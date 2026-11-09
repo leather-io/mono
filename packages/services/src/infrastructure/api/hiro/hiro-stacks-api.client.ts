@@ -1,4 +1,3 @@
-import { NonFungibleTokenHoldingsList } from '@stacks/stacks-blockchain-api-types';
 import { ClarityAbi, ClarityValue, cvToHex, hexToCV } from '@stacks/transactions';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { inject, injectable } from 'inversify';
@@ -17,7 +16,7 @@ import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-lim
 import { selectStacksApiUrl, selectStacksChainId } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
 import { ApiRequestOptions } from '../types';
-import { HiroMultiPageRequest, fetchHiroPages } from './hiro-multi-page';
+import { HiroMultiPageRequest, fetchHiroCursorPages, fetchHiroPages } from './hiro-multi-page';
 import { hiroApiRequestsPriorityLevels } from './hiro-request-priorities';
 import {
   CallReadOnlyFunctionArgs,
@@ -29,10 +28,11 @@ import {
   HiroBalanceChangesResponse,
   HiroFtMetadata,
   HiroMetadata,
-  HiroNftHolding,
   HiroPageRequest,
   HiroPoxInfoResponse,
   HiroPrincipalMempoolTransactionsResponse,
+  HiroPrincipalNftBalance,
+  HiroPrincipalNftBalancesResponse,
   HiroPrincipalStakingBondsResponse,
   HiroPrincipalTransactionsResponse,
   HiroReadOnlyFunctionResponse,
@@ -56,6 +56,7 @@ interface GetTransactionByIdOptions extends ApiRequestOptions {
 }
 
 const balanceChangesResultLimit = 50;
+const principalNftBalancesPageLimit = 200;
 const stakingBondsListLimit = 10;
 
 @injectable()
@@ -471,26 +472,24 @@ export class HiroStacksApiClient {
     );
   }
 
-  private async getNftHoldingsPage(
+  private async getPrincipalNftBalancesPage(
     principal: string,
-    page: HiroPageRequest,
+    { cursor, assetIdentifier }: { cursor: string | null; assetIdentifier?: string },
     { signal, skipCache }: ApiRequestOptions = {}
-  ): Promise<NonFungibleTokenHoldingsList> {
-    const pageParams = new URLSearchParams({
-      principal,
-      limit: page.limit.toString(),
-      offset: page.offset.toString(),
-    });
+  ): Promise<HiroPrincipalNftBalancesResponse> {
     const fetchFn = async () => {
+      const params = new URLSearchParams({ limit: String(principalNftBalancesPageLimit) });
+      if (assetIdentifier) params.set('asset_identifier', assetIdentifier);
+      if (cursor) params.set('cursor', cursor);
       const res = await this.limiter.add(
         RateLimiterType.HiroStacks,
         () =>
-          this._axios.get<NonFungibleTokenHoldingsList>(
-            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/tokens/nft/holdings?${pageParams.toString()}`,
+          this._axios.get<HiroPrincipalNftBalancesResponse>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/principals/${principal}/balances/nft?${params.toString()}`,
             { signal }
           ),
         {
-          priority: hiroApiRequestsPriorityLevels.getNftHoldings,
+          priority: hiroApiRequestsPriorityLevels.getPrincipalNftBalances,
           signal,
           throwOnTimeout: true,
         }
@@ -499,26 +498,31 @@ export class HiroStacksApiClient {
     };
     return await this.cache.fetchWithCache(
       [
-        'hiro-stacks-get-nft-holdings',
+        'hiro-stacks-get-principal-nft-balances',
+        principal,
+        assetIdentifier ?? 'all',
+        cursor ?? 'start',
+        principalNftBalancesPageLimit,
         selectStacksChainId(this.settings.getSettings()),
-        pageParams.toString(),
       ],
       fetchFn,
       { skipCache }
     );
   }
 
-  public async getNftHoldings(
+  public async getPrincipalNftBalances(
     principal: string,
-    pages: HiroMultiPageRequest,
-    { signal }: ApiRequestOptions = {}
-  ): Promise<HiroNftHolding[]> {
-    return fetchHiroPages<HiroNftHolding>(
-      page => this.getNftHoldingsPage(principal, page, { signal }),
-      {
-        limit: 200,
-        pagesRequest: pages,
-      }
+    { assetIdentifier, maxPages }: { assetIdentifier?: string; maxPages: number },
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Promise<HiroPrincipalNftBalance[]> {
+    return fetchHiroCursorPages(
+      cursor =>
+        this.getPrincipalNftBalancesPage(
+          principal,
+          { cursor, assetIdentifier },
+          { signal, skipCache }
+        ),
+      { maxPages }
     );
   }
 
