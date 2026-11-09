@@ -96,16 +96,15 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-get-address-balances',
-            address,
-            selectStacksChainId(this.settings.getSettings()),
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-address-balances',
+        address,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getAddressStxBalance(
@@ -128,16 +127,15 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-get-address-stx-balance',
-            address,
-            selectStacksChainId(this.settings.getSettings()),
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-address-stx-balance',
+        address,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getPrincipalTransactions(
@@ -163,18 +161,17 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-get-principal-transactions',
-            principal,
-            cursor ?? 'start',
-            limit,
-            selectStacksChainId(this.settings.getSettings()),
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-principal-transactions',
+        principal,
+        cursor ?? 'start',
+        limit,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getPrincipalBalanceChanges(
@@ -204,18 +201,17 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-get-principal-balance-changes',
-            principal,
-            sortedTxIds.join(','),
-            cursor ?? 'start',
-            selectStacksChainId(this.settings.getSettings()),
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-principal-balance-changes',
+        principal,
+        sortedTxIds.join(','),
+        cursor ?? 'start',
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getAddressFtBalances(
@@ -238,16 +234,15 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-get-address-ft-balances',
-            address,
-            selectStacksChainId(this.settings.getSettings()),
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-address-ft-balances',
+        address,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   private async getAddressTransactionsPage(
@@ -279,17 +274,16 @@ export class HiroStacksApiClient {
         results: res.data.results.map(filterVerboseUnusedTransactionWithTransfersData),
       };
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-get-address-transactions',
-            selectStacksChainId(this.settings.getSettings()),
-            address,
-            pageParams.toString(),
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-address-transactions',
+        selectStacksChainId(this.settings.getSettings()),
+        address,
+        pageParams.toString(),
+      ],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getAddressTransactions(
@@ -331,17 +325,16 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-get-transaction-events',
-            selectStacksChainId(this.settings.getSettings()),
-            address,
-            pageParams.toString(),
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-transaction-events',
+        selectStacksChainId(this.settings.getSettings()),
+        address,
+        pageParams.toString(),
+      ],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getTransactionEvents(
@@ -381,18 +374,17 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-get-principal-mempool-transactions',
-            principal,
-            cursor ?? 'start',
-            limit,
-            selectStacksChainId(this.settings.getSettings()),
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-principal-mempool-transactions',
+        principal,
+        cursor ?? 'start',
+        limit,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getTransactionById(
@@ -424,17 +416,16 @@ export class HiroStacksApiClient {
         throw error;
       }
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-get-transaction-by-id',
-            txid,
-            includeParam,
-            selectStacksChainId(this.settings.getSettings()),
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-transaction-by-id',
+        txid,
+        includeParam,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getNftMetadata(
@@ -466,17 +457,16 @@ export class HiroStacksApiClient {
       }
     };
 
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-get-nft-metadata',
-            principal,
-            tokenId,
-            selectStacksChainId(this.settings.getSettings()),
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-nft-metadata',
+        principal,
+        tokenId,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   private async getPrincipalNftBalancesPage(
@@ -503,19 +493,18 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-get-principal-nft-balances',
-            principal,
-            assetIdentifier ?? 'all',
-            cursor ?? 'start',
-            principalNftBalancesPageLimit,
-            selectStacksChainId(this.settings.getSettings()),
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-principal-nft-balances',
+        principal,
+        assetIdentifier ?? 'all',
+        cursor ?? 'start',
+        principalNftBalancesPageLimit,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getPrincipalNftBalances(
@@ -570,18 +559,17 @@ export class HiroStacksApiClient {
       return hexToCV(res.data.result);
     };
 
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-call-read-only-function',
-            contractAddress,
-            contractName,
-            functionName,
-            body.arguments,
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-call-read-only-function',
+        contractAddress,
+        contractName,
+        functionName,
+        body.arguments,
+      ],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getTransferFeeRate({ signal, skipCache }: ApiRequestOptions = {}): Promise<number> {
@@ -601,12 +589,11 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          ['hiro-stacks-get-transfer-fee-rate', selectStacksChainId(this.settings.getSettings())],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      ['hiro-stacks-get-transfer-fee-rate', selectStacksChainId(this.settings.getSettings())],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getTransactionFeeEstimate(
@@ -635,14 +622,13 @@ export class HiroStacksApiClient {
       return res.data;
     };
 
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          // shouldnt need to add entire txPayload to cache key, estimatedLen + sufficiently
-          // low cache times should ensure acceptable refetching
-          ['hiro-stacks-get-transaction-fee-estimate', txByteLength],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      // shouldnt need to add entire txPayload to cache key, estimatedLen + sufficiently
+      // low cache times should ensure acceptable refetching
+      ['hiro-stacks-get-transaction-fee-estimate', txByteLength],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getPoxInfo({
@@ -665,12 +651,11 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          ['hiro-stacks-get-pox-info', selectStacksChainId(this.settings.getSettings())],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      ['hiro-stacks-get-pox-info', selectStacksChainId(this.settings.getSettings())],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getStakingBonds({
@@ -693,12 +678,11 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          ['hiro-stacks-get-staking-bonds', selectStacksChainId(this.settings.getSettings())],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      ['hiro-stacks-get-staking-bonds', selectStacksChainId(this.settings.getSettings())],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getStakingBond(
@@ -721,12 +705,11 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          ['hiro-stacks-get-staking-bond', index, selectStacksChainId(this.settings.getSettings())],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      ['hiro-stacks-get-staking-bond', index, selectStacksChainId(this.settings.getSettings())],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getPrincipalStakingBonds(
@@ -749,16 +732,15 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-get-principal-staking-bonds',
-            principal,
-            selectStacksChainId(this.settings.getSettings()),
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-principal-staking-bonds',
+        principal,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getAccountNonces(
@@ -801,16 +783,15 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-get-raw-transaction-by-id',
-            txid,
-            selectStacksChainId(this.settings.getSettings()),
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-raw-transaction-by-id',
+        txid,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getContractInterface(
@@ -834,17 +815,16 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-get-contract-interface',
-            contractAddress,
-            contractName,
-            selectStacksChainId(this.settings.getSettings()),
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-contract-interface',
+        contractAddress,
+        contractName,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getFtMetadata(
@@ -877,16 +857,11 @@ export class HiroStacksApiClient {
         throw error;
       }
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          [
-            'hiro-stacks-get-ft-metadata',
-            principal,
-            selectStacksChainId(this.settings.getSettings()),
-          ],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      ['hiro-stacks-get-ft-metadata', principal, selectStacksChainId(this.settings.getSettings())],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async getNetworkStatus(url: string, { signal }: ApiRequestOptions = {}): Promise<unknown> {
@@ -922,11 +897,10 @@ export class HiroStacksApiClient {
       );
       return res.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(
-          ['hiro-stacks-get-api-status', selectStacksChainId(this.settings.getSettings())],
-          fetchFn
-        );
+    return await this.cache.fetchWithCache(
+      ['hiro-stacks-get-api-status', selectStacksChainId(this.settings.getSettings())],
+      fetchFn,
+      { skipCache }
+    );
   }
 }
