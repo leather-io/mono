@@ -41,7 +41,9 @@ export function StakingPositionGrid({ poolSlug, pool, info, details }: StakingPo
     ? poolSignerManagerContractIds
     : [info.signerManagerContractId];
   const payoutMode = getPoolPayoutMode(pool);
-  const defaultPayoutLabel = isBtcPayoutRequired(payoutMode) ? EM_DASH : 'sBTC on Stacks';
+  const payoutPreferenceLoaded = details.payoutPreferenceStatus === 'success';
+  const defaultPayoutLabel =
+    !payoutPreferenceLoaded || isBtcPayoutRequired(payoutMode) ? EM_DASH : 'sBTC on Stacks';
 
   return (
     <StackingInfoGridLayout
@@ -126,7 +128,11 @@ export function StakingPositionGrid({ poolSlug, pool, info, details }: StakingPo
           <ValueDisplayer
             gap="space.04"
             name="Rewards token"
-            value={getRewardsTokenSymbol(payoutMode)}
+            value={
+              payoutPreferenceLoaded
+                ? getRewardsTokenSymbol(details.payoutPreference ? 'btc-only' : payoutMode)
+                : EM_DASH
+            }
           />
         ),
         poolAddress: (
@@ -141,7 +147,7 @@ export function StakingPositionGrid({ poolSlug, pool, info, details }: StakingPo
             gap="space.04"
             name="Rewards payout"
             value={
-              details.payoutPreference ? (
+              payoutPreferenceLoaded && details.payoutPreference ? (
                 <CopyAddress
                   addr={details.payoutPreference.btcRewardAddress}
                   emphasis
