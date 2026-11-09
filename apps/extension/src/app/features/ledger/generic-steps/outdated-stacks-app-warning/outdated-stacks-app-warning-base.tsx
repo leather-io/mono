@@ -62,7 +62,7 @@ export function OutdatedStacksAppWarningBase({
           }
         >
           <styled.span textStyle="body.01">
-            Open Ledger Wallet → My Ledger and{' '}
+            Open Ledger Wallet (formerly Ledger Live) → My Ledger and{' '}
             <Tooltip.Root delayDuration={0}>
               <Tooltip.Trigger asChild>
                 <styled.span
@@ -132,6 +132,15 @@ export function OutdatedStacksAppWarningBase({
             width="20"
           />
           Open Ledger Wallet <ExternalLinkIcon color="ink.background-primary" />
+        </styled.a>
+        <styled.a
+          href="https://www.ledger.com/ledger-live/download"
+          target="_blank"
+          rel="noopener noreferrer"
+          textStyle="label.02"
+          textDecoration="underline"
+        >
+          Not installed? Download Ledger Wallet
         </styled.a>
         <HStack gap="space.03" width="100%">
           <Button flex={1} onClick={() => void onTryAgain()} variant="outline">
