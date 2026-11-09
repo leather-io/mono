@@ -357,4 +357,31 @@ describe('mixed input types', () => {
       expect(input.value >= nextInput.value).toEqual(true);
     });
   });
+
+  test('recalculates size and sets exact fee when change is dropped as dust', () => {
+    const feeRate = 1;
+    const utxos = [
+      {
+        txid: '0000000000000000000000000000000000000000000000000000000000000001',
+        value: 10000,
+        address: recipientAddress,
+      },
+    ];
+    // Candidate change falls below the dust window (<= 294 sats)
+    const spendAmount = 9700;
+
+    const result = determineUtxosForSpend({
+      utxos,
+      recipients: [{ address: recipientAddress, amount: createMoney(spendAmount, 'BTC') }],
+      feeRate,
+    });
+
+    expect(result.outputs.length).toEqual(1);
+
+    const totalInputs = utxos.reduce((acc, u) => acc + u.value, 0);
+    const totalOutputs = result.outputs.reduce((acc, o) => acc + Number(o.value), 0);
+    const actualNetworkFee = totalInputs - totalOutputs;
+
+    expect(result.fee.amount.toNumber()).toEqual(actualNetworkFee);
+  });
 });
