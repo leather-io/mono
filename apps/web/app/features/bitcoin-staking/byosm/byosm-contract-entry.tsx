@@ -2,6 +2,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useSearchParams } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { Stack, styled } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
@@ -67,7 +68,7 @@ export function ByosmContractEntry({ state }: ByosmContractEntryProps) {
                   <Input.Field
                     autoComplete="off"
                     data-1p-ignore
-                    data-testid="byosm-contract-input"
+                    data-testid={BitcoinStakingSelectors.ByosmContractInput}
                     id="contract"
                     value={value ?? ''}
                     onChange={input => onChange(input.target.value)}
@@ -86,7 +87,7 @@ export function ByosmContractEntry({ state }: ByosmContractEntryProps) {
             type="submit"
             size="md"
             disabled={isChecking}
-            data-testid="byosm-contract-continue"
+            data-testid={BitcoinStakingSelectors.ByosmContractContinue}
           >
             {isChecking ? byosmContent.checkingLabel : byosmContent.continueLabel}
           </Button>

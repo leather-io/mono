@@ -23,6 +23,7 @@ export interface RoutedRoute {
   readonly flags: readonly string[];
   readonly parentKeys: readonly string[];
   readonly isIndex: boolean;
+  readonly module?: string;
 }
 
 export interface RouteReference {

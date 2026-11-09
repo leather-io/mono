@@ -22,6 +22,7 @@
     "rootDirs": [".", "./.react-router/types"],
     "paths": {
       "~/*": ["./app/*"],
+      "@tests/*": ["./tests/*"],
       "react": ["./node_modules/@types/react"],
       "leather-styles/*": ["./leather-styles/*"]
     },

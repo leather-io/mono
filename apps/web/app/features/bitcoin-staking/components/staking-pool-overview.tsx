@@ -1,3 +1,4 @@
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, VStack, styled } from 'leather-styles/jsx';
 import type { ColorToken } from 'leather-styles/tokens';
@@ -141,7 +142,11 @@ function CycleStatusLine({ cycleStatus }: { cycleStatus: StakingCycleStatus }) {
     <styled.span
       textStyle="label.03"
       color={color}
-      data-testid={isPaused ? 'cycle-status-paused' : 'cycle-status-open'}
+      data-testid={
+        isPaused
+          ? BitcoinStakingSelectors.CycleStatusPaused
+          : BitcoinStakingSelectors.CycleStatusOpen
+      }
     >
       {cycleStatusText(cycleStatus)}
       <InfoTooltipIcon
@@ -227,7 +232,7 @@ export function StakingPoolOverview({
             totalStakedMicroStx === null ? (
               EM_DASH
             ) : (
-              <span data-testid="pool-total-staked">
+              <span data-testid={BitcoinStakingSelectors.PoolTotalStaked}>
                 {toHumanReadableMicroStx(totalStakedMicroStx, 0)}
               </span>
             )

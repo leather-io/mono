@@ -1,3 +1,4 @@
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { css } from 'leather-styles/css';
 import { HStack, Stack, styled } from 'leather-styles/jsx';
 import { link as linkRecipe } from 'leather-styles/recipes';
@@ -28,7 +29,7 @@ export function OperatorPayoutCard({
       borderWidth={1}
       borderColor="ink.border-default"
       borderRadius="md"
-      data-testid="operator-payout-card"
+      data-testid={BitcoinStakingSelectors.OperatorPayoutCard}
     >
       <HStack justifyContent="space-between" alignItems="flex-start" gap="space.03">
         <Stack gap="space.01">
@@ -46,14 +47,14 @@ export function OperatorPayoutCard({
           display="inline-flex"
           alignItems="center"
           gap="space.01"
-          data-testid="operator-payout-link"
+          data-testid={BitcoinStakingSelectors.OperatorPayoutLink}
         >
           {copy.linkLabel(pool.name)}
           <ArrowLeftIcon variant="small" className={css({ transform: 'rotate(180deg)' })} />
         </styled.a>
       </HStack>
 
-      <styled.div textStyle="label.02" data-testid="operator-payout-address">
+      <styled.div textStyle="label.02" data-testid={BitcoinStakingSelectors.OperatorPayoutAddress}>
         {payoutAddress ? <CopyAddress addr={payoutAddress} emphasis underlined wide /> : EM_DASH}
       </styled.div>
 

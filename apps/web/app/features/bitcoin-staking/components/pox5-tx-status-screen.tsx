@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useQueryClient } from '@tanstack/react-query';
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { Flex, HStack, Stack, styled } from 'leather-styles/jsx';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
@@ -84,7 +85,7 @@ export function Pox5TxStatusScreen({ trackedTx }: Pox5TxStatusScreenProps) {
           )
         )
       }
-      data-testid="pox5-tx-explorer-link"
+      data-testid={BitcoinStakingSelectors.Pox5TxExplorerLink}
     >
       {transactionStatus.viewInExplorer}
     </Button>
@@ -94,7 +95,11 @@ export function Pox5TxStatusScreen({ trackedTx }: Pox5TxStatusScreenProps) {
     return (
       <Page>
         <Page.Header title={transactionStatus.headerTitle} onBack={clear} />
-        <Flex justifyContent="center" py="space.09" data-testid="pox5-tx-status-failed">
+        <Flex
+          justifyContent="center"
+          py="space.09"
+          data-testid={BitcoinStakingSelectors.Pox5TxStatusFailed}
+        >
           <Stack gap="space.04" maxWidth="60ch">
             <Flag img={<ErrorCircleIcon />} align="top">
               <Stack gap="space.01">
@@ -105,7 +110,11 @@ export function Pox5TxStatusScreen({ trackedTx }: Pox5TxStatusScreenProps) {
               </Stack>
             </Flag>
             <HStack gap="space.03">
-              <Button size="sm" onClick={() => clear()} data-testid="pox5-tx-dismiss-button">
+              <Button
+                size="sm"
+                onClick={() => clear()}
+                data-testid={BitcoinStakingSelectors.Pox5TxDismissButton}
+              >
                 {transactionStatus.dismiss}
               </Button>
               {explorerAction}
@@ -119,7 +128,11 @@ export function Pox5TxStatusScreen({ trackedTx }: Pox5TxStatusScreenProps) {
   return (
     <Page>
       <Page.Header title={transactionStatus.headerTitle} />
-      <Flex justifyContent="center" py="space.09" data-testid="pox5-tx-status-screen">
+      <Flex
+        justifyContent="center"
+        py="space.09"
+        data-testid={BitcoinStakingSelectors.Pox5TxStatusScreen}
+      >
         <Stack gap="space.04" alignItems="center" maxWidth="60ch">
           <LoadingSpinner fill="ink.text-subdued" />
           <Stack gap="space.01" textAlign="center">

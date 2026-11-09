@@ -1,3 +1,4 @@
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { ErrorLabel } from '~/components/error-label';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 import { WalletProviderUnavailableError, isUserRejectionError } from '~/utils/wallet';
@@ -19,7 +20,7 @@ export function Pox5SubmitError({ error, ...rest }: Pox5SubmitErrorProps) {
   if (!error) return null;
 
   return (
-    <ErrorLabel data-testid="pox5-submit-error" {...rest}>
+    <ErrorLabel data-testid={BitcoinStakingSelectors.Pox5SubmitError} {...rest}>
       {getSubmitErrorMessage(error)}
     </ErrorLabel>
   );
