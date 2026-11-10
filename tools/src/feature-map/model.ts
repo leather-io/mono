@@ -28,12 +28,12 @@ import {
   loadPageObjectActions,
   loadRouteUrls,
   loadRouterFiles,
+  loadRpcEndpoints,
   loadRpcHandlers,
-  loadRpcMethods,
-  loadSelectorObjects,
-  loadSelectorTable,
+  loadSelectors,
   loadSetupMocks,
   loadSpecs,
+  loadVerifyMockNames,
 } from './test-assets.js';
 import { type SourceLocation, type StringTable, mergeStringTables } from './ts-ast.js';
 
@@ -47,6 +47,7 @@ export interface FeatureMapModel {
   readonly pageObjectActions: ReadonlyMap<string, PageObjectAction>;
   readonly mocks: ReadonlyMap<string, SourceLocation>;
   readonly setupMocks: SetupMocks | undefined;
+  readonly verifyMocks: ReadonlySet<string>;
   readonly specs: ReadonlyMap<string, SpecFile>;
   readonly flags: readonly string[];
   readonly rpcMethods: ReadonlySet<string>;
@@ -68,9 +69,9 @@ function parseAllFeatures(files: readonly string[], table: StringTable): Feature
 
 export function buildFeatureMapModel(config: FeatureMapAppConfig): FeatureMapModel {
   const routeUrls = loadRouteUrls(config);
-  const selectorTable = loadSelectorTable(config);
+  const selectors = loadSelectors(config);
   const table = mergeStringTables([
-    selectorTable,
+    selectors.table,
     new Map([[config.routeUrlsObjectName, routeUrls]]),
   ]);
   const router = parseRouterFiles(
@@ -81,22 +82,24 @@ export function buildFeatureMapModel(config: FeatureMapAppConfig): FeatureMapMod
   );
   const parsed = parseAllFeatures(loadFeatureFiles(config), table);
   const mocks = loadMockFunctions(config);
+  const endpoints = loadRpcEndpoints(config);
 
   return {
     config,
     routeUrls,
-    selectorTable,
+    selectorTable: selectors.table,
     router,
     features: parsed.features,
     parseErrors: parsed.errors,
     pageObjectActions: loadPageObjectActions(config),
     mocks,
     setupMocks: loadSetupMocks(config, mocks),
+    verifyMocks: loadVerifyMockNames(config),
     specs: loadSpecs(config),
     flags: loadFeatureFlags(config),
-    rpcMethods: loadRpcMethods(config),
-    selectorObjects: loadSelectorObjects(config),
-    rpcHandlers: loadRpcHandlers(config),
+    rpcMethods: new Set(endpoints.values()),
+    selectorObjects: selectors.objects,
+    rpcHandlers: loadRpcHandlers(config, endpoints),
   };
 }
 
@@ -146,15 +149,18 @@ export function firstReference(model: FeatureMapModel, key: string): RouteRefere
   return references[0];
 }
 
+function addClaim(claims: Map<string, ParsedFeature[]>, name: string, feature: ParsedFeature) {
+  const list = claims.get(name) ?? [];
+  if (!list.includes(feature)) list.push(feature);
+  claims.set(name, list);
+}
+
 export function claimsByKey(model: FeatureMapModel): Map<string, ParsedFeature[]> {
   const claims = new Map<string, ParsedFeature[]>();
   for (const feature of model.features) {
     for (const route of feature.routes) {
       const key = keyForRoute(model, route);
-      if (!key) continue;
-      const list = claims.get(key) ?? [];
-      if (!list.includes(feature)) list.push(feature);
-      claims.set(key, list);
+      if (key) addClaim(claims, key, feature);
     }
   }
   return claims;
@@ -177,7 +183,7 @@ function paramNameOf(segment: string): string | undefined {
   return undefined;
 }
 
-function substituteParams(value: string, params: readonly FeatureParam[]): string {
+export function substituteParams(value: string, params: readonly FeatureParam[]): string {
   return value
     .split('/')
     .map(segment => {
@@ -269,14 +275,9 @@ export function selectorObjectOf(ref: string): string {
 
 export function claimsByRpcHandler(model: FeatureMapModel): Map<string, ParsedFeature[]> {
   const claims = new Map<string, ParsedFeature[]>();
-  function claim(name: string, feature: ParsedFeature) {
-    const list = claims.get(name) ?? [];
-    if (!list.includes(feature)) list.push(feature);
-    claims.set(name, list);
-  }
   for (const feature of model.features) {
     if (feature.anchor.kind === 'rpc') {
-      for (const handler of feature.anchor.handlers) claim(handler, feature);
+      for (const handler of feature.anchor.handlers) addClaim(claims, handler, feature);
       continue;
     }
     const methods = new Set(
@@ -284,8 +285,49 @@ export function claimsByRpcHandler(model: FeatureMapModel): Map<string, ParsedFe
     );
     if (methods.size === 0) continue;
     for (const handler of model.rpcHandlers.values()) {
-      if (handler.methods.some(method => methods.has(method))) claim(handler.name, feature);
+      if (handler.methods.some(method => methods.has(method))) {
+        addClaim(claims, handler.name, feature);
+      }
     }
   }
   return claims;
+}
+
+type VerifyAvailability =
+  | { readonly verifiable: true }
+  | { readonly verifiable: false; readonly reason: string };
+
+export function verifyAvailability(feature: ParsedFeature): VerifyAvailability {
+  const { anchor } = feature;
+  if (anchor.kind === 'behavior') {
+    return {
+      verifiable: false,
+      reason: `'${feature.id}' is a behavior with no screen to open; reproduce it with its specs`,
+    };
+  }
+  if (feature.selectors.ready === undefined) {
+    return {
+      verifiable: false,
+      reason: `'${feature.id}' declares no selectors.ready, so there is nothing to wait for`,
+    };
+  }
+  if (anchor.kind === 'selectors' && feature.open.length === 0) {
+    return {
+      verifiable: false,
+      reason: `'${feature.id}' has no open action: the screen is reached by state the page objects cannot set; reproduce it with its specs`,
+    };
+  }
+  if (!feature.deepLinkable && feature.open.length === 0) {
+    return {
+      verifiable: false,
+      reason: `'${feature.id}' is not deep-linkable: the screen reads router state the previous screen passes, so a bare URL redirects or fails; reproduce it with its specs`,
+    };
+  }
+  if (anchor.kind === 'rpc' && !feature.entry.some(point => point.kind === 'rpc' && point.method)) {
+    return {
+      verifiable: false,
+      reason: `'${feature.id}' has no rpc entry method to call`,
+    };
+  }
+  return { verifiable: true };
 }

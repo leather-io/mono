@@ -6,6 +6,7 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   globalSetup: './tests/global-playwright-setup.js',
   testDir: './tests',
+  testIgnore: process.env.VERIFY_RUN ? [] : ['**/verify/**'],
   timeout: 30 * 1000,
   expect: { timeout: 5000 },
   // Extensions live cross-worker meaning `chrome.storage` is shared. Disabling
