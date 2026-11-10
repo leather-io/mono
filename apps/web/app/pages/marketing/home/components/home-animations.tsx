@@ -119,7 +119,7 @@ const spamActivate: AnimationSegment = [200, 300];
 /** "Stay spam free": idle loop, plus a real toggle button that flips the Hide spam switch. */
 export function SpamFreeAnimation({ aspect }: { aspect: string }) {
   const lottie = useLottie({
-    src: '/marketing/home/current/asset-visibility.lottie.json',
+    src: `${animationsPath}/spam-free.lottie.json`,
     segment: spamIdle,
   });
   const { animation, isReady } = lottie;
@@ -135,15 +135,15 @@ export function SpamFreeAnimation({ aspect }: { aspect: string }) {
   return (
     <LottieFrame
       lottie={lottie}
-      poster="/marketing/home/current/asset-visibility.png"
-      alt="An illustrated token list with individual visibility controls"
+      poster="/marketing/home/spam-free.webp"
+      alt="A stylized Hide spam control above faded sample token names"
       aspect={aspect}
     >
       {isReady && (
         <styled.button
           type="button"
           aria-pressed={hideSpam}
-          aria-label="Toggle USDCx visibility in the illustration"
+          aria-label="Toggle the Hide spam illustration"
           onClick={() => {
             hasToggled.current = true;
             setHideSpam(pressed => !pressed);
