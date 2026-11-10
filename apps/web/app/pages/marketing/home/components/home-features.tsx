@@ -153,29 +153,13 @@ export function HomeFullControl() {
             <LottieAnimation
               src="/marketing/home/current/mobile-tokens.lottie.json"
               poster="/marketing/home/current/mobile-tokens.png"
-              alt="Token balances opening into token details with tabs and a price chart"
+              alt="Token balances opening into Bitcoin Info with a price chart, then Activity with pending and received transactions"
               aspect={largeCardAspect}
             />
           }
         />
       </Grid>
-      <Grid
-        gridTemplateColumns={['1fr', null, 'repeat(2, 1fr)', 'repeat(3, 1fr)']}
-        gap="space.03"
-        mt="space.03"
-      >
-        <FeatureCard
-          title="Explore apps from your wallet"
-          description="Discover Bitcoin and Stacks apps, connect with Leather, and review requested transactions before approving."
-          visual={
-            <LottieAnimation
-              src="/marketing/home/current/apps-browser.lottie.json"
-              poster="/marketing/home/current/apps-browser.png"
-              alt="Bitcoin and Stacks app categories and listings in Leather’s app directory"
-              aspect={smallCardAspect}
-            />
-          }
-        />
+      <Grid gridTemplateColumns={['1fr', null, 'repeat(2, 1fr)']} gap="space.03" mt="space.03">
         <FeatureCard
           title="Know every move"
           description="Check transaction status, amounts and fees in your activity history."

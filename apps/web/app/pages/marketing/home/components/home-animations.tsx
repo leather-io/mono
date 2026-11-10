@@ -136,7 +136,7 @@ export function SpamFreeAnimation({ aspect }: { aspect: string }) {
     <LottieFrame
       lottie={lottie}
       poster="/marketing/home/current/asset-visibility.png"
-      alt="Manage tokens with separate visibility switches for sBTC and USDCx"
+      alt="An illustrated token list with individual visibility controls"
       aspect={aspect}
     >
       {isReady && (
