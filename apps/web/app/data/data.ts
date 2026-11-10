@@ -71,15 +71,15 @@ const liquidStackingPoolData = {
   stackingDao: {
     ...providers.stackingDao,
     slug: 'stacking-dao',
-    estApr: '5%',
-    fee: '10%',
+    estApr: 'Not available',
+    fee: 'See provider',
     payout: 'stSTX',
   },
   lisa: {
     ...providers.lisa,
     slug: 'lisa',
-    estApr: '10%',
-    fee: '0.00%',
+    estApr: 'Not available',
+    fee: 'See provider',
     payout: 'LiSTX',
   },
 } as const satisfies Record<string, LiquidStackingPool>;

@@ -40,8 +40,8 @@ interface ExplorerTab {
 }
 
 export const explorerPromo: ExplorerPromo = {
-  titleLines: ['Grow your', 'Bitcoin'],
-  description: 'Up to 8% with direct wallet payouts',
+  titleLines: ['Explore', 'sBTC'],
+  description: 'Compare independent sBTC providers and variable rewards',
   ctaLabel: 'Get sBTC',
   href: '/sbtc',
   art: {
@@ -54,47 +54,42 @@ export const featuredApps: FeaturedApp[] = [
   {
     name: 'Hermetica',
     description:
-      'A Bitcoin-backed synthetic dollar that generates up to 25% APY through delta-neutral strategies',
+      'A synthetic dollar protocol using Bitcoin-based hedging strategies. Yield and terms vary.',
     href: '/posts/hermetica',
     cover: `${assetDir}/featured-hermetica.webp`,
     logo: `${assetDir}/featured-logo-hermetica.svg`,
   },
   {
     name: 'Granite',
-    description:
-      'Use sBTC to borrow stablecoins non-custodially, without risk of forced liquidations',
+    description: 'A lending protocol for borrowing stablecoins against sBTC collateral.',
     href: '/posts/granite',
     cover: `${assetDir}/featured-granite.webp`,
     logo: `${assetDir}/featured-logo-granite.svg`,
   },
   {
     name: 'ALEX',
-    description:
-      'A DeFi platform on Stacks offering swaps, staking, fixed-term lending, and cross-chain liquidity with Bitcoin security',
+    description: 'A DeFi platform on Stacks with token swaps and liquidity pools.',
     href: '/posts/alex',
     cover: `${assetDir}/featured-alex.webp`,
     logo: `${assetDir}/featured-logo-alex.webp`,
   },
   {
     name: 'Arkadiko',
-    description:
-      'A Bitcoin-secured protocol for vault-based borrowing, USDA minting, and decentralized smart contract automation.',
+    description: 'A protocol on Stacks for vault-based borrowing and USDA minting.',
     href: '/posts/arkadiko',
     cover: `${assetDir}/featured-arkadiko.webp`,
     logo: `${assetDir}/featured-logo-arkadiko.svg`,
   },
   {
     name: 'Bitflow',
-    description:
-      'A Bitcoin-native DEX aggregator and liquidity hub that sources the best prices across Stacks-based protocols.',
+    description: 'A DEX aggregator and liquidity hub for token swaps on Stacks.',
     href: '/posts/bitflow',
     cover: `${assetDir}/featured-bitflow.webp`,
     logo: `${assetDir}/featured-logo-bitflow.webp`,
   },
   {
     name: 'Zest Protocol',
-    description:
-      'A Bitcoin-native protocol on Stacks for borrowing, lending, and yield generation through overcollateralized loans and BTC staking pools',
+    description: 'A borrowing and lending protocol on Stacks.',
     href: '/posts/zest',
     cover: `${assetDir}/featured-zest.webp`,
     logo: `${assetDir}/featured-logo-zest.svg`,

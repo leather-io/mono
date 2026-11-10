@@ -1,5 +1,6 @@
 import { Box, Grid, styled } from 'leather-styles/jsx';
 import { LottieAnimation } from '~/pages/marketing/shared/lottie-animation';
+import { MarketingTag } from '~/pages/marketing/shared/marketing-tag';
 import { Reveal } from '~/pages/marketing/shared/reveal';
 
 import { LedgerAnimation, SpamFreeAnimation, SwapsCoins, animationsPath } from './home-animations';
@@ -27,8 +28,8 @@ export function HomeSwapsAndLedger() {
               <HomeSectionHeading id="home-swaps-heading" lines={['Decentralized', 'swaps.']} />
             </Reveal>
             <styled.p textStyle="body.02" color="ink.text-secondary" mt="space.05" maxW="454px">
-              Swap over 100 tokens. Instantly, privately, and with full control. No accounts. No
-              middlemen. No limits.
+              Swap supported Stacks tokens in your wallet. Compare quotes and review fees before you
+              approve. Available routes depend on the token pair and provider.
             </styled.p>
             <styled.ul
               aria-label="Swap providers"
@@ -39,8 +40,6 @@ export function HomeSwapsAndLedger() {
               mt="space.05"
             >
               <CheckItem>Bitflow</CheckItem>
-              <CheckItem>Velar</CheckItem>
-              <CheckItem>sBTC Bridge</CheckItem>
               <CheckItem>ALEX</CheckItem>
             </styled.ul>
           </Box>
@@ -65,17 +64,18 @@ export function HomeSwapsAndLedger() {
             <Reveal>
               <HomeSectionHeading
                 id="home-ledger-heading"
-                lines={['Best in class', 'Ledger support.']}
+                lines={['Your Ledger.', 'Your approval.']}
               />
             </Reveal>
+            <MarketingTag mt="space.03">Extension</MarketingTag>
             <styled.p textStyle="body.02" color="ink.text-secondary" mt="space.05">
-              Create or restore wallets in seconds, keeping all your Bitcoin and Stacks accounts in
-              one secure place.
+              Connect your Ledger to Leather’s browser extension. Review and approve supported
+              Bitcoin and Stacks transactions on your device.
             </styled.p>
             <styled.ul display="flex" flexDir="column" gap="space.03" mt="space.05">
-              <CheckItem>Smart signing for a safer Ledger experience</CheckItem>
-              <CheckItem>Seamless multi-chain BTC &amp; STX experience</CheckItem>
-              <CheckItem>Connect once and sign smoothly</CheckItem>
+              <CheckItem>Keep signing keys on your hardware wallet</CheckItem>
+              <CheckItem>Manage Bitcoin and Stacks accounts</CheckItem>
+              <CheckItem>Review transaction details before signing</CheckItem>
             </styled.ul>
           </Box>
         </Grid>
@@ -90,14 +90,14 @@ export function HomeWallets() {
       <Reveal>
         <HomeSectionHeading
           id="home-wallets-heading"
-          lines={['All your wallets,', 'perfectly organized.']}
+          lines={['All your wallets,', 'organized your way.']}
         />
       </Reveal>
       <Grid gridTemplateColumns={['1fr', null, '1fr 1fr']} gap="space.03" mt="space.07">
         <FeatureCard
           title="Bring all your wallets"
           tag="Mobile"
-          description="Create or restore wallets in seconds, keeping all your Bitcoin and Stacks accounts in one secure place."
+          description="Create or restore wallets and keep your Bitcoin and Stacks accounts organized in one place."
           visual={
             <LottieAnimation
               src={`${animationsPath}/wallets-accounts.lottie.json`}
@@ -110,12 +110,12 @@ export function HomeWallets() {
         <FeatureCard
           title="Name it your way"
           tag="Mobile"
-          description="Personalize your wallets with custom names to stay organized and instantly recognize the accounts that matter most."
+          description="Give your wallets custom names so you can tell everyday spending, savings and experiments apart."
           visual={
             <LottieAnimation
-              src={`${animationsPath}/wallets-names.lottie.json`}
-              poster="/marketing/home/wallets-names.webp"
-              alt="A carousel of wallet avatars with the selected wallet named Ordinals"
+              src="/marketing/home/current/wallets-names.lottie.json"
+              poster="/marketing/home/current/wallets-names.png"
+              alt="A carousel of wallet avatars with custom names including Savings and Everyday"
               aspect={largeCardAspect}
             />
           }
@@ -129,12 +129,12 @@ export function HomeFullControl() {
   return (
     <HomeSection aria-labelledby="home-control-heading">
       <Reveal>
-        <HomeSectionHeading id="home-control-heading" lines={['Full control,', 'no compromise.']} />
+        <HomeSectionHeading id="home-control-heading" lines={['Your assets.', 'Your decisions.']} />
       </Reveal>
       <Grid gridTemplateColumns={['1fr', null, '1fr 1fr']} gap="space.03" mt="space.05">
         <FeatureCard
           title="Send and receive"
-          description="Transfer Bitcoin, tokens, and collectibles securely and instantly, with clear transaction details every step of the way."
+          description="Send and receive Bitcoin, STX and supported Stacks tokens. Check the recipient, amount and fees before approving."
           visual={
             <LottieAnimation
               src={`${animationsPath}/send-and-receive.lottie.json`}
@@ -147,14 +147,14 @@ export function HomeFullControl() {
           }
         />
         <FeatureCard
-          title="Your collection, beautifully organised"
+          title="Your tokens, at a glance"
           tag="Mobile"
-          description="See all your tokens and stacks collectibles at a glance, designed for clarity and a clean visual experience."
+          description="View your Bitcoin and Stacks token balances together, and choose an asset to see its details."
           visual={
             <LottieAnimation
-              src={`${animationsPath}/collection.lottie.json`}
-              poster="/marketing/home/collection.webp"
-              alt="The Tokens tab listing Stacks, Bitcoin and sBTC balances"
+              src="/marketing/home/current/mobile-tokens.lottie.json"
+              poster="/marketing/home/current/mobile-tokens.png"
+              alt="A mobile asset list with Bitcoin, STX, sBTC and USDCx balances"
               aspect={largeCardAspect}
             />
           }
@@ -166,15 +166,21 @@ export function HomeFullControl() {
         mt="space.03"
       >
         <FeatureCard
-          title="Send sBTC without fees"
-          description="Transfer securely and instantly, with clear review step at every transaction."
-          image="/marketing/home/send-sbtc.svg"
-          imageAlt="Sending 0.1 sBTC, sponsored with no transaction fees"
-          imageAspect="390 / 280"
+          title="Explore apps from your wallet"
+          tag="Mobile"
+          description="Browse Bitcoin and Stacks apps in Leather, then review the transactions they request."
+          visual={
+            <LottieAnimation
+              src="/marketing/home/current/apps-browser.lottie.json"
+              poster="/marketing/home/current/apps-browser.png"
+              alt="Leather’s in-app browser showing Bitcoin and Stacks app categories"
+              aspect={smallCardAspect}
+            />
+          }
         />
         <FeatureCard
           title="Know every move"
-          description="Review your past transactions with full transparency and detail."
+          description="Check transaction status, amounts and fees in your activity history."
           image="/marketing/home/know-every-move.svg"
           imageAlt="Activity list with sending, sent and received transactions"
           imageAspect="390 / 280"
@@ -182,7 +188,7 @@ export function HomeFullControl() {
         <FeatureCard
           title="Get BTC notifications"
           tag="Extension"
-          description="Get instant notification every time you receive Bitcoin in your wallet."
+          description="Turn on browser notifications for alerts when Bitcoin sends and receives confirm."
           visual={
             <LottieAnimation
               src={`${animationsPath}/btc-notifications.lottie.json`}
@@ -201,7 +207,7 @@ export function HomeProtection() {
   return (
     <HomeSection aria-labelledby="home-protection-heading">
       <Reveal>
-        <HomeSectionHeading id="home-protection-heading" lines={['Protection', 'at every step.']} />
+        <HomeSectionHeading id="home-protection-heading" lines={['Clarity,', 'at every step.']} />
       </Reveal>
       <Grid
         gridTemplateColumns={['1fr', null, 'repeat(2, 1fr)', 'repeat(3, 1fr)']}
@@ -209,14 +215,14 @@ export function HomeProtection() {
         mt="space.07"
       >
         <FeatureCard
-          title="Stay spam free"
+          title="Show or hide tokens"
           tag="Extension"
-          description="Filter unwanted tokens and collectibles, keeping your wallet clean and safe."
+          description="Use Manage tokens to show or hide individual supported tokens in your asset list."
           visual={<SpamFreeAnimation aspect={smallCardAspect} />}
         />
         <FeatureCard
           title="Review transactions"
-          description="Transfer securely and instantly, with clear review step at every transaction."
+          description="Review transaction details, requested changes and network fees before you approve."
           visual={
             <LottieAnimation
               src={`${animationsPath}/review-transactions.lottie.json`}
@@ -227,12 +233,17 @@ export function HomeProtection() {
           }
         />
         <FeatureCard
-          title="UTXO protection"
-          tag="Extension"
-          description="Prevent accidental misuse of Ordinal Inscriptions with UTXO safeguards."
-          image="/marketing/home/utxo-protection.webp"
-          imageAlt="An inscription of a psychedelic cat with a lock badge"
-          imageAspect="780 / 560"
+          title="Your portfolio on the web"
+          tag="Web"
+          description="Connect Leather to view your Bitcoin and Stacks balances and activity in your browser."
+          visual={
+            <LottieAnimation
+              src="/marketing/home/current/web-portfolio.lottie.json"
+              poster="/marketing/home/current/web-portfolio.png"
+              alt="A web portfolio listing Bitcoin, STX and USDCx balances"
+              aspect={smallCardAspect}
+            />
+          }
         />
       </Grid>
     </HomeSection>

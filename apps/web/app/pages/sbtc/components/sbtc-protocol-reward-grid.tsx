@@ -56,80 +56,16 @@ function RewardProtocolEnrollCell({
   );
 }
 
-function TotalValueLockedCell({ pool }: RewardProtocolCellProps): ReactElement {
-  const {
-    concepts: { tvlConcept },
-  } = useLoaderData<typeof loader>();
-  if (!tvlConcept) return <></>;
-  return (
-    <ValueDisplayer
-      name={
-        <BasicPageHoverCard
-          title={tvlConcept?.name ?? 'Total Value Locked (TVL)'}
-          slug={tvlConcept?.relatedLegacyPost?.slug.current ?? ''}
-          description={tvlConcept?.description ?? ''}
-          label="Total Value Locked (TVL)"
-          textStyle="label.03"
-        />
-      }
-      value={
-        <>
-          {pool.tvl}
-          <Box textStyle="label.03">{pool.tvlUsd}</Box>
-        </>
-      }
-      textAlign="left"
-    />
-  );
+function VariableYieldCell(): ReactElement {
+  return <ValueDisplayer name="Yield" value="Variable" textAlign="left" />;
 }
 
-function HistoricalAprCell({ pool }: RewardProtocolCellProps): ReactElement {
-  const {
-    concepts: { historicalYieldConcept },
-  } = useLoaderData<typeof loader>();
-  if (!historicalYieldConcept) return <></>;
-  return (
-    <ValueDisplayer
-      name={
-        <BasicPageHoverCard
-          title={historicalYieldConcept?.name ?? 'Historical yield'}
-          slug={historicalYieldConcept?.relatedLegacyPost?.slug.current ?? ''}
-          description={historicalYieldConcept?.description ?? ''}
-          label="Historical yield"
-          textStyle="label.03"
-        />
-      }
-      value={pool.apr}
-      textAlign="left"
-    />
-  );
+function ProviderFeesCell(): ReactElement {
+  return <ValueDisplayer name="Fees" value="See provider" textAlign="left" />;
 }
 
-function MinimumCommitmentCell({ pool }: RewardProtocolCellProps) {
-  const {
-    concepts: { minimumCommitmentConcept },
-  } = useLoaderData<typeof loader>();
-  if (!minimumCommitmentConcept) return <></>;
-  return (
-    <ValueDisplayer
-      name={
-        <BasicPageHoverCard
-          title={minimumCommitmentConcept?.name ?? 'Minimum commitment'}
-          slug={minimumCommitmentConcept?.relatedLegacyPost?.slug.current ?? ''}
-          description={minimumCommitmentConcept?.description ?? ''}
-          label="Minimum commitment"
-          textStyle="label.03"
-        />
-      }
-      value={
-        <>
-          {pool.minCommitment}
-          <Box textStyle="label.03">{pool.minCommitmentUsd}</Box>
-        </>
-      }
-      textAlign="left"
-    />
-  );
+function MinimumCommitmentCell(): ReactElement {
+  return <ValueDisplayer name="Minimum commitment" value="See provider" textAlign="left" />;
 }
 
 function PayoutTokenCell({ pool }: RewardProtocolCellProps): ReactElement {
@@ -180,9 +116,9 @@ export function SbtcProtocolRewardGrid({
     <SbtcProtocolRewardGridLayout
       primaryCell={<RewardProtocolEnrollCell pool={pool} action={enrollAction} />}
       cells={[
-        <TotalValueLockedCell key={`${pool.id}-tvl`} pool={pool} />,
-        <HistoricalAprCell key={`${pool.id}-apr`} pool={pool} />,
-        <MinimumCommitmentCell key={`${pool.id}-minCommitment`} pool={pool} />,
+        <VariableYieldCell key={`${pool.id}-yield`} />,
+        <ProviderFeesCell key={`${pool.id}-fees`} />,
+        <MinimumCommitmentCell key={`${pool.id}-minCommitment`} />,
         <PayoutTokenCell key={`${pool.id}-token`} pool={pool} />,
       ]}
       {...props}

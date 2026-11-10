@@ -68,7 +68,7 @@ export function LedgerAnimation() {
     const wrapper = wrapperRef.current;
     if (reducedMotion !== false || !wrapper) return;
     const observer = new IntersectionObserver(
-      ([entry]) => setIsInView(entry?.isIntersecting ?? false),
+      ([entry]) => setIsInView(Boolean(entry?.isIntersecting && entry.intersectionRatio >= 0.5)),
       { threshold: 0.5 }
     );
     observer.observe(wrapper);
@@ -118,7 +118,10 @@ const spamActivate: AnimationSegment = [200, 300];
 
 /** "Stay spam free": idle loop, plus a real toggle button that flips the Hide spam switch. */
 export function SpamFreeAnimation({ aspect }: { aspect: string }) {
-  const lottie = useLottie({ src: `${animationsPath}/spam-free.lottie.json`, segment: spamIdle });
+  const lottie = useLottie({
+    src: '/marketing/home/current/asset-visibility.lottie.json',
+    segment: spamIdle,
+  });
   const { animation, isReady } = lottie;
   const [hideSpam, setHideSpam] = useState(false);
   const hasToggled = useRef(false);
@@ -132,15 +135,15 @@ export function SpamFreeAnimation({ aspect }: { aspect: string }) {
   return (
     <LottieFrame
       lottie={lottie}
-      poster="/marketing/home/spam-free.webp"
-      alt="A Hide spam toggle above a list of suspicious tokens"
+      poster="/marketing/home/current/asset-visibility.png"
+      alt="Manage tokens with separate visibility switches for sBTC and USDCx"
       aspect={aspect}
     >
       {isReady && (
         <styled.button
           type="button"
           aria-pressed={hideSpam}
-          aria-label="Play the Hide spam demo"
+          aria-label="Toggle USDCx visibility in the illustration"
           onClick={() => {
             hasToggled.current = true;
             setHideSpam(pressed => !pressed);

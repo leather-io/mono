@@ -20,13 +20,6 @@ function wordDelay(lineIndex: number, wordIndex: number) {
   return `${Math.round((headlineStartDelay + index * headlineWordStagger) * 1000)}ms`;
 }
 
-const partners = [
-  { name: 'Coinbase', src: '/marketing/home/partner-coinbase.webp', width: 140 },
-  { name: 'Binance', src: '/marketing/home/partner-binance.webp', width: 140 },
-  { name: 'MoonPay', src: '/marketing/home/partner-moonpay.webp', width: 140 },
-  { name: 'Gate', src: '/marketing/home/partner-gate.webp', width: 106 },
-];
-
 function PhishingNotice() {
   return (
     <Flex
@@ -44,8 +37,8 @@ function PhishingNotice() {
         <ErrorTriangleIcon variant="small" />
       </Flex>
       <styled.p>
-        There is an active email phishing 2FA scam. Leather will never send you an email. Do not
-        click any links.
+        Your Secret Key gives access to your wallet. Keep it backed up and never share it with
+        anyone.
       </styled.p>
     </Flex>
   );
@@ -104,8 +97,8 @@ export function HomeHero() {
               },
             }}
           >
-            Leather is a wallet for Bitcoin and Stacks, designed for security, clarity, and growth.
-            Join 100,000+ users on your favorite platform.
+            Your Bitcoin and Stacks wallet. Manage your assets, connect to apps, and explore Bitcoin
+            DeFi on mobile and in your browser.
           </styled.p>
           <Box
             _motionSafe={{
@@ -168,29 +161,12 @@ export function HomeHero() {
         mt={['space.07', null, 'space.05']}
       >
         <styled.p textStyle="caption.01" color="ink.text-secondary" maxW="160px">
-          Buy instantly through trusted partners.
+          Buy through Onramper.
         </styled.p>
-        <styled.ul
-          aria-label="Partners"
-          display="flex"
-          alignItems="center"
-          justifyContent="space-between"
-          gap={['space.02', null, 'space.09']}
-          flex={[null, null, '0 1 794px']}
-        >
-          {partners.map(partner => (
-            <styled.li key={partner.name} flexShrink={1} minW={0}>
-              <styled.img
-                src={partner.src}
-                alt={partner.name}
-                style={{ width: partner.width }}
-                maxW="100%"
-                height="auto"
-                loading="lazy"
-              />
-            </styled.li>
-          ))}
-        </styled.ul>
+        <styled.p textStyle="body.02" color="ink.text-secondary" flex={[null, null, '0 1 794px']}>
+          Compare purchase options in Leather’s buy flow. Available providers, payment methods,
+          fees, and limits depend on your location.
+        </styled.p>
       </Flex>
     </styled.section>
   );

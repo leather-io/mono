@@ -31,7 +31,7 @@ export function meta() {
     {
       name: 'description',
       content:
-        'Earn sBTC yield through integrated DeFi protocols while maintaining control of your Bitcoin.',
+        'Explore independent sBTC providers on Stacks and compare their strategies, reward tokens and current terms.',
     },
   ] satisfies MetaDescriptor[];
 }

@@ -55,7 +55,7 @@ function ProviderTable({ providers }: { providers: Provider[] }) {
             color="ink.text-non-interactive"
             pb="space.03"
           >
-            Historical yield
+            Offering
           </styled.th>
         </tr>
       </thead>
@@ -155,9 +155,9 @@ function YieldCard({ href, title, icon, cta, rate, groups }: YieldCardProps) {
             {rate}
           </styled.p>
           <styled.p textStyle="caption.01" fontWeight="500" lineHeight="16px">
-            Based on avg. past
+            Rates and rewards
             <br />
-            yearly rewards
+            vary by provider
           </styled.p>
         </Flex>
       </Grid>
@@ -190,11 +190,11 @@ export function HomeProviders() {
             <Reveal>
               <HomeSectionHeading
                 id="home-providers-heading"
-                lines={['The best providers,', 'in one place.']}
+                lines={['Explore providers,', 'on your terms.']}
               />
               <styled.p textStyle="body.01" mt="space.02" maxW="330px">
-                We’ve aggregated the best for you, so your assets work harder with full transparency
-                and steady yields over time.
+                Explore ways to use sBTC and stake STX. Compare each provider’s rates, fees, payout
+                assets, and withdrawal terms before you commit.
               </styled.p>
             </Reveal>
           </Box>
@@ -204,63 +204,66 @@ export function HomeProviders() {
             href="/sbtc"
             title="sBTC"
             icon="/marketing/home/icon-sbtc.webp"
-            cta="Earn BTC"
-            rate="5%"
+            cta="Use sBTC"
+            rate="Variable"
             groups={[
               {
-                title: 'Bitcoin on layer 2',
+                title: 'Bitcoin in Stacks DeFi',
                 description:
-                  'Turn your Bitcoin into an active asset. Earn rewards, use it in DeFi, and explore new ways to grow your BTC on layer 2.',
+                  'Use sBTC, a Bitcoin-backed asset on Stacks, in lending markets and liquidity pools. Returns depend on the strategy and market conditions; fees and risks vary.',
                 providers: [
                   {
-                    name: 'sBTC Rewards Program',
-                    logo: '/marketing/home/icon-sbtc.webp',
-                    yield: 'Up to 5% on your Bitcoin, paid in sBTC',
+                    name: 'Zest',
+                    logo: '/marketing/home/provider-zest.png',
+                    yield: 'Lending markets',
                   },
-                  { name: 'Zest', logo: '/marketing/home/provider-zest.png', yield: '5.2%' },
-                  { name: 'Bitflow', logo: '/marketing/home/provider-bitflow.png', yield: '5.1%' },
+                  {
+                    name: 'Bitflow',
+                    logo: '/marketing/home/provider-bitflow.png',
+                    yield: 'Liquidity pools',
+                  },
                 ],
               },
             ]}
           />
           <YieldCard
             href="/staking"
-            title="Staking"
+            title="STX Staking"
             icon="/marketing/home/icon-stx.png"
-            cta="Start Staking"
-            rate="6–10%"
+            cta="View pools"
+            rate="Variable"
             groups={[
               {
-                title: 'Pooled staking',
+                title: 'Pooled Stacking',
                 description:
-                  'Stake with others to earn BTC. Your STX stay locked for each cycle, and you earn steady rewards.',
+                  'Commit STX to help secure Stacks and earn Bitcoin rewards. Lock periods, fees, claim steps, and BTC or sBTC payouts depend on the pool.',
                 providers: [
                   {
                     name: 'Stacking DAO',
                     logo: '/marketing/home/provider-stacking-dao.png',
-                    yield: '9.27%',
+                    yield: 'Pool-specific terms',
                   },
                   {
-                    name: 'Fast pool',
+                    name: 'Fast Pool',
                     logo: '/marketing/home/provider-fast-pool.png',
-                    yield: '8.59%',
+                    yield: 'Pool-specific terms',
                   },
                   {
                     name: 'PlanBetter',
                     logo: '/marketing/home/provider-planbetter.png',
-                    yield: '8.57%',
+                    yield: 'Operator BTC payouts',
                   },
                 ],
               },
               {
-                title: 'Liquid Staking',
+                title: 'Liquid Stacking',
                 description:
-                  'Keep your STX flexible and still earn BTC. Get a liquid token that lets you trade or use your staked STX anytime.',
+                  'Receive a token representing a Stacking position. Rewards may compound in STX or be claimable as sBTC, depending on the product. Swaps and withdrawals depend on liquidity and provider terms.',
                 providers: [
                   {
                     name: 'Stacking DAO',
                     logo: '/marketing/home/provider-stacking-dao.png',
-                    yield: '8.72%',
+                    yield: 'stSTX / stSTXbtc',
                   },
                 ],
               },

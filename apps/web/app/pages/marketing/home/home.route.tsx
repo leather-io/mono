@@ -37,7 +37,11 @@ export default function HomeRoute({ loaderData }: Route.ComponentProps) {
       <HomeProtection />
       <HomeTrust />
       <HomeProviders />
-      <ChangelogStrip entries={loaderData.changelog} mt={['112px', null, '160px', '200px']} />
+      <ChangelogStrip
+        heading="From the changelog"
+        entries={loaderData.changelog}
+        mt={['112px', null, '160px', '200px']}
+      />
     </MarketingPage>
   );
 }

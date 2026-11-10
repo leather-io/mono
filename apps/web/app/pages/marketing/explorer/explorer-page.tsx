@@ -225,9 +225,9 @@ function AppTabs() {
         px={columnPx}
         mb="space.05"
       >
-        More apps to
+        More apps
         <br />
-        earn in Stacks
+        on Stacks
       </styled.h2>
       <Tabs.Root defaultValue={defaultTab?.id}>
         <Tabs.List aria-label="App categories">

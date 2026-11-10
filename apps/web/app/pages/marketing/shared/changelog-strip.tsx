@@ -105,7 +105,7 @@ export function ChangelogStrip({ entries, heading = 'Changelog', ...props }: Cha
             _hover={{ color: 'ink.action-primary-hover' }}
             mb={[null, null, 'space.01']}
           >
-            See what’s new in Leather
+            View the changelog
           </StyledLink>
         </Flex>
       </Reveal>

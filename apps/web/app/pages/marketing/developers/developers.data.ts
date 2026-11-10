@@ -2,9 +2,9 @@
 // leather.io). Each doc is a CMS post served at /posts/<slug>.
 
 export const developersIntro = {
-  title: 'Everything you need to start building',
+  title: 'Build with Leather',
   description:
-    "Whether you're just getting started or you're deep into development, you'll find everything you need right here. From quick-start guides to in-depth API references, this space is designed to help you ship faster and smarter.",
+    'Explore APIs for connecting accounts and requesting Bitcoin and Stacks transactions. Check the documentation for method support, permissions and platform differences.',
 };
 
 export const developerDocsHeading = 'Start developing with Leather';

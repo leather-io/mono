@@ -122,7 +122,7 @@ function StakingOptionCard({ option }: { option: (typeof stakingOptions)[number]
               color="ink.text-non-interactive"
               pb="space.03"
             >
-              Historical yield
+              Token
             </styled.th>
           </tr>
         </thead>
@@ -145,7 +145,7 @@ function StakingOptionCard({ option }: { option: (typeof stakingOptions)[number]
                 </Flex>
               </styled.td>
               <styled.td py="space.04" pl="space.03" textAlign="right" textStyle="caption.01">
-                {provider.historicalYield}
+                {provider.rewardDetails}
               </styled.td>
             </styled.tr>
           ))}

@@ -19,29 +19,29 @@ interface TrustCard {
 const trustCards: TrustCard[] = [
   {
     title: 'Open source by design',
-    description:
-      'Transparent by design. Community-tested and reviewed to ensure the highest level of safety.',
-    href: 'https://github.com/leather-io',
+    description: 'Explore Leather’s public code, review changes, and see how the wallet is built.',
+    href: 'https://github.com/leather-io/mono',
     icon: <MagnifyingGlassIcon variant="small" />,
     image: '/marketing/home/trust-github.webp',
     imageAlt: 'GitHub',
   },
   {
-    title: 'Audited by Least Authority',
-    description: 'Reviewed by one of the most respected security firms in the crypto industry.',
+    title: 'A published extension audit',
+    description:
+      'Least Authority audited the Hiro Stacks Wallet browser extension in 2021. Read the report for its scope and findings.',
     href: 'https://leastauthority.com/blog/audit-of-hiros-stacks-wallet/',
     icon: <ShieldIcon variant="small" />,
     image: '/marketing/home/trust-least-authority.webp',
     imageAlt: 'Least Authority',
   },
   {
-    title: 'Field tested by hackerone.com',
+    title: 'Report a security issue',
     description:
-      'Validated by ethical hackers who continuously identify and resolve vulnerabilities.',
-    href: 'https://hackerone.com/leather_wallet',
+      'Found a vulnerability? Follow our disclosure instructions or contact security@leather.io privately.',
+    href: 'https://github.com/leather-io/mono/tree/dev/apps/extension#security',
     icon: <PulseIcon variant="small" />,
-    image: '/marketing/home/trust-hackerone.webp',
-    imageAlt: 'HackerOne',
+    image: '/marketing/home/trust-github.webp',
+    imageAlt: 'Security reporting instructions on GitHub',
   },
 ];
 

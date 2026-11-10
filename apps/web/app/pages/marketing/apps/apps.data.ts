@@ -31,7 +31,7 @@ export const coreTokens: CoreToken[] = [
     icon: `${assetBase}/btc.svg`,
     action: 'buy',
     description:
-      'The most secure and decentralized asset. BTC can be safely stored in Leather and used across Bitcoin and Stacks apps.',
+      'Bitcoin is the native asset of the Bitcoin network. Use Leather to manage BTC and connect to supported Bitcoin apps.',
   },
   {
     symbol: 'STX',
@@ -39,7 +39,7 @@ export const coreTokens: CoreToken[] = [
     icon: `${assetBase}/stx.webp`,
     action: 'buy',
     description:
-      'The token that powers Stacks. STX is used to pay for transactions and can be staked to earn Bitcoin rewards on the network.',
+      'The token that powers Stacks. Use STX for transaction fees or stake with a pool for variable rewards paid in sBTC.',
   },
   {
     symbol: 'sBTC',
@@ -47,16 +47,16 @@ export const coreTokens: CoreToken[] = [
     action: 'get',
     href: 'https://sbtc.stacks.co/',
     description:
-      'A 1:1 BTC backed that does not rely on a centralized custodian. Lets you use Bitcoin in Stacks apps.',
+      'A token on Stacks backed 1:1 by BTC held through the sBTC protocol. Use sBTC in supported Stacks apps.',
   },
   {
     symbol: 'USDCx',
     icon: `${assetBase}/usdc.svg`,
     action: 'get',
-    href: 'https://bridge.stacks.co/usdc/eth/stx?recipient=SP1ZS9BX25WFYGHKHGY399057HT4MBH6TQMS8ZKTE',
+    href: 'https://bridge.stacks.co/usdc/eth/stx',
     inlineLink: { text: 'Circle', href: 'https://www.circle.com' },
     description:
-      'A 1:1 USD-backed stablecoin issued by Circle via xReserve and native to Stacks for payments and on-chain stability.',
+      'A stablecoin on Stacks backed by USDC held in Circle xReserve, for payments and DeFi.',
   },
 ];
 
@@ -67,16 +67,16 @@ export const coreTokens: CoreToken[] = [
 interface StakingProvider {
   name: string;
   logo: string;
-  historicalYield: string;
+  rewardDetails: string;
 }
 
 const stackingDaoLogo = `${assetBase}/provider-stacking-dao.webp`;
 
 export const dualStacking = {
-  title: 'Dual stacking',
-  highlight: 'Up to 5% APY in sBTC',
-  description: 'Hold sBTC & boost with STX Stacking or DeFi',
-  cta: 'Start earning',
+  title: 'Staking opportunities',
+  highlight: 'Variable rewards',
+  description: 'Explore current STX staking and sBTC options',
+  cta: 'Explore options',
   href: 'https://app.stacks.co/',
   image: { src: `${assetBase}/dual-stacking-coins.webp`, width: 828, height: 434 },
 };
@@ -92,24 +92,28 @@ export const stakingOptions: StakingOption[] = [
   {
     title: 'Pooled staking',
     description:
-      'Stake with others to earn BTC. Your STX stay locked for each cycle, and you earn steady rewards.',
+      'Stake STX with a pool for variable sBTC rewards. Payout methods and fees depend on the provider.',
     href: '/staking',
     providers: [
-      { name: 'Stacking DAO', logo: stackingDaoLogo, historicalYield: '9.27%' },
-      { name: 'Fast pool', logo: `${assetBase}/provider-fast-pool.webp`, historicalYield: '8.59%' },
+      { name: 'Stacking DAO', logo: stackingDaoLogo, rewardDetails: 'sBTC' },
+      {
+        name: 'Fast pool',
+        logo: `${assetBase}/provider-fast-pool.webp`,
+        rewardDetails: 'sBTC / BTC',
+      },
       {
         name: 'PlanBetter',
         logo: `${assetBase}/provider-planbetter.webp`,
-        historicalYield: '8.57%',
+        rewardDetails: 'BTC',
       },
     ],
   },
   {
     title: 'Liquid Staking',
     description:
-      'Keep your STX flexible and still earn BTC. Get a liquid token that lets you trade or use your staked STX anytime.',
+      'Receive a token representing staked STX. Rewards, redemption terms and market liquidity depend on the protocol.',
     href: '/staking',
-    providers: [{ name: 'Stacking DAO', logo: stackingDaoLogo, historicalYield: '8.72%' }],
+    providers: [{ name: 'Stacking DAO', logo: stackingDaoLogo, rewardDetails: 'stSTX' }],
   },
 ];
 
@@ -140,25 +144,25 @@ const alex = project(
   'ALEX',
   'alex',
   'logo-alex.webp',
-  'A DeFi platform on Stacks offering swaps, staking, fixed-term lending, and cross-chain liquidity with Bitcoin...'
+  'A DeFi platform on Stacks with token swaps and liquidity pools.'
 );
 const arkadiko = project(
   'Arkadiko',
   'arkadiko',
   'logo-arkadiko.svg',
-  'A Bitcoin-secured protocol for vault-based borrowing, USDA minting, and decentralized smart contract automatio...'
+  'A protocol on Stacks for vault-based borrowing and USDA minting.'
 );
 const bitflow = project(
   'Bitflow',
   'bitflow',
   'logo-bitflow.webp',
-  'A Bitcoin-native DEX aggregator and liquidity hub that sources the best prices across Stacks-based protocols.'
+  'A DEX aggregator and liquidity hub for token swaps on Stacks.'
 );
 const bnsOne = project(
   'BNS One',
   'bns-one',
   'logo-bns-one.webp',
-  'BNS One is a Bitcoin Name System platform for registering and managing .btc domain names on Bitcoin via the St...',
+  'A platform for registering and managing .btc names through the Bitcoin Name System on Stacks.',
   // The per-app BNS posts redirect to the BNS explainer; link there directly
   'bns'
 );
@@ -166,7 +170,7 @@ const bnsHub = project(
   'BNSv2 Hub',
   'bns-hub',
   'logo-bns-hub.webp',
-  'BNS Hub is the BNS V2 management platform for registering names, creating namespaces, and building with the BN...',
+  'A BNS V2 platform for managing names and namespaces on Stacks.',
   // The per-app BNS posts redirect to the BNS explainer; link there directly
   'bns'
 );
@@ -186,31 +190,31 @@ const granite = project(
   'Granite',
   'granite',
   'logo-granite.svg',
-  'Use sBTC to borrow stablecoins non-custodially, without risk of forced liquidations'
+  'A lending protocol for borrowing stablecoins against sBTC collateral.'
 );
 const hermetica = project(
   'Hermetica',
   'hermetica',
   'logo-hermetica.svg',
-  'A Bitcoin-backed synthetic dollar that generates up to 25% APY through delta-neutral strategies'
+  'A synthetic dollar protocol using Bitcoin-based hedging strategies. Yield and terms vary.'
 );
 const lisa = project(
   'LISA',
   'lisa',
   'logo-lisa.webp',
-  'A liquid staking protocol built on Stacks that lets you earn yield on assets like STX and ALEX—without locking...'
+  'A liquid staking protocol on Stacks. Token support, rewards and redemption terms depend on the protocol.'
 );
 const stackingDao = project(
   'Stacking DAO',
   'stacking-dao',
   'logo-stacking-dao.webp',
-  'Stacking infrastructure offering native and liquid options with BTC and STX-based yield'
+  'A provider of pooled and liquid STX staking, with rewards and payout terms specific to each option.'
 );
 const bnsGateway = project(
   'STX City - BNS Gateway',
   'bns-gateway',
   'logo-bns-gateway.webp',
-  'BNS Gateway on STX.CITY is a marketplace and registration platform for .btc domains, with analytics, social fe...',
+  'A marketplace and registration platform for .btc names on STX.CITY.',
   // The per-app BNS posts redirect to the BNS explainer; link there directly
   'bns'
 );
@@ -224,7 +228,7 @@ const zest = project(
   'Zest Protocol',
   'zest',
   'logo-zest.svg',
-  'A Bitcoin-native protocol on Stacks for borrowing, lending, and yield generation through overcollateralized lo...'
+  'A borrowing and lending protocol on Stacks.'
 );
 
 /** Alphabetical, as on leather.io. */
