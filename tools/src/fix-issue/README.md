@@ -177,7 +177,9 @@ can edit, so an allowlist would not be a boundary either. The job uses no shared
 caches are off (`TURBO_CACHE` and `PNPM_CACHE` in `provision`), because `setup-node` saves the
 pnpm store after the job on a cache miss, and a store the fixer could have changed would then be
 restored by every workflow on `dev`, including `open-pull-request` and the release jobs. The
-Playwright browsers are only restored, never saved. What it can reach: its job holds the
+Playwright browsers are only restored, never saved. The fixer's and the reviewer's full transcripts reach the log only
+outside `leather-io/mono` (`show_full_output`): on the public repository a transcript could carry
+a secret in a form GitHub does not mask, so debug a run there by reproducing it on a fork. What it can reach: its job holds the
 OAuth token for Claude (the action needs it) and a read-only GitHub token, and its shell inherits
 both.
 

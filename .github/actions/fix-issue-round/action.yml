@@ -36,7 +36,7 @@ runs:
           --model opus
           --permission-mode auto
           --permission-prompts none
-        show_full_output: true
+        show_full_output: ${{ github.repository != 'leather-io/mono' }}
         path_to_bun_executable: ${{ inputs.bun-executable }}
         settings: >-
           {"hooks": {"Stop": [{"hooks": [{"type": "command",
@@ -61,7 +61,7 @@ runs:
           --model opus
           --permission-mode auto
           --permission-prompts none
-        show_full_output: true
+        show_full_output: ${{ github.repository != 'leather-io/mono' }}
         path_to_bun_executable: ${{ inputs.bun-executable }}
         settings: >-
           {"hooks": {"Stop": [{"hooks": [{"type": "command",

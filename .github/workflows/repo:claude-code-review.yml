@@ -58,7 +58,7 @@ jobs:
             --allowedTools "Bash(gh pr view:*) Bash(gh pr diff:*) Bash(gh pr list:*)"
           use_sticky_comment: true
           classify_inline_comments: true
-          show_full_output: true
+          show_full_output: ${{ github.repository != 'leather-io/mono' }}
           track_progress: true
           prompt: |
             Review this PR. Focus on:
