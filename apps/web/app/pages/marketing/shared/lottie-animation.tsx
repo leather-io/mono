@@ -10,6 +10,8 @@ import {
 import { styled } from 'leather-styles/jsx';
 import type { AnimationItem, AnimationSegment, LottiePlayer } from 'lottie-web';
 
+import { loadAnimationWithRetry } from './animation-loading';
+
 // The SVG build, not lottie_light: several home animations use Gaussian Blur and Drop Shadow,
 // which only the full SVG renderer draws (as SVG filters).
 async function importLottiePlayer(): Promise<LottiePlayer> {
@@ -61,12 +63,16 @@ export function usePrefersReducedMotion() {
 export function useNearViewport(
   ref: RefObject<HTMLElement | null>,
   enabled: boolean,
-  rootMargin = '200px 0px'
+  rootMargin = '800px 0px'
 ) {
   const [isNear, setIsNear] = useState(false);
   useEffect(() => {
     const element = ref.current;
     if (!enabled || isNear || !element) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      setIsNear(true);
+      return;
+    }
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry?.isIntersecting) return;
@@ -79,6 +85,57 @@ export function useNearViewport(
     return () => observer.disconnect();
   }, [ref, enabled, isNear, rootMargin]);
   return isNear;
+}
+
+type LottieReadinessEvent = 'DOMLoaded' | 'loaded_images' | 'data_failed' | 'error';
+
+interface LottieReadinessItem {
+  isLoaded: boolean;
+  imagePreloader?: { loadedImages(): boolean } | null;
+  addEventListener(name: LottieReadinessEvent, callback: () => void): () => void;
+  removeEventListener(name: LottieReadinessEvent, callback: () => void): void;
+}
+
+export function waitForLottieReady(
+  item: LottieReadinessItem,
+  hasImages: boolean,
+  signal: AbortSignal
+): Promise<boolean> {
+  return new Promise(resolve => {
+    let domLoaded = item.isLoaded;
+    let imagesLoaded = !hasImages;
+    function finish(ready: boolean) {
+      item.removeEventListener('DOMLoaded', markDomLoaded);
+      item.removeEventListener('loaded_images', markImagesLoaded);
+      item.removeEventListener('data_failed', failed);
+      item.removeEventListener('error', failed);
+      signal.removeEventListener('abort', failed);
+      resolve(ready);
+    }
+    function checkReady() {
+      if (domLoaded && (imagesLoaded || item.imagePreloader?.loadedImages() === true)) {
+        finish(true);
+      }
+    }
+    function markDomLoaded() {
+      domLoaded = true;
+      checkReady();
+    }
+    function markImagesLoaded() {
+      imagesLoaded = true;
+      checkReady();
+    }
+    function failed() {
+      finish(false);
+    }
+    item.addEventListener('DOMLoaded', markDomLoaded);
+    item.addEventListener('loaded_images', markImagesLoaded);
+    item.addEventListener('data_failed', failed);
+    item.addEventListener('error', failed);
+    signal.addEventListener('abort', failed, { once: true });
+    if (signal.aborted) failed();
+    else checkReady();
+  });
 }
 
 interface UseLottieOptions {
@@ -120,13 +177,13 @@ export function useLottie({
     const abort = new AbortController();
     let item: AnimationItem | undefined;
 
-    async function load(container: HTMLDivElement) {
+    async function load(container: HTMLDivElement, signal: AbortSignal) {
       const [lottie, animationData] = await Promise.all([
         loadLottiePlayer(),
-        fetchLottieJson(src, abort.signal),
+        fetchLottieJson(src, signal),
       ]);
-      if (abort.signal.aborted) return;
-      item = lottie.loadAnimation({
+      if (signal.aborted) return null;
+      const animationItem = lottie.loadAnimation({
         container,
         renderer: 'svg',
         loop,
@@ -141,19 +198,30 @@ export function useLottie({
         },
       });
 
+      item = animationItem;
+
       // Keep the poster up until bitmaps inside the animation have loaded too
-      let pending = animationData.assets?.some(asset => asset.p) ? 2 : 1;
-      function markLoaded() {
-        pending -= 1;
-        if (pending === 0) setIsReady(true);
+      const loaded = await waitForLottieReady(
+        animationItem,
+        animationData.assets?.some(asset => asset.p) ?? false,
+        signal
+      );
+      if (!loaded || signal.aborted) {
+        animationItem.destroy();
+        if (item === animationItem) item = undefined;
+        return null;
       }
-      item.addEventListener('DOMLoaded', markLoaded);
-      if (pending === 2) item.addEventListener('loaded_images', markLoaded);
-      setAnimation(item);
+      return animationItem;
     }
 
     // On failure the poster simply stays up, which is the intended fallback
-    load(container).catch(() => undefined);
+    async function start(container: HTMLDivElement) {
+      const loaded = await loadAnimationWithRetry(signal => load(container, signal), abort.signal);
+      if (!loaded || abort.signal.aborted) return;
+      setAnimation(loaded);
+      setIsReady(true);
+    }
+    void start(container);
 
     return () => {
       abort.abort();
@@ -166,12 +234,19 @@ export function useLottie({
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!autoplay || !animation || !wrapper) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      animation.play();
+      return () => animation.pause();
+    }
     const observer = new IntersectionObserver(([entry]) => {
       if (entry?.isIntersecting) animation.play();
       else animation.pause();
     });
     observer.observe(wrapper);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      animation.pause();
+    };
   }, [autoplay, animation]);
 
   return { wrapperRef, containerRef, animation, isReady, reducedMotion };
@@ -219,6 +294,7 @@ export function LottieFrame({
         aria-hidden
         position="absolute"
         inset="0"
+        style={{ visibility: lottie.isReady ? 'visible' : 'hidden' }}
         css={{ '& svg': { display: 'block' } }}
       />
       {children}
