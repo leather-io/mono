@@ -6,7 +6,9 @@ import { BitcoinOutcome } from '@/features/approver/components/bitcoin-outcome';
 import { BitcoinFeeCard } from '@/features/approver/components/fees/bitcoin-fee-card';
 import { InputsAndOutputsCard } from '@/features/approver/components/inputs-outputs-card';
 import { OutcomeAddressesCard } from '@/features/approver/components/outcome-addresses-card';
-import { useAverageBitcoinFeeRates } from '@/queries/fees/fee-estimates.hooks';
+import { useAccountAddresses } from '@/hooks/use-account-addresses';
+import { type BitcoinFeeRates, useBitcoinFeeRates } from '@/queries/fees/bitcoin-fee-rates.query';
+import { useBitcoinTransactionFees } from '@/queries/fees/bitcoin-transaction-fees.query';
 import { useCurrentNetworkState } from '@/queries/leather-query-provider';
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import { useGenerateBtcUnsignedTransactionNativeSegwit } from '@/queries/transaction/bitcoin-transactions.hooks';
@@ -20,20 +22,10 @@ import { bytesToHex } from '@noble/hashes/utils';
 import BigNumber from 'bignumber.js';
 import * as Clipboard from 'expo-clipboard';
 
-import {
-  getBitcoinFees,
-  getPsbtAsTransaction,
-  getPsbtDetails,
-  getSizeInfo,
-} from '@leather.io/bitcoin';
+import { getPsbtAsTransaction, getPsbtDetails, getSizeInfo } from '@leather.io/bitcoin';
 import { btcAsset } from '@leather.io/constants';
 import { makeActivityLink } from '@leather.io/features';
-import {
-  type AccountId,
-  type AverageBitcoinFeeRates,
-  type BitcoinNetworkModes,
-  FeeTypes,
-} from '@leather.io/models';
+import { type AccountId, type BitcoinNetworkModes, FeeTypes } from '@leather.io/models';
 import { type RpcParams, type signPsbt } from '@leather.io/rpc';
 import { Approver, Box, SentIcon, type SheetInstance, Text } from '@leather.io/ui/native';
 import {
@@ -70,13 +62,13 @@ interface PsbtSignerProps extends AccountId {
   onClose(): void;
 }
 export function PsbtSigner(props: PsbtSignerProps) {
-  const feeRatesQuery = useAverageBitcoinFeeRates();
+  const feeRatesQuery = useBitcoinFeeRates();
   if (feeRatesQuery.isPending) return null;
   return <BasePsbtSigner feeRates={feeRatesQuery.data} {...props} />;
 }
 
 interface BasePsbtSignerProps extends PsbtSignerProps {
-  feeRates?: AverageBitcoinFeeRates;
+  feeRates?: BitcoinFeeRates;
 }
 function BasePsbtSigner(props: BasePsbtSignerProps) {
   const {
@@ -122,6 +114,10 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
   const feeSheetRef = useRef<SheetInstance>(null);
 
   const utxos = useAccountUtxos(psbtAccounts[0]?.fingerprint, psbtAccounts[0]?.accountIndex);
+  const accountAddresses = useAccountAddresses(
+    psbtAccounts[0]?.fingerprint,
+    psbtAccounts[0]?.accountIndex
+  );
 
   const psbtDetails = useMemo(
     () =>
@@ -143,16 +139,13 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
 
   const coinSelectionUtxos = utxos.value?.available ?? [];
 
-  const [selectedFeeType, setSelectedFeeType] = useState<FeeTypes>(() => {
-    if (!feeRates) return FeeTypes.Custom;
-    const fees = getBitcoinFees({
-      feeRates,
-      recipients,
-      utxos: coinSelectionUtxos,
-      isSendingMax: false,
-    });
-    return getFeeType({ psbtFee: psbtDetails.fee, fees });
+  const { data: fees } = useBitcoinTransactionFees({
+    account: { account: accountAddresses },
+    recipients,
+    isMaxSpend: false,
   });
+  const [chosenFeeType, setChosenFeeType] = useState<FeeTypes | null>(null);
+  const selectedFeeType = chosenFeeType ?? getFeeType({ psbtFee: psbtDetails.fee, fees });
 
   const { txVBytes } = getSizeInfo({
     utxos: psbtDetails.psbtInputs,
@@ -181,12 +174,12 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
   function onChangeFee(feeType: FeeTypes) {
     if (!feeRates) return;
     const feeRateMap: Partial<Record<FeeTypes, number>> = {
-      [FeeTypes.Low]: feeRates.hourFee.toNumber(),
-      [FeeTypes.Middle]: feeRates.halfHourFee.toNumber(),
-      [FeeTypes.High]: feeRates.fastestFee.toNumber(),
+      [FeeTypes.Low]: feeRates.low.rate,
+      [FeeTypes.Middle]: feeRates.standard.rate,
+      [FeeTypes.High]: feeRates.high.rate,
     };
 
-    const feeRate = feeRateMap[feeType] ?? feeRates.fastestFee.toNumber();
+    const feeRate = feeRateMap[feeType] ?? feeRates.high.rate;
     const totalSendValue =
       psbtDetails.addressNativeSegwitTotal.amount.toNumber() +
       psbtDetails.addressTaprootTotal.amount.toNumber() -
@@ -201,7 +194,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
       if (!tx) throw new Error('No tx');
       const psbtHex = bytesToHex(tx.psbt);
 
-      setSelectedFeeType(feeType);
+      setChosenFeeType(feeType);
       setPsbtHex(psbtHex);
       displayToast({
         title: t`Fee updated`,
@@ -308,7 +301,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
 
           <Approver.Section>
             <BitcoinFeeCard
-              disabled={!feeEditorEnabled || !feeRates}
+              disabled={!feeEditorEnabled || !feeRates || !fees}
               feeType={selectedFeeType}
               amount={psbtDetails.fee}
               onPress={() => feeSheetRef.current?.present()}
@@ -345,8 +338,8 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
         sheetRef={feeSheetRef}
         selectedFeeType={selectedFeeType}
         onChangeFee={onChangeFee}
-        fees={feeRates}
-        txSize={txVBytes}
+        fees={fees}
+        currentFee={psbtDetails.fee}
         currentFeeRate={Math.round(psbtDetails.fee.amount.toNumber() / txVBytes)}
       />
     </>

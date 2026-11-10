@@ -17,18 +17,7 @@ import {
 import { type BitcoinNetworkModes, type OwnedUtxo } from '@leather.io/models';
 import { getComplianceService } from '@leather.io/services';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
-import {
-  convertAmountToBaseUnit,
-  createMoney,
-  createMoneyFromDecimal,
-  isError,
-} from '@leather.io/utils';
-
-const defaultStacksFeeMicroStx = 3000;
-
-export function calculateDefaultStacksFee() {
-  return convertAmountToBaseUnit(createMoney(defaultStacksFeeMicroStx, 'STX'));
-}
+import { createMoneyFromDecimal, isError } from '@leather.io/utils';
 
 export function isUserInputEffectivelyZero(input: string) {
   return input === '0' || /^0\.0*$/.test(input);

@@ -9,6 +9,9 @@ export default defineProject({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  esbuild: {
+    jsx: 'automatic',
+  },
   ...defaultVitestUnitTestingConfig,
   test: {
     ...defaultVitestUnitTestingConfig.test,

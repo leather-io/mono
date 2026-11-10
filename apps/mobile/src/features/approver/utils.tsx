@@ -1,4 +1,3 @@
-import { calculateDefaultStacksFee } from '@/features/send/utils';
 import { t } from '@lingui/core/macro';
 import { bytesToHex } from '@noble/hashes/utils';
 import { type StacksNetwork } from '@stacks/network';
@@ -22,7 +21,13 @@ import {
   AnimalRabbitIcon,
   AnimalSnailIcon,
 } from '@leather.io/ui/native';
-import { convertToMoneyTypeWithDefaultOfZero, createMoneyFromDecimal } from '@leather.io/utils';
+import {
+  convertToMoneyTypeWithDefaultOfZero,
+  createMoney,
+  createMoneyFromDecimal,
+} from '@leather.io/utils';
+
+const defaultStacksFeeMicroStx = 3000;
 
 function getBaseFeeData(feeType: FeeTypes) {
   const icon = {
@@ -135,8 +140,7 @@ export function getTxOptions(signer: StacksSigner, stacksNetwork: StacksNetwork)
 }
 
 export function getDefaultFee() {
-  const defaultFee = calculateDefaultStacksFee();
-  return createMoneyFromDecimal(defaultFee, 'STX');
+  return createMoney(defaultStacksFeeMicroStx, 'STX');
 }
 
 export function getApproverFee(sponsored: boolean | undefined) {
