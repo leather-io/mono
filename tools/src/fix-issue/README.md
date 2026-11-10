@@ -173,7 +173,11 @@ boundary. The fixer runs with `--permission-mode auto --permission-prompts none`
 classifier reviews each tool call and refuses the ones that reach beyond the fix, and anything that
 would wait for a person is denied. `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` must stay unset: it forces
 the default permission mode, which turns auto mode off. `pnpm` scripts are arbitrary code the fixer
-can edit, so an allowlist would not be a boundary either. What it can reach: its job holds the
+can edit, so an allowlist would not be a boundary either. The job uses no shared cache: the turbo and pnpm
+caches are off (`TURBO_CACHE` and `PNPM_CACHE` in `provision`), because `setup-node` saves the
+pnpm store after the job on a cache miss, and a store the fixer could have changed would then be
+restored by every workflow on `dev`, including `open-pull-request` and the release jobs. The
+Playwright browsers are only restored, never saved. What it can reach: its job holds the
 OAuth token for Claude (the action needs it) and a read-only GitHub token, and its shell inherits
 both.
 
