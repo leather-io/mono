@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { ExtensionState, whenExtensionState } from '~/utils/utils';
+import { type ExtensionState, type whenExtensionState } from '~/utils/utils';
 
 interface SbtcRewardContextValue {
   whenExtensionState: ReturnType<typeof whenExtensionState>;

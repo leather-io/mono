@@ -1,20 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { createGetAccountTransactionsWithTransfersQueryOptions } from '@leather.io/query';
+import { createStacksAddressTransactionsQueryConfig } from '@leather.io/queries';
 
-import { useCurrentNetworkState } from '@app/query/leather-query-provider';
-
-import { useStacksClient } from '../stacks-client';
+import { useUserSettings } from '@app/hooks/use-user-settings';
 
 export function useGetAccountTransactionsWithTransfersQuery(address: string) {
-  const network = useCurrentNetworkState();
-  const client = useStacksClient();
-
-  return useQuery(
-    createGetAccountTransactionsWithTransfersQueryOptions({
-      address,
-      client,
-      network: network.chain.stacks.url,
-    })
-  );
+  const settings = useUserSettings();
+  return useQuery(createStacksAddressTransactionsQueryConfig(address, settings));
 }

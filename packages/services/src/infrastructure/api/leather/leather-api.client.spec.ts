@@ -129,9 +129,9 @@ describe(LeatherApiClient.name, () => {
     function createClient(
       network: (typeof defaultNetworksKeyedById)[keyof typeof defaultNetworksKeyedById]
     ) {
-      const settingsService = {
+      const settingsService: SettingsService = {
         getSettings: () => ({ quoteCurrency: 'USD', network, assetVisibility: {} }),
-      } as unknown as SettingsService;
+      };
       return new LeatherApiClient(
         new PassthroughHttpCacheService(),
         settingsService,

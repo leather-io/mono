@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import { calculateMaxSpend } from '@leather.io/bitcoin';
-import { AverageBitcoinFeeRates, OwnedUtxo } from '@leather.io/models';
+import { type AverageBitcoinFeeRates, type OwnedUtxo } from '@leather.io/models';
 
 interface CalculateBtcMaxSpendParams {
   recipient: string;

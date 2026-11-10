@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 
 import type { Sip9Asset } from '@leather.io/models';
 
@@ -33,13 +33,8 @@ const supportedContentTypes = [
 
 type SupportedSip9ContentType = (typeof supportedContentTypes)[number];
 
-const supportedContentTypesSet = new Set(supportedContentTypes);
-
-function isSupportedContentType(
-  contentType: string | null
-): contentType is SupportedSip9ContentType {
-  if (contentType === null) return false;
-  return supportedContentTypesSet.has(contentType as SupportedSip9ContentType);
+function toSupportedContentType(contentType: string | null): SupportedSip9ContentType {
+  return supportedContentTypes.find(supportedType => supportedType === contentType) ?? '';
 }
 
 interface Sip9Props {
@@ -60,7 +55,7 @@ async function checkContentType(url: string): Promise<MediaInfo> {
     });
 
     const rawContentType = response.headers.get('content-type');
-    const contentType = isSupportedContentType(rawContentType) ? rawContentType : '';
+    const contentType = toSupportedContentType(rawContentType);
 
     return {
       contentType,
@@ -77,9 +72,9 @@ async function checkContentType(url: string): Promise<MediaInfo> {
 
     return {
       contentType: '',
-      isVideo: videoExtensions.includes(extension ?? ''),
-      isImage: imageExtensions.includes(extension ?? ''),
-      isAudio: audioExtensions.includes(extension ?? ''),
+      isVideo: extension !== undefined && videoExtensions.includes(extension),
+      isImage: extension !== undefined && imageExtensions.includes(extension),
+      isAudio: extension !== undefined && audioExtensions.includes(extension),
     };
   }
 }
@@ -116,10 +111,10 @@ export function Sip9({
       const info = await checkContentType(contentUrl);
       const { contentType, isVideo, isImage, isAudio } = info;
       setMediaInfo({
-        contentType: contentType,
-        isVideo: isVideo,
-        isImage: isImage,
-        isAudio: isAudio,
+        contentType,
+        isVideo,
+        isImage,
+        isAudio,
       });
     }
 

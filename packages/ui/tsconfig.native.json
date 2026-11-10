@@ -16,6 +16,7 @@
     "src/**/*.shared.spec.ts",
     "src/native.ts",
     "src/theme-native/**/*",
-    "src/global.d.ts"
+    "src/global.d.ts",
+    "src/svg.native.d.ts"
   ]
 }

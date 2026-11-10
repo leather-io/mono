@@ -24,9 +24,12 @@ export const SharedComponentsSelectors = {
   SponsoredFeeBadge: 'sponsored-fee-badge',
   FeesListItem: 'fee-list-item',
   FeesListItemFeeValue: 'fee-list-item-fee-value',
+  FeeTabRecommended: 'tab-recommended',
+  FeeTabCustom: 'tab-custom',
 
   // Error
   BroadcastErrorTitle: 'broadcast-error-title',
+  GenericErrorTitle: 'generic-error-title',
   HeaderBackBtn: 'header-back-button',
   HeaderCloseBtn: 'header-close-button',
 

@@ -17,8 +17,11 @@ export function ErrorLayout({ error }: ErrorLayoutProps) {
 
   if (isRouteErrorResponse(error)) {
     message = error.status === 404 ? errorMessages.error404 : errorMessages.error;
+    const data: unknown = error.data;
     details =
-      error.data || (error.status === 404 ? errorMessages.notFound : error.statusText) || details;
+      (typeof data === 'string' && data) ||
+      (error.status === 404 ? errorMessages.notFound : error.statusText) ||
+      details;
     Sentry.captureException(error);
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;

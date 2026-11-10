@@ -1,7 +1,7 @@
-import { ClarityType, ClarityValue, hexToCV } from '@stacks/transactions';
+import { ClarityType, type ClarityValue, hexToCV } from '@stacks/transactions';
 import { isStackingDaoWrapperContract } from '~/data/bitcoin-staking-data';
 import {
-  PendingTransactionArgs,
+  type PendingTransactionArgs,
   expectUintCV,
   getHasPendingTransaction,
 } from '~/features/stacking/direct-stacking-info/utils-pending-txs';

@@ -5,7 +5,7 @@ import {
   Button,
   QuestionCircleIcon,
   Sheet,
-  SheetRef,
+  type SheetRef,
   Text,
   TouchableOpacity,
 } from '@leather.io/ui/native';

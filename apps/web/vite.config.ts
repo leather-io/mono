@@ -28,7 +28,7 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
   css: {
     postcss: {
       // Type error with Panda plugin
-      plugins: [pandacss] as any[],
+      plugins: [pandacss],
     },
   },
   resolve: {

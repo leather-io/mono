@@ -1,3 +1,5 @@
+import spinnerDarkImage from '@/assets/spinner-dark.png';
+import spinnerLightImage from '@/assets/spinner-light.png';
 import { useSettings } from '@/store/settings/settings';
 import { Image } from 'expo-image';
 
@@ -26,15 +28,11 @@ function LoadingAvatarIcon() {
             <Image
               style={{ width: 16, height: 16 }}
               contentFit="cover"
-              source={require('@/assets/spinner-light.png')}
+              source={spinnerLightImage}
             />
           ),
           dark: (
-            <Image
-              style={{ width: 16, height: 16 }}
-              contentFit="cover"
-              source={require('@/assets/spinner-dark.png')}
-            />
+            <Image style={{ width: 16, height: 16 }} contentFit="cover" source={spinnerDarkImage} />
           ),
         })}
       </Box>

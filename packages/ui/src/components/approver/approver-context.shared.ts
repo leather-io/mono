@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 
 import { useOnMount } from '../../utils/use-on-mount.shared';
-import { ChildRegister, useRegisterChildren } from '../../utils/use-register-children.shared';
+import { type ChildRegister, useRegisterChildren } from '../../utils/use-register-children.shared';
 
 type ApproverChildren = 'header' | 'actions' | 'advanced' | 'section' | 'subheader' | 'requester';
 
@@ -33,8 +33,8 @@ export function useRegisterApproverChildren() {
 
 export function useRegisterApproverChild(child: ApproverChildren) {
   const { registerChild, deregisterChild, childCount } = useApproverContext();
-  if (childCount.actions > 1) throw new Error('Only one `Approver.Actions` is allowed');
-  if (childCount.advanced > 1) throw new Error('Only one `Approver.Advanced` is allowed');
+  if ((childCount.actions ?? 0) > 1) throw new Error('Only one `Approver.Actions` is allowed');
+  if ((childCount.advanced ?? 0) > 1) throw new Error('Only one `Approver.Advanced` is allowed');
   useOnMount(() => {
     registerChild(child);
     return () => deregisterChild(child);

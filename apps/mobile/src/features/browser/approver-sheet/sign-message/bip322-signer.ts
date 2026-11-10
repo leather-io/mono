@@ -1,15 +1,15 @@
 import { signTx } from '@/features/psbt-signer/signer';
-import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import { type useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { destructAccountIdentifier } from '@/store/utils';
-import * as bitcoin from 'bitcoinjs-lib';
+import type * as bitcoin from 'bitcoinjs-lib';
 
 import {
   payerToBip32DerivationBitcoinJsLib,
   payerToTapBip32DerivationBitcoinJsLib,
   signBip322MessageSimple,
 } from '@leather.io/bitcoin';
-import { NetworkConfiguration } from '@leather.io/models';
-import { RpcRequest, RpcResult, signMessage } from '@leather.io/rpc';
+import { type NetworkConfiguration } from '@leather.io/models';
+import { type RpcRequest, type RpcResult, type signMessage } from '@leather.io/rpc';
 
 interface SignBip322MessageArgs {
   message: RpcRequest<typeof signMessage>;

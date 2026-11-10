@@ -1,7 +1,11 @@
-import { HttpCacheKey, httpCacheConfig } from './http-cache.config';
+import { type HttpCacheKey, httpCacheConfig } from './http-cache.config';
 
 export interface HttpCacheOptions {
   ttl?: number;
+}
+
+interface FetchWithCacheOptions extends HttpCacheOptions {
+  skipCache?: boolean;
 }
 
 export type HttpCacheKeyArray = [HttpCacheKey, ...unknown[]];
@@ -12,13 +16,13 @@ export abstract class HttpCacheService {
   fetchWithCache<T>(
     key: HttpCacheKeyArray,
     fetchFn: () => Promise<T>,
-    options?: HttpCacheOptions
+    { skipCache, ...options }: FetchWithCacheOptions = {}
   ): Promise<T> {
-    return this.fetchWithCacheInternal(
-      this.addCachePrefix(key),
-      fetchFn,
-      options ?? httpCacheConfig[key[0]]
-    );
+    if (skipCache) return fetchFn();
+    return this.fetchWithCacheInternal(this.addCachePrefix(key), fetchFn, {
+      ...httpCacheConfig[key[0]],
+      ...options,
+    });
   }
 
   clear(cacheKey: HttpCacheKey): Promise<void> {

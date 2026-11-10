@@ -5,13 +5,12 @@ import { useFormikContext } from 'formik';
 import { Box } from 'leather-styles/jsx';
 
 import type { Money } from '@leather.io/models';
-import { Link } from '@leather.io/ui';
+import { BasicTooltip, Link } from '@leather.io/ui';
 
 import type { BitcoinSendFormValues } from '@shared/models/form.model';
 
 import { useCalculateMaxBitcoinSpend } from '@app/common/hooks/balance/use-calculate-max-spend';
 import { useCurrentUtxos } from '@app/query/bitcoin/utxos/utxos.hooks';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 import { useSendMax } from '../hooks/use-send-max';
 

@@ -66,4 +66,14 @@ export const querySettingsDepsRegistry = {
   'stacks-transaction-fees-service--get-stacks-transaction-fees': ['network'],
   // sbtc sponsorship
   'leather-sponsorship-api--get-quote': ['network'],
+  'hiro-stacks-api-client--get-account-nonces': ['network'],
+  'hiro-stacks-api-client--get-contract-interface': ['network'],
+  'hiro-stacks-api-client--get-raw-transaction-by-id': ['network'],
+  'hiro-stacks-api-client--get-network-status': [],
+  'hiro-stacks-api-client--get-ft-metadata': ['network'],
+  'hiro-stacks-api-client--get-principal-mempool-transactions': ['network'],
+  'hiro-stacks-api-client--get-address-transactions': ['network'],
+  'mempool-api-client--fetch-address-bitcoin-txs': ['network'],
+  'alex-sdk-client--fetch-swappable-currency': [],
+  'alex-sdk-client--get-latest-prices': [],
 } as const satisfies Record<string, readonly QuerySettingsDep[]>;

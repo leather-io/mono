@@ -1,4 +1,4 @@
-import { SVGProps, forwardRef } from 'react';
+import { type SVGProps, forwardRef } from 'react';
 
 import { token } from 'leather-styles/tokens';
 

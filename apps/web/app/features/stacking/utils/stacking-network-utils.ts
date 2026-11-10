@@ -1,10 +1,12 @@
-import { ChainId, StacksNetwork } from '@stacks/network';
+import { ChainId, type StacksNetwork } from '@stacks/network';
 import { DEFAULT_DEVNET_SERVER } from '~/constants/constants';
 
-import { NetworkMode } from './stacking-network-types';
+import { type NetworkMode } from './stacking-network-types';
+
+const mainnetChainId: number = ChainId.Mainnet;
 
 export function getNetworkInstance(network: StacksNetwork): NetworkMode {
-  if (network.chainId === ChainId.Mainnet) {
+  if (network.chainId === mainnetChainId) {
     return 'mainnet';
   }
 

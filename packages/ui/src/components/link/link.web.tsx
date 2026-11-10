@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef } from 'react';
+import { type ForwardedRef, forwardRef } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 import { type LinkVariantProps, link as linkRecipe } from 'leather-styles/recipes';

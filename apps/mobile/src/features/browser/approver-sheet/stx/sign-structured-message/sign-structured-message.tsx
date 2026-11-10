@@ -1,15 +1,15 @@
 import { BaseStxMessageApproverLayout } from '@/features/approver/layouts/base-stx-message-approver.layout';
 import { useAccounts } from '@/store/accounts/accounts.read';
-import { App } from '@/store/apps/utils';
+import { type App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { deserializeCV } from '@stacks/transactions';
 
 import {
-  RpcRequest,
-  RpcResponse,
+  type RpcRequest,
+  type RpcResponse,
   createRpcSuccessResponse,
-  stxSignStructuredMessage,
+  type stxSignStructuredMessage,
 } from '@leather.io/rpc';
 
 interface StxSignStructuredMessageApproverProps {

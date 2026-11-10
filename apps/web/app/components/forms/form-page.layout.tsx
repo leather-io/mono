@@ -1,6 +1,6 @@
-import { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 
-import { Box, Flex, FlexProps } from 'leather-styles/jsx';
+import { Box, Flex, type FlexProps } from 'leather-styles/jsx';
 
 type Slots = 'preview' | 'form';
 

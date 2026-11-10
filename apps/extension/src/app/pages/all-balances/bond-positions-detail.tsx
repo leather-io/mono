@@ -3,15 +3,14 @@ import { useNavigate } from 'react-router';
 import { AllBalancesSelectors } from '@tests/selectors/all-balances.selectors';
 import { Box, Flex, Stack, styled } from 'leather-styles/jsx';
 
-import { BtcAvatarIcon, ExternalLinkIcon, Flag } from '@leather.io/ui';
+import { LEATHER_STACKING_URL } from '@leather.io/constants';
+import { BtcAvatarIcon, ExternalLinkIcon, Flag, Hr } from '@leather.io/ui';
 
-import { BITCOIN_STAKING_URL } from '@shared/constants';
 import { RouteUrls } from '@shared/route-urls';
 
 import { useViewportMinWidth } from '@app/common/hooks/use-media-query';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { Content } from '@app/components/layout';
-import { Divider } from '@app/components/layout/divider';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
 import { HeaderGrid } from '@app/components/layout/headers/header-grid';
@@ -61,7 +60,7 @@ export function BondPositionsDetail() {
 
   const endToEndDivider = (
     <Box mx={isMd ? 'space.00' : '-space.05'}>
-      <Divider />
+      <Hr />
     </Box>
   );
 
@@ -181,7 +180,7 @@ export function BondPositionsDetail() {
             textStyle="label.02"
             color="ink.text-primary"
             _hover={{ cursor: 'pointer', textDecoration: 'underline' }}
-            onClick={() => openInNewTab(BITCOIN_STAKING_URL)}
+            onClick={() => openInNewTab(LEATHER_STACKING_URL)}
             data-testid={AllBalancesSelectors.DetailManageLink}
           >
             Manage in Bitcoin Staking

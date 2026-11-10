@@ -1,20 +1,10 @@
-import { type UseQueryResult, useQuery } from '@tanstack/react-query';
-import { type Currency } from 'alex-sdk';
+import { useQuery } from '@tanstack/react-query';
 
-import { alex } from '@leather.io/query';
+import { createAlexLatestPricesQueryConfig } from '@leather.io/queries';
 
-export function useAlexSdkLatestPricesQuery(): UseQueryResult<
-  Partial<{
-    [currency in Currency]: number;
-  }>
-> {
-  return useQuery({
-    queryKey: ['alex-sdk-latest-prices'],
-    queryFn: async () => alex.getLatestPrices(),
-    refetchOnMount: true,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    retryDelay: 1000 * 60,
-    staleTime: 1000 * 60 * 10,
-  });
+import { useUserSettings } from '@app/hooks/use-user-settings';
+
+export function useAlexSdkLatestPricesQuery() {
+  const settings = useUserSettings();
+  return useQuery(createAlexLatestPricesQueryConfig(settings));
 }

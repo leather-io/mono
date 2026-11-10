@@ -1,5 +1,5 @@
 import { Box } from '../box/box.native';
-import { Pressable, PressableProps } from '../pressable/pressable.native';
+import { Pressable, type PressableProps } from '../pressable/pressable.native';
 
 interface RadioButtonProps extends PressableProps {
   isSelected: boolean;

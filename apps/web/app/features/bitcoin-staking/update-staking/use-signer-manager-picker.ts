@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import {
-  BitcoinStakingPool,
-  StakingPoolSlug,
+  type BitcoinStakingPool,
+  type StakingPoolSlug,
   bitcoinStakingPoolList,
   getPoolBySignerManager,
   getPrimarySignerManagerContract,
@@ -12,7 +12,7 @@ import { pox5NetworkConfig } from '~/data/pox5-network-config';
 
 import { parseByosmContractInput } from '../byosm/byosm-contract-schema';
 import {
-  ByosmSignerManagerState,
+  type ByosmSignerManagerState,
   useSignerManagerContractInput,
 } from '../byosm/use-byosm-signer-manager';
 import { currentCustomRowId, customRowId } from './update-staking-summary';
@@ -91,7 +91,7 @@ export function useSignerManagerPicker({
     setSubmittedCustomInput(customInput);
   }
 
-  const target = ((): SignerManagerTarget | null => {
+  function getTarget(): SignerManagerTarget | null {
     if (selectedRowId === currentRowId) return null;
     if (isCustomSelected) {
       if (customState.status !== 'valid') return null;
@@ -105,7 +105,8 @@ export function useSignerManagerPicker({
     );
     if (!contractId) return null;
     return { contractId, pool: selectedPool };
-  })();
+  }
+  const target = getTarget();
 
   return {
     selectedRowId,

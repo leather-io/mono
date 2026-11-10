@@ -1,12 +1,12 @@
-import { ComponentType, ReactNode } from 'react';
+import { type ComponentType, type ReactNode } from 'react';
 
 import { Card } from '@/components/card';
 import { Loading } from '@/components/loading/loading';
 import { AccountAvatar } from '@/features/account/components/account-avatar';
 import { AppIcons } from '@/features/account/components/app-icons';
-import { AccountIcon } from '@/store/accounts/utils';
+import { type AccountIcon } from '@/store/accounts/utils';
 
-import { Box, HasChildren, PressableProps, Text } from '@leather.io/ui/native';
+import { Box, type HasChildren, type PressableProps, Text } from '@leather.io/ui/native';
 import { isString } from '@leather.io/utils';
 
 interface AccountCardProps extends PressableProps {

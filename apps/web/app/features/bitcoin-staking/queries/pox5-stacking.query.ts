@@ -1,7 +1,7 @@
 import { type UseQueryResult, useQueries, useQuery } from '@tanstack/react-query';
 import {
-  BitcoinStakingPool,
-  BitcoinStakingProviderId,
+  type BitcoinStakingPool,
+  type BitcoinStakingProviderId,
   getPrimarySignerManagerContract,
 } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
@@ -13,7 +13,7 @@ import { getExpectedFeeBips } from '../utils/pool-fee';
 import { getPox5ContractId } from '../utils/pox5-contracts';
 import { createGetPox5DelegatedAmountQueryOptions } from './create-get-pox5-delegated-amount-query-options';
 import {
-  Pox5EarnedRewards,
+  type Pox5EarnedRewards,
   createGetPox5EarnedRewardsQueryOptions,
 } from './create-get-pox5-earned-rewards-query-options';
 import {
@@ -23,7 +23,7 @@ import {
 import { createGetPox5PoolFeeQueryOptions } from './create-get-pox5-pool-fee-query-options';
 import { createGetPox5SignerManagerValidationQueryOptions } from './create-get-pox5-signer-manager-validation-query-options';
 import {
-  Pox5StakerInfo,
+  type Pox5StakerInfo,
   createGetPox5StakerInfoQueryOptions,
 } from './create-get-pox5-staker-info-query-options';
 import { createGetPox5TransactionQueryOptions } from './create-get-pox5-transaction-query-options';
@@ -137,7 +137,7 @@ export function usePox5PoolTotalStaked(signerManagerContractIds: string[]): Pox5
 
   const resolvedAmounts = delegatedQueries
     .map(query => query.data)
-    .filter((amount): amount is bigint => amount !== null && amount !== undefined);
+    .filter(amount => amount !== null && amount !== undefined);
   const hasAllAmounts =
     signerManagerContractIds.length > 0 &&
     resolvedAmounts.length === signerManagerContractIds.length;

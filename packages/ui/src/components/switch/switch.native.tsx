@@ -1,7 +1,7 @@
-import { Switch as RNSwitch, SwitchProps as RNSwitchProps } from 'react-native';
+import { Switch as RNSwitch, type SwitchProps as RNSwitchProps } from 'react-native';
 
 import { useTheme } from '@shopify/restyle';
-import { Theme } from 'native';
+import { type Theme } from 'native';
 
 interface SwitchProps extends RNSwitchProps {
   value: boolean;

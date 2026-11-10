@@ -19,9 +19,7 @@ export function useAuthentication() {
     });
   }
 
-  async function callIfEnrolled<T extends (...args: any) => any>(
-    cb: T
-  ): Promise<ReturnType<T> | undefined> {
+  async function callIfEnrolled<T>(cb: () => T): Promise<T | undefined> {
     try {
       await assertEnrolled();
       return cb();

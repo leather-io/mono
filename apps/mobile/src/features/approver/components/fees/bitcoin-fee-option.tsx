@@ -1,7 +1,7 @@
 import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
 
-import { FeeTypes, Money } from '@leather.io/models';
+import { type FeeTypes, type Money } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { getBitcoinFeeData } from '../../utils';

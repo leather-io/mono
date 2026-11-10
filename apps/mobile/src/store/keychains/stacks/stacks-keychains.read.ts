@@ -7,7 +7,7 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import { decomposeDescriptor } from '@leather.io/crypto';
 import {
-  StacksSigner,
+  type StacksSigner,
   createSignFnFromMnemonic,
   createSignMessageFnFromMnemonic,
   createSignStructuredDataMessageFnFromMnemonic,

@@ -1,11 +1,11 @@
-import { ComponentType, ReactElement, ReactNode, isValidElement } from 'react';
+import { type ComponentType, type ReactElement, type ReactNode, isValidElement } from 'react';
 
 import { isNullish } from 'remeda';
 
-import { IconProps } from '../../icons/icon/create-icon.native';
-import { Theme } from '../../theme-native';
-import { PressableRef, PressableRestyleProps } from '../pressable/pressable-core.native';
-import { Pressable, PressableProps } from '../pressable/pressable.native';
+import { type IconProps } from '../../icons/icon/create-icon.native';
+import { type Theme } from '../../theme-native';
+import { type PressableRef, type PressableRestyleProps } from '../pressable/pressable-core.native';
+import { Pressable, type PressableProps } from '../pressable/pressable.native';
 import { Text } from '../text/text.native';
 
 type ButtonVariant = 'solid' | 'outline' | 'ghost';
@@ -38,6 +38,9 @@ export function Button({
   ...props
 }: ButtonProps) {
   const { color, ...variantProps } = getButtonStyles({ size, variant, intent, disabled });
+  const iconSideStyles = hasExplicitHorizontalPadding(props)
+    ? {}
+    : getIconSideStyles({ size, hasIconStart: !!iconStart, hasIconEnd: !!iconEnd });
 
   return (
     <Pressable
@@ -49,6 +52,7 @@ export function Button({
       disabled={disabled}
       px="3"
       {...variantProps}
+      {...iconSideStyles}
       {...props}
     >
       {renderIcon(iconStart, { color, variant: 'small' })}
@@ -60,11 +64,11 @@ export function Button({
   );
 }
 
-function renderIcon(icon: ComponentType<IconProps> | ReactNode, props: IconProps) {
+function renderIcon(icon: ComponentType<IconProps> | ReactElement | undefined, props: IconProps) {
   if (isValidElement(icon) || isNullish(icon)) {
     return icon;
   }
-  const IconComponent = icon as ComponentType<IconProps>;
+  const IconComponent = icon;
   return <IconComponent {...props} />;
 }
 
@@ -72,7 +76,7 @@ function renderIcon(icon: ComponentType<IconProps> | ReactNode, props: IconProps
 const sizes: Record<ButtonSize, VariantProps> = {
   sm: {
     height: 32,
-    px: '3',
+    px: '4',
     gap: '1',
   },
   md: {
@@ -117,6 +121,41 @@ const disabledOverrides: Record<ButtonVariant, VariantProps> = {
   outline: { borderColor: 'ink.text-non-interactive', color: 'ink.text-non-interactive' },
   ghost: { color: 'ink.text-non-interactive' },
 };
+
+const iconSidePadding: Partial<Record<ButtonSize, VariantProps['px']>> = {
+  sm: '3',
+};
+
+const horizontalPaddingProps = [
+  'p',
+  'px',
+  'pl',
+  'pr',
+  'paddingHorizontal',
+  'paddingLeft',
+  'paddingRight',
+] as const;
+
+function hasExplicitHorizontalPadding(props: PressableProps) {
+  return horizontalPaddingProps.some(key => props[key] !== undefined);
+}
+
+function getIconSideStyles({
+  size,
+  hasIconStart,
+  hasIconEnd,
+}: {
+  size: ButtonSize;
+  hasIconStart: boolean;
+  hasIconEnd: boolean;
+}): VariantProps {
+  const padding = iconSidePadding[size];
+  if (!padding) return {};
+  return {
+    ...(hasIconStart && { pl: padding }),
+    ...(hasIconEnd && { pr: padding }),
+  };
+}
 
 function getButtonStyles({
   size,

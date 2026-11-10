@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { Sip10AggregateBalance } from '@leather.io/services';
+import { type Sip10AggregateBalance } from '@leather.io/services';
 import { createMoney } from '@leather.io/utils';
 
 import { sortSip10Balances } from './sort-sip10-balances';

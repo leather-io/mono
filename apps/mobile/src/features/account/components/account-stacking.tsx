@@ -4,10 +4,10 @@ import { isStacking } from '@/features/balances/utils';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/core/macro';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import {
   Box,
-  HasChildren,
+  type HasChildren,
   Pressable,
   QuestionCircleIcon,
   SkeletonLoader,

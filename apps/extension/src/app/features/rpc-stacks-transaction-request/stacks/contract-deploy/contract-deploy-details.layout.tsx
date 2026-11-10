@@ -1,9 +1,7 @@
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { Stack, styled } from 'leather-styles/jsx';
 
-import { AddressDisplayer, Approver, Highlighter } from '@leather.io/ui';
-
-import { Prism } from '@app/common/clarity-prism';
+import { AddressDisplayer, Approver, Highlighter, Prism } from '@leather.io/ui';
 
 interface ContractDeployDetailsLayoutProps {
   address: string;

@@ -14,11 +14,10 @@ import {
   matchLiveEstimate,
   useSwapContext,
 } from '@leather.io/state/swap';
-import { Button } from '@leather.io/ui';
+import { Button, LoadingSpinner } from '@leather.io/ui';
 
 import { formatCurrency, formatPercentage } from '@app/common/currency-formatter';
 import { ButtonRow, Card, Content, Page } from '@app/components/layout';
-import { LoadingSpinner } from '@app/components/loading-spinner';
 import { PageHeader } from '@app/features/container/headers/page.header';
 import { QuoteRefetchIndicator } from '@app/pages/swap/components/quote-preview/quote-refetch-indicator';
 import { PriceImpactValue } from '@app/pages/swap/components/review/price-impact-value';

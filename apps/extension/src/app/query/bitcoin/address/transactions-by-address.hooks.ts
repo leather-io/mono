@@ -3,13 +3,12 @@ import { useCallback, useMemo } from 'react';
 import { useQueries } from '@tanstack/react-query';
 
 import { type BitcoinTx } from '@leather.io/models';
-import { createGetBitcoinTransactionsByAddressQueryOptions } from '@leather.io/query';
+import { createBitcoinAddressTransactionsQueryConfig } from '@leather.io/queries';
 import { isDefined } from '@leather.io/utils';
 
+import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useCurrentAccountNativeSegwitIndexZeroPayerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentAccountTaprootPayer } from '@app/store/accounts/blockchain/bitcoin/taproot-account.hooks';
-
-import { useBitcoinClient } from '../clients/bitcoin-client';
 
 function useFilterAddressPendingTransactions() {
   return useCallback((txs: BitcoinTx[]) => txs.filter(tx => !tx.status.confirmed), []);
@@ -17,11 +16,11 @@ function useFilterAddressPendingTransactions() {
 
 function useBitcoinPendingTransactions(addresses: string[]) {
   const filterPendingTransactions = useFilterAddressPendingTransactions();
-  const client = useBitcoinClient();
+  const settings = useUserSettings();
 
   return useQueries({
     queries: addresses.map(address => ({
-      ...createGetBitcoinTransactionsByAddressQueryOptions({ address, client }),
+      ...createBitcoinAddressTransactionsQueryConfig(address, settings),
       select: (resp: BitcoinTx[]) => filterPendingTransactions(resp),
     })),
   });

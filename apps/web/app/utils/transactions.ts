@@ -1,15 +1,8 @@
-import {
-  ContractCallTransaction,
-  MempoolContractCallTransaction,
-  MempoolTransaction,
-  Transaction,
-} from '@stacks/stacks-blockchain-api-types';
+import { type MempoolTransaction, type Transaction } from '@stacks/stacks-blockchain-api-types';
 
-export function isMempoolContractCallTransaction(
-  t: MempoolTransaction
-): t is MempoolContractCallTransaction {
+export function isMempoolContractCallTransaction(t: MempoolTransaction) {
   return t.tx_type === 'contract_call';
 }
-export function isContractCallTransaction(t: Transaction): t is ContractCallTransaction {
+export function isContractCallTransaction(t: Transaction) {
   return t.tx_type === 'contract_call';
 }

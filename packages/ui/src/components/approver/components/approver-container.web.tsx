@@ -1,5 +1,5 @@
 import { css } from 'leather-styles/css';
-import { Flex, HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
 import {
   childElementInitialAnimationState,

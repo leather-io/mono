@@ -2,9 +2,10 @@ import { Suspense } from 'react';
 
 import { Box, HStack } from 'leather-styles/jsx';
 
+import { SkeletonLoader } from '@leather.io/ui';
+
 import { BtcBalance } from '@app/components/balance/btc-balance';
 import { StxBalance } from '@app/components/balance/stx-balance';
-import { LoadingRectangle } from '@app/components/loading-rectangle';
 import { useHasCurrentBitcoinAccount } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
@@ -42,7 +43,7 @@ function TotalBalanceSuspense({ displayAddresssBalanceOf }: TotalBalanceProps) {
 function TotalBalanceFallback() {
   return (
     <TotalBalanceLayout>
-      <LoadingRectangle width="72px" height="14px" />
+      <SkeletonLoader isLoading width="72px" height="14px" />
     </TotalBalanceLayout>
   );
 }

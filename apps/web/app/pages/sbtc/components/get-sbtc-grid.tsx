@@ -1,4 +1,4 @@
-import { Box, Flex, GridProps, styled } from 'leather-styles/jsx';
+import { Box, Flex, type GridProps, styled } from 'leather-styles/jsx';
 import { BitcoinIcon } from '~/components/icons/bitcoin-icon';
 import { StacksIcon } from '~/components/icons/stacks-icon';
 import { WhenClient } from '~/components/when-client';

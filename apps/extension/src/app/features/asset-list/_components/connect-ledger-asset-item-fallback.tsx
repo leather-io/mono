@@ -4,8 +4,8 @@ import { Box } from 'leather-styles/jsx';
 
 import type { Currency, SupportedBlockchains } from '@leather.io/models';
 import { ItemLayout } from '@leather.io/ui';
+import { capitalize } from '@leather.io/utils';
 
-import { capitalize } from '@app/common/utils';
 import { useCheckLedgerBlockchainAvailable } from '@app/store/accounts/blockchain/utils';
 
 import type { TokenListVariant } from '../token-list';

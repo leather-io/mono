@@ -6,7 +6,7 @@ export function interpolateActivityTemplate(
   template: string,
   values: Record<string, string> = {}
 ): string {
-  return template.replace(/{(\w+)}/g, (_match, key) => values[key] ?? '');
+  return template.replace(/{(\w+)}/g, (_match, key: string) => values[key] ?? '');
 }
 
 type StatusTemplates = Record<OnChainActivityStatus, string>;
@@ -150,9 +150,9 @@ const protocolActionTitles: Partial<Record<StacksProtocolAction, string>> = {
 export function buildBlockchainActivityActionTitle(
   action: StacksProtocolAction,
   t: BlockchainActivityTranslate
-): string {
+): string | undefined {
   const title = protocolActionTitles[action];
-  return title ? t(title) : '';
+  return title ? t(title) : undefined;
 }
 
 interface SubtitleParams {
@@ -166,7 +166,7 @@ interface SubtitleParams {
 export function buildBlockchainActivitySubtitle(
   params: SubtitleParams,
   t: BlockchainActivityTranslate
-): string {
+): string | undefined {
   const { action, status, protocolName, counterparty, contractName } = params;
 
   switch (action) {
@@ -186,7 +186,7 @@ export function buildBlockchainActivitySubtitle(
       return t('{contract}', { contract: contractName ?? '' });
     default: {
       const entry = protocolActionSubtitles[action];
-      if (!entry) return '';
+      if (!entry) return undefined;
       const template = protocolName ? entry[status] : entry[status].replace(viaProtocolSuffix, '');
       return t(template, protocolName ? { protocol: protocolName } : {});
     }

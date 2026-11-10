@@ -1,13 +1,13 @@
 import { getDefaultFee } from '@/features/approver/utils';
-import { App, assertAppIsConnected } from '@/store/apps/utils';
+import { type App, assertAppIsConnected } from '@/store/apps/utils';
 import { stacksSignerFromAddress } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { makeStacksAccountIdentiferFromDescriptor } from '@/store/utils';
-import { PostConditionModeName } from '@stacks/transactions';
+import { type PostConditionModeName } from '@stacks/transactions';
 
-import { Money } from '@leather.io/models';
-import { BaseStacksTransactionRpcParams } from '@leather.io/rpc';
-import { StacksSigner } from '@leather.io/stacks';
+import { type Money } from '@leather.io/models';
+import { type BaseStacksTransactionRpcParams } from '@leather.io/rpc';
+import { type StacksSigner } from '@leather.io/stacks';
 import { createMoney, initBigNumber } from '@leather.io/utils';
 
 export function getAccountIdFromConnectedApp(app: App) {

@@ -1,10 +1,11 @@
 import { t } from '@lingui/core/macro';
 
-export enum AssetType {
-  NativeSegwit = 'native_segwit',
-  Taproot = 'taproot',
-  Stacks = 'stacks',
-}
+export const AssetType = {
+  NativeSegwit: 'native_segwit',
+  Taproot: 'taproot',
+  Stacks: 'stacks',
+} as const;
+export type AssetType = (typeof AssetType)[keyof typeof AssetType];
 export interface ReceivableAsset {
   type: AssetType;
   address: string;

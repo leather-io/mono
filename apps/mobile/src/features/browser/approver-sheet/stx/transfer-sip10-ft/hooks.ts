@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { getTransferSip10TxHex } from '@/features/approver/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
-import { StacksNetwork } from '@stacks/network';
+import { type StacksNetwork } from '@stacks/network';
 
 import { useOnMount } from '@leather.io/ui/native';
 
@@ -46,7 +46,11 @@ export function useTransferSip10FtTxHex({
     },
     [fromAccountId, accountId, nonce, amount, assetId, recipient, network, sponsored]
   );
+  async function loadTxHex() {
+    setTxHex(await getTxHex());
+  }
+
   useOnMount(() => {
-    void getTxHex().then(txHex => setTxHex(txHex));
+    void loadTxHex();
   });
 }

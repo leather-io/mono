@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { Flex, FlexProps, styled } from 'leather-styles/jsx';
+import { Flex, type FlexProps, styled } from 'leather-styles/jsx';
 
 interface ValueDisplayerProps extends FlexProps {
   children: ReactNode;

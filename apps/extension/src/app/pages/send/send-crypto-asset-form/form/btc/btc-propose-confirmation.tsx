@@ -19,7 +19,7 @@ import {
 } from '@app/components/info-card/info-card';
 import { Card, Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
-import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
+import { useCryptoCurrencyMarketData } from '@app/query/common/market-data/market-data.hooks';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import type { BtcProposalConfirmationRouteState } from '../../hooks/use-send-form-navigate';
@@ -33,7 +33,7 @@ interface BtcProposeConfirmationProps {
 
 export function BtcProposeConfirmation({ state }: BtcProposeConfirmationProps) {
   const policy = useCurrentPolicy();
-  const btcMarketData = useCryptoCurrencyMarketDataMeanAverage('BTC');
+  const btcMarketData = useCryptoCurrencyMarketData('BTC');
   const { proposeSendTransaction, isProposing } = useProposeBtcSendTransaction();
   const { psbt, recipient, fee, feeRowValue, time, amount } = state;
 

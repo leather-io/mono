@@ -246,7 +246,12 @@ export const postType = defineType({
       date: 'publishedAt',
       status: 'status',
     },
-    prepare(selection) {
+    prepare(selection: {
+      title: string | undefined;
+      subtitle: string | undefined;
+      date: string | undefined;
+      status: string | undefined;
+    }) {
       const { title, subtitle, date, status } = selection;
       const dateFormatted = date ? new Date(date).toLocaleDateString() : 'No date';
       return {

@@ -1,8 +1,8 @@
 import { createMoney } from '@leather.io/utils';
 
-import { PoolPayoutMode } from '../../utils/pool-payout';
+import { type PoolPayoutMode } from '../../utils/pool-payout';
 import {
-  PoolMinStake,
+  type PoolMinStake,
   buildPayoutPreference,
   createStakingFormSchema,
 } from './staking-form-schema';

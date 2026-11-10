@@ -7,19 +7,19 @@ import {
   TransactionTypes,
   buildSbtcSponsoredTransferPostCondition,
   buildSbtcTransferManyArgs,
+  generateStacksUnsignedTransaction,
   getStacksAssetStringParts,
   sbtcTransferManyFunctionName,
 } from '@leather.io/stacks';
+import { createMoney, unitToFractionalUnit } from '@leather.io/utils';
 
 import type { StacksSendFormValues } from '@shared/models/form.model';
 
-import { ftUnshiftDecimals } from '@app/common/stacks-utils';
 import type { SbtcSponsorshipRouteState } from '@app/pages/send/send-crypto-asset-form/hooks/use-send-form-navigate';
 import { useFetchSbtcSponsorshipQuote } from '@app/query/sbtc/sbtc-sponsorship.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 
-import { generateUnsignedTransaction } from './generate-unsigned-txs';
 import { getSbtcSponsorshipFeeSats } from './sbtc-sponsorship.utils';
 
 export interface SbtcSponsoredTransfer {
@@ -64,26 +64,23 @@ export function useBuildSbtcSponsoredTransfer({
         sender: account.address,
         recipient: values.recipient,
         feeRecipient: quote.feeRecipientPrincipal,
-        amount: BigInt(ftUnshiftDecimals(values.amount, decimals)),
+        amount: BigInt(unitToFractionalUnit(decimals)(values.amount).toString(10)),
         feeAmount: BigInt(getSbtcSponsorshipFeeSats(stxFeeMicro, quote)),
         memo: values.memo !== '' ? values.memo : undefined,
       };
 
-      const tx = await generateUnsignedTransaction({
-        txData: {
-          txType: TransactionTypes.ContractCall,
-          contractAddress,
-          contractName,
-          functionName: sbtcTransferManyFunctionName,
-          functionArgs: buildSbtcTransferManyArgs(params).map(arg => serializeCV(arg)),
-          postConditions: [buildSbtcSponsoredTransferPostCondition(params)],
-          postConditionMode: PostConditionMode.Deny,
-          network,
-          publicKey: account.stxPublicKey,
-          sponsored: true,
-        },
-        fee: 0,
+      const tx = await generateStacksUnsignedTransaction({
+        txType: TransactionTypes.ContractCall,
+        contractAddress,
+        contractName,
+        functionName: sbtcTransferManyFunctionName,
+        functionArgs: buildSbtcTransferManyArgs(params).map(arg => serializeCV(arg)),
+        postConditions: [buildSbtcSponsoredTransferPostCondition(params)],
+        postConditionMode: PostConditionMode.Deny,
+        network,
         publicKey: account.stxPublicKey,
+        sponsored: true,
+        fee: createMoney(0, 'STX'),
         nonce: hasExplicitNonce ? Number(values.nonce) : nonce,
       });
 

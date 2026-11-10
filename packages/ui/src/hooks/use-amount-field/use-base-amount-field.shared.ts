@@ -40,7 +40,7 @@ export function useBaseAmountField({
   const formatter = useMemo(() => new Intl.NumberFormat(locale), [locale]);
 
   const decimalSeparator = extractDecimalSeparator(formatter);
-  const groupSeparator = enableGrouping ? extractGroupSeparator(formatter) : '';
+  const groupSeparator = enableGrouping ? extractGroupSeparator(formatter) : undefined;
   const escapedDecimalSeparator = escapeForRegex(decimalSeparator);
 
   const currencySign = useMemo(
@@ -138,17 +138,17 @@ function extractDecimalSeparator(formatter: Intl.NumberFormat): string {
   return decimalPart ? decimalPart.value : '.';
 }
 
-function extractGroupSeparator(formatter: Intl.NumberFormat): string {
+function extractGroupSeparator(formatter: Intl.NumberFormat): string | undefined {
   const parts = formatter.formatToParts(12345);
   const groupPart = parts.find(part => part.type === 'group');
-  return groupPart ? groupPart.value : '';
+  return groupPart?.value;
 }
 
 function escapeForRegex(text: string): string {
   return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function removeGroupSeparators(text: string, groupSeparator: string): string {
+function removeGroupSeparators(text: string, groupSeparator: string | undefined): string {
   if (!groupSeparator) return text;
   return text.split(groupSeparator).join('');
 }
@@ -171,7 +171,7 @@ function formatRawForDisplay(
   const integerPart = decimalIndex >= 0 ? raw.slice(0, decimalIndex) : raw;
   const decimalTail = decimalIndex >= 0 ? raw.slice(decimalIndex) : '';
 
-  const integerValue = parseInt(integerPart || '0', 10);
+  const integerValue = integerPart ? parseInt(integerPart, 10) : 0;
   const allowedTypes: string[] = enableGrouping ? ['integer', 'group'] : ['integer'];
   const formattedInteger = formatter
     .formatToParts(integerValue)
@@ -185,7 +185,7 @@ function formatRawForDisplay(
 function countLogicalCharacters(
   text: string,
   upToPosition: number,
-  groupSeparator: string
+  groupSeparator: string | undefined
 ): number {
   let count = 0;
   for (let i = 0; i < upToPosition; i++) {
@@ -197,7 +197,7 @@ function countLogicalCharacters(
 function resolveFormattedCursorPosition(
   formattedText: string,
   logicalOffset: number,
-  groupSeparator: string
+  groupSeparator: string | undefined
 ): number {
   let count = 0;
   for (let i = 0; i < formattedText.length; i++) {

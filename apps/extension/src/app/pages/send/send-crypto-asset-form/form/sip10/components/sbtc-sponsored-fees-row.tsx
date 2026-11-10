@@ -12,6 +12,7 @@ import {
   type TransactionFees,
 } from '@leather.io/models';
 import type { SbtcSponsorshipQuoteResponse } from '@leather.io/services';
+import { SkeletonLoader } from '@leather.io/ui';
 import { baseCurrencyAmountInQuote, convertAmountToBaseUnit, createMoney } from '@leather.io/utils';
 
 import {
@@ -22,7 +23,6 @@ import {
 import { SponsoredFeeBadge } from '@app/components/fees-row/components/sponsored-fee-badge';
 import { FeesRow } from '@app/components/fees-row/fees-row';
 import { stxFeeCurrency } from '@app/components/fees-row/fees-row.constants';
-import { LoadingRectangle } from '@app/components/loading-rectangle';
 import {
   isSbtcSponsorshipQuoteExpired,
   useSbtcSponsorshipQuote,
@@ -104,7 +104,7 @@ export function SbtcSponsoredFeesRow({
   const isQuoteLoading = offerSbtcFee && !isSbtcFeeMode && (quote.isPending || quote.isFetching);
   const isFeeCurrencySynced = feeCurrencyField.value === feeCurrency;
   if (isQuoteLoading || !isFeeCurrencySynced)
-    return <LoadingRectangle height="32px" width="100%" />;
+    return <SkeletonLoader isLoading height="32px" width="100%" />;
 
   if (!isSbtcFeeMode) return <FeesRow fees={fees} isSponsored={false} />;
 

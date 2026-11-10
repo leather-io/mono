@@ -1,31 +1,32 @@
-import { AvailableLanguageCode, defaultLanguage } from '@/i18n/languages';
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { type AvailableLanguageCode, defaultLanguage } from '@/i18n/languages';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { REHYDRATE } from 'redux-persist';
 
 import {
-  AccountDisplayPreference,
-  AnalyticsPreference,
-  BitcoinUnit,
-  DefaultNetworkConfigurations,
-  QuoteCurrency,
+  type AccountDisplayPreference,
+  type AnalyticsPreference,
+  type BitcoinUnit,
+  type DefaultNetworkConfigurations,
+  type QuoteCurrency,
   WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
 import { handleAppResetWithState } from '@leather.io/state';
 import { userAddsWallet } from '@leather.io/state/wallet';
-import { SerializedCryptoAssetId } from '@leather.io/utils';
+import { type SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { handleSettingsRehydration } from './settings-rehydration';
 import {
-  AppIconPreference,
-  CurrentAccount,
-  HapticsPreference,
-  LanguagePreferenceSource,
-  LastActiveTimestamp,
-  NotificationsPreference,
-  PrivacyModePreference,
-  SecurityLevelPreference,
+  type AppIconPreference,
+  type CurrentAccount,
+  type HapticsPreference,
+  type LanguagePreferenceSource,
+  type LastActiveTimestamp,
+  type NotificationsPreference,
+  type PrivacyModePreference,
+  type SecurityLevelPreference,
   type SettingsState,
-  ThemePreference,
+  type ThemePreference,
+  type TokenPreset,
 } from './utils';
 
 const initialState: SettingsState = {
@@ -45,6 +46,7 @@ const initialState: SettingsState = {
   languagePreference: defaultLanguage,
   languagePreferenceSource: 'system',
   assetVisibility: {},
+  tokenPreset: 'mainTokens',
   currentAccount: null,
   appIconPreference: 'default',
 };
@@ -107,6 +109,9 @@ export const settingsSlice = createSlice({
         [action.payload.assetId]: action.payload.value,
       };
     },
+    userChangedTokenPreset(state, action: PayloadAction<TokenPreset>) {
+      state.tokenPreset = action.payload;
+    },
     userChangedCurrentAccount(state, action: PayloadAction<{ account: CurrentAccount }>) {
       state.currentAccount = action.payload.account;
     },
@@ -114,7 +119,7 @@ export const settingsSlice = createSlice({
       state.appIconPreference = action.payload;
     },
   },
-  extraReducers: builder => {
+  extraReducers(builder) {
     builder.addCase(REHYDRATE, handleSettingsRehydration);
     builder.addCase(userAddsWallet, (state, action) => {
       return {
@@ -145,6 +150,7 @@ export const {
   userChangedLanguagePreference,
   userChangedLanguagePreferenceSource,
   userChangedAssetVisibility,
+  userChangedTokenPreset,
   userChangedCurrentAccount,
   userChangedAppIconPreference,
 } = settingsSlice.actions;

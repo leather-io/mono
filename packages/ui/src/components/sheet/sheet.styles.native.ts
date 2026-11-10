@@ -1,8 +1,8 @@
-import { ViewStyle } from 'react-native';
+import { type ViewStyle } from 'react-native';
 
 import { useTheme } from '@shopify/restyle';
 
-import { Theme } from '@leather.io/ui/native';
+import { type Theme } from '../../theme-native';
 
 const handleIndicatorWidth = 60;
 const handleIndicatorHeight = 4;
@@ -54,7 +54,7 @@ function getBackgroundStyle(theme: Theme): ViewStyle {
     borderTopRightRadius: theme.borderRadii['lg'],
     backgroundColor: theme.colors['ink.background-primary'],
     borderWidth: 0.5,
-    borderColor: borderColor,
+    borderColor,
     borderBottomWidth: 0,
     boxShadow: [{ offsetX: 0, offsetY: -2, blurRadius: 8, spreadDistance: 0, color: shadowColor }],
   };

@@ -3,20 +3,34 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
+    "format": "prettier . --write --ignore-path ../.prettierignore",
+    "format:check": "prettier . --check --ignore-path ../.prettierignore",
+    "lint": "eslint --cache --max-warnings 0",
+    "lint:fix": "pnpm lint --fix",
     "lt": "node bin/lt.js",
-    "watch": "tsc --watch"
+    "test:unit": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "watch": "tsc --watch -p tsconfig.build.json"
+  },
+  "exports": {
+    "./feature-entry": "./src/feature-map/feature-entry.ts"
   },
   "bin": {
     "lt": "./bin/lt.js"
   },
   "dependencies": {
-    "commander": "12.0.0"
-  },
-  "devDependencies": {
-    "@types/node": "24.0.8",
+    "commander": "12.0.0",
     "typescript": "5.9.3"
   },
+  "devDependencies": {
+    "@leather.io/prettier-config": "workspace:*",
+    "@leather.io/test-config": "workspace:*",
+    "@types/node": "24.0.8",
+    "prettier": "3.5.1",
+    "vitest": "2.1.9"
+  },
   "main": "dist/lt.js",
+  "prettier": "@leather.io/prettier-config",
   "private": true
 }

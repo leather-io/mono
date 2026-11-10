@@ -1,3 +1,4 @@
+import flowerImage from '@/assets/stickers/flower.png';
 import { Screen } from '@/components/screen/screen';
 import { HeaderTitle } from '@/components/screen/screen-header/components/header-title';
 import { Sticker } from '@/components/sticker';
@@ -19,7 +20,7 @@ export default function RecentlyViewedScreen() {
         <Screen.Header centerElement={<HeaderTitle title={title} />} />
       </Box>
       <Screen.Body width={270} alignSelf="center" justifyContent="center" alignItems="center">
-        <Sticker source={require('@/assets/stickers/flower.png')} />
+        <Sticker source={flowerImage} />
         <Text textAlign="center" variant="label01">
           {t`You will find the apps you recently viewed here`}
         </Text>

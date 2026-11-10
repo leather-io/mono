@@ -8,7 +8,7 @@ import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 import { InfoCircleIcon, Spinner } from '@leather.io/ui';
 import { microStxToStx } from '@leather.io/utils';
 
-const feeReserveExplanation = `${microStxToStx(STAKING_TX_FEE_RESERVE_USTX)} STX reserved for transaction fees`;
+const feeReserveExplanation = `${microStxToStx(STAKING_TX_FEE_RESERVE_USTX).toString()} STX reserved for transaction fees`;
 
 function maxStakeableAmount(availableAmount: BigNumber) {
   return BigNumber.max(availableAmount.minus(STAKING_TX_FEE_RESERVE_USTX), 0);

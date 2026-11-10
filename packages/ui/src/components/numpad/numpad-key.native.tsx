@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { isString } from '@leather.io/utils';
 
-import { HasChildren } from '../../utils/has-children.shared';
+import { type HasChildren } from '../../utils/has-children.shared';
 import { Box } from '../box/box.native';
 import { TouchableOpacity } from '../button/touchable-opacity.native';
 import { Text } from '../text/text.native';

@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from 'react';
 
-import { Account } from '@/store/accounts/accounts';
+import { type Account } from '@/store/accounts/accounts';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { omit } from 'remeda';
 
-import { FungibleCryptoAsset } from '@leather.io/models';
+import { type FungibleCryptoAsset } from '@leather.io/models';
 
 interface UseAccountHelpersResult {
   findAccountByAddress(address: string): Account | null;

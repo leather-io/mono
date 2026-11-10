@@ -3,7 +3,7 @@ import { ActivityList } from '@/features/activity/activity-list';
 import { useActivity } from '@/queries/activity/activity.query';
 import { t } from '@lingui/core/macro';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 
 interface ActivityScreenWithAccountProps {
   currentAccount: AccountId;

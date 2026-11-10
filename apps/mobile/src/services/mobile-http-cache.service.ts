@@ -1,6 +1,6 @@
 import { queryClient } from '@/queries/query';
 
-import { HttpCacheOptions, HttpCacheService } from '@leather.io/services';
+import { type HttpCacheOptions, HttpCacheService } from '@leather.io/services';
 
 export class MobileHttpCacheService extends HttpCacheService {
   async fetchWithCacheInternal<T>(

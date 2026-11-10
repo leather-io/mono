@@ -38,7 +38,8 @@ export function useAmountField(props: UseAmountFieldProps): UseAmountFieldResult
   });
 
   function onChange(e: ChangeEvent<HTMLInputElement>) {
-    const result = handleChange(e.target.value, e.target.selectionStart ?? 0);
+    const { value, selectionStart } = e.target;
+    const result = handleChange(value, selectionStart ?? value.length);
 
     if (result.accepted) {
       cursorRef.current = result.cursorPosition;

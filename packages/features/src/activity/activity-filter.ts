@@ -4,9 +4,7 @@ import { type SerializedCryptoAssetId, getAssetId, serializeAssetId } from '@lea
 import type { ActivityView } from './types';
 
 function getActivityViewAssetIds(view: ActivityView): SerializedCryptoAssetId[] {
-  const assets = [view.asset, view.fromAsset, view.toAsset].filter(
-    (value): value is CryptoAsset => !!value
-  );
+  const assets = [view.asset, view.fromAsset, view.toAsset].filter(value => value !== undefined);
   return assets.map(asset => serializeAssetId(getAssetId(asset)));
 }
 

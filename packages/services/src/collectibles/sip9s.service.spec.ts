@@ -1,42 +1,38 @@
-import type { NonFungibleTokenHolding } from '@stacks/stacks-blockchain-api-types';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { type AccountAddresses, CryptoAssetProtocols, type Sip9Asset } from '@leather.io/models';
+import { type AccountAddresses, CryptoAssetProtocols } from '@leather.io/models';
 
 import type { Sip9AssetService } from '../assets/sip9-asset.service';
 import type { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import type { HiroPrincipalNftBalance } from '../infrastructure/api/hiro/hiro-stacks-api.types';
+import { createTestSip9Asset } from '../test/assets-sip9';
+import { createMock } from '../test/create-mock';
 import { Sip9sService } from './sip9s.service';
 
 describe(Sip9sService.name, () => {
-  const mockNftHoldings: NonFungibleTokenHolding[] = [
+  const mockNftHoldings: HiroPrincipalNftBalance[] = [
     {
       asset_identifier: 'SP000.nft-1',
       value: { hex: '0x01', repr: '1' },
-      block_height: 90,
-      tx_id: 'tx1',
     },
     {
       asset_identifier: 'SP000.nft-2',
       value: { hex: '0x02', repr: '2' },
-      block_height: 95,
-      tx_id: 'tx2',
     },
   ];
 
-  const mockStacksApiClient = {
-    getNftHoldings: vi.fn().mockResolvedValue(mockNftHoldings),
-  } as unknown as HiroStacksApiClient;
+  const getPrincipalNftBalances = vi.fn().mockResolvedValue(mockNftHoldings);
+  const mockStacksApiClient = createMock<HiroStacksApiClient>({ getPrincipalNftBalances });
 
-  const mockSip9AssetService = {
-    getAsset: vi.fn().mockImplementation((assetId: string) =>
-      Promise.resolve({
-        protocol: CryptoAssetProtocols.sip9,
-        assetId,
-        name: 'Test NFT',
-        content: { contentUrl: 'https://example.com/image.png', contentType: 'image/png' },
-      })
-    ),
-  } as unknown as Sip9AssetService;
+  const getAsset = vi.fn().mockImplementation((assetId: string) =>
+    Promise.resolve({
+      protocol: CryptoAssetProtocols.sip9,
+      assetId,
+      name: 'Test NFT',
+      content: { contentUrl: 'https://example.com/image.png', contentType: 'image/png' },
+    })
+  );
+  const mockSip9AssetService = createMock<Sip9AssetService>({ getAsset });
 
   const sip9sService = new Sip9sService(mockStacksApiClient, mockSip9AssetService);
 
@@ -53,16 +49,16 @@ describe(Sip9sService.name, () => {
 
       const sip9s = await sip9sService.getAccountSip9s({ account });
 
-      expect(mockStacksApiClient.getNftHoldings).toHaveBeenCalledWith(
+      expect(mockStacksApiClient.getPrincipalNftBalances).toHaveBeenCalledWith(
         'ST123',
-        { allPages: true, stopAfter: 10 },
+        { maxPages: 10 },
         { signal: undefined }
       );
       expect(mockSip9AssetService.getAsset).toHaveBeenCalledTimes(2);
       expect(sip9s).toHaveLength(2);
     });
 
-    it('sorts SIP-9 NFTs by block height descending', async () => {
+    it('keeps the API order of SIP-9 NFTs', async () => {
       const account: AccountAddresses = {
         id: { fingerprint: 'fp1', accountIndex: 0 },
         stacks: { stxAddress: 'ST123' },
@@ -70,9 +66,7 @@ describe(Sip9sService.name, () => {
 
       const sip9s = await sip9sService.getAccountSip9s({ account });
 
-      // nft-2 has block_height: 95, nft-1 has 90
-      expect(sip9s[0].assetId).toEqual('SP000.nft-2');
-      expect(sip9s[1].assetId).toEqual('SP000.nft-1');
+      expect(sip9s.map(sip9 => sip9.assetId)).toEqual(['SP000.nft-1', 'SP000.nft-2']);
     });
 
     it('returns empty array when account has no stacks address', async () => {
@@ -87,7 +81,7 @@ describe(Sip9sService.name, () => {
 
       const sip9s = await sip9sService.getAccountSip9s({ account });
 
-      expect(mockStacksApiClient.getNftHoldings).not.toHaveBeenCalled();
+      expect(mockStacksApiClient.getPrincipalNftBalances).not.toHaveBeenCalled();
       expect(sip9s).toHaveLength(0);
     });
 
@@ -97,9 +91,7 @@ describe(Sip9sService.name, () => {
         stacks: { stxAddress: 'ST123' },
       };
 
-      vi.spyOn(mockSip9AssetService, 'getAsset').mockRejectedValueOnce(
-        new Error('Failed to fetch')
-      );
+      getAsset.mockRejectedValueOnce(new Error('Failed to fetch'));
 
       const sip9s = await sip9sService.getAccountSip9s({ account });
 
@@ -113,12 +105,14 @@ describe(Sip9sService.name, () => {
         stacks: { stxAddress: 'ST123' },
       };
 
-      vi.spyOn(mockSip9AssetService, 'getAsset').mockResolvedValueOnce({
-        protocol: CryptoAssetProtocols.sip9,
-        assetId: 'SP000.bns-archive',
-        name: 'BNS - Archive',
-        content: { contentUrl: 'https://example.com/image.png', contentType: 'image/png' },
-      } as Sip9Asset);
+      getAsset.mockResolvedValueOnce(
+        createTestSip9Asset({
+          protocol: CryptoAssetProtocols.sip9,
+          assetId: 'SP000.bns-archive',
+          name: 'BNS - Archive',
+          content: { contentUrl: 'https://example.com/image.png', contentType: 'image/png' },
+        })
+      );
 
       const sip9s = await sip9sService.getAccountSip9s({ account });
 
@@ -127,28 +121,22 @@ describe(Sip9sService.name, () => {
     });
 
     it('filters out LP tokens before fetching metadata', async () => {
-      const lpHoldings: NonFungibleTokenHolding[] = [
+      const lpHoldings: HiroPrincipalNftBalance[] = [
         {
           asset_identifier: 'SP000.velar::pool-token-id',
           value: { hex: '0x01', repr: '1' },
-          block_height: 100,
-          tx_id: 'tx1',
         },
         {
           asset_identifier: 'SP000.dlmm-pool-stx::token',
           value: { hex: '0x02', repr: '2' },
-          block_height: 101,
-          tx_id: 'tx2',
         },
         {
           asset_identifier: 'SP000.real-nft::nft',
           value: { hex: '0x03', repr: '3' },
-          block_height: 102,
-          tx_id: 'tx3',
         },
       ];
 
-      vi.spyOn(mockStacksApiClient, 'getNftHoldings').mockResolvedValueOnce(lpHoldings);
+      getPrincipalNftBalances.mockResolvedValueOnce(lpHoldings);
 
       const account: AccountAddresses = {
         id: { fingerprint: 'fp1', accountIndex: 0 },
@@ -172,9 +160,7 @@ describe(Sip9sService.name, () => {
         stacks: { stxAddress: 'ST123' },
       };
 
-      vi.spyOn(mockStacksApiClient, 'getNftHoldings').mockRejectedValueOnce(
-        new Error('Stacks API error')
-      );
+      getPrincipalNftBalances.mockRejectedValueOnce(new Error('Stacks API error'));
 
       const sip9s = await sip9sService.getAccountSip9s({ account });
 
@@ -191,7 +177,7 @@ describe(Sip9sService.name, () => {
 
       expect(sip9s[0]).toMatchObject({
         protocol: 'sip9',
-        assetId: 'SP000.nft-2',
+        assetId: 'SP000.nft-1',
       });
     });
   });

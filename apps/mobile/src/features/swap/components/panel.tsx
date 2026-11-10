@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { Box, HasChildren } from '@leather.io/ui/native';
+import { Box, type HasChildren } from '@leather.io/ui/native';
 
 export function Root({ children }: HasChildren) {
   return (

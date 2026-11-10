@@ -4,14 +4,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { AccountBalance } from '@/features/balances/total-balance';
 import { HEADER_HEIGHT } from '@/shared/constants';
-import { Account } from '@/store/accounts/accounts';
+import { type Account } from '@/store/accounts/accounts';
 import { getConnectedAppsToAccountIdMap, useApps } from '@/store/apps/apps.read';
 import { useSettings } from '@/store/settings/settings';
 import { WalletLoader } from '@/store/wallets/wallets.read';
 import { defaultIconTestId } from '@/utils/testing-utils';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { Box, Sheet, SheetRef, useTheme } from '@leather.io/ui/native';
+import { Box, Sheet, type SheetRef, useTheme } from '@leather.io/ui/native';
 
 import { AccountAddress } from '../components/account-address';
 import { AccountCard } from '../components/account-card';

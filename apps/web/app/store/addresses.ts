@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 
-import { StacksNetwork } from '@stacks/network';
+import { type StacksNetwork } from '@stacks/network';
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,12 +17,14 @@ import {
   markLeatherAsSelectedWallet,
   revokeWalletPermissions,
 } from '~/utils/wallet';
-import { WalletAddressEntry } from '~/utils/wallet-addresses';
+import { type WalletAddressEntry } from '~/utils/wallet-addresses';
 
-import { AccountAddresses, ChainId } from '@leather.io/models';
+import { type AccountAddresses, ChainId } from '@leather.io/models';
 import { createAccountAddresses, delay } from '@leather.io/utils';
 
 import { useStacksNetwork } from './stacks-network';
+
+const mainnetChainId: number = ChainId.Mainnet;
 
 const addressesAtom = atomWithStorage<WalletAddressEntry[]>('addresses', []);
 
@@ -258,7 +260,7 @@ export function useLeatherConnect() {
 
 function completeZealyConnectTask(network: StacksNetwork, address?: string) {
   if (getConnectedWalletId() !== leatherProviderId) return;
-  if (network.chainId === ChainId.Mainnet && address) {
+  if (network.chainId === mainnetChainId && address) {
     fetch('https://api.leather.io/v1/quests/connect-earn/complete', {
       method: 'POST',
       headers: {

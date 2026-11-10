@@ -1,6 +1,6 @@
-import { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 
-import { Avatar, IconProps, ItemLayout, Pressable } from '@leather.io/ui/native';
+import { Avatar, type IconProps, ItemLayout, Pressable } from '@leather.io/ui/native';
 
 interface BaseFeeOptionProps {
   onPress(): void;

@@ -22,11 +22,6 @@ component_management:
       paths:
         - packages/bitcoin
 
-    - component_id: packages-query
-      name: query
-      paths:
-        - packages/query
-
     - component_id: packages-utils
       name: utils
       paths:

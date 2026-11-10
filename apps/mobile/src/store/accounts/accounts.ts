@@ -1,4 +1,4 @@
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 
 import { type Account, deserializeAccountId, useAccountByIndex } from './accounts.read';
 

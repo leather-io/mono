@@ -1,6 +1,6 @@
-import { ComponentType } from 'react';
+import { type ComponentType } from 'react';
 
-import { AccountIcon } from '@/store/accounts/utils';
+import { type AccountIcon } from '@/store/accounts/utils';
 
 import {
   AlienIcon,
@@ -14,7 +14,7 @@ import {
   GiftIcon,
   HeartIcon,
   HomeIcon,
-  IconProps,
+  type IconProps,
   OrangeIcon,
   PiggybankIcon,
   PizzaIcon,

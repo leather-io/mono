@@ -1,6 +1,6 @@
 import type { SupportedBlockchains } from '@leather.io/models';
+import { capitalize } from '@leather.io/utils';
 
-import { capitalize } from '@app/common/utils';
 import { useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 
 import { ConnectLedgerErrorLayout } from './connect-ledger-error.layout';

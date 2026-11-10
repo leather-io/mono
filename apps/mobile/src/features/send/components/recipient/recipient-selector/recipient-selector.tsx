@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SectionListRenderItemInfo } from 'react-native';
+import { type SectionListRenderItemInfo } from 'react-native';
 
 import { SearchInput } from '@/components/search-input';
 import { useSendPasteButton } from '@/features/feature-flags';
@@ -9,8 +9,8 @@ import { RecipientSelectorItem } from '@/features/send/components/recipient/reci
 import { RecipientSelectorSearchEmptyState } from '@/features/send/components/recipient/recipient-selector/recipient-selector-search-empty-state';
 import { RecipientSelectorSectionHeader } from '@/features/send/components/recipient/recipient-selector/recipient-selector-section-header';
 import {
-  RecipientSection,
-  RecipientSuggestionEntry,
+  type RecipientSection,
+  type RecipientSuggestionEntry,
 } from '@/features/send/components/recipient/recipient.types';
 import {
   isBnsLookupCandidate,
@@ -25,7 +25,11 @@ import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/core/macro';
 import { type ZodSchema } from 'zod';
 
-import { AccountId, type FungibleCryptoAsset, type SendAssetActivity } from '@leather.io/models';
+import {
+  type AccountId,
+  type FungibleCryptoAsset,
+  type SendAssetActivity,
+} from '@leather.io/models';
 import { Box, IconButton, QrCodeIcon, Sheet } from '@leather.io/ui/native';
 
 interface RecipientSelectorProps {
@@ -90,7 +94,7 @@ export function RecipientSelector({
         // Avoid brief flickers by only showing a spinner when BNS lookup is in flight
         fetching: isBnsLookup ? <SendFormLoadingSpinner /> : undefined,
         error: () => <RecipientSelectorSearchEmptyState />,
-        success: sections => {
+        success(sections) {
           if (isPerformingSearch && sections.length === 0) {
             return <RecipientSelectorSearchEmptyState />;
           }

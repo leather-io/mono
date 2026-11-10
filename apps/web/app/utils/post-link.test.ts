@@ -19,6 +19,6 @@ describe('getPostHref', () => {
     const expected = import.meta.env.DEV
       ? 'https://prosperous-combination-099461.framer.app/posts/undefined'
       : 'https://leather.io/posts/undefined';
-    expect(getPostHref(undefined as any)).toBe(expected);
+    expect(getPostHref(undefined)).toBe(expected);
   });
 });

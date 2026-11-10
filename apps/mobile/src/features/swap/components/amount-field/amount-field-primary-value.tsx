@@ -1,10 +1,10 @@
-import { ReactNode, useState } from 'react';
-import { NativeSyntheticEvent, TextLayoutEventData, TextStyle } from 'react-native';
+import { type ReactNode, useState } from 'react';
+import { type NativeSyntheticEvent, type TextLayoutEventData, type TextStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { decimalSeparator } from '@/features/swap/swap.utils';
 
-import { Currency } from '@leather.io/models';
+import { type Currency } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 
 const textOpticalAlignmentStyle = { paddingTop: 1, marginBottom: -1 };

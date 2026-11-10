@@ -13,18 +13,20 @@ const exampleNftAssetIdentifier =
 const exampleNftTokenIdHex = '0x0100000000000000000000000000000001';
 
 export async function mockPolicyStacksNftHoldings(page: Page | BrowserContext, address: string) {
-  await page.route(`**/api.hiro.so/extended/v1/tokens/nft/holdings?principal=${address}*`, route =>
+  await page.route(`**/api.hiro.so/extended/v3/principals/${address}/balances/nft**`, route =>
     route.fulfill({
       json: {
         limit: 200,
-        offset: 0,
         total: 1,
+        cursor: {
+          next: null,
+          previous: null,
+          current: `${exampleNftAssetIdentifier}:${exampleNftTokenIdHex}`,
+        },
         results: [
           {
             asset_identifier: exampleNftAssetIdentifier,
             value: { hex: exampleNftTokenIdHex, repr: 'u1' },
-            block_height: 150000,
-            tx_id: '0x6a1c0c3b5dfb9c92024cf48922ff30726e1ad2016615f1a06e195a2a51b998ae',
           },
         ],
       },

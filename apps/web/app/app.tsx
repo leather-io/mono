@@ -17,6 +17,11 @@ declare global {
   }
 }
 
+async function importAndInitAppServices() {
+  const { initAppServices } = await import('~/services/init-app-services');
+  return initAppServices();
+}
+
 export default function App() {
   const navigate = useNavigate();
 
@@ -24,16 +29,15 @@ export default function App() {
 
   useEffect(() => {
     // Required async import otherwise Buffer is undefined
-    import('~/services/init-app-services')
-      .then(({ initAppServices }) => initAppServices())
+    importAndInitAppServices()
       // eslint-disable-next-line no-console
       .catch(console.error);
   }, []);
 
   useOnRouteChange(() => analytics.page());
-  useOnRouteChange(
-    location => location.pathname === '/' && navigate('/staking', { replace: true })
-  );
+  useOnRouteChange(location => {
+    if (location.pathname === '/') void navigate('/staking', { replace: true });
+  });
 
   return (
     <QueryClientProvider client={queryClient}>

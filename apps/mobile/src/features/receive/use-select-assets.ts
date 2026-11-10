@@ -1,8 +1,8 @@
-import { AssetType, ReceivableAsset, getAssets } from '@/features/receive/get-assets';
+import { AssetType, type ReceivableAsset, getAssets } from '@/features/receive/get-assets';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 
 import { type ReceiveType } from './utils/get-receive-type';
 
@@ -24,8 +24,8 @@ export function useSelectAssets({
   );
 
   const assets = getAssets({
-    nativeSegwitPayerAddress: nativeSegwitPayerAddress,
-    taprootPayerAddress: taprootPayerAddress,
+    nativeSegwitPayerAddress,
+    taprootPayerAddress,
     stxAddress: stxAddress ?? '',
   });
 

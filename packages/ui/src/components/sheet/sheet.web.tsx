@@ -1,4 +1,4 @@
-import { JSXElementConstructor, ReactElement, ReactNode, cloneElement } from 'react';
+import { type ReactElement, type ReactNode, cloneElement } from 'react';
 
 import { type CssFunction, css } from 'leather-styles/css';
 import { Box } from 'leather-styles/jsx';
@@ -20,7 +20,7 @@ interface RadixDialogProps extends SheetProps {
   description?: string;
   children: ReactNode;
   footer?: ReactNode;
-  header?: ReactElement<any, string | JSXElementConstructor<any>>;
+  header?: ReactElement<Pick<SheetProps, 'onClose'>>;
   onGoBack?(): void;
   wrapChildren?: boolean;
   variant?: SheetVariant;
