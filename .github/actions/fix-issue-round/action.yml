@@ -1,0 +1,83 @@
+name: fix-issue-round
+description: One repo:fix-issue round - fix, verify, review - reporting whether another round should run
+inputs:
+  round:
+    description: 'The round number; round 1 runs the fixer prompt, later rounds fix what the previous round found'
+    required: true
+  claude-code-oauth-token:
+    description: 'OAuth token for claude-code-action'
+    required: true
+  github-token:
+    description: 'The read-only job token for claude-code-action and its GitHub MCP server'
+    required: true
+  test-mnemonic:
+    description: 'Test-only wallet mnemonic for the extension end-to-end specs'
+    required: false
+    default: ''
+  bun-executable:
+    description: 'Path to a Bun binary for claude-code-action, so each Claude step skips its own download from GitHub releases'
+    required: true
+outputs:
+  continue:
+    description: 'true when another round should try to fix what this round found'
+    value: ${{ steps.end-round.outputs.continue }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: fix
+      uses: anthropics/claude-code-action@ae68417a745a5df4b2124873632bd73a2255e6f6 # v1.0.259
+      env:
+        EXTENSION_INTEGRATION_TEST_MNEMONIC: ${{ inputs.test-mnemonic }}
+      with:
+        claude_code_oauth_token: ${{ inputs.claude-code-oauth-token }}
+        github_token: ${{ inputs.github-token }}
+        claude_args: >-
+          --model opus
+          --permission-mode auto
+          --permission-prompts none
+        show_full_output: true
+        path_to_bun_executable: ${{ inputs.bun-executable }}
+        settings: >-
+          {"hooks": {"Stop": [{"hooks": [{"type": "command",
+          "command": "node \"$CLAUDE_PROJECT_DIR/tools/dist/lt.js\" fix-issue stop-guard --output status"}]}]}}
+        prompt: ${{ inputs.round == '1' && 'Follow the instructions in .github/prompts/fix-issue.md.' || format('Follow the instructions in .github/prompts/fix-issue-round.md. This is round {0}.', inputs.round) }}
+
+    - name: verify
+      id: verify
+      shell: bash
+      env:
+        ROUND: ${{ inputs.round }}
+      run: pnpm lt fix-issue round verify --round "$ROUND"
+
+    - name: review
+      if: steps.verify.outputs.verified == 'true'
+      continue-on-error: true
+      uses: anthropics/claude-code-action@ae68417a745a5df4b2124873632bd73a2255e6f6 # v1.0.259
+      with:
+        claude_code_oauth_token: ${{ inputs.claude-code-oauth-token }}
+        github_token: ${{ inputs.github-token }}
+        claude_args: >-
+          --model opus
+          --permission-mode auto
+          --permission-prompts none
+        show_full_output: true
+        path_to_bun_executable: ${{ inputs.bun-executable }}
+        settings: >-
+          {"hooks": {"Stop": [{"hooks": [{"type": "command",
+          "command": "node \"$CLAUDE_PROJECT_DIR/tools/dist/lt.js\" fix-issue stop-guard --output review"}]}]}}
+        prompt: Follow the instructions in .github/prompts/fix-issue-review.md.
+
+    - name: check-review
+      if: steps.verify.outputs.verified == 'true'
+      shell: bash
+      env:
+        ROUND: ${{ inputs.round }}
+      run: pnpm lt fix-issue round check-review --round "$ROUND"
+
+    - name: end-round
+      id: end-round
+      shell: bash
+      env:
+        ROUND: ${{ inputs.round }}
+      run: pnpm lt fix-issue round end --round "$ROUND"
