@@ -30,6 +30,9 @@
       "path": "./packages/features/tsconfig.json"
     },
     {
+      "path": "./packages/ledger/tsconfig.json"
+    },
+    {
       "path": "./packages/models/tsconfig.json"
     },
     {

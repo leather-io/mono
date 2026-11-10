@@ -1,6 +1,6 @@
 const cleanLayers = {
   presentation: ['ui', 'features'],
-  application: ['queries', 'services'],
+  application: ['queries', 'services', 'ledger'],
   domain: ['models', 'bitcoin', 'stacks'],
   state: ['state'],
   foundation: ['utils', 'constants', 'tokens', 'crypto'],
@@ -97,6 +97,29 @@ module.exports = {
       },
       to: {
         path: '^apps',
+      },
+    },
+    {
+      name: 'ledger-sdks-only-in-ledger-package',
+      severity: 'error',
+      comment: `Only @leather.io/ledger may import the Ledger device SDKs. Other packages consume them through it.`,
+      from: {
+        path: '^packages/',
+        pathNot: '^packages/ledger/',
+      },
+      to: {
+        path: '(^|/)@(ledgerhq|zondax/ledger-stacks)/',
+      },
+    },
+    {
+      name: 'ledger-contract-is-vendor-free',
+      severity: 'error',
+      comment: `The hardware wallet contract in @leather.io/ledger must not depend on Ledger-specific code or SDKs.`,
+      from: {
+        path: '^packages/ledger/src/contract/',
+      },
+      to: {
+        path: ['^packages/ledger/src/(?!contract/)', '(^|/)@(ledgerhq|zondax/ledger-stacks)/'],
       },
     },
     {

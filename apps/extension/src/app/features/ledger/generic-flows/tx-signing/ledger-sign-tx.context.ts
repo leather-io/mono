@@ -5,7 +5,7 @@ import { type StacksTransactionWire } from '@stacks/transactions';
 
 import type { SupportedBlockchains } from '@leather.io/models';
 
-import { type BaseLedgerOperationContext } from '../../utils/generic-ledger-utils';
+import type { BaseLedgerOperationContext } from '../../utils/generic-ledger-utils';
 
 interface BaseLedgerTxSigningContext extends BaseLedgerOperationContext {
   chain: SupportedBlockchains;

@@ -123,7 +123,7 @@ export function ChooseAddressStandard() {
             chevronDirection="right"
           />
         </Pressable>
-        <Pressable onClick={() => onSelectStandard('ledgerLive')}>
+        <Pressable onClick={() => onSelectStandard('bip44')}>
           <ItemLayout
             img={
               <OptionIcon>

@@ -1,43 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-import { signatureVrsToRsv } from '@stacks/common';
-import { serializeCV } from '@stacks/transactions';
-import { LedgerError } from '@zondax/ledger-stacks';
-
+import { getStacksSigner, isHardwareWalletErrorOfKind } from '@leather.io/ledger';
 import { delay } from '@leather.io/utils';
 
 import { whenSignableMessageOfType } from '@shared/signature/signature-types';
 
-import {
-  handleLedgerConnectionError,
-  isLedgerDeviceLockedError,
-  makeLedgerAppResponseError,
-} from '@app/features/ledger/dmk/ledger-dmk-errors';
-import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
-import { closeLedgerSession } from '@app/features/ledger/dmk/ledger-session';
 import { LedgerFlowSheet } from '@app/features/ledger/flow/ledger-flow-sheet';
 import { useLedgerFlow, useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import type { ActiveLedgerSigningRequest } from '@app/features/ledger/flow/ledger-flow.types';
-import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
-import {
-  isCancellableConnectionInteraction,
-  isUnlockDeviceInteraction,
-  useCancelLedgerAction,
-} from '@app/features/ledger/utils/generic-ledger-utils';
-import {
-  getStacksAppVersion,
-  hasLedgerReturnCode,
-  prepareLedgerDeviceStacksAppConnection,
-  signLedgerStacksStructuredMessage,
-  signLedgerStacksUtf8Message,
-} from '@app/features/ledger/utils/stacks-ledger-utils';
-import { stacksVersionGate } from '@app/features/ledger/utils/stacks-version-gate';
+import { useHardwareWalletOperation } from '@app/features/ledger/hardware-wallet/use-hardware-wallet-operation';
+import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { type StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 
 import { useLedgerAnalytics } from '../../hooks/use-ledger-analytics.hook';
 import { useLedgerFingerprintMigration } from '../../hooks/use-ledger-fingerprint-migration';
-import { useLedgerResponseState } from '../../utils/generic-ledger-utils';
 import {
   type LedgerMessageSigningContext,
   LedgerMsgSigningProvider,
@@ -47,6 +24,7 @@ import { OutdatedStacksAppWarningMsgSigning } from './steps/outdated-stacks-app-
 import { SignLedgerMessage } from './steps/sign-stacks-ledger-message';
 
 const noStacksAccountErrorMessage = 'No active account found for message signing';
+const checkingAppVersionDelayMs = 1_000;
 
 interface LedgerSignMsgProps {
   account: StacksAccount;
@@ -54,120 +32,70 @@ interface LedgerSignMsgProps {
 }
 function LedgerSignStacksMsg({ account, request }: LedgerSignMsgProps) {
   const { message: unsignedMessage } = request;
-  const dmk = useLedgerDmk();
-  const signerActions = useSignerActionController();
   const ledgerNavigate = useLedgerSteps();
   const ledgerAnalytics = useLedgerAnalytics();
   const migrateFingerprintIfNeeded = useLedgerFingerprintMigration();
 
-  const [latestDeviceResponse, setLatestDeviceResponse] = useLedgerResponseState();
-
-  const [awaitingDeviceConnection, setAwaitingDeviceConnection] = useState(false);
-  const [isConnectionCancellable, setIsConnectionCancellable] = useState(false);
-
   const chain = 'stacks';
 
-  async function signMessage() {
-    const stacksApp = await prepareLedgerDeviceStacksAppConnection(dmk, {
-      runAction: signerActions.run,
-      onRequiredUserInteraction(interaction) {
-        setLatestDeviceResponse({
-          deviceLocked: isUnlockDeviceInteraction(interaction),
-        });
-        setIsConnectionCancellable(isCancellableConnectionInteraction(interaction));
-      },
-    })({
-      setLoadingState: setAwaitingDeviceConnection,
-      onError(e) {
-        setIsConnectionCancellable(false);
-        if (isLedgerDeviceLockedError(e)) {
-          setLatestDeviceResponse({ deviceLocked: true });
-          return;
-        }
-        handleLedgerConnectionError(e, { chain, ledgerNavigate, setLatestDeviceResponse });
-      },
-    }).catch(() => null);
-    setIsConnectionCancellable(false);
-    if (!stacksApp) return;
-
-    try {
-      // Show checking version page immediately
-      ledgerNavigate.toCheckingAppVersion();
-      await delay(1000);
-
-      const versionInfo = await getStacksAppVersion(stacksApp);
-      ledgerAnalytics.trackDeviceVersionInfo(versionInfo);
-      setLatestDeviceResponse({ deviceLocked: versionInfo.deviceLocked });
-      if (versionInfo.deviceLocked) {
-        setAwaitingDeviceConnection(false);
-        return;
-      }
-
-      const passesVersionCheck = await stacksVersionGate(ledgerNavigate)(versionInfo);
-      if (!passesVersionCheck) {
-        setAwaitingDeviceConnection(false);
-        return;
-      }
+  const {
+    run: signMessage,
+    cancel,
+    latestDeviceResponse,
+    awaitingDeviceConnection,
+    isConnectionCancellable,
+  } = useHardwareWalletOperation({
+    connectRequest: { chain },
+    checkingAppVersionDelayMs,
+    async operation(wallet, ctx, session) {
+      if (session.app) ledgerAnalytics.trackDeviceVersionInfo(session.app);
 
       // Migrate fingerprint if needed (one-time)
-      await migrateFingerprintIfNeeded(stacksApp);
+      await migrateFingerprintIfNeeded(wallet, ctx);
 
-      ledgerNavigate.toConnectionSuccessStep('stacks');
-      await delay(1000);
       ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: false });
 
-      const resp = await whenSignableMessageOfType(unsignedMessage)({
-        async utf8(msg) {
-          return signLedgerStacksUtf8Message(stacksApp)(msg, account.derivationPath);
-        },
-        async structured(domain, msg) {
-          return signLedgerStacksStructuredMessage(stacksApp)(
-            serializeCV(domain),
-            serializeCV(msg),
-            account.derivationPath
-          );
-        },
-      });
+      const stacks = getStacksSigner(wallet);
+      const key = { derivationPath: account.derivationPath, publicKey: account.stxPublicKey };
 
-      // Assuming here that public keys are wrong. Alternatively, we may want
-      // to proactively check the key before signing
-      if (hasLedgerReturnCode(resp, LedgerError.DataIsInvalid)) {
-        ledgerNavigate.toDevicePayloadInvalid();
-        return;
+      try {
+        const signature = await whenSignableMessageOfType(unsignedMessage)({
+          async utf8(msg) {
+            return stacks.signMessage({ message: msg, key }, ctx);
+          },
+          async structured(domain, msg) {
+            return stacks.signStructuredMessage({ message: msg, domain, key }, ctx);
+          },
+        });
+
+        ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
+        await delay(1000);
+
+        ledgerAnalytics.messageSignedOnLedgerSuccessfully();
+
+        ledgerNavigate.settleLedgerAction(request, { status: 'signed', value: signature });
+      } catch (e) {
+        // Assuming here that public keys are wrong. Alternatively, we may want
+        // to proactively check the key before signing
+        if (isHardwareWalletErrorOfKind(e, 'invalid-payload')) {
+          ledgerNavigate.toDevicePayloadInvalid();
+          return;
+        }
+
+        if (isHardwareWalletErrorOfKind(e, 'rejected')) {
+          ledgerNavigate.toOperationRejectedStep(`Message signing operation rejected`);
+          ledgerAnalytics.messageSignedOnLedgerRejected();
+          ledgerNavigate.settleLedgerAction(request, { status: 'cancelled' });
+          return;
+        }
+
+        throw e;
       }
-
-      if (hasLedgerReturnCode(resp, LedgerError.TransactionRejected)) {
-        ledgerNavigate.toOperationRejectedStep(`Message signing operation rejected`);
-        ledgerAnalytics.messageSignedOnLedgerRejected();
-        ledgerNavigate.settleLedgerAction(request, { status: 'cancelled' });
-        return;
-      }
-
-      if (!hasLedgerReturnCode(resp, LedgerError.NoErrors)) {
-        throw makeLedgerAppResponseError(resp);
-      }
-
-      ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
-      await delay(1000);
-
-      ledgerAnalytics.messageSignedOnLedgerSuccessfully();
-
-      ledgerNavigate.settleLedgerAction(request, {
-        status: 'signed',
-        value: {
-          signature: signatureVrsToRsv(resp.signatureVRS.toString('hex')),
-          publicKey: account.stxPublicKey,
-        },
-      });
-    } catch (e) {
-      handleLedgerConnectionError(e, { chain, ledgerNavigate, setLatestDeviceResponse });
-    } finally {
-      await closeLedgerSession(dmk, stacksApp.sessionId);
-    }
-  }
+    },
+  });
 
   function closeAction() {
-    signerActions.cancelActive();
+    cancel();
     ledgerNavigate.cancelLedgerAction();
   }
 
