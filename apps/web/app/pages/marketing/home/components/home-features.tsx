@@ -148,13 +148,12 @@ export function HomeFullControl() {
         />
         <FeatureCard
           title="Your tokens, at a glance"
-          tag="Mobile"
           description="View your Bitcoin and Stacks token balances together, and choose an asset to see its details."
           visual={
             <LottieAnimation
               src="/marketing/home/current/mobile-tokens.lottie.json"
               poster="/marketing/home/current/mobile-tokens.png"
-              alt="A mobile asset list with Bitcoin, STX, sBTC and USDCx balances"
+              alt="Token balances opening into token details with tabs and a price chart"
               aspect={largeCardAspect}
             />
           }
@@ -167,13 +166,12 @@ export function HomeFullControl() {
       >
         <FeatureCard
           title="Explore apps from your wallet"
-          tag="Mobile"
-          description="Browse Bitcoin and Stacks apps in Leather, then review the transactions they request."
+          description="Discover Bitcoin and Stacks apps, connect with Leather, and review requested transactions before approving."
           visual={
             <LottieAnimation
               src="/marketing/home/current/apps-browser.lottie.json"
               poster="/marketing/home/current/apps-browser.png"
-              alt="Leather’s in-app browser showing Bitcoin and Stacks app categories"
+              alt="Bitcoin and Stacks app categories and listings in Leather’s app directory"
               aspect={smallCardAspect}
             />
           }
@@ -209,11 +207,7 @@ export function HomeProtection() {
       <Reveal>
         <HomeSectionHeading id="home-protection-heading" lines={['Clarity,', 'at every step.']} />
       </Reveal>
-      <Grid
-        gridTemplateColumns={['1fr', null, 'repeat(2, 1fr)', 'repeat(3, 1fr)']}
-        gap="space.03"
-        mt="space.07"
-      >
+      <Grid gridTemplateColumns={['1fr', null, 'repeat(2, 1fr)']} gap="space.03" mt="space.07">
         <FeatureCard
           title="Show or hide tokens"
           tag="Extension"
@@ -228,19 +222,6 @@ export function HomeProtection() {
               src={`${animationsPath}/review-transactions.lottie.json`}
               poster="/marketing/home/review-transactions.webp"
               alt="A Clarity contract call to review, with Edit and Approve buttons"
-              aspect={smallCardAspect}
-            />
-          }
-        />
-        <FeatureCard
-          title="Your portfolio on the web"
-          tag="Web"
-          description="Connect Leather to view your Bitcoin and Stacks balances and activity in your browser."
-          visual={
-            <LottieAnimation
-              src="/marketing/home/current/web-portfolio.lottie.json"
-              poster="/marketing/home/current/web-portfolio.png"
-              alt="A web portfolio listing Bitcoin, STX and USDCx balances"
               aspect={smallCardAspect}
             />
           }
