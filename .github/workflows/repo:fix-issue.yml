@@ -30,7 +30,6 @@ jobs:
     permissions:
       contents: read # checkout only; this job runs the fixer and its code and never writes to the repository
       issues: read # read the issue and its comments for the fixer
-      id-token: write # OIDC exchange for claude-code-action
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
