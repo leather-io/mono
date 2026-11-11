@@ -47,6 +47,8 @@ const productColor = {
  * the panel's tabular numerals. Small glyphs sit at 12.
  */
 const rowHeight = mockupSize.rowHeight;
+/** How far a list row's wash bleeds past the content inset, as ListItemBox's does. */
+const rowBleed = 8;
 const iconSize = mockupSize.icon;
 const glyphSize = 12;
 const primaryText: CSSProperties = { ...mockupType.body, fontWeight: 500 };
@@ -300,8 +302,8 @@ function TransactionRow({
         height: stagePx(rowHeight),
         gap: stagePx(12),
         // ListItemBox's wash bleeds a little past the content, as in the product
-        margin: `0 ${stagePx(-8)}`,
-        padding: `0 ${stagePx(8)}`,
+        margin: `0 ${stagePx(-rowBleed)}`,
+        padding: `0 ${stagePx(rowBleed)}`,
         borderRadius: stagePx(8),
         backgroundImage: attentionWash,
         backgroundRepeat: 'no-repeat',
@@ -604,7 +606,7 @@ function ProposalCard({
                         transform: isSigned ? 'none' : `translateX(${stagePx(6)})`,
                         transition: transitionFor(isAnimated, ['opacity', 'transform'], 400, 80),
                         ...mockupType.meta,
-                        color: mockupColor.positive,
+                        color: mockupColor.text,
                       }}
                     >
                       Signed {proposal.signedAt}
@@ -615,7 +617,7 @@ function ProposalCard({
                     whiteSpace="nowrap"
                     style={{
                       ...mockupType.meta,
-                      color: hasSigned ? mockupColor.positive : mockupColor.secondary,
+                      color: hasSigned ? mockupColor.text : mockupColor.secondary,
                     }}
                   >
                     {hasSigned ? `Signed ${proposal.cosignedAt}` : 'Not signed yet'}
@@ -653,16 +655,19 @@ function ProposalCard({
   );
 }
 
-const proposalTop = 20;
-// Card height (≈275) plus a gap, so the next proposal waits just below the panel's fade
+// The feed row's wash bleeds past the content inset, so its left edge sits at 18 − 8 = 10;
+// the card starts 10 down so the highlighted row has the same gutter above as beside it
+const proposalTop = mockupSize.inset - rowBleed;
+// Card height (≈275) plus a gap, so the next proposal waits just below the panel
 const proposalPitch = 292;
 
 /**
  * "Shared vaults", default: a vault proposal on its transaction page. Amber has signed; Sign
  * presses in, Sam (me) turns Signed and Broadcast transaction enables; Broadcast presses in and
- * turns green with a check as the row's badge does; then the page scrolls up, fading at the
- * top edge, and the next proposal (a different vault, asset and amount) comes in from below.
- * Reduced motion shows the first proposal broadcast.
+ * turns green with a check as the row's badge does; then the page scrolls up, fading out at the
+ * top edge, and the next proposal (a different vault, asset and amount) slides in from below,
+ * fading in only as it moves: until then it is fully hidden. Reduced motion shows the first
+ * proposal broadcast.
  */
 function SharedVaultBroadcastMockup() {
   // 0 pending · 1 Sign pressed · 2 signed · 3 Broadcast pressed · 4 broadcast · 5 next one in
@@ -689,7 +694,8 @@ function SharedVaultBroadcastMockup() {
     <BentoStage label="A Team Treasury vault proposal to send BTC: Amber has signed, I sign, the transaction is broadcast, and the next proposal comes in">
       <div ref={ref} style={{ position: 'absolute', inset: 0 }}>
         <MockupPanel>
-          <styled.div position="absolute" inset="0" style={edgeFade(18, 44)}>
+          {/* The top fade stays above the resting card, so it only touches the one leaving */}
+          <styled.div position="absolute" inset="0" style={edgeFade(proposalTop - 2, 44)}>
             {cards.map(({ position, slot, phase }) => (
               <styled.div
                 key={position}
@@ -699,7 +705,8 @@ function SharedVaultBroadcastMockup() {
                   left: stagePx(mockupSize.inset),
                   right: stagePx(mockupSize.inset),
                   transform: `translateY(${stagePx(slot * proposalPitch)})`,
-                  opacity: slot < 0 ? 0 : 1,
+                  // Only the current card shows; the next one fades in as it slides up
+                  opacity: slot === 0 ? 1 : 0,
                   transition: transitionFor(isAnimated, ['transform', 'opacity'], 700),
                 }}
               >
@@ -718,9 +725,10 @@ function SharedVaultBroadcastMockup() {
 }
 
 // ---------------------------------------------------------------------------------------------
-// B — the vault page: balance hero (vault/components/vault-balance-hero.tsx) over its pending
-// transactions (vault/components/vault-transactions.tsx). Signatures land, each proposal
-// clears with a check and the queue moves up.
+// B — the vault page: balance header (vault/components/vault-balance-hero.tsx) over its pending
+// transactions (vault/components/vault-transactions.tsx). Each signature fills one segment of
+// a row's threshold bar; at the threshold the proposal is broadcast, clears and the queue
+// moves up.
 // ---------------------------------------------------------------------------------------------
 
 interface QueuedProposal {
@@ -736,113 +744,189 @@ const queue: [QueuedProposal, ...QueuedProposal[]] = [
   { account: 'Grants', amount: '0.0068 BTC', fiat: '$511.36' },
 ];
 
-const heroInset = 10;
-const heroHeight = 104;
-const queueTop = heroInset + heroHeight + 14 + 15 + 6;
+/** The vault's 2-of-3 policy: one progress segment per required signature. */
+const requiredSignatures = 2;
 
-/** A hairline under the active row's text: its signatures toward the 2-of-3 threshold. */
-function SignatureProgress({
-  signed,
-  isDone,
-  isShown,
-  isAnimated,
-}: {
-  signed: number;
-  isDone: boolean;
-  isShown: boolean;
-  isAnimated: boolean;
-}) {
+/** The Leather display face, as the bond card's headline figure uses it. */
+const brandFigure: CSSProperties = {
+  ...mockupType.headline,
+  fontFamily: 'Marche, sans-serif',
+  fontWeight: 400,
+  letterSpacing: '0.02em',
+  textTransform: 'uppercase',
+};
+
+// The balance block: the Marche figure on a tight line over the fiat line. The vault tile spans
+// exactly from the figure's cap top to the fiat line's baseline: its bottom is aligned to that
+// baseline (last-baseline alignment), and its size is the distance up to the cap top, measured
+// in the browser: Marche's 0.708 em caps start 3.3 down a 26 line, the fiat baseline sits
+// 39.7 down.
+const figureLine = 26;
+const fiatLine = 15;
+const figureGap = 2;
+const vaultTileSize = 36.4;
+const balanceHeight = figureLine + figureGap + fiatLine;
+
+const headerTop = mockupSize.inset;
+const headerBottom = headerTop + balanceHeight + 18;
+const pendingTop = headerBottom + 14;
+const queueTop = pendingTop + 15 + 6;
+// Rows that fit above the panel's bottom edge
+const visibleRows = Math.ceil((mockupSize.panelHeight - queueTop) / rowHeight);
+
+// AvatarSq's lg glyph-to-tile ratio (30 / 56)
+const glyphRatio = 0.54;
+
+/** AvatarSq with the vault glyph (pages/multisig/components/avatar-sq.tsx), Blue theme. */
+function VaultTile({ size }: { size: number }) {
+  const mask = "url('/multisig/icons/account/vault.svg') center / contain no-repeat";
   return (
     <styled.span
-      position="absolute"
-      overflow="hidden"
+      position="relative"
+      flexShrink={0}
       style={{
-        opacity: isShown ? 1 : 0,
-        transition: transitionFor(isAnimated, ['opacity'], 300),
-        left: stagePx(8 + iconSize + 12),
-        right: stagePx(8),
-        bottom: stagePx(4),
-        height: stagePx(2),
-        borderRadius: stagePx(1),
-        background: mockupColor.divider,
+        width: stagePx(size),
+        height: stagePx(size),
+        // squareAvatarRadius: 20% of the tile
+        borderRadius: stagePx(size * 0.2),
+        background: "url('/multisig/themes/blue.jpg') center/cover no-repeat",
       }}
     >
-      <styled.span
-        position="absolute"
-        top="0"
-        bottom="0"
-        left="0"
+      {/* Out of flow, so the tile's baseline is its bottom edge */}
+      <span
         style={{
-          width: `${(signed / 2) * 100}%`,
-          background: isDone ? mockupColor.positive : productColor.orange,
-          transition: transitionFor(isAnimated, ['width', 'background-color'], 520),
+          position: 'absolute',
+          inset: `${(1 - glyphRatio) * 50}%`,
+          background: '#FFFFFF',
+          mask,
+          WebkitMask: mask,
         }}
       />
     </styled.span>
   );
 }
 
+/** The vault page's balance, without the vault name: the vault tile beside figure and fiat. */
+function VaultBalance() {
+  return (
+    <styled.div display="flex" style={{ alignItems: 'last baseline', gap: stagePx(12) }}>
+      <VaultTile size={vaultTileSize} />
+      <styled.div display="flex" flexDirection="column" style={{ gap: stagePx(figureGap) }}>
+        <styled.span
+          display="block"
+          whiteSpace="nowrap"
+          style={{ ...brandFigure, lineHeight: stagePx(figureLine), height: stagePx(figureLine) }}
+        >
+          1.2480 BTC
+        </styled.span>
+        <styled.span
+          display="block"
+          style={{
+            ...mockupType.meta,
+            lineHeight: stagePx(fiatLine),
+            color: mockupColor.secondary,
+          }}
+        >
+          $93,849.60
+        </styled.span>
+      </styled.div>
+    </styled.div>
+  );
+}
+
 /**
- * "Shared vaults", option B: the Team Treasury vault page. The top pending transaction gets
- * its second signature (the progress line fills), is broadcast (check badge, green line),
- * then clears; the queue moves up and another proposal joins at the bottom.
+ * A row's threshold bar under its text: one segment per required signature, each filling as a
+ * member signs, all turning green once the transaction is broadcast.
+ */
+function SignatureProgress({
+  signed,
+  isDone,
+  isAnimated,
+}: {
+  signed: number;
+  isDone: boolean;
+  isAnimated: boolean;
+}) {
+  return (
+    <styled.span
+      position="absolute"
+      display="flex"
+      style={{
+        gap: stagePx(3),
+        left: stagePx(rowBleed + iconSize + 12),
+        right: stagePx(rowBleed),
+        bottom: stagePx(4),
+        height: stagePx(2),
+      }}
+    >
+      {Array.from({ length: requiredSignatures }, (_, segment) => (
+        <styled.span
+          key={segment}
+          position="relative"
+          flex="1"
+          overflow="hidden"
+          style={{ borderRadius: stagePx(1), background: mockupColor.divider }}
+        >
+          <styled.span
+            position="absolute"
+            inset="0"
+            style={{
+              transformOrigin: 'left center',
+              transform: segment < signed ? 'none' : 'scaleX(0)',
+              background: isDone ? mockupColor.positive : productColor.orange,
+              transition: transitionFor(isAnimated, ['transform', 'background-color'], 520),
+            }}
+          />
+        </styled.span>
+      ))}
+    </styled.span>
+  );
+}
+
+/**
+ * "Shared vaults", option B: a vault page. The pending transaction at the top gets its second
+ * signature (its second bar segment fills), is broadcast (check badge, the bar turns green),
+ * the next proposal gets its first signature, then the top one clears and the queue moves up.
  */
 function SharedVaultQueueMockup() {
-  // 0 waiting · 1 second signature · 2 broadcast · 3 clears, queue moves up
-  const { ref, step, isAnimated } = useLoopingSequence<HTMLDivElement>([1100, 900, 1000], 900);
+  // 0 waiting · 1 second signature · 2 broadcast · 3 next row's first signature · 4 clears
+  const { ref, step, isAnimated } = useLoopingSequence<HTMLDivElement>([1100, 900, 800, 900], 900);
   const loop = useLoopCount(step);
   const head = isAnimated ? loop : 0;
-  const headStep = isAnimated ? step : 2;
-  const hasCleared = isAnimated && step >= 3;
+  // Reduced motion: the top row broadcast, the next one at one signature
+  const visibleStep = isAnimated ? step : 3;
+  const hasCleared = isAnimated && step >= 4;
 
-  const rows = [-1, 0, 1, 2, 3, 4].map(offset => {
-    const position = head + offset;
+  const rows = Array.from({ length: visibleRows + 2 }, (_, index) => index - 1).map(offset => {
     const slot = offset - (hasCleared ? 1 : 0);
-    const isHead = offset === 0;
-    const signed = offset < 0 || (isHead && headStep >= 1) ? 2 : 1;
-    const isDone = offset < 0 || (isHead && headStep >= 2);
-    return { position, slot, signed, isDone };
+    let signed = 0;
+    if (offset < 0) signed = 2;
+    else if (offset === 0) signed = visibleStep >= 1 ? 2 : 1;
+    else if (offset === 1 && visibleStep >= 3) signed = 1;
+    const isDone = offset < 0 || (offset === 0 && visibleStep >= 2);
+    return { position: head + offset, slot, signed, isDone };
   });
 
   return (
-    <BentoStage label="The Team Treasury vault page: its BTC balance over pending transactions that collect signatures, broadcast and clear one by one">
+    <BentoStage label="A vault page: its BTC balance over pending transactions whose signature bars fill one segment per signer, then broadcast and clear one by one">
       <div ref={ref} style={{ position: 'absolute', inset: 0 }}>
         <MockupPanel>
-          {/* MultisigHero, balance variant, in the vault's Blue theme */}
           <styled.div
             position="absolute"
-            display="flex"
-            flexDirection="column"
-            justifyContent="space-between"
-            color="white"
-            style={{
-              top: stagePx(heroInset),
-              left: stagePx(heroInset),
-              right: stagePx(heroInset),
-              height: stagePx(heroHeight),
-              padding: `${stagePx(12)} ${stagePx(14)}`,
-              borderRadius: stagePx(8),
-              background: "url('/multisig/themes/blue.jpg') center/cover no-repeat",
-            }}
+            style={{ top: stagePx(headerTop), left: stagePx(mockupSize.inset) }}
           >
-            <styled.span style={{ ...primaryText, opacity: 0.85 }}>Team Treasury</styled.span>
-            <span>
-              <styled.span display="block" style={mockupType.headline}>
-                1.2480 BTC
-              </styled.span>
-              <styled.span display="block" style={{ ...mockupType.meta, opacity: 0.8 }}>
-                $93,849.60
-              </styled.span>
-            </span>
+            <VaultBalance />
           </styled.div>
+          <styled.div
+            position="absolute"
+            left="0"
+            right="0"
+            style={{ top: stagePx(headerBottom), height: 1, background: mockupColor.divider }}
+          />
 
           <styled.div
             position="absolute"
-            style={{
-              top: stagePx(heroInset + heroHeight + 14),
-              left: stagePx(mockupSize.inset),
-              ...secondaryText,
-            }}
+            style={{ top: stagePx(pendingTop), left: stagePx(mockupSize.inset), ...secondaryText }}
           >
             Pending
           </styled.div>
@@ -866,7 +950,7 @@ function SharedVaultQueueMockup() {
                     left: stagePx(mockupSize.inset),
                     right: stagePx(mockupSize.inset),
                     transform: `translateY(${stagePx(Math.max(slot, 0) * rowHeight)}) scale(${slot < 0 ? 0.97 : 1})`,
-                    opacity: slot < 0 || slot > 3 ? 0 : 1,
+                    opacity: slot < 0 || slot >= visibleRows ? 0 : 1,
                     // The cleared row fades out first, then the queue closes the gap
                     transition: transitionFor(
                       isAnimated,
@@ -885,22 +969,20 @@ function SharedVaultQueueMockup() {
                     isAnimated={isAnimated}
                     caption={
                       <SwapText
-                        index={isDone ? 2 : signed - 1}
+                        index={isDone ? requiredSignatures + 1 : signed}
                         isAnimated={isAnimated}
                         items={[
-                          `${entry.account} · 1 of 2 signed`,
-                          `${entry.account} · 2 of 2 signed`,
+                          ...Array.from(
+                            { length: requiredSignatures + 1 },
+                            (_, count) =>
+                              `${entry.account} · ${count} of ${requiredSignatures} signed`
+                          ),
                           `${entry.account} · Broadcast`,
                         ]}
                       />
                     }
                   >
-                    <SignatureProgress
-                      signed={signed}
-                      isDone={isDone}
-                      isShown={slot <= 0}
-                      isAnimated={isAnimated}
-                    />
+                    <SignatureProgress signed={signed} isDone={isDone} isAnimated={isAnimated} />
                   </TransactionRow>
                 </styled.div>
               );
@@ -1233,18 +1315,7 @@ export function BondPositionMockup() {
                   <InfoCircleIcon variant="small" color="ink.text-subdued" />
                 </ScaledIcon>
               </styled.div>
-              <styled.div
-                textTransform="uppercase"
-                style={{
-                  ...mockupType.headline,
-                  fontFamily: 'Marche, sans-serif',
-                  fontWeight: 400,
-                  letterSpacing: '0.02em',
-                  marginTop: stagePx(4),
-                }}
-              >
-                $31,420.50
-              </styled.div>
+              <styled.div style={{ ...brandFigure, marginTop: stagePx(4) }}>$31,420.50</styled.div>
               <styled.div style={{ ...secondaryText, marginTop: stagePx(2) }}>0.50 BTC</styled.div>
             </div>
             <styled.img
