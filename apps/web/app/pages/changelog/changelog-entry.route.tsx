@@ -1,20 +1,16 @@
 import { Link, type MetaDescriptor } from 'react-router';
 
-import { cmsClient, getBlockText, urlFor } from '~/constants/cms-client';
+import { siteOrigin } from '~/pages/marketing/shared/marketing-meta';
 
-import { changelogEntryBySlugQuery } from '@leather.io/cms';
 import { ArrowLeftIcon, Button } from '@leather.io/ui';
 
 import { type Route } from './+types/changelog-entry.route';
+import { getChangelogDescription, getChangelogEntry } from './changelog.data';
 import { ChangelogEntry } from './components/changelog-entry';
 import { ChangelogEntryLayout, ChangelogPageLayout } from './components/changelog-page-layout';
 
-export async function loader({ params }: Route.LoaderArgs) {
-  const { slug } = params;
-
-  const entry = await cmsClient.fetch(changelogEntryBySlugQuery, { slug });
-
-  return { entry };
+export function loader({ params }: Route.LoaderArgs) {
+  return { entry: getChangelogEntry(params.slug) };
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {
@@ -27,12 +23,8 @@ export function meta({ loaderData }: Route.MetaArgs) {
 
   const { entry } = loaderData;
   const title = entry.title ?? 'Changelog';
-  const textBlocks = entry.body.filter(block => '_type' in block && block._type === 'block');
-  const fullText = getBlockText(textBlocks, ' ');
-  const description = fullText.split(/(?<!\d)\.(?!\d)|[!?]/)[0].trim() + '.';
-  const imageUrl = entry.heroImage?.asset?._ref
-    ? urlFor(entry.heroImage).auto('format').format('webp').width(600).height(338).url()
-    : undefined;
+  const description = getChangelogDescription(entry);
+  const imageUrl = entry.cover ? `${siteOrigin}${entry.cover}` : undefined;
 
   const metaTags: MetaDescriptor[] = [
     { title: `${title} – Leather Changelog` },
@@ -67,7 +59,7 @@ export default function ChangelogEntryRoute({ loaderData }: Route.ComponentProps
         </Link>
       }
     >
-      <ChangelogEntry entry={entry} key={entry._id}>
+      <ChangelogEntry entry={entry} key={entry.slug}>
         <ChangelogEntryLayout
           leftColumn={
             <>

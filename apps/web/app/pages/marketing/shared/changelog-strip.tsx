@@ -1,8 +1,7 @@
 import { Link } from 'react-router';
 
-import { type SanityImageObject } from '@sanity/image-url/lib/types/types';
 import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
-import { cmsClient, marketingCmsRequestOptions, urlFor } from '~/constants/cms-client';
+import { getChangelogEntries } from '~/pages/changelog/changelog.data';
 
 import { MarketingTag } from './marketing-tag';
 import { Reveal } from './reveal';
@@ -15,50 +14,25 @@ export interface ChangelogStripEntry {
   /** ISO publish date. */
   date?: string;
   imageUrl?: string;
-  /** Tag names from Sanity (e.g. "extension", "web"), shown as chips. */
+  /** Tag names (e.g. "extension", "web"), shown as chips. */
   tags?: string[];
-}
-
-// Only the newest entries and the fields the strip renders (the shared changelogQuery pulls
-// every entry with its full body).
-const changelogStripQuery = `*[
-  _type == "changelog" && publishedAt <= now()
-] | order(publishedAt desc)[0...$limit] {
-  "slug": slug.current,
-  title,
-  publishedAt,
-  heroImage,
-  "tags": tags[]->name
-}`;
-
-interface ChangelogStripQueryResult {
-  slug: string;
-  title: string;
-  publishedAt?: string;
-  heroImage?: SanityImageObject | null;
-  tags: (string | null)[] | null;
 }
 
 /**
  * Loader helper: the latest changelog entries for the strip, newest first. Never throws, so a
- * Sanity outage can't take down a marketing page; the strip just renders nothing.
+ * content problem can't take down a marketing page; the strip just renders nothing.
  */
-export async function fetchChangelogStrip(limit = 4): Promise<ChangelogStripEntry[]> {
+export function getChangelogStrip(limit = 4): ChangelogStripEntry[] {
   try {
-    const entries = await cmsClient.fetch<ChangelogStripQueryResult[]>(
-      changelogStripQuery,
-      { limit },
-      marketingCmsRequestOptions
-    );
-    return (entries ?? []).map(entry => ({
-      slug: entry.slug,
-      title: entry.title,
-      date: entry.publishedAt,
-      imageUrl: entry.heroImage?.asset
-        ? urlFor(entry.heroImage).width(800).format('webp').quality(75).url()
-        : undefined,
-      tags: (entry.tags ?? []).flatMap(tag => (tag ? [tag] : [])),
-    }));
+    return getChangelogEntries()
+      .slice(0, limit)
+      .map(entry => ({
+        slug: entry.slug,
+        title: entry.title,
+        date: entry.publishedAt,
+        imageUrl: entry.cover,
+        tags: entry.tags,
+      }));
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to load changelog strip', error);

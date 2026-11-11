@@ -4,7 +4,7 @@ import { styled } from 'leather-styles/jsx';
 import {
   ChangelogStrip,
   type ChangelogStripEntry,
-  fetchChangelogStrip,
+  getChangelogStrip,
 } from '~/pages/marketing/shared/changelog-strip';
 import { marketingHeaders, marketingMeta } from '~/pages/marketing/shared/marketing-meta';
 import { MarketingPage } from '~/pages/marketing/shared/marketing-page';
@@ -16,8 +16,8 @@ import { EarningCards } from './components/earning-cards';
 import { FeaturedAppsCarousel } from './components/featured-apps-carousel';
 import { ProjectDirectory } from './components/project-directory';
 
-export async function loader(): Promise<{ changelog: ChangelogStripEntry[] }> {
-  return { changelog: await fetchChangelogStrip() };
+export function loader(): { changelog: ChangelogStripEntry[] } {
+  return { changelog: getChangelogStrip() };
 }
 
 export const headers = marketingHeaders;

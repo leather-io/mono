@@ -1,7 +1,7 @@
 import {
   ChangelogStrip,
   type ChangelogStripEntry,
-  fetchChangelogStrip,
+  getChangelogStrip,
 } from '~/pages/marketing/shared/changelog-strip';
 import { marketingHeaders, marketingMeta } from '~/pages/marketing/shared/marketing-meta';
 import { MarketingPage } from '~/pages/marketing/shared/marketing-page';
@@ -29,11 +29,7 @@ export async function loader(): Promise<{
   changelog: ChangelogStripEntry[];
   bondTargetRate: BondTargetRate;
 }> {
-  const [changelog, bondTargetRate] = await Promise.all([
-    fetchChangelogStrip(),
-    fetchBondTargetRate(),
-  ]);
-  return { changelog, bondTargetRate };
+  return { changelog: getChangelogStrip(), bondTargetRate: await fetchBondTargetRate() };
 }
 
 export default function HomeRoute({ loaderData }: Route.ComponentProps) {

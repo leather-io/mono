@@ -1,19 +1,23 @@
 import { cmsClient, marketingCmsRequestOptions } from '~/constants/cms-client';
+import { getChangelogEntries } from '~/pages/changelog/changelog.data';
 
 import {
-  type SitemapContent,
+  type SitemapCmsContent,
   getSitemapPaths,
   renderSitemap,
   sitemapContentQuery,
 } from './sitemap.utils';
 
 export async function loader() {
-  const content = await cmsClient.fetch<SitemapContent>(
+  const content = await cmsClient.fetch<SitemapCmsContent>(
     sitemapContentQuery,
     {},
     marketingCmsRequestOptions
   );
-  const paths = await getSitemapPaths(content);
+  const paths = await getSitemapPaths({
+    ...content,
+    changelogSlugs: getChangelogEntries().map(entry => entry.slug),
+  });
 
   return new Response(renderSitemap(paths), {
     headers: {

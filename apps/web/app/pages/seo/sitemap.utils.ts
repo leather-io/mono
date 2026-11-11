@@ -18,15 +18,17 @@ export const sitemapContentQuery = `{
   ] | order(publishedAt desc).slug.current,
   "guideSlugs": *[
     _type == "helpCenterGuide" && defined(slug.current)
-  ] | order(title asc).slug.current,
-  "changelogSlugs": *[
-    _type == "changelog" && publishedAt <= now() && defined(slug.current)
-  ] | order(publishedAt desc).slug.current
+  ] | order(title asc).slug.current
 }`;
 
-export interface SitemapContent {
+/** Result of sitemapContentQuery */
+export interface SitemapCmsContent {
   postSlugs: string[];
   guideSlugs: string[];
+}
+
+interface SitemapContent extends SitemapCmsContent {
+  /** From the repo content, see changelog.data.ts */
   changelogSlugs: string[];
 }
 

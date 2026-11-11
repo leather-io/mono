@@ -42,8 +42,6 @@
     "@leather.io/stacks": "workspace:*",
     "@leather.io/ui": "workspace:*",
     "@leather.io/utils": "workspace:*",
-    "@portabletext/react": "4.0.2",
-    "@portabletext/to-html": "3.0.0",
     "@react-router/node": "7.18.1",
     "@react-router/serve": "7.18.1",
     "@sanity/image-url": "1.2.0",
