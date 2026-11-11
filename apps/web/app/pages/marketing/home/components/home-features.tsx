@@ -5,6 +5,7 @@ import { LottieAnimation } from '~/pages/marketing/shared/lottie-animation';
 import { MarketingTag } from '~/pages/marketing/shared/marketing-tag';
 import { Reveal } from '~/pages/marketing/shared/reveal';
 
+import { ActivityMockup, BtcNotificationsMockup } from './bento-activity';
 import {
   BondPositionsAnimation,
   LedgerAnimation,
@@ -192,34 +193,13 @@ export function HomeFullControl() {
         <FeatureCard
           title="Know every move"
           description="Check transaction status, amounts and fees in your activity history."
-          visual={
-            <ScaledVisual scale={0.7}>
-              <styled.img
-                src="/marketing/home/know-every-move.svg"
-                alt="Activity list with sending, sent and received transactions"
-                width="100%"
-                height="auto"
-                style={{ aspectRatio: '390 / 280' }}
-                loading="lazy"
-                decoding="async"
-              />
-            </ScaledVisual>
-          }
+          visual={<ActivityMockup />}
         />
         <FeatureCard
           title="Get BTC notifications"
           tag="Extension"
           description="Turn on browser notifications for alerts when Bitcoin sends and receives confirm."
-          visual={
-            <ScaledVisual scale={0.64}>
-              <LottieAnimation
-                src={`${animationsPath}/btc-notifications.lottie.json`}
-                poster="/marketing/home/btc-notifications.webp"
-                alt="A notification: BTC received 5 min ago"
-                aspect={smallArtAspect}
-              />
-            </ScaledVisual>
-          }
+          visual={<BtcNotificationsMockup />}
         />
       </Grid>
     </HomeSection>

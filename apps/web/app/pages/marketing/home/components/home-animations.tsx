@@ -166,7 +166,7 @@ export function SpamFreeAnimation({ aspect }: { aspect: string }) {
   );
 }
 
-// Palette of the static mockups (know-every-move.svg, the Lottie posters): light theme ink tokens
+// Palette of the static mockups (the Lottie posters): light theme ink tokens
 const mockup = {
   panel: '#FFFFFF',
   border: '#E5E3E1',
