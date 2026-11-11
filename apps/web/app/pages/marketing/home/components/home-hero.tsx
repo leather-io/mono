@@ -3,6 +3,13 @@ import { Fragment } from 'react';
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
 import { StoreButtons } from '~/pages/marketing/shared/store-buttons';
 
+const partners = [
+  { name: 'Coinbase', src: '/marketing/home/partner-coinbase.webp', width: 140 },
+  { name: 'Binance', src: '/marketing/home/partner-binance.webp', width: 140 },
+  { name: 'MoonPay', src: '/marketing/home/partner-moonpay.webp', width: 140 },
+  { name: 'Gate', src: '/marketing/home/partner-gate.webp', width: 106 },
+];
+
 // Entrance motion rebuilt from the Framer site's appear effects. Pure CSS, so it runs before
 // hydration and without JS. Every entrance starts at opacity 0.001 rather than 0: the SSR HTML stays
 // visible to crawlers and the first paint still counts for LCP. Reduced motion: no animation.
@@ -133,12 +140,29 @@ export function HomeHero() {
         mt={['space.07', null, 'space.05']}
       >
         <styled.p textStyle="caption.01" color="ink.text-secondary" maxW="160px">
-          Buy through Onramper.
+          Buy instantly through trusted partners.
         </styled.p>
-        <styled.p textStyle="body.02" color="ink.text-secondary" flex={[null, null, '0 1 794px']}>
-          Compare purchase options in Leather’s buy flow. Available providers, payment methods,
-          fees, and limits depend on your location.
-        </styled.p>
+        <styled.ul
+          aria-label="Partners"
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          gap={['space.02', null, 'space.09']}
+          flex={[null, null, '0 1 794px']}
+        >
+          {partners.map(partner => (
+            <styled.li key={partner.name} flexShrink={1} minW={0}>
+              <styled.img
+                src={partner.src}
+                alt={partner.name}
+                style={{ width: partner.width }}
+                maxW="100%"
+                height="auto"
+                loading="lazy"
+              />
+            </styled.li>
+          ))}
+        </styled.ul>
       </Flex>
     </styled.section>
   );
