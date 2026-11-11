@@ -5,6 +5,7 @@ import { LottieAnimation } from '~/pages/marketing/shared/lottie-animation';
 import { Reveal } from '~/pages/marketing/shared/reveal';
 
 import { ActivityMockup, BtcNotificationsMockup } from './bento-activity';
+import { SendMockup, TokensMockup } from './bento-assets';
 import { ManageTokensMockup, ReviewTransactionMockup } from './bento-clarity';
 import { BondPositionMockup, SharedVaultMockup } from './bento-vaults';
 import { LedgerAnimation, SwapsCoins, animationsPath } from './home-animations';
@@ -139,28 +140,12 @@ export function HomeFullControl() {
         <FeatureCard
           title="Send and receive"
           description="Send and receive Bitcoin, STX and supported Stacks tokens. Check the recipient, amount and fees before approving."
-          visual={
-            <LottieAnimation
-              src={`${animationsPath}/send-and-receive.lottie.json`}
-              poster="/marketing/home/send-and-receive.webp"
-              alt="The Send screen: 50 STX from a Stacks account to a recipient"
-              aspect={cardAspect}
-              // Lottielab state "State 1": loops 0–6.65 s; the rest of the file never shows
-              segment={[0, 665]}
-            />
-          }
+          visual={<SendMockup />}
         />
         <FeatureCard
           title="Your tokens, at a glance"
           description="View your Bitcoin and Stacks token balances together, and choose an asset to see its details."
-          visual={
-            <LottieAnimation
-              src="/marketing/home/current/mobile-tokens.lottie.json"
-              poster="/marketing/home/current/mobile-tokens.png"
-              alt="Token balances opening into Bitcoin Info with a price chart, then Activity with pending and received transactions"
-              aspect={cardAspect}
-            />
-          }
+          visual={<TokensMockup />}
         />
       </Grid>
       <Grid gridTemplateColumns={['1fr', null, 'repeat(2, 1fr)']} gap="space.03" mt="space.03">
