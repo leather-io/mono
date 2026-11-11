@@ -38,6 +38,9 @@ function respond(route: GitHubRoute, method: HttpMethod, path: string, body: unk
   if (method === 'POST' && path.endsWith('/pulls')) {
     return { number: 101, html_url: 'https://github.com/leather-io/mono/pull/101' };
   }
+  if (method === 'GET' && /\/pulls\/\d+$/.test(path)) {
+    return { state: 'open', draft: false, commits: 1 };
+  }
   if (method === 'PATCH' && path.includes('/pulls/')) return {};
   if (method === 'POST' && path.endsWith('/comments')) {
     return { html_url: 'https://github.com/leather-io/mono/issues/12#issuecomment-1' };

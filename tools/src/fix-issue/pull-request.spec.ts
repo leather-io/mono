@@ -275,15 +275,24 @@ describe('openPullRequest', () => {
       openPull(53, 'bot/fix-issue-12-by-hand'),
     ];
 
-    function withOpenPulls(fail = false): GitHubRoute {
+    const untouched = { state: 'open', draft: false, commits: 1 };
+
+    function withOpenPulls(fail = false, earlier = untouched): GitHubRoute {
       return (method, path) => {
         if (method === 'GET' && path.includes('/pulls?') && path.includes('head=')) return [];
         if (method === 'GET' && path.includes('/pulls?')) return others;
+        if (method === 'GET' && path.endsWith('/pulls/50')) return earlier;
         if (fail && method === 'PATCH' && path.endsWith('/pulls/50')) {
           throw new Error('closing failed');
         }
         return undefined;
       };
+    }
+
+    function expectKept(client: ReturnType<typeof fakeGitHub>) {
+      expect(callsTo(client, 'POST', '/issues/50/comments')).toHaveLength(0);
+      expect(callsTo(client, 'PATCH', '/pulls/50')).toHaveLength(0);
+      expect(callsTo(client, 'DELETE', '/git/refs/heads/bot/fix-issue-12-111')).toHaveLength(0);
     }
 
     test('closes the earlier run of the same issue and deletes its branch', async () => {
@@ -304,6 +313,35 @@ describe('openPullRequest', () => {
           )
         ).toBe(false);
       }
+    });
+
+    test('keeps an earlier pull request someone added commits to', async () => {
+      setup(doneStatus);
+      const { client, result } = open(withOpenPulls(false, { ...untouched, commits: 2 }));
+      await expect(result).resolves.toBe('https://github.com/leather-io/mono/pull/101');
+      expectKept(client);
+    });
+
+    test('keeps an earlier pull request that is no longer open', async () => {
+      setup(doneStatus);
+      const { client, result } = open(withOpenPulls(false, { ...untouched, state: 'closed' }));
+      await expect(result).resolves.toBe('https://github.com/leather-io/mono/pull/101');
+      expectKept(client);
+    });
+
+    test('keeps a ready earlier pull request when the new one is a draft', async () => {
+      setup({ ...doneStatus, handoff: [handoff] });
+      const { client, result } = open(withOpenPulls());
+      await expect(result).resolves.toBe('https://github.com/leather-io/mono/pull/101');
+      expect(callsTo(client, 'POST', '/pulls')[0]?.body).toMatchObject({ draft: true });
+      expectKept(client);
+    });
+
+    test('closes an earlier draft when the new pull request is a draft too', async () => {
+      setup({ ...doneStatus, handoff: [handoff] });
+      const { client, result } = open(withOpenPulls(false, { ...untouched, draft: true }));
+      await expect(result).resolves.toBe('https://github.com/leather-io/mono/pull/101');
+      expect(callsTo(client, 'PATCH', '/pulls/50')[0]?.body).toEqual({ state: 'closed' });
     });
 
     test('still returns the new pull request when superseding fails', async () => {

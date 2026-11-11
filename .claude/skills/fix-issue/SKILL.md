@@ -152,7 +152,9 @@ never in a tight loop.
 Put the questions from `status` (or from the issue comment) to the person in one `AskUserQuestion`
 round per issue: these are the fixer's questions, a new set, not a second interview. Append each
 answer to the brief's Decisions as `Settled: <choice> — <reason>`, then dispatch again after the
-same explicit yes. The new run's pull request replaces the earlier one, which is closed.
+same explicit yes. The new run's pull request replaces the earlier one, which is closed, unless
+someone added commits to the earlier one or it is ready and the new one is a draft; then both stay
+open and the person picks.
 
 ## 9. Report
 

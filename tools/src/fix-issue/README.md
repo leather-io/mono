@@ -155,7 +155,9 @@ the top of the body and makes the pull request a draft; with no changes at all, 
 into the issue comment instead.
 Every run gets its own branch and its own pull request. Once it is open, the run comments
 `Superseded by #<new>` on the issue's earlier bot pull requests (those on a
-`bot/fix-issue-<n>-` branch), closes them and deletes their branches. A new run never moves an
+`bot/fix-issue-<n>-` branch), closes them and deletes their branches. It checks each one again
+first and keeps it when someone added commits to it, when it is no longer open, or when it is ready
+and the new pull request is only a draft. A new run never moves an
 earlier run's branch, so a change to a workflow on `dev` between runs never needs the App's
 Workflows permission, which it does not have. The one exception is "Re-run jobs" on the same run:
 `open-pull-request` then force-updates that run's own branch to a fresh commit on the same parent

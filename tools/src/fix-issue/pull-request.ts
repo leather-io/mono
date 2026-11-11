@@ -312,9 +312,36 @@ function isEarlierRunBranch(ref: string, issue: number, current: string): boolea
   return ref !== current && ref.startsWith(prefix) && runIdPattern.test(ref.slice(prefix.length));
 }
 
+const botCommitCount = 1;
+const freshPullSchema = z.object({
+  state: z.string(),
+  draft: z.boolean(),
+  commits: z.number(),
+});
+
+interface CurrentPull {
+  readonly number: number;
+  readonly draft: boolean;
+}
+
+async function keepReason(
+  options: OpenPullRequestOptions,
+  earlier: number,
+  current: CurrentPull
+): Promise<string | null> {
+  const { client, repo } = options;
+  const fresh = freshPullSchema.parse(
+    await client.request('GET', `repos/${repo}/pulls/${earlier}`)
+  );
+  if (fresh.state !== 'open') return 'it is no longer open';
+  if (fresh.commits > botCommitCount) return 'someone added commits to it';
+  if (current.draft && !fresh.draft) return `it is ready and #${current.number} is only a draft`;
+  return null;
+}
+
 async function supersedeEarlierPullRequests(
   options: OpenPullRequestOptions,
-  current: number,
+  current: CurrentPull,
   log: (line: string) => void
 ): Promise<void> {
   const { client, repo, issue, branch, baseBranch } = options;
@@ -323,18 +350,23 @@ async function supersedeEarlierPullRequests(
     .parse(await paginate(client, `repos/${repo}/pulls?state=open&base=${baseBranch}`));
   const earlier = open.filter(
     pull =>
-      pull.number !== current &&
+      pull.number !== current.number &&
       pull.head.repo?.full_name === repo &&
       isEarlierRunBranch(pull.head.ref, issue, branch)
   );
   for (const pull of earlier) {
     try {
+      const kept = await keepReason(options, pull.number, current);
+      if (kept) {
+        log(`open-pull-request: kept #${pull.number}; ${kept}`);
+        continue;
+      }
       await client.request('POST', `repos/${repo}/issues/${pull.number}/comments`, {
-        body: `Superseded by #${current}.`,
+        body: `Superseded by #${current.number}.`,
       });
       await client.request('PATCH', `repos/${repo}/pulls/${pull.number}`, { state: 'closed' });
       await client.request('DELETE', `repos/${repo}/git/refs/heads/${pull.head.ref}`);
-      log(`open-pull-request: closed #${pull.number}, superseded by #${current}`);
+      log(`open-pull-request: closed #${pull.number}, superseded by #${current.number}`);
     } catch (error) {
       log(
         `open-pull-request: could not supersede #${pull.number}: ${error instanceof Error ? error.message : String(error)}`
@@ -420,13 +452,13 @@ export async function openPullRequest(options: OpenPullRequestOptions): Promise<
           draft,
         })
       );
-      await supersedeEarlierPullRequests(options, created.number, log);
+      await supersedeEarlierPullRequests(options, { number: created.number, draft }, log);
       return created.html_url;
     }
     await client.request('PATCH', `repos/${repo}/pulls/${existing.number}`, { title, body });
     if (!draft && existing.draft) await client.graphql(readyMutation, { id: existing.node_id });
     if (draft && !existing.draft) await client.graphql(draftMutation, { id: existing.node_id });
-    await supersedeEarlierPullRequests(options, existing.number, log);
+    await supersedeEarlierPullRequests(options, { number: existing.number, draft }, log);
     return existing.html_url;
   } finally {
     removeWorkspace(paths);
