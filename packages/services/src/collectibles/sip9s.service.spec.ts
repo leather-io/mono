@@ -1,3 +1,4 @@
+import { bufferCVFromString, cvToHex, tupleCV } from '@stacks/transactions';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { type AccountAddresses, CryptoAssetProtocols } from '@leather.io/models';
@@ -152,6 +153,59 @@ describe(Sip9sService.name, () => {
         '0x03',
         undefined
       );
+    });
+
+    it('filters out names from the uninitialized BNS-V2 archive contract before fetching metadata', async () => {
+      getPrincipalNftBalances.mockResolvedValueOnce([
+        {
+          asset_identifier: 'SP2JMM3PH9AGMASBD11SHG4HWDS6CTY9MGN6CW48G.BNS-V2::BNS-V2',
+          value: { hex: '0x01000000000000000000000000000405bb', repr: 'u263611' },
+        },
+        {
+          asset_identifier: 'SP2QEZ06AGJ3RKJPBV14SY1V5BBFNAW33D96YPGZF.BNS-V2::BNS-V2',
+          value: { hex: '0x0100000000000000000000000000040877', repr: 'u264311' },
+        },
+      ]);
+
+      const account: AccountAddresses = {
+        id: { fingerprint: 'fp1', accountIndex: 0 },
+        stacks: { stxAddress: 'ST123' },
+      };
+
+      const sip9s = await sip9sService.getAccountSip9s({ account });
+
+      expect(mockSip9AssetService.getAsset).toHaveBeenCalledTimes(1);
+      expect(sip9s.map(sip9 => sip9.assetId)).toEqual([
+        'SP2QEZ06AGJ3RKJPBV14SY1V5BBFNAW33D96YPGZF.BNS-V2::BNS-V2',
+      ]);
+    });
+
+    it('reads BNS v1 names from the holding value without fetching metadata', async () => {
+      const bnsV1Value = tupleCV({
+        name: bufferCVFromString('satoshi'),
+        namespace: bufferCVFromString('btc'),
+      });
+      getPrincipalNftBalances.mockResolvedValueOnce([
+        {
+          asset_identifier: 'SP000000000000000000002Q6VF78.bns::names',
+          value: { hex: cvToHex(bnsV1Value), repr: '' },
+        },
+      ]);
+
+      const account: AccountAddresses = {
+        id: { fingerprint: 'fp1', accountIndex: 0 },
+        stacks: { stxAddress: 'ST123' },
+      };
+
+      const sip9s = await sip9sService.getAccountSip9s({ account });
+
+      expect(mockSip9AssetService.getAsset).not.toHaveBeenCalled();
+      expect(sip9s).toHaveLength(1);
+      expect(sip9s[0]).toMatchObject({
+        assetId: 'SP000000000000000000002Q6VF78.bns::names',
+        contractId: 'SP000000000000000000002Q6VF78.bns',
+        name: 'satoshi.btc',
+      });
     });
 
     it('catches Stacks API errors and returns empty array', async () => {

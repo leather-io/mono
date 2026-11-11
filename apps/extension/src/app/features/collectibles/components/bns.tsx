@@ -1,53 +1,62 @@
-import { Box, styled } from 'leather-styles/jsx';
+import { Stack, styled } from 'leather-styles/jsx';
+
+import { BnsIcon, LegacyBnsIcon } from '@leather.io/ui';
 
 import { CollectibleCard } from './collectible-card';
 
-interface BnsImageContentProps {
-  alt?: string;
-  src: string;
+function getNameTextStyle(name: string) {
+  if (name.length <= 8) return 'heading.05';
+  if (name.length <= 11) return 'label.01';
+  if (name.length <= 14) return 'label.02';
+  return 'label.03';
 }
 
-function BnsImageContent({ alt, src }: BnsImageContentProps) {
+interface BnsCardContentProps {
+  name: string;
+  isLegacy: boolean;
+}
+
+function BnsCardContent({ name, isLegacy }: BnsCardContentProps) {
   return (
-    <Box
+    <Stack
       width="100%"
       height="100%"
-      overflow="hidden"
       bg="ink.background-secondary"
-      position="relative"
+      alignItems="center"
+      justifyContent="center"
+      gap="space.03"
+      px="space.03"
     >
-      <styled.img src={src} alt={alt} loading="lazy" width="100%" height="100%" objectFit="cover" />
-      <Box
-        position="absolute"
-        bottom={0}
-        left={0}
-        right={0}
-        p="space.03"
-        justifyContent="center"
-        textAlign="center"
+      {isLegacy ? (
+        <LegacyBnsIcon width="40%" height="40%" />
+      ) : (
+        <BnsIcon color="orange.action-primary-default" width="40%" height="40%" />
+      )}
+      <styled.span
+        textStyle={getNameTextStyle(name)}
+        maxWidth="100%"
+        overflow="hidden"
+        textOverflow="ellipsis"
+        whiteSpace="nowrap"
       >
-        <styled.span
-          color="#F09D00"
-          textStyle="label.02"
-          overflow="hidden"
-          textOverflow="ellipsis"
-          whiteSpace="nowrap"
-          display="block"
-        >
-          {alt}
+        {name}
+      </styled.span>
+      {isLegacy && (
+        <styled.span textStyle="caption.01" color="ink.text-subdued">
+          Legacy BNS
         </styled.span>
-      </Box>
-    </Box>
+      )}
+    </Stack>
   );
 }
 
-interface BnsImageProps {
-  alt?: string;
-  src: string;
+interface BnsCardProps {
+  name: string;
+  isLegacy: boolean;
   onPress?(): void;
 }
 
-export function BnsImage({ alt, src, onPress }: BnsImageProps) {
+export function BnsCard({ name, isLegacy, onPress }: BnsCardProps) {
   if (onPress) {
     return (
       <CollectibleCard>
@@ -61,7 +70,7 @@ export function BnsImage({ alt, src, onPress }: BnsImageProps) {
           width="100%"
           height="100%"
         >
-          <BnsImageContent alt={alt} src={src} />
+          <BnsCardContent name={name} isLegacy={isLegacy} />
         </styled.button>
       </CollectibleCard>
     );
@@ -69,7 +78,7 @@ export function BnsImage({ alt, src, onPress }: BnsImageProps) {
 
   return (
     <CollectibleCard>
-      <BnsImageContent alt={alt} src={src} />
+      <BnsCardContent name={name} isLegacy={isLegacy} />
     </CollectibleCard>
   );
 }

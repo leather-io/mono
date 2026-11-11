@@ -19,7 +19,7 @@ interface CollectibleItemProps {
 function CollectibleItem({ view, onSelect }: CollectibleItemProps) {
   switch (view.asset.protocol) {
     case 'sip9':
-      return <Sip9Card item={view.asset} isBns={view.isBns} onSelect={onSelect} />;
+      return <Sip9Card item={view.asset} kind={view.kind} onSelect={onSelect} />;
     default:
       return null;
   }
