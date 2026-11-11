@@ -102,7 +102,9 @@
       "@reown/appkit-wallet>zod": "4.6.7",
       "@sanity/codegen>zod": "4.6.7",
       "follow-redirects@>=1.0.0 <1.16.2": ">=1.16.2 <2",
-      "node-forge@>=1.0.0 <1.4.1": ">=1.4.1 <2"
+      "node-forge@>=1.0.0 <1.4.1": ">=1.4.1 <2",
+      "bitcoinjs-lib@>=6.0.0 <6.1.8": ">=6.1.8 <7",
+      "bitcoinjs-lib@>=7.0.0 <7.0.2": ">=7.0.2 <8"
     },
     "patchedDependencies": {
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",
