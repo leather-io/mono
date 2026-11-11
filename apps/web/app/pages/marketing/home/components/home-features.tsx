@@ -1,6 +1,7 @@
+import { Link } from 'react-router';
+
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
 import { LottieAnimation } from '~/pages/marketing/shared/lottie-animation';
-import { MarketingTag } from '~/pages/marketing/shared/marketing-tag';
 import { Reveal } from '~/pages/marketing/shared/reveal';
 
 import { ActivityMockup, BtcNotificationsMockup } from './bento-activity';
@@ -8,6 +9,8 @@ import { ManageTokensMockup, ReviewTransactionMockup } from './bento-clarity';
 import { BondPositionMockup, SharedVaultMockup } from './bento-vaults';
 import { LedgerAnimation, SwapsCoins, animationsPath } from './home-animations';
 import { CheckItem, FeatureCard, HomeSection, HomeSectionHeading } from './home-layout';
+
+const StyledLink = styled(Link);
 
 // Every bento visual sits on the same stage, so all cards share one height
 const cardAspect = '592 / 444';
@@ -71,7 +74,6 @@ export function HomeSwapsAndLedger() {
                 lines={['Your Ledger.', 'Your approval.']}
               />
             </Reveal>
-            <MarketingTag mt="space.03">Extension</MarketingTag>
             <styled.p textStyle="body.02" color="ink.text-secondary" mt="space.05">
               Connect your Ledger to Leather’s browser extension. Review and approve supported
               Bitcoin and Stacks transactions on your device.
@@ -100,7 +102,6 @@ export function HomeWallets() {
       <Grid gridTemplateColumns={['1fr', null, '1fr 1fr']} gap="space.03" mt="space.07">
         <FeatureCard
           title="Bring all your wallets"
-          tag="Mobile"
           description="Create or restore wallets and keep your Bitcoin and Stacks accounts organized in one place."
           visual={
             <LottieAnimation
@@ -113,7 +114,6 @@ export function HomeWallets() {
         />
         <FeatureCard
           title="Name it your way"
-          tag="Mobile"
           description="Give your wallets custom names so you can tell everyday spending, savings and experiments apart."
           visual={
             <LottieAnimation
@@ -171,7 +171,6 @@ export function HomeFullControl() {
         />
         <FeatureCard
           title="Get BTC notifications"
-          tag="Extension"
           description="Turn on browser notifications for alerts when Bitcoin sends and receives confirm."
           visual={<BtcNotificationsMockup />}
         />
@@ -189,7 +188,6 @@ export function HomeProtection() {
       <Grid gridTemplateColumns={['1fr', null, 'repeat(2, 1fr)']} gap="space.03" mt="space.07">
         <FeatureCard
           title="Show or hide tokens"
-          tag="Extension"
           description="Use Manage tokens to show or hide individual supported tokens in your asset list."
           visual={<ManageTokensMockup />}
         />
@@ -215,13 +213,25 @@ export function HomeVaultsAndStaking() {
       <Grid gridTemplateColumns={['1fr', null, 'repeat(2, 1fr)']} gap="space.03" mt="space.07">
         <FeatureCard
           title="Shared vaults"
-          tag="Web"
-          description="Create a vault with your team, family or DAO. Bitcoin and Stacks transactions go out once enough members have signed."
+          description={
+            <>
+              Create a vault with your team, family or DAO. Bitcoin and Stacks transactions go out
+              once enough members have signed.{' '}
+              <StyledLink
+                to="/multisig"
+                prefetch="intent"
+                color="ink.text-primary"
+                textDecoration="underline"
+                textUnderlineOffset="2px"
+              >
+                Learn more
+              </StyledLink>
+            </>
+          }
           visual={<SharedVaultMockup />}
         />
         <FeatureCard
           title="Bitcoin Staking bonds"
-          tag="Extension"
           description="BTC locked in a Bitcoin Staking bond counts in your balance, with each bond’s amount, unlock date and status."
           visual={<BondPositionMockup />}
         />

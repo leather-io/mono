@@ -46,7 +46,7 @@ export function CheckItem({ children }: { children: ReactNode }) {
 
 type FeatureCardProps = {
   title: string;
-  description: string;
+  description: ReactNode;
   tag?: string;
 } & (
   | {
