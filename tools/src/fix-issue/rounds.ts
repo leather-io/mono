@@ -126,6 +126,10 @@ function decideOutcome(
   return { outcome: passed ? 'clean' : 'failed', summary: `Round ${round}: ${checks}` };
 }
 
+function oneLine(text: string): string {
+  return text.replace(/\s+/g, ' ').trim();
+}
+
 function unfixedFindingsQuestion(paths: FixIssuePaths, round: number): string | null {
   const file = path.join(roundDir(paths, round), path.basename(paths.reviewFile));
   const read = tryReadReview(file);
@@ -133,7 +137,7 @@ function unfixedFindingsQuestion(paths: FixIssuePaths, round: number): string | 
   const { blocking } = read.review;
   if (blocking.length === 0) return null;
   const findings = blocking.map(
-    finding => `${finding.kind} at ${finding.location}: ${finding.defect}`
+    finding => `${finding.kind} at ${oneLine(finding.location)}: ${oneLine(finding.defect)}`
   );
   return `The review found ${blocking.length} critical, blocker or regression findings that no round fixed because the fixer stopped as blocked: ${findings.join('; ')}. Options: answer the questions and dispatch again; fix them on this branch by hand.`;
 }
@@ -176,7 +180,7 @@ interface FollowUp {
 const followUpLocationPattern = /^`?([^`\s:]+)(:\d+)?`?:\s+(.+)$/s;
 
 function formatFollowUp(location: string, note: string): string {
-  return `\`${location}\`: ${note.replace(/\s+/g, ' ').trim()}`;
+  return `\`${oneLine(location)}\`: ${oneLine(note)}`;
 }
 
 function parseOwnFollowUp(entry: string): FollowUp {

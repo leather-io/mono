@@ -272,6 +272,30 @@ describe('rounds', () => {
     ]);
   });
 
+  test('review findings that span lines still finish with a valid status', () => {
+    repo.makeFix();
+    repo.writeStatus(blockedStatus);
+    reviewedRound(1, {
+      blocking: [
+        {
+          kind: 'critical',
+          location: 'apps/extension/fee-row.tsx:1\nand its caller',
+          defect: 'leaks the address:\n- in the log call\n- in the error',
+          scenario: 'any log call',
+        },
+      ],
+      minor: [{ location: 'packages/utils/run.sh:1\n', note: 'quote the variable' }],
+    });
+    expect(finishRounds(repo.paths)).toBe('blocked');
+    const status = readStatus(repo.paths.statusFile);
+    expect(status.ok && status.status.questions.at(-1)).toContain(
+      'critical at apps/extension/fee-row.tsx:1 and its caller: leaks the address: - in the log call - in the error.'
+    );
+    expect(status.ok && status.status.followUps).toEqual([
+      '`packages/utils/run.sh:1`: quote the variable',
+    ]);
+  });
+
   test("finishing carries the last review's minor findings into follow-ups", () => {
     repo.makeFix();
     repo.writeStatus({
