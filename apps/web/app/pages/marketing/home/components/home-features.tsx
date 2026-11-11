@@ -56,21 +56,21 @@ export function HomeSwapsAndLedger() {
               <HomeSectionHeading id="home-swaps-heading" lines={['Decentralized', 'swaps.']} />
             </Reveal>
             <styled.p textStyle="body.02" color="ink.text-secondary" mt="space.05" maxW="454px">
-              Swap supported Stacks tokens in your wallet. Compare quotes and review fees before you
-              approve. Available routes depend on the token pair and provider.
+              Swap supported Stacks tokens in your wallet. Review the rate and fees before you
+              approve. Available routes depend on the token pair.
             </styled.p>
-            <styled.ul
-              aria-label="Swap providers"
-              display="flex"
-              flexWrap="wrap"
-              columnGap="space.05"
-              rowGap="space.03"
-              mt="space.05"
-            >
-              <CheckItem>Bitflow</CheckItem>
-              <CheckItem>ALEX</CheckItem>
-              <CheckItem>sBTC Bridge</CheckItem>
-            </styled.ul>
+            {/* Bitflow is the swap provider on both mobile and the extension */}
+            <Flex alignItems="center" gap="space.02" mt="space.05" textStyle="label.02">
+              <styled.span color="ink.text-secondary">Powered by</styled.span>
+              <styled.img
+                src="/marketing/home/provider-bitflow.png"
+                alt=""
+                width="20px"
+                height="20px"
+                borderRadius="xs"
+              />
+              <styled.span color="ink.text-primary">Bitflow</styled.span>
+            </Flex>
           </Box>
           <SwapsCoins />
         </Grid>

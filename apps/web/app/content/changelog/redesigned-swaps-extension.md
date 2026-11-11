@@ -14,8 +14,8 @@ Pick your assets, enter an amount or set it to max, and see the estimated output
 **Know what you're signing**\
 The review screen breaks down the rate, minimum received, price impact and every fee, with a tooltip on each line. You can adjust slippage right there.
 
-**Best available route**\
-Leather compares quotes from Stacks DEXs, including Bitflow and ALEX, and picks the best one for you.
+**Powered by Bitflow**\
+Leather gets swap quotes and routes from Bitflow.
 
 **Ledger support**\
 You can now swap from Ledger accounts and approve the trade on your device.
