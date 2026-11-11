@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router';
 import { css } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
 import { SignIcon } from '~/components/icons/sign-icon';
+import { vaultThemes } from '~/pages/multisig/multisig-tokens';
 
 import {
   ChevronUpIcon,
@@ -361,7 +362,8 @@ function buttonColors(tone: ButtonTone, isEnabled: boolean, isPressed: boolean) 
 
 /**
  * The product Button (size sm), 28 high. Pressing scales it in and darkens it, as the
- * Approve press in the Review transactions bento does; done turns it green with a pop.
+ * Approve press in the Review transactions bento does; releasing springs it back with a small
+ * overshoot. Done (option C only) turns it green.
  */
 function MockButton({
   children,
@@ -641,8 +643,8 @@ function ProposalCard({
           <MockButton tone="ghost-danger" isAnimated={isAnimated}>
             Cancel transaction
           </MockButton>
+          {/* Stays the product's dark button: the reward is the check label and the badge */}
           <MockButton
-            tone={isDone ? 'done' : 'solid'}
             isEnabled={isSigned}
             isPressed={phase === 'broadcasting'}
             isAnimated={isAnimated}
@@ -664,7 +666,8 @@ const proposalPitch = 292;
 /**
  * "Shared vaults", default: a vault proposal on its transaction page. Amber has signed; Sign
  * presses in, Sam (me) turns Signed and Broadcast transaction enables; Broadcast presses in and
- * turns green with a check as the row's badge does; then the page scrolls up, fading out at the
+ * springs back in its own dark colour, its label swapping to a check and Broadcast while the
+ * row's badge turns into a green check; then the page scrolls up, fading out at the
  * top edge, and the next proposal (a different vault, asset and amount) slides in from below,
  * fading in only as it moves: until then it is fully hidden. Reduced motion shows the first
  * proposal broadcast.
@@ -732,16 +735,50 @@ function SharedVaultBroadcastMockup() {
 // ---------------------------------------------------------------------------------------------
 
 interface QueuedProposal {
+  /** The vault the transaction spends from */
   account: string;
   amount: string;
   fiat: string;
+  /** Index into the product's vaultThemes (pages/multisig/multisig-tokens.ts) */
+  theme: number;
+  balance: string;
+  balanceFiat: string;
 }
 
+// One vault per transaction, each in its own product theme: Blue, Bronze, Green, Orange
 const queue: [QueuedProposal, ...QueuedProposal[]] = [
-  { account: 'Payroll', amount: '0.0150 BTC', fiat: '$1,128.00' },
-  { account: 'Operations', amount: '0.0420 BTC', fiat: '$3,158.40' },
-  { account: 'Reserve', amount: '0.1000 BTC', fiat: '$7,520.00' },
-  { account: 'Grants', amount: '0.0068 BTC', fiat: '$511.36' },
+  {
+    account: 'Payroll',
+    amount: '0.0150 BTC',
+    fiat: '$1,128.00',
+    theme: 0,
+    balance: '0.4820 BTC',
+    balanceFiat: '$36,246.40',
+  },
+  {
+    account: 'Operations',
+    amount: '0.0420 BTC',
+    fiat: '$3,158.40',
+    theme: 1,
+    balance: '1.2480 BTC',
+    balanceFiat: '$93,849.60',
+  },
+  {
+    account: 'Reserve',
+    amount: '0.1000 BTC',
+    fiat: '$7,520.00',
+    theme: 2,
+    balance: '3.5000 BTC',
+    balanceFiat: '$263,200.00',
+  },
+  {
+    account: 'Grants',
+    amount: '0.0068 BTC',
+    fiat: '$511.36',
+    theme: 3,
+    balance: '0.2150 BTC',
+    balanceFiat: '$16,168.00',
+  },
 ];
 
 /** The vault's 2-of-3 policy: one progress segment per required signature. */
@@ -767,32 +804,72 @@ const figureGap = 2;
 const vaultTileSize = 36.4;
 const balanceHeight = figureLine + figureGap + fiatLine;
 
-const headerTop = mockupSize.inset;
-const headerBottom = headerTop + balanceHeight + 18;
-const pendingTop = headerBottom + 14;
+// MultisigHero's themed card, inset by the same small gutter on top, left and right
+const heroInset = 10;
+const heroPadding = 16;
+const heroHeight = balanceHeight + heroPadding * 2;
+const pendingTop = heroInset + heroHeight + 14;
 const queueTop = pendingTop + 15 + 6;
 // Rows that fit above the panel's bottom edge
 const visibleRows = Math.ceil((mockupSize.panelHeight - queueTop) / rowHeight);
 
 // AvatarSq's lg glyph-to-tile ratio (30 / 56)
 const glyphRatio = 0.54;
+const themeFade = 520;
 
-/** AvatarSq with the vault glyph (pages/multisig/components/avatar-sq.tsx), Blue theme. */
-function VaultTile({ size }: { size: number }) {
+/**
+ * Every product vault theme stacked, the active one shown: switching vaults cross-fades the
+ * texture instead of swapping it.
+ */
+function ThemeBackdrop({ theme, isAnimated }: { theme: number; isAnimated: boolean }) {
+  return (
+    <>
+      {vaultThemes.map(({ id, background }) => (
+        <span
+          key={id}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            borderRadius: 'inherit',
+            background,
+            opacity: id === theme ? 1 : 0,
+            transition: transitionFor(isAnimated, ['opacity'], themeFade),
+          }}
+        />
+      ))}
+    </>
+  );
+}
+
+/**
+ * AvatarSq with the vault glyph (pages/multisig/components/avatar-sq.tsx), in the vault's
+ * theme. A white ring, drawn inside the tile so it stays flush with the text, keeps it from
+ * melting into the card behind it.
+ */
+function VaultTile({
+  size,
+  theme,
+  isAnimated,
+}: {
+  size: number;
+  theme: number;
+  isAnimated: boolean;
+}) {
   const mask = "url('/multisig/icons/account/vault.svg') center / contain no-repeat";
   return (
     <styled.span
       position="relative"
       flexShrink={0}
+      overflow="hidden"
       style={{
         width: stagePx(size),
         height: stagePx(size),
         // squareAvatarRadius: 20% of the tile
         borderRadius: stagePx(size * 0.2),
-        background: "url('/multisig/themes/blue.jpg') center/cover no-repeat",
       }}
     >
       {/* Out of flow, so the tile's baseline is its bottom edge */}
+      <ThemeBackdrop theme={theme} isAnimated={isAnimated} />
       <span
         style={{
           position: 'absolute',
@@ -802,33 +879,50 @@ function VaultTile({ size }: { size: number }) {
           WebkitMask: mask,
         }}
       />
+      <span
+        style={{
+          position: 'absolute',
+          inset: 0,
+          borderRadius: 'inherit',
+          boxShadow: `inset 0 0 0 ${stagePx(1.75)} #FFFFFF`,
+        }}
+      />
     </styled.span>
   );
 }
 
-/** The vault page's balance, without the vault name: the vault tile beside figure and fiat. */
-function VaultBalance() {
+/**
+ * The vault page's balance, without the vault name, on its themed card: the vault tile beside
+ * the figure and fiat, in white. The figures cross-fade as the vault changes.
+ */
+function VaultBalance({ active, isAnimated }: { active: number; isAnimated: boolean }) {
+  const entry = pick(queue, active);
+  const index = queue.indexOf(entry);
   return (
     <styled.div display="flex" style={{ alignItems: 'last baseline', gap: stagePx(12) }}>
-      <VaultTile size={vaultTileSize} />
+      <VaultTile size={vaultTileSize} theme={entry.theme} isAnimated={isAnimated} />
       <styled.div display="flex" flexDirection="column" style={{ gap: stagePx(figureGap) }}>
-        <styled.span
-          display="block"
-          whiteSpace="nowrap"
-          style={{ ...brandFigure, lineHeight: stagePx(figureLine), height: stagePx(figureLine) }}
-        >
-          1.2480 BTC
-        </styled.span>
-        <styled.span
-          display="block"
+        <SwapText
+          index={index}
+          isAnimated={isAnimated}
+          items={queue.map(vault => vault.balance)}
+          style={{
+            ...brandFigure,
+            lineHeight: stagePx(figureLine),
+            height: stagePx(figureLine),
+            color: '#FFFFFF',
+          }}
+        />
+        <SwapText
+          index={index}
+          isAnimated={isAnimated}
+          items={queue.map(vault => vault.balanceFiat)}
           style={{
             ...mockupType.meta,
             lineHeight: stagePx(fiatLine),
-            color: mockupColor.secondary,
+            color: 'rgb(255 255 255 / 0.85)',
           }}
-        >
-          $93,849.60
-        </styled.span>
+        />
       </styled.div>
     </styled.div>
   );
@@ -884,9 +978,12 @@ function SignatureProgress({
 }
 
 /**
- * "Shared vaults", option B: a vault page. The pending transaction at the top gets its second
- * signature (its second bar segment fills), is broadcast (check badge, the bar turns green),
- * the next proposal gets its first signature, then the top one clears and the queue moves up.
+ * "Shared vaults", option B: a vault page. Its themed balance card belongs to the vault of the
+ * pending transaction at the top. That transaction gets its second signature (its second bar
+ * segment fills), is broadcast (check badge, the bar turns green), the next proposal gets its
+ * first signature, then the top one clears, the queue moves up and the card cross-fades to the
+ * next vault's theme and balance. Reduced motion shows the first vault, its transaction
+ * broadcast.
  */
 function SharedVaultQueueMockup() {
   // 0 waiting · 1 second signature · 2 broadcast · 3 next row's first signature · 4 clears
@@ -896,6 +993,8 @@ function SharedVaultQueueMockup() {
   // Reduced motion: the top row broadcast, the next one at one signature
   const visibleStep = isAnimated ? step : 3;
   const hasCleared = isAnimated && step >= 4;
+  // The card follows the vault of the transaction at the top of the queue
+  const active = head + (hasCleared ? 1 : 0);
 
   const rows = Array.from({ length: visibleRows + 2 }, (_, index) => index - 1).map(offset => {
     const slot = offset - (hasCleared ? 1 : 0);
@@ -908,21 +1007,29 @@ function SharedVaultQueueMockup() {
   });
 
   return (
-    <BentoStage label="A vault page: its BTC balance over pending transactions whose signature bars fill one segment per signer, then broadcast and clear one by one">
+    <BentoStage label="A vault's BTC balance on its themed card over pending transactions whose signature bars fill one segment per signer, then broadcast and clear one by one, the card switching to each next transaction's vault">
       <div ref={ref} style={{ position: 'absolute', inset: 0 }}>
         <MockupPanel>
+          {/* MultisigHero, balance variant, in the theme of the vault whose transaction is up */}
           <styled.div
             position="absolute"
-            style={{ top: stagePx(headerTop), left: stagePx(mockupSize.inset) }}
+            display="flex"
+            alignItems="center"
+            overflow="hidden"
+            style={{
+              top: stagePx(heroInset),
+              left: stagePx(heroInset),
+              right: stagePx(heroInset),
+              height: stagePx(heroHeight),
+              paddingInline: stagePx(heroPadding),
+              borderRadius: stagePx(8),
+            }}
           >
-            <VaultBalance />
+            <ThemeBackdrop theme={pick(queue, active).theme} isAnimated={isAnimated} />
+            <styled.div position="relative">
+              <VaultBalance active={active} isAnimated={isAnimated} />
+            </styled.div>
           </styled.div>
-          <styled.div
-            position="absolute"
-            left="0"
-            right="0"
-            style={{ top: stagePx(headerBottom), height: 1, background: mockupColor.divider }}
-          />
 
           <styled.div
             position="absolute"
