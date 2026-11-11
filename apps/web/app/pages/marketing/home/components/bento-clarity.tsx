@@ -302,13 +302,17 @@ function Divider() {
   return <styled.div style={{ height: '1px', background: mockupColor.divider }} />;
 }
 
+// The extension's request footer renders Button size lg (48 px, pill, label.02 = 15/500) at the
+// popup's scale; the stage's 12 px body is the same type at 0.8, so heights and gaps follow it.
 const buttonBase: CSSProperties = {
   flex: 1,
-  height: stagePx(36),
-  borderRadius: stagePx(8),
+  height: stagePx(38),
+  borderRadius: '9999px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  paddingInline: stagePx(13),
+  whiteSpace: 'nowrap',
   ...mockupType.body,
   fontWeight: 500,
 };
@@ -406,34 +410,41 @@ export function ReviewTransactionMockup() {
                 </styled.span>
               }
             />
-            <Divider />
           </styled.div>
 
-          {/* Actions footer */}
-          <styled.div marginTop="auto" style={{ ...insetX, paddingBottom: stagePx(16) }}>
-            <styled.div
-              display="flex"
-              justifyContent="space-between"
-              style={{ ...mockupType.body, fontWeight: 500, marginBottom: stagePx(10) }}
-            >
-              <span>Total spend</span>
-              <span>$29.11</span>
-            </styled.div>
-            <styled.div display="flex" style={{ gap: stagePx(10) }}>
-              <styled.span style={{ ...buttonBase, border: `1px solid ${mockupColor.border}` }}>
-                Cancel
-              </styled.span>
-              <styled.span
-                style={{
-                  ...buttonBase,
-                  background: isPressed ? productColor.actionPressed : productColor.action,
-                  color: mockupColor.panel,
-                  transform: isPressed ? 'scale(0.97)' : 'none',
-                  transition: transitionFor(isAnimated, ['transform', 'background-color'], 160),
-                }}
+          {/* Actions footer: Approver.Actions with TransactionActionsTitle, outline Cancel + solid Approve */}
+          <styled.div marginTop="auto" style={{ borderTop: `1px solid ${mockupColor.border}` }}>
+            <styled.div style={{ padding: `${stagePx(19)} ${stagePx(19)}` }}>
+              <styled.div
+                display="flex"
+                justifyContent="space-between"
+                style={{ ...mockupType.body, fontWeight: 500, marginBottom: stagePx(10) }}
               >
-                Approve
-              </styled.span>
+                <span>Total spend</span>
+                <span>$29.11</span>
+              </styled.div>
+              <styled.div display="flex" style={{ gap: stagePx(13) }}>
+                <styled.span
+                  style={{
+                    ...buttonBase,
+                    border: `1px solid ${mockupColor.border}`,
+                    color: productColor.action,
+                  }}
+                >
+                  Cancel
+                </styled.span>
+                <styled.span
+                  style={{
+                    ...buttonBase,
+                    background: isPressed ? productColor.actionPressed : productColor.action,
+                    color: mockupColor.panel,
+                    transform: isPressed ? 'scale(0.95)' : 'none',
+                    transition: transitionFor(isAnimated, ['transform', 'background-color'], 200),
+                  }}
+                >
+                  Approve
+                </styled.span>
+              </styled.div>
             </styled.div>
           </styled.div>
         </MockupPanel>
