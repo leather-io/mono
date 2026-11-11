@@ -1,16 +1,7 @@
 import { siteOrigin } from '~/pages/marketing/shared/marketing-meta';
 import { type ContentFetchers, resolveContentSlug } from '~/pages/redirects/content-slug-resolver';
 
-export const sitemapPagePaths = [
-  '/',
-  '/apps',
-  '/developers',
-  '/news',
-  '/explorer',
-  '/posts',
-  '/support',
-  '/changelog',
-];
+export const sitemapPagePaths = ['/', '/apps', '/news', '/explorer', '/posts', '/changelog'];
 
 export const sitemapContentQuery = `{
   "postSlugs": *[
@@ -33,10 +24,10 @@ interface SitemapContent extends SitemapCmsContent {
 }
 
 /**
- * Every path the sitemap lists. Post and guide slugs go through the same resolver as the
- * /posts/:slug and /support/:slug routes, and only slugs that serve content are listed, at
- * their canonical URL. Deprecated slugs and posts that share a slug with a help center guide
- * (both 301 elsewhere) never make it in.
+ * Every path the sitemap lists. Post slugs go through the same resolver as the /posts/:slug
+ * route, and only slugs that serve content are listed, at their canonical URL. Help center
+ * guides live on Leather Docs now, so deprecated slugs and posts that share a slug with a guide
+ * (all 301 elsewhere) never make it in.
  */
 export async function getSitemapPaths({ postSlugs, guideSlugs, changelogSlugs }: SitemapContent) {
   const posts = new Set(postSlugs);
@@ -46,10 +37,9 @@ export async function getSitemapPaths({ postSlugs, guideSlugs, changelogSlugs }:
     fetchGuide: slug => Promise.resolve(guides.has(slug) ? slug : null),
   };
 
-  const slugs = [...new Set([...guideSlugs, ...postSlugs])];
-  const resolutions = await Promise.all(slugs.map(slug => resolveContentSlug(slug, fetchers)));
+  const resolutions = await Promise.all(postSlugs.map(slug => resolveContentSlug(slug, fetchers)));
   const contentPaths = resolutions.flatMap(resolution =>
-    resolution.kind === 'guide' || resolution.kind === 'post' ? [resolution.canonicalPath] : []
+    resolution.kind === 'post' ? [resolution.canonicalPath] : []
   );
 
   return [

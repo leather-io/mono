@@ -1,8 +1,14 @@
 import { data, redirect } from 'react-router';
 
-import { type ContentFetchers, redirectContentSlug } from './content-slug-resolver';
+import { LEATHER_DOCS } from '~/constants/leather-docs';
 
-// Static pages under /support that must not be treated as a guide slug.
+import {
+  type ContentFetchers,
+  redirectContentSlug,
+  redirectHelpCenterSlug,
+} from './content-slug-resolver';
+
+// Static pages of the old help center that must not be treated as a guide slug.
 const supportStaticPaths = new Set(['search']);
 
 function safeDecode(segment: string) {
@@ -25,9 +31,8 @@ function getHelpCenterSlug(segments: string[]) {
 
 /**
  * `/help-center/guide/:slug` and `/help-center/:slug` resolve the slug directly to its final
- * URL (one hop), instead of going /support/guide/:slug → /support/:slug → /posts/:slug.
- * `/help-center/` and static support pages keep the plain `/help-center` → `/support` swap;
- * any other path has no equivalent under /support and is a 404.
+ * URL (one hop): its Leather Docs page, a post, or a deprecation notice. `/help-center/` and the
+ * old search page go to the Leather Docs Guides home; any other path is a 404.
  */
 export async function helpCenterWildcardLoader<TPost, TGuide>(
   request: Request,
@@ -36,13 +41,12 @@ export async function helpCenterWildcardLoader<TPost, TGuide>(
   const url = new URL(request.url);
   const segments = splitPath(url.pathname, '/help-center');
 
-  if (segments.length === 0) return redirect(`/support${url.search}`, 301);
-  if (segments.length === 1 && supportStaticPaths.has(segments[0])) {
-    return redirect(`/support/${segments[0]}${url.search}`, 301);
+  if (segments.length === 0 || (segments.length === 1 && supportStaticPaths.has(segments[0]))) {
+    return redirect(`${LEATHER_DOCS.guides}${url.search}`, 301);
   }
 
   const slug = getHelpCenterSlug(segments);
-  if (slug) return redirectContentSlug(slug, request, fetchers);
+  if (slug) return redirectHelpCenterSlug(slug, request, fetchers);
 
   throw data('The requested page could not be found.', { status: 404 });
 }
@@ -56,7 +60,7 @@ export async function guidesWildcardLoader<TPost, TGuide>(
   const segments = splitPath(url.pathname, '/guides');
 
   if (segments.length === 1) return redirectContentSlug(segments[0], request, fetchers);
-  if (segments.length === 0) return redirect(`/support${url.search}`, 301);
+  if (segments.length === 0) return redirect(`${LEATHER_DOCS.guides}${url.search}`, 301);
 
   throw data('The requested page could not be found.', { status: 404 });
 }

@@ -2,7 +2,7 @@ import { type ReactElement } from 'react';
 import { Link } from 'react-router';
 
 import { Box, Grid, type HTMLStyledProps, styled } from 'leather-styles/jsx';
-import { HELP_CENTER_URL } from '~/constants/environment';
+import { LEATHER_DOCS } from '~/constants/leather-docs';
 
 import { GlassesIcon, SupportIcon, TerminalIcon } from '@leather.io/ui';
 
@@ -19,25 +19,25 @@ const helpCards: HelpCard[] = [
   {
     title: 'Help',
     description: 'Quick answers and support for common questions.',
-    href: HELP_CENTER_URL,
+    href: LEATHER_DOCS.guides,
     icon: <SupportIcon />,
   },
   {
     title: 'Guides',
     description: 'Simple walkthroughs to get you started.',
-    href: HELP_CENTER_URL,
+    href: LEATHER_DOCS.guides,
     icon: <GlassesIcon />,
   },
   {
     title: 'Developers',
     description: 'Docs and tools to help you build faster.',
-    href: '/developers',
+    href: LEATHER_DOCS.developers,
     icon: <TerminalIcon />,
   },
 ];
 
 /**
- * The Help / Guides / Developers strip shared by /developers and the not-found page.
+ * The Help / Guides / Developers strip on the not-found page, linking out to Leather Docs.
  * Three bordered cells on desktop; a stacked list (icon left) on mobile.
  */
 export function HelpCards(props: HTMLStyledProps<'nav'>) {

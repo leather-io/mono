@@ -5,7 +5,7 @@ import { getSitemapPaths, renderSitemap, sitemapPagePaths } from './sitemap.util
 vi.mock('~/constants/cms-client', () => ({ cmsClient: { fetch: vi.fn() } }));
 
 describe('getSitemapPaths', () => {
-  test('lists pages, served posts and guides at their canonical URL, and changelog entries', async () => {
+  test('lists pages, served posts at their canonical URL, and changelog entries', async () => {
     const paths = await getSitemapPaths({
       postSlugs: ['what-is-stacks', 'receive-btc', 'send-ordinals'],
       guideSlugs: ['receive-btc', 'send-stx', 'receive-ordinals'],
@@ -14,8 +14,6 @@ describe('getSitemapPaths', () => {
 
     expect(paths).toEqual([
       ...sitemapPagePaths,
-      '/support/receive-btc',
-      '/support/send-stx',
       '/posts/what-is-stacks',
       '/changelog/web-portfolio',
     ]);
@@ -31,6 +29,11 @@ describe('getSitemapPaths', () => {
     expect(paths).not.toContain('/posts/receive-btc');
     expect(paths).not.toContain('/posts/send-ordinals');
   });
+});
+
+test('leaves out pages that moved to Leather Docs', () => {
+  expect(sitemapPagePaths).not.toContain('/support');
+  expect(sitemapPagePaths).not.toContain('/developers');
 });
 
 describe('renderSitemap', () => {

@@ -9,7 +9,6 @@ export default [
   index('pages/marketing/home/home.route.tsx'),
   // Marketing pages
   route('apps', 'pages/marketing/apps/apps.route.tsx'),
-  route('developers', 'pages/marketing/developers/developers.route.tsx'),
   route('news', 'pages/marketing/news/news.route.tsx'),
   route('explorer', 'pages/marketing/explorer/explorer.route.tsx'),
   // sBTC
@@ -23,12 +22,12 @@ export default [
   // pages/redirects/content-slug-resolver.ts (serve, one 301 to the final URL, or 404/410)
   route('posts', 'pages/posts/posts.route.tsx'),
   route('posts/:postSlug', 'pages/posts/post.route.tsx'),
-  route('support', 'pages/support/help-center.route.tsx'),
-  route('support/search', 'pages/support/search.tsx'),
+  // The help center and developers pages moved to Leather Docs (GitBook). /developers, /support,
+  // /support/search and /help-center are in legacyPathRedirectRoutes; guide slugs 301 to their page.
   route('support/guide/:slug', 'pages/redirects/support-guide-redirect.route.tsx'),
-  route('support/:guideSlug', 'pages/support/guide/guide.route.tsx'),
-  // Redirects from old help-center URLs
-  route('help-center', 'pages/redirects/help-center-redirect.route.tsx'),
+  route('support/:slug', 'pages/redirects/support-guide-redirect.route.tsx', {
+    id: 'support-slug-redirect',
+  }),
   route('help-center/*', 'pages/redirects/help-center-wildcard.route.tsx'),
   // Redirects from the retired Framer site (leather.io/guides/:slug, /privacy-policy, /download, ...)
   route('guides/*', 'pages/redirects/guides-wildcard.route.tsx'),

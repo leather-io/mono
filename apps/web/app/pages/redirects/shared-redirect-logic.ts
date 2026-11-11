@@ -8,12 +8,6 @@ function prefixRedirectLoader(request: Request, from: string, to: string) {
   return redirect(redirectUrl, 301);
 }
 
-// Serves `/help-center` and `/help-center/`; both land on `/support`, without a trailing slash.
-export function helpCenterRedirectLoader(request: Request) {
-  const url = new URL(request.url);
-  return redirect(`${url.origin}/support${url.search}${url.hash}`, 301);
-}
-
 export function stackingRedirectLoader(request: Request) {
   return prefixRedirectLoader(request, '/stacking', '/staking');
 }
@@ -69,12 +63,6 @@ const deprecatedContentRedirects = new Map<string, string>([
   ...stampsContentSlugs.map((slug): [string, string] => [slug, stampsDeprecationPostSlug]),
   ...ordinalsContentSlugs.map((slug): [string, string] => [slug, ordinalsDeprecationPostSlug]),
 ]);
-
-export const deprecationPostSlugs = [
-  ordinalsDeprecationPostSlug,
-  stampsDeprecationPostSlug,
-  runesDeprecationPostSlug,
-];
 
 export function isDeprecatedContentSlug(slug: string) {
   return deprecatedContentRedirects.has(slug);

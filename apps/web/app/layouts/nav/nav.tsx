@@ -6,7 +6,7 @@ import { Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { Drawer } from 'vaul';
 import { LeatherLogo } from '~/components/icons/leather-logo';
 import { StackingIcon } from '~/components/icons/stacking-icon';
-import { HELP_CENTER_URL } from '~/constants/environment';
+import { LEATHER_DOCS } from '~/constants/leather-docs';
 
 import {
   BarsTwoIcon,
@@ -65,14 +65,10 @@ function NavContents() {
         <NavItem href="/changelog" icon={<ChangelogIcon variant="small" />}>
           Changelog
         </NavItem>
-        <NavItem href="/developers" icon={<CodeIcon variant="small" />}>
+        <NavItem href={LEATHER_DOCS.developers} newTab icon={<CodeIcon variant="small" />}>
           Developers
         </NavItem>
-        <NavItem
-          href={HELP_CENTER_URL}
-          newTab={HELP_CENTER_URL.startsWith('https://')}
-          icon={<SupportIcon variant="small" />}
-        >
+        <NavItem href={LEATHER_DOCS.guides} newTab icon={<SupportIcon variant="small" />}>
           Help Center
         </NavItem>
       </styled.div>

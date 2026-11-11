@@ -11,5 +11,3 @@ export const VERSION = packageJson.version;
 export const STACKING_TRACKER_API_URL = 'https://api.stacking-tracker.com';
 
 export const EM_DASH = '—';
-
-export const FRONT_INBOX_ID = 'inb_6cw7l';

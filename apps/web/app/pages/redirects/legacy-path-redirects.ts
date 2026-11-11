@@ -1,11 +1,12 @@
 /**
  * Short paths from the retired Framer site's redirect table (leather.io/privacy-policy,
- * /download, ...). Each resolves in a single 301 to its final URL. Entries with a `slug`
- * go through the content resolver, so they follow the content if it ever moves.
+ * /download, ...) and the retired in-app help center and developers pages. Each resolves in a
+ * single 301 to its final URL. Entries with a `slug` go through the content resolver, so they
+ * follow the content if it ever moves; `docs` entries go to a section of Leather Docs (GitBook).
  *
  * Kept free of runtime imports so `routes.ts` can read the path list.
  */
-type LegacyPathTarget = { slug: string } | { to: `/${string}` };
+type LegacyPathTarget = { slug: string } | { to: `/${string}` } | { docs: 'guides' | 'developers' };
 
 const legacyPathRedirects = new Map<string, LegacyPathTarget>([
   ['/privacy-policy', { slug: 'privacy-policy' }],
@@ -18,10 +19,10 @@ const legacyPathRedirects = new Map<string, LegacyPathTarget>([
   ['/wallet/extension', { to: '/' }],
   ['/download', { to: '/' }],
   ['/install', { to: '/' }],
-  ['/contact', { to: '/support' }],
-  ['/help', { to: '/support' }],
-  ['/guides', { to: '/support' }],
-  ['/frequent-questions', { to: '/support' }],
+  ['/contact', { docs: 'guides' }],
+  ['/help', { docs: 'guides' }],
+  ['/guides', { docs: 'guides' }],
+  ['/frequent-questions', { docs: 'guides' }],
   ['/wallet-apps', { slug: 'wallets-comparison' }],
   ['/mobilewaitlist', { to: '/' }],
   ['/install-desktop', { to: '/' }],
@@ -35,12 +36,17 @@ const legacyPathRedirects = new Map<string, LegacyPathTarget>([
   ['/old-page/wallet-apps', { slug: 'wallets-comparison' }],
   ['/old-page/blog', { to: '/posts' }],
   ['/old-page/learn', { to: '/posts' }],
-  ['/old-page/guides', { to: '/support' }],
-  ['/old-page/frequent-questions', { to: '/support' }],
-  ['/old-page/contact', { to: '/support' }],
-  ['/old-page/developer-docs', { to: '/developers' }],
+  ['/old-page/guides', { docs: 'guides' }],
+  ['/old-page/frequent-questions', { docs: 'guides' }],
+  ['/old-page/contact', { docs: 'guides' }],
+  ['/old-page/developer-docs', { docs: 'developers' }],
   ['/old-page/privacy-policy', { slug: 'privacy-policy' }],
   ['/old-page/terms', { slug: 'terms-of-service' }],
+  // The in-app help center and developers page, retired for Leather Docs
+  ['/developers', { docs: 'developers' }],
+  ['/support', { docs: 'guides' }],
+  ['/support/search', { docs: 'guides' }],
+  ['/help-center', { docs: 'guides' }],
 ]);
 
 export const legacyRedirectPaths = [...legacyPathRedirects.keys()];

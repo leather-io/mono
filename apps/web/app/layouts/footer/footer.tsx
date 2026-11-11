@@ -1,4 +1,4 @@
-import { HELP_CENTER_URL } from '~/constants/environment';
+import { LEATHER_DOCS } from '~/constants/leather-docs';
 
 import { FooterLayout as Footer } from './footer.layout';
 
@@ -8,16 +8,12 @@ function AppFooter() {
     <Footer>
       <Footer.Grid>
         <Footer.Column title="Dive deeper">
-          {HELP_CENTER_URL.startsWith('https://') ? (
-            <Footer.Link withIcon href={HELP_CENTER_URL}>
-              Help Center
-            </Footer.Link>
-          ) : (
-            <Footer.InternalLink to={HELP_CENTER_URL}>Help Center</Footer.InternalLink>
-          )}
+          <Footer.Link withIcon href={LEATHER_DOCS.guides}>
+            Help Center
+          </Footer.Link>
           <Footer.InternalLink to="/changelog">Changelog</Footer.InternalLink>
           <Footer.InternalLink to="/news">News</Footer.InternalLink>
-          <Footer.Link withIcon href="https://leather.gitbook.io/">
+          <Footer.Link withIcon href={LEATHER_DOCS.developers}>
             Developer Docs
           </Footer.Link>
         </Footer.Column>
@@ -25,7 +21,9 @@ function AppFooter() {
         <Footer.Column title="Legal & policies">
           <Footer.InternalLink to="/posts/privacy-policy">Privacy policy</Footer.InternalLink>
           <Footer.InternalLink to="/posts/terms-of-service">Terms of service</Footer.InternalLink>
-          <Footer.InternalLink to="/support/security">Security</Footer.InternalLink>
+          <Footer.Link href={`${LEATHER_DOCS.guides}/wallet-and-security/security`}>
+            Security
+          </Footer.Link>
           <Footer.Link href="https://trustmachines.notion.site/Public-assets-00144dc5c69142199b00788ff61d721c">
             Brand assets
           </Footer.Link>

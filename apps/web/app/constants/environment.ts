@@ -18,16 +18,12 @@ export const TARGET = envTargetSchema
   .default('production')
   .parse(import.meta.env.CLOUDFLARE_ENV ?? import.meta.env.LEATHER_TARGET);
 
-export const HELP_CENTER_URL =
-  TARGET === 'production' ? '/support' : import.meta.env.LEATHER_GUIDES_PREVIEW_URL || '/support';
-
 // New type for the map
 
 declare global {
   interface ImportMetaEnv {
     readonly CLOUDFLARE_ENV?: string;
     readonly LEATHER_TARGET?: string;
-    readonly LEATHER_GUIDES_PREVIEW_URL?: string;
     readonly LEATHER_API_URL?: string;
     readonly LEATHER_BITCOIN_API_URL?: string;
     readonly LEATHER_STACKS_API_URL?: string;
@@ -35,7 +31,6 @@ declare global {
     readonly LEATHER_PRIVATE_NETWORK_FLAVOR?: string;
     readonly LEATHER_PRIVATE_NETWORK_NAME?: string;
     readonly LEATHER_PRIVATE_NETWORK_KEY?: string;
-    readonly LEATHER_FRONT_WEB_APP_API_TOKEN?: string;
     readonly LEATHER_MIXPANEL_TOKEN?: string;
     readonly LEATHER_SENTRY_DSN?: string;
     readonly LEATHER_SHOW_MOCK_MODE_TOGGLE?: string;
