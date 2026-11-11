@@ -5,13 +5,8 @@ import { Reveal } from '~/pages/marketing/shared/reveal';
 
 import { ActivityMockup, BtcNotificationsMockup } from './bento-activity';
 import { ManageTokensMockup, ReviewTransactionMockup } from './bento-clarity';
-import {
-  BondPositionsAnimation,
-  LedgerAnimation,
-  MultisigVaultAnimation,
-  SwapsCoins,
-  animationsPath,
-} from './home-animations';
+import { BondPositionMockup, SharedVaultMockup } from './bento-vaults';
+import { LedgerAnimation, SwapsCoins, animationsPath } from './home-animations';
 import { CheckItem, FeatureCard, HomeSection, HomeSectionHeading } from './home-layout';
 
 // Every bento visual sits on the same stage, so all cards share one height
@@ -222,13 +217,13 @@ export function HomeVaultsAndStaking() {
           title="Shared vaults"
           tag="Web"
           description="Create a vault with your team, family or DAO. Bitcoin and Stacks transactions go out once enough members have signed."
-          visual={<MultisigVaultAnimation aspect={cardAspect} />}
+          visual={<SharedVaultMockup />}
         />
         <FeatureCard
           title="Bitcoin Staking bonds"
           tag="Extension"
           description="BTC locked in a Bitcoin Staking bond counts in your balance, with each bond’s amount, unlock date and status."
-          visual={<BondPositionsAnimation aspect={cardAspect} />}
+          visual={<BondPositionMockup />}
         />
       </Grid>
     </HomeSection>
