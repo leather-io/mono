@@ -37,8 +37,11 @@ describe('fix-issue commands', () => {
       'stop-guard',
       'strip-forbidden',
       'screenshots',
+      'app-token',
       'open-pull-request',
     ]);
+    const appToken = fixIssue?.commands.find(command => command.name() === 'app-token');
+    expect(appToken?.commands.map(command => command.name())).toEqual(['create', 'revoke']);
     const round = fixIssue?.commands.find(command => command.name() === 'round');
     expect(round?.commands.map(command => command.name())).toEqual([
       'verify',

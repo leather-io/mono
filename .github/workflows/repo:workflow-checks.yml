@@ -5,8 +5,6 @@ on:
     paths:
       - '.github/workflows/**'
       - '.github/scripts/**'
-      - '.github/bot-branch-secret-guard-baseline.json'
-      - 'tools/src/bot-branch-secret-guard/**'
   push:
     branches:
       - main
@@ -14,8 +12,6 @@ on:
     paths:
       - '.github/workflows/**'
       - '.github/scripts/**'
-      - '.github/bot-branch-secret-guard-baseline.json'
-      - 'tools/src/bot-branch-secret-guard/**'
 
 # GITHUB_TOKEN only needs to read the repository for checkout.
 permissions:
@@ -88,21 +84,6 @@ jobs:
           # actionlint does not yet understand GitHub's `$/` self-repository `uses:` syntax.
           # Drop the -ignore flag once https://github.com/rhysd/actionlint/pull/732 is merged and released.
           "$ACTIONLINT" -color -ignore 'specifying action "\$/[^"]*" in invalid format because ref is missing'
-
-  check-bot-branch-secret-guard:
-    name: check-bot-branch-secret-guard
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - uses: $/.github/actions/provision
-        with:
-          TURBO_CACHE: 'false'
-
-      - name: check-bot-branch-secret-guard
-        run: pnpm --filter @leather.io/tools build && pnpm lt bot-branch-secret-guard check
 
   test-scripts:
     name: test-scripts

@@ -5,6 +5,7 @@ import {
   checkBotBranchSecrets,
   findWorkflowViolations,
   formatGuardReport,
+  hasBotBranchGuard,
   untrustedTriggers,
 } from './check.js';
 
@@ -34,6 +35,25 @@ describe('untrustedTriggers', () => {
   test('treats tag pushes and ignore filters as untrusted', () => {
     expect(untrustedTriggers({ push: { branches: ['dev'], tags: ['v*'] } })).toEqual(['push']);
     expect(untrustedTriggers({ push: { 'branches-ignore': ['dev'] } })).toEqual(['push']);
+  });
+});
+
+describe('hasBotBranchGuard', () => {
+  test('accepts the guard alone or joined with &&, with or without ${{ }}', () => {
+    expect(hasBotBranchGuard(botBranchGuard)).toBe(true);
+    expect(hasBotBranchGuard(`\${{ ${botBranchGuard} }}`)).toBe(true);
+    expect(
+      hasBotBranchGuard(`\${{ github.event.pull_request.draft == false && ${botBranchGuard} }}`)
+    ).toBe(true);
+    expect(hasBotBranchGuard(`\${{ ${botBranchGuard} && success() }}`)).toBe(true);
+  });
+
+  test('refuses a guard that || or a negation can switch off', () => {
+    expect(hasBotBranchGuard(`\${{ always() || ${botBranchGuard} }}`)).toBe(false);
+    expect(hasBotBranchGuard(`\${{ ${botBranchGuard} || true }}`)).toBe(false);
+    expect(hasBotBranchGuard(`\${{ !(${botBranchGuard}) }}`)).toBe(false);
+    expect(hasBotBranchGuard(`\${{ (a || b) && ${botBranchGuard} }}`)).toBe(true);
+    expect(hasBotBranchGuard(undefined)).toBe(false);
   });
 });
 
@@ -127,8 +147,42 @@ describe('findWorkflowViolations', () => {
       ['  call:', '    uses: ./.github/workflows/other.yml', '    secrets: inherit'].join('\n')
     );
     expect(findWorkflowViolations({ file: 'a.yml', content })).toEqual([
-      { file: 'a.yml', job: 'call', reasons: ['secrets'] },
+      { file: 'a.yml', job: 'call', reasons: ['reusable workflow', 'secrets'] },
     ]);
+  });
+
+  test('flags a reusable workflow call even without secrets, since it cannot see inside it', () => {
+    const content = workflow(
+      pullRequest,
+      ['  call:', '    uses: ./.github/workflows/other.yml'].join('\n')
+    );
+    expect(findWorkflowViolations({ file: 'a.yml', content })).toEqual([
+      { file: 'a.yml', job: 'call', reasons: ['reusable workflow'] },
+    ]);
+  });
+
+  test('flags toJSON(secrets), which hands over every secret', () => {
+    const content = workflow(
+      pullRequest,
+      [
+        '  leak:',
+        '    steps:',
+        '      - run: echo',
+        '        env:',
+        '          ALL: ${{ toJSON(secrets) }}',
+      ].join('\n')
+    );
+    expect(findWorkflowViolations({ file: 'a.yml', content })).toEqual([
+      { file: 'a.yml', job: 'leak', reasons: ['secrets in step 1'] },
+    ]);
+  });
+
+  test('ignores the word secrets outside an expression', () => {
+    const content = workflow(
+      pullRequest,
+      ['  check:', '    steps:', '      - run: echo "no secrets.here"'].join('\n')
+    );
+    expect(findWorkflowViolations({ file: 'a.yml', content })).toEqual([]);
   });
 
   test('ignores workflows that only run trusted refs', () => {

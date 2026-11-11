@@ -5,7 +5,9 @@ export const botBranchGuard = "!startsWith(github.head_ref || github.ref_name, '
 
 const trustedPushBranches = new Set(['dev', 'main']);
 const untrustedEvents = new Set(['pull_request', 'pull_request_target']);
-const secretReferencePattern = /\bsecrets\s*(?:\.\s*(?!GITHUB_TOKEN\b)[A-Za-z_]|\[)/;
+const expressionPattern = /\$\{\{([\s\S]*?)\}\}/g;
+const secretsContextPattern = /(?<![\w.])secrets\b(?!\s*\.\s*GITHUB_TOKEN\b)/;
+const wholeExpressionPattern = /^\$\{\{([\s\S]*)\}\}$/;
 
 const stepSchema = z.looseObject({
   name: z.string().optional(),
@@ -18,6 +20,7 @@ const jobSchema = z.looseObject({
   environment: z.unknown().optional(),
   permissions: z.unknown().optional(),
   secrets: z.unknown().optional(),
+  uses: z.unknown().optional(),
   steps: z.array(stepSchema).optional(),
 });
 
@@ -85,13 +88,43 @@ export function untrustedTriggers(on: unknown): string[] {
     .map(([event]) => event);
 }
 
-function hasBotBranchGuard(condition: unknown): boolean {
-  return typeof condition === 'string' && condition.replace(/\s+/g, ' ').includes(botBranchGuard);
+function splitTopLevel(expression: string, operator: '&&' | '||'): string[] {
+  const parts: string[] = [];
+  let depth = 0;
+  let quoted = false;
+  let start = 0;
+  for (let index = 0; index < expression.length; index += 1) {
+    const char = expression[index];
+    if (char === "'") quoted = !quoted;
+    if (quoted) continue;
+    if (char === '(') depth += 1;
+    if (char === ')') depth -= 1;
+    if (depth === 0 && expression.startsWith(operator, index)) {
+      parts.push(expression.slice(start, index).trim());
+      start = index + operator.length;
+      index += operator.length - 1;
+    }
+  }
+  parts.push(expression.slice(start).trim());
+  return parts;
+}
+
+export function hasBotBranchGuard(condition: unknown): boolean {
+  if (typeof condition !== 'string') return false;
+  const trimmed = condition.trim();
+  const expression = (wholeExpressionPattern.exec(trimmed)?.[1] ?? trimmed)
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (splitTopLevel(expression, '||').length > 1) return false;
+  return splitTopLevel(expression, '&&').includes(botBranchGuard);
 }
 
 function referencesSecrets(value: unknown): boolean {
   if (value === undefined) return false;
-  return secretReferencePattern.test(JSON.stringify(value));
+  const text = JSON.stringify(value);
+  return Array.from(text.matchAll(expressionPattern)).some(
+    ([, expression]) => expression !== undefined && secretsContextPattern.test(expression)
+  );
 }
 
 function writeScopes(permissions: unknown): GuardReason[] {
@@ -112,6 +145,7 @@ function jobReasons(job: Job, workflowPermissions: unknown, workflowEnv: unknown
   if (hasBotBranchGuard(job.if)) return [];
   const reasons: string[] = [];
   if (job.environment !== undefined) reasons.push('environment');
+  if (job.uses !== undefined) reasons.push('reusable workflow');
   const { steps, ...jobWithoutSteps } = job;
   if (
     referencesSecrets(workflowEnv) ||

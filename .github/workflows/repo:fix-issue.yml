@@ -174,9 +174,10 @@ jobs:
     if: github.ref_name == 'dev'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
-    environment: fix-issue
+    environment: environment/mono-fix-issue
     permissions:
       contents: read # checkout only; every GitHub write uses the fix-issue app token
+      id-token: write # OIDC exchange for the AWS role that signs the fix-issue App JWT with its KMS key
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -189,16 +190,18 @@ jobs:
       - name: build-tools
         run: pnpm --filter @leather.io/tools build
 
+      - name: aws-credentials
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
       - name: app-token
         id: app-token
-        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
-        with:
-          client-id: ${{ vars.FIX_ISSUE_APP_CLIENT_ID }}
-          private-key: ${{ secrets.FIX_ISSUE_APP_PRIVATE_KEY }}
-          repositories: ${{ github.event.repository.name }}
-          permission-contents: write # create the signed fix commit on bot/fix-issue-<issue>-<run id> and the screenshots on bot/screenshots-<issue>
-          permission-pull-requests: write # open or update the issue's pull request and flip its draft state
-          permission-issues: write # comment the fixer's questions on the issue when it is blocked before changing anything
+        env:
+          APP_CLIENT_ID: ${{ vars.FIX_ISSUE_APP_CLIENT_ID }}
+          KMS_KEY_ID: ${{ vars.FIX_ISSUE_APP_KMS_KEY_ID }}
+        run: pnpm lt fix-issue app-token create --client-id "$APP_CLIENT_ID" --kms-key-id "$KMS_KEY_ID"
 
       - name: download-fix
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
@@ -216,3 +219,9 @@ jobs:
         run: >-
           pnpm lt fix-issue open-pull-request --issue "$ISSUE" --branch "$BRANCH" --base dev
           --parent-sha "$PARENT_SHA" --co-author "$CO_AUTHOR"
+
+      - name: revoke-app-token
+        if: always() && steps.app-token.outputs.token != ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: pnpm lt fix-issue app-token revoke
