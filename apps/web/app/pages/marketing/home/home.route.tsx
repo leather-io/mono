@@ -12,6 +12,7 @@ import {
   HomeFullControl,
   HomeProtection,
   HomeSwapsAndLedger,
+  HomeVaultsAndStaking,
   HomeWallets,
 } from './components/home-features';
 import { HomeHero } from './components/home-hero';
@@ -43,6 +44,7 @@ export default function HomeRoute({ loaderData }: Route.ComponentProps) {
       <HomeWallets />
       <HomeFullControl />
       <HomeProtection />
+      <HomeVaultsAndStaking />
       <HomeTrust />
       <HomeProviders bondTargetRate={loaderData.bondTargetRate} />
       <ChangelogStrip

@@ -5,7 +5,14 @@ import { LottieAnimation } from '~/pages/marketing/shared/lottie-animation';
 import { MarketingTag } from '~/pages/marketing/shared/marketing-tag';
 import { Reveal } from '~/pages/marketing/shared/reveal';
 
-import { LedgerAnimation, SpamFreeAnimation, SwapsCoins, animationsPath } from './home-animations';
+import {
+  BondPositionsAnimation,
+  LedgerAnimation,
+  MultisigVaultAnimation,
+  SpamFreeAnimation,
+  SwapsCoins,
+  animationsPath,
+} from './home-animations';
 import { CheckItem, FeatureCard, HomeSection, HomeSectionHeading } from './home-layout';
 
 // Every bento visual sits on the same stage, so all cards share one height
@@ -247,6 +254,33 @@ export function HomeProtection() {
               aspect={cardAspect}
             />
           }
+        />
+      </Grid>
+    </HomeSection>
+  );
+}
+
+export function HomeVaultsAndStaking() {
+  return (
+    <HomeSection aria-labelledby="home-vaults-heading">
+      <Reveal>
+        <HomeSectionHeading
+          id="home-vaults-heading"
+          lines={['Sign together.', 'See every bond.']}
+        />
+      </Reveal>
+      <Grid gridTemplateColumns={['1fr', null, 'repeat(2, 1fr)']} gap="space.03" mt="space.07">
+        <FeatureCard
+          title="Shared vaults"
+          tag="Web"
+          description="Create a vault with your team, family or DAO. Bitcoin and Stacks transactions go out once enough members have signed."
+          visual={<MultisigVaultAnimation aspect={cardAspect} />}
+        />
+        <FeatureCard
+          title="Bitcoin Staking bonds"
+          tag="Extension"
+          description="BTC locked in a Bitcoin Staking bond counts in your balance, with each bond’s amount, unlock date and status."
+          visual={<BondPositionsAnimation aspect={cardAspect} />}
         />
       </Grid>
     </HomeSection>
