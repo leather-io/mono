@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { styled } from 'leather-styles/jsx';
-import type { AnimationSegment } from 'lottie-web';
 import {
   LottieFrame,
   useLottie,
@@ -112,57 +111,6 @@ export function LedgerAnimation() {
         fit="contain"
       />
     </styled.div>
-  );
-}
-
-// Lottielab state machine of the original: Idle loops 0–1.75 s, a click plays Activate
-// (2–3 s, the Hide spam switch turning on) and holds, another click goes back to Idle.
-const spamIdle: AnimationSegment = [0, 175];
-const spamActivate: AnimationSegment = [200, 300];
-
-/** "Stay spam free": idle loop, plus a real toggle button that flips the Hide spam switch. */
-export function SpamFreeAnimation({ aspect }: { aspect: string }) {
-  const lottie = useLottie({
-    src: `${animationsPath}/spam-free.lottie.json`,
-    segment: spamIdle,
-  });
-  const { animation, isReady } = lottie;
-  const [hideSpam, setHideSpam] = useState(false);
-  const hasToggled = useRef(false);
-
-  useEffect(() => {
-    if (!animation || !hasToggled.current) return;
-    animation.setLoop(!hideSpam);
-    animation.playSegments(hideSpam ? spamActivate : spamIdle, true);
-  }, [animation, hideSpam]);
-
-  return (
-    <LottieFrame
-      lottie={lottie}
-      poster="/marketing/home/spam-free.webp"
-      alt="A stylized Hide spam control above faded sample token names"
-      aspect={aspect}
-    >
-      {isReady && (
-        <styled.button
-          type="button"
-          aria-pressed={hideSpam}
-          aria-label="Toggle the Hide spam illustration"
-          onClick={() => {
-            hasToggled.current = true;
-            setHideSpam(pressed => !pressed);
-          }}
-          position="absolute"
-          inset="0"
-          cursor="pointer"
-          _focusVisible={{
-            outline: '2px solid',
-            outlineColor: 'ink.action-primary-default',
-            outlineOffset: '-4px',
-          }}
-        />
-      )}
-    </LottieFrame>
   );
 }
 

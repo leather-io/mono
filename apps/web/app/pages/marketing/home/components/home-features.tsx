@@ -1,16 +1,14 @@
-import { type ReactNode } from 'react';
-
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
 import { LottieAnimation } from '~/pages/marketing/shared/lottie-animation';
 import { MarketingTag } from '~/pages/marketing/shared/marketing-tag';
 import { Reveal } from '~/pages/marketing/shared/reveal';
 
 import { ActivityMockup, BtcNotificationsMockup } from './bento-activity';
+import { ManageTokensMockup, ReviewTransactionMockup } from './bento-clarity';
 import {
   BondPositionsAnimation,
   LedgerAnimation,
   MultisigVaultAnimation,
-  SpamFreeAnimation,
   SwapsCoins,
   animationsPath,
 } from './home-animations';
@@ -18,25 +16,6 @@ import { CheckItem, FeatureCard, HomeSection, HomeSectionHeading } from './home-
 
 // Every bento visual sits on the same stage, so all cards share one height
 const cardAspect = '592 / 444';
-const smallArtAspect = '391 / 283';
-
-/**
- * Small-canvas art (391 × 283) was drawn with larger UI type than the full-size
- * mockups. Shrinking it onto the shared stage keeps the mockups' text at one scale.
- */
-function ScaledVisual({ scale, children }: { scale: number; children: ReactNode }) {
-  return (
-    <Flex
-      alignItems="center"
-      justifyContent="center"
-      width="100%"
-      style={{ aspectRatio: cardAspect }}
-    >
-      {/* Inline: Panda can't extract a runtime width */}
-      <Box style={{ width: `${scale * 100}%` }}>{children}</Box>
-    </Flex>
-  );
-}
 
 export function HomeSwapsAndLedger() {
   return (
@@ -217,23 +196,12 @@ export function HomeProtection() {
           title="Show or hide tokens"
           tag="Extension"
           description="Use Manage tokens to show or hide individual supported tokens in your asset list."
-          visual={
-            <ScaledVisual scale={0.7}>
-              <SpamFreeAnimation aspect={smallArtAspect} />
-            </ScaledVisual>
-          }
+          visual={<ManageTokensMockup />}
         />
         <FeatureCard
           title="Review transactions"
           description="Review transaction details, requested changes and network fees before you approve."
-          visual={
-            <LottieAnimation
-              src={`${animationsPath}/review-transactions.lottie.json`}
-              poster="/marketing/home/review-transactions.webp"
-              alt="A Clarity contract call to review, with Edit and Approve buttons"
-              aspect={cardAspect}
-            />
-          }
+          visual={<ReviewTransactionMockup />}
         />
       </Grid>
     </HomeSection>
