@@ -71,8 +71,8 @@ describe('repo changelog content', () => {
   const entries = getChangelogEntries(new Date('2100-01-01'));
 
   test('every file in app/content/changelog parses', () => {
-    // The 9 published entries exported from Sanity
-    expect(entries).toHaveLength(9);
+    // 9 entries exported from Sanity + 11 added with the move to the repo
+    expect(entries).toHaveLength(20);
   });
 
   test('slugs are unique and the Sanity-era URLs still resolve', () => {
@@ -105,12 +105,25 @@ describe('repo changelog content', () => {
     }
   });
 
+  test('the 2026-10-01 release is ordered deliberately on the home strip', () => {
+    expect(
+      getChangelogEntries(new Date('2026-10-02'))
+        .slice(0, 4)
+        .map(entry => entry.slug)
+    ).toEqual([
+      'redesigned-swaps-extension',
+      'token-price-charts',
+      'ledger-improvements',
+      'extension-update-notice',
+    ]);
+  });
+
   test('hides entries dated in the future', () => {
     const now = new Date('2025-10-20T00:00:00.000Z');
     const published = getChangelogEntries(now);
     expect(published.every(entry => Date.parse(entry.publishedAt) <= now.getTime())).toBe(true);
     expect(published[0].slug).toBe('wallet-balance-improvements');
-    expect(getChangelogEntry('usdcx-default-asset', now)).toBeNull();
+    expect(getChangelogEntry('leather-multisig', now)).toBeNull();
     expect(getChangelogEntry('wallet-balance-improvements', now)?.title).toBe(
       'Improved wallet balance accuracy, coverage and load times'
     );
@@ -122,6 +135,13 @@ describe('getChangelogDescription', () => {
     const entry = getChangelogEntry('stacks-sip-30-support');
     expect(entry && getChangelogDescription(entry)).toBe(
       'Available in v6.70.0, this release brings full support for SIP-30, a standard API that makes it easier for apps to interact with the Stacks ecosystem through a consistent interface.'
+    );
+  });
+
+  test('does not cut a sentence at a dot inside a domain', () => {
+    const entry = getChangelogEntry('leather-multisig', new Date('2100-01-01'));
+    expect(entry && getChangelogDescription(entry)).toBe(
+      'Multisig is now live at app.leather.io/multisig.'
     );
   });
 });
