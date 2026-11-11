@@ -1,6 +1,7 @@
 export const CollectiblesSelectors = {
   CollectibleCardSip9: 'collectible-card-sip9',
   CollectibleDetailsContainer: 'collectible-details-container',
+  CollectibleSendBtn: 'collectible-send-btn',
   CollectiblesEmpty: 'collectibles-empty',
   ManageCollectiblesBtn: 'manage-collectibles-btn',
   RefreshCollectibles: 'refresh-collectibles',

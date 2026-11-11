@@ -1,4 +1,4 @@
-import { standardPrincipalCV } from '@stacks/transactions';
+import { ClarityType, standardPrincipalCV, uintCV } from '@stacks/transactions';
 import { inject, injectable } from 'inversify';
 
 import { BnsName, BnsProfile, bnsContractAddress, bnsContractName } from '@leather.io/models';
@@ -11,12 +11,16 @@ import { Types } from '../inversify.types';
 import { AccountRequest } from '../types';
 import {
   buildBnsName,
+  getBnsNamespaceCVFromGetBnsFromIdResponseCV,
+  isManagerTransferableNamespaceResponseCV,
   isValidBnsName,
   mapBnsNameFromV2ApiAddressName,
   mapBnsNameFromV2ApiName,
   mapBnsProfileDataFromZoneFile,
   parseBnsContractGetPrimaryResponseCV,
 } from './bns.utils';
+
+export type BnsNameTransferBlocker = 'managed-namespace' | 'listed';
 
 export interface AccountBnsName extends BnsName {
   isPrimary: boolean;
@@ -123,6 +127,40 @@ export class BnsService {
     } catch {
       return { bnsName: primaryName, profileData: {} };
     }
+  }
+
+  public async getBnsNameTransferBlocker(
+    tokenId: number,
+    signal?: AbortSignal
+  ): Promise<BnsNameTransferBlocker | null> {
+    const contract = {
+      contractAddress: bnsContractAddress[selectStacksNetworkMode(this.settings.getSettings())],
+      contractName: bnsContractName,
+    };
+    const options = { signal, skipCache: true };
+    const [bnsFromIdRes, marketEntry] = await Promise.all([
+      this.stacksApiClient.callReadOnlyFunction(
+        { ...contract, functionName: 'get-bns-from-id', functionArgs: [uintCV(tokenId)] },
+        options
+      ),
+      this.stacksApiClient.getMapEntry(
+        { ...contract, mapName: 'market', key: uintCV(tokenId) },
+        options
+      ),
+    ]);
+    const namespacePropertiesRes = await this.stacksApiClient.callReadOnlyFunction(
+      {
+        ...contract,
+        functionName: 'get-namespace-properties',
+        functionArgs: [getBnsNamespaceCVFromGetBnsFromIdResponseCV(bnsFromIdRes)],
+      },
+      options
+    );
+    if (isManagerTransferableNamespaceResponseCV(namespacePropertiesRes)) {
+      return 'managed-namespace';
+    }
+    if (marketEntry.type === ClarityType.OptionalSome) return 'listed';
+    return null;
   }
 
   private async getPrimaryName(stacksAddress: string, signal?: AbortSignal) {

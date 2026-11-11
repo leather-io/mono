@@ -17,6 +17,7 @@ import { HiroMultiPageRequest, fetchHiroCursorPages, fetchHiroPages } from './hi
 import { hiroApiRequestsPriorityLevels } from './hiro-request-priorities';
 import {
   CallReadOnlyFunctionArgs,
+  GetMapEntryArgs,
   HiroAddressBalanceResponse,
   HiroAddressFtBalancesResponse,
   HiroAddressStxBalanceResponse,
@@ -24,6 +25,7 @@ import {
   HiroAddressTransactionsResponse,
   HiroBalanceChangesResponse,
   HiroFtMetadata,
+  HiroMapEntryResponse,
   HiroMetadata,
   HiroPageRequest,
   HiroPoxInfoResponse,
@@ -570,6 +572,27 @@ export class HiroStacksApiClient {
       fetchFn,
       { skipCache }
     );
+  }
+
+  public async getMapEntry(
+    { contractAddress, contractName, mapName, key }: GetMapEntryArgs,
+    { signal }: ApiRequestOptions
+  ): Promise<ClarityValue> {
+    const res = await this.limiter.add(
+      RateLimiterType.HiroStacks,
+      () =>
+        this._axios.post<HiroMapEntryResponse>(
+          `${selectStacksApiUrl(this.settings.getSettings())}/v2/map_entry/${contractAddress}/${contractName}/${mapName}?proof=0`,
+          JSON.stringify(cvToHex(key)),
+          { signal, headers: { 'Content-Type': 'application/json' } }
+        ),
+      {
+        priority: hiroApiRequestsPriorityLevels.callReadOnlyFunction,
+        signal,
+        throwOnTimeout: true,
+      }
+    );
+    return hexToCV(res.data.data);
   }
 
   public async getTransferFeeRate({ signal, skipCache }: ApiRequestOptions = {}): Promise<number> {

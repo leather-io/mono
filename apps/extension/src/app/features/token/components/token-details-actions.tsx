@@ -23,7 +23,12 @@ interface TokenDetailsPillButtonProps {
   testId?: string;
 }
 
-function TokenDetailsPillButton({ label, onClick, disabled, testId }: TokenDetailsPillButtonProps) {
+export function TokenDetailsPillButton({
+  label,
+  onClick,
+  disabled,
+  testId,
+}: TokenDetailsPillButtonProps) {
   return (
     <styled.button
       type="button"

@@ -14,6 +14,7 @@ const sendBtcMixedUtxosSpec = 'apps/extension/tests/specs/send/send-btc-mixed-ut
 const sendBtcSpendSourcesSpec = 'apps/extension/tests/specs/send/send-btc-spend-sources.spec.ts';
 const sendStxSpec = 'apps/extension/tests/specs/send/send-stx.spec.ts';
 const sendSip10Spec = 'apps/extension/tests/specs/send/send-sip10.spec.ts';
+const sendCollectibleSpec = 'apps/extension/tests/specs/send/send-collectible.spec.ts';
 const sendRecipientAccountsSpec = 'apps/extension/tests/specs/send/send-recipient-accounts.spec.ts';
 const sendStxPolicyProposeSpec = 'apps/extension/tests/specs/send/send-stx-policy-propose.spec.ts';
 const rbfBtcSpec = 'apps/extension/tests/specs/manage-transaction/rbf-btc.spec.ts';
@@ -401,6 +402,93 @@ export const sendFeatures = [
     specs: [sendSip10Spec],
     description:
       'Send form for a SIP-10 fungible token at /send/<assetName>/<contractAddress.contractName>. Shares the Stacks form: the recipient-accounts and edit-tx-nonce sheets and the confirm/broadcast-error sheet nest under this route too. SendPage.selectSip10AndGoToSendForm clicks the chooser row whose test id is <contractId>::<assetName>; with no argument it clicks the longcoin row (MockedTokensSelectors.Sip10TokenTestId), while send-sip10.spec.ts passes \'SP000000000000000000002Q6VF78.leather-integration-tests::leather-test-token\', which matches the params example. When the account does not hold the token the page toasts "Token not found" and navigates back to /send (sip10-token-send-form.tsx). "Continue" goes to the literal /send/:symbol/:contractId/confirm review; send-sip10.spec.ts registers mockStacksBroadcastTransaction so confirming there succeeds.',
+  },
+  {
+    id: 'send-collectible-form',
+    anchor: { kind: 'route' },
+    routes: [
+      RouteUrls.SendCollectible,
+      RouteUrls.EditNonce,
+      RouteUrls.SendCryptoAssetFormRecipientAccounts,
+    ],
+    params: [
+      {
+        name: 'assetId',
+        example: 'SP2XMGYYTA1KRBKBYJHTW8CFWB2QYZKZE4BMHG3PJ.living-leather::living-leather',
+      },
+      { name: 'tokenId', example: '1' },
+    ],
+    entry: [
+      {
+        kind: 'nav',
+        steps: [
+          'On the Collectibles tab click a collectible card (CollectiblesSelectors.CollectibleCardSip9)',
+          'On the collectible page click "Send" (CollectiblesSelectors.CollectibleSendBtn)',
+        ],
+      },
+      {
+        kind: 'deepLink',
+        steps: [
+          'Open #/send/nft/<URL-encoded asset identifier>/<tokenId> for a collectible the account holds',
+        ],
+      },
+    ],
+    gate: 'none',
+    flags: [],
+    preconditions: {
+      session: 'signed-in',
+      mocks: [...defaultMocks, 'mockTestAccountCollectibleHoldings'],
+    },
+    selectors: {
+      ready: SharedComponentsSelectors.FeeToBePaidLabel,
+      others: [
+        SendCryptoAssetSelectors.SendForm,
+        SendCryptoAssetSelectors.RecipientFieldInput,
+        SendCryptoAssetSelectors.PreviewSendTxBtn,
+      ],
+    },
+    actions: ['HomePage.openCollectible', 'SendPage.goToCollectibleSendForm'],
+    specs: [sendCollectibleSpec],
+    description:
+      'Send form for a SIP-009 collectible at /send/nft/<asset identifier>/<tokenId>. The collectible page shows a "Send" pill under the media for every collectible except a legacy BNS v1 name, and only with no active policy (sip9-details-page.tsx). The form first reads the contract interface: the contract must have a public transfer function with (uint principal principal) arguments and a uint token id for the asset, otherwise the page shows "This collectible cannot be sent" (SendCryptoAssetSelectors.SendCollectibleTransferBlocked) with "The contract of this collectible has no standard SIP-009 transfer function, so Leather cannot send it.". For a BNS v2 name it then reads the BNS-V2 namespace properties and the market map entry, because the contract transfer function rejects a name in a manager-transferable namespace (err u102) and a listed name (err u105); the callout then says "The manager of this namespace controls transfers. Use the namespace manager to send this name." or "This name is listed for sale. Remove the listing before you send it.". A failed check shows "Unable to check this collectible"; a collectible the account does not hold shows "Collectible not found" (send-collectible-form.tsx). The form has the collectible, the shared Stacks recipient field (address or BNS name, with the recipient-accounts sheet), the fee row and an "Edit nonce" link (nested edit-tx-nonce sheet); the confirm/broadcast-error sheet nests here too. "Continue" builds a deny-mode transfer contract call with an NFT post-condition and goes to the confirm route. mockTestAccountCollectibleHoldings gives the test account a BNS v2 name, a legacy BNS name, a living-leather NFT and an NFT whose mocked contract has no transfer function. send-collectible.spec.ts registers mockBnsV2NameTransferState(page)({ isManagerTransferable, isListed }) to choose the BNS contract state and mockStacksBroadcastTransaction.',
+  },
+  {
+    id: 'send-collectible-confirmation',
+    anchor: { kind: 'route' },
+    deepLinkable: false,
+    routes: [RouteUrls.SendCollectibleConfirmation],
+    params: [
+      {
+        name: 'assetId',
+        example: 'SP2XMGYYTA1KRBKBYJHTW8CFWB2QYZKZE4BMHG3PJ.living-leather::living-leather',
+      },
+      { name: 'tokenId', example: '1' },
+    ],
+    entry: [
+      {
+        kind: 'nav',
+        steps: ['On /send/nft/<asset identifier>/<tokenId> enter a recipient, click "Continue"'],
+      },
+    ],
+    gate: 'none',
+    flags: [],
+    preconditions: {
+      session: 'signed-in',
+      mocks: [...defaultMocks, 'mockTestAccountCollectibleHoldings'],
+    },
+    selectors: {
+      ready: SendCryptoAssetSelectors.ConfirmationDetails,
+      others: [
+        SendCryptoAssetSelectors.ConfirmationDetailsAssetValue,
+        SendCryptoAssetSelectors.ConfirmationDetailsRecipient,
+        SendCryptoAssetSelectors.ConfirmationDetailsFee,
+        SendCryptoAssetSelectors.ConfirmSendTxBtn,
+      ],
+    },
+    actions: ['SendPage.confirmSendTransaction'],
+    specs: [sendCollectibleSpec],
+    description:
+      'Review for a collectible transfer. It reads the recipient and the serialized unsigned transaction from router state, so a bare URL throws. It shows the collectible image and title, "To", "Sending", "Fee" and "Nonce", and a "Sending to a smart contract" warning when the recipient is a contract principal. "Confirm and send transaction" signs and broadcasts; on success the app shows the "<title> sent" toast and navigates to /activity, on failure to the broadcast-error sheet (send-collectible-confirmation.tsx). send-collectible.spec.ts registers mockStacksBroadcastTransaction.',
   },
   {
     id: 'sent-stx-summary',

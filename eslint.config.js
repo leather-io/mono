@@ -120,7 +120,7 @@ const pageObjectOnlySelectors = [
     object: 'SendCryptoAssetSelectors',
     property: 'SendForm',
     action:
-      'SendPage.selectBtcAndGoToSendForm, selectStxAndGoToSendForm or selectSip10AndGoToSendForm',
+      'SendPage.selectBtcAndGoToSendForm, selectStxAndGoToSendForm, selectSip10AndGoToSendForm or goToCollectibleSendForm',
   },
   {
     object: 'SharedComponentsSelectors',

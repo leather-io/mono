@@ -1,4 +1,5 @@
 import type { BrowserContext, Page } from '@playwright/test';
+import { Cl, cvToHex } from '@stacks/transactions';
 
 import { TEST_ACCOUNT_1_STX_ADDRESS } from './constants';
 
@@ -67,6 +68,61 @@ export function mockBnsV2NameLookup(page: Page | BrowserContext) {
             preordered_by: 'none',
             is_valid: true,
           },
+        },
+      })
+    );
+  };
+}
+
+const bnsV2ContractId = 'SP2QEZ06AGJ3RKJPBV14SY1V5BBFNAW33D96YPGZF.BNS-V2';
+
+interface BnsV2NameTransferState {
+  isManagerTransferable: boolean;
+  isListed: boolean;
+}
+export function mockBnsV2NameTransferState(page: Page | BrowserContext) {
+  return async function ({ isManagerTransferable, isListed }: BnsV2NameTransferState) {
+    await page.route('**/v2/contracts/call-read/*/BNS-V2/get-bns-from-id**', route =>
+      route.fulfill({
+        json: {
+          okay: true,
+          result: cvToHex(
+            Cl.some(
+              Cl.tuple({
+                name: Cl.bufferFromAscii('leather'),
+                namespace: Cl.bufferFromAscii('btc'),
+              })
+            )
+          ),
+        },
+      })
+    );
+    await page.route('**/v2/contracts/call-read/*/BNS-V2/get-namespace-properties**', route =>
+      route.fulfill({
+        json: {
+          okay: true,
+          result: cvToHex(
+            Cl.ok(
+              Cl.tuple({
+                namespace: Cl.bufferFromAscii('btc'),
+                properties: Cl.tuple({ 'manager-transferable': Cl.bool(isManagerTransferable) }),
+              })
+            )
+          ),
+        },
+      })
+    );
+    await page.route('**/v2/map_entry/*/BNS-V2/market**', route =>
+      route.fulfill({
+        json: {
+          data: cvToHex(
+            isListed
+              ? Cl.some(
+                  Cl.tuple({ price: Cl.uint(1000000), commission: Cl.principal(bnsV2ContractId) })
+                )
+              : Cl.none()
+          ),
+          proof: '',
         },
       })
     );
