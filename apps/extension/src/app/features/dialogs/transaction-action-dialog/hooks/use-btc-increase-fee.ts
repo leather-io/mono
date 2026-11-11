@@ -15,7 +15,7 @@ import { requiredNumberField } from '@shared/forms/field-schemas';
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
-import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
+import { createFormResolver } from '@app/common/validation/form-resolver';
 import { MAX_FEE_RATE_MULTIPLIER } from '@app/components/bitcoin-custom-fee/hooks/use-bitcoin-custom-fee';
 import { toastDurations, useToast } from '@app/features/toasts/use-toast';
 import { invalidateActivityQueries } from '@app/query/activity/blockchain-activity.query';
@@ -27,6 +27,10 @@ import { useBitcoinScureLibNetworkConfig } from '@app/store/accounts/blockchain/
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitIndexZeroPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useBitcoinPayerFromInput } from '@app/store/accounts/blockchain/bitcoin/use-bitcoin-payer-from-input';
+
+export interface IncreaseBtcFeeFormValues {
+  feeRate: string;
+}
 
 export function useBtcIncreaseFee(btcTx: BitcoinTx) {
   const toast = useToast();
@@ -152,7 +156,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     });
   }
 
-  async function onSubmit(values: { feeRate: string }) {
+  async function onSubmit(values: IncreaseBtcFeeFormValues) {
     try {
       const { tx, signingConfig } = generateUnsignedTx({ feeRate: values.feeRate, tx: btcTx });
       await initiateTransaction(tx, signingConfig);
@@ -167,7 +171,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     void navigate(RouteUrls.Home);
   }
 
-  const validationSchema = createFormikValidationSchema(
+  const resolver = createFormResolver<IncreaseBtcFeeFormValues>(
     z.object({
       feeRate: requiredNumberField({
         requiredError: 'Fee is required',
@@ -210,7 +214,7 @@ export function useBtcIncreaseFee(btcTx: BitcoinTx) {
     isBroadcasting,
     sizeInfo,
     onSubmit,
-    validationSchema,
+    resolver,
     recipients,
   };
 }

@@ -1,11 +1,11 @@
 import { memo } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import { AccountSelectors } from '@tests/selectors/account.selectors';
-import { useFormikContext } from 'formik';
 
 import type { AccountId } from '@leather.io/models';
 
-import { type BitcoinSendFormValues, type StacksSendFormValues } from '@shared/models/form.model';
+import type { RecipientFormValues } from '@shared/models/form.model';
 
 import { useAccountDisplayName } from '@app/common/hooks/account/use-account-names';
 import { AccountTotalBalance } from '@app/components/account-total-balance';
@@ -28,9 +28,7 @@ export const AccountListItem = memo(function AccountListItem({
   walletType,
   onClose,
 }: AccountListItemProps) {
-  const { setFieldValue, values } = useFormikContext<
-    BitcoinSendFormValues | StacksSendFormValues
-  >();
+  const { getValues, setValue } = useFormContext<RecipientFormValues>();
   const stacksAccount = useStacksAccount(accountId);
   const bitcoinSigner = useNativeSegwitPayer(accountId);
   const { data: name } = useAccountDisplayName({
@@ -40,10 +38,10 @@ export const AccountListItem = memo(function AccountListItem({
   });
 
   function onSelectAccount() {
-    const isBitcoin = values.symbol === 'BTC';
+    const isBitcoin = getValues('symbol') === 'BTC';
     const bitcoinAddress = bitcoinSigner?.({ changeIndex: 0, addressIndex: 0 }).address ?? '';
     const stacksAddress = stacksAccount?.address ?? '';
-    void setFieldValue('recipient', isBitcoin ? bitcoinAddress : stacksAddress, false);
+    setValue('recipient', isBitcoin ? bitcoinAddress : stacksAddress);
     onClose();
   }
 

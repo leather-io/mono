@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
-import { useFormikContext } from 'formik';
-
-import { type BitcoinSendFormValues, type StacksSendFormValues } from '@shared/models/form.model';
+import type { RecipientFormValues } from '@shared/models/form.model';
 
 import { RecipientAddressTypeField } from '@app/pages/send/send-crypto-asset-form/components/recipient-address-type-field';
 
@@ -20,9 +19,14 @@ export function RecipientBnsNameTypeField({
   rightLabel,
 }: RecipientBnsNameTypeFieldProps) {
   const [showBnsAddress, setShowBnsAddress] = useState(false);
-  const { errors, setFieldError, values } = useFormikContext<
-    BitcoinSendFormValues | StacksSendFormValues
-  >();
+  const {
+    clearErrors,
+    formState: { errors },
+    setError,
+    watch,
+  } = useFormContext<RecipientFormValues>();
+  const recipient = watch('recipient');
+  const recipientError = errors.recipient?.message;
   const { bnsAddress, getBnsAddressAndValidate } = useRecipientBnsName();
 
   // Apply the recipient field validation to the bns name field
@@ -31,15 +35,15 @@ export function RecipientBnsNameTypeField({
   // This allows us to have just one field handling the recipient
   // address for generating the unsigned transaction.
   useEffect(() => {
-    if (!errors.recipient) {
+    if (!recipientError) {
       if (bnsAddress) setShowBnsAddress(true);
-      setFieldError('recipientBnsName', undefined);
+      clearErrors('recipientBnsName');
     }
-    if (values.recipient && errors.recipient) {
+    if (recipient && recipientError) {
       setShowBnsAddress(false);
-      setFieldError('recipientBnsName', errors.recipient);
+      setError('recipientBnsName', { message: recipientError });
     }
-  }, [bnsAddress, errors.recipient, setFieldError, values.recipient]);
+  }, [bnsAddress, clearErrors, recipient, recipientError, setError]);
 
   return (
     <>

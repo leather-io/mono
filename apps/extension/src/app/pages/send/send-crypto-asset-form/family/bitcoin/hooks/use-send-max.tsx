@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
-
-import { useField } from 'formik';
+import { useFormContext } from 'react-hook-form';
 
 import type { Money } from '@leather.io/models';
 
+import type { BitcoinSendFormValues } from '@shared/models/form.model';
 import { analytics } from '@shared/utils/analytics';
 
 import { useToast } from '@app/features/toasts/use-toast';
@@ -22,8 +22,7 @@ export function useSendMax({
   sendMaxBalance,
   sendMaxFee,
 }: UseSendMaxArgs) {
-  const [, _, amountFieldHelpers] = useField('amount');
-  const [, __, feeFieldHelpers] = useField('fee');
+  const { clearErrors, setValue } = useFormContext<BitcoinSendFormValues>();
   const toast = useToast();
 
   return useCallback(() => {
@@ -33,18 +32,17 @@ export function useSendMax({
       return;
     }
     onSetIsSendingMax(!isSendingMax);
-    void feeFieldHelpers.setValue(sendMaxFee);
-    void amountFieldHelpers.setValue(sendMaxBalance, false);
-    void amountFieldHelpers.setTouched(false, false);
-    amountFieldHelpers.setError(undefined);
+    setValue('fee', sendMaxFee);
+    setValue('amount', sendMaxBalance);
+    clearErrors('amount');
   }, [
-    amountFieldHelpers,
     balance.amount,
-    feeFieldHelpers,
+    clearErrors,
     isSendingMax,
     onSetIsSendingMax,
     sendMaxBalance,
     sendMaxFee,
+    setValue,
     toast,
   ]);
 }

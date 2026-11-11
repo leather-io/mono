@@ -3,7 +3,9 @@ import { z } from 'zod';
 
 import { stringField } from '@shared/forms/field-schemas';
 
-import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
+import { createFormResolver } from '@app/common/validation/form-resolver';
+
+import type { MnemonicFormValues } from './error-handling';
 
 function isValidMnemonic(word: string): boolean {
   return wordlist.includes(word);
@@ -19,6 +21,6 @@ const dynamicObjectValue = stringField().check(
   )
 );
 
-export const validationSchema = createFormikValidationSchema(
+export const mnemonicFormResolver = createFormResolver<MnemonicFormValues>(
   z.object({}).catchall(dynamicObjectValue)
 );
