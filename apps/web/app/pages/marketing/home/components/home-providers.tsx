@@ -1,10 +1,13 @@
+import { type ReactNode } from 'react';
 import { Link } from 'react-router';
 
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
+import { ProviderIcon } from '~/components/icons/provider-icon';
 import { Reveal } from '~/pages/marketing/shared/reveal';
 
 import { ArrowLeftIcon } from '@leather.io/ui';
 
+import { type BondTargetRate, formatBondTargetRate } from '../bond-target-rate';
 import { HomeSection, HomeSectionHeading } from './home-layout';
 
 const StyledLink = styled(Link);
@@ -15,7 +18,8 @@ const yieldGradient =
 
 interface Provider {
   name: string;
-  logo: string;
+  /** A logo image, or a ready-made icon for providers drawn on a brand fill. */
+  logo: string | ReactNode;
   yield: string;
 }
 
@@ -74,14 +78,20 @@ function ProviderTable({ providers }: { providers: Provider[] }) {
           >
             <styled.td py="space.03" pr="space.03">
               <Flex alignItems="center" gap="space.03">
-                <styled.img
-                  src={provider.logo}
-                  alt=""
-                  width="32px"
-                  height="32px"
-                  flexShrink={0}
-                  loading="lazy"
-                />
+                {typeof provider.logo === 'string' ? (
+                  <styled.img
+                    src={provider.logo}
+                    alt=""
+                    width="32px"
+                    height="32px"
+                    flexShrink={0}
+                    loading="lazy"
+                  />
+                ) : (
+                  <Box flexShrink={0} borderRadius="xs" overflow="hidden">
+                    {provider.logo}
+                  </Box>
+                )}
                 <styled.span textStyle="body.02" color="ink.text-secondary">
                   {provider.name}
                 </styled.span>
@@ -215,7 +225,9 @@ function YieldCard({
   );
 }
 
-export function HomeProviders() {
+export function HomeProviders({ bondTargetRate }: { bondTargetRate: BondTargetRate }) {
+  const targetRate = formatBondTargetRate(bondTargetRate.rateBps);
+
   return (
     <HomeSection aria-labelledby="home-providers-heading">
       <Grid
@@ -242,24 +254,45 @@ export function HomeProviders() {
             title="sBTC"
             icon="/marketing/home/icon-sbtc.webp"
             cta="Use sBTC"
-            rate="0.96%"
-            rateLabel="Zest · sBTC supply APY"
-            rateContext="Quoted 11 Nov 2026"
+            rate={targetRate}
+            rateLabel="Bitcoin Staking · bond target rate"
+            rateContext={
+              bondTargetRate.isLive
+                ? 'Live from the Stacks API · paid in sBTC'
+                : 'As of 11 Nov 2026 · paid in sBTC'
+            }
             reference={{
-              label: 'Zest market data',
-              url: 'https://app.zestprotocol.com/market/main/overview',
-              note: 'A dated example of an annualized supply rate, not a historical average or fixed return. Check the latest rate before supplying.',
+              label: 'How bond rewards work',
+              url: 'https://docs.stacks.co/learn/bitcoin-staking/rewards-and-tranches',
+              note: 'Each bond’s target rate is set when the bond opens and paid first from each cycle’s rewards, but it isn’t guaranteed. Bonds lock for about six months, and pools set their own fees and exit terms.',
             }}
             groups={[
               {
+                title: 'Bitcoin Staking pools',
+                description:
+                  'Add sBTC to a pool that holds a protocol bond. The pool pairs it with STX and passes the bond’s sBTC rewards on by its own rules.',
+                providers: [
+                  {
+                    name: 'Stacking DAO',
+                    logo: '/marketing/home/provider-stacking-dao.png',
+                    yield: 'Liquid stBTC',
+                  },
+                  {
+                    name: 'Esbee DAO',
+                    logo: <ProviderIcon providerId="esbeeDao" size="32" />,
+                    yield: 'sBTC rewards',
+                  },
+                ],
+              },
+              {
                 title: 'Bitcoin in Stacks DeFi',
                 description:
-                  'Use sBTC, a Bitcoin-backed asset on Stacks, in lending markets and liquidity pools. Returns depend on the strategy and market conditions; fees and risks vary.',
+                  'Use sBTC in lending markets and liquidity pools. Returns move with market conditions; fees and risks vary.',
                 providers: [
                   {
                     name: 'Zest',
                     logo: '/marketing/home/provider-zest.png',
-                    yield: '0.96% quoted supply APY',
+                    yield: 'Variable lending rate',
                   },
                   {
                     name: 'Bitflow',

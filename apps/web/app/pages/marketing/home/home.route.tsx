@@ -7,6 +7,7 @@ import { marketingHeaders, marketingMeta } from '~/pages/marketing/shared/market
 import { MarketingPage } from '~/pages/marketing/shared/marketing-page';
 
 import { type Route } from './+types/home.route';
+import { type BondTargetRate, fetchBondTargetRate } from './bond-target-rate';
 import {
   HomeFullControl,
   HomeProtection,
@@ -23,8 +24,15 @@ export function meta() {
   return marketingMeta({ title: 'Leather', path: '/' });
 }
 
-export async function loader(): Promise<{ changelog: ChangelogStripEntry[] }> {
-  return { changelog: await fetchChangelogStrip() };
+export async function loader(): Promise<{
+  changelog: ChangelogStripEntry[];
+  bondTargetRate: BondTargetRate;
+}> {
+  const [changelog, bondTargetRate] = await Promise.all([
+    fetchChangelogStrip(),
+    fetchBondTargetRate(),
+  ]);
+  return { changelog, bondTargetRate };
 }
 
 export default function HomeRoute({ loaderData }: Route.ComponentProps) {
@@ -36,7 +44,7 @@ export default function HomeRoute({ loaderData }: Route.ComponentProps) {
       <HomeFullControl />
       <HomeProtection />
       <HomeTrust />
-      <HomeProviders />
+      <HomeProviders bondTargetRate={loaderData.bondTargetRate} />
       <ChangelogStrip
         heading="From the changelog"
         entries={loaderData.changelog}

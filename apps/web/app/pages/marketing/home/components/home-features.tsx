@@ -1,4 +1,6 @@
-import { Box, Grid, styled } from 'leather-styles/jsx';
+import { type ReactNode } from 'react';
+
+import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
 import { LottieAnimation } from '~/pages/marketing/shared/lottie-animation';
 import { MarketingTag } from '~/pages/marketing/shared/marketing-tag';
 import { Reveal } from '~/pages/marketing/shared/reveal';
@@ -6,8 +8,27 @@ import { Reveal } from '~/pages/marketing/shared/reveal';
 import { LedgerAnimation, SpamFreeAnimation, SwapsCoins, animationsPath } from './home-animations';
 import { CheckItem, FeatureCard, HomeSection, HomeSectionHeading } from './home-layout';
 
-const largeCardAspect = '592 / 444';
-const smallCardAspect = '391 / 283';
+// Every bento visual sits on the same stage, so all cards share one height
+const cardAspect = '592 / 444';
+const smallArtAspect = '391 / 283';
+
+/**
+ * Small-canvas art (391 × 283) was drawn with larger UI type than the full-size
+ * mockups. Shrinking it onto the shared stage keeps the mockups' text at one scale.
+ */
+function ScaledVisual({ scale, children }: { scale: number; children: ReactNode }) {
+  return (
+    <Flex
+      alignItems="center"
+      justifyContent="center"
+      width="100%"
+      style={{ aspectRatio: cardAspect }}
+    >
+      {/* Inline: Panda can't extract a runtime width */}
+      <Box style={{ width: `${scale * 100}%` }}>{children}</Box>
+    </Flex>
+  );
+}
 
 export function HomeSwapsAndLedger() {
   return (
@@ -39,26 +60,9 @@ export function HomeSwapsAndLedger() {
               rowGap="space.03"
               mt="space.05"
             >
-              <styled.li display="flex" alignItems="center" gap="space.02" textStyle="label.01">
-                <styled.img
-                  src="/marketing/home/provider-bitflow.png"
-                  alt=""
-                  width="24px"
-                  height="24px"
-                  objectFit="contain"
-                />
-                <styled.span color="ink.text-secondary">Bitflow</styled.span>
-              </styled.li>
-              <styled.li display="flex" alignItems="center" gap="space.02" textStyle="label.01">
-                <styled.img
-                  src="/icons/alex.svg"
-                  alt=""
-                  width="24px"
-                  height="24px"
-                  objectFit="contain"
-                />
-                <styled.span color="ink.text-secondary">ALEX</styled.span>
-              </styled.li>
+              <CheckItem>Bitflow</CheckItem>
+              <CheckItem>ALEX</CheckItem>
+              <CheckItem>sBTC Bridge</CheckItem>
             </styled.ul>
           </Box>
           <SwapsCoins />
@@ -121,7 +125,7 @@ export function HomeWallets() {
               src={`${animationsPath}/wallets-accounts.lottie.json`}
               poster="/marketing/home/wallets-accounts.webp"
               alt="A stack of wallet cards, the front one named Wallet 4, Play & Try, holding $568"
-              aspect={largeCardAspect}
+              aspect={cardAspect}
             />
           }
         />
@@ -134,7 +138,7 @@ export function HomeWallets() {
               src="/marketing/home/current/wallets-names.lottie.json"
               poster="/marketing/home/current/wallets-names.png"
               alt="A carousel of wallet avatars with custom names including Savings and Everyday"
-              aspect={largeCardAspect}
+              aspect={cardAspect}
             />
           }
         />
@@ -158,7 +162,7 @@ export function HomeFullControl() {
               src={`${animationsPath}/send-and-receive.lottie.json`}
               poster="/marketing/home/send-and-receive.webp"
               alt="The Send screen: 50 STX from a Stacks account to a recipient"
-              aspect={largeCardAspect}
+              aspect={cardAspect}
               // Lottielab state "State 1": loops 0–6.65 s; the rest of the file never shows
               segment={[0, 665]}
             />
@@ -172,7 +176,7 @@ export function HomeFullControl() {
               src="/marketing/home/current/mobile-tokens.lottie.json"
               poster="/marketing/home/current/mobile-tokens.png"
               alt="Token balances opening into Bitcoin Info with a price chart, then Activity with pending and received transactions"
-              aspect={largeCardAspect}
+              aspect={cardAspect}
             />
           }
         />
@@ -181,21 +185,33 @@ export function HomeFullControl() {
         <FeatureCard
           title="Know every move"
           description="Check transaction status, amounts and fees in your activity history."
-          image="/marketing/home/know-every-move.svg"
-          imageAlt="Activity list with sending, sent and received transactions"
-          imageAspect="390 / 280"
+          visual={
+            <ScaledVisual scale={0.7}>
+              <styled.img
+                src="/marketing/home/know-every-move.svg"
+                alt="Activity list with sending, sent and received transactions"
+                width="100%"
+                height="auto"
+                style={{ aspectRatio: '390 / 280' }}
+                loading="lazy"
+                decoding="async"
+              />
+            </ScaledVisual>
+          }
         />
         <FeatureCard
           title="Get BTC notifications"
           tag="Extension"
           description="Turn on browser notifications for alerts when Bitcoin sends and receives confirm."
           visual={
-            <LottieAnimation
-              src={`${animationsPath}/btc-notifications.lottie.json`}
-              poster="/marketing/home/btc-notifications.webp"
-              alt="A notification: BTC received 5 min ago"
-              aspect={smallCardAspect}
-            />
+            <ScaledVisual scale={0.64}>
+              <LottieAnimation
+                src={`${animationsPath}/btc-notifications.lottie.json`}
+                poster="/marketing/home/btc-notifications.webp"
+                alt="A notification: BTC received 5 min ago"
+                aspect={smallArtAspect}
+              />
+            </ScaledVisual>
           }
         />
       </Grid>
@@ -214,7 +230,11 @@ export function HomeProtection() {
           title="Show or hide tokens"
           tag="Extension"
           description="Use Manage tokens to show or hide individual supported tokens in your asset list."
-          visual={<SpamFreeAnimation aspect={smallCardAspect} />}
+          visual={
+            <ScaledVisual scale={0.7}>
+              <SpamFreeAnimation aspect={smallArtAspect} />
+            </ScaledVisual>
+          }
         />
         <FeatureCard
           title="Review transactions"
@@ -224,7 +244,7 @@ export function HomeProtection() {
               src={`${animationsPath}/review-transactions.lottie.json`}
               poster="/marketing/home/review-transactions.webp"
               alt="A Clarity contract call to review, with Edit and Approve buttons"
-              aspect={smallCardAspect}
+              aspect={cardAspect}
             />
           }
         />
