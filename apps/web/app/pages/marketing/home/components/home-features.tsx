@@ -39,8 +39,26 @@ export function HomeSwapsAndLedger() {
               rowGap="space.03"
               mt="space.05"
             >
-              <CheckItem>Bitflow</CheckItem>
-              <CheckItem>ALEX</CheckItem>
+              <styled.li display="flex" alignItems="center" gap="space.02" textStyle="label.01">
+                <styled.img
+                  src="/marketing/home/provider-bitflow.png"
+                  alt=""
+                  width="24px"
+                  height="24px"
+                  objectFit="contain"
+                />
+                <styled.span color="ink.text-secondary">Bitflow</styled.span>
+              </styled.li>
+              <styled.li display="flex" alignItems="center" gap="space.02" textStyle="label.01">
+                <styled.img
+                  src="/icons/alex.svg"
+                  alt=""
+                  width="24px"
+                  height="24px"
+                  objectFit="contain"
+                />
+                <styled.span color="ink.text-secondary">ALEX</styled.span>
+              </styled.li>
             </styled.ul>
           </Box>
           <SwapsCoins />

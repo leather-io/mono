@@ -31,6 +31,13 @@ interface YieldCardProps {
   icon: string;
   cta: string;
   rate: string;
+  rateLabel: string;
+  rateContext: string;
+  reference: {
+    label: string;
+    url: string;
+    note: string;
+  };
   groups: ProviderGroup[];
 }
 
@@ -95,86 +102,116 @@ function ProviderTable({ providers }: { providers: Provider[] }) {
   );
 }
 
-function YieldCard({ href, title, icon, cta, rate, groups }: YieldCardProps) {
+function YieldCard({
+  href,
+  title,
+  icon,
+  cta,
+  rate,
+  rateLabel,
+  rateContext,
+  reference,
+  groups,
+}: YieldCardProps) {
   return (
-    <StyledLink
-      to={href}
-      prefetch="intent"
-      display="block"
-      border="1px solid"
-      borderColor="ink.border-default"
-      borderRadius="sm"
-      overflow="hidden"
-      className="group"
-      _focusVisible={{ outline: '2px solid', outlineColor: 'blue.border', outlineOffset: '2px' }}
-    >
-      <Grid gridTemplateColumns="1fr 1fr" gap="0">
-        <Flex
-          flexDir="column"
-          alignItems="flex-start"
-          gap={['space.05', null, 'space.07']}
-          p={['space.05', null, 'space.06']}
-          bg="ink.background-primary"
-        >
+    <Box>
+      <StyledLink
+        to={href}
+        prefetch="intent"
+        display="block"
+        border="1px solid"
+        borderColor="ink.border-default"
+        borderRadius="sm"
+        overflow="hidden"
+        className="group"
+        _focusVisible={{ outline: '2px solid', outlineColor: 'blue.border', outlineOffset: '2px' }}
+      >
+        <Grid gridTemplateColumns="1fr 1fr" gap="0">
           <Flex
-            flexDir={['column', null, 'row']}
-            alignItems={[null, null, 'center']}
-            gap="space.03"
+            flexDir="column"
+            alignItems="flex-start"
+            gap={['space.05', null, 'space.07']}
+            p={['space.05', null, 'space.06']}
+            bg="ink.background-primary"
           >
-            <styled.img src={icon} alt="" width="40px" height="40px" borderRadius="xs" />
-            <styled.h3 textStyle="heading.04" fontWeight="400">
-              {title}
-            </styled.h3>
+            <Flex
+              flexDir={['column', null, 'row']}
+              alignItems={[null, null, 'center']}
+              gap="space.03"
+            >
+              <styled.img src={icon} alt="" width="40px" height="40px" borderRadius="xs" />
+              <styled.h3 textStyle="heading.04" fontWeight="400">
+                {title}
+              </styled.h3>
+            </Flex>
+            <Flex
+              alignItems="center"
+              gap="space.02"
+              height="40px"
+              px="space.04"
+              borderRadius="round"
+              bg="ink.action-primary-default"
+              color="ink.background-primary"
+              textStyle="label.02"
+              whiteSpace="nowrap"
+              _groupHover={{ bg: 'ink.action-primary-hover' }}
+            >
+              {cta}
+              <styled.span transform="rotate(180deg)" display="flex" aria-hidden>
+                <ArrowLeftIcon variant="small" color="ink.background-primary" />
+              </styled.span>
+            </Flex>
           </Flex>
           <Flex
-            alignItems="center"
-            gap="space.02"
-            height="40px"
-            px="space.04"
-            borderRadius="round"
-            bg="ink.action-primary-default"
-            color="ink.background-primary"
-            textStyle="label.02"
-            whiteSpace="nowrap"
-            _groupHover={{ bg: 'ink.action-primary-hover' }}
+            flexDir="column"
+            justifyContent="space-between"
+            p={['space.05', null, 'space.06']}
+            bgImage={yieldGradient}
+            color="ink.text-primary"
           >
-            {cta}
-            <styled.span transform="rotate(180deg)" display="flex" aria-hidden>
-              <ArrowLeftIcon variant="small" color="ink.background-primary" />
-            </styled.span>
-          </Flex>
-        </Flex>
-        <Flex
-          flexDir="column"
-          justifyContent="space-between"
-          p={['space.05', null, 'space.06']}
-          bgImage={yieldGradient}
-          color="ink.text-primary"
-        >
-          <styled.p textStyle="heading.01" fontWeight="400" fontSize={['24px', null, '53px']}>
-            {rate}
-          </styled.p>
-          <styled.p textStyle="caption.01" fontWeight="500" lineHeight="16px">
-            Rates and rewards
-            <br />
-            vary by provider
-          </styled.p>
-        </Flex>
-      </Grid>
-      <Box bg="ink.background-secondary" px={['space.05', null, 'space.06']} pb="space.06">
-        {groups.map(group => (
-          <Box key={group.title} pt={['space.05', null, 'space.07']}>
-            <styled.h4 textStyle="label.01" fontWeight="400">
-              {group.title}
-            </styled.h4>
-            <styled.p textStyle="body.02" lineHeight="24px" color="ink.text-secondary" maxW="440px">
-              {group.description}
+            <styled.p textStyle="caption.01" fontWeight="500" lineHeight="20px">
+              {rateLabel}
             </styled.p>
-            <ProviderTable providers={group.providers} />
-          </Box>
-        ))}
-      </Box>
-    </StyledLink>
+            <styled.p textStyle="heading.01" fontWeight="400" fontSize={['24px', null, '53px']}>
+              {rate}
+            </styled.p>
+            <styled.p textStyle="caption.01" fontWeight="500" lineHeight="16px">
+              {rateContext}
+            </styled.p>
+          </Flex>
+        </Grid>
+        <Box bg="ink.background-secondary" px={['space.05', null, 'space.06']} pb="space.06">
+          {groups.map(group => (
+            <Box key={group.title} pt={['space.05', null, 'space.07']}>
+              <styled.h4 textStyle="label.01" fontWeight="400">
+                {group.title}
+              </styled.h4>
+              <styled.p
+                textStyle="body.02"
+                lineHeight="24px"
+                color="ink.text-secondary"
+                maxW="440px"
+              >
+                {group.description}
+              </styled.p>
+              <ProviderTable providers={group.providers} />
+            </Box>
+          ))}
+        </Box>
+      </StyledLink>
+      <styled.p textStyle="caption.01" color="ink.text-secondary" lineHeight="20px" mt="space.03">
+        <styled.a
+          href={reference.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          textDecoration="underline"
+        >
+          {reference.label}
+        </styled.a>
+        {' — '}
+        {reference.note}
+      </styled.p>
+    </Box>
   );
 }
 
@@ -205,7 +242,14 @@ export function HomeProviders() {
             title="sBTC"
             icon="/marketing/home/icon-sbtc.webp"
             cta="Use sBTC"
-            rate="Variable"
+            rate="0.96%"
+            rateLabel="Zest · sBTC supply APY"
+            rateContext="Quoted 11 Nov 2026"
+            reference={{
+              label: 'Zest market data',
+              url: 'https://app.zestprotocol.com/market/main/overview',
+              note: 'A dated example of an annualized supply rate, not a historical average or fixed return. Check the latest rate before supplying.',
+            }}
             groups={[
               {
                 title: 'Bitcoin in Stacks DeFi',
@@ -215,7 +259,7 @@ export function HomeProviders() {
                   {
                     name: 'Zest',
                     logo: '/marketing/home/provider-zest.png',
-                    yield: 'Lending markets',
+                    yield: '0.96% quoted supply APY',
                   },
                   {
                     name: 'Bitflow',
@@ -231,7 +275,14 @@ export function HomeProviders() {
             title="STX Staking"
             icon="/marketing/home/icon-stx.png"
             cta="View pools"
-            rate="Variable"
+            rate="8.22%"
+            rateLabel="Fast Pool · historical APR"
+            rateContext="Average of 136 payout cycles"
+            reference={{
+              label: 'Fast Pool history',
+              url: 'https://fastpool.org/analytics',
+              note: 'Provider-reported average, checked 11 Nov 2026. Includes earlier reward models and is not an estimate of the current pool’s return. Past returns do not predict future rewards.',
+            }}
             groups={[
               {
                 title: 'Pooled Stacking',
@@ -241,12 +292,12 @@ export function HomeProviders() {
                   {
                     name: 'Stacking DAO',
                     logo: '/marketing/home/provider-stacking-dao.png',
-                    yield: 'Pool-specific terms',
+                    yield: 'Claimable sBTC rewards',
                   },
                   {
                     name: 'Fast Pool',
                     logo: '/marketing/home/provider-fast-pool.png',
-                    yield: 'Pool-specific terms',
+                    yield: '8.22% historical APR',
                   },
                   {
                     name: 'PlanBetter',
@@ -263,7 +314,7 @@ export function HomeProviders() {
                   {
                     name: 'Stacking DAO',
                     logo: '/marketing/home/provider-stacking-dao.png',
-                    yield: 'stSTX / stSTXbtc',
+                    yield: 'STX compounding / sBTC rewards',
                   },
                 ],
               },

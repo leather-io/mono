@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { Page } from '~/layouts/page/page';
+import { HomeKeyNotice } from '~/pages/marketing/home/components/home-key-notice';
 
 interface MarketingPageProps extends Omit<HTMLStyledProps<'div'>, 'title'> {
   /** Shown in the top bar (e.g. "Developers", "News", "Explore"). Omit on pages without one. */
@@ -39,7 +40,11 @@ export function MarketingPage({
 
   return (
     <Page {...props}>
-      <Page.Header title={title} onBack={showBack ? handleBack : undefined} />
+      <Page.Header
+        title={title}
+        onBack={showBack ? handleBack : undefined}
+        notice={location.pathname === '/' ? <HomeKeyNotice /> : undefined}
+      />
       <styled.div pb={['space.09', null, 'space.11']}>{children}</styled.div>
     </Page>
   );

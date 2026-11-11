@@ -3,8 +3,6 @@ import { Fragment } from 'react';
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
 import { StoreButtons } from '~/pages/marketing/shared/store-buttons';
 
-import { ErrorTriangleIcon } from '@leather.io/ui';
-
 // Entrance motion rebuilt from the Framer site's appear effects. Pure CSS, so it runs before
 // hydration and without JS. Every entrance starts at opacity 0.001 rather than 0: the SSR HTML stays
 // visible to crawlers and the first paint still counts for LCP. Reduced motion: no animation.
@@ -20,35 +18,9 @@ function wordDelay(lineIndex: number, wordIndex: number) {
   return `${Math.round((headlineStartDelay + index * headlineWordStagger) * 1000)}ms`;
 }
 
-function PhishingNotice() {
-  return (
-    <Flex
-      role="note"
-      _motionSafe={{ animation: 'marketingAppear 0.4s cubic-bezier(0.22, 1, 0.36, 1) both' }}
-      alignItems="flex-start"
-      gap="space.03"
-      bg="ink.border-default"
-      px={['space.04', null, 'space.04']}
-      py="space.03"
-      textStyle="label.02"
-      fontWeight="400"
-    >
-      <Flex flexShrink={0} height="20px" alignItems="center" aria-hidden>
-        <ErrorTriangleIcon variant="small" />
-      </Flex>
-      <styled.p>
-        Your Secret Key gives access to your wallet. Keep it backed up and never share it with
-        anyone.
-      </styled.p>
-    </Flex>
-  );
-}
-
 export function HomeHero() {
   return (
     <styled.section aria-labelledby="home-hero-heading">
-      <PhishingNotice />
-
       <Grid
         gridTemplateColumns={['1fr', null, null, '1fr 1fr']}
         gap={['space.05', null, null, 'space.07']}
