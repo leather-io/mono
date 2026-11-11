@@ -108,7 +108,8 @@ function PageHeader({ title, backTo, onBack, notice, children }: PageHeaderProps
         {children}
       </Flex>
       {notice && (
-        <Box minW={0} maxW="440px" mr="space.03">
+        // Leads the header so it lines up with the page content's left edge
+        <Box minW={0} maxW="440px" order={-1} mr="space.03">
           {notice}
         </Box>
       )}

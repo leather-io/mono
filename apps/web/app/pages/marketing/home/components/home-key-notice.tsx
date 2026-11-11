@@ -17,7 +17,7 @@ export function HomeKeyNotice() {
       role="note"
       aria-label="Wallet security"
       width="fit-content"
-      alignItems="flex-start"
+      alignItems="center"
       gap="space.02"
       bg={variant === 'soft' ? 'ink.background-secondary' : undefined}
       border={variant === 'outline' ? 'default' : undefined}
@@ -25,7 +25,7 @@ export function HomeKeyNotice() {
       px={variant === 'plain' ? '0' : 'space.03'}
       py="space.02"
       textStyle="caption.01"
-      color="ink.text-secondary"
+      color="ink.text-primary"
     >
       <Flex flexShrink={0} aria-hidden>
         <ErrorTriangleIcon variant="small" />
