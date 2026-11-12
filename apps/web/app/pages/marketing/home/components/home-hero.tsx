@@ -1,4 +1,5 @@
 import {
+  type CSSProperties,
   Fragment,
   type KeyboardEvent,
   type PointerEvent,
@@ -115,18 +116,6 @@ function useIsHeroVisible(ref: RefObject<HTMLElement | null>) {
   return isInView && isPageVisible;
 }
 
-type HeroVariant = 'flat' | 'tilt';
-
-// DESIGN REVIEW ONLY: `?hero=tilt` previews the tilted stage next to the default flat one.
-// Remove this switch, and the losing variant's styles, once the direction is chosen.
-function useHeroVariant() {
-  const [variant, setVariant] = useState<HeroVariant>('flat');
-  useEffect(() => {
-    if (new URLSearchParams(window.location.search).get('hero') === 'tilt') setVariant('tilt');
-  }, []);
-  return variant;
-}
-
 // Words: full ink at rest; while a verb is active the others fall back to a lighter tone
 const wordClass = css({
   display: 'inline-block',
@@ -148,54 +137,177 @@ const wordClass = css({
   },
 });
 
-// The devices: flat, as in the old hero image, or tilted back in 3D on wide screens
+// The devices lean back in 3D on wide screens; flat and centred on small ones
 const rigClass = css({
   position: 'absolute',
   inset: 0,
   md: {
-    '&[data-variant=tilt]': {
-      transformStyle: 'preserve-3d',
-      transformOrigin: '50% 40%',
-      transform:
-        'perspective(2400px) translate3d(1.5%, 1%, 0) rotateX(calc(14deg + var(--hero-tilt-y, 0deg))) rotateY(calc(-12deg + var(--hero-tilt-x, 0deg))) rotateZ(2.5deg) scale(0.94)',
-      _motionSafe: { transition: 'transform 700ms cubic-bezier(0.22, 1, 0.36, 1)' },
-    },
+    transformStyle: 'preserve-3d',
+    transformOrigin: '50% 40%',
+    transform:
+      'perspective(2400px) translate3d(1.5%, 1%, 0) rotateX(14deg) rotateY(-12deg) rotateZ(2.5deg) scale(0.94)',
   },
 });
 
 const deviceShadowClass = css({
   md: {
-    '[data-variant=tilt] &': {
-      filter:
-        'drop-shadow(0 28px 36px rgba(18, 16, 15, 0.22)) drop-shadow(0 6px 10px rgba(18, 16, 15, 0.12))',
+    filter:
+      'drop-shadow(0 28px 36px rgba(18, 16, 15, 0.22)) drop-shadow(0 6px 10px rgba(18, 16, 15, 0.12))',
+  },
+});
+
+/*
+ * Entrance: the grey stage opens from top to bottom while the extension, then the phone, rise in
+ * from below and settle partly cropped. It waits for the stage to be on screen. The SSR markup
+ * starts closed ("pending"); without JS the <noscript> rule below shows it, and reduced motion
+ * never applies the closed state at all.
+ */
+type Entrance = 'pending' | 'run';
+const revealMs = 850;
+const revealEase = 'cubic-bezier(0.22, 1, 0.36, 1)';
+// The stage used to drop in at about 1.25 s, after the headline words
+const entranceStartMs = 1000;
+
+const stageClass = css({
+  _motionSafe: {
+    '&[data-entrance=pending]': { clipPath: 'inset(0 0 100% 0)' },
+    '&[data-entrance=run]': {
+      clipPath: 'inset(0 0 0 0)',
+      transition: `clip-path ${revealMs}ms ${revealEase}`,
     },
   },
 });
 
+const riseClass = css({
+  _motionSafe: {
+    '[data-entrance=pending] &': { transform: 'translate3d(0, 42%, 0)' },
+    '[data-entrance=run] &': {
+      transform: 'none',
+      transition: 'transform 1150ms cubic-bezier(0.16, 1, 0.3, 1) var(--hero-rise-delay, 0ms)',
+    },
+  },
+});
+
+// The phone follows the extension by a short stagger
+type RiseStyle = CSSProperties & Record<'--hero-rise-delay', string>;
+const extensionRise: RiseStyle = { '--hero-rise-delay': '180ms' };
+const phoneRise: RiseStyle = { '--hero-rise-delay': '360ms' };
+
+const noScriptStyles = `<style>#${stageId}{clip-path:none!important}#${stageId} [data-rise]{transform:none!important}</style>`;
+
+function useEntrance(targetRef: RefObject<HTMLElement | null>) {
+  const [entrance, setEntrance] = useState<Entrance>('pending');
+  useEffect(() => {
+    const target = targetRef.current;
+    if (!target || typeof IntersectionObserver === 'undefined') {
+      setEntrance('run');
+      return;
+    }
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        observer.disconnect();
+        // On load, let the headline lead; scrolled into view later, start at once
+        timer = setTimeout(
+          () => setEntrance('run'),
+          Math.max(0, entranceStartMs - performance.now())
+        );
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(target);
+    return () => {
+      observer.disconnect();
+      clearTimeout(timer);
+    };
+  }, [targetRef]);
+  return entrance;
+}
+
+/*
+ * Pointer parallax: both devices drift with the cursor, the phone about 1.8 times as far because
+ * it sits in front. Smoothed with a lerp on requestAnimationFrame; eases home on leave. Mouse
+ * only, and never with reduced motion.
+ */
+const parallax = {
+  extension: { x: 12, y: 9, rotate: 1.6 },
+  phone: { x: 22, y: 16, rotate: 2.9 },
+};
+const parallaxLerp = 0.08;
+
+function useParallax(isEnabled: boolean) {
+  const extensionRef = useRef<HTMLDivElement>(null);
+  const phoneRef = useRef<HTMLDivElement>(null);
+  const target = useRef({ x: 0, y: 0 });
+  const current = useRef({ x: 0, y: 0 });
+  const frame = useRef<number | null>(null);
+
+  useEffect(
+    () => () => {
+      if (frame.current !== null) cancelAnimationFrame(frame.current);
+    },
+    []
+  );
+
+  function apply() {
+    const { x, y } = current.current;
+    for (const [element, amount] of [
+      [extensionRef.current, parallax.extension],
+      [phoneRef.current, parallax.phone],
+    ] as const) {
+      if (!element) continue;
+      element.style.transform = `translate3d(${(x * amount.x).toFixed(2)}px, ${(y * amount.y).toFixed(2)}px, 0) rotateX(${(-y * amount.rotate).toFixed(3)}deg) rotateY(${(x * amount.rotate).toFixed(3)}deg)`;
+    }
+  }
+
+  function tick() {
+    const next = current.current;
+    next.x += (target.current.x - next.x) * parallaxLerp;
+    next.y += (target.current.y - next.y) * parallaxLerp;
+    const isSettled =
+      Math.abs(target.current.x - next.x) < 0.0005 && Math.abs(target.current.y - next.y) < 0.0005;
+    if (isSettled) {
+      next.x = target.current.x;
+      next.y = target.current.y;
+    }
+    apply();
+    frame.current = isSettled ? null : requestAnimationFrame(tick);
+  }
+
+  function setTarget(x: number, y: number) {
+    target.current = { x, y };
+    frame.current ??= requestAnimationFrame(tick);
+  }
+
+  function onPointerMove(event: PointerEvent<HTMLDivElement>) {
+    if (!isEnabled || event.pointerType !== 'mouse') return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    // -1…1 from the stage centre
+    setTarget(
+      ((event.clientX - rect.left) / rect.width - 0.5) * 2,
+      ((event.clientY - rect.top) / rect.height - 0.5) * 2
+    );
+  }
+
+  function onPointerLeave() {
+    if (!isEnabled) return;
+    setTarget(0, 0);
+  }
+
+  return { extensionRef, phoneRef, onPointerMove, onPointerLeave };
+}
+
 export function HomeHero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
+  const revealRef = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
   const isAnimated = reducedMotion === false;
   const isVisible = useIsHeroVisible(sectionRef);
   const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
   const { view, pick } = useHeroSequence(isAnimated && isVisible && !isKeyboardFocused);
-  const variant = useHeroVariant();
-
-  // Tilt variant: the rig leans a few degrees toward the pointer. Wide screens, motion allowed.
-  function onStagePointerMove(event: PointerEvent<HTMLDivElement>) {
-    const stage = stageRef.current;
-    if (variant !== 'tilt' || !isAnimated || !stage || event.pointerType !== 'mouse') return;
-    const rect = stage.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width - 0.5;
-    const y = (event.clientY - rect.top) / rect.height - 0.5;
-    stage.style.setProperty('--hero-tilt-x', `${(x * 5).toFixed(2)}deg`);
-    stage.style.setProperty('--hero-tilt-y', `${(-y * 4).toFixed(2)}deg`);
-  }
-  function onStagePointerLeave() {
-    stageRef.current?.style.removeProperty('--hero-tilt-x');
-    stageRef.current?.style.removeProperty('--hero-tilt-y');
-  }
+  const entrance = useEntrance(revealRef);
+  const { extensionRef, phoneRef, onPointerMove, onPointerLeave } = useParallax(isAnimated);
 
   function onWordKeyUp(event: KeyboardEvent<HTMLButtonElement>) {
     if (event.key === 'Tab') setIsKeyboardFocused(true);
@@ -270,51 +382,53 @@ export function HomeHero() {
         </Box>
       </Grid>
 
-      <Box
-        ref={stageRef}
-        id={stageId}
-        role="img"
-        aria-label={heroViewDescriptions[view]}
-        data-variant={variant}
-        position="relative"
-        overflow="hidden"
-        bg="ink.border-default"
-        borderRadius="sm"
-        mt={['space.07', null, '86px']}
-        aspectRatio={['342 / 500', null, '1196 / 615']}
-        className={css({ md: { '&[data-variant=tilt]': { mt: '40px' } } })}
-        onPointerMove={onStagePointerMove}
-        onPointerLeave={onStagePointerLeave}
-        _motionSafe={{
-          animation: 'marketingDropIn 0.4s cubic-bezier(0.44, 0, 0.56, 1) 1.25s both',
-          '@media (min-width: 900px) and (max-width: 1439.98px)': {
-            animation: 'marketingDropIn 0.25s cubic-bezier(0.44, 0, 0.56, 1) 1s both',
-          },
-        }}
-      >
-        {/* Desktop: browser extension + phone; mobile: phone only. Placed as in the old image. */}
-        <div aria-hidden className={rigClass} data-variant={variant}>
-          <Box
-            className={deviceShadowClass}
-            display={['none', null, 'block']}
-            position="absolute"
-            left="7.36%"
-            top="9.27%"
-            width="72.4%"
-          >
-            <HeroExtension view={view} isAnimated={isAnimated} />
-          </Box>
-          <Box
-            className={deviceShadowClass}
-            position="absolute"
-            left={['50%', null, '66.56%']}
-            top={['8%', null, '22.8%']}
-            width={['60%', null, '24.4%']}
-            transform={['translateX(-50%)', null, 'none']}
-          >
-            <HeroPhone view={view} isAnimated={isAnimated} />
-          </Box>
-        </div>
+      <noscript dangerouslySetInnerHTML={{ __html: noScriptStyles }} />
+      {/* Observed for the entrance: the stage itself is clipped shut until it opens */}
+      <Box ref={revealRef} mt={['space.07', null, '40px']}>
+        <Box
+          id={stageId}
+          role="img"
+          aria-label={heroViewDescriptions[view]}
+          data-entrance={entrance}
+          className={stageClass}
+          position="relative"
+          overflow="hidden"
+          bg="ink.border-default"
+          borderRadius="sm"
+          aspectRatio={['342 / 500', null, '1196 / 615']}
+          onPointerMove={onPointerMove}
+          onPointerLeave={onPointerLeave}
+        >
+          {/* Desktop: the extension in a browser + the phone; mobile: the phone only */}
+          <div aria-hidden className={rigClass}>
+            <Box
+              display={['none', null, 'block']}
+              position="absolute"
+              left="3.5%"
+              top="7.5%"
+              width="68%"
+            >
+              <div data-rise className={riseClass} style={extensionRise}>
+                <div ref={extensionRef} className={deviceShadowClass}>
+                  <HeroExtension view={view} isAnimated={isAnimated} />
+                </div>
+              </div>
+            </Box>
+            <Box
+              position="absolute"
+              left={['50%', null, '69.5%']}
+              top={['8%', null, '19%']}
+              width={['60%', null, '23.5%']}
+              transform={['translateX(-50%)', null, 'none']}
+            >
+              <div data-rise className={riseClass} style={phoneRise}>
+                <div ref={phoneRef} className={deviceShadowClass}>
+                  <HeroPhone view={view} isAnimated={isAnimated} />
+                </div>
+              </div>
+            </Box>
+          </div>
+        </Box>
       </Box>
 
       <Flex

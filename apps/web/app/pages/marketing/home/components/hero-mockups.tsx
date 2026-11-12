@@ -2,22 +2,44 @@ import { type CSSProperties, type ReactNode } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 
-import { mockupColor } from './bento-mockup';
-
 /**
- * The homepage hero's two devices, rebuilt in HTML so their screens can follow the headline verbs:
- * the browser extension (dark, in a browser window) and the mobile app (light, in a phone).
+ * The homepage hero's two devices, rebuilt in HTML so their screens can follow the headline verbs.
+ * The large frame is a browser window running the Leather EXTENSION (dark theme); the phone runs
+ * the Leather MOBILE app (light theme). Each device mirrors its own app's screens, labels and
+ * layout, from its own source in this repo:
  *
- * Like the bento mockups (see bento-mockup.tsx), every size is in reference pixels converted to
- * container units, so the art scales with its frame at every breakpoint. Each device is its own
- * size container and measures in the coordinates of the image it replaces: the extension window
- * is 1214 units wide, the phone 412. Type comes out at about the same unit size in both, so the
- * screens below are shared and only their palette and a few chrome details differ per device.
+ *   Extension (apps/extension/src/app). The toolbar popup is a 390px column (`sizes.popupWidth`).
+ *   - home   pages/home/home.tsx: features/container/headers/home.header.tsx, account-card.tsx,
+ *            features/bonds/components/locked-balance-card.tsx, account-actions-current/* (below
+ *            the md breakpoint: Buy & Sell, Transfer, Swap), home-tabs.tsx, tokens-tab-header.tsx,
+ *            components/crypto-asset-item/crypto-asset-item.layout.tsx
+ *   - buy    pages/fund/fund.tsx. In the popup, Buy opens the full-page tab and closes the popup
+ *            (fund-buttons.tsx, whenPageMode), so the browser tab shows the Onramper widget,
+ *            themed with Leather's colours (packages/features/src/onramper/onramper-params.ts).
+ *   - send   pages/send/send-crypto-asset-form/form/btc/btc-send-form.tsx and its components
+ *   - swap   pages/swap/swap-form.tsx and pages/swap/components/*
+ *   - earn   pages/all-balances/bond-positions-detail.tsx, components/bond-position-section.tsx
+ *   - grow   features/token/token-details.layout.tsx, components/token-overview.tsx,
+ *            token-details-actions.tsx, token-details-tabs.tsx, price-history/*
  *
- * Screens mirror the shipping apps: home (apps/mobile/src/components/home, extension pages/home),
- * Send (features/send), Swap (features/swap, quotes from Bitflow), Buy (the Onramper ramp in
- * features/ramp, pages/fund), Bitcoin Staking (extension pages/all-balances bond positions).
- * Figures are illustrative and use one set of prices: about $110,550 / BTC and $0.436 / STX.
+ *   Mobile (apps/mobile/src)
+ *   - home   components/home/home-with-account-screen.tsx, features/account/components/*
+ *            (account-header, account-total-balance, account-stacking, account-actions,
+ *            available-account-balance), components/home/components/asset-tabs.tsx,
+ *            features/token/components/token-cell.tsx, features/navigation/tab-layout.tsx
+ *   - buy    features/ramp/ramp-sheet.tsx: a full-height sheet holding the Onramper widget
+ *   - send   features/send/screens/form.tsx, forms/btc/btc-form.tsx, components/amount-field
+ *   - swap   features/swap/screens/swap-form-screen.tsx and its components
+ *   - earn   Mobile has no staking or bond screen. It shows its real stacking surface instead: the
+ *            Locked STX block on home with its "Locked" description sheet open
+ *            (features/account/components/account-stacking.tsx, features/settings/description-sheet.tsx)
+ *   - grow   Mobile token details (features/token/token.tsx, token-details-table.tsx,
+ *            components/balance/price-change.tsx). Mobile has no price chart; this is its
+ *            price and 24-hour-change view. The chart is on the extension.
+ *
+ * Every size is in reference pixels converted to container units, so the art scales with its
+ * frame: the browser window is 860 units wide, the phone 412, and the apps inside use their real
+ * pixel sizes. Figures are illustrative and use one set of prices: $110,550 / BTC, $0.436 / STX.
  */
 
 export type HeroView = 'home' | 'buy' | 'send' | 'swap' | 'earn' | 'grow';
@@ -30,76 +52,84 @@ function u(n: number) {
 const ease = 'cubic-bezier(0.25, 1, 0.5, 1)';
 const viewTransitionMs = 420;
 
-type DeviceTheme = 'light' | 'dark';
+/* -------------------------------------------------------------------------------------------- */
+/* Tokens: packages/tokens (colorThemes, text variants)                                          */
+/* -------------------------------------------------------------------------------------------- */
 
-// Product inks per theme, as CSS variables, so one set of screens renders in both
-type HeroVariable = `--hero-${string}`;
-type DeviceStyle = CSSProperties & Record<HeroVariable, string>;
+type Theme = 'light' | 'dark';
+type InkVariable = `--ink-${string}`;
+type ThemeStyle = CSSProperties & Record<InkVariable | '--hero-unit', string>;
 
-const palette: Record<DeviceTheme, Record<HeroVariable, string>> = {
+const themes: Record<Theme, Record<InkVariable, string>> = {
   light: {
-    '--hero-bg': '#FFFFFF',
-    '--hero-ink': mockupColor.text,
-    '--hero-secondary': mockupColor.secondary,
-    '--hero-border': mockupColor.border,
-    '--hero-divider': mockupColor.divider,
-    '--hero-surface': '#F5F3F1',
-    '--hero-primary-bg': mockupColor.text,
-    '--hero-primary-ink': '#FFFFFF',
-    '--hero-positive': mockupColor.positive,
-    '--hero-positive-wash': 'rgba(31, 154, 93, 0.12)',
+    '--ink-bg': '#FFFFFF',
+    '--ink-bg-2': '#F9F9F8',
+    '--ink-text': '#12100F',
+    '--ink-subdued': '#7B7572',
+    '--ink-muted': '#9E9996',
+    '--ink-border': '#E5E3E1',
+    '--ink-border-t': '#463f3c1a',
+    '--ink-component': '#F1EFED',
+    '--ink-hover': '#BEB0A71A',
+    '--ink-action': '#12100F',
+    '--ink-overlay': '#12100F66',
   },
   dark: {
-    '--hero-bg': '#12100F',
-    '--hero-ink': '#F5F1ED',
-    '--hero-secondary': '#A39E9A',
-    '--hero-border': '#3A3633',
-    '--hero-divider': '#2A2725',
-    '--hero-surface': '#1E1B1A',
-    '--hero-primary-bg': '#F5F1ED',
-    '--hero-primary-ink': mockupColor.text,
-    '--hero-positive': '#3DBB7A',
-    '--hero-positive-wash': 'rgba(61, 187, 122, 0.16)',
+    '--ink-bg': '#12100F',
+    '--ink-bg-2': '#1F1C1A',
+    '--ink-text': '#F9F9F8',
+    '--ink-subdued': '#D9D6D4',
+    '--ink-muted': '#9E9996',
+    '--ink-border': '#46413E',
+    '--ink-border-t': '#F5F1ED33',
+    '--ink-component': '#292623',
+    '--ink-hover': '#716A604D',
+    '--ink-action': '#F9F9F8',
+    '--ink-overlay': '#12100FA6',
   },
 };
 
-const ink = 'var(--hero-ink)';
-const secondaryInk = 'var(--hero-secondary)';
-const border = 'var(--hero-border)';
+const c = {
+  bg: 'var(--ink-bg)',
+  bg2: 'var(--ink-bg-2)',
+  text: 'var(--ink-text)',
+  subdued: 'var(--ink-subdued)',
+  muted: 'var(--ink-muted)',
+  border: 'var(--ink-border)',
+  borderT: 'var(--ink-border-t)',
+  component: 'var(--ink-component)',
+  hover: 'var(--ink-hover)',
+  action: 'var(--ink-action)',
+  overlay: 'var(--ink-overlay)',
+  green: '#1CBA7D',
+};
 
-const type = {
-  title: { fontSize: u(18), lineHeight: 1.3, fontWeight: 500 },
-  label: { fontSize: u(16), lineHeight: 1.3, fontWeight: 500 },
-  body: { fontSize: u(15), lineHeight: 1.35 },
-  meta: { fontSize: u(13), lineHeight: 1.35, color: secondaryInk },
-  figure: { fontSize: u(46), lineHeight: 1.05, fontWeight: 700, letterSpacing: '-0.02em' },
-  amount: { fontSize: u(22), lineHeight: 1.2, fontWeight: 500 },
+const marche = { fontFamily: 'Marche', textTransform: 'uppercase' } as const;
+const t = {
+  heading02: { ...marche, fontSize: u(44), lineHeight: u(44) },
+  heading03: { ...marche, fontSize: u(32), lineHeight: u(35), letterSpacing: u(0.64) },
+  heading05: { fontSize: u(21), lineHeight: u(28), fontWeight: 500 },
+  label01: { fontSize: u(17), lineHeight: u(24), fontWeight: 500, letterSpacing: u(0.16) },
+  label02: { fontSize: u(15), lineHeight: u(20), fontWeight: 500 },
+  label03: { fontSize: u(13), lineHeight: u(16), fontWeight: 500 },
+  body01: { fontSize: u(17), lineHeight: u(24), fontWeight: 400 },
+  body02: { fontSize: u(15), lineHeight: u(20), fontWeight: 400 },
+  caption01: { fontSize: u(13), lineHeight: u(20), fontWeight: 400 },
 } as const satisfies Record<string, CSSProperties>;
 
 /* -------------------------------------------------------------------------------------------- */
-/* Small parts                                                                                   */
+/* Figures, kept consistent across both devices                                                 */
 /* -------------------------------------------------------------------------------------------- */
 
-function Icon({ size, children, viewBox = '0 0 24 24' }: IconProps) {
-  return (
-    <svg
-      viewBox={viewBox}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      style={{ width: u(size), height: u(size), flexShrink: 0, display: 'block' }}
-    >
-      {children}
-    </svg>
-  );
-}
-interface IconProps {
-  size: number;
-  children: ReactNode;
-  viewBox?: string;
-}
+const figures = {
+  total: '$10,920.06',
+  available: '$7,517.81',
+  locked: '$3,402.25',
+  lockedStx: '$1,744.00',
+  btcPrice: '$110,550.00',
+  btcChangePercent: '1.84%',
+  btcChangeFiat: '$1,997.40',
+};
 
 const tokenIcon = {
   btc: '/icons/bitcoin.svg',
@@ -109,11 +139,121 @@ const tokenIcon = {
 type Token = keyof typeof tokenIcon;
 const tokenChain: Record<Token, Token> = { btc: 'btc', stx: 'stx', sbtc: 'stx' };
 
-/** Token logo with its chain badge, as in the mobile TokenBalance cell. */
-function TokenIcon({ token, size = 46 }: { token: Token; size?: number }) {
-  const badge = Math.round(size * 0.36);
+const holdings = [
+  {
+    token: 'btc',
+    name: 'Bitcoin',
+    symbol: 'BTC',
+    fiat: '$5,416.95',
+    amount: '0.049',
+    locked: '0.015',
+  },
+  {
+    token: 'stx',
+    name: 'Stacks',
+    symbol: 'STX',
+    fiat: '$3,247.89',
+    amount: '7,449.3',
+    locked: '4,000',
+  },
+  { token: 'sbtc', name: 'sBTC', symbol: 'sBTC', fiat: '$2,255.22', amount: '0.0204' },
+] as const satisfies readonly { token: Token; [key: string]: string }[];
+
+/* -------------------------------------------------------------------------------------------- */
+/* Small parts                                                                                   */
+/* -------------------------------------------------------------------------------------------- */
+
+const Div = styled.div;
+const Span = styled.span;
+
+function Icon({ size, children, viewBox = '0 0 24 24', strokeWidth = 1.75, style }: IconProps) {
   return (
-    <styled.span position="relative" flexShrink="0" style={{ width: u(size), height: u(size) }}>
+    <svg
+      viewBox={viewBox}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={{ width: u(size), height: u(size), flexShrink: 0, display: 'block', ...style }}
+    >
+      {children}
+    </svg>
+  );
+}
+interface IconProps {
+  size: number;
+  children: ReactNode;
+  viewBox?: string;
+  strokeWidth?: number;
+  style?: CSSProperties;
+}
+
+const glyph = {
+  chevronDown: <path d="m6 9 6 6 6-6" />,
+  chevronUp: <path d="m18 15-6-6-6 6" />,
+  chevronRight: <path d="m9 6 6 6-6 6" />,
+  chevronLeft: <path d="m15 5-7 7 7 7" />,
+  arrowLeft: <path d="M19 12H5M12 19l-7-7 7-7" />,
+  info: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M11 11h1v5M12 8h.01" />
+    </>
+  ),
+  question: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M9.6 9.4a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.4M12 17h.01" />
+    </>
+  ),
+  expand: <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />,
+  gear: (
+    <>
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+      <circle cx="12" cy="12" r="3" />
+    </>
+  ),
+  eye: (
+    <>
+      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+      <circle cx="12" cy="12" r="3" />
+    </>
+  ),
+  sliders: (
+    <>
+      <path d="M4 7h10M18 7h2M4 17h2M10 17h10" />
+      <circle cx="16" cy="7" r="2" />
+      <circle cx="8" cy="17" r="2" />
+    </>
+  ),
+  lock: (
+    <>
+      <rect x="5" y="11" width="14" height="10" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    </>
+  ),
+  qr: (
+    <>
+      <rect x="3" y="3" width="7" height="7" rx="1.5" />
+      <rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" />
+      <path d="M14 14h2.5v2.5M21 14v2.5M14 21h2.5M19 19h2v2" />
+    </>
+  ),
+  switch: <path d="M7 20V4M3 8l4-4 4 4M17 4v16M13 16l4 4 4-4" />,
+  flip: <path d="M17 3l4 4-4 4M3 7h18M7 21l-4-4 4-4M21 17H3" />,
+  external: (
+    <path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+  ),
+  backspace: <path d="M21 5H8l-6 7 6 7h13a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1ZM17 9l-6 6M11 9l6 6" />,
+};
+
+/** Token logo, with the chain badge the mobile avatars carry. */
+function TokenIcon({ token, size, badge }: { token: Token; size: number; badge?: boolean }) {
+  const badgeSize = Math.round(size * 0.36);
+  return (
+    <Span position="relative" flexShrink="0" style={{ width: u(size), height: u(size) }}>
       <styled.img
         src={tokenIcon[token]}
         alt=""
@@ -121,816 +261,1297 @@ function TokenIcon({ token, size = 46 }: { token: Token; size?: number }) {
         borderRadius="50%"
         style={{ width: '100%', height: '100%' }}
       />
-      <styled.img
-        src={tokenIcon[tokenChain[token]]}
-        alt=""
-        position="absolute"
-        borderRadius="50%"
-        style={{
-          width: u(badge),
-          height: u(badge),
-          right: u(-2),
-          bottom: u(-2),
-          boxShadow: `0 0 0 ${u(2)} var(--hero-bg)`,
-        }}
-      />
-    </styled.span>
+      {badge && (
+        <styled.img
+          src={tokenIcon[tokenChain[token]]}
+          alt=""
+          position="absolute"
+          borderRadius="50%"
+          style={{
+            width: u(badgeSize),
+            height: u(badgeSize),
+            right: u(-2),
+            bottom: u(-2),
+            boxShadow: `0 0 0 ${u(2)} ${c.bg}`,
+          }}
+        />
+      )}
+    </Span>
   );
 }
 
 function Row({
   children,
-  height,
-  gap = 12,
+  gap = 0,
+  justify,
+  align = 'center',
   style,
 }: {
   children: ReactNode;
-  height?: number;
   gap?: number;
+  justify?: CSSProperties['justifyContent'];
+  align?: CSSProperties['alignItems'];
   style?: CSSProperties;
 }) {
   return (
-    <styled.div
+    <Div
       display="flex"
-      alignItems="center"
-      style={{ height: height ? u(height) : undefined, gap: u(gap), ...style }}
+      style={{ gap: u(gap), justifyContent: justify, alignItems: align, ...style }}
     >
       {children}
-    </styled.div>
+    </Div>
   );
 }
 
-function Stacked({
-  primary,
-  secondary,
-  align = 'start',
-  primaryStyle,
+function Column({
+  children,
+  gap = 0,
+  align,
+  style,
 }: {
-  primary: ReactNode;
-  secondary: ReactNode;
-  align?: 'start' | 'end';
-  primaryStyle?: CSSProperties;
+  children: ReactNode;
+  gap?: number;
+  align?: CSSProperties['alignItems'];
+  style?: CSSProperties;
 }) {
   return (
-    <styled.span
-      display="flex"
-      flexDir="column"
-      minWidth="0"
-      style={{ alignItems: align === 'end' ? 'flex-end' : 'flex-start', gap: u(3) }}
-    >
-      <styled.span whiteSpace="nowrap" style={{ ...type.label, ...primaryStyle }}>
-        {primary}
-      </styled.span>
-      <styled.span whiteSpace="nowrap" style={type.meta}>
-        {secondary}
-      </styled.span>
-    </styled.span>
+    <Div display="flex" flexDir="column" style={{ gap: u(gap), alignItems: align, ...style }}>
+      {children}
+    </Div>
   );
 }
 
-function Divider({ bleed = 0, style }: { bleed?: number; style?: CSSProperties }) {
+function Text({ children, style }: { children: ReactNode; style?: CSSProperties }) {
   return (
-    <styled.div
+    <Span whiteSpace="nowrap" style={style}>
+      {children}
+    </Span>
+  );
+}
+
+/** Label with the small info or question glyph after it (Flag reverse). */
+function LabelWithHint({
+  children,
+  hint = 'info',
+  style,
+}: {
+  children: ReactNode;
+  hint?: 'info' | 'question';
+  style?: CSSProperties;
+}) {
+  return (
+    <Row gap={4} style={style}>
+      <Text>{children}</Text>
+      <Span style={{ color: c.subdued }}>
+        <Icon size={14}>{glyph[hint]}</Icon>
+      </Span>
+    </Row>
+  );
+}
+
+/** packages/ui Button: always a pill; solid or outline; sm 32, md 36, lg 48. */
+function Pill({
+  children,
+  variant = 'outline',
+  height = 48,
+  px = 16,
+  style,
+}: {
+  children: ReactNode;
+  variant?: 'solid' | 'outline';
+  height?: number;
+  px?: number;
+  style?: CSSProperties;
+}) {
+  const isSolid = variant === 'solid';
+  return (
+    <Span
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      borderRadius="round"
+      whiteSpace="nowrap"
+      flexShrink="0"
       style={{
-        height: 1,
-        background: 'var(--hero-divider)',
-        marginInline: u(-bleed),
+        height: u(height),
+        paddingInline: u(px),
+        background: isSolid ? c.action : 'transparent',
+        color: isSolid ? c.bg : c.action,
+        border: isSolid ? 'none' : `1px solid ${c.border}`,
+        ...t.label02,
         ...style,
       }}
+    >
+      {children}
+    </Span>
+  );
+}
+
+function Hairline({ bleed = 0, color = c.border, style }: HairlineProps) {
+  return (
+    <Div
+      style={{ height: 1, background: color, marginInline: u(-bleed), flexShrink: 0, ...style }}
     />
   );
 }
-
-function InfoGlyph() {
-  return (
-    <Icon size={12} viewBox="0 0 16 16">
-      <path d="M7.167 7.333H8v3.5M14.167 8A6.167 6.167 0 1 1 1.834 8a6.167 6.167 0 0 1 12.333 0Z" />
-    </Icon>
-  );
+interface HairlineProps {
+  bleed?: number;
+  color?: string;
+  style?: CSSProperties;
 }
 
-/** Back chevron and a centred title: the header every flow screen opens with. */
-function ScreenHeader({ title }: { title: string }) {
+/** packages/ui Tabs (web): equal-width triggers, label.01, a 2px rule under the active one. */
+function WebTabs({ tabs, active }: { tabs: string[]; active: string }) {
   return (
-    <styled.div
-      position="relative"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      style={{ height: u(48), marginBottom: u(12), ...type.title }}
-    >
-      <styled.span position="absolute" left="0" style={{ color: ink }}>
-        <Icon size={22}>
-          <path d="m15 5-7 7 7 7" />
-        </Icon>
-      </styled.span>
-      {title}
-    </styled.div>
-  );
-}
-
-function PrimaryButton({ children }: { children: ReactNode }) {
-  return (
-    <styled.div
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      borderRadius="round"
-      style={{
-        height: u(48),
-        marginTop: u(18),
-        background: 'var(--hero-primary-bg)',
-        color: 'var(--hero-primary-ink)',
-        ...type.label,
-      }}
-    >
-      {children}
-    </styled.div>
-  );
-}
-
-function Box({ children, style }: { children: ReactNode; style?: CSSProperties }) {
-  return (
-    <styled.div
-      style={{
-        border: `1px solid ${border}`,
-        borderRadius: u(14),
-        paddingInline: u(14),
-        ...style,
-      }}
-    >
-      {children}
-    </styled.div>
-  );
-}
-
-function Chip({ children, isSelected }: { children: ReactNode; isSelected?: boolean }) {
-  return (
-    <styled.span
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      borderRadius="round"
-      flex="1"
-      style={{
-        height: u(34),
-        border: `1px solid ${isSelected ? ink : border}`,
-        ...type.body,
-        fontWeight: 500,
-      }}
-    >
-      {children}
-    </styled.span>
-  );
-}
-
-function DetailRow({
-  label,
-  value,
-  valueColor,
-}: {
-  label: ReactNode;
-  value: ReactNode;
-  valueColor?: string;
-}) {
-  return (
-    <Row height={30} style={{ justifyContent: 'space-between', ...type.body }}>
-      <styled.span style={{ color: secondaryInk }}>{label}</styled.span>
-      <styled.span whiteSpace="nowrap" style={{ fontWeight: 500, color: valueColor }}>
-        {value}
-      </styled.span>
-    </Row>
-  );
-}
-
-/* -------------------------------------------------------------------------------------------- */
-/* Screens                                                                                       */
-/* -------------------------------------------------------------------------------------------- */
-
-type Device = 'extension' | 'phone';
-
-interface ScreenProps {
-  device: Device;
-  isActive: boolean;
-  isAnimated: boolean;
-}
-
-const tokenRows = [
-  { token: 'stx', name: 'Stacks', ticker: 'STX', fiat: '$1,503.50', amount: '3,449.3' },
-  { token: 'btc', name: 'Bitcoin', ticker: 'BTC', fiat: '$3,758.74', amount: '0.0340' },
-  { token: 'sbtc', name: 'sBTC', ticker: 'sBTC', fiat: '$2,255.25', amount: '0.0204' },
-] as const satisfies readonly { token: Token; [key: string]: string }[];
-
-function AccountHeader({ device }: { device: Device }) {
-  return (
-    <Row height={48} style={{ justifyContent: 'space-between' }}>
-      <Row gap={12}>
-        <styled.span
+    <Div display="flex" position="relative" style={{ boxShadow: `inset 0 ${u(-2)} 0 ${c.border}` }}>
+      {tabs.map(tab => (
+        <Span
+          key={tab}
+          flex="1"
           display="flex"
-          alignItems="center"
-          justifyContent="center"
-          style={{
-            width: u(42),
-            height: u(42),
-            borderRadius: u(12),
-            border: `1px solid ${border}`,
-          }}
-        >
-          <svg viewBox="0 0 24 24" style={{ width: u(22), height: u(22) }} fill="currentColor">
-            <path d="M6.9 3.14C5.8 2.9 5 3.83 5 4.75v2.24c0 .06-.03.15-.1.23a8.06 8.06 0 0 0-1.11 1.56c-.08.16-.21.22-.3.22h-.74C1.78 9 1 9.79 1 10.75v2.5c0 .97.78 1.75 1.75 1.75h.74c.09 0 .22.06.3.22.3.57.67 1.1 1.1 1.56.08.09.11.17.11.23v2.24c0 .96.78 1.75 1.75 1.75h2.5c.97 0 1.75-.79 1.75-1.75 0-.14.11-.25.25-.25h1.5c.14 0 .25.11.25.25 0 .96.78 1.75 1.75 1.75h2.5c.97 0 1.75-.79 1.75-1.75v-2.23c0-.06.03-.15.1-.23.33-.34.61-.71.86-1.11a2.75 2.75 0 0 0 3.44-4.15.75.75 0 1 0-1.17.94 1.25 1.25 0 0 1-1.62 1.85c.26-.73.4-1.51.4-2.32a7 7 0 0 0-7-7h-3.86A6.32 6.32 0 0 0 6.9 3.14ZM8.25 12a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5Z" />
-          </svg>
-        </styled.span>
-        <Stacked primary="Savings" secondary="Wallet 2" />
-      </Row>
-      {device === 'phone' ? (
-        <Row gap={16}>
-          <Icon size={24}>
-            <path d="M2.246 13.54c4.841-8.72 14.666-8.72 19.508 0M15 14a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-          </Icon>
-          <Icon size={24}>
-            <path d="M11.51 3.28a1 1 0 0 1 .98 0l7 3.93a1 1 0 0 1 .51.88v7.83a1 1 0 0 1-.51.87l-7 3.94a1 1 0 0 1-.98 0l-7-3.94a1 1 0 0 1-.51-.87V8.08a1 1 0 0 1 .51-.87l7-3.93Z" />
-            <circle cx="12" cy="12" r="3" />
-          </Icon>
-        </Row>
-      ) : (
-        <Icon size={26}>
-          <path d="M3 8h18M3 16h18" />
-        </Icon>
-      )}
-    </Row>
-  );
-}
-
-function BalanceBlock({ label, value }: { label: string; value: string }) {
-  return (
-    <styled.div display="flex" flexDir="column" style={{ gap: u(8) }}>
-      <Row gap={5} style={{ ...type.body, fontWeight: 500 }}>
-        {label}
-        <styled.span style={{ color: secondaryInk }}>
-          <InfoGlyph />
-        </styled.span>
-      </Row>
-      <styled.span style={type.figure}>{value}</styled.span>
-    </styled.div>
-  );
-}
-
-const homeActions = ['Send', 'Receive', 'Swap', 'Buy'] as const;
-
-function HomeScreen({ device }: ScreenProps) {
-  const isPhone = device === 'phone';
-  const bleed = isPhone ? 22 : 24;
-  return (
-    <>
-      <AccountHeader device={device} />
-      <styled.div style={{ marginTop: u(isPhone ? 30 : 46) }}>
-        <BalanceBlock label="Total balance" value="$7,517.49" />
-      </styled.div>
-      <Divider style={{ marginTop: u(22) }} />
-      <styled.div display="flex" flexDir="column" style={{ gap: u(8), marginTop: u(18) }}>
-        <Row gap={5} style={{ ...type.body, fontWeight: 500 }}>
-          Locked
-          {isPhone && (
-            <styled.span style={{ color: secondaryInk }}>
-              <InfoGlyph />
-            </styled.span>
-          )}
-        </Row>
-        <styled.span style={type.amount}>$10,751.74</styled.span>
-      </styled.div>
-      <styled.div display="flex" style={{ gap: u(8), marginTop: u(24) }}>
-        {homeActions.map((action, index) => (
-          <styled.span
-            key={action}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            flex="1"
-            borderRadius="round"
-            style={{
-              height: u(isPhone ? 46 : 48),
-              border: `1px solid ${index === 0 ? 'transparent' : border}`,
-              background: index === 0 ? 'var(--hero-primary-bg)' : 'transparent',
-              color: index === 0 ? 'var(--hero-primary-ink)' : ink,
-              ...type.body,
-              fontWeight: 500,
-            }}
-          >
-            {action}
-          </styled.span>
-        ))}
-      </styled.div>
-      <styled.div
-        position="relative"
-        display="flex"
-        style={{
-          marginTop: u(isPhone ? 30 : 36),
-          marginInline: u(-bleed),
-          paddingInline: u(bleed),
-          gap: u(48),
-          height: u(52),
-          borderBottom: `${u(2)} solid var(--hero-divider)`,
-          ...type.label,
-          fontSize: u(17),
-        }}
-      >
-        {(isPhone ? ['Tokens', 'Collectibles'] : ['Tokens', 'Collectibles', 'Activity']).map(
-          (tab, index) => (
-            <styled.span
-              key={tab}
-              position="relative"
-              display="flex"
-              alignItems="center"
-              style={{ color: index === 0 || !isPhone ? ink : secondaryInk }}
-            >
-              {tab}
-              {index === 0 && (
-                <styled.span
-                  position="absolute"
-                  style={{
-                    left: u(-bleed),
-                    right: u(-26),
-                    bottom: u(-2),
-                    height: u(2),
-                    background: ink,
-                  }}
-                />
-              )}
-            </styled.span>
-          )
-        )}
-      </styled.div>
-      <Row style={{ justifyContent: 'space-between', marginTop: u(26) }}>
-        <styled.span display="flex" flexDir="column" style={{ gap: u(6) }}>
-          <Row gap={5} style={{ ...type.meta, color: ink, fontWeight: 500 }}>
-            Available
-            {isPhone && (
-              <styled.span style={{ color: secondaryInk }}>
-                <InfoGlyph />
-              </styled.span>
-            )}
-          </Row>
-          <styled.span style={{ ...type.amount, fontSize: u(21) }}>$7,000.50</styled.span>
-        </styled.span>
-        <Icon size={18}>
-          <path d="M4 7h10M18 7h2M4 17h2M10 17h10" />
-          <circle cx="16" cy="7" r="2" />
-          <circle cx="8" cy="17" r="2" />
-        </Icon>
-      </Row>
-      <styled.div style={{ marginTop: u(20) }}>
-        {tokenRows.map(row => (
-          <Row key={row.token} height={isPhone ? 70 : 73} gap={14}>
-            <TokenIcon token={row.token} />
-            <styled.span flex="1" minWidth="0">
-              <Stacked primary={row.name} secondary={row.ticker} />
-            </styled.span>
-            <Stacked primary={row.fiat} secondary={row.amount} align="end" />
-          </Row>
-        ))}
-      </styled.div>
-    </>
-  );
-}
-
-const buyOffers = [
-  { name: 'MoonPay', mark: '#7D00FF', amount: '0.00221 BTC', note: 'Best rate' },
-  { name: 'Coinbase', mark: '#0052FF', amount: '0.00219 BTC' },
-] as const;
-
-/** Buy: the on-ramp. Leather hands the purchase to a provider; the best offer leads. */
-function BuyScreen() {
-  return (
-    <>
-      <ScreenHeader title="Buy" />
-      <Box>
-        <Row height={66} gap={12}>
-          <TokenIcon token="btc" size={38} />
-          <styled.span flex="1">
-            <Stacked primary="Bitcoin" secondary="BTC" />
-          </styled.span>
-          <Icon size={18}>
-            <path d="m6 9 6 6 6-6" />
-          </Icon>
-        </Row>
-      </Box>
-      <styled.div
-        display="flex"
-        flexDir="column"
-        alignItems="center"
-        style={{ gap: u(6), paddingBlock: u(26) }}
-      >
-        <styled.span style={type.meta}>You pay</styled.span>
-        <styled.span style={{ ...type.figure, fontSize: u(56) }}>$250</styled.span>
-        <styled.span style={{ ...type.body, color: secondaryInk }}>≈ 0.00221 BTC</styled.span>
-      </styled.div>
-      <styled.div display="flex" style={{ gap: u(8) }}>
-        <Chip>$100</Chip>
-        <Chip isSelected>$250</Chip>
-        <Chip>$500</Chip>
-      </styled.div>
-      <styled.div style={{ ...type.meta, marginTop: u(22), marginBottom: u(8) }}>
-        Provider
-      </styled.div>
-      <Box style={{ paddingBlock: u(4) }}>
-        {buyOffers.map((offer, index) => (
-          <Row
-            key={offer.name}
-            height={56}
-            gap={12}
-            style={{ borderTop: index > 0 ? `1px solid var(--hero-divider)` : undefined }}
-          >
-            <styled.span
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              borderRadius="50%"
-              color="white"
-              fontWeight="600"
-              style={{ width: u(30), height: u(30), background: offer.mark, fontSize: u(14) }}
-            >
-              {offer.name[0]}
-            </styled.span>
-            <styled.span flex="1" display="flex" alignItems="center" style={{ gap: u(8) }}>
-              <styled.span style={type.label}>{offer.name}</styled.span>
-              {'note' in offer && (
-                <styled.span
-                  borderRadius="round"
-                  style={{
-                    ...type.meta,
-                    fontSize: u(12),
-                    color: 'var(--hero-positive)',
-                    background: 'var(--hero-positive-wash)',
-                    paddingInline: u(8),
-                    paddingBlock: u(2),
-                  }}
-                >
-                  {offer.note}
-                </styled.span>
-              )}
-            </styled.span>
-            <styled.span style={{ ...type.body, fontWeight: 500 }}>{offer.amount}</styled.span>
-          </Row>
-        ))}
-      </Box>
-      <PrimaryButton>Continue to MoonPay</PrimaryButton>
-    </>
-  );
-}
-
-function SendScreen() {
-  return (
-    <>
-      <ScreenHeader title="Send" />
-      <Box style={{ paddingInline: 0 }}>
-        <Row
-          height={66}
-          gap={12}
-          style={{ paddingInline: u(14), borderBottom: `1px solid ${border}` }}
-        >
-          <TokenIcon token="btc" size={38} />
-          <styled.span flex="1" minWidth="0">
-            <Stacked primary="Bitcoin" secondary="Native SegWit" />
-          </styled.span>
-          <Stacked primary="0.0340 BTC" secondary="$3,758.74" align="end" />
-        </Row>
-        <Row style={{ justifyContent: 'space-between', padding: u(14), alignItems: 'flex-start' }}>
-          <styled.span display="flex" flexDir="column" style={{ gap: u(6) }}>
-            <styled.span style={{ ...type.figure, fontSize: u(40) }}>0.005</styled.span>
-            <Row gap={5} style={type.meta}>
-              $552.76
-              <Icon size={13}>
-                <path d="M7 20V4M3 8l4-4 4 4M17 4v16M13 16l4 4 4-4" />
-              </Icon>
-            </Row>
-          </styled.span>
-          <styled.span style={{ ...type.body, fontWeight: 500 }}>MAX</styled.span>
-        </Row>
-      </Box>
-      <Box style={{ marginTop: u(10) }}>
-        <Row height={56} style={{ justifyContent: 'space-between' }}>
-          <styled.span style={{ ...type.label }}>bc1q8c6f…u7x9h</styled.span>
-          <Icon size={20}>
-            <rect x="3" y="3" width="7" height="7" rx="1.5" />
-            <rect x="14" y="3" width="7" height="7" rx="1.5" />
-            <rect x="3" y="14" width="7" height="7" rx="1.5" />
-            <path d="M14 14h2.5v2.5M21 14v2.5M14 21h2.5M19 19h2v2" />
-          </Icon>
-        </Row>
-      </Box>
-      <styled.div style={{ marginTop: u(16) }}>
-        <DetailRow label="Fee" value="Standard · $1.24" />
-        <DetailRow label="Arrives" value="~30 min" />
-      </styled.div>
-      <PrimaryButton>Review</PrimaryButton>
-    </>
-  );
-}
-
-function SwapPanel({
-  token,
-  ticker,
-  amount,
-  fiat,
-  caption,
-}: {
-  token: Token;
-  ticker: string;
-  amount: string;
-  fiat: string;
-  caption: string;
-}) {
-  return (
-    <styled.div style={{ background: 'var(--hero-surface)', borderRadius: u(16), padding: u(14) }}>
-      <Row style={{ justifyContent: 'space-between' }}>
-        <Row
-          gap={8}
-          style={{
-            border: `1px solid ${border}`,
-            borderRadius: u(999),
-            padding: `${u(5)} ${u(10)} ${u(5)} ${u(5)}`,
-            background: 'var(--hero-bg)',
-            ...type.label,
-          }}
-        >
-          <styled.img
-            src={tokenIcon[token]}
-            alt=""
-            borderRadius="50%"
-            style={{ width: u(26), height: u(26) }}
-          />
-          {ticker}
-          <Icon size={14}>
-            <path d="m6 9 6 6 6-6" />
-          </Icon>
-        </Row>
-        <styled.span style={{ ...type.figure, fontSize: u(32), fontWeight: 600 }}>
-          {amount}
-        </styled.span>
-      </Row>
-      <Row style={{ justifyContent: 'space-between', marginTop: u(10), ...type.meta }}>
-        <span>{caption}</span>
-        <span>{fiat}</span>
-      </Row>
-    </styled.div>
-  );
-}
-
-function SwapScreen() {
-  return (
-    <>
-      <ScreenHeader title="Swap" />
-      <SwapPanel token="stx" ticker="STX" amount="1,000" fiat="$435.90" caption="Balance 3,449.3" />
-      <styled.div display="flex" justifyContent="center" style={{ height: u(6) }}>
-        <styled.span
-          display="flex"
-          alignItems="center"
           justifyContent="center"
           position="relative"
-          zIndex="1"
-          borderRadius="50%"
           style={{
-            width: u(36),
-            height: u(36),
-            marginTop: u(-15),
-            background: 'var(--hero-bg)',
-            border: `1px solid ${border}`,
+            ...t.label01,
+            paddingBlock: u(16),
+            color: tab === active ? c.text : c.subdued,
+            boxShadow: tab === active ? `inset 0 ${u(-2)} 0 ${c.subdued}` : undefined,
           }}
         >
-          <Icon size={16}>
-            <path d="M12 4v16M6 14l6 6 6-6" />
-          </Icon>
-        </styled.span>
-      </styled.div>
-      <SwapPanel
-        token="sbtc"
-        ticker="sBTC"
-        amount="0.00391"
-        fiat="$432.25"
-        caption="Balance 0.0204"
-      />
-      <styled.div display="flex" style={{ gap: u(8), marginTop: u(14) }}>
-        <Chip>25%</Chip>
-        <Chip>50%</Chip>
-        <Chip>75%</Chip>
-        <Chip>MAX</Chip>
-      </styled.div>
-      <styled.div style={{ marginTop: u(14) }}>
-        <DetailRow label="Rate" value="1 STX ≈ 0.0000039 sBTC" />
-        <DetailRow
-          label="Quote from"
-          value={
-            <Row gap={6}>
-              <styled.img
-                src="/icons/bitflow.png"
-                alt=""
-                borderRadius="50%"
-                style={{ width: u(18), height: u(18) }}
-              />
-              Bitflow
-            </Row>
-          }
-        />
-      </styled.div>
-      <PrimaryButton>Review</PrimaryButton>
-    </>
+          {tab}
+        </Span>
+      ))}
+    </Div>
   );
 }
 
-const bondCycle = 5;
-const bondCycles = 12;
+/* -------------------------------------------------------------------------------------------- */
+/* Price chart (extension features/token/components/price-history)                              */
+/* -------------------------------------------------------------------------------------------- */
 
-/**
- * Bitcoin Staking: one protocol bond, as the extension lists it (Period, status badge, Amount,
- * STX stacked, Unlocks, Paid out). A bond runs 12 reward cycles, about six months, and pays out
- * in sBTC by default (docs.stacks.co/learn/bitcoin-staking). No rate is shown.
- */
-function EarnScreen({ isActive, isAnimated }: ScreenProps) {
-  const progress = isActive || !isAnimated ? bondCycle / bondCycles : 0;
-  return (
-    <>
-      <ScreenHeader title="Bitcoin Staking" />
-      <styled.div display="flex" flexDir="column" style={{ gap: u(6) }}>
-        <styled.span style={{ ...type.body, fontWeight: 500 }}>In a bond</styled.span>
-        <styled.span style={{ ...type.figure, fontSize: u(40) }}>0.0150 BTC</styled.span>
-        <styled.span style={type.meta}>$1,658.27 · stays on Bitcoin, under a timelock</styled.span>
-      </styled.div>
-      <Box style={{ marginTop: u(22), paddingBlock: u(14) }}>
-        <Row style={{ justifyContent: 'space-between' }}>
-          <styled.span style={type.label}>Period 3</styled.span>
-          <styled.span
-            borderRadius="round"
-            style={{
-              ...type.meta,
-              color: ink,
-              fontWeight: 500,
-              border: `1px solid ${border}`,
-              paddingInline: u(10),
-              paddingBlock: u(3),
-            }}
-          >
-            Active
-          </styled.span>
-        </Row>
-        <styled.div style={{ marginTop: u(14) }}>
-          <Row style={{ justifyContent: 'space-between', ...type.meta }}>
-            <span>
-              Cycle {bondCycle} of {bondCycles}
-            </span>
-            <span>about 6 months</span>
-          </Row>
-          <styled.div
-            overflow="hidden"
-            borderRadius="round"
-            style={{ height: u(6), marginTop: u(8), background: 'var(--hero-divider)' }}
-          >
-            <styled.div
-              borderRadius="round"
-              style={{
-                height: '100%',
-                width: '100%',
-                background: '#F7931A',
-                transformOrigin: 'left',
-                transform: `scaleX(${progress})`,
-                transition: isAnimated ? `transform 900ms ${ease} 200ms` : undefined,
-              }}
-            />
-          </styled.div>
-        </styled.div>
-        <styled.div style={{ marginTop: u(10) }}>
-          <DetailRow label="Amount" value="0.0150 BTC" />
-          <DetailRow label="STX stacked" value="20,861 STX" />
-          <DetailRow label="Unlocks" value="about May 2027" />
-          <DetailRow label="Paid out" value="+0.00012 sBTC" valueColor="var(--hero-positive)" />
-        </styled.div>
-      </Box>
-      <styled.div style={{ ...type.meta, marginTop: u(12) }}>
-        Rewards pay out in sBTC by default.
-      </styled.div>
-    </>
-  );
-}
-
-// A year of portfolio value, sampled; normalised 0–1. Illustrative.
-const growthTrace = [
-  0.18, 0.2, 0.16, 0.22, 0.26, 0.24, 0.3, 0.27, 0.33, 0.31, 0.36, 0.42, 0.39, 0.45, 0.43, 0.5, 0.47,
-  0.55, 0.58, 0.54, 0.6, 0.66, 0.63, 0.7, 0.68, 0.75, 0.8, 0.77, 0.84, 0.9,
+// One day of BTC prices, normalised 0–1. Illustrative; ends at the current price.
+const dayTrace = [
+  0.32, 0.3, 0.34, 0.29, 0.25, 0.27, 0.22, 0.2, 0.24, 0.31, 0.28, 0.35, 0.4, 0.37, 0.42, 0.39, 0.45,
+  0.52, 0.48, 0.5, 0.56, 0.53, 0.47, 0.51, 0.58, 0.62, 0.59, 0.66, 0.63, 0.7, 0.74, 0.69, 0.72,
+  0.78, 0.75, 0.81, 0.86, 0.83, 0.88, 0.92,
 ];
 
-const allocation = [
-  { token: 'btc', name: 'Bitcoin', share: 0.5, color: '#F7931A' },
-  { token: 'sbtc', name: 'sBTC', share: 0.3, color: '#FF5F33' },
-  { token: 'stx', name: 'Stacks', share: 0.2, color: '#FC6432' },
-] as const;
-
-function GrowthChart({ isActive, isAnimated }: { isActive: boolean; isAnimated: boolean }) {
-  const width = 400;
-  const height = 150;
-  const step = width / (growthTrace.length - 1);
-  const points = growthTrace.map(
-    (value, index) => `${(index * step).toFixed(1)},${(height - value * height).toFixed(1)}`
-  );
-  const line = `M${points.join(' L')}`;
-  const area = `${line} L${width},${height} L0,${height} Z`;
-  const isDrawn = isActive || !isAnimated;
+function PriceChart({ isDrawn, isAnimated }: { isDrawn: boolean; isAnimated: boolean }) {
+  // The chart's own size in the popup (390 less 24 padding each side, by 120), so the stroke
+  // stays even without vector-effect, which renders unreliably inside the tilted rig
+  const width = 342;
+  const height = 120;
+  const step = width / (dayTrace.length - 1);
+  const path = `M${dayTrace
+    .map((value, index) => `${(index * step).toFixed(2)},${((1 - value) * height).toFixed(2)}`)
+    .join(' L')}`;
   return (
     <svg
-      viewBox={`0 -4 ${width} ${height + 4}`}
+      viewBox={`0 0 ${width} ${height}`}
       preserveAspectRatio="none"
-      style={{ width: '100%', height: u(150), display: 'block', overflow: 'visible' }}
+      style={{
+        width: '100%',
+        height: u(height),
+        display: 'block',
+        overflow: 'visible',
+        clipPath: isDrawn ? 'inset(-8px -8px -8px -8px)' : 'inset(-8px 100% -8px -8px)',
+        transition: isAnimated ? `clip-path 1400ms ${ease} 200ms` : undefined,
+      }}
     >
-      <defs>
-        <linearGradient id="hero-growth-fill" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="var(--hero-positive)" stopOpacity="0.22" />
-          <stop offset="1" stopColor="var(--hero-positive)" stopOpacity="0" />
-        </linearGradient>
-      </defs>
       <path
-        d={area}
-        fill="url(#hero-growth-fill)"
-        style={{
-          opacity: isDrawn ? 1 : 0,
-          transition: isAnimated ? `opacity 600ms ${ease} 700ms` : undefined,
-        }}
-      />
-      <path
-        d={line}
+        d={path}
         fill="none"
-        stroke="var(--hero-positive)"
-        strokeWidth="2"
+        stroke={c.green}
+        strokeWidth="2.5"
         strokeLinejoin="round"
         strokeLinecap="round"
-        vectorEffect="non-scaling-stroke"
-        pathLength={1}
-        style={{
-          strokeDasharray: 1,
-          strokeDashoffset: isDrawn ? 0 : 1,
-          transition: isAnimated ? `stroke-dashoffset 1400ms ${ease} 150ms` : undefined,
-        }}
       />
     </svg>
   );
 }
 
-function GrowScreen({ device, isActive, isAnimated }: ScreenProps) {
+/* -------------------------------------------------------------------------------------------- */
+/* Onramper widget, themed with Leather's colours (onramper-params.ts)                           */
+/* -------------------------------------------------------------------------------------------- */
+
+function OnramperField({
+  label,
+  amount,
+  asset,
+}: {
+  label: string;
+  amount: string;
+  asset: ReactNode;
+}) {
+  return (
+    <Div style={{ background: c.hover, borderRadius: u(12), padding: u(14) }}>
+      <Text style={{ ...t.caption01, color: c.subdued }}>{label}</Text>
+      <Row justify="space-between" style={{ marginTop: u(4) }}>
+        <Text style={{ fontSize: u(26), lineHeight: u(32), fontWeight: 500 }}>{amount}</Text>
+        <Row
+          gap={6}
+          style={{
+            ...t.label02,
+            background: c.bg,
+            borderRadius: u(999),
+            padding: `${u(5)} ${u(10)}`,
+          }}
+        >
+          {asset}
+          <Icon size={14}>{glyph.chevronDown}</Icon>
+        </Row>
+      </Row>
+    </Div>
+  );
+}
+
+function OnramperWidget() {
+  return (
+    <Column gap={10} style={{ padding: u(16), color: c.text }}>
+      <Row gap={20} style={{ ...t.label01, marginBottom: u(4) }}>
+        <Text>Buy</Text>
+        <Text style={{ color: c.subdued }}>Sell</Text>
+      </Row>
+      <OnramperField label="You pay" amount="250" asset={<Text>USD</Text>} />
+      <OnramperField
+        label="You get"
+        amount="0.00221"
+        asset={
+          <>
+            <TokenIcon token="btc" size={20} />
+            <Text>BTC</Text>
+          </>
+        }
+      />
+      <Row
+        justify="space-between"
+        style={{ ...t.body02, border: `1px solid ${c.hover}`, borderRadius: u(12), padding: u(14) }}
+      >
+        <Text style={{ color: c.subdued }}>Pay with</Text>
+        <Row gap={6}>
+          <Text style={t.label02}>Card</Text>
+          <Icon size={14}>{glyph.chevronDown}</Icon>
+        </Row>
+      </Row>
+      <Row
+        justify="space-between"
+        style={{ ...t.body02, border: `1px solid ${c.hover}`, borderRadius: u(12), padding: u(14) }}
+      >
+        <Text style={{ color: c.subdued }}>Via</Text>
+        <Row gap={8}>
+          <Span
+            borderRadius="round"
+            style={{
+              ...t.label03,
+              color: c.green,
+              background: 'rgba(28, 186, 125, 0.14)',
+              padding: `${u(2)} ${u(8)}`,
+            }}
+          >
+            Best rate
+          </Span>
+          <Text style={t.label02}>MoonPay</Text>
+          <Icon size={14}>{glyph.chevronDown}</Icon>
+        </Row>
+      </Row>
+      <Div
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        style={{
+          ...t.label02,
+          height: u(48),
+          borderRadius: u(12),
+          background: c.action,
+          color: c.bg,
+          marginTop: u(6),
+        }}
+      >
+        Buy BTC
+      </Div>
+      <Text style={{ ...t.caption01, color: c.subdued, textAlign: 'center' }}>
+        Powered by Onramper
+      </Text>
+    </Column>
+  );
+}
+
+/* -------------------------------------------------------------------------------------------- */
+/* Extension screens (dark theme, 390-wide popup)                                                */
+/* -------------------------------------------------------------------------------------------- */
+
+interface ScreenProps {
+  isActive: boolean;
+  isAnimated: boolean;
+}
+
+/** features/container/headers/home.header.tsx: account selector, Expand, Settings. */
+function ExtHomeHeader() {
+  return (
+    <Row justify="space-between" style={{ padding: u(16) }}>
+      <Row gap={8} style={t.label01}>
+        <Text>Savings</Text>
+        <Icon size={16}>{glyph.chevronDown}</Icon>
+      </Row>
+      <Row gap={8}>
+        <Span
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          style={{ width: u(40), height: u(40) }}
+        >
+          <Icon size={20}>{glyph.expand}</Icon>
+        </Span>
+        <Span
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          style={{ width: u(40), height: u(40) }}
+        >
+          <Icon size={22}>{glyph.gear}</Icon>
+        </Span>
+      </Row>
+    </Row>
+  );
+}
+
+/** Back button, centred heading.05 title: the header of every pushed extension page. */
+function ExtPageHeader({ title }: { title: string }) {
+  return (
+    <Div
+      position="relative"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      style={{ height: u(72), ...t.heading05 }}
+    >
+      <Span position="absolute" style={{ left: u(16) }}>
+        <Icon size={22}>{glyph.arrowLeft}</Icon>
+      </Span>
+      {title}
+    </Div>
+  );
+}
+
+function ExtTokenRow({ row }: { row: (typeof holdings)[number] }) {
+  return (
+    <Row gap={12} style={{ paddingBlock: u(8) }}>
+      <TokenIcon token={row.token} size={40} badge />
+      <Column style={{ flex: 1, minWidth: 0 }}>
+        <Text style={t.label01}>{row.name}</Text>
+        <Text style={t.label03}>{row.symbol}</Text>
+      </Column>
+      <Column align="flex-end">
+        <Text style={t.label02}>{row.fiat}</Text>
+        <Row gap={6} style={{ ...t.caption01, color: c.subdued }}>
+          <Text>{row.amount}</Text>
+          {'locked' in row && (
+            <Row gap={2} style={{ ...t.label03, color: c.text }}>
+              <Icon size={12} strokeWidth={2}>
+                {glyph.lock}
+              </Icon>
+              <Text>{row.locked}</Text>
+            </Row>
+          )}
+        </Row>
+      </Column>
+    </Row>
+  );
+}
+
+function ExtHome() {
   return (
     <>
-      <AccountHeader device={device} />
-      <styled.div style={{ marginTop: u(device === 'phone' ? 30 : 46) }}>
-        <BalanceBlock label="Total balance" value="$7,517.49" />
-      </styled.div>
-      <Row gap={6} style={{ ...type.body, marginTop: u(8), color: 'var(--hero-positive)' }}>
-        <Icon size={14}>
-          <path d="M7 17 17 7M9 7h8v8" />
-        </Icon>
-        <styled.span fontWeight="500">$1,412.08 (23.1%)</styled.span>
-        <styled.span style={{ color: secondaryInk }}>past year</styled.span>
-      </Row>
-      <styled.div style={{ marginTop: u(22) }}>
-        <GrowthChart isActive={isActive} isAnimated={isAnimated} />
-      </styled.div>
-      <styled.div display="flex" style={{ gap: u(8), marginTop: u(16) }}>
-        <Chip>1W</Chip>
-        <Chip>1M</Chip>
-        <Chip isSelected>1Y</Chip>
-        <Chip>All</Chip>
-      </styled.div>
-      <styled.div
-        display="flex"
-        overflow="hidden"
-        borderRadius="round"
-        style={{ height: u(8), marginTop: u(24), gap: u(3) }}
-      >
-        {allocation.map(slice => (
-          <styled.span key={slice.token} style={{ flex: slice.share, background: slice.color }} />
-        ))}
-      </styled.div>
-      <styled.div style={{ marginTop: u(10) }}>
-        {allocation.map(slice => (
-          <Row key={slice.token} height={30} gap={8} style={type.body}>
-            <styled.span
-              borderRadius="50%"
-              style={{ width: u(8), height: u(8), background: slice.color }}
-            />
-            <styled.span flex="1">{slice.name}</styled.span>
-            <styled.span style={{ color: secondaryInk }}>
-              {Math.round(slice.share * 100)}%
-            </styled.span>
+      <ExtHomeHeader />
+      <Column gap={24} style={{ paddingInline: u(24), paddingTop: u(16), paddingBottom: u(24) }}>
+        <Column>
+          <LabelWithHint style={t.label02}>Total balance</LabelWithHint>
+          <Text style={{ ...t.heading02, marginTop: u(8) }}>{figures.total}</Text>
+          {/* features/bonds/components/locked-balance-card.tsx */}
+          <Row
+            justify="space-between"
+            style={{
+              marginTop: u(16),
+              border: `1px solid ${c.border}`,
+              borderRadius: u(8),
+              padding: `${u(12)} ${u(16)}`,
+            }}
+          >
+            <Column gap={4}>
+              <LabelWithHint style={t.label02}>Locked</LabelWithHint>
+              <Text style={t.heading05}>{figures.locked}</Text>
+            </Column>
+            <Icon size={18}>{glyph.chevronRight}</Icon>
           </Row>
-        ))}
-      </styled.div>
+        </Column>
+        <Row gap={4}>
+          <Pill variant="solid" style={{ flex: 1 }}>
+            Buy & Sell
+          </Pill>
+          <Pill style={{ flex: 1 }}>Transfer</Pill>
+          <Pill style={{ flex: 1 }}>Swap</Pill>
+        </Row>
+      </Column>
+      <WebTabs tabs={['Tokens', 'Collectibles', 'Activity']} active="Tokens" />
+      <Column gap={16} style={{ padding: u(24), paddingTop: u(24) }}>
+        <Row justify="space-between" align="flex-start">
+          <Column gap={4}>
+            <LabelWithHint style={t.label02}>Available</LabelWithHint>
+            <Text style={t.heading05}>{figures.available}</Text>
+          </Column>
+          <Span
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            style={{ width: u(40), height: u(40) }}
+          >
+            <Icon size={18}>{glyph.sliders}</Icon>
+          </Span>
+        </Row>
+        <Column>
+          {holdings.map(row => (
+            <ExtTokenRow key={row.token} row={row} />
+          ))}
+        </Column>
+      </Column>
     </>
   );
 }
 
-const screens: Record<HeroView, (props: ScreenProps) => ReactNode> = {
-  home: HomeScreen,
-  buy: BuyScreen,
-  send: SendScreen,
-  swap: SwapScreen,
-  earn: EarnScreen,
-  grow: GrowScreen,
-};
+/** pages/send/.../btc-send-form.tsx: amount, asset, recipient, Continue. */
+function ExtSend() {
+  return (
+    <>
+      <ExtPageHeader title="Send" />
+      <Column style={{ paddingInline: u(24) }}>
+        <Column align="center" style={{ paddingTop: u(24) }}>
+          <Row
+            gap={8}
+            style={{
+              fontFamily: 'Marche',
+              fontSize: u(48),
+              lineHeight: u(55),
+              letterSpacing: u(0.64),
+            }}
+          >
+            <Text>0.005</Text>
+            <Text>BTC</Text>
+          </Row>
+          <Row gap={6} style={{ ...t.body02, color: c.subdued, marginTop: u(12) }}>
+            <Text>~ $552.75</Text>
+            <Icon size={14}>{glyph.switch}</Icon>
+          </Row>
+          <Text style={{ ...t.label02, marginTop: u(32), textDecoration: 'underline' }}>
+            Send max
+          </Text>
+        </Column>
+        <Row
+          gap={12}
+          style={{
+            marginTop: u(32),
+            minHeight: u(64),
+            border: `1px solid ${c.border}`,
+            borderRadius: u(4),
+            paddingInline: u(16),
+          }}
+        >
+          <TokenIcon token="btc" size={36} />
+          <Text style={t.label01}>Bitcoin</Text>
+        </Row>
+        <Row
+          justify="space-between"
+          style={{
+            marginTop: u(16),
+            height: u(64),
+            border: `1px solid ${c.border}`,
+            borderRadius: u(4),
+            paddingInline: u(16),
+          }}
+        >
+          <Column gap={2}>
+            <Text style={{ ...t.label03, color: c.subdued }}>Recipient</Text>
+            <Text style={t.body02}>bc1q8c6fh7…2kqu7x9h</Text>
+          </Column>
+          <Row gap={6} style={{ ...t.label03, color: c.subdued }}>
+            <Text>Address</Text>
+            <Icon size={14}>{glyph.chevronDown}</Icon>
+          </Row>
+        </Row>
+      </Column>
+      <Column
+        gap={12}
+        style={{ padding: u(24), marginTop: u(36), borderTop: `1px solid ${c.border}` }}
+      >
+        <Pill variant="solid">Continue</Pill>
+        <Row justify="space-between" style={{ ...t.caption01, color: c.subdued }}>
+          <LabelWithHint>Available balance</LabelWithHint>
+          <Text>$3,758.70</Text>
+        </Row>
+      </Column>
+    </>
+  );
+}
+
+function AssetChip({ token, symbol }: { token: Token; symbol: string }) {
+  return (
+    <Row
+      gap={8}
+      style={{
+        height: u(32),
+        paddingLeft: u(4),
+        paddingRight: u(8),
+        borderRadius: u(999),
+        background: c.hover,
+        ...t.label03,
+      }}
+    >
+      <TokenIcon token={token} size={24} />
+      <Text>{symbol}</Text>
+      <Icon size={14}>{glyph.chevronDown}</Icon>
+    </Row>
+  );
+}
+
+function SwapLeg({
+  amount,
+  fiat,
+  token,
+  symbol,
+  balance,
+  showSwitch,
+}: {
+  amount: string;
+  fiat: string;
+  token: Token;
+  symbol: string;
+  balance: string;
+  showSwitch?: boolean;
+}) {
+  return (
+    <Row justify="space-between" align="flex-start">
+      <Column gap={12}>
+        <Text style={{ ...t.heading03, fontSize: u(26), lineHeight: u(32) }}>{amount}</Text>
+        <Row gap={4} style={{ ...t.label03, color: c.subdued }}>
+          <Text>{fiat}</Text>
+          {showSwitch && <Icon size={12}>{glyph.switch}</Icon>}
+        </Row>
+      </Column>
+      <Column gap={12} align="flex-end">
+        <AssetChip token={token} symbol={symbol} />
+        <Text style={{ ...t.label03, color: c.subdued }}>{balance}</Text>
+      </Column>
+    </Row>
+  );
+}
+
+/** pages/swap/swap-form.tsx: base and target legs, flip button, Rate and Estimated fees. */
+function ExtSwap() {
+  return (
+    <>
+      <ExtPageHeader title="Swap" />
+      <Column gap={24} style={{ padding: u(24), paddingTop: u(16) }}>
+        <Div position="relative">
+          <SwapLeg
+            amount="1,000"
+            fiat="$436.00"
+            token="stx"
+            symbol="STX"
+            balance="3,449.3"
+            showSwitch
+          />
+          <Hairline color={c.borderT} style={{ marginBlock: u(24) }} />
+          <SwapLeg amount="0.00394" fiat="$435.56" token="sbtc" symbol="sBTC" balance="0.0204" />
+          <Span
+            position="absolute"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            borderRadius="50%"
+            style={{
+              left: '50%',
+              top: '50%',
+              width: u(32),
+              height: u(32),
+              transform: 'translate(-50%, -50%)',
+              background: c.bg,
+              border: `1px solid ${c.borderT}`,
+            }}
+          >
+            <Icon size={16}>{glyph.flip}</Icon>
+          </Span>
+        </Div>
+        <Column>
+          <Row justify="space-between" style={{ height: u(40), ...t.label03 }}>
+            <Text style={{ color: c.subdued }}>Rate</Text>
+            <Text>1 STX ≈ 0.0000039 sBTC</Text>
+          </Row>
+          <Hairline color={c.borderT} />
+          <Row justify="space-between" style={{ height: u(40), ...t.label03 }}>
+            <Text style={{ color: c.subdued }}>Estimated fees</Text>
+            <Text>$0.28</Text>
+          </Row>
+        </Column>
+      </Column>
+      <Div style={{ padding: u(24), borderTop: `1px solid ${c.border}`, marginTop: u(40) }}>
+        <Pill variant="solid">Continue</Pill>
+      </Div>
+    </>
+  );
+}
+
+function BondRow({ label, value, color }: { label: string; value: string; color?: string }) {
+  return (
+    <Row justify="space-between" gap={16} style={t.caption01}>
+      <Text style={{ color: c.subdued }}>{label}</Text>
+      <Text style={{ color }}>{value}</Text>
+    </Row>
+  );
+}
+
+/** pages/all-balances/bond-positions-detail.tsx: the In a bond detail of All balances. */
+function ExtEarn() {
+  return (
+    <>
+      <ExtPageHeader title="All balances" />
+      <Column style={{ paddingInline: u(24) }}>
+        <Row justify="space-between" align="flex-start" style={{ paddingBlock: u(16) }}>
+          <Column gap={4}>
+            <LabelWithHint style={t.label02}>In a bond</LabelWithHint>
+            <Column gap={2}>
+              <Text style={t.heading03}>$1,658.25</Text>
+              <Text style={{ ...t.caption01, color: c.subdued }}>0.015 BTC</Text>
+            </Column>
+          </Column>
+          <TokenIcon token="btc" size={40} />
+        </Row>
+        <Hairline bleed={24} />
+        <Column gap={12} style={{ paddingBlock: u(16) }}>
+          <Row justify="space-between">
+            <Row gap={8}>
+              <Text style={t.label01}>Period 3</Text>
+              <Span
+                borderRadius="round"
+                style={{
+                  ...t.label03,
+                  border: `1px solid ${c.border}`,
+                  padding: `${u(2)} ${u(8)}`,
+                }}
+              >
+                Active
+              </Span>
+            </Row>
+            <Icon size={16}>{glyph.chevronUp}</Icon>
+          </Row>
+          <Column gap={8}>
+            <BondRow label="Amount" value="0.015 BTC" />
+            <BondRow label="STX stacked" value="4,000.00 STX" />
+            <BondRow label="Policy" value="bc1p…q7k2" />
+            <BondRow label="Unlocks" value="about May 14 · block 1,001,520" />
+            <BondRow label="Held by" value="Your key, timelock script" />
+            <BondRow label="Paid out" value="+0.00012 BTC" color={c.green} />
+          </Column>
+        </Column>
+        <Hairline bleed={24} />
+        <Row gap={4} style={{ ...t.label02, paddingBlock: u(16) }}>
+          <Text>Manage in Bitcoin Staking</Text>
+          <Icon size={14}>{glyph.external}</Icon>
+        </Row>
+      </Column>
+    </>
+  );
+}
+
+/** features/token/token-details.layout.tsx: Bitcoin details, Info tab, Price section. */
+function ExtGrow({ isActive, isAnimated }: ScreenProps) {
+  return (
+    <>
+      <ExtPageHeader title="Bitcoin" />
+      <Column gap={12} align="center" style={{ padding: u(24), paddingTop: u(8) }}>
+        <TokenIcon token="btc" size={48} />
+        <Column align="center">
+          <Text style={t.heading03}>
+            0.049 <Span style={{ color: c.subdued }}>BTC</Span>
+          </Text>
+          <Text style={t.label01}>$5,416.95</Text>
+        </Column>
+        <Row gap={8} style={{ width: '100%', paddingTop: u(4) }}>
+          {['Receive', 'Send', 'Buy', 'Swap'].map(label => (
+            <Pill key={label} height={36} px={12} style={{ flex: 1 }}>
+              {label}
+            </Pill>
+          ))}
+        </Row>
+      </Column>
+      <WebTabs tabs={['Activity', 'Balances', 'Info']} active="Info" />
+      <Column gap={12} style={{ paddingInline: u(24), paddingTop: u(16) }}>
+        <Column gap={4}>
+          <Text style={t.label01}>{figures.btcPrice}</Text>
+          <Text style={{ ...t.label03, color: c.green }}>
+            + {figures.btcChangePercent} ({figures.btcChangeFiat})
+          </Text>
+        </Column>
+        <PriceChart isDrawn={isActive || !isAnimated} isAnimated={isAnimated} />
+        <Row gap={4}>
+          {['1d', '1w', '1m', '3m', '6m', '1y'].map(period => (
+            <Span
+              key={period}
+              flex="1"
+              display="flex"
+              justifyContent="center"
+              style={{
+                ...t.label03,
+                textTransform: 'uppercase',
+                paddingBlock: u(4),
+                borderRadius: u(4),
+                color: period === '1d' ? c.text : c.subdued,
+                background: period === '1d' ? c.component : 'transparent',
+              }}
+            >
+              {period}
+            </Span>
+          ))}
+        </Row>
+      </Column>
+    </>
+  );
+}
+
+/** pages/fund/fund.tsx in the full-page tab: page header, then the Onramper iframe. */
+function ExtFundPage() {
+  return (
+    <Div position="absolute" inset="0" style={{ background: c.bg }}>
+      <Row justify="space-between" style={{ height: u(80), paddingInline: u(32) }}>
+        <Icon size={24}>{glyph.arrowLeft}</Icon>
+        <Icon size={24}>{glyph.gear}</Icon>
+      </Row>
+      <Div style={{ width: u(500), margin: '0 auto', paddingTop: u(8) }}>
+        <OnramperWidget />
+      </Div>
+    </Div>
+  );
+}
+
+/* -------------------------------------------------------------------------------------------- */
+/* Mobile screens (light theme, 390 x 844)                                                        */
+/* -------------------------------------------------------------------------------------------- */
+
+const statusBarHeight = 54;
+
+/** features/account/components/account-header.tsx + header-actions.tsx */
+function PhoneHomeHeader() {
+  return (
+    <Row justify="space-between" style={{ height: u(64), paddingInline: u(16) }}>
+      <Row gap={12}>
+        <Span
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          style={{ width: u(40), height: u(40), borderRadius: u(14), background: c.component }}
+        >
+          <svg viewBox="0 0 24 24" style={{ width: u(22), height: u(22) }} fill="currentColor">
+            <path d="M6.9 3.14C5.8 2.9 5 3.83 5 4.75v2.24c0 .06-.03.15-.1.23a8.06 8.06 0 0 0-1.11 1.56c-.08.16-.21.22-.3.22h-.74C1.78 9 1 9.79 1 10.75v2.5c0 .97.78 1.75 1.75 1.75h.74c.09 0 .22.06.3.22.3.57.67 1.1 1.1 1.56.08.09.11.17.11.23v2.24c0 .96.78 1.75 1.75 1.75h2.5c.97 0 1.75-.79 1.75-1.75 0-.14.11-.25.25-.25h1.5c.14 0 .25.11.25.25 0 .96.78 1.75 1.75 1.75h2.5c.97 0 1.75-.79 1.75-1.75v-2.23c0-.06.03-.15.1-.23.33-.34.61-.71.86-1.11a2.75 2.75 0 0 0 3.44-4.15.75.75 0 1 0-1.17.94 1.25 1.25 0 0 1-1.62 1.85c.26-.73.4-1.51.4-2.32a7 7 0 0 0-7-7h-3.86A6.32 6.32 0 0 0 6.9 3.14ZM8.25 12a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5Z" />
+          </svg>
+        </Span>
+        <Text style={t.label01}>Savings</Text>
+      </Row>
+      <Row gap={16}>
+        <Icon size={24}>{glyph.eye}</Icon>
+        <Icon size={24}>{glyph.gear}</Icon>
+      </Row>
+    </Row>
+  );
+}
+
+const phoneTabs = ['Home', 'Activity', 'Browser'] as const;
+
+/** features/navigation/tab-layout.tsx: icon over label, hairline above. */
+function PhoneTabBar() {
+  return (
+    <Div
+      position="absolute"
+      display="flex"
+      justifyContent="space-between"
+      style={{
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: u(84),
+        paddingTop: u(12),
+        paddingInline: u(64),
+        background: c.bg,
+        borderTop: `1px solid ${c.border}`,
+      }}
+    >
+      {phoneTabs.map((tab, index) => (
+        <Span
+          key={tab}
+          display="flex"
+          flexDir="column"
+          alignItems="center"
+          style={{ gap: u(4), ...t.label03, color: index === 0 ? c.text : c.subdued }}
+        >
+          <Icon size={24}>
+            {index === 0 && (
+              <path
+                d="M13.26 1.74a2 2 0 0 0-2.52 0l-7 5.69A2 2 0 0 0 3 8.98V19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.98a2 2 0 0 0-.74-1.55l-7-5.69Z"
+                fill="currentColor"
+                stroke="none"
+              />
+            )}
+            {index === 1 && (
+              <path d="M2 12h3.27a1 1 0 0 0 .95-.7l2.54-8.05c.08-.23.4-.23.48 0l5.52 17.5c.08.23.4.23.48 0l2.54-8.05a1 1 0 0 1 .95-.7H22" />
+            )}
+            {index === 2 && (
+              <>
+                <circle cx="12" cy="12" r="9" />
+                <path d="m14.66 8.73-4.1 1.12a1 1 0 0 0-.7.7l-1.13 4.1c-.1.38.24.72.62.62l4.1-1.12a1 1 0 0 0 .7-.7l1.13-4.1c.1-.38-.24-.72-.62-.62Z" />
+              </>
+            )}
+          </Icon>
+          {tab}
+        </Span>
+      ))}
+    </Div>
+  );
+}
+
+/** features/token/components/token-cell.tsx */
+function PhoneTokenCell({ row }: { row: (typeof holdings)[number] }) {
+  return (
+    <Row gap={12} style={{ paddingInline: u(24), paddingBlock: u(12) }}>
+      <TokenIcon token={row.token} size={48} badge />
+      <Column style={{ flex: 1, minWidth: 0 }}>
+        <Text style={t.label02}>{row.name}</Text>
+        <Text style={{ ...t.caption01, lineHeight: u(16), color: c.subdued }}>{row.symbol}</Text>
+      </Column>
+      <Column align="flex-end" gap={2}>
+        <Text style={{ ...t.label02, lineHeight: u(16) }}>{row.fiat}</Text>
+        <Text style={{ ...t.caption01, color: c.subdued }}>{row.amount}</Text>
+      </Column>
+    </Row>
+  );
+}
+
+function PhoneHome() {
+  return (
+    <>
+      <PhoneHomeHeader />
+      {/* account-total-balance.tsx */}
+      <Column gap={4} style={{ padding: `${u(12)} ${u(24)} ${u(24)}` }}>
+        <LabelWithHint hint="question" style={t.label02}>
+          Total balance
+        </LabelWithHint>
+        <Text style={t.heading02}>{figures.total}</Text>
+      </Column>
+      {/* account-stacking.tsx: shown while STX is stacked */}
+      <Div style={{ paddingInline: u(24), paddingBottom: u(24) }}>
+        <Hairline color={c.component} style={{ marginBottom: u(12) }} />
+        <Column gap={4}>
+          <LabelWithHint hint="question" style={t.label02}>
+            Locked STX
+          </LabelWithHint>
+          <Text style={t.heading05}>{figures.lockedStx}</Text>
+        </Column>
+      </Div>
+      {/* account-actions.tsx: a scrolling row of lg pills */}
+      <Row gap={8} style={{ paddingInline: u(12), paddingBottom: u(24), overflow: 'hidden' }}>
+        {['Send', 'Receive', 'Buy', 'Sell', 'Swap'].map((label, index) => (
+          <Pill key={label} variant={index === 0 ? 'solid' : 'outline'} style={{ minWidth: u(86) }}>
+            {label}
+          </Pill>
+        ))}
+      </Row>
+      {/* asset-tabs.tsx */}
+      <Div display="flex" style={{ boxShadow: `inset 0 ${u(-2)} 0 ${c.border}` }}>
+        {['Tokens', 'Collectibles'].map((tab, index) => (
+          <Span
+            key={tab}
+            display="flex"
+            justifyContent="center"
+            style={{
+              width: u(104),
+              paddingBlock: u(16),
+              ...t.label01,
+              color: index === 0 ? c.text : c.subdued,
+              boxShadow: index === 0 ? `inset 0 ${u(-2)} 0 ${c.text}` : undefined,
+            }}
+          >
+            {tab}
+          </Span>
+        ))}
+      </Div>
+      {/* available-account-balance.tsx */}
+      <Row justify="space-between" style={{ padding: u(24) }}>
+        <Column gap={4}>
+          <LabelWithHint hint="question" style={t.label03}>
+            Available
+          </LabelWithHint>
+          <Text style={t.heading05}>{figures.available}</Text>
+        </Column>
+        <Icon size={22}>{glyph.sliders}</Icon>
+      </Row>
+      {holdings.map(row => (
+        <PhoneTokenCell key={row.token} row={row} />
+      ))}
+      <PhoneTabBar />
+    </>
+  );
+}
+
+/** Sheet header: back on the left, heading.05 title with the account name under it. */
+function PhoneSheetHeader({ title, subtitle }: { title: string; subtitle?: string }) {
+  return (
+    <Div
+      position="relative"
+      display="flex"
+      flexDir="column"
+      alignItems="center"
+      justifyContent="center"
+      style={{ height: u(64) }}
+    >
+      <Span position="absolute" style={{ left: u(16) }}>
+        <Icon size={24}>{glyph.chevronLeft}</Icon>
+      </Span>
+      <Text style={t.heading05}>{title}</Text>
+      {subtitle && <Text style={{ ...t.label03, color: c.subdued }}>{subtitle}</Text>}
+    </Div>
+  );
+}
+
+/** packages/ui numpad: 1–9, then . 0 and backspace. */
+function Numpad() {
+  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', 'back'];
+  return (
+    <Div display="grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+      {keys.map(key => (
+        <Span
+          key={key}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          style={{ height: u(56), ...t.heading05 }}
+        >
+          {key === 'back' ? <Icon size={24}>{glyph.backspace}</Icon> : key}
+        </Span>
+      ))}
+    </Div>
+  );
+}
+
+function PhoneSend() {
+  return (
+    <>
+      <PhoneSheetHeader title="Send" subtitle="Savings" />
+      <Column gap={12} style={{ paddingInline: u(24), paddingTop: u(8) }}>
+        <Div>
+          <Row
+            gap={12}
+            style={{
+              padding: `${u(12)} ${u(16)}`,
+              border: `1px solid ${c.border}`,
+              borderRadius: `${u(4)} ${u(4)} 0 0`,
+            }}
+          >
+            <TokenIcon token="btc" size={40} badge />
+            <Column style={{ flex: 1 }}>
+              <Text style={t.label02}>Bitcoin</Text>
+              <Text style={{ ...t.caption01, color: c.subdued }}>BTC</Text>
+            </Column>
+            <Column align="flex-end">
+              <Text style={t.label02}>$3,758.70</Text>
+              <Text style={{ ...t.caption01, color: c.subdued }}>0.034</Text>
+            </Column>
+          </Row>
+          <Div
+            style={{
+              padding: u(16),
+              border: `1px solid ${c.border}`,
+              borderTop: 'none',
+              borderRadius: `0 0 ${u(4)} ${u(4)}`,
+            }}
+          >
+            <Row justify="space-between">
+              <Text style={t.heading02}>0.005</Text>
+              <Text style={{ ...t.label02, textTransform: 'uppercase' }}>Max</Text>
+            </Row>
+            <Row gap={4} style={{ ...t.label02, color: c.subdued, marginTop: u(4) }}>
+              <Text>$552.75</Text>
+              <Icon size={14}>{glyph.switch}</Icon>
+            </Row>
+          </Div>
+        </Div>
+        <Row
+          justify="space-between"
+          style={{
+            height: u(56),
+            paddingInline: u(16),
+            border: `1px solid ${c.border}`,
+            borderRadius: u(4),
+          }}
+        >
+          <Text style={t.label02}>bc1q8c6f…u7x9h</Text>
+          <Icon size={22}>{glyph.qr}</Icon>
+        </Row>
+      </Column>
+      <Div style={{ paddingInline: u(24), marginTop: u(16) }}>
+        <Numpad />
+        <Pill variant="solid" style={{ marginTop: u(12) }}>
+          Review
+        </Pill>
+      </Div>
+    </>
+  );
+}
+
+function PhoneSwapCard({
+  amount,
+  fiat,
+  token,
+  symbol,
+  balance,
+  radius,
+}: {
+  amount: string;
+  fiat: string;
+  token: Token;
+  symbol: string;
+  balance: string;
+  radius: string;
+}) {
+  return (
+    <Row
+      justify="space-between"
+      align="flex-start"
+      style={{ padding: u(16), border: `1px solid ${c.borderT}`, borderRadius: radius }}
+    >
+      <Column gap={4}>
+        <Text style={{ fontFamily: 'Marche', fontSize: u(24), lineHeight: u(32) }}>{amount}</Text>
+        <Text style={{ ...t.label03, color: c.subdued }}>{fiat}</Text>
+      </Column>
+      <Column gap={8} align="flex-end">
+        <AssetChip token={token} symbol={symbol} />
+        <Text style={{ ...t.label03, color: c.subdued }}>{balance}</Text>
+      </Column>
+    </Row>
+  );
+}
+
+function PhoneSwap() {
+  return (
+    <>
+      <PhoneSheetHeader title="Swap" />
+      <Column gap={12} style={{ paddingInline: u(24), paddingTop: u(8) }}>
+        <Div position="relative">
+          <PhoneSwapCard
+            amount="1,000"
+            fiat="$436.00"
+            token="stx"
+            symbol="STX"
+            balance="3,449.3"
+            radius={`${u(4)} ${u(4)} 0 0`}
+          />
+          <PhoneSwapCard
+            amount="0.00394"
+            fiat="$435.56"
+            token="sbtc"
+            symbol="sBTC"
+            balance="0.0204"
+            radius={`0 0 ${u(4)} ${u(4)}`}
+          />
+          <Span
+            position="absolute"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            borderRadius="50%"
+            style={{
+              left: '50%',
+              top: '50%',
+              width: u(32),
+              height: u(32),
+              transform: 'translate(-50%, -50%)',
+              background: c.bg,
+              border: `1px solid ${c.borderT}`,
+            }}
+          >
+            <Icon size={16}>{glyph.flip}</Icon>
+          </Span>
+        </Div>
+        <Column>
+          <Row justify="space-between" style={{ height: u(40), ...t.label03 }}>
+            <Text style={{ color: c.subdued }}>Rate</Text>
+            <Text>1 STX ≈ 0.0000039 sBTC</Text>
+          </Row>
+          <Hairline color={c.borderT} />
+          <Row justify="space-between" style={{ height: u(40), ...t.label03 }}>
+            <Text style={{ color: c.subdued }}>Estimated fees</Text>
+            <Text>$0.28</Text>
+          </Row>
+        </Column>
+        <Row gap={8}>
+          {['25%', '50%', '75%', 'MAX'].map(label => (
+            <Pill key={label} height={32} px={12} style={{ flex: 1 }}>
+              {label}
+            </Pill>
+          ))}
+        </Row>
+      </Column>
+      <Div style={{ paddingInline: u(24), marginTop: u(4) }}>
+        <Numpad />
+        <Pill variant="solid" style={{ marginTop: u(8) }}>
+          Review
+        </Pill>
+      </Div>
+    </>
+  );
+}
+
+/** A sheet over home, under the overlay; Buy is full height, descriptions hug their content. */
+function PhoneSheet({ children, top }: { children: ReactNode; top?: number }) {
+  return (
+    <>
+      <Div position="absolute" inset="0" style={{ background: c.overlay }} />
+      <Div
+        position="absolute"
+        overflow="hidden"
+        style={{
+          left: 0,
+          right: 0,
+          bottom: 0,
+          top: top === undefined ? undefined : u(top),
+          background: c.bg,
+          borderRadius: `${u(28)} ${u(28)} 0 0`,
+        }}
+      >
+        <Div
+          style={{
+            width: u(36),
+            height: u(5),
+            borderRadius: u(3),
+            background: c.border,
+            margin: `${u(8)} auto 0`,
+          }}
+        />
+        {children}
+      </Div>
+    </>
+  );
+}
+
+/** features/ramp/ramp-sheet.tsx: the Onramper widget in a full-height sheet. */
+function PhoneBuy() {
+  return (
+    <>
+      <PhoneHome />
+      <PhoneSheet top={statusBarHeight + 6}>
+        <Div style={{ padding: u(8) }}>
+          <OnramperWidget />
+        </Div>
+      </PhoneSheet>
+    </>
+  );
+}
+
+/** EARN on mobile: home with the Locked STX description sheet (no staking screen on mobile). */
+function PhoneEarn() {
+  return (
+    <>
+      <PhoneHome />
+      {/* Sized to the stage's crop: the phone's lower third sits below the fold of the stage */}
+      <PhoneSheet top={430}>
+        <Column gap={20} style={{ padding: `${u(20)} ${u(24)}` }}>
+          <Text style={t.heading05}>Locked</Text>
+          <Span style={t.body01}>
+            Amount you’ve committed to stacking. You won’t be able to move or spend it until the
+            stacking period ends.
+          </Span>
+        </Column>
+      </PhoneSheet>
+    </>
+  );
+}
+
+function DetailsCard({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <Column gap={8} style={{ padding: `${u(12)} ${u(24)}`, background: c.bg }}>
+      <Text style={t.label03}>{title}</Text>
+      {children}
+    </Column>
+  );
+}
+
+function SummaryRow({ label, value }: { label: string; value: ReactNode }) {
+  return (
+    <Row justify="space-between" style={{ height: u(32) }}>
+      <Text style={{ ...t.label02, color: c.subdued }}>{label}</Text>
+      <Span style={t.body02}>{value}</Span>
+    </Row>
+  );
+}
+
+/** features/token/token.tsx: Bitcoin details; price and 24 Hour Change, no chart on mobile. */
+function PhoneGrow() {
+  return (
+    <>
+      <Div
+        position="relative"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        style={{ height: u(64) }}
+      >
+        <Span position="absolute" style={{ left: u(16) }}>
+          <Icon size={24}>{glyph.chevronLeft}</Icon>
+        </Span>
+        <Text style={t.heading05}>Bitcoin</Text>
+      </Div>
+      <Column gap={12} align="center" style={{ padding: u(24), paddingTop: u(8) }}>
+        <TokenIcon token="btc" size={48} badge />
+        <Column align="center">
+          <Text style={t.heading03}>
+            0.049 <Span style={{ color: c.subdued }}>BTC</Span>
+          </Text>
+          <Text style={t.label01}>$5,416.95</Text>
+        </Column>
+        <Row gap={6}>
+          {['Send', 'Receive', 'Buy', 'Sell', 'Swap'].map((label, index) => (
+            <Pill key={label} variant={index === 0 ? 'solid' : 'outline'} height={36} px={12}>
+              {label}
+            </Pill>
+          ))}
+        </Row>
+      </Column>
+      <Column gap={4} style={{ background: c.bg2, paddingTop: u(4) }}>
+        <DetailsCard title="Token Details">
+          <Column>
+            <SummaryRow label="Name" value="Bitcoin (BTC)" />
+            <SummaryRow label="Price" value={figures.btcPrice} />
+            <SummaryRow
+              label="24 Hour Change"
+              value={
+                <Row gap={4} style={{ ...t.label02, color: c.green }}>
+                  <svg viewBox="0 0 8 8" style={{ width: u(8), height: u(8) }} fill="currentColor">
+                    <path d="M4 1 7.5 7h-7Z" />
+                  </svg>
+                  <Text>
+                    {figures.btcChangePercent} {figures.btcChangeFiat}
+                  </Text>
+                </Row>
+              }
+            />
+            <SummaryRow label="Layer" value="Layer 1" />
+          </Column>
+        </DetailsCard>
+      </Column>
+      <PhoneTabBar />
+    </>
+  );
+}
+
+/* -------------------------------------------------------------------------------------------- */
+/* Screen stacks                                                                                 */
+/* -------------------------------------------------------------------------------------------- */
+
 const views: HeroView[] = ['home', 'buy', 'send', 'swap', 'earn', 'grow'];
 
 /** Out quickly, then in, so two screens never read on top of each other. */
@@ -941,28 +1562,29 @@ function screenTransition(isActive: boolean) {
   return `opacity ${viewTransitionMs - delay}ms ${ease} ${delay}ms, transform ${viewTransitionMs}ms ${ease} ${delay}ms, visibility 0ms linear 0ms`;
 }
 
-/** Every screen, stacked; the active one fades and rises in, the rest fade out. */
-function Screens({
-  device,
+function ScreenStack({
+  screens,
   view,
   isAnimated,
   style,
 }: {
-  device: Device;
+  screens: Partial<Record<HeroView, (props: ScreenProps) => ReactNode>>;
   view: HeroView;
   isAnimated: boolean;
-  style: CSSProperties;
+  style?: CSSProperties;
 }) {
   return (
     <>
       {views.map(key => {
         const Screen = screens[key];
+        if (!Screen) return null;
         const isActive = key === view;
         return (
-          <styled.div
+          <Div
             key={key}
             position="absolute"
             inset="0"
+            overflow="hidden"
             style={{
               ...style,
               opacity: isActive ? 1 : 0,
@@ -971,8 +1593,8 @@ function Screens({
               transition: isAnimated ? screenTransition(isActive) : undefined,
             }}
           >
-            <Screen device={device} isActive={isActive} isAnimated={isAnimated} />
-          </styled.div>
+            <Screen isActive={isActive} isAnimated={isAnimated} />
+          </Div>
         );
       })}
     </>
@@ -988,118 +1610,228 @@ interface DeviceProps {
   isAnimated: boolean;
 }
 
-function deviceRoot(theme: DeviceTheme, width: number): DeviceStyle {
+function deviceRoot(theme: Theme, width: number): ThemeStyle {
   return {
-    ...palette[theme],
+    ...themes[theme],
     '--hero-unit': `calc(100cqw / ${width})`,
-    color: 'var(--hero-ink)',
-    fontFeatureSettings: '"tnum"',
+    color: 'var(--ink-text)',
+    fontFamily: 'Diatype',
+    fontVariantLigatures: 'none',
     textAlign: 'left',
   };
 }
 
-const extensionWidth = 1214;
+const windowWidth = 860;
+const windowHeight = 700;
+const toolbarHeight = 46;
+const popupWidth = 390;
+const popupHeight = 600;
 
-/** The extension popup expanded in a dark browser window, as in the old hero image. */
-export function HeroExtension({ view, isAnimated }: DeviceProps) {
+const popupScreens: Partial<Record<HeroView, (props: ScreenProps) => ReactNode>> = {
+  home: ExtHome,
+  send: ExtSend,
+  swap: ExtSwap,
+  earn: ExtEarn,
+  grow: ExtGrow,
+};
+
+/** A web page behind the popup, kept quiet so the extension reads first. */
+function PageBackdrop() {
+  function block(style: CSSProperties) {
+    return <Div style={{ background: '#2E2A28', borderRadius: u(10), ...style }} />;
+  }
   return (
-    <styled.div width="100%" style={{ containerType: 'inline-size' }}>
-      <styled.div
+    <Div position="absolute" inset="0" style={{ background: '#1F1C1A', padding: u(40) }}>
+      <Row justify="space-between">
+        {block({ width: u(120), height: u(22) })}
+        <Row gap={20}>
+          {block({ width: u(70), height: u(14) })}
+          {block({ width: u(70), height: u(14) })}
+          {block({ width: u(110), height: u(34), borderRadius: u(999) })}
+        </Row>
+      </Row>
+      {block({ width: u(420), height: u(40), marginTop: u(80) })}
+      {block({ width: u(300), height: u(40), marginTop: u(14) })}
+      {block({ width: u(360), height: u(14), marginTop: u(28) })}
+      <Row gap={20} style={{ marginTop: u(60) }}>
+        {block({ flex: 1, height: u(200) })}
+        {block({ flex: 1, height: u(200) })}
+        {block({ flex: 1, height: u(200) })}
+      </Row>
+    </Div>
+  );
+}
+
+/** The extension in a browser window: its toolbar popup, or for Buy the full-page Fund tab. */
+export function HeroExtension({ view, isAnimated }: DeviceProps) {
+  const isFullPage = view === 'buy';
+  function fade(isShown: boolean, extra = ''): CSSProperties {
+    return {
+      opacity: isShown ? 1 : 0,
+      visibility: isShown ? 'visible' : 'hidden',
+      transition: isAnimated
+        ? `opacity ${viewTransitionMs}ms ${ease}, visibility 0ms linear ${isShown ? 0 : viewTransitionMs}ms${extra}`
+        : undefined,
+    };
+  }
+  return (
+    <Div width="100%" style={{ containerType: 'inline-size' }}>
+      <Div
         position="relative"
         overflow="hidden"
         style={{
-          ...deviceRoot('dark', extensionWidth),
-          height: u(1000),
-          background: 'var(--hero-bg)',
-          borderRadius: `${u(18)} ${u(18)} 0 0`,
-          boxShadow: `0 0 0 1px rgba(255, 255, 255, 0.06) inset`,
+          ...deviceRoot('dark', windowWidth),
+          height: u(windowHeight),
+          background: '#1F1C1A',
+          borderRadius: `${u(14)} ${u(14)} 0 0`,
+          boxShadow: '0 0 0 1px rgba(255, 255, 255, 0.08) inset',
         }}
       >
-        {/* Window bar: traffic lights, address bar, extension button */}
-        <styled.div
+        {/* Toolbar: traffic lights, address bar, extension buttons */}
+        <Div
           position="relative"
           display="flex"
           alignItems="center"
+          zIndex="2"
           style={{
-            height: u(34),
-            paddingInline: u(14),
-            gap: u(7),
-            background: '#1A1817',
-            borderBottom: '1px solid #2A2725',
+            height: u(toolbarHeight),
+            paddingInline: u(16),
+            gap: u(8),
+            background: '#292623',
+            borderBottom: '1px solid #36322F',
           }}
         >
           {['#FF5F57', '#FEBC2E', '#28C840'].map(color => (
-            <styled.span
+            <Span
               key={color}
               borderRadius="50%"
-              style={{ width: u(11), height: u(11), background: color }}
+              style={{ width: u(12), height: u(12), background: color }}
             />
           ))}
-          <styled.span
-            position="absolute"
-            borderRadius="round"
+          <Row
+            gap={8}
             style={{
-              left: u(277),
-              width: u(690),
-              top: u(10),
-              height: u(15),
-              background: '#2E2B29',
+              marginLeft: u(60),
+              flex: 1,
+              height: u(28),
+              borderRadius: u(999),
+              background: '#1A1817',
+              paddingInline: u(14),
+              color: '#9E9996',
+              ...t.label03,
+              fontWeight: 400,
             }}
-          />
-          <styled.span
-            position="absolute"
+          >
+            <Span style={{ ...fade(isFullPage), display: 'flex', alignItems: 'center', gap: u(8) }}>
+              <styled.img
+                src="/icons/leather.webp"
+                alt=""
+                style={{ width: u(14), height: u(14), borderRadius: u(3) }}
+              />
+              Leather
+            </Span>
+          </Row>
+          <Span
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
             style={{
-              right: u(12),
-              top: u(10),
-              width: u(14),
-              height: u(14),
-              borderRadius: u(3),
-              background: '#E9E5E1',
+              width: u(30),
+              height: u(30),
+              marginLeft: u(16),
+              borderRadius: u(8),
+              background: isFullPage ? 'transparent' : '#3A3633',
+              transition: isAnimated ? `background ${viewTransitionMs}ms ${ease}` : undefined,
             }}
+          >
+            <styled.img
+              src="/icons/leather.webp"
+              alt=""
+              style={{ width: u(18), height: u(18), borderRadius: u(4) }}
+            />
+          </Span>
+          <Span borderRadius="50%" style={{ width: u(22), height: u(22), background: '#46413E' }} />
+        </Div>
+
+        <Div position="absolute" inset="0" style={{ top: u(toolbarHeight) }}>
+          <Div position="absolute" inset="0" style={fade(!isFullPage)}>
+            <PageBackdrop />
+          </Div>
+          <Div position="absolute" inset="0" style={fade(isFullPage)}>
+            <ExtFundPage />
+          </Div>
+        </Div>
+
+        {/* The toolbar popup; Buy hands off to the full-page tab and closes it */}
+        <Div
+          position="absolute"
+          overflow="hidden"
+          zIndex="3"
+          style={{
+            right: u(46),
+            top: u(toolbarHeight - 4),
+            width: u(popupWidth),
+            height: u(popupHeight),
+            background: c.bg,
+            borderRadius: u(10),
+            border: `1px solid ${c.border}`,
+            boxShadow: `0 ${u(24)} ${u(60)} rgba(0, 0, 0, 0.55)`,
+            transformOrigin: '85% 0',
+            transform: isFullPage ? 'scale(0.96)' : 'none',
+            ...fade(!isFullPage, isAnimated ? `, transform ${viewTransitionMs}ms ${ease}` : ''),
+          }}
+        >
+          <ScreenStack
+            screens={popupScreens}
+            view={isFullPage ? 'home' : view}
+            isAnimated={isAnimated}
           />
-        </styled.div>
-        <Screens
-          device="extension"
-          view={view}
-          isAnimated={isAnimated}
-          style={{ top: u(34), paddingTop: u(52), paddingInline: u(281) }}
-        />
-      </styled.div>
-    </styled.div>
+        </Div>
+      </Div>
+    </Div>
   );
 }
 
 const phoneWidth = 412;
-const phoneHeight = 846;
-const phoneBezel = 17;
-const phoneTabs = ['Home', 'Activity', 'Browse'] as const;
+const phoneHeight = 866;
+const phoneBezel = 11;
 
-/** The mobile app in a phone frame: status bar, Dynamic Island, and the tab bar on home. */
+const phoneScreens: Record<HeroView, (props: ScreenProps) => ReactNode> = {
+  home: PhoneHome,
+  buy: PhoneBuy,
+  send: PhoneSend,
+  swap: PhoneSwap,
+  earn: PhoneEarn,
+  grow: PhoneGrow,
+};
+
+/** The mobile app in a phone frame: status bar and Dynamic Island over the screens. */
 export function HeroPhone({ view, isAnimated }: DeviceProps) {
-  const showTabBar = view === 'home' || view === 'grow';
   return (
-    <styled.div width="100%" style={{ containerType: 'inline-size' }}>
-      <styled.div
+    <Div width="100%" style={{ containerType: 'inline-size' }}>
+      <Div
         position="relative"
         style={{
           ...deviceRoot('light', phoneWidth),
           height: u(phoneHeight),
-          borderRadius: u(66),
+          borderRadius: u(64),
           background: '#0D0C0B',
           boxShadow: `0 0 0 ${u(2.5)} #3B3836 inset`,
         }}
       >
-        <styled.div
+        <Div
           position="absolute"
           overflow="hidden"
-          style={{
-            inset: u(phoneBezel),
-            borderRadius: u(50),
-            background: 'var(--hero-bg)',
-          }}
+          style={{ inset: u(phoneBezel), borderRadius: u(54), background: c.bg }}
         >
+          <ScreenStack
+            screens={phoneScreens}
+            view={view}
+            isAnimated={isAnimated}
+            style={{ paddingTop: u(statusBarHeight) }}
+          />
           {/* Status bar */}
-          <styled.div
+          <Div
             position="absolute"
             display="flex"
             alignItems="center"
@@ -1109,10 +1841,11 @@ export function HeroPhone({ view, isAnimated }: DeviceProps) {
               top: 0,
               left: 0,
               right: 0,
-              height: u(54),
-              paddingInline: u(32),
+              height: u(statusBarHeight),
+              paddingInline: u(36),
               fontSize: u(16),
               fontWeight: 600,
+              color: '#12100F',
             }}
           >
             9:41
@@ -1122,9 +1855,6 @@ export function HeroPhone({ view, isAnimated }: DeviceProps) {
                 <rect x="5" y="5.5" width="3" height="6.5" rx="1" />
                 <rect x="10" y="3" width="3" height="9" rx="1" />
                 <rect x="15" y="0" width="3" height="12" rx="1" />
-              </svg>
-              <svg viewBox="0 0 16 12" style={{ width: u(16), height: u(12) }} fill="currentColor">
-                <path d="M8 2.2c2.2 0 4.2.85 5.7 2.25l1.2-1.25A9.9 9.9 0 0 0 8 .4 9.9 9.9 0 0 0 1.1 3.2l1.2 1.25A8.2 8.2 0 0 1 8 2.2Zm0 3.6c1.2 0 2.3.45 3.2 1.2l1.2-1.25A6.4 6.4 0 0 0 8 4a6.4 6.4 0 0 0-4.4 1.75L4.8 7c.9-.75 2-1.2 3.2-1.2Zm0 3.6c-.4 0-.8.15-1.1.4L8 11l1.1-1.2c-.3-.25-.7-.4-1.1-.4Z" />
               </svg>
               <svg viewBox="0 0 27 13" style={{ width: u(27), height: u(13) }}>
                 <rect
@@ -1138,97 +1868,33 @@ export function HeroPhone({ view, isAnimated }: DeviceProps) {
                   opacity="0.4"
                 />
                 <rect x="2" y="2" width="20" height="9" rx="2" fill="currentColor" />
-                <path
-                  d="M25 4.5v4c.8-.3 1.3-1.1 1.3-2s-.5-1.7-1.3-2Z"
-                  fill="currentColor"
-                  opacity="0.4"
-                />
               </svg>
             </Row>
-          </styled.div>
-          {/* Dynamic Island */}
-          <styled.span
+          </Div>
+          <Span
             position="absolute"
             zIndex="1"
             borderRadius="round"
             style={{
-              top: u(10),
+              top: u(11),
               left: '50%',
-              width: u(117),
-              height: u(34),
+              width: u(120),
+              height: u(35),
               transform: 'translateX(-50%)',
               background: '#0D0C0B',
             }}
           />
-          <Screens
-            device="phone"
-            view={view}
-            isAnimated={isAnimated}
-            style={{ paddingTop: u(70), paddingInline: u(22) }}
-          />
-          {/* Tab bar on the top-level screens; flows open as sheets above it */}
-          <styled.div
-            position="absolute"
-            display="flex"
-            justifyContent="space-around"
-            zIndex="1"
-            style={{
-              left: 0,
-              right: 0,
-              bottom: 0,
-              height: u(78),
-              paddingTop: u(10),
-              paddingInline: u(28),
-              background: 'var(--hero-bg)',
-              borderTop: '1px solid var(--hero-divider)',
-              opacity: showTabBar ? 1 : 0,
-              transform: showTabBar ? 'none' : `translateY(${u(20)})`,
-              transition: isAnimated
-                ? `opacity ${viewTransitionMs}ms ${ease}, transform ${viewTransitionMs}ms ${ease}`
-                : undefined,
-            }}
-          >
-            {phoneTabs.map((tab, index) => (
-              <styled.span
-                key={tab}
-                display="flex"
-                flexDir="column"
-                alignItems="center"
-                style={{ gap: u(4), fontSize: u(13), fontWeight: 500 }}
-              >
-                <Icon size={22}>
-                  {index === 0 && (
-                    <path
-                      d="M13.26 1.74a2 2 0 0 0-2.52 0l-7 5.69A2 2 0 0 0 3 8.98V19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.98a2 2 0 0 0-.74-1.55l-7-5.69Z"
-                      fill="currentColor"
-                      stroke="none"
-                    />
-                  )}
-                  {index === 1 && (
-                    <path d="M2 12h3.27a1 1 0 0 0 .95-.7l2.54-8.05c.08-.23.4-.23.48 0l5.52 17.5c.08.23.4.23.48 0l2.54-8.05a1 1 0 0 1 .95-.7H22" />
-                  )}
-                  {index === 2 && (
-                    <>
-                      <circle cx="12" cy="12" r="9" />
-                      <path d="m14.66 8.73-4.1 1.12a1 1 0 0 0-.7.7l-1.13 4.1c-.1.38.24.72.62.62l4.1-1.12a1 1 0 0 0 .7-.7l1.13-4.1c.1-.38-.24-.72-.62-.62Z" />
-                    </>
-                  )}
-                </Icon>
-                {tab}
-              </styled.span>
-            ))}
-          </styled.div>
-        </styled.div>
-      </styled.div>
-    </styled.div>
+        </Div>
+      </Div>
+    </Div>
   );
 }
 
 export const heroViewDescriptions: Record<HeroView, string> = {
-  home: 'The Leather browser extension and mobile app showing a wallet with a total balance of $7,517.49 and Stacks, Bitcoin and sBTC holdings',
-  buy: 'Leather’s Buy screen: $250 of bitcoin, with offers from MoonPay and Coinbase',
-  send: 'Leather’s Send screen: 0.005 BTC to a Bitcoin address, ready to review',
-  swap: 'Leather’s Swap screen: 1,000 STX to sBTC, with a quote from Bitflow',
-  earn: 'Leather’s Bitcoin Staking screen: 0.015 BTC in an active protocol bond, cycle 5 of 12',
-  grow: 'Leather’s portfolio: a total balance of $7,517.49 with its value over the past year',
+  home: 'The Leather browser extension and mobile app on the wallet home: a total balance of $10,920.06 across Bitcoin, Stacks and sBTC',
+  buy: 'Buying $250 of bitcoin through the Onramper widget, in the extension’s full-page tab and in the mobile app',
+  send: 'The Send form in the extension and the mobile app: 0.005 BTC to a Bitcoin address',
+  swap: 'The Swap form in the extension and the mobile app: 1,000 STX to sBTC',
+  earn: 'The extension’s All balances page showing 0.015 BTC in an active bond, and the mobile app’s Locked STX explanation',
+  grow: 'Bitcoin token details: the extension’s price chart for the past day, and the mobile app’s price and 24-hour change',
 };
