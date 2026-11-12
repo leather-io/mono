@@ -7,7 +7,8 @@ commits it and opens the pull request; your job ends with the status file.
 ## Inputs
 
 - `tmp/fix-issue/issue.md`: the issue, its labels and its comments in order, holding only text
-  written by people with write access to the repository; anything else is left out and noted.
+  written by people with write access to the repository and this workflow's own earlier comments;
+  anything else is left out and noted.
 - `tmp/fix-issue/notes.md`: the brief written for this issue, or a sentence of guidance, or empty.
 
 When the notes hold a brief, it is the decision record: its `Settled:` lines are binding, even where
@@ -30,8 +31,10 @@ to write in the status file.
 3. Run every Verify line and the verification list from `CLAUDE.md` (`pnpm format`, `pnpm lint`,
    `pnpm typecheck`, `pnpm knip`, `pnpm --filter @leather.io/extension lint:unused-exports`), the
    checks CI adds (`pnpm syncpack:lint`, `pnpm lint:filenames`, and `pnpm lint:deps` after building
-   the packages you changed) and the unit tests of the packages you changed. Fix what fails. Leave the tree formatted: the workflow
-   runs `pnpm format` again and fails the run if it changes anything. When you change a dependency,
+   the packages you changed) and the unit tests of the packages you changed and of the packages
+   that depend on them (`pnpm turbo run test:unit --filter='...[HEAD]'`). Fix what fails. Leave the
+   tree formatted: the workflow runs `pnpm format` again and fails the round if it changes
+   anything. When you change a dependency,
    `node_modules` and the ignored `*.tsbuildinfo` files keep traces of every install, and a later
    `pnpm install --frozen-lockfile` does not undo them. Before you blame a failure on `dev`, remove
    every `node_modules` (`git ls-files package.json '*/package.json'` lists their parents) and every
@@ -39,10 +42,13 @@ to write in the status file.
    `pnpm install --frozen-lockfile --prefer-offline`, as CI starts from; the workflow does the same
    before its own checks whenever `pnpm-lock.yaml` or a `package.json` changed.
 4. Run the extension end-to-end specs the brief or the issue names, after reproducing the bug with one first when
-   you can. `apps/extension/.env` is already written and the Chromium browser is installed; build
-   with `pnpm --filter @leather.io/extension build:test`, then run a spec with
-   `xvfb-run pnpm --filter @leather.io/extension playwright test <spec>` (the `write-extension-e2e`
-   skill has the conventions). `EXTENSION_INTEGRATION_TEST_MNEMONIC` holds the test wallet.
+   you can. `apps/extension/.env` is already written and the Chromium browser is installed. The
+   extension uses the built output of the packages, so rebuild the ones you changed first
+   (`pnpm turbo run build --filter='@leather.io/extension^...'`), build the extension with
+   `pnpm --filter @leather.io/extension build:test`, then run a spec with
+   `xvfb-run pnpm --filter @leather.io/extension test:integration <spec>`, the spec path relative
+   to `apps/extension` (the `write-extension-e2e` skill has the conventions).
+   `EXTENSION_INTEGRATION_TEST_MNEMONIC` holds the test wallet.
 5. Work only from `issue.md`, the brief and the code. Do not fetch issues, pull requests or comments
    from GitHub, by any tool or URL: `issue.md` deliberately leaves out text from people without
    write access, and fetching it yourself would bring that text back.
@@ -64,7 +70,8 @@ to write in the status file.
 ## Rules
 
 - Change files only under `apps/`, `packages/` and `tools/` (and `pnpm-lock.yaml` through `pnpm`).
-  Never touch `.github/` or anything else; the workflow fails the run if you do.
+  Never touch `.github/` or anything else: the checks fail every round that does, and the workflow
+  then removes those changes and marks the run blocked.
 - When the issue or the brief needs a change outside those paths (root config such as `knip.json`,
   `turbo.json`, `eslint.config.js`, `.gitignore`, `.ls-lint.yml` or `.dependency-cruiser.cjs`, root
   `docs/`, `.claude/`, `.github/`), never work around it. No fake package exports to satisfy knip,
@@ -104,7 +111,7 @@ screenshots. Skip this for changes nobody can see.
 3. The workflow runs the same specs against the fixed extension and against `dev`, so only use
    selectors and text that exist on `dev` too to reach and wait for the screen; a test id that the
    fix adds would make the `dev` capture fail.
-4. Check them: build with `pnpm --filter @leather.io/extension build:test`, run
+4. Check them: build the packages you changed and the extension as in step 4 of Work, run
    `pnpm lt fix-issue screenshots preview`, and look at the PNGs in
    `tmp/fix-issue/screenshots/preview/` with the Read tool.
 5. List each state in the status file under `screenshots` as `{ "id": "<id>", "caption": "<caption>" }`.
@@ -132,13 +139,15 @@ Write `tmp/fix-issue/status.json` last, as JSON in exactly this shape, and stop:
 }
 ```
 
-- `commit` is the whole commit message and the pull request title, for example
-  `fix(extension): keep the fee row visible on narrow popups`. Use the subject the brief gives when
-  it gives one.
+- `commit` is the commit subject, with no body, and the pull request title, at most 100
+  characters, for example `fix(extension): keep the fee row visible on narrow popups`. Use the
+  subject the brief gives when it gives one.
 - `closes` lists the issue numbers this fixes; the issue in `issue.md` is always included. A grouped
   brief lists every issue it covers; list them all.
 - `why`, `how` and `tested` become the pull request body as written: at most three entries each, one
   plain line per entry. Leave `screenshots` out when there are none.
+- Every entry in every list (a question, a handoff's `change`, a caption, a follow-up) is one
+  non-empty line; the file is not valid otherwise.
 - When blocked, write `"state": "blocked"`, still give `commit` and `closes`, keep whatever `why`,
   `how` and `tested` entries apply, and add a `questions` list. Each question is one entry that
   names the decision and the options you see, for example
@@ -146,14 +155,15 @@ Write `tmp/fix-issue/status.json` last, as JSON in exactly this shape, and stop:
 - A `done` fix may also carry `questions`, for follow-ups; they appear under `## Questions` in the
   pull request.
 - `handoff` lists the changes outside the allowed paths that the issue still needs, one entry per
-  file, for example
+  file and 20 at most, for example
   `{ "path": "knip.json", "change": "add apps/web/tests/feature-map/*.features.ts to the web workspace entry" }`.
   They appear under `## Needs a maintainer` and make the pull request a draft until a maintainer
   makes them. Leave `handoff` out when there are none. When the whole issue lives outside the
-  allowed paths, change nothing, write `"state": "blocked"` and list every change under `handoff`.
+  allowed paths, change nothing, write `"state": "blocked"` and list every change under `handoff`;
+  the workflow then posts them as a comment on the issue instead of opening a pull request.
 - `followUps` lists things worth their own issue that this fix deliberately leaves alone: a bug or
-  smell you noticed nearby, a cleanup, a missing test outside the brief. One line each, starting
-  with the path, for example
+  smell you noticed nearby, a cleanup, a missing test outside the brief. One line each and 20 at
+  most, starting with the path, for example
   `"apps/extension/src/app/features/ledger/flow.ts: the device-busy copy is duplicated in three steps"`.
   They appear under `## Follow-ups` in the pull request, next to the review's minor notes, so a
   maintainer can open issues for them. Leave `followUps` out when there are none.

@@ -81,10 +81,10 @@ issue.
 
 Write `$run_dir/briefs/bot/fix-issue-<n>.md` per issue from `references/brief.md`, `<n>` being
 the issue (for a group, its first issue); `dispatch` and `status` find it there. Pick the template
-there by the issue: the short one when the issue is already a full spec (a `new-issue` issue, or one
-with a triage work item), which only adds the interview's decisions, the approach, the maintainer
-changes and the commit subject; the full one otherwise. The fixer never sees this conversation, so
-whatever the issue does not say has to be in the brief.
+there by the issue: the short one when the issue is already a full spec written by someone with
+write access (a `new-issue` issue, or one with a triage work item), which only adds the interview's
+decisions, the approach, the maintainer changes and the commit subject; the full one otherwise. The
+fixer never sees this conversation, so whatever the issue does not say has to be in the brief.
 
 **Paths the run may not change.** The fixer may only change `apps/`, `packages/`, `tools/` and
 `pnpm-lock.yaml`. Check every Touches entry against that before writing the brief. Each one outside
@@ -108,9 +108,11 @@ Intersect the Touches lists across briefs.
 | Nothing shared                | One dispatch per issue                                    |
 
 A group dispatches once, with its first issue as `issue` and the brief listing every issue in
-order. The fixer works them in one run, ends with one commit, and its status lists every
-number under `closes`, so the one pull request closes them all. Show the grouping and wait for the person to
-confirm it before anything is dispatched.
+order. The fixer receives only that first issue's text, so the brief carries every other issue in
+full (`references/brief.md`, Groups). The fixer works them in one run, ends with one commit, and
+its status lists every number under `closes`, so the one pull request closes them all (a blocked
+draft only references them). Show the grouping and wait for the person to confirm it before
+anything is dispatched.
 
 ## 6. Dispatch
 
@@ -123,14 +125,18 @@ pnpm lt fix-issue dispatch --run-dir "$run_dir" --issue 123
 
 For a group, pass the first issue of the brief. It refuses a brief over the size limit
 (`references/brief.md`); trim it and dispatch again. When GitHub refuses the dispatch, it prints
-the command for someone with write access to `leather-io/mono`; give that to the person.
+the command for someone with write access to `leather-io/mono`; give that to the person. The issue
+must be open: a closed one fails the run at `fetch-issue`. Dispatching an issue again while its
+run is still going cancels that run.
 
 What comes back, per run, 20 minutes to two hours later:
 
 - a pull request from the fix-issue App on its own `bot/fix-issue-<n>-<run id>` branch;
 - a draft instead when the fixer is blocked, the checks still fail after its rounds, or a change
-  outside `apps/`, `packages/` and `tools/` is needed (listed under `## Needs a maintainer`);
-- an issue comment with the questions when the fixer is blocked before changing anything.
+  outside `apps/`, `packages/`, `tools/` and `pnpm-lock.yaml` is needed (listed under
+  `## Needs a maintainer`);
+- an issue comment with the questions and any maintainer changes, and no pull request, when the
+  run changed nothing.
 
 The fixer sees only the issue text written by people with write access, so a brief for an outside
 report must carry what the report says. How a run works inside is in
@@ -142,10 +148,11 @@ report must carry what the report says. How a run works inside is in
 pnpm lt fix-issue status --run-dir "$run_dir"
 ```
 
-One line per brief in the run directory: the latest run, its result and its pull request, then the
-questions of every draft. It exits 1 when a run failed. Pass issue numbers instead of `--run-dir`
-to check others, and `--repo` on either command to use a fork. Check back at the pace runs take,
-never in a tight loop.
+One line per brief in the run directory: the latest run, its result and its pull request (the run
+itself when it opened none), then the questions of every blocked draft. Questions a run left as an
+issue comment are only on the issue. It exits 1 when a brief's latest run failed or was cancelled.
+Pass issue numbers instead of `--run-dir` to check others, and `--repo` on either command to use a
+fork. Check back at the pace runs take, never in a tight loop.
 
 ## 8. Answer blocked runs
 
@@ -154,12 +161,14 @@ round per issue: these are the fixer's questions, a new set, not a second interv
 answer to the brief's Decisions as `Settled: <choice> — <reason>`, then dispatch again after the
 same explicit yes. The new run's pull request replaces the earlier one, which is closed, unless
 someone added commits to the earlier one or it is ready and the new one is a draft; then both stay
-open and the person picks.
+open and the person picks. A run that only comments on the issue closes nothing.
 
 ## 9. Report
 
 Per issue: the run URL and result, the pull request URL and whether it is a draft, and what still
 needs a human: the open questions, a failed run's failing step (`gh run view <id> --log-failed`),
 the `Not verified:` lines of the pull request, any `## Needs a maintainer` changes, and the reviews
-every pull request needs before merge. Then the run directory path, so a later session can resume
-with `status --run-dir` alone.
+every pull request needs before merge. When only the `open-pull-request` job failed, re-running the
+failed job (`gh run rerun <id> --failed`) within three days opens the pull request from the patch
+the fixer already made; it is a GitHub write, so ask first. Then the run directory path, so a later
+session can resume with `status --run-dir` alone.

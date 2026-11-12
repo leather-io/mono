@@ -12,9 +12,9 @@ nobody can answer a question while it runs.
   - `verify.md`, when the gate failed: `FAILED:` with the failing check and the tail of its output.
   - `review.json`, when the gate passed and the review found defects. Fix every finding in
     `blocking`. Leave `minor` alone unless a blocking fix touches the same lines.
-  - Neither file, when the review ended without a valid verdict. Nothing is known to be wrong:
-    check the change against the issue and the brief once more, run the verification again and
-    rewrite the status.
+  - No `verify.md` and no usable `review.json` (none, or one that is not in the review shape),
+    when the review ended without a valid verdict. Nothing is known to be wrong: check the change
+    against the issue and the brief once more, run the verification again and rewrite the status.
 - `tmp/fix-issue/issue.md` and `tmp/fix-issue/notes.md`: the issue and the brief. The brief's
   `Settled:` lines stay binding.
 - `tmp/fix-issue/status.json`: the status the previous round wrote.

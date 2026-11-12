@@ -1,8 +1,9 @@
 # Brief
 
 One brief per dispatch, written to `<run-dir>/briefs/bot/fix-issue-<n>.md` once every decision for
-its issues is settled. The fixer gets the issue and its comments as well, but only text written by
-people with write access to `leather-io/mono`; the brief is everything else it knows. It must stand
+its issues is settled. The fixer gets the dispatched issue and its comments as well (for a group,
+only the first issue's), but only text written by people with write access to `leather-io/mono`;
+the brief is everything else it knows. It must stand
 alone: no "as discussed", no pointers to this conversation, to the run directory or to files that
 exist only on this machine. Verbatim headings, in this order; drop a section that would be empty.
 
@@ -38,7 +39,7 @@ The issue is the spec; this brief only adds to it.
 
 ## Maintainer changes
 
-- `<path outside apps/, packages/, tools/>`: <the exact change a maintainer makes there>
+- `<path outside apps/, packages/, tools/ and pnpm-lock.yaml>`: <the exact change a maintainer makes there>
 
 ## Out of scope
 
@@ -78,7 +79,7 @@ Expected, Cause, Verify or Done when.
 
 ## Maintainer changes
 
-- `<path outside apps/, packages/, tools/>`: <the exact change a maintainer makes there>
+- `<path outside apps/, packages/, tools/ and pnpm-lock.yaml>`: <the exact change a maintainer makes there>
 
 ## Out of scope
 
@@ -102,10 +103,12 @@ Expected, Cause, Verify or Done when.
 
 ## Groups
 
-A grouped brief repeats a template once per issue, short or full by that issue, in the order the
-fixer works them, each starting at its own `# #<n>: <title>` heading, and ends with one Commit
-section for the group: the run makes one commit and one pull request that closes every issue
-listed.
+A grouped brief repeats a template once per issue, in the order the fixer works them, each starting
+at its own `# #<n>: <title>` heading, and ends with one Commit section for the group: the run makes
+one commit and one pull request that closes every issue listed. Only the first issue, the one the
+brief is dispatched with, may use the short template, and only when it qualifies. The fixer
+receives that issue's text and no other, so every other issue gets the full template, with its
+Agreed behavior, Verify, Done when and Out of scope written out.
 
 ## How each field is filled
 
@@ -126,6 +129,7 @@ rules that are only the brief's:
 - **Out of scope**: what the interview excluded, plus the areas another dispatch owns (section 5
   of the skill); the full template adds the issue's own list.
 - **Verify** and **Done when**: the issue's own when it has them, otherwise research's.
-- **Commit**: a conventional-commit subject, imperative, no issue number. A bug is `fix`, a change
-  is `feat` or `refactor` by its nature; the scope is the platform or package (`extension`,
-  `mobile`, `web`, `<package>`). It becomes the whole commit message and the pull request title.
+- **Commit**: a conventional-commit subject, imperative, no issue number, at most 100 characters. A
+  bug is `fix`, a change is `feat` or `refactor` by its nature; the scope is the platform or
+  package (`extension`, `mobile`, `web`, `<package>`). It becomes the commit subject and the pull
+  request title; the workflow adds a `Co-authored-by` trailer for whoever dispatched.
