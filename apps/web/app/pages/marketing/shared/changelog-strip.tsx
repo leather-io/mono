@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { getChangelogEntries } from '~/pages/changelog/changelog.data';
 
+import { trackMarketingEvent } from './marketing-analytics';
 import { MarketingTag } from './marketing-tag';
 import { Reveal } from './reveal';
 
@@ -102,6 +103,7 @@ export function ChangelogStrip({ entries, heading = 'Changelog', ...props }: Cha
             <StyledLink
               to={`/changelog/${entry.slug}`}
               prefetch="intent"
+              onClick={() => trackMarketingEvent('changelog_entry_clicked', { slug: entry.slug })}
               display="flex"
               flexDir="column"
               height="100%"

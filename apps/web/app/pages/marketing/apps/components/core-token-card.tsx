@@ -92,6 +92,7 @@ export function CoreTokenCard({ token }: { token: CoreToken }) {
         </Box>
         {token.action === 'buy' ? (
           <InstallModal
+            section="apps_core_token"
             trigger={
               <button
                 type="button"

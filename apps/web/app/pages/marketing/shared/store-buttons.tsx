@@ -1,6 +1,7 @@
 import { Flex, type FlexProps, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
 import { type InstallPlatform, installLinks } from './install-links';
+import { type MarketingSection, trackMarketingEvent } from './marketing-analytics';
 
 const defaultPlatforms: InstallPlatform[] = ['chrome', 'ios', 'android'];
 
@@ -15,10 +16,11 @@ type StoreButtonTone = 'light' | 'dark';
 interface StoreButtonProps extends HTMLStyledProps<'a'> {
   platform: InstallPlatform;
   tone?: StoreButtonTone;
+  section: MarketingSection;
 }
 
 /** One outlined store pill (icon + platform name) linking to the platform's store listing. */
-function StoreButton({ platform, tone = 'light', ...props }: StoreButtonProps) {
+function StoreButton({ platform, tone = 'light', section, ...props }: StoreButtonProps) {
   const { label, icon, store } = storeDetails[platform];
   const isDark = tone === 'dark';
   return (
@@ -27,6 +29,13 @@ function StoreButton({ platform, tone = 'light', ...props }: StoreButtonProps) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`${label}: get Leather on the ${store} (opens in a new tab)`}
+      onClick={() =>
+        trackMarketingEvent('store_link_clicked', {
+          store: platform,
+          section,
+          url: installLinks[platform],
+        })
+      }
       display="inline-flex"
       alignItems="center"
       gap="space.02"
@@ -61,6 +70,8 @@ interface StoreButtonsProps {
   tone?: StoreButtonTone;
   /** Optional layout props for the wrapping row (margins, justify, etc). */
   containerProps?: FlexProps;
+  /** Where the row sits, reported with each click. */
+  section: MarketingSection;
 }
 
 /** Row of store pills: Chrome Web Store, App Store and Google Play. Each opens in a new tab. */
@@ -68,11 +79,12 @@ export function StoreButtons({
   platforms = defaultPlatforms,
   tone = 'light',
   containerProps,
+  section,
 }: StoreButtonsProps) {
   return (
     <Flex gap="space.02" flexWrap="wrap" {...containerProps}>
       {platforms.map(platform => (
-        <StoreButton key={platform} platform={platform} tone={tone} />
+        <StoreButton key={platform} platform={platform} tone={tone} section={section} />
       ))}
     </Flex>
   );

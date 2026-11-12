@@ -3,7 +3,9 @@ import { Link } from 'react-router';
 
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
 import { ProviderIcon } from '~/components/icons/provider-icon';
+import { trackMarketingEvent } from '~/pages/marketing/shared/marketing-analytics';
 import { Reveal } from '~/pages/marketing/shared/reveal';
+import { trackExternalLinkClick } from '~/utils/external-links';
 
 import { ArrowLeftIcon } from '@leather.io/ui';
 
@@ -128,6 +130,9 @@ function YieldCard({
       <StyledLink
         to={href}
         prefetch="intent"
+        onClick={() =>
+          trackMarketingEvent('provider_cta_clicked', { provider: title, cta, url: href })
+        }
         display="block"
         border="1px solid"
         borderColor="ink.border-default"
@@ -212,6 +217,7 @@ function YieldCard({
       <styled.p textStyle="caption.01" color="ink.text-secondary" lineHeight="20px" mt="space.03">
         <styled.a
           href={reference.url}
+          onClick={() => trackExternalLinkClick(reference.url, { section: 'home_providers' })}
           target="_blank"
           rel="noopener noreferrer"
           textDecoration="underline"

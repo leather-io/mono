@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
 import { LottieAnimation } from '~/pages/marketing/shared/lottie-animation';
+import { trackMarketingEvent } from '~/pages/marketing/shared/marketing-analytics';
 import { Reveal } from '~/pages/marketing/shared/reveal';
 
 import { ActivityMockup, BtcNotificationsMockup } from './bento-activity';
@@ -205,6 +206,13 @@ export function HomeVaultsAndStaking() {
               <StyledLink
                 to="/multisig"
                 prefetch="intent"
+                onClick={() =>
+                  trackMarketingEvent('learn_more_clicked', {
+                    section: 'home_features',
+                    card: 'Shared vaults',
+                    url: '/multisig',
+                  })
+                }
                 color="ink.text-primary"
                 textDecoration="underline"
                 textUnderlineOffset="2px"

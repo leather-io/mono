@@ -1,6 +1,7 @@
 import { type ReactElement } from 'react';
 
 import { Box, Grid, styled } from 'leather-styles/jsx';
+import { trackMarketingEvent } from '~/pages/marketing/shared/marketing-analytics';
 import { Reveal } from '~/pages/marketing/shared/reveal';
 
 import { MagnifyingGlassIcon, PulseIcon, ShieldIcon } from '@leather.io/ui';
@@ -67,6 +68,13 @@ export function HomeTrust() {
           <styled.a
             key={card.title}
             href={card.href}
+            onClick={() =>
+              trackMarketingEvent('learn_more_clicked', {
+                section: 'home_trust',
+                card: card.title,
+                url: card.href,
+              })
+            }
             target="_blank"
             rel="noopener noreferrer"
             className="group"

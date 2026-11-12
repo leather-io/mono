@@ -16,6 +16,7 @@ import { Dialog as RadixDialog, VisuallyHidden } from 'radix-ui';
 import { CloseIcon, IconButton } from '@leather.io/ui';
 
 import { type InstallPlatform } from './install-links';
+import { type MarketingSection, trackMarketingEvent } from './marketing-analytics';
 import { StoreButtons } from './store-buttons';
 
 const StyledLink = styled(Link);
@@ -106,7 +107,7 @@ function PlatformCard({ title, description, image, platforms }: PlatformCardProp
           {description}
         </styled.p>
         <Box mt="auto">
-          <StoreButtons platforms={platforms} />
+          <StoreButtons platforms={platforms} section="install_modal" />
         </Box>
       </Flex>
     </Flex>
@@ -119,10 +120,12 @@ interface InstallModalProps {
   /** Controlled mode: pass `open` + `onOpenChange` to drive the modal without a trigger. */
   open?: boolean;
   onOpenChange?(open: boolean): void;
+  /** Where the trigger sits, reported when it's clicked. */
+  section?: MarketingSection;
 }
 
 /** The "Choose the platform" dialog: browser extension (Chrome) or mobile (iOS / Android). */
-export function InstallModal({ trigger, open, onOpenChange }: InstallModalProps) {
+export function InstallModal({ trigger, open, onOpenChange, section }: InstallModalProps) {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
   const isOpen = open ?? uncontrolledOpen;
   // There's no Radix trigger to return focus to, so do it ourselves once the dialog has unmounted
@@ -150,6 +153,7 @@ export function InstallModal({ trigger, open, onOpenChange }: InstallModalProps)
             returnFocusRef.current = event.currentTarget;
           }
           setOpen(true);
+          if (section) trackMarketingEvent('install_leather_clicked', { section });
         },
       })
     : trigger;

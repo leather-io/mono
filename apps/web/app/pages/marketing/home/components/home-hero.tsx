@@ -12,6 +12,7 @@ import {
 import { css } from 'leather-styles/css';
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
 import { usePrefersReducedMotion } from '~/pages/marketing/shared/lottie-animation';
+import { trackMarketingEvent } from '~/pages/marketing/shared/marketing-analytics';
 import { StoreButtons } from '~/pages/marketing/shared/store-buttons';
 
 import { HeroExtension, HeroPhone, type HeroView, heroViewDescriptions } from './hero-mockups';
@@ -339,7 +340,10 @@ export function HomeHero() {
                       aria-controls={stageId}
                       data-dimmed={view !== 'home' && view !== verb}
                       style={{ animationDelay: wordDelay(lineIndex, wordIndex) }}
-                      onClick={() => pick(verb)}
+                      onClick={() => {
+                        pick(verb);
+                        trackMarketingEvent('hero_word_clicked', { word: verb });
+                      }}
                       onKeyUp={onWordKeyUp}
                       onBlur={() => setIsKeyboardFocused(false)}
                     >
@@ -371,8 +375,12 @@ export function HomeHero() {
               animation: 'marketingAppear 0.4s cubic-bezier(0.44, 0, 0.56, 1) 0.5s both',
             }}
           >
-            <StoreButtons containerProps={{ mt: 'space.05', display: ['none', null, 'flex'] }} />
             <StoreButtons
+              section="home_hero"
+              containerProps={{ mt: 'space.05', display: ['none', null, 'flex'] }}
+            />
+            <StoreButtons
+              section="home_hero"
               platforms={['ios', 'chrome', 'android']}
               containerProps={{ mt: 'space.05', display: ['flex', null, 'none'] }}
             />

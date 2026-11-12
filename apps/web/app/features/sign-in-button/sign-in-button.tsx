@@ -67,7 +67,7 @@ export function SignInButton() {
 
   return (
     <>
-      {status === 'missing' && <InstallModal trigger={<InstallLeatherButton />} />}
+      {status === 'missing' && <InstallModal section="header" trigger={<InstallLeatherButton />} />}
       {status === 'detected' && <ConnectLeatherButton />}
       {status === 'connected' && <ActiveAccountButton />}
       <NoStacksAccountsWarningDialog />
