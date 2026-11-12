@@ -3,6 +3,7 @@ import { keys } from 'remeda';
 import { MEMPOOL_BASE_URL } from '@leather.io/constants';
 import {
   BITCOIN_API_BASE_URL_MAINNET,
+  BITCOIN_API_BASE_URL_PRIMARY_TESTNET,
   BITCOIN_API_BASE_URL_TESTNET3,
   BITCOIN_API_BASE_URL_TESTNET4,
   type BitcoinNetwork,
@@ -46,8 +47,8 @@ export const bitcoinNetworkPresets: Record<BitcoinNetwork, NetworkPreset> = {
     stacksUrl: HIRO_API_BASE_URL_TESTNET,
   },
   regtest: {
-    label: 'Regtest',
-    bitcoinUrl: `${MEMPOOL_BASE_URL}/testnet/api`,
+    label: 'Primary Hiro Testnet',
+    bitcoinUrl: BITCOIN_API_BASE_URL_PRIMARY_TESTNET,
     stacksUrl: HIRO_API_BASE_URL_TESTNET,
   },
 };

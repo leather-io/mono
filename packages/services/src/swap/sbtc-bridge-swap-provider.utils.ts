@@ -4,7 +4,13 @@ import axios from 'axios';
 import BigNumber from 'bignumber.js';
 
 import { deconstructBtcAddress, ecdsaPublicKeyToSchnorr } from '@leather.io/bitcoin';
-import type { ExecutionConstraint, Money, NetworkModes } from '@leather.io/models';
+import {
+  type ExecutionConstraint,
+  type Money,
+  type NetworkConfiguration,
+  type NetworkModes,
+  WalletDefaultNetworkConfigurationIds,
+} from '@leather.io/models';
 import { cleanHex } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
@@ -17,8 +23,15 @@ type SbtcBridgeTxType = 'deposit' | 'withdrawal';
 
 export const sbtcStacksAddressMap = {
   mainnet: 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4',
-  testnet: 'SNGWPN3XDAQE673MXYXF81016M50NHF5X5PWWM70',
+  testnet: 'SN3VMHXEN64ZZF71JQ5VESXDWTR301XTTXGF4J8F1',
 };
+
+export function getSbtcWithdrawalNetworkMode(network: NetworkConfiguration): NetworkModes | null {
+  if (network.id === WalletDefaultNetworkConfigurationIds.primaryStacksTestnet) return 'testnet';
+  const { mode } = network.chain.bitcoin;
+  if (mode === 'mainnet' || mode === 'testnet') return mode;
+  return null;
+}
 
 export function getRemainingSbtcSupply(
   pegCap: number | null,

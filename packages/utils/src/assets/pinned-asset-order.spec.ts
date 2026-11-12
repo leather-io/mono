@@ -68,7 +68,7 @@ describe('sortByPinnedAssetOrder', () => {
 
   it('pins the testnet sBTC and USDCx contracts', () => {
     const testnetSbtc = createSip10Asset(
-      'SNGWPN3XDAQE673MXYXF81016M50NHF5X5PWWM70.sbtc-token',
+      'SN3VMHXEN64ZZF71JQ5VESXDWTR301XTTXGF4J8F1.sbtc-token',
       'sbtc-token',
       'sBTC'
     );

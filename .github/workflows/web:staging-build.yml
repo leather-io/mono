@@ -55,7 +55,7 @@ jobs:
           LEATHER_TARGET: staging
           PRIVATE_NETWORK_FLAVOR: testnet
           PRIVATE_NETWORK_NAME: BTC Staking Testnet
-          PRIVATE_NETWORK_KEY: stakingTestnet
+          PRIVATE_NETWORK_KEY: btcStakingStacksTestnet
           BITCOIN_API_URL: https://mempool.bitcoin.staking-testnet.hiro.so/api
           STACKS_API_URL: https://api.staking-testnet.hiro.so
           STACKS_CHAIN_ID: '1280'
