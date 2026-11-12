@@ -8,18 +8,23 @@ import { styled } from 'leather-styles/jsx';
  * the Leather MOBILE app (light theme). Each device mirrors its own app's screens, labels and
  * layout, from its own source in this repo:
  *
- *   Extension (apps/extension/src/app). The toolbar popup is a 390px column (`sizes.popupWidth`).
- *   - home   pages/home/home.tsx: features/container/headers/home.header.tsx, account-card.tsx,
- *            features/bonds/components/locked-balance-card.tsx, account-actions-current/* (below
- *            the md breakpoint: Buy & Sell, Transfer, Swap), home-tabs.tsx, tokens-tab-header.tsx,
+ *   Extension (apps/extension/src/app), in its full-page tab: the same routes the popup shows,
+ *   laid out for a tab. Headers and the home column are centred and at most 882 wide
+ *   (`sizes.fullPageMaxWidth`, components/layout/headers/header.tsx, layouts/content.layout.tsx);
+ *   form pages sit in a centred 500 card (`sizes.pageWidth`, page/page.layout.tsx, card/card.tsx).
+ *   - home   pages/home/home.tsx: features/container/headers/home.header.tsx (no Expand button
+ *            in a tab), account-card.tsx, features/bonds/components/locked-balance-card.tsx,
+ *            account-actions-current/* (md and up: Buy, Sell, Send, Receive, Swap),
+ *            home-tabs.tsx, tokens-tab-header.tsx,
  *            components/crypto-asset-item/crypto-asset-item.layout.tsx
- *   - buy    pages/fund/fund.tsx. In the popup, Buy opens the full-page tab and closes the popup
- *            (fund-buttons.tsx, whenPageMode), so the browser tab shows the Onramper widget,
- *            themed with Leather's colours (packages/features/src/onramper/onramper-params.ts).
+ *   - buy    pages/fund/fund.tsx: page.header.tsx, then the Onramper widget, themed with
+ *            Leather's colours (packages/features/src/onramper/onramper-params.ts)
  *   - send   pages/send/send-crypto-asset-form/form/btc/btc-send-form.tsx and its components
  *   - swap   pages/swap/swap-form.tsx and pages/swap/components/*
- *   - earn   pages/all-balances/bond-positions-detail.tsx, components/bond-position-section.tsx
- *   - grow   features/token/token-details.layout.tsx, components/token-overview.tsx,
+ *   - earn   pages/all-balances/all-balances-detail.tsx, bond-positions-detail.tsx,
+ *            components/bond-position-section.tsx
+ *   - grow   features/token/token-details.layout.tsx in its 780 column
+ *            (components/token-details-screen.tsx, token-details-header.tsx), token-overview.tsx,
  *            token-details-actions.tsx, token-details-tabs.tsx, price-history/*
  *
  *   Mobile (apps/mobile/src)
@@ -38,7 +43,7 @@ import { styled } from 'leather-styles/jsx';
  *            price and 24-hour-change view. The chart is on the extension.
  *
  * Every size is in reference pixels converted to container units, so the art scales with its
- * frame: the browser window is 860 units wide, the phone 412, and the apps inside use their real
+ * frame: the browser window is 1040 units wide, the phone 412, and the apps inside use their real
  * pixel sizes. Figures are illustrative and use one set of prices: $110,550 / BTC, $0.436 / STX.
  */
 
@@ -437,10 +442,10 @@ const dayTrace = [
 ];
 
 function PriceChart({ isDrawn, isAnimated }: { isDrawn: boolean; isAnimated: boolean }) {
-  // The chart's own size in the popup (390 less 24 padding each side, by 120), so the stroke
-  // stays even without vector-effect, which renders unreliably inside the tilted rig
-  const width = 342;
-  const height = 120;
+  // The chart's own size in the 780 token details column (less 24 padding each side, by 140), so
+  // the stroke stays even without vector-effect, which renders unreliably inside the tilted rig
+  const width = 732;
+  const height = 140;
   const step = width / (dayTrace.length - 1);
   const path = `M${dayTrace
     .map((value, index) => `${(index * step).toFixed(2)},${((1 - value) * height).toFixed(2)}`)
@@ -577,7 +582,7 @@ function OnramperWidget() {
 }
 
 /* -------------------------------------------------------------------------------------------- */
-/* Extension screens (dark theme, 390-wide popup)                                                */
+/* Extension screens (dark theme, full-page tab)                                                 */
 /* -------------------------------------------------------------------------------------------- */
 
 interface ScreenProps {
@@ -585,50 +590,128 @@ interface ScreenProps {
   isAnimated: boolean;
 }
 
-/** features/container/headers/home.header.tsx: account selector, Expand, Settings. */
-function ExtHomeHeader() {
+// packages/tokens sizes: the full-page header and content column, and the centred form page
+const fullPageMaxWidth = 882;
+const pageWidth = 500;
+// features/token/components/token-details-screen.tsx: the token details column from md up
+const tokenDetailsWidth = 780;
+
+function HeaderButton({ children }: { children: ReactNode }) {
   return (
-    <Row justify="space-between" style={{ padding: u(16) }}>
-      <Row gap={8} style={t.label01}>
-        <Text>Savings</Text>
-        <Icon size={16}>{glyph.chevronDown}</Icon>
-      </Row>
-      <Row gap={8}>
-        <Span
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          style={{ width: u(40), height: u(40) }}
-        >
-          <Icon size={20}>{glyph.expand}</Icon>
-        </Span>
-        <Span
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          style={{ width: u(40), height: u(40) }}
-        >
-          <Icon size={22}>{glyph.gear}</Icon>
-        </Span>
-      </Row>
-    </Row>
+    <Span
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      style={{ width: u(40), height: u(40) }}
+    >
+      {children}
+    </Span>
   );
 }
 
-/** Back button, centred heading.05 title: the header of every pushed extension page. */
-function ExtPageHeader({ title }: { title: string }) {
+/** packages/ui logo.web.tsx: the Leather logomark (assets/icons/leather-logomark.svg). */
+function Logomark() {
+  return (
+    <svg
+      viewBox="0 0 86 19"
+      fill="currentColor"
+      style={{ width: u(86), height: u(19), display: 'block', flexShrink: 0 }}
+    >
+      <path d="M83.004 13.53c-.796 1.504-1.965 2.427-2.868 2.427-.691 0-1.222-.58-1.222-1.952 0-2.136 1.062-5.46 1.567-7.2h-7.916l-.77 2.664c-1.169 4.088-3.002 6.488-5.897 6.488-.425 0-.93-.08-1.195-.237 2.178-1.556 4.383-4.036 4.383-6.489 0-2.03-1.488-2.822-2.843-2.822-4.25 0-7.278 5.539-6.136 9.02-.69.238-1.328.528-2.098.528-.77 0-1.195-.527-1.036-1.24.186-.844 1.248-3.666 1.248-5.196 0-1.872-1.46-3.138-3.665-3.138-.505 0-1.063.132-1.62.343l1.407-4.932h-2.762l-3.294 11.5c-.505 1.793-2.019 2.663-3.267 2.663-1.567 0-2.152-1.24-1.78-2.48l1.169-4.035h3.002l.77-2.637h-3.028l1.434-5.011h-2.763L40.24 14.295c-.346 1.187-1.17 1.662-1.886 1.662-1.143 0-1.488-.923-1.249-1.767l2.125-7.385c-.744-.238-1.806-.422-2.63-.422-4.754 0-9.243 4.193-9.243 8.334v.012c-1.272.81-2.748 1.228-4.038 1.228-.903 0-1.408-.08-1.806-.29 2.231-1.45 4.542-3.877 4.542-6.436 0-2.03-1.487-2.822-2.842-2.822-4.224 0-7.172 5.407-6.19 8.862-.929.475-1.779.712-2.709.712-1.46 0-2.842-.606-3.904-1.82l1.354-4.72c3.294-.264 7.65-2.955 7.65-6.252C19.413 1.134 18.033 0 16.28 0c-3.108 0-5.445 2.98-6.534 6.805-2.02-.238-3.108-2.4-1.514-5.011H5.36C3.581 5.724 5.387 8.466 9 9.442l-.877 3.034c-1.328-.818-2.364-1.135-3.586-1.135-5.87 0-6.11 7.254-.345 7.254 1.673 0 3.692-.87 4.755-2.031 1.514 1.319 3.001 2.03 4.914 2.03 1.46 0 2.948-.421 4.489-1.318 1.036.844 2.39 1.319 4.33 1.319 1.722 0 3.444-.355 5.218-1.593.525.918 1.484 1.593 3.096 1.593 1.354 0 2.842-.58 3.958-1.82.823 1.187 2.072 1.82 3.346 1.82 1.063 0 2.152-.422 3.082-1.266.743.79 2.098 1.266 3.586 1.266 2.31 0 4.887-1.214 5.79-4.352l1.036-3.64c.32-1.082 1.17-1.583 2.152-1.583.85 0 1.301.422 1.301 1.16 0 1.372-1.221 4.643-1.221 5.803 0 1.952 1.328 2.612 3.107 2.612 1.116 0 1.993-.027 4.49-1.134 1.009.738 2.576 1.134 4.356 1.134 3.958 0 6.72-2.69 8.606-9.153h2.39c-.45 1.504-.77 3.165-.77 4.642 0 2.48.904 4.51 3.693 4.51 2.178 0 5.206-2.189 5.976-5.064h-2.869ZM15.881 2.639c.504 0 .85.29.85.712 0 1.398-2.497 3.191-4.224 3.455.797-2.743 2.417-4.167 3.374-4.167ZM4.326 15.958c-2.258 0-2.072-2.216.186-2.216.983 0 1.753.316 2.683 1.107-.638.712-1.86 1.108-2.87 1.108ZM22.415 9.02c.558 0 .903.343.903.897 0 1.477-1.939 3.297-3.586 4.22-.584-1.688 1.09-5.117 2.683-5.117Zm9.058 6.937c-.824 0-1.222-.58-1.222-1.424 0-2.031 2.205-5.46 5.578-5.513-1.222 4.247-2.045 6.937-4.356 6.937ZM65.447 9.02c.557 0 .903.343.903.897 0 1.477-2.02 3.376-3.56 4.326-.664-1.583 1.036-5.223 2.657-5.223Z" />
+    </svg>
+  );
+}
+
+/**
+ * components/layout/headers/header.tsx + header-grid.tsx: a 72-high row centred in the window,
+ * left column, centred heading.05 title, right column.
+ */
+function ExtHeader({
+  left,
+  title,
+  right,
+  maxWidth = fullPageMaxWidth,
+  paddingInline = 16,
+}: {
+  left?: ReactNode;
+  title?: string;
+  right?: ReactNode;
+  maxWidth?: number;
+  paddingInline?: number;
+}) {
   return (
     <Div
       position="relative"
       display="flex"
       alignItems="center"
-      justifyContent="center"
-      style={{ height: u(72), ...t.heading05 }}
+      justifyContent="space-between"
+      style={{
+        width: '100%',
+        maxWidth: u(maxWidth),
+        height: u(72),
+        margin: '0 auto',
+        paddingInline: u(paddingInline),
+      }}
     >
-      <Span position="absolute" style={{ left: u(16) }}>
-        <Icon size={22}>{glyph.arrowLeft}</Icon>
-      </Span>
-      {title}
+      <Row gap={8}>{left}</Row>
+      {title && (
+        <Span
+          position="absolute"
+          whiteSpace="nowrap"
+          style={{ left: '50%', transform: 'translateX(-50%)', ...t.heading05 }}
+        >
+          {title}
+        </Span>
+      )}
+      <Row>{right}</Row>
+    </Div>
+  );
+}
+
+const backButton = (
+  <HeaderButton>
+    <Icon size={22}>{glyph.arrowLeft}</Icon>
+  </HeaderButton>
+);
+const settingsButton = (
+  <HeaderButton>
+    <Icon size={22}>{glyph.gear}</Icon>
+  </HeaderButton>
+);
+
+/** features/container/headers/page.header.tsx: back and the logo, title, Settings. */
+function ExtPageHeader({ title }: { title?: string }) {
+  return (
+    <ExtHeader
+      paddingInline={0}
+      left={
+        <>
+          {backButton}
+          <Logomark />
+        </>
+      }
+      title={title}
+      right={settingsButton}
+    />
+  );
+}
+
+/** components/layout/page/page.layout.tsx + card/card.tsx: the bordered form card, 500 wide. */
+function ExtPageCard({ children, footer }: { children: ReactNode; footer: ReactNode }) {
+  return (
+    <Div
+      style={{
+        width: u(pageWidth),
+        margin: '0 auto',
+        border: `1px solid ${c.border}`,
+        borderRadius: u(12),
+        overflow: 'hidden',
+      }}
+    >
+      <Div style={{ padding: u(20) }}>{children}</Div>
+      <Column gap={12} style={{ padding: u(20) }}>
+        {footer}
+      </Column>
     </Div>
   );
 }
@@ -659,71 +742,114 @@ function ExtTokenRow({ row }: { row: (typeof holdings)[number] }) {
   );
 }
 
+/**
+ * pages/home/home.tsx in the full-page tab: home.header.tsx (account selector and Settings; no
+ * Expand button in a tab), then the 882 column: account-card.tsx with the locked balance card,
+ * the md-and-up actions (Buy, Sell, Send, Receive, Swap), home-tabs.tsx and the token list.
+ */
 function ExtHome() {
   return (
     <>
-      <ExtHomeHeader />
-      <Column gap={24} style={{ paddingInline: u(24), paddingTop: u(16), paddingBottom: u(24) }}>
-        <Column>
-          <LabelWithHint style={t.label02}>Total balance</LabelWithHint>
-          <Text style={{ ...t.heading02, marginTop: u(8) }}>{figures.total}</Text>
-          {/* features/bonds/components/locked-balance-card.tsx */}
-          <Row
-            justify="space-between"
-            style={{
-              marginTop: u(16),
-              border: `1px solid ${c.border}`,
-              borderRadius: u(8),
-              padding: `${u(12)} ${u(16)}`,
-            }}
-          >
-            <Column gap={4}>
-              <LabelWithHint style={t.label02}>Locked</LabelWithHint>
-              <Text style={t.heading05}>{figures.locked}</Text>
-            </Column>
-            <Icon size={18}>{glyph.chevronRight}</Icon>
+      <ExtHeader
+        left={
+          <Row gap={8} style={t.label01}>
+            <Text>Savings</Text>
+            <Icon size={16}>{glyph.chevronDown}</Icon>
+          </Row>
+        }
+        right={settingsButton}
+      />
+      <Div
+        style={{
+          maxWidth: u(fullPageMaxWidth),
+          margin: '0 auto',
+          paddingInline: u(20),
+          paddingTop: u(16),
+        }}
+      >
+        <Column gap={20} style={{ paddingBottom: u(20) }}>
+          <Column>
+            <LabelWithHint style={t.label02}>Total balance</LabelWithHint>
+            <Text style={{ ...t.heading02, marginTop: u(8) }}>{figures.total}</Text>
+            {/* features/bonds/components/locked-balance-card.tsx */}
+            <Row
+              justify="space-between"
+              style={{
+                marginTop: u(16),
+                border: `1px solid ${c.border}`,
+                borderRadius: u(8),
+                padding: `${u(12)} ${u(16)}`,
+              }}
+            >
+              <Column gap={4}>
+                <LabelWithHint style={t.label02}>Locked</LabelWithHint>
+                <Text style={t.heading05}>{figures.locked}</Text>
+              </Column>
+              <Icon size={18}>{glyph.chevronRight}</Icon>
+            </Row>
+          </Column>
+          <Row gap={16}>
+            {['Buy', 'Sell', 'Send', 'Receive', 'Swap'].map((label, index) => (
+              <Pill
+                key={label}
+                variant={index === 0 ? 'solid' : 'outline'}
+                style={{ flex: 1, minWidth: u(100) }}
+              >
+                {label}
+              </Pill>
+            ))}
           </Row>
         </Column>
-        <Row gap={4}>
-          <Pill variant="solid" style={{ flex: 1 }}>
-            Buy & Sell
-          </Pill>
-          <Pill style={{ flex: 1 }}>Transfer</Pill>
-          <Pill style={{ flex: 1 }}>Swap</Pill>
-        </Row>
-      </Column>
-      <WebTabs tabs={['Tokens', 'Collectibles', 'Activity']} active="Tokens" />
-      <Column gap={16} style={{ padding: u(24), paddingTop: u(24) }}>
-        <Row justify="space-between" align="flex-start">
-          <Column gap={4}>
-            <LabelWithHint style={t.label02}>Available</LabelWithHint>
-            <Text style={t.heading05}>{figures.available}</Text>
+        <WebTabs tabs={['Tokens', 'Collectibles', 'Activity']} active="Tokens" />
+        <Column gap={16} style={{ paddingBlock: u(24) }}>
+          <Row justify="space-between" align="flex-start">
+            <Column gap={4}>
+              <LabelWithHint style={t.label02}>Available</LabelWithHint>
+              <Text style={t.heading05}>{figures.available}</Text>
+            </Column>
+            <HeaderButton>
+              <Icon size={18}>{glyph.sliders}</Icon>
+            </HeaderButton>
+          </Row>
+          <Column>
+            {holdings.map(row => (
+              <ExtTokenRow key={row.token} row={row} />
+            ))}
           </Column>
-          <Span
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            style={{ width: u(40), height: u(40) }}
-          >
-            <Icon size={18}>{glyph.sliders}</Icon>
-          </Span>
-        </Row>
-        <Column>
-          {holdings.map(row => (
-            <ExtTokenRow key={row.token} row={row} />
-          ))}
         </Column>
-      </Column>
+      </Div>
     </>
   );
 }
 
-/** pages/send/.../btc-send-form.tsx: amount, asset, recipient, Continue. */
+/** pages/fund/fund.tsx: page header, then the Onramper widget in the 500 page. */
+function ExtFund() {
+  return (
+    <>
+      <ExtPageHeader />
+      <Div style={{ width: u(pageWidth), margin: '0 auto', paddingTop: u(8) }}>
+        <OnramperWidget />
+      </Div>
+    </>
+  );
+}
+
+/** pages/send/.../btc-send-form.tsx: amount, asset, recipient, then Continue in the card footer. */
 function ExtSend() {
   return (
     <>
       <ExtPageHeader title="Send" />
-      <Column style={{ paddingInline: u(24) }}>
+      <ExtPageCard
+        footer={
+          <>
+            <Pill variant="solid">Continue</Pill>
+            <Row justify="space-between" style={{ ...t.caption01, color: c.subdued }}>
+              <LabelWithHint>Available balance</LabelWithHint>
+              <Text>$3,758.70</Text>
+            </Row>
+          </>
+        }
+      >
         <Column align="center" style={{ paddingTop: u(24) }}>
           <Row
             gap={8}
@@ -777,17 +903,7 @@ function ExtSend() {
             <Icon size={14}>{glyph.chevronDown}</Icon>
           </Row>
         </Row>
-      </Column>
-      <Column
-        gap={12}
-        style={{ padding: u(24), marginTop: u(36), borderTop: `1px solid ${c.border}` }}
-      >
-        <Pill variant="solid">Continue</Pill>
-        <Row justify="space-between" style={{ ...t.caption01, color: c.subdued }}>
-          <LabelWithHint>Available balance</LabelWithHint>
-          <Text>$3,758.70</Text>
-        </Row>
-      </Column>
+      </ExtPageCard>
     </>
   );
 }
@@ -849,52 +965,51 @@ function ExtSwap() {
   return (
     <>
       <ExtPageHeader title="Swap" />
-      <Column gap={24} style={{ padding: u(24), paddingTop: u(16) }}>
-        <Div position="relative">
-          <SwapLeg
-            amount="1,000"
-            fiat="$436.00"
-            token="stx"
-            symbol="STX"
-            balance="3,449.3"
-            showSwitch
-          />
-          <Hairline color={c.borderT} style={{ marginBlock: u(24) }} />
-          <SwapLeg amount="0.00394" fiat="$435.56" token="sbtc" symbol="sBTC" balance="0.0204" />
-          <Span
-            position="absolute"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            borderRadius="50%"
-            style={{
-              left: '50%',
-              top: '50%',
-              width: u(32),
-              height: u(32),
-              transform: 'translate(-50%, -50%)',
-              background: c.bg,
-              border: `1px solid ${c.borderT}`,
-            }}
-          >
-            <Icon size={16}>{glyph.flip}</Icon>
-          </Span>
-        </Div>
-        <Column>
-          <Row justify="space-between" style={{ height: u(40), ...t.label03 }}>
-            <Text style={{ color: c.subdued }}>Rate</Text>
-            <Text>1 STX ≈ 0.0000039 sBTC</Text>
-          </Row>
-          <Hairline color={c.borderT} />
-          <Row justify="space-between" style={{ height: u(40), ...t.label03 }}>
-            <Text style={{ color: c.subdued }}>Estimated fees</Text>
-            <Text>$0.28</Text>
-          </Row>
+      <ExtPageCard footer={<Pill variant="solid">Continue</Pill>}>
+        <Column gap={20}>
+          <Div position="relative">
+            <SwapLeg
+              amount="1,000"
+              fiat="$436.00"
+              token="stx"
+              symbol="STX"
+              balance="3,449.3"
+              showSwitch
+            />
+            <Hairline color={c.borderT} style={{ marginBlock: u(24) }} />
+            <SwapLeg amount="0.00394" fiat="$435.56" token="sbtc" symbol="sBTC" balance="0.0204" />
+            <Span
+              position="absolute"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              borderRadius="50%"
+              style={{
+                left: '50%',
+                top: '50%',
+                width: u(32),
+                height: u(32),
+                transform: 'translate(-50%, -50%)',
+                background: c.bg,
+                border: `1px solid ${c.borderT}`,
+              }}
+            >
+              <Icon size={16}>{glyph.flip}</Icon>
+            </Span>
+          </Div>
+          <Column>
+            <Row justify="space-between" style={{ height: u(40), ...t.label03 }}>
+              <Text style={{ color: c.subdued }}>Rate</Text>
+              <Text>1 STX ≈ 0.0000039 sBTC</Text>
+            </Row>
+            <Hairline color={c.borderT} />
+            <Row justify="space-between" style={{ height: u(40), ...t.label03 }}>
+              <Text style={{ color: c.subdued }}>Estimated fees</Text>
+              <Text>$0.28</Text>
+            </Row>
+          </Column>
         </Column>
-      </Column>
-      <Div style={{ padding: u(24), borderTop: `1px solid ${c.border}`, marginTop: u(40) }}>
-        <Pill variant="solid">Continue</Pill>
-      </Div>
+      </ExtPageCard>
     </>
   );
 }
@@ -912,8 +1027,9 @@ function BondRow({ label, value, color }: { label: string; value: string; color?
 function ExtEarn() {
   return (
     <>
-      <ExtPageHeader title="All balances" />
-      <Column style={{ paddingInline: u(24) }}>
+      {/* all-balances-detail.tsx: back button and title, no Settings */}
+      <ExtHeader left={backButton} title="All balances" />
+      <Column style={{ maxWidth: u(fullPageMaxWidth), margin: '0 auto', paddingInline: u(20) }}>
         <Row justify="space-between" align="flex-start" style={{ paddingBlock: u(16) }}>
           <Column gap={4}>
             <LabelWithHint style={t.label02}>In a bond</LabelWithHint>
@@ -924,7 +1040,7 @@ function ExtEarn() {
           </Column>
           <TokenIcon token="btc" size={40} />
         </Row>
-        <Hairline bleed={24} />
+        <Hairline bleed={20} />
         <Column gap={12} style={{ paddingBlock: u(16) }}>
           <Row justify="space-between">
             <Row gap={8}>
@@ -951,7 +1067,7 @@ function ExtEarn() {
             <BondRow label="Paid out" value="+0.00012 BTC" color={c.green} />
           </Column>
         </Column>
-        <Hairline bleed={24} />
+        <Hairline bleed={20} />
         <Row gap={4} style={{ ...t.label02, paddingBlock: u(16) }}>
           <Text>Manage in Bitcoin Staking</Text>
           <Icon size={14}>{glyph.external}</Icon>
@@ -961,73 +1077,63 @@ function ExtEarn() {
   );
 }
 
-/** features/token/token-details.layout.tsx: Bitcoin details, Info tab, Price section. */
+/**
+ * features/token/token-details.layout.tsx in its 780 column (token-details-screen.tsx):
+ * Bitcoin details, Info tab, Price section.
+ */
 function ExtGrow({ isActive, isAnimated }: ScreenProps) {
   return (
     <>
-      <ExtPageHeader title="Bitcoin" />
-      <Column gap={12} align="center" style={{ padding: u(24), paddingTop: u(8) }}>
-        <TokenIcon token="btc" size={48} />
-        <Column align="center">
-          <Text style={t.heading03}>
-            0.049 <Span style={{ color: c.subdued }}>BTC</Span>
-          </Text>
-          <Text style={t.label01}>$5,416.95</Text>
+      <ExtHeader maxWidth={tokenDetailsWidth} paddingInline={0} left={backButton} title="Bitcoin" />
+      <Div style={{ maxWidth: u(tokenDetailsWidth), margin: '0 auto' }}>
+        <Column gap={12} align="center" style={{ padding: u(24), paddingTop: u(8) }}>
+          <TokenIcon token="btc" size={48} />
+          <Column align="center">
+            <Text style={t.heading03}>
+              0.049 <Span style={{ color: c.subdued }}>BTC</Span>
+            </Text>
+            <Text style={t.label01}>$5,416.95</Text>
+          </Column>
+          <Row gap={8} style={{ width: '100%', paddingTop: u(4) }}>
+            {['Receive', 'Send', 'Buy', 'Swap'].map(label => (
+              <Pill key={label} height={36} px={12} style={{ flex: 1 }}>
+                {label}
+              </Pill>
+            ))}
+          </Row>
         </Column>
-        <Row gap={8} style={{ width: '100%', paddingTop: u(4) }}>
-          {['Receive', 'Send', 'Buy', 'Swap'].map(label => (
-            <Pill key={label} height={36} px={12} style={{ flex: 1 }}>
-              {label}
-            </Pill>
-          ))}
-        </Row>
-      </Column>
-      <WebTabs tabs={['Activity', 'Balances', 'Info']} active="Info" />
-      <Column gap={12} style={{ paddingInline: u(24), paddingTop: u(16) }}>
-        <Column gap={4}>
-          <Text style={t.label01}>{figures.btcPrice}</Text>
-          <Text style={{ ...t.label03, color: c.green }}>
-            + {figures.btcChangePercent} ({figures.btcChangeFiat})
-          </Text>
+        <WebTabs tabs={['Activity', 'Balances', 'Info']} active="Info" />
+        <Column gap={12} style={{ paddingInline: u(24), paddingTop: u(16) }}>
+          <Column gap={4}>
+            <Text style={t.label01}>{figures.btcPrice}</Text>
+            <Text style={{ ...t.label03, color: c.green }}>
+              + {figures.btcChangePercent} ({figures.btcChangeFiat})
+            </Text>
+          </Column>
+          <PriceChart isDrawn={isActive || !isAnimated} isAnimated={isAnimated} />
+          <Row gap={4}>
+            {['1d', '1w', '1m', '3m', '6m', '1y'].map(period => (
+              <Span
+                key={period}
+                flex="1"
+                display="flex"
+                justifyContent="center"
+                style={{
+                  ...t.label03,
+                  textTransform: 'uppercase',
+                  paddingBlock: u(4),
+                  borderRadius: u(4),
+                  color: period === '1d' ? c.text : c.subdued,
+                  background: period === '1d' ? c.component : 'transparent',
+                }}
+              >
+                {period}
+              </Span>
+            ))}
+          </Row>
         </Column>
-        <PriceChart isDrawn={isActive || !isAnimated} isAnimated={isAnimated} />
-        <Row gap={4}>
-          {['1d', '1w', '1m', '3m', '6m', '1y'].map(period => (
-            <Span
-              key={period}
-              flex="1"
-              display="flex"
-              justifyContent="center"
-              style={{
-                ...t.label03,
-                textTransform: 'uppercase',
-                paddingBlock: u(4),
-                borderRadius: u(4),
-                color: period === '1d' ? c.text : c.subdued,
-                background: period === '1d' ? c.component : 'transparent',
-              }}
-            >
-              {period}
-            </Span>
-          ))}
-        </Row>
-      </Column>
-    </>
-  );
-}
-
-/** pages/fund/fund.tsx in the full-page tab: page header, then the Onramper iframe. */
-function ExtFundPage() {
-  return (
-    <Div position="absolute" inset="0" style={{ background: c.bg }}>
-      <Row justify="space-between" style={{ height: u(80), paddingInline: u(32) }}>
-        <Icon size={24}>{glyph.arrowLeft}</Icon>
-        <Icon size={24}>{glyph.gear}</Icon>
-      </Row>
-      <Div style={{ width: u(500), margin: '0 auto', paddingTop: u(8) }}>
-        <OnramperWidget />
       </Div>
-    </Div>
+    </>
   );
 }
 
@@ -1621,59 +1727,22 @@ function deviceRoot(theme: Theme, width: number): ThemeStyle {
   };
 }
 
-const windowWidth = 860;
-const windowHeight = 700;
-const toolbarHeight = 46;
-const popupWidth = 390;
-const popupHeight = 600;
+// The window is wide enough that the extension's 882 column sits centred with room either side
+const windowWidth = 1040;
+const windowHeight = 850;
+const toolbarHeight = 52;
 
-const popupScreens: Partial<Record<HeroView, (props: ScreenProps) => ReactNode>> = {
+const extensionScreens: Record<HeroView, (props: ScreenProps) => ReactNode> = {
   home: ExtHome,
+  buy: ExtFund,
   send: ExtSend,
   swap: ExtSwap,
   earn: ExtEarn,
   grow: ExtGrow,
 };
 
-/** A web page behind the popup, kept quiet so the extension reads first. */
-function PageBackdrop() {
-  function block(style: CSSProperties) {
-    return <Div style={{ background: '#2E2A28', borderRadius: u(10), ...style }} />;
-  }
-  return (
-    <Div position="absolute" inset="0" style={{ background: '#1F1C1A', padding: u(40) }}>
-      <Row justify="space-between">
-        {block({ width: u(120), height: u(22) })}
-        <Row gap={20}>
-          {block({ width: u(70), height: u(14) })}
-          {block({ width: u(70), height: u(14) })}
-          {block({ width: u(110), height: u(34), borderRadius: u(999) })}
-        </Row>
-      </Row>
-      {block({ width: u(420), height: u(40), marginTop: u(80) })}
-      {block({ width: u(300), height: u(40), marginTop: u(14) })}
-      {block({ width: u(360), height: u(14), marginTop: u(28) })}
-      <Row gap={20} style={{ marginTop: u(60) }}>
-        {block({ flex: 1, height: u(200) })}
-        {block({ flex: 1, height: u(200) })}
-        {block({ flex: 1, height: u(200) })}
-      </Row>
-    </Div>
-  );
-}
-
-/** The extension in a browser window: its toolbar popup, or for Buy the full-page Fund tab. */
+/** The extension's full-page tab in a browser window: the same routes, laid out for a tab. */
 export function HeroExtension({ view, isAnimated }: DeviceProps) {
-  const isFullPage = view === 'buy';
-  function fade(isShown: boolean, extra = ''): CSSProperties {
-    return {
-      opacity: isShown ? 1 : 0,
-      visibility: isShown ? 'visible' : 'hidden',
-      transition: isAnimated
-        ? `opacity ${viewTransitionMs}ms ${ease}, visibility 0ms linear ${isShown ? 0 : viewTransitionMs}ms${extra}`
-        : undefined,
-    };
-  }
   return (
     <Div width="100%" style={{ containerType: 'inline-size' }}>
       <Div
@@ -1682,20 +1751,19 @@ export function HeroExtension({ view, isAnimated }: DeviceProps) {
         style={{
           ...deviceRoot('dark', windowWidth),
           height: u(windowHeight),
-          background: '#1F1C1A',
-          borderRadius: `${u(14)} ${u(14)} 0 0`,
+          background: c.bg,
+          borderRadius: `${u(16)} ${u(16)} 0 0`,
           boxShadow: '0 0 0 1px rgba(255, 255, 255, 0.08) inset',
         }}
       >
-        {/* Toolbar: traffic lights, address bar, extension buttons */}
+        {/* Toolbar: traffic lights, address bar with the Leather tab, extension button */}
         <Div
           position="relative"
           display="flex"
           alignItems="center"
-          zIndex="2"
           style={{
             height: u(toolbarHeight),
-            paddingInline: u(16),
+            paddingInline: u(18),
             gap: u(8),
             background: '#292623',
             borderBottom: '1px solid #36322F',
@@ -1705,87 +1773,47 @@ export function HeroExtension({ view, isAnimated }: DeviceProps) {
             <Span
               key={color}
               borderRadius="50%"
-              style={{ width: u(12), height: u(12), background: color }}
+              style={{ width: u(13), height: u(13), background: color }}
             />
           ))}
           <Row
             gap={8}
             style={{
-              marginLeft: u(60),
+              marginLeft: u(80),
               flex: 1,
-              height: u(28),
+              height: u(32),
               borderRadius: u(999),
               background: '#1A1817',
-              paddingInline: u(14),
+              paddingInline: u(16),
               color: '#9E9996',
               ...t.label03,
               fontWeight: 400,
             }}
           >
-            <Span style={{ ...fade(isFullPage), display: 'flex', alignItems: 'center', gap: u(8) }}>
-              <styled.img
-                src="/icons/leather.webp"
-                alt=""
-                style={{ width: u(14), height: u(14), borderRadius: u(3) }}
-              />
-              Leather
-            </Span>
+            <styled.img
+              src="/icons/leather.webp"
+              alt=""
+              style={{ width: u(16), height: u(16), borderRadius: u(4) }}
+            />
+            Leather
           </Row>
           <Span
             display="flex"
             alignItems="center"
             justifyContent="center"
-            style={{
-              width: u(30),
-              height: u(30),
-              marginLeft: u(16),
-              borderRadius: u(8),
-              background: isFullPage ? 'transparent' : '#3A3633',
-              transition: isAnimated ? `background ${viewTransitionMs}ms ${ease}` : undefined,
-            }}
+            style={{ width: u(32), height: u(32), marginLeft: u(16) }}
           >
             <styled.img
               src="/icons/leather.webp"
               alt=""
-              style={{ width: u(18), height: u(18), borderRadius: u(4) }}
+              style={{ width: u(20), height: u(20), borderRadius: u(5) }}
             />
           </Span>
-          <Span borderRadius="50%" style={{ width: u(22), height: u(22), background: '#46413E' }} />
+          <Span borderRadius="50%" style={{ width: u(24), height: u(24), background: '#46413E' }} />
         </Div>
 
         <Div position="absolute" inset="0" style={{ top: u(toolbarHeight) }}>
-          <Div position="absolute" inset="0" style={fade(!isFullPage)}>
-            <PageBackdrop />
-          </Div>
-          <Div position="absolute" inset="0" style={fade(isFullPage)}>
-            <ExtFundPage />
-          </Div>
-        </Div>
-
-        {/* The toolbar popup; Buy hands off to the full-page tab and closes it */}
-        <Div
-          position="absolute"
-          overflow="hidden"
-          zIndex="3"
-          style={{
-            right: u(46),
-            top: u(toolbarHeight - 4),
-            width: u(popupWidth),
-            height: u(popupHeight),
-            background: c.bg,
-            borderRadius: u(10),
-            border: `1px solid ${c.border}`,
-            boxShadow: `0 ${u(24)} ${u(60)} rgba(0, 0, 0, 0.55)`,
-            transformOrigin: '85% 0',
-            transform: isFullPage ? 'scale(0.96)' : 'none',
-            ...fade(!isFullPage, isAnimated ? `, transform ${viewTransitionMs}ms ${ease}` : ''),
-          }}
-        >
-          <ScreenStack
-            screens={popupScreens}
-            view={isFullPage ? 'home' : view}
-            isAnimated={isAnimated}
-          />
+          <ScreenStack screens={extensionScreens} view={view} isAnimated={isAnimated} />
         </Div>
       </Div>
     </Div>

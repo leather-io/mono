@@ -226,17 +226,15 @@ function useEntrance(targetRef: RefObject<HTMLElement | null>) {
 }
 
 /*
- * Pointer parallax: both devices drift with the cursor, the phone about 1.8 times as far because
- * it sits in front. Smoothed with a lerp on requestAnimationFrame; eases home on leave. Mouse
- * only, and never with reduced motion.
+ * Pointer tilt: the devices keep their rest pose and only turn a little towards the cursor, the
+ * phone a bit more because it sits in front. No translation. Smoothed with a lerp on
+ * requestAnimationFrame; eases back on leave. Mouse only, and never with reduced motion.
  */
-const parallax = {
-  extension: { x: 12, y: 9, rotate: 1.6 },
-  phone: { x: 22, y: 16, rotate: 2.9 },
-};
-const parallaxLerp = 0.08;
+const tiltDegrees = { extension: 3, phone: 4.5 };
+const tiltPerspective = '1800px';
+const tiltLerp = 0.08;
 
-function useParallax(isEnabled: boolean) {
+function useTilt(isEnabled: boolean) {
   const extensionRef = useRef<HTMLDivElement>(null);
   const phoneRef = useRef<HTMLDivElement>(null);
   const target = useRef({ x: 0, y: 0 });
@@ -252,19 +250,19 @@ function useParallax(isEnabled: boolean) {
 
   function apply() {
     const { x, y } = current.current;
-    for (const [element, amount] of [
-      [extensionRef.current, parallax.extension],
-      [phoneRef.current, parallax.phone],
+    for (const [element, degrees] of [
+      [extensionRef.current, tiltDegrees.extension],
+      [phoneRef.current, tiltDegrees.phone],
     ] as const) {
       if (!element) continue;
-      element.style.transform = `translate3d(${(x * amount.x).toFixed(2)}px, ${(y * amount.y).toFixed(2)}px, 0) rotateX(${(-y * amount.rotate).toFixed(3)}deg) rotateY(${(x * amount.rotate).toFixed(3)}deg)`;
+      element.style.transform = `perspective(${tiltPerspective}) rotateX(${(-y * degrees).toFixed(3)}deg) rotateY(${(x * degrees).toFixed(3)}deg)`;
     }
   }
 
   function tick() {
     const next = current.current;
-    next.x += (target.current.x - next.x) * parallaxLerp;
-    next.y += (target.current.y - next.y) * parallaxLerp;
+    next.x += (target.current.x - next.x) * tiltLerp;
+    next.y += (target.current.y - next.y) * tiltLerp;
     const isSettled =
       Math.abs(target.current.x - next.x) < 0.0005 && Math.abs(target.current.y - next.y) < 0.0005;
     if (isSettled) {
@@ -307,7 +305,7 @@ export function HomeHero() {
   const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
   const { view, pick } = useHeroSequence(isAnimated && isVisible && !isKeyboardFocused);
   const entrance = useEntrance(revealRef);
-  const { extensionRef, phoneRef, onPointerMove, onPointerLeave } = useParallax(isAnimated);
+  const { extensionRef, phoneRef, onPointerMove, onPointerLeave } = useTilt(isAnimated);
 
   function onWordKeyUp(event: KeyboardEvent<HTMLButtonElement>) {
     if (event.key === 'Tab') setIsKeyboardFocused(true);
