@@ -32,6 +32,7 @@ overrides:
   '@sanity/codegen>zod': 4.6.7
   follow-redirects@>=1.0.0 <1.16.2: '>=1.16.2 <2'
   node-forge@>=1.0.0 <1.4.1: '>=1.4.1 <2'
+  bitcoinjs-lib@>=6.0.0 <6.1.8: '>=6.1.8 <7'
 
 patchedDependencies:
   expo-secure-store@15.0.8:
@@ -191,7 +192,7 @@ importers:
         version: 1.9.0(rxjs@7.8.2)
       '@ledgerhq/device-signer-kit-bitcoin':
         specifier: 1.3.3
-        version: 1.3.3(@ledgerhq/device-management-kit@1.9.0(rxjs@7.8.2))(bitcoinjs-lib@7.0.1(typescript@5.9.3))
+        version: 1.3.3(@ledgerhq/device-management-kit@1.9.0(rxjs@7.8.2))(bitcoinjs-lib@7.0.5(typescript@5.9.3))
       '@ledgerhq/device-transport-kit-web-hid':
         specifier: 1.2.4
         version: 1.2.4(@ledgerhq/device-management-kit@1.9.0(rxjs@7.8.2))(rxjs@7.8.2)
@@ -280,8 +281,8 @@ importers:
         specifier: 2.2.3
         version: 2.2.3
       bitcoinjs-lib:
-        specifier: 7.0.1
-        version: 7.0.1(typescript@5.9.3)
+        specifier: 7.0.5
+        version: 7.0.5(typescript@5.9.3)
       bn.js:
         specifier: 5.2.1
         version: 5.2.1
@@ -683,8 +684,8 @@ importers:
         specifier: 9.1.2
         version: 9.1.2
       bitcoinjs-lib:
-        specifier: 7.0.1
-        version: 7.0.1(typescript@5.9.3)
+        specifier: 7.0.5
+        version: 7.0.5(typescript@5.9.3)
       buffer:
         specifier: 6.0.3
         version: 6.0.3
@@ -1294,7 +1295,7 @@ importers:
     dependencies:
       '@bitcoinerlab/descriptors-core':
         specifier: 3.1.7
-        version: 3.1.7(@noble/hashes@1.5.0)(@scure/base@1.2.4)(@scure/bip32@1.6.2)(@scure/btc-signer@1.6.0)(bip32@5.0.1(typescript@5.9.3))(bitcoinjs-lib@7.0.1(typescript@5.9.3))(ecpair@3.0.1(typescript@5.9.3))
+        version: 3.1.7(@noble/hashes@1.5.0)(@scure/base@1.2.4)(@scure/bip32@1.6.2)(@scure/btc-signer@1.6.0)(bip32@5.0.1(typescript@5.9.3))(bitcoinjs-lib@7.0.5(typescript@5.9.3))(ecpair@3.0.1(typescript@5.9.3))
       '@bitcoinerlab/secp256k1':
         specifier: 1.0.2
         version: 1.0.2
@@ -1341,8 +1342,8 @@ importers:
         specifier: 2.2.3
         version: 2.2.3
       bitcoinjs-lib:
-        specifier: 7.0.1
-        version: 7.0.1(typescript@5.9.3)
+        specifier: 7.0.5
+        version: 7.0.5(typescript@5.9.3)
       ecpair:
         specifier: 3.0.1
         version: 3.0.1(typescript@5.9.3)
@@ -1599,8 +1600,8 @@ importers:
   packages/models:
     dependencies:
       '@stacks/blockchain-api-client':
-        specifier: 9.7.1
-        version: 9.7.1
+        specifier: 9.9.0
+        version: 9.9.0
       '@stacks/stacks-blockchain-api-types':
         specifier: 7.14.1
         version: 7.14.1
@@ -5034,7 +5035,7 @@ packages:
     resolution: {integrity: sha512-jLdZsq3eQKli7zOYsP4NxETY40FzA3WlMP7aMWsrajOShVNJmj/p8RLoURA77zM8Fxhr88qMz8ziJm3XuzIjkA==}
     peerDependencies:
       '@ledgerhq/device-management-kit': ^1.7.1
-      bitcoinjs-lib: ^6.1.6
+      bitcoinjs-lib: '>=6.1.8 <7'
 
   '@ledgerhq/device-transport-kit-web-hid@1.2.4':
     resolution: {integrity: sha512-VMwkZ6QTUJpj4fS45ihnqdcNrJFDI58kg/KGKCDVhsknSZAe52R0JoH9yRqryemjL0eeo11Yj2KifXM8dNpsDA==}
@@ -8177,8 +8178,8 @@ packages:
   '@stacks/auth@7.2.0':
     resolution: {integrity: sha512-u+Ky4CMQWFTPI6Au3VFcW74nSIA4Zb8YjsbOkcv0q9E6LiALyK4gozpKTxKvfW3/z1ER3z1Ky9uH/s4zY59rvg==}
 
-  '@stacks/blockchain-api-client@9.7.1':
-    resolution: {integrity: sha512-MnHsz9XDL7bMpb63n+3F8CXPcYWsg8Ro4oWMZTMvaLs24kujb6w6+91UvckwzxQZxRcBGdWw/wnnMvhBWLRbxQ==}
+  '@stacks/blockchain-api-client@9.9.0':
+    resolution: {integrity: sha512-pzH3kNtKr/AP/egSyIYgjJFR40RKSHIuLa2RHwh/a30XKp6Hnp6ltMmJ40buD7jsAbNJFm+0pYxAFTYP/lPxIA==}
 
   '@stacks/common@6.16.0':
     resolution: {integrity: sha512-PnzvhrdGRMVZvxTulitlYafSK4l02gPCBBoI9QEoTqgSnv62oaOXhYAUUkTMFKxdHW1seVEwZsrahuXiZPIAwg==}
@@ -9840,8 +9841,8 @@ packages:
     resolution: {integrity: sha512-mdFV5+/v0XyNYXjBS6CQPLo9ekCx4gtKZFnJm5PMto7Fs9hTTDpkkzOB7/FtluRI6JbUUAu+snTYfJRgHLZbZQ==}
     engines: {node: '>=8.0.0'}
 
-  bip174@3.0.0:
-    resolution: {integrity: sha512-N3vz3rqikLEu0d6yQL8GTrSkpYb35NQKWMR7Hlza0lOj6ZOlvQ3Xr7N9Y+JPebaCVoEUHdBeBSuLxcHr71r+Lw==}
+  bip174@3.0.1:
+    resolution: {integrity: sha512-avOnOoLOwdjw1MebWKh3bHqWOH558Q9VpqmRKUv2S63vjw0pnX7Y+yRihxIibgP55twhc7+YfC0IAH43IF5FqQ==}
     engines: {node: '>=18.0.0'}
 
   bip21@3.0.0:
@@ -9867,12 +9868,12 @@ packages:
   bitcoin-address-validation@2.2.3:
     resolution: {integrity: sha512-1uGCGl26Ye8JG5qcExtFLQfuib6qEZWNDo1ZlLlwp/z7ygUFby3IxolgEfgMGaC+LG9csbVASLcH8fRLv7DIOg==}
 
-  bitcoinjs-lib@6.1.7:
-    resolution: {integrity: sha512-tlf/r2DGMbF7ky1MgUqXHzypYHakkEnm0SZP23CJKIqNY/5uNAnMbFhMJdhjrL/7anfb/U8+AlpdjPWjPnAalg==}
+  bitcoinjs-lib@6.1.10:
+    resolution: {integrity: sha512-9KpnS5JKVP0j0yfTsBNFIsNA6+JdBDb7VtL35F20I/pJYobosi3TmZFGtu6qxhJCfb0vubJixr5Zv61/lUYETw==}
     engines: {node: '>=8.0.0'}
 
-  bitcoinjs-lib@7.0.1:
-    resolution: {integrity: sha512-vwEmpL5Tpj0I0RBdNkcDMXePoaYSTeKY6mL6/l5esbnTs+jGdPDuLp4NY1hSh6Zk5wSgePygZ4Wx5JJao30Pww==}
+  bitcoinjs-lib@7.0.5:
+    resolution: {integrity: sha512-xH24P1ile3QtyChzX1ITitcgpfZgDzG986gy1glbGXFsvcSnRX0P6p4m3nuTQfJ+j97va8py0leEK7xG8oxMqQ==}
     engines: {node: '>=18.0.0'}
 
   bitcoinjs-message@2.2.0:
@@ -14451,6 +14452,7 @@ packages:
 
   node-abort-controller@3.1.1:
     resolution: {integrity: sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==}
+    deprecated: This package is no longer needed on supported Node.js versions. Node.js 16+ includes AbortController and AbortSignal as built-in globals. All Node.js versions requiring this polyfill are end-of-life. Use the built-in globals instead.
 
   node-addon-api@5.1.0:
     resolution: {integrity: sha512-eh0GgfEkpnoWDq+VY8OyvYhFEzBk6jIYbRKdIlyTiAXIVJ8PyBaKb0rp7oDtoddbdoHWhq8wwr+XZ81F1rpNdA==}
@@ -17489,6 +17491,10 @@ packages:
   ufo@1.6.4:
     resolution: {integrity: sha512-JFNbkD1Svwe0KvGi8GOeLcP4kAWQ609twvCdcHxq1oSL8svv39ZuSvajcD8B+5D0eL4+s1Is2D/O6KN3qcTeRA==}
 
+  uint8array-tools@0.0.10:
+    resolution: {integrity: sha512-sSbrZqlr04w4p8KKpHw0ME/R4JzQaadum+BWhMlk2M7LrDyXWTfJOco3d1jNMdQNxgk5DDm88R3IWYH0nR+tzQ==}
+    engines: {node: '>=14.0.0'}
+
   uint8array-tools@0.0.8:
     resolution: {integrity: sha512-xS6+s8e0Xbx++5/0L+yyexukU7pz//Yg6IHg3BKhXotg1JcYtgxVcUctQ0HxLByiJzpAkNFawz1Nz5Xadzo82g==}
     engines: {node: '>=14.0.0'}
@@ -17895,6 +17901,9 @@ packages:
 
   varuint-bitcoin@2.0.0:
     resolution: {integrity: sha512-6QZbU/rHO2ZQYpWFDALCDSRsXbAs1VOEmXAxtbtjLtKuMJ/FQ8YbhfxlaiKv5nklci0M6lZtlZyxo9Q+qNnyog==}
+
+  varuint-bitcoin@2.0.1:
+    resolution: {integrity: sha512-TTl5qSPJ3FzjuTHo0Ex9WUE3jTxnUsQHR38vIDhHApoVstzJK4gE20WqmTWOT5oo7ilvOSNejXt4CJrfDcqm5A==}
 
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
@@ -20808,7 +20817,7 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@bitcoinerlab/descriptors-core@3.1.7(@noble/hashes@1.5.0)(@scure/base@1.2.4)(@scure/bip32@1.6.2)(@scure/btc-signer@1.6.0)(bip32@5.0.1(typescript@5.9.3))(bitcoinjs-lib@7.0.1(typescript@5.9.3))(ecpair@3.0.1(typescript@5.9.3))':
+  '@bitcoinerlab/descriptors-core@3.1.7(@noble/hashes@1.5.0)(@scure/base@1.2.4)(@scure/bip32@1.6.2)(@scure/btc-signer@1.6.0)(bip32@5.0.1(typescript@5.9.3))(bitcoinjs-lib@7.0.5(typescript@5.9.3))(ecpair@3.0.1(typescript@5.9.3))':
     dependencies:
       '@bitcoinerlab/miniscript': 2.0.0
       lodash.memoize: 4.1.2
@@ -20820,7 +20829,7 @@ snapshots:
       '@scure/bip32': 1.6.2
       '@scure/btc-signer': 1.6.0
       bip32: 5.0.1(typescript@5.9.3)
-      bitcoinjs-lib: 7.0.1(typescript@5.9.3)
+      bitcoinjs-lib: 7.0.5(typescript@5.9.3)
       ecpair: 3.0.1(typescript@5.9.3)
 
   '@bitcoinerlab/miniscript@2.0.0':
@@ -22674,12 +22683,12 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@ledgerhq/device-signer-kit-bitcoin@1.3.3(@ledgerhq/device-management-kit@1.9.0(rxjs@7.8.2))(bitcoinjs-lib@7.0.1(typescript@5.9.3))':
+  '@ledgerhq/device-signer-kit-bitcoin@1.3.3(@ledgerhq/device-management-kit@1.9.0(rxjs@7.8.2))(bitcoinjs-lib@7.0.5(typescript@5.9.3))':
     dependencies:
       '@ledgerhq/device-management-kit': 1.9.0(rxjs@7.8.2)
       '@ledgerhq/signer-utils': 1.3.0(@ledgerhq/device-management-kit@1.9.0(rxjs@7.8.2))
       '@types/crypto-js': 4.2.2
-      bitcoinjs-lib: 7.0.1(typescript@5.9.3)
+      bitcoinjs-lib: 7.0.5(typescript@5.9.3)
       crypto-js: 4.2.0
       inversify: 7.5.1(reflect-metadata@0.2.2)
       purify-ts: 2.1.0
@@ -25511,9 +25520,9 @@ snapshots:
       '@babel/runtime': 7.28.4
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
-      '@rjsf/core': 5.24.13(@rjsf/utils@5.24.13(react@19.1.0))(react@19.2.3)
+      '@rjsf/core': 5.24.13(@rjsf/utils@5.24.13(react@19.2.3))(react@19.2.3)
       '@rjsf/utils': 5.24.13(react@19.2.3)
-      '@rjsf/validator-ajv8': 5.24.13(@rjsf/utils@5.24.13(react@19.1.0))
+      '@rjsf/validator-ajv8': 5.24.13(@rjsf/utils@5.24.13(react@19.2.3))
       '@types/codemirror': 5.60.17
       '@types/json-schema': 7.0.15
       '@types/react': 19.1.17
@@ -25911,23 +25920,14 @@ snapshots:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
-  '@rjsf/core@5.24.13(@rjsf/utils@5.24.13(react@19.1.0))(react@19.2.3)':
+  '@rjsf/core@5.24.13(@rjsf/utils@5.24.13(react@19.2.3))(react@19.2.3)':
     dependencies:
-      '@rjsf/utils': 5.24.13(react@19.1.0)
+      '@rjsf/utils': 5.24.13(react@19.2.3)
       lodash: 4.18.1
       lodash-es: 4.18.1
       markdown-to-jsx: 7.7.17(react@19.2.3)
       prop-types: 15.8.1
       react: 19.2.3
-
-  '@rjsf/utils@5.24.13(react@19.1.0)':
-    dependencies:
-      json-schema-merge-allof: 0.8.1
-      jsonpointer: 5.0.1
-      lodash: 4.18.1
-      lodash-es: 4.18.1
-      react: 19.1.0
-      react-is: 18.3.1
 
   '@rjsf/utils@5.24.13(react@19.2.3)':
     dependencies:
@@ -25938,9 +25938,9 @@ snapshots:
       react: 19.2.3
       react-is: 18.3.1
 
-  '@rjsf/validator-ajv8@5.24.13(@rjsf/utils@5.24.13(react@19.1.0))':
+  '@rjsf/validator-ajv8@5.24.13(@rjsf/utils@5.24.13(react@19.2.3))':
     dependencies:
-      '@rjsf/utils': 5.24.13(react@19.1.0)
+      '@rjsf/utils': 5.24.13(react@19.2.3)
       ajv: 8.18.0
       ajv-formats: 2.1.1(ajv@8.18.0)
       lodash: 4.18.1
@@ -27200,7 +27200,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/blockchain-api-client@9.7.1':
+  '@stacks/blockchain-api-client@9.9.0':
     dependencies:
       eventemitter3: 5.0.4
       jsonrpc-lite: 2.2.0
@@ -29649,10 +29649,10 @@ snapshots:
   bip174@2.1.1:
     optional: true
 
-  bip174@3.0.0:
+  bip174@3.0.1:
     dependencies:
-      uint8array-tools: 0.0.9
-      varuint-bitcoin: 2.0.0
+      uint8array-tools: 0.0.10
+      varuint-bitcoin: 2.0.1
 
   bip21@3.0.0:
     dependencies:
@@ -29661,7 +29661,7 @@ snapshots:
   bip322-js@2.0.0:
     dependencies:
       '@bitcoinerlab/secp256k1': 1.2.0
-      bitcoinjs-lib: 6.1.7
+      bitcoinjs-lib: 6.1.10
       bitcoinjs-message: 2.2.0
       ecpair: 2.1.0
       elliptic: 6.6.1
@@ -29694,7 +29694,7 @@ snapshots:
       bech32: 2.0.0
       sha256-uint8array: 0.10.7
 
-  bitcoinjs-lib@6.1.7:
+  bitcoinjs-lib@6.1.10:
     dependencies:
       '@noble/hashes': 1.5.0
       bech32: 2.0.0
@@ -29704,15 +29704,15 @@ snapshots:
       varuint-bitcoin: 1.1.2
     optional: true
 
-  bitcoinjs-lib@7.0.1(typescript@5.9.3):
+  bitcoinjs-lib@7.0.5(typescript@5.9.3):
     dependencies:
       '@noble/hashes': 1.5.0
       bech32: 2.0.0
-      bip174: 3.0.0
+      bip174: 3.0.1
       bs58check: 4.0.0
-      uint8array-tools: 0.0.9
+      uint8array-tools: 0.0.10
       valibot: 1.4.2(typescript@5.9.3)
-      varuint-bitcoin: 2.0.0
+      varuint-bitcoin: 2.0.1
     transitivePeerDependencies:
       - typescript
 
@@ -39014,6 +39014,8 @@ snapshots:
 
   ufo@1.6.4: {}
 
+  uint8array-tools@0.0.10: {}
+
   uint8array-tools@0.0.8: {}
 
   uint8array-tools@0.0.9: {}
@@ -39338,6 +39340,10 @@ snapshots:
   varuint-bitcoin@2.0.0:
     dependencies:
       uint8array-tools: 0.0.8
+
+  varuint-bitcoin@2.0.1:
+    dependencies:
+      uint8array-tools: 0.0.10
 
   vary@1.1.2: {}
 
