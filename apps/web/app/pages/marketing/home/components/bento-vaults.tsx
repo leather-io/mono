@@ -1,8 +1,8 @@
-import { type CSSProperties, type ReactNode, useState } from 'react';
+import { type CSSProperties, type ReactNode, useLayoutEffect, useRef, useState } from 'react';
 
 import { css } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
-import { vaultThemes } from '~/pages/multisig/multisig-tokens';
+import { accountIconUrl, vaultTheme, vaultThemes } from '~/pages/multisig/multisig-tokens';
 
 import {
   ChevronUpIcon,
@@ -74,7 +74,7 @@ function pick<T>(list: readonly [T, ...T[]], index: number): T {
  * Counts how many times a looping sequence has started over, so a loop can move on to the
  * next sample transaction instead of replaying the same one. Adjusts state during render
  * (React's pattern for state derived from a changing value) so the count and the restarted
- * step land in the same commit and nothing flashes back.
+ * step land in the same commit and nothing flashes back. -1 until the sequence first starts.
  */
 function useLoopCount(step: number) {
   const [tracked, setTracked] = useState({ step, count: -1 });
@@ -83,7 +83,7 @@ function useLoopCount(step: number) {
     if (step < tracked.step) count += 1;
     setTracked({ step, count });
   }
-  return Math.max(count, 0);
+  return count;
 }
 
 /** Lets a fixed-size product icon scale with the stage. */
@@ -321,6 +321,8 @@ interface QueuedProposal {
   required: number;
   /** Index into the product's vaultThemes (pages/multisig/multisig-tokens.ts) */
   theme: number;
+  /** The vault's glyph, one of the product's vaultIcons (edit-vault-modal's icon picker) */
+  icon: string;
   /**
    * The vault's balance in its native asset (BTC or STX), as the vault page's hero shows it.
    * Marche is all caps, so an sBTC figure would read "SBTC"; the sBTC lives in the row.
@@ -338,6 +340,7 @@ const queue: [QueuedProposal, ...QueuedProposal[]] = [
     fiat: '$1,128.00',
     required: 2, // 2-of-3
     theme: 0,
+    icon: 'vault',
     balance: '0.4820 BTC',
     balanceFiat: '$36,246.40',
   },
@@ -348,6 +351,7 @@ const queue: [QueuedProposal, ...QueuedProposal[]] = [
     fiat: '$1,075.00',
     required: 3, // 3-of-5
     theme: 1,
+    icon: 'gift',
     balance: '184,200 STX',
     balanceFiat: '$79,206.00',
   },
@@ -358,6 +362,7 @@ const queue: [QueuedProposal, ...QueuedProposal[]] = [
     fiat: '$3,158.40',
     required: 4, // 4-of-4
     theme: 2,
+    icon: 'bank',
     balance: '96,500 STX',
     balanceFiat: '$41,495.00',
   },
@@ -368,6 +373,7 @@ const queue: [QueuedProposal, ...QueuedProposal[]] = [
     fiat: '$7,520.00',
     required: 2, // 2-of-2
     theme: 3,
+    icon: 'piggybank',
     balance: '3.5000 BTC',
     balanceFiat: '$263,200.00',
   },
@@ -423,48 +429,160 @@ const visibleRows = Math.ceil((mockupSize.panelHeight - queueTop) / rowHeight);
 
 // AvatarSq's lg glyph-to-tile ratio (30 / 56)
 const glyphRatio = 0.54;
-const themeFade = 520;
+// The card's theme, the tile's theme and glyph, and the balance all change on one beat
+const headerMs = 600;
+const headerEase = 'cubic-bezier(0.65, 0, 0.35, 1)';
+
+/** Fades a slot's top and bottom edges, so what rolls through it softens as it enters and leaves. */
+function rollMask(edge: string): CSSProperties {
+  const mask = `linear-gradient(to bottom, transparent, #000 ${edge}, #000 calc(100% - ${edge}), transparent)`;
+  return { maskImage: mask, WebkitMaskImage: mask };
+}
 
 /**
- * Every product vault theme stacked, the active one shown: switching vaults cross-fades the
- * texture instead of swapping it.
+ * Counts theme changes and remembers the theme shown before the current one. Adjusts state
+ * during render, as useLoopCount does, so the new layer and its backing land in one commit.
+ */
+function useThemeChange(theme: number) {
+  const [tracked, setTracked] = useState({ theme, previous: theme, changes: 0 });
+  if (tracked.theme === theme) return tracked;
+  const next = { theme, previous: tracked.theme, changes: tracked.changes + 1 };
+  setTracked(next);
+  return next;
+}
+
+const themeLayer: CSSProperties = { position: 'absolute', inset: 0, borderRadius: 'inherit' };
+
+/** The incoming theme, fading in from transparent as it mounts. */
+function IncomingTheme({ background, isFading }: { background: string; isFading: boolean }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  // Before paint, so the layer never shows a frame at full opacity first
+  useLayoutEffect(() => {
+    if (!isFading) return;
+    const animation = ref.current?.animate([{ opacity: 0 }, { opacity: 1 }], {
+      duration: headerMs,
+      easing: headerEase,
+    });
+    return () => animation?.cancel();
+  }, [isFading]);
+  return <span ref={ref} style={{ ...themeLayer, background }} />;
+}
+
+/**
+ * The vault's theme texture. A change mounts the new theme on top, fading in from transparent,
+ * while the old one stays fully opaque beneath it, so the card only ever blends between the two
+ * themes and never shows the white panel through. Every theme sits underneath, transparent, so
+ * its image is loaded before its turn.
  */
 function ThemeBackdrop({ theme, isAnimated }: { theme: number; isAnimated: boolean }) {
+  const { previous, changes } = useThemeChange(theme);
   return (
-    <>
+    <span style={{ ...themeLayer, isolation: 'isolate' }}>
       {vaultThemes.map(({ id, background }) => (
         <span
           key={id}
-          style={{
-            position: 'absolute',
-            inset: 0,
-            borderRadius: 'inherit',
-            background,
-            opacity: id === theme ? 1 : 0,
-            transition: transitionFor(isAnimated, ['opacity'], themeFade),
-          }}
+          style={{ ...themeLayer, background, opacity: id === previous && changes > 0 ? 1 : 0 }}
         />
       ))}
-    </>
+      <IncomingTheme
+        key={changes}
+        background={vaultTheme(theme).background}
+        isFading={isAnimated && changes > 0}
+      />
+    </span>
   );
 }
 
 /**
- * AvatarSq with the vault glyph (pages/multisig/components/avatar-sq.tsx), in the vault's
- * theme. The ring is the product Avatar's own (@leather.io/ui avatar.web.tsx): a 1 px outline
- * inset by 1 px in ink.border-transparent, here at its dark-theme value since the card is a
- * dark surface. Drawn inside the tile so the tile stays flush with the text.
+ * A slot-machine slot: the item at `position` sits in the slot, the next one waits just below
+ * it and the last one just above, out of sight. Advancing the position rolls the current item
+ * up and out as the next one rolls up in from below, each fading as it crosses the slot's top
+ * or bottom edge. The slot clips to its own box, so a roll never spills onto its neighbours.
+ */
+function RollSlot({
+  position,
+  isAnimated,
+  renderItem,
+  edge,
+  style,
+}: {
+  position: number;
+  isAnimated: boolean;
+  renderItem(position: number): ReactNode;
+  /** How deep the fade at the top and bottom edges reaches */
+  edge: string;
+  style?: CSSProperties;
+}) {
+  return (
+    <span
+      style={{
+        display: 'grid',
+        // Clips without becoming a scroll container, so the slot keeps its text baseline
+        overflow: 'clip',
+        ...rollMask(edge),
+        ...style,
+      }}
+    >
+      {[position - 1, position, position + 1].map(item => {
+        const offset = Math.sign(item - position);
+        return (
+          <span
+            key={item}
+            aria-hidden={offset !== 0 || undefined}
+            style={{
+              gridArea: '1 / 1',
+              position: 'relative',
+              transform: offset === 0 ? 'none' : `translateY(${offset * 100}%)`,
+              opacity: offset === 0 ? 1 : 0,
+              transition: transitionFor(
+                isAnimated,
+                ['transform', 'opacity'],
+                headerMs,
+                0,
+                headerEase
+              ),
+            }}
+          >
+            {renderItem(item)}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
+
+/** A vault glyph in white, as AvatarSq draws it on the dark themes, recoloured through a mask. */
+function VaultGlyph({ icon }: { icon: string }) {
+  const mask = `url('${accountIconUrl(icon)}') center / contain no-repeat`;
+  return (
+    <span
+      style={{
+        position: 'absolute',
+        inset: `${(1 - glyphRatio) * 50}%`,
+        background: '#FFFFFF',
+        mask,
+        WebkitMask: mask,
+      }}
+    />
+  );
+}
+
+/**
+ * AvatarSq with the vault's glyph (pages/multisig/components/avatar-sq.tsx), in the vault's
+ * theme. The theme cross-fades with the card's while the glyph rolls to the next vault's. The
+ * ring is the product Avatar's own (@leather.io/ui avatar.web.tsx): a 1 px outline inset by
+ * 1 px in ink.border-transparent, here at its dark-theme value since the card is a dark
+ * surface. Drawn inside the tile so the tile stays flush with the text.
  */
 function VaultTile({
   size,
-  theme,
+  active,
   isAnimated,
 }: {
   size: number;
-  theme: number;
+  active: number;
   isAnimated: boolean;
 }) {
-  const mask = "url('/multisig/icons/account/vault.svg') center / contain no-repeat";
   return (
     <styled.span
       position="relative"
@@ -477,16 +595,14 @@ function VaultTile({
         borderRadius: stagePx(size * 0.2),
       }}
     >
-      {/* Out of flow, so the tile's baseline is its bottom edge */}
-      <ThemeBackdrop theme={theme} isAnimated={isAnimated} />
-      <span
-        style={{
-          position: 'absolute',
-          inset: `${(1 - glyphRatio) * 50}%`,
-          background: '#FFFFFF',
-          mask,
-          WebkitMask: mask,
-        }}
+      {/* Everything out of flow, so the tile's baseline is its bottom edge */}
+      <ThemeBackdrop theme={pick(queue, active).theme} isAnimated={isAnimated} />
+      <RollSlot
+        position={active}
+        isAnimated={isAnimated}
+        edge="22%"
+        style={{ position: 'absolute', inset: 0 }}
+        renderItem={position => <VaultGlyph icon={pick(queue, position).icon} />}
       />
       <span
         style={{
@@ -503,36 +619,38 @@ function VaultTile({
 
 /**
  * The vault page's balance, without the vault name, on its themed card: the vault tile beside
- * the figure and fiat, in white. The figures cross-fade as the vault changes.
+ * the figure and fiat, in white. Tile glyph, figure and fiat roll together to the next vault.
  */
 function VaultBalance({ active, isAnimated }: { active: number; isAnimated: boolean }) {
-  const entry = pick(queue, active);
-  const index = queue.indexOf(entry);
   return (
     <styled.div display="flex" style={{ alignItems: 'last baseline', gap: stagePx(12) }}>
-      <VaultTile size={vaultTileSize} theme={entry.theme} isAnimated={isAnimated} />
+      <VaultTile size={vaultTileSize} active={active} isAnimated={isAnimated} />
       <styled.div display="flex" flexDirection="column">
-        <SwapText
-          index={index}
+        <RollSlot
+          position={active}
           isAnimated={isAnimated}
-          items={queue.map(vault => vault.balance)}
+          // Just above Marche's cap top and below its baseline, in the 26 line
+          edge={stagePx(3)}
           style={{
             ...brandFigure,
+            whiteSpace: 'nowrap',
             lineHeight: stagePx(figureLine),
-            height: stagePx(figureLine),
             color: '#FFFFFF',
           }}
+          renderItem={position => pick(queue, position).balance}
         />
-        <SwapText
-          index={index}
+        <RollSlot
+          position={active}
           isAnimated={isAnimated}
-          items={queue.map(vault => vault.balanceFiat)}
+          edge={stagePx(2)}
           style={{
             ...mockupType.meta,
+            whiteSpace: 'nowrap',
             lineHeight: stagePx(fiatLine),
             marginTop: stagePx(figureGap),
             color: 'rgb(255 255 255 / 0.85)',
           }}
+          renderItem={position => pick(queue, position).balanceFiat}
         />
       </styled.div>
     </styled.div>
@@ -605,12 +723,14 @@ export function SharedVaultMockup() {
     loopDelays(pick(queue, cycle).required),
     900
   );
-  const loop = useLoopCount(step);
+  // -1 until the loop first starts: the frame's final state, which hasn't cleared anything
+  const loopCount = useLoopCount(step);
+  const loop = Math.max(loopCount, 0);
   if (isAnimated && loop !== cycle) setCycle(loop);
   const head = isAnimated ? loop : 0;
   // Reduced motion: the top row broadcast, the next one at one signature
   const visibleStep = isAnimated ? step : nextSignatureStep;
-  const hasCleared = isAnimated && step >= clearStep;
+  const hasCleared = isAnimated && loopCount >= 0 && step >= clearStep;
   // The card follows the vault of the transaction at the top of the queue
   const active = head + (hasCleared ? 1 : 0);
 
