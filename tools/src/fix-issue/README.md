@@ -64,7 +64,7 @@ access to the repository: their permission is looked up per author, because `lea
 memberships are private; anyone else's comments, and the title and body of an issue they opened,
 are left out with a note, so the brief must carry what an outside report says), writes the brief to
 `tmp/fix-issue/notes.md`, writes `apps/extension/.env` from the `PUBLIC_*` repository variables,
-installs Chromium for Playwright (the browser cache is restored, never saved) and runs the fixer
+installs Chromium for Playwright and runs the fixer
 with `.github/prompts/fix-issue.md`. The fixer can build the extension in test mode and run its
 end-to-end specs under `xvfb-run` with the `EXTENSION_INTEGRATION_TEST_MNEMONIC` test wallet. It has
 no GitHub MCP server and is told not to fetch issues or pull requests itself, so its only view of the
@@ -175,11 +175,14 @@ boundary. The fixer runs with `--permission-mode auto --permission-prompts none`
 classifier reviews each tool call and refuses the ones that reach beyond the fix, and anything that
 would wait for a person is denied. `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` must stay unset: it forces
 the default permission mode, which turns auto mode off. `pnpm` scripts are arbitrary code the fixer
-can edit, so an allowlist would not be a boundary either. The job uses no shared cache: the turbo and pnpm
-caches are off (`TURBO_CACHE` and `PNPM_CACHE` in `provision`), because `setup-node` saves the
-pnpm store after the job on a cache miss, and a store the fixer could have changed would then be
-restored by every workflow on `dev`, including `open-pull-request` and the release jobs. The
-Playwright browsers are only restored, never saved. The fixer's and the reviewer's full transcripts reach the log only
+can edit, so an allowlist would not be a boundary either. The job has no access to the Actions
+cache: `cache-mode: none` denies its cache token both restores and saves. GitHub enforces the mode
+at the cache service through that token, so it holds for any code in the job, not only for the
+cache actions. Without it, a `workflow_dispatch` run on `dev` may write the default branch's cache,
+and an entry the fixer wrote would be restored by every workflow on `dev`, including the release
+jobs. The turbo and pnpm caches are off as well (`TURBO_CACHE` and `PNPM_CACHE` in `provision`),
+and the Playwright browsers are installed on every run. The fixer's and the reviewer's full
+transcripts reach the log only
 outside `leather-io/mono` (`show_full_output`): on the public repository a transcript could carry
 a secret in a form GitHub does not mask, so debug a run there by reproducing it on a fork. What it can reach: its job holds the
 OAuth token for Claude (the action needs it) and a read-only GitHub token, and its shell inherits
@@ -187,8 +190,10 @@ both.
 
 `open-pull-request` is the boundary: a fresh runner that builds `tools` from `dev` before reading
 the artifact, runs no code from the patch, applies it in a separate worktree, refuses anything
-outside `apps/`, `packages/`, `tools/` and `pnpm-lock.yaml`, and holds the only write token. Every
-GitHub write there uses an installation token of the `fix-issue` GitHub App, not the run's
+outside `apps/`, `packages/`, `tools/` and `pnpm-lock.yaml`, and holds the only write token. It has
+no access to the Actions cache either (`cache-mode: none`, turbo and pnpm caches off), so nothing
+another job saved runs next to that token. Every GitHub write there uses an installation token of
+the `fix-issue` GitHub App, not the run's
 `GITHUB_TOKEN`. GitHub starts no workflows for events made with `GITHUB_TOKEN`; the App's push and
 pull request start CI like any contributor's, and its API commits are signed. The pull request then
 needs two human reviews like any other.
