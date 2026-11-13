@@ -1,10 +1,7 @@
 import { type MetaDescriptor } from 'react-router';
 
-import { cmsClient } from '~/constants/cms-client';
-
-import { changelogQuery } from '@leather.io/cms';
-
 import { type Route } from './+types/changelog.route';
+import { getChangelogEntries } from './changelog.data';
 import { ChangelogPage } from './changelog.page';
 
 export function meta() {
@@ -15,8 +12,8 @@ export function meta() {
   ] satisfies MetaDescriptor[];
 }
 
-export async function loader() {
-  return await cmsClient.fetch(changelogQuery);
+export function loader() {
+  return getChangelogEntries();
 }
 
 export default function ChangelogRoute({ loaderData }: Route.ComponentProps) {
