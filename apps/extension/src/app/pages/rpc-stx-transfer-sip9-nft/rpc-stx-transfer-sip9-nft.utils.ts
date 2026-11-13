@@ -1,27 +1,12 @@
 import type { StacksNetwork } from '@stacks/network';
-import {
-  type ClarityValue,
-  createAddress,
-  deserializeCV,
-  postConditionToWire,
-  serializeCV,
-  serializePostConditionWire,
-  standardPrincipalCVFromAddress,
-} from '@stacks/transactions';
 
 import type { Money } from '@leather.io/models';
 import { createRequestEncoder, stxTransferSip9Nft } from '@leather.io/rpc';
-import { getAddressFromAssetIdentifier } from '@leather.io/services';
-import {
-  type StacksUnsignedContractCallOptions,
-  TransactionTypes,
-  getStacksAssetStringParts,
-} from '@leather.io/stacks';
+import { type StacksUnsignedContractCallOptions, TransactionTypes } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
-import { makeNftPostCondition } from '@shared/utils/post-conditions';
-
 import { initialSearchParams } from '@app/common/initial-search-params';
+import { createSip9NftTransferContractCall } from '@app/common/transactions/stacks/sip9-nft-transfer.utils';
 import type { Nonce } from '@app/features/nonce-editor/nonce-editor.context';
 
 export function getDecodedRpcStxTransferSip9NftRequest() {
@@ -32,37 +17,18 @@ export function getDecodedRpcStxTransferSip9NftRequest() {
 }
 
 function getTransactionOptionsFromRpcRequest(address: string) {
-  const decodedRpcRequest = getDecodedRpcStxTransferSip9NftRequest();
-
-  const { contractAddress, contractAssetName, contractName } = getStacksAssetStringParts(
-    decodedRpcRequest.params.asset
-  );
-
-  const fnArgs: ClarityValue[] = [
-    deserializeCV(decodedRpcRequest.params.assetId),
-    standardPrincipalCVFromAddress(createAddress(decodedRpcRequest.params.address ?? address)),
-    standardPrincipalCVFromAddress(createAddress(decodedRpcRequest.params.recipient)),
-  ];
-  const postConditionOptions = {
-    assetId: decodedRpcRequest.params.assetId,
-    contractAddress,
-    contractAssetName,
-    contractName,
-    stxAddress: decodedRpcRequest.params.address ?? address,
-  };
+  const { params } = getDecodedRpcStxTransferSip9NftRequest();
 
   return {
-    contractAddress: getAddressFromAssetIdentifier(decodedRpcRequest.params.asset),
-    contractName,
-    functionArgs: fnArgs.map(arg => serializeCV(arg)),
-    fee: decodedRpcRequest.params.fee
-      ? createMoney(decodedRpcRequest.params.fee, 'STX')
-      : undefined,
-    nonce: decodedRpcRequest.params.nonce,
-    sponsored: decodedRpcRequest.params.sponsored,
-    postConditions: [
-      serializePostConditionWire(postConditionToWire(makeNftPostCondition(postConditionOptions))),
-    ],
+    ...createSip9NftTransferContractCall({
+      assetIdentifier: params.asset,
+      serializedTokenId: params.assetId,
+      sender: params.address ?? address,
+      recipient: params.recipient,
+    }),
+    fee: params.fee ? createMoney(params.fee, 'STX') : undefined,
+    nonce: params.nonce,
+    sponsored: params.sponsored,
   };
 }
 
@@ -81,7 +47,6 @@ export function getUnsignedStacksContractCallOptionsForFeeEstimation({
   return {
     txType: TransactionTypes.ContractCall,
     ...requestOptions,
-    functionName: 'transfer',
     fee: requestOptions.fee ?? createMoney(0, 'STX'),
     nonce: requestOptions.nonce ?? 0,
     publicKey,
@@ -108,7 +73,6 @@ export function getUnsignedStacksContractCallOptions({
   return {
     txType: TransactionTypes.ContractCall,
     ...requestOptions,
-    functionName: 'transfer',
     publicKey,
     network,
     fee,

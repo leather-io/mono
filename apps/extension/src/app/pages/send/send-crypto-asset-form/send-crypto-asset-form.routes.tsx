@@ -12,6 +12,8 @@ import { AccountGate } from '@app/routes/account-gate';
 
 import { BroadcastError } from '../broadcast-error/broadcast-error';
 import { ChooseCryptoAsset } from '../choose-crypto-asset/choose-crypto-asset';
+import { SendCollectibleConfirmation } from '../send-collectible/send-collectible-confirmation';
+import { SendCollectibleForm } from '../send-collectible/send-collectible-form';
 import { BtcSentSummary } from '../sent-summary/btc-sent-summary';
 import { ProposalSentSummary } from '../sent-summary/proposal-sent-summary';
 import { StacksChainTxSummaryRoute } from '../sent-summary/stacks/stacks-chain-tx-summary.route';
@@ -94,6 +96,13 @@ export const sendCryptoAssetFormRoutes = (
       {recipientAccountsSheetRoute}
     </Route>
     <Route path="/send/:symbol/:contractId/confirm" element={<StacksSendFormConfirmation />} />
+
+    <Route path={RouteUrls.SendCollectible} element={<SendCollectibleForm />}>
+      {broadcastErrorSheetRoute}
+      {editNonceSheetRoute}
+      {recipientAccountsSheetRoute}
+    </Route>
+    <Route path={RouteUrls.SendCollectibleConfirmation} element={<SendCollectibleConfirmation />} />
     <Route path={RouteUrls.SentProposalSummary} element={<ProposalSentSummary />} />
     <Route path={RouteUrls.SentStxTxSummary} element={<StacksChainTxSummaryRoute />} />
   </Route>

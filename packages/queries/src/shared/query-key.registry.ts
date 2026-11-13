@@ -44,6 +44,7 @@ export const querySettingsDepsRegistry = {
   'bns-service--get-account-bns-names': [],
   // collectibles
   'collectibles-service--get-account-collectibles': [],
+  'collectibles-service--get-collectible-transfer-blocker': ['network'],
   // transactions
   'stacks-transactions-service--get-transaction-by-id': ['network'],
   'bitcoin-transactions-service--get-transaction-by-tx-id': ['network'],

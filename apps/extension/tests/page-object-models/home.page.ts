@@ -1,6 +1,7 @@
 import { type Locator, type Page, expect } from '@playwright/test';
 import { TEST_PASSWORD } from '@tests/mocks/constants';
 import { ActivitySelectors } from '@tests/selectors/activity.selectors';
+import { CollectiblesSelectors } from '@tests/selectors/collectibles.selectors';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
@@ -99,6 +100,15 @@ export class HomePage {
 
   async clickCollectiblesTab() {
     await this.page.getByTestId(HomePageSelectors.CollectiblesTabBtn).click();
+  }
+
+  async openCollectible(name: string) {
+    await this.clickCollectiblesTab();
+    await this.page
+      .getByTestId(CollectiblesSelectors.CollectibleCardSip9)
+      .filter({ hasText: name })
+      .click();
+    await this.page.getByTestId(CollectiblesSelectors.CollectibleDetailsContainer).waitFor();
   }
 
   async clickActivityTab() {

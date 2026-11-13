@@ -48,6 +48,8 @@ export const RouteUrls = {
   SendBtcDisabled: '/send/btc/disabled',
   SendStxConfirmation: '/send/stx/confirm',
   SendStacksSip10Confirmation: '/send/:symbol/confirm',
+  SendCollectible: '/send/nft/:assetId/:tokenId',
+  SendCollectibleConfirmation: '/send/nft/:assetId/:tokenId/confirm',
   SentBtcTxSummary: '/sent/btc/:txId',
   SentStxTxSummary: '/sent/:symbol/:txid',
   SentProposalSummary: '/sent/proposal',

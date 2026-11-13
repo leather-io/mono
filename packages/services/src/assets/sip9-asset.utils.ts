@@ -1,3 +1,4 @@
+import { bytesToUtf8, hexToBytes } from '@stacks/common';
 import { ClarityType, hexToCV } from '@stacks/transactions';
 import { isPlainObject } from 'remeda';
 import { type z } from 'zod';
@@ -59,6 +60,17 @@ const transformGammaAttributes = optionalize(transformGammaAttributesData);
 export function getNonFungibleTokenId(hex: string): number {
   const clarityValue = hexToCV(hex);
   return clarityValue.type === ClarityType.UInt ? Number(clarityValue.value) : 0;
+}
+
+export function createBnsV1Sip9Asset(assetIdentifier: string, hex: string): Sip9Asset {
+  const clarityValue = hexToCV(hex);
+  if (clarityValue.type !== ClarityType.Tuple) throw new Error('Invalid BNS v1 name value');
+  const { name, namespace } = clarityValue.value;
+  if (name?.type !== ClarityType.Buffer || namespace?.type !== ClarityType.Buffer) {
+    throw new Error('Invalid BNS v1 name value');
+  }
+  const fullName = `${bytesToUtf8(hexToBytes(name.value))}.${bytesToUtf8(hexToBytes(namespace.value))}`;
+  return { ...createSip9Asset(assetIdentifier, 0), name: fullName };
 }
 
 function encodeIpfsPath(path: string) {
