@@ -17,6 +17,7 @@ import type { SettingsService } from '../../../infrastructure/settings/settings.
 import { Types } from '../../../inversify.types';
 import type { YieldProductService } from '../../yield.service';
 import { StackingDaoLstService } from './stacking-dao-lst.service';
+import { ststxWithdrawNftIdentifier } from './stacking-dao.constants';
 
 @injectable()
 export class StackingDaoStStxService implements YieldProductService {
@@ -59,9 +60,9 @@ export class StackingDaoStStxService implements YieldProductService {
 
     const [ftBalances, nftHoldings] = await Promise.all([
       this.hiroStacksApiClient.getAddressFtBalances(account.stacks.stxAddress, { signal }),
-      this.hiroStacksApiClient.getNftHoldings(
+      this.hiroStacksApiClient.getPrincipalNftBalances(
         account.stacks.stxAddress,
-        { allPages: true, stopAfter: 5 },
+        { assetIdentifier: ststxWithdrawNftIdentifier, maxPages: 5 },
         { signal }
       ),
     ]);

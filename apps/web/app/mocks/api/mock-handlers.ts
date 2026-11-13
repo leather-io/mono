@@ -31,7 +31,6 @@ import {
 } from './hiro.so/pox5-signer-manager';
 import { stackingDaoContractCallHandler } from './hiro.so/stacking-dao-core-v4';
 import { ststxTokenBalanceContractCallHandler } from './hiro.so/ststx-token-get-balance';
-import { nftHoldingsHandler } from './hiro.so/tokens-nft-holdings';
 import { leatherMarketPricesHandler } from './leather.io/market-prices';
 import { multisigHandlers } from './leather.io/multisig';
 import { leatherPingHandler } from './leather.io/ping';
@@ -53,7 +52,6 @@ const endpoints = [
   accountsHandler,
   accountsBalanceHandler,
   hiroInfoHandler,
-  nftHoldingsHandler,
   transactionWithTransfersHandler,
   mempoolHandler,
   ststxTokenBalanceContractCallHandler,
