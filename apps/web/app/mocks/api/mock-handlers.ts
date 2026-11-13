@@ -3,8 +3,6 @@ import { HttpResponse, http } from 'msw';
 import { delay } from '@leather.io/utils';
 
 import { accountsHandler } from './hiro.so/accounts-address';
-import { accountsBalanceStxHandler } from './hiro.so/accounts-address-balance-stx';
-import { blockTimesHandler } from './hiro.so/block-times';
 import { getAllowanceContractCallersHandlers } from './hiro.so/get-allowance-contract-callers';
 import { hiroInfoHandler } from './hiro.so/info';
 import { poxMainnetHandler } from './hiro.so/pox';
@@ -65,9 +63,7 @@ const endpoints = [
   pox5CustomGetPoxAddrHandler,
   pox5CustomFeesBipsHandler,
   pox5GetAmountDelegatedHandler,
-  blockTimesHandler,
   getAllowanceContractCallersHandlers,
-  accountsBalanceStxHandler,
   poolsHandler,
   tokenHandler,
 ];

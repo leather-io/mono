@@ -1,8 +1,8 @@
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 
-import { accountsBalanceStxHandler } from './accounts-address-balance-stx';
 import { hiroInfoHandler } from './info';
 import { poxMainnetHandler } from './pox';
+import { principalsBalancesStxHandler } from './principals-balances-stx';
 import { principalsMempoolTransactionsHandler } from './principals-mempool-transactions';
 
 // The pox-5 read layer is pinned to the chain selected in
@@ -25,6 +25,6 @@ function atPox5Host(handler: EndpointHandler): EndpointHandler {
 export const pox5PinnedNetworkHandlers = [
   poxMainnetHandler,
   hiroInfoHandler,
-  accountsBalanceStxHandler,
+  principalsBalancesStxHandler,
   principalsMempoolTransactionsHandler,
 ].map(atPox5Host);

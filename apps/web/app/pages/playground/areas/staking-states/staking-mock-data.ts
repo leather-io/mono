@@ -125,12 +125,8 @@ function createCoreInfo(position: CyclePosition) {
 function createStxBalance(availableMicroStx: bigint, lockedMicroStx: bigint) {
   return {
     balance: (availableMicroStx + lockedMicroStx).toString(),
-    total_miner_rewards_received: '0',
-    lock_tx_id: '',
-    locked: lockedMicroStx.toString(),
-    lock_height: 0,
-    burnchain_lock_height: 0,
-    burnchain_unlock_height: 0,
+    available: availableMicroStx.toString(),
+    locked: lockedMicroStx > 0n ? { amount: lockedMicroStx.toString() } : null,
   };
 }
 

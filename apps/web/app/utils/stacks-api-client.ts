@@ -19,11 +19,6 @@ function getRateLimiter(apiUrl: string) {
   return limiter;
 }
 
-const stxAddressBalanceSchema = z.object({
-  balance: z.string(),
-  locked: z.string(),
-});
-
 const principalStxBalanceSchema = z.object({
   balance: z.string(),
   available: z.string(),
@@ -85,11 +80,6 @@ export function createStacksApiClient(apiUrl: string) {
   }
 
   return {
-    async getStxAddressBalance(address: string, signal: AbortSignal) {
-      return stxAddressBalanceSchema.parse(
-        await get(`/extended/v2/addresses/${address}/balances/stx`, signal)
-      );
-    },
     async getPrincipalStxBalance(principal: string, signal: AbortSignal) {
       return principalStxBalanceSchema.parse(
         await get(`/extended/v3/principals/${principal}/balances/stx`, signal)
