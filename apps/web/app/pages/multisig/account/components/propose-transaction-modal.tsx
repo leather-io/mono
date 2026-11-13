@@ -3,6 +3,7 @@ import { type ChangeEvent, type ReactNode, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
+import { LEATHER_DOCS } from '~/constants/leather-docs';
 import { useVaultAccountAssets } from '~/features/multisig/assets/use-vault-account-assets';
 import { filterSendableVaultAssets } from '~/features/multisig/assets/vault-asset-items';
 import { normalizeNativeSegwitAddress } from '~/features/multisig/network/normalize-btc-address';
@@ -221,7 +222,7 @@ function FeeTierSelector({
             type="button"
             onClick={() =>
               window.open(
-                'https://leather.gitbook.io/guides/transactions/fees',
+                `${LEATHER_DOCS.guides}/transactions/configure-transaction-fees`,
                 '_blank',
                 'noopener,noreferrer'
               )
