@@ -1,10 +1,12 @@
 import { ClarityType, type ClarityValue, hexToCV } from '@stacks/transactions';
+import { type QueryKey } from '@tanstack/react-query';
 import { isStackingDaoWrapperContract } from '~/data/bitcoin-staking-data';
 import {
   type PendingTransactionArgs,
   expectUintCV,
   getHasPendingTransaction,
 } from '~/features/stacking/direct-stacking-info/utils-pending-txs';
+import { type StacksApiClient } from '~/utils/stacks-api-client';
 
 export type PendingPox5Tx =
   | {
@@ -95,6 +97,20 @@ export function convertPox5Transaction(transaction: Pox5ContractCallFields): Pen
     default:
       throw new Error(`Unexpected pox-5 function name: ${functionName}`);
   }
+}
+
+interface CreatePox5PendingTxQueryKeyArgs {
+  address: string | undefined;
+  pox5ContractId: string;
+  stacksClient: StacksApiClient;
+}
+
+export function createPox5PendingTxQueryKey({
+  address,
+  pox5ContractId,
+  stacksClient,
+}: CreatePox5PendingTxQueryKeyArgs): QueryKey {
+  return ['pox5-pending-tx', address, pox5ContractId, stacksClient];
 }
 
 export async function getPendingPox5Transaction(
