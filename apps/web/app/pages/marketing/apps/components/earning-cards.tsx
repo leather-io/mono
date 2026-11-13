@@ -4,6 +4,8 @@ import { Link } from 'react-router';
 import { css, cx } from 'leather-styles/css';
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
 
+import { squareAvatarRadius } from '@leather.io/ui';
+
 import { dualStacking, stakingOptions } from '../apps.data';
 
 // Each card is clickable as a whole through its primary link's ::after overlay, which keeps the
@@ -142,7 +144,7 @@ function StakingOptionCard({ option }: { option: (typeof stakingOptions)[number]
                     w="32px"
                     h="32px"
                     loading="lazy"
-                    borderRadius="xs"
+                    style={{ borderRadius: squareAvatarRadius(32) }}
                   />
                   {provider.name}
                 </Flex>

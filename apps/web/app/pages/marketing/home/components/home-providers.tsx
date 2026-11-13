@@ -7,10 +7,12 @@ import { trackMarketingEvent } from '~/pages/marketing/shared/marketing-analytic
 import { Reveal } from '~/pages/marketing/shared/reveal';
 import { trackExternalLinkClick } from '~/utils/external-links';
 
-import { ArrowLeftIcon } from '@leather.io/ui';
+import { ArrowLeftIcon, squareAvatarRadius } from '@leather.io/ui';
 
 import { type BondTargetRate, formatBondTargetRate } from '../bond-target-rate';
 import { HomeSection, HomeSectionHeading } from './home-layout';
+
+const providerLogoRadius = squareAvatarRadius(32);
 
 const StyledLink = styled(Link);
 
@@ -87,9 +89,14 @@ function ProviderTable({ providers }: { providers: Provider[] }) {
                     height="32px"
                     flexShrink={0}
                     loading="lazy"
+                    style={{ borderRadius: providerLogoRadius }}
                   />
                 ) : (
-                  <Box flexShrink={0} borderRadius="xs" overflow="hidden">
+                  <Box
+                    flexShrink={0}
+                    overflow="hidden"
+                    style={{ borderRadius: providerLogoRadius }}
+                  >
                     {provider.logo}
                   </Box>
                 )}
