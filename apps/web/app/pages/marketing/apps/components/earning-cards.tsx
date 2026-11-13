@@ -28,6 +28,8 @@ function EarningCard({ children }: { children: ReactNode }) {
       borderRadius="sm"
       bg="ink.background-primary"
       overflow="hidden"
+      className="group"
+      cursor="pointer"
       transition="background-color 120ms ease"
       _hover={{ bg: 'ink.background-secondary' }}
     >
@@ -65,6 +67,7 @@ function DualStackingCard() {
               textStyle: 'label.02',
               fontWeight: 400,
               _hover: { bg: 'ink.action-primary-hover' },
+              _groupHover: { bg: 'ink.action-primary-hover' },
             }),
             stretchedLinkStyles
           )}

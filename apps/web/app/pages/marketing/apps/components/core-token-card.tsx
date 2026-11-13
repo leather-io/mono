@@ -21,10 +21,11 @@ const pillStyles = css({
   color: 'ink.text-primary',
   transition: 'background-color 120ms ease',
   _hover: { bg: 'ink.component-background-hover' },
+  _groupHover: { bg: 'ink.component-background-hover' },
   _focusVisible: { outline: '2px solid', outlineColor: 'blue.border', outlineOffset: '2px' },
 });
 
-// The whole "Get" card is clickable through the pill link's ::after overlay, so the nested
+// Every card is clickable as a whole through its pill's ::after overlay, so the nested
 // "Circle" link stays a valid, separately focusable link.
 const stretchedLinkStyles = css({
   _after: { content: '""', position: 'absolute', inset: 0, borderRadius: 'sm' },
@@ -66,7 +67,9 @@ export function CoreTokenCard({ token }: { token: CoreToken }) {
       border="default"
       borderRadius="sm"
       transition="background-color 120ms ease"
-      _hover={token.action === 'get' ? { bg: 'ink.component-background-default' } : undefined}
+      className="group"
+      cursor="pointer"
+      _hover={{ bg: 'ink.component-background-default' }}
     >
       <Flex alignItems="center" gap="space.03">
         <styled.img
@@ -96,7 +99,7 @@ export function CoreTokenCard({ token }: { token: CoreToken }) {
             trigger={
               <button
                 type="button"
-                className={pillStyles}
+                className={cx(pillStyles, stretchedLinkStyles)}
                 aria-haspopup="dialog"
                 aria-label={`Buy ${token.symbol}: install Leather`}
               >
