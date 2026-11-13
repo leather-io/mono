@@ -257,8 +257,6 @@ describe('legacy prefixes', () => {
 
 describe('legacy Framer short paths', () => {
   test.each([
-    ['/privacy-policy', '/posts/privacy-policy', ['privacy-policy'], []],
-    ['/terms', '/posts/terms-of-service', ['terms-of-service'], []],
     ['/security', `${docsGuides}/wallet-and-security/security`, ['security'], ['security']],
   ])('%s resolves through Sanity to %s', async (path, location, posts, guides) => {
     const thrown = await captureThrown(
@@ -269,6 +267,9 @@ describe('legacy Framer short paths', () => {
 
   test.each([
     ['/download', '/'],
+    ['/terms-of-service', '/terms'],
+    ['/old-page/terms', '/terms'],
+    ['/old-page/privacy-policy', '/privacy-policy'],
     ['/wallet/mobile', '/'],
     ['/contact/', docsGuides],
     ['/guides?ref=nav', `${docsGuides}?ref=nav`],

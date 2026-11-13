@@ -18,6 +18,9 @@ export default [
   route('changelog/:slug', 'pages/changelog/changelog-entry.route.tsx'),
   route('changelog.xml', 'pages/changelog/changelog-rss.route.tsx'),
   route('portfolio', 'pages/portfolio/portfolio.route.tsx'),
+  // Legal
+  route('privacy-policy', 'pages/legal/privacy-policy.route.tsx'),
+  route('terms', 'pages/legal/terms.route.tsx'),
   // Legacy content: /posts/:slug, /support/:slug and every legacy alias resolve through
   // pages/redirects/content-slug-resolver.ts (serve, one 301 to the final URL, or 404/410)
   route('posts', 'pages/posts/posts.route.tsx'),
@@ -29,7 +32,7 @@ export default [
     id: 'support-slug-redirect',
   }),
   route('help-center/*', 'pages/redirects/help-center-wildcard.route.tsx'),
-  // Redirects from the retired Framer site (leather.io/guides/:slug, /privacy-policy, /download, ...)
+  // Redirects from the retired Framer site (leather.io/guides/:slug, /download, ...)
   route('guides/*', 'pages/redirects/guides-wildcard.route.tsx'),
   ...legacyPathRedirectRoutes,
   // Redirects from the retired stacking URLs, now served under /staking

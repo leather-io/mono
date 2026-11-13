@@ -1,6 +1,6 @@
 /**
- * Short paths from the retired Framer site's redirect table (leather.io/privacy-policy,
- * /download, ...) and the retired in-app help center and developers pages. Each resolves in a
+ * Short paths from the retired Framer site's redirect table (leather.io/download, ...)
+ * and the retired in-app help center and developers pages. Each resolves in a
  * single 301 to its final URL. Entries with a `slug` go through the content resolver, so they
  * follow the content if it ever moves; `docs` entries go to a section of Leather Docs (GitBook).
  *
@@ -9,8 +9,7 @@
 type LegacyPathTarget = { slug: string } | { to: `/${string}` } | { docs: 'guides' | 'developers' };
 
 const legacyPathRedirects = new Map<string, LegacyPathTarget>([
-  ['/privacy-policy', { slug: 'privacy-policy' }],
-  ['/terms', { slug: 'terms-of-service' }],
+  ['/terms-of-service', { to: '/terms' }],
   ['/security', { slug: 'security' }],
   // The wallet download pages were not rebuilt: installing lives on the home page now.
   // /wallet/mobile is still linked from shipped extension builds (promo banner).
@@ -40,8 +39,8 @@ const legacyPathRedirects = new Map<string, LegacyPathTarget>([
   ['/old-page/frequent-questions', { docs: 'guides' }],
   ['/old-page/contact', { docs: 'guides' }],
   ['/old-page/developer-docs', { docs: 'developers' }],
-  ['/old-page/privacy-policy', { slug: 'privacy-policy' }],
-  ['/old-page/terms', { slug: 'terms-of-service' }],
+  ['/old-page/privacy-policy', { to: '/privacy-policy' }],
+  ['/old-page/terms', { to: '/terms' }],
   // The in-app help center and developers page, retired for Leather Docs
   ['/developers', { docs: 'developers' }],
   ['/support', { docs: 'guides' }],
