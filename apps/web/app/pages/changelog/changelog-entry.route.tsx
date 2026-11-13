@@ -1,6 +1,6 @@
 import { Link, type MetaDescriptor } from 'react-router';
 
-import { siteOrigin } from '~/pages/marketing/shared/marketing-meta';
+import { SITE_ORIGIN } from '~/constants/constants';
 
 import { ArrowLeftIcon, Button } from '@leather.io/ui';
 
@@ -24,7 +24,7 @@ export function meta({ loaderData }: Route.MetaArgs) {
   const { entry } = loaderData;
   const title = entry.title ?? 'Changelog';
   const description = getChangelogDescription(entry);
-  const imageUrl = entry.cover ? `${siteOrigin}${entry.cover}` : undefined;
+  const imageUrl = entry.cover ? `${SITE_ORIGIN}${entry.cover}` : undefined;
 
   const metaTags: MetaDescriptor[] = [
     { title: `${title} – Leather Changelog` },

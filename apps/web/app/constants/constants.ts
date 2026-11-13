@@ -11,3 +11,7 @@ export const VERSION = packageJson.version;
 export const STACKING_TRACKER_API_URL = 'https://api.stacking-tracker.com';
 
 export const EM_DASH = '—';
+
+export const SITE_ORIGIN = 'https://leather.io';
+
+export const SITE_HOSTNAMES = ['leather.io', 'www.leather.io', 'app.leather.io'];

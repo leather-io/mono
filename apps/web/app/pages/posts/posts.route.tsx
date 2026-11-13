@@ -1,6 +1,7 @@
 import { type ShouldRevalidateFunctionArgs } from 'react-router';
 
 import { cmsClient, marketingCmsRequestOptions } from '~/constants/cms-client';
+import { SITE_ORIGIN } from '~/constants/constants';
 import { marketingHeaders, marketingMeta } from '~/pages/marketing/shared/marketing-meta';
 import { MarketingPage } from '~/pages/marketing/shared/marketing-page';
 import { isDeprecatedContentSlug } from '~/pages/redirects/shared-redirect-logic';
@@ -22,7 +23,7 @@ export function meta() {
     path: '/posts',
     description:
       'Stay up to date and read about the latest integrations, partnerships, new features and more from Leather Bitcoin wallet with the Leather blog.',
-    image: 'https://leather.io/marketing/posts/og-posts.jpg',
+    image: `${SITE_ORIGIN}/marketing/posts/og-posts.jpg`,
   });
 }
 

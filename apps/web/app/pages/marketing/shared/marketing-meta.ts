@@ -1,6 +1,6 @@
 import { type MetaDescriptor } from 'react-router';
 
-export const siteOrigin = 'https://leather.io';
+import { SITE_ORIGIN } from '~/constants/constants';
 
 export const defaultMarketingDescription =
   'Leather is an open-source, self-custodial wallet for Bitcoin and Stacks. Manage BTC, STX and supported tokens, connect to apps, and explore DeFi on mobile and in your browser.';
@@ -26,7 +26,7 @@ export function marketingMeta({
     { property: 'og:description', content: description },
     ...(image ? [{ property: 'og:image', content: image }] : []),
     { name: 'twitter:card', content: 'summary_large_image' },
-    { tagName: 'link', rel: 'canonical', href: `${siteOrigin}${path}` },
+    { tagName: 'link', rel: 'canonical', href: `${SITE_ORIGIN}${path}` },
   ] satisfies MetaDescriptor[];
 }
 

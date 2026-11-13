@@ -1,7 +1,7 @@
-import { siteOrigin } from '~/pages/marketing/shared/marketing-meta';
+import { SITE_ORIGIN } from '~/constants/constants';
 
 export function loader() {
-  const robots = ['User-agent: *', 'Allow: /', '', `Sitemap: ${siteOrigin}/sitemap.xml`, ''].join(
+  const robots = ['User-agent: *', 'Allow: /', '', `Sitemap: ${SITE_ORIGIN}/sitemap.xml`, ''].join(
     '\n'
   );
 

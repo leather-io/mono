@@ -8,7 +8,7 @@ cover: /marketing/changelog/leather-web-portfolio.webp
 
 See your full BTC and STX portfolio in one place
 
-Knowing what you own shouldn't require mental math across multiple screens. Now you can see everything in one view. Check out the new features by connecting your wallet at [https://app.leather.io/portfolio](https://leather.io/portfolio)!
+Knowing what you own shouldn't require mental math across multiple screens. Now you can see everything in one view. Check out the new features by connecting your wallet at [https://app.leather.io/portfolio](/portfolio)!
 
 Connect your wallet at leather.io/portfolio to get a complete picture of your holdings—total value in USD, a breakdown of each token's share, and your recent activity.
 
