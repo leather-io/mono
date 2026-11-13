@@ -4,10 +4,12 @@ import { describe, expect, test } from 'vitest';
 import { runCommand, runOrThrow } from './exec.js';
 
 const cwd = tmpdir();
+const outputScript = "console.log('out'); console.error('err'); process.exit(3)";
+const failingScript = "console.error('broke'); process.exit(1)";
 
 describe('runCommand', () => {
   test('returns the status and both output streams', () => {
-    expect(runCommand('sh', ['-c', 'echo out; echo err >&2; exit 3'], { cwd })).toEqual({
+    expect(runCommand('node', ['-e', outputScript], { cwd })).toEqual({
       status: 3,
       stdout: 'out\n',
       stderr: 'err\n',
@@ -27,12 +29,12 @@ describe('runCommand', () => {
 
 describe('runOrThrow', () => {
   test('returns standard output on success', () => {
-    expect(runOrThrow('sh', ['-c', 'echo ok'], { cwd })).toBe('ok\n');
+    expect(runOrThrow('node', ['-e', "console.log('ok')"], { cwd })).toBe('ok\n');
   });
 
   test('throws with the command and its standard error on failure', () => {
-    expect(() => runOrThrow('sh', ['-c', 'echo broke >&2; exit 1'], { cwd })).toThrow(
-      'sh -c echo broke >&2; exit 1 failed: broke'
+    expect(() => runOrThrow('node', ['-e', failingScript], { cwd })).toThrow(
+      `node -e ${failingScript} failed: broke`
     );
   });
 });
