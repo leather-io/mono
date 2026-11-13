@@ -1,8 +1,4 @@
-import type {
-  AddressTransactionsWithTransfersListResponse,
-  MempoolTransactionListResponse,
-  ReadOnlyFunctionArgs,
-} from '@stacks/stacks-blockchain-api-types';
+import type { ReadOnlyFunctionArgs } from '@stacks/stacks-blockchain-api-types';
 import { type ClarityAbi } from '@stacks/transactions';
 import PQueue from 'p-queue';
 import { z } from 'zod';
@@ -23,11 +19,6 @@ function getRateLimiter(apiUrl: string) {
   return limiter;
 }
 
-const stxAddressBalanceSchema = z.object({
-  balance: z.string(),
-  locked: z.string(),
-});
-
 const principalStxBalanceSchema = z.object({
   balance: z.string(),
   available: z.string(),
@@ -40,9 +31,14 @@ const callReadOnlyFunctionResponseSchema = z.object({
   cause: z.string().optional(),
 });
 
-const addressTransactionsWithTransfersSchema =
-  z.custom<AddressTransactionsWithTransfersListResponse>();
-const mempoolTransactionsSchema = z.custom<MempoolTransactionListResponse>();
+const principalMempoolTransactionsSchema = z.object({
+  results: z.array(
+    z.object({
+      tx_id: z.string(),
+      contract_call: z.object({ contract_id: z.string(), function_name: z.string() }).optional(),
+    })
+  ),
+});
 const stacksTransactionSchema = z.custom<StacksTransaction>();
 const contractInterfaceSchema = z.custom<ClarityAbi>();
 
@@ -55,6 +51,8 @@ class StacksApiRequestError extends Error {
     this.name = 'StacksApiRequestError';
   }
 }
+
+type TransactionIncludeField = 'function_args' | 'source_code' | 'post_conditions' | 'result';
 
 interface CallReadOnlyFunctionArgs {
   contractAddress: string;
@@ -82,31 +80,28 @@ export function createStacksApiClient(apiUrl: string) {
   }
 
   return {
-    async getStxAddressBalance(address: string, signal: AbortSignal) {
-      return stxAddressBalanceSchema.parse(
-        await get(`/extended/v2/addresses/${address}/balances/stx`, signal)
-      );
-    },
     async getPrincipalStxBalance(principal: string, signal: AbortSignal) {
       return principalStxBalanceSchema.parse(
         await get(`/extended/v3/principals/${principal}/balances/stx`, signal)
       );
     },
-    async getAccountTransactionsWithTransfers(address: string, signal: AbortSignal) {
-      return addressTransactionsWithTransfersSchema.parse(
+    async getPrincipalMempoolTransactions(principal: string, signal: AbortSignal) {
+      return principalMempoolTransactionsSchema.parse(
         await get(
-          `/extended/v1/address/${address}/transactions_with_transfers?limit=${DEFAULT_LIST_LIMIT}`,
+          `/extended/v3/principals/${principal}/mempool/transactions?limit=${DEFAULT_LIST_LIMIT}`,
           signal
         )
       );
     },
-    async getAddressMempoolTransactions(address: string, signal: AbortSignal) {
-      return mempoolTransactionsSchema.parse(
-        await get(`/extended/v1/tx/mempool?address=${address}&limit=${DEFAULT_LIST_LIMIT}`, signal)
+    async getTransactionById(
+      txid: string,
+      signal: AbortSignal,
+      include: TransactionIncludeField[] = []
+    ) {
+      const includeQuery = include.length > 0 ? `?include=${include.join(',')}` : '';
+      return stacksTransactionSchema.parse(
+        await get(`/extended/v3/transactions/${txid}${includeQuery}`, signal)
       );
-    },
-    async getTransactionById(txid: string, signal: AbortSignal) {
-      return stacksTransactionSchema.parse(await get(`/extended/v3/transactions/${txid}`, signal));
     },
     async getContractInterface(
       contractAddress: string,

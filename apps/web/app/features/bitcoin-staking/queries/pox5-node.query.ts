@@ -68,7 +68,7 @@ export function usePox5AvailableUnlockedBalance(
   );
 
   const resp = balanceQuery.data;
-  const unlocked = resp ? new BigNumber(resp.balance).minus(new BigNumber(resp.locked)) : null;
+  const unlocked = resp ? new BigNumber(resp.available) : null;
 
   return {
     isLoading: balanceQuery.isLoading,

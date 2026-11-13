@@ -3,12 +3,8 @@ import { HttpResponse, http } from 'msw';
 import { delay } from '@leather.io/utils';
 
 import { accountsHandler } from './hiro.so/accounts-address';
-import { accountsBalanceStxHandler } from './hiro.so/accounts-address-balance-stx';
-import { transactionWithTransfersHandler } from './hiro.so/address-address-transactions-with-transfers';
-import { blockTimesHandler } from './hiro.so/block-times';
 import { getAllowanceContractCallersHandlers } from './hiro.so/get-allowance-contract-callers';
 import { hiroInfoHandler } from './hiro.so/info';
-import { mempoolHandler } from './hiro.so/mempool';
 import { poxMainnetHandler } from './hiro.so/pox';
 import { pox4GetDelegationInfo } from './hiro.so/pox4-get-delegation-info';
 import { poxGetStackerInfoHandler } from './hiro.so/pox4-get-stacker-info';
@@ -29,6 +25,7 @@ import {
   pox5GetPoxAddrHandler,
 } from './hiro.so/pox5-signer-manager';
 import { principalsBalancesStxHandler } from './hiro.so/principals-balances-stx';
+import { principalsMempoolTransactionsHandler } from './hiro.so/principals-mempool-transactions';
 import { stackingDaoContractCallHandler } from './hiro.so/stacking-dao-core-v4';
 import { ststxTokenBalanceContractCallHandler } from './hiro.so/ststx-token-get-balance';
 import { leatherMarketPricesHandler } from './leather.io/market-prices';
@@ -52,8 +49,7 @@ const endpoints = [
   accountsHandler,
   principalsBalancesStxHandler,
   hiroInfoHandler,
-  transactionWithTransfersHandler,
-  mempoolHandler,
+  principalsMempoolTransactionsHandler,
   ststxTokenBalanceContractCallHandler,
   stackingDaoContractCallHandler,
   pox4GetDelegationInfo,
@@ -67,9 +63,7 @@ const endpoints = [
   pox5CustomGetPoxAddrHandler,
   pox5CustomFeesBipsHandler,
   pox5GetAmountDelegatedHandler,
-  blockTimesHandler,
   getAllowanceContractCallersHandlers,
-  accountsBalanceStxHandler,
   poolsHandler,
   tokenHandler,
 ];

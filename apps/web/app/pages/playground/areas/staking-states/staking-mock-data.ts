@@ -20,7 +20,10 @@ import {
 } from '~/features/bitcoin-staking/queries/create-get-pox5-staker-info-query-options';
 import { createGetPox5TransactionQueryOptions } from '~/features/bitcoin-staking/queries/create-get-pox5-transaction-query-options';
 import { createGetStxAddressBalanceQueryOptions } from '~/features/bitcoin-staking/queries/create-get-stx-address-balance-query-options';
-import type { PendingPox5Tx } from '~/features/bitcoin-staking/queries/get-pending-pox5-txs';
+import {
+  type PendingPox5Tx,
+  createPox5PendingTxQueryKey,
+} from '~/features/bitcoin-staking/queries/get-pending-pox5-txs';
 import type { Pox5PayoutPreference } from '~/features/bitcoin-staking/transactions/pox5-signer-calldata';
 import type { Pox5TxOutcome } from '~/features/bitcoin-staking/transactions/pox5-tx-status';
 import { parseContractId } from '~/features/bitcoin-staking/utils/contract-id';
@@ -44,12 +47,6 @@ export const mockAddresses =
 const mockStacksAddress = mockAddresses.find(address => address.symbol === 'STX')?.address ?? '';
 
 const pox5ContractId = getPox5ContractId(pox5NetworkConfig.contractNetworkMode);
-
-const mockStackingClient = new StackingClient({
-  address: mockStacksAddress,
-  network: pox5NetworkConfig.stacksNetworkName,
-  client: { baseUrl: pox5NetworkConfig.apiUrl, fetch: fetchFn },
-});
 
 const mockChainStackingClient = new StackingClient({
   address: parseContractId(pox5ContractId).contractAddress,
@@ -125,12 +122,8 @@ function createCoreInfo(position: CyclePosition) {
 function createStxBalance(availableMicroStx: bigint, lockedMicroStx: bigint) {
   return {
     balance: (availableMicroStx + lockedMicroStx).toString(),
-    total_miner_rewards_received: '0',
-    lock_tx_id: '',
-    locked: lockedMicroStx.toString(),
-    lock_height: 0,
-    burnchain_lock_height: 0,
-    burnchain_unlock_height: 0,
+    available: availableMicroStx.toString(),
+    locked: lockedMicroStx > 0n ? { amount: lockedMicroStx.toString() } : null,
   };
 }
 
@@ -346,7 +339,11 @@ export function createSeededQueryClient(seed: StakingSurfaceSeed = {}) {
   );
 
   queryClient.setQueryData(
-    ['pox5-pending-tx', mockStacksAddress, pox5ContractId, mockStackingClient, mockStacksClient],
+    createPox5PendingTxQueryKey({
+      address: mockStacksAddress,
+      pox5ContractId,
+      stacksClient: mockStacksClient,
+    }),
     pendingTx
   );
 

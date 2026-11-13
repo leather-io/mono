@@ -7,7 +7,7 @@ import {
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { useLeatherConnect } from '~/store/addresses';
 
-import { usePox5StackingClient, usePox5StacksClient } from '../hooks/use-pox5-clients';
+import { usePox5StacksClient } from '../hooks/use-pox5-clients';
 import { getPox5TxRefetchInterval } from '../transactions/pox5-tx-status';
 import { getExpectedFeeBips } from '../utils/pool-fee';
 import { getPox5ContractId } from '../utils/pox5-contracts';
@@ -27,7 +27,7 @@ import {
   createGetPox5StakerInfoQueryOptions,
 } from './create-get-pox5-staker-info-query-options';
 import { createGetPox5TransactionQueryOptions } from './create-get-pox5-transaction-query-options';
-import { getPendingPox5Transaction } from './get-pending-pox5-txs';
+import { createPox5PendingTxQueryKey, getPendingPox5Transaction } from './get-pending-pox5-txs';
 import { usePox5PoxInfoQuery } from './pox5-node.query';
 
 // All pox-5 interaction happens on the configured chain, so the contract id
@@ -160,22 +160,20 @@ export function usePox5SignerManagerValidationQuery(contractId: string | undefin
 }
 
 export function usePox5PendingTxQuery() {
-  const client = usePox5StackingClient();
   const { stacksAccount } = useLeatherConnect();
   const stacksClient = usePox5StacksClient();
   const pox5ContractId = usePox5ContractId();
   const address = stacksAccount?.address;
 
   return useQuery({
-    queryKey: ['pox5-pending-tx', address, pox5ContractId, client, stacksClient],
-    enabled: !!client && !!address,
+    queryKey: createPox5PendingTxQueryKey({ address, pox5ContractId, stacksClient }),
+    enabled: !!address,
     refetchInterval: 5000,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     async queryFn() {
-      if (!client || !address) return null;
+      if (!address) return null;
       return getPendingPox5Transaction({
-        stackingClient: client,
         stacksClient,
         address,
         pox5ContractId,
