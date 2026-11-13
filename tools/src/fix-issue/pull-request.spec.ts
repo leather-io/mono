@@ -459,6 +459,19 @@ describe('openPullRequest', () => {
     expect(client.calls).toEqual([]);
   });
 
+  test('refuses to commit when the applied tree holds a change outside the allowed paths', async () => {
+    setup(doneStatus);
+    repo.write(
+      'tmp/hooks/post-checkout',
+      '#!/bin/sh\nmkdir -p .github/workflows\necho "on: push" > .github/workflows/evil.yml\n',
+      0o755
+    );
+    repo.git(['config', 'core.hooksPath', `${repo.root}/tmp/hooks`]);
+    const { client, result } = open();
+    await expect(result).rejects.toThrow(/refusing to commit[\s\S]*\.github\/workflows\/evil\.yml/);
+    expect(client.calls).toEqual([]);
+  });
+
   test('refuses to run on a different commit than the fix was made against', async () => {
     setup(doneStatus);
     await expect(open(undefined, { parentSha: 'f'.repeat(40) }).result).rejects.toThrow(
