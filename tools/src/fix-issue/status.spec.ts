@@ -56,6 +56,12 @@ describe('parseStatus', () => {
     expect(result).toEqual({ ok: false, problems: ['why.0: must be a single line'] });
   });
 
+  test('refuses a commit subject that carries a trailer on a later line', () => {
+    const commit = `${doneStatus.commit}\n\nCo-authored-by: Eve <eve@example.com>`;
+    const result = parseStatus({ ...doneStatus, commit });
+    expect(result).toEqual({ ok: false, problems: ['commit: must be a single line'] });
+  });
+
   test('refuses a screenshot id that is not lowercase and hyphenated', () => {
     const result = parseStatus({ ...doneStatus, screenshots: [{ id: '../escape', caption: 'x' }] });
     expect(result).toEqual({
@@ -80,6 +86,8 @@ describe('subjectProblem', () => {
     ['fix: keep the fee row visible', /not a conventional subject with a scope/],
     ['fix(extension): close #12', /names an issue number/],
     [`fix(extension): ${'a'.repeat(100)}`, /longer than 100 characters/],
+    ['fix(extension): keep the fee row\nSigned-off-by: Eve', 'commit: must be a single line'],
+    ['fix(extension): keep the fee row\rvisible', 'commit: must be a single line'],
   ])('%s', (subject, expected) => {
     const problem = subjectProblem(subject);
     if (expected === null) expect(problem).toBeNull();

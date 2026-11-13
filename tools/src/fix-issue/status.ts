@@ -6,6 +6,7 @@ import { refusedPaths } from './git.js';
 const subjectPattern =
   /^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)\([a-z0-9][a-z0-9-]*\)!?: \S/;
 const issueNumberPattern = /#\d/;
+const lineBreakPattern = /[\r\n]/;
 const maxSubjectLength = 100;
 const maxScreenshots = 12;
 const maxHandoffs = 20;
@@ -25,6 +26,7 @@ const screenshotSchema = z.object({
 
 export function subjectProblem(subject: string): string | null {
   if (subject === '') return 'commit: is empty';
+  if (lineBreakPattern.test(subject)) return 'commit: must be a single line';
   if (!subjectPattern.test(subject)) {
     return `commit: '${subject}' is not a conventional subject with a scope, like fix(extension): keep the fee row visible`;
   }
