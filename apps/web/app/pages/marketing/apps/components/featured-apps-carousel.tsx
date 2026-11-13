@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router';
 
 import { css, cx } from 'leather-styles/css';
 import { Box, Flex, styled } from 'leather-styles/jsx';
@@ -8,7 +7,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@leather.io/ui';
 
 import { type FeaturedApp } from '../apps.data';
 
-const cardLinkStyles = css({
+const cardStyles = css({
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
@@ -18,7 +17,6 @@ const cardLinkStyles = css({
   borderRadius: 'sm',
   bg: 'ink.background-primary',
   color: 'ink.text-primary',
-  _focusVisible: { outline: '3px solid', outlineColor: 'blue.border', outlineOffset: '-3px' },
 });
 
 const coverStyles = css({
@@ -29,9 +27,6 @@ const coverStyles = css({
   height: '70%',
   objectFit: 'cover',
   objectPosition: 'center top',
-  transition: 'transform 0.4s cubic-bezier(0.2, 0, 0, 1)',
-  _groupHover: { transform: 'scale(1.03)' },
-  _motionReduce: { transition: 'none', _groupHover: { transform: 'none' } },
 });
 
 const navButtonStyles = css({
@@ -52,7 +47,7 @@ const navButtonStyles = css({
 
 function FeaturedAppCard({ app }: { app: FeaturedApp }) {
   return (
-    <Link to={`/posts/${app.postSlug}`} className={cx('group', 'dark', cardLinkStyles)}>
+    <div className={cx('dark', cardStyles)}>
       <img
         src={app.cover.src}
         alt=""
@@ -84,21 +79,11 @@ function FeaturedAppCard({ app }: { app: FeaturedApp }) {
         <styled.h3 textStyle="label.01" fontWeight={400} mt="space.03">
           {app.name}
         </styled.h3>
-        <Flex alignItems="flex-end" gap="space.04" mt="space.02">
-          <styled.p textStyle="caption.01" lineHeight="16px" color="ink.text-secondary" flex="1">
-            {app.description}
-          </styled.p>
-          <styled.span
-            aria-hidden="true"
-            textStyle="label.01"
-            transform="rotate(45deg)"
-            mb="space.01"
-          >
-            ↑
-          </styled.span>
-        </Flex>
+        <styled.p textStyle="caption.01" lineHeight="16px" color="ink.text-secondary" mt="space.02">
+          {app.description}
+        </styled.p>
       </Box>
-    </Link>
+    </div>
   );
 }
 

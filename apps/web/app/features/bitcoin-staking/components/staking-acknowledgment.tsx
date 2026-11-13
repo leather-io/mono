@@ -94,7 +94,7 @@ export function StakingAcknowledgment({
           </styled.label>{' '}
           See{' '}
           <Link
-            href="/posts/terms-of-service"
+            href="/terms"
             target="_blank"
             rel="noopener noreferrer"
             textStyle="body.02"

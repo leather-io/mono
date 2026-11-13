@@ -1,21 +1,16 @@
-import { Link } from 'react-router';
-
 import { css } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
 
 import { type Project } from '../apps.data';
 
-const projectLinkStyles = css({
+const projectStyles = css({
   display: 'flex',
   flexDirection: 'column',
   height: '100%',
   p: 'space.05',
-  transition: 'background-color 120ms ease',
-  _hover: { bg: 'ink.component-background-hover' },
-  _focusVisible: { outline: '2px solid', outlineColor: 'blue.border', outlineOffset: '-2px' },
 });
 
-/** Bordered 3-column directory of every published app, each linking to its post. */
+/** Bordered 3-column directory of every published app. */
 export function ProjectDirectory({ projects }: { projects: Project[] }) {
   return (
     <styled.ul
@@ -28,7 +23,7 @@ export function ProjectDirectory({ projects }: { projects: Project[] }) {
       {projects.map(project => (
         // Hairline dividers between cells that hold for every column count
         <styled.li key={project.slug} boxShadow="-1px -1px 0 0 {colors.ink.border-default}">
-          <Link to={`/posts/${project.postSlug}`} className={projectLinkStyles}>
+          <div className={projectStyles}>
             <styled.img
               src={project.logo}
               alt=""
@@ -51,7 +46,7 @@ export function ProjectDirectory({ projects }: { projects: Project[] }) {
             >
               {project.description}
             </styled.p>
-          </Link>
+          </div>
         </styled.li>
       ))}
     </styled.ul>

@@ -10,11 +10,11 @@ const networkAgnosticPaths = ['/'];
 const networkAgnosticRoutePrefixes = [
   '/apps',
   '/developers',
-  '/news',
   '/explorer',
-  '/posts',
   '/support',
   '/changelog',
+  '/privacy-policy',
+  '/terms',
 ];
 
 function matchesPrefix(pathname: string, prefix: string) {

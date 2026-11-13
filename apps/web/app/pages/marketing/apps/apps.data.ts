@@ -1,5 +1,5 @@
 // Content for /apps (verbatim from leather.io, including the CMS descriptions that end in a
-// literal "..."). Projects and featured apps link to their CMS post at /posts/<slug>.
+// literal "...").
 
 const assetBase = '/marketing/apps';
 
@@ -112,20 +112,12 @@ export const stakingOptions: StakingOption[] = [
 export interface Project {
   name: string;
   slug: string;
-  /** Sanity post the card links to (`/posts/:postSlug`); usually the same as `slug`. */
-  postSlug: string;
   description: string;
   logo: string;
 }
 
-function project(
-  name: string,
-  slug: string,
-  logo: string,
-  description: string,
-  postSlug = slug
-): Project {
-  return { name, slug, postSlug, logo: `${assetBase}/${logo}`, description };
+function project(name: string, slug: string, logo: string, description: string): Project {
+  return { name, slug, logo: `${assetBase}/${logo}`, description };
 }
 
 const alex = project(
@@ -150,17 +142,13 @@ const bnsOne = project(
   'BNS One',
   'bns-one',
   'logo-bns-one.webp',
-  'A platform for registering and managing .btc names through the Bitcoin Name System on Stacks.',
-  // The per-app BNS posts redirect to the BNS explainer; link there directly
-  'bns'
+  'A platform for registering and managing .btc names through the Bitcoin Name System on Stacks.'
 );
 const bnsHub = project(
   'BNSv2 Hub',
   'bns-hub',
   'logo-bns-hub.webp',
-  'A BNS V2 platform for managing names and namespaces on Stacks.',
-  // The per-app BNS posts redirect to the BNS explainer; link there directly
-  'bns'
+  'A BNS V2 platform for managing names and namespaces on Stacks.'
 );
 const brotocol = project(
   'Brotocol',
@@ -202,9 +190,7 @@ const bnsGateway = project(
   'STX City - BNS Gateway',
   'bns-gateway',
   'logo-bns-gateway.webp',
-  'A marketplace and registration platform for .btc names on STX.CITY.',
-  // The per-app BNS posts redirect to the BNS explainer; link there directly
-  'bns'
+  'A marketplace and registration platform for .btc names on STX.CITY.'
 );
 const velar = project(
   'Velar',

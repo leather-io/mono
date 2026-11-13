@@ -12,15 +12,17 @@ function AppFooter() {
             Help Center
           </Footer.Link>
           <Footer.InternalLink to="/changelog">Changelog</Footer.InternalLink>
-          <Footer.InternalLink to="/news">News</Footer.InternalLink>
+          <Footer.Link withIcon href={LEATHER_DOCS.blog}>
+            Blog
+          </Footer.Link>
           <Footer.Link withIcon href={LEATHER_DOCS.developers}>
             Developer Docs
           </Footer.Link>
         </Footer.Column>
 
         <Footer.Column title="Legal & policies">
-          <Footer.InternalLink to="/posts/privacy-policy">Privacy policy</Footer.InternalLink>
-          <Footer.InternalLink to="/posts/terms-of-service">Terms of service</Footer.InternalLink>
+          <Footer.InternalLink to="/privacy-policy">Privacy policy</Footer.InternalLink>
+          <Footer.InternalLink to="/terms">Terms of service</Footer.InternalLink>
           <Footer.Link href={`${LEATHER_DOCS.guides}/wallet-and-security/security`}>
             Security
           </Footer.Link>

@@ -11,21 +11,20 @@ describe('routeSupportsNetwork', () => {
     '/',
     '/apps',
     '/developers',
-    '/news',
     '/explorer',
-    '/posts',
-    '/posts/what-is-stacks',
     '/support',
     '/support/send-stx',
     '/changelog',
     '/changelog/some-entry',
+    '/privacy-policy',
+    '/terms',
     '/multisig',
     '/multisig/vault',
   ])('supports %s on testnet', pathname => {
     expect(routeSupportsNetwork(pathname, 'testnet')).toBe(true);
   });
 
-  test.each(['/staking', '/portfolio', '/sbtc', '/postsx', '/apps-old'])(
+  test.each(['/staking', '/portfolio', '/sbtc', '/termsx', '/apps-old'])(
     'gates %s on testnet',
     pathname => {
       expect(routeSupportsNetwork(pathname, 'testnet')).toBe(false);
