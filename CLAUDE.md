@@ -140,7 +140,8 @@ pnpm --filter @leather.io/{package} typecheck
 - **Add a UI component** → `@leather.io/ui`, use the `monorepo-navigation` skill
 - **Add a Redux slice** → Extension: `{feature}.slice.ts`; Mobile: `{feature}.write.ts` + `{feature}.read.ts`
 - **Add a React Query hook** → `packages/queries/` or app-level `src/queries/`
-- **Run a single package's tests** → `pnpm --filter @leather.io/{package} test:unit`
+- **Run a single package's tests** → `pnpm --filter @leather.io/{package} test:unit`; for some specs, append their paths without `--` (`test:unit src/x.spec.ts`), since with `--` vitest ignores them and runs everything
 - **Add or fix an extension E2E test** → `apps/extension/tests`, use the `write-extension-e2e` skill
 - **File an issue** → `/new-issue`
 - **Fix an issue** → `Settled` decisions are binding, ask about every `Open` one before coding, re-check the issue's line links against current `dev`, run every Verify line before ticking Done when
+- **Fix a batch of GitHub issues** → use the `fix-issue` skill: research, interview and briefs locally, then one `repo:fix-issue` workflow run per brief opens the pull request

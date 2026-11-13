@@ -83,7 +83,9 @@ jobs:
         run: |
           # actionlint does not yet understand GitHub's `$/` self-repository `uses:` syntax.
           # Drop the -ignore flag once https://github.com/rhysd/actionlint/pull/732 is merged and released.
-          "$ACTIONLINT" -color -ignore 'specifying action "\$/[^"]*" in invalid format because ref is missing'
+          "$ACTIONLINT" -color \
+            -ignore 'specifying action "\$/[^"]*" in invalid format because ref is missing' \
+            -ignore 'unexpected key "cache-mode" for "(workflow|job)" section'
 
   test-scripts:
     name: test-scripts

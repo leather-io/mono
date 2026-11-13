@@ -39,7 +39,7 @@ jobs:
           claude_args: >-
             --model opus
             --allowedTools "Edit(apps/extension/tests/feature-map/**) Write(tmp/**) Bash(pnpm lt feature-map check:*) Bash(pnpm --filter @leather.io/extension exec prettier:*) Bash(pnpm --filter @leather.io/extension exec eslint:*)"
-          show_full_output: true
+          show_full_output: ${{ github.repository != 'leather-io/mono' }}
           prompt: |
             Follow the instructions in .github/prompts/feature-map-fix.md.
 
