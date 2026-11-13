@@ -4,7 +4,6 @@ import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { getChangelogEntries } from '~/pages/changelog/changelog.data';
 
 import { trackMarketingEvent } from './marketing-analytics';
-import { MarketingTag } from './marketing-tag';
 import { Reveal } from './reveal';
 
 const StyledLink = styled(Link);
@@ -15,8 +14,6 @@ export interface ChangelogStripEntry {
   /** ISO publish date. */
   date?: string;
   imageUrl?: string;
-  /** Tag names (e.g. "extension", "web"), shown as chips. */
-  tags?: string[];
 }
 
 /**
@@ -32,7 +29,6 @@ export function getChangelogStrip(limit = 4): ChangelogStripEntry[] {
         title: entry.title,
         date: entry.publishedAt,
         imageUrl: entry.cover,
-        tags: entry.tags,
       }));
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -123,13 +119,6 @@ export function ChangelogStrip({ entries, heading = 'Changelog', ...props }: Cha
                 </styled.time>
               )}
               <Box mt="auto" pt="space.07">
-                {entry.tags?.length ? (
-                  <Flex gap="space.01" mb="space.02" flexWrap="wrap">
-                    {entry.tags.map(tag => (
-                      <MarketingTag key={tag}>{tag}</MarketingTag>
-                    ))}
-                  </Flex>
-                ) : null}
                 <styled.h3 textStyle="heading.05" fontWeight="400" lineHeight="1.25">
                   {entry.title}
                 </styled.h3>
