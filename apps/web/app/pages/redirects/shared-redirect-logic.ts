@@ -1,5 +1,7 @@
 import { redirect } from 'react-router';
 
+import { leatherDocsDiscontinuedUrl } from './leather-docs-guides';
+
 function prefixRedirectLoader(request: Request, from: string, to: string) {
   const url = new URL(request.url);
   const newPath = url.pathname.replace(from, to);
@@ -12,11 +14,8 @@ export function stackingRedirectLoader(request: Request) {
   return prefixRedirectLoader(request, '/stacking', '/staking');
 }
 
-const runesDeprecationPostSlug = 'leather-runes-wallet';
-const stampsDeprecationPostSlug = 'leather-stamps-src20-wallet';
-const ordinalsDeprecationPostSlug = 'deprecation-of-ordinals-inscriptions-support-in-leather';
-
 const runesContentSlugs = [
+  'leather-runes-wallet',
   'bitcoin-runes',
   'ordinals-vs-runes',
   'see-your-runes-in-usd-with-leather',
@@ -26,6 +25,7 @@ const runesContentSlugs = [
 ];
 
 const stampsContentSlugs = [
+  'leather-stamps-src20-wallet',
   'bitcoin-stamps-src20',
   'receive-stamps',
   'receive-src20',
@@ -56,12 +56,42 @@ const ordinalsContentSlugs = [
   'leather-magic-eden',
   'leather-unisat',
   'leather-luminex',
+  'deprecation-of-ordinals-inscriptions-support-in-leather',
+  'watch-your-recursive-inscriptions-come-to-life-in-leather',
+  'break-out-your-ledger-device-to-securely-manage-bitcoin-and-ordinals-transactions',
+  'what-are-rare-sats',
+  'what-are-audionals',
+  'node-monkes',
+  'ordinal-fusion',
+  'the-royals',
+  'guide-to-bitcoin-ordinal-collections-quantum-cats',
+  'guide-to-ordinal-collections-what-are-runestones',
+  'guide-to-ordinal-collections-what-are-taproot-wizards',
+  'guide-to-bitcoin-ordinals-collections-what-is-birds-of-a-feather',
+  'guide-to-bitcoin-ordinals-collections-what-is-bitcoin-boos',
+  'guide-to-bitcoin-ordinals-collections-what-is-bitcoin-burials',
+  'guide-to-bitcoin-ordinals-collections-what-is-bitcoin-frogs',
+  'guide-to-bitcoin-ordinals-collections-what-is-blob',
+  'guide-to-bitcoin-ordinals-collections-what-is-frucks',
+  'guide-to-bitcoin-ordinals-collections-what-is-honey-badgers',
+  'guide-to-bitcoin-ordinals-collections-what-is-n0-ordinary-kind',
+  'guide-to-bitcoin-ordinals-collections-what-is-nodemonkes',
+  'guide-to-bitcoin-ordinals-collections-what-is-ocm-dimensions',
+  'guide-to-bitcoin-ordinals-collections-what-is-ordinal-maxi-biz',
+  'guide-to-bitcoin-ordinals-collections-what-is-pizza-ninjas',
+  'guide-to-bitcoin-ordinals-collections-what-is-prometheans',
 ];
 
 const deprecatedContentRedirects = new Map<string, string>([
-  ...runesContentSlugs.map((slug): [string, string] => [slug, runesDeprecationPostSlug]),
-  ...stampsContentSlugs.map((slug): [string, string] => [slug, stampsDeprecationPostSlug]),
-  ...ordinalsContentSlugs.map((slug): [string, string] => [slug, ordinalsDeprecationPostSlug]),
+  ...runesContentSlugs.map((slug): [string, string] => [slug, leatherDocsDiscontinuedUrl('runes')]),
+  ...stampsContentSlugs.map((slug): [string, string] => [
+    slug,
+    leatherDocsDiscontinuedUrl('stamps'),
+  ]),
+  ...ordinalsContentSlugs.map((slug): [string, string] => [
+    slug,
+    leatherDocsDiscontinuedUrl('ordinals'),
+  ]),
 ]);
 
 export function isDeprecatedContentSlug(slug: string) {
@@ -69,7 +99,5 @@ export function isDeprecatedContentSlug(slug: string) {
 }
 
 export function getDeprecationTarget(slug: string) {
-  const target = deprecatedContentRedirects.get(slug);
-  if (!target) return null;
-  return `/posts/${target}`;
+  return deprecatedContentRedirects.get(slug) ?? null;
 }

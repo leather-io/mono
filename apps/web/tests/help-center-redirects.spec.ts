@@ -20,16 +20,12 @@ const singleHopRedirects = [
   { from: '/help-center/install-leather', to: `${docsGuides}/get-started/install-leather` },
   { from: '/guides/send-stacks-from-app', to: `${docsGuides}/transactions/send-stx` },
   { from: '/posts/install-leather', to: `${docsGuides}/get-started/install-leather` },
+  { from: '/posts/send-ordinals', to: `${docsGuides}/discontinued/ordinals-inscriptions` },
+  { from: '/posts/api-sign-psbt', to: `${LEATHER_DOCS.developers}/bitcoin-methods/signpsbt` },
 ];
 
 // Content that stays on leather.io, also in one hop
-const onSiteRedirects = [
-  {
-    from: '/posts/send-ordinals',
-    to: '/posts/deprecation-of-ordinals-inscriptions-support-in-leather',
-  },
-  { from: '/posts/apps-xlink', to: '/posts/brotocol' },
-];
+const onSiteRedirects = [{ from: '/posts/apps-xlink', to: '/posts/brotocol' }];
 
 test.describe('Help center and developers redirects', () => {
   for (const { from, to } of singleHopRedirects) {

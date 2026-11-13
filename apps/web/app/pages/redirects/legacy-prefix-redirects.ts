@@ -2,11 +2,7 @@ import { data, redirect } from 'react-router';
 
 import { LEATHER_DOCS } from '~/constants/leather-docs';
 
-import {
-  type ContentFetchers,
-  redirectContentSlug,
-  redirectHelpCenterSlug,
-} from './content-slug-resolver';
+import { type ContentFetchers, redirectContentSlug } from './content-slug-resolver';
 
 // Static pages of the old help center that must not be treated as a guide slug.
 const supportStaticPaths = new Set(['search']);
@@ -46,7 +42,7 @@ export async function helpCenterWildcardLoader<TPost, TGuide>(
   }
 
   const slug = getHelpCenterSlug(segments);
-  if (slug) return redirectHelpCenterSlug(slug, request, fetchers);
+  if (slug) return redirectContentSlug(slug, request, fetchers);
 
   throw data('The requested page could not be found.', { status: 404 });
 }

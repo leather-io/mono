@@ -4,10 +4,9 @@ import { LEATHER_DOCS } from '~/constants/leather-docs';
 import {
   type ContentFetchers,
   loadPostBySlug,
-  redirectHelpCenterSlug,
+  redirectContentSlug,
   resolveContentSlug,
 } from './content-slug-resolver';
-import { hasLeatherDocsGuide, toLeatherDocsLocation } from './leather-docs-guides';
 import { getLegacyContentEntries } from './legacy-content-redirects';
 import { legacyPathRedirectLoader } from './legacy-path-redirect-loader';
 import { guidesWildcardLoader, helpCenterWildcardLoader } from './legacy-prefix-redirects';
@@ -15,11 +14,11 @@ import { getDeprecationTarget } from './shared-redirect-logic';
 
 vi.mock('~/constants/cms-client', () => ({ cmsClient: { fetch: vi.fn() } }));
 
-const postOnlySlug = 'what-is-stacks';
+const postOnlySlug = 'gearing-up-for-2024-with-leather';
 const guideOnlySlug = 'leather-password-strength-guide';
 const guideAndPostSlug = 'receive-btc';
 const deprecatedSlug = 'send-ordinals';
-const ordinalsDeprecationPath = '/posts/deprecation-of-ordinals-inscriptions-support-in-leather';
+const ordinalsDeprecationPath = `${LEATHER_DOCS.guides}/discontinued/ordinals-inscriptions`;
 
 const docsGuides = LEATHER_DOCS.guides;
 // Guide pages on Leather Docs, for slugs used below
@@ -138,7 +137,7 @@ describe('/posts/:slug', () => {
     expect(thrown).toEqual({ status: 301, location: docsReceiveBtc });
   });
 
-  test('301s a deprecated slug once, straight to the deprecation post', async () => {
+  test('301s a deprecated slug once, straight to its discontinued notice', async () => {
     const thrown = await captureThrown(
       loadPostBySlug(deprecatedSlug, request(`/posts/${deprecatedSlug}`), createFetchers())
     );
@@ -149,7 +148,10 @@ describe('/posts/:slug', () => {
     const thrown = await captureThrown(
       loadPostBySlug('tokens-stx', request('/posts/tokens-stx?utm_source=x'), createFetchers())
     );
-    expect(thrown).toEqual({ status: 301, location: '/posts/stacks-token-stx?utm_source=x' });
+    expect(thrown).toEqual({
+      status: 301,
+      location: `${docsGuides}/stacking-and-sbtc-reference/stacks-token-stx?utm_source=x`,
+    });
   });
 
   test('returns 404 for unknown slugs and 410 for retired ones', async () => {
@@ -171,14 +173,14 @@ describe('/support/:slug and /support/guide/:slug', () => {
     [guideAndPostSlug, docsReceiveBtc],
     ['install-leather', docsInstallLeather],
     // Explainers moved to Leather Docs with the guides
-    [postOnlySlug, docsWhatIsStacks],
+    ['what-is-stacks', docsWhatIsStacks],
     [guideOnlySlug, docsGuides],
     [deprecatedSlug, ordinalsDeprecationPath],
     ['how-can-i-secure-my-secret-key', docsSecureSecretKey],
   ])('301s %s straight to %s', async (slug, location) => {
     for (const path of [`/support/${slug}`, `/support/guide/${slug}`]) {
       const thrown = await captureThrown(
-        redirectHelpCenterSlug(slug, request(path), createFetchers())
+        redirectContentSlug(slug, request(path), createFetchers())
       );
       expect(thrown, path).toEqual({ status: 301, location });
     }
@@ -187,7 +189,7 @@ describe('/support/:slug and /support/guide/:slug', () => {
   test('goes to Leather Docs without querying Sanity and keeps the query string', async () => {
     const fetchers = createFetchers();
     const thrown = await captureThrown(
-      redirectHelpCenterSlug('send-stx', request('/support/send-stx?utm_source=x'), fetchers)
+      redirectContentSlug('send-stx', request('/support/send-stx?utm_source=x'), fetchers)
     );
     expect(thrown).toEqual({ status: 301, location: `${docsSendStx}?utm_source=x` });
     expect(fetchers.fetchGuide).not.toHaveBeenCalled();
@@ -195,7 +197,7 @@ describe('/support/:slug and /support/guide/:slug', () => {
 
   test('301s a post that is not on Leather Docs to /posts', async () => {
     const thrown = await captureThrown(
-      redirectHelpCenterSlug(
+      redirectContentSlug(
         'stacking',
         request('/support/stacking'),
         createFetchers({ posts: ['stacking'] })
@@ -206,7 +208,7 @@ describe('/support/:slug and /support/guide/:slug', () => {
 
   test('returns 404 for unknown slugs', async () => {
     const thrown = await captureThrown(
-      redirectHelpCenterSlug('nope', request('/support/guide/nope'), createFetchers())
+      redirectContentSlug('nope', request('/support/guide/nope'), createFetchers())
     );
     expect(thrown).toEqual({ status: 404, location: null });
   });
@@ -284,29 +286,27 @@ describe('legacy Framer short paths', () => {
 describe('no redirect chains', () => {
   const entries = getLegacyContentEntries();
 
-  test('every legacy target is a final URL', () => {
-    const pageTargets = new Set(['/support', '/']);
-    for (const [, target] of entries) {
-      if (target.action !== 'redirect' || pageTargets.has(target.to)) continue;
-      const [, section, targetSlug] = target.to.split('/');
-      expect(['posts', 'support'], target.to).toContain(section);
+  test('every legacy slug resolves to a final URL in one hop', async () => {
+    const slugs = new Set(entries.map(([slug]) => slug));
+    for (const [slug, target] of entries) {
+      if (target.action !== 'redirect') continue;
+      const resolution = await resolveContentSlug(slug, createFetchers());
+      expect(resolution.kind, slug).toBe('redirect');
+      if (resolution.kind !== 'redirect') continue;
+      const { location } = resolution;
+      if (location === docsGuides && target.to === '/support') continue;
+      if (location.startsWith(`${docsGuides}/`) || location === '/') continue;
       // Help center targets resolve to a page on Leather Docs, never the Guides home
-      if (section === 'support') {
-        expect(hasLeatherDocsGuide(targetSlug), target.to).toBe(true);
-        expect(toLeatherDocsLocation(target.to)).not.toBe(docsGuides);
-      }
-      expect(getDeprecationTarget(targetSlug), target.to).toBeNull();
-      expect(
-        entries.some(([slug]) => slug === targetSlug),
-        target.to
-      ).toBe(false);
+      expect(target.to.startsWith('/support'), slug).toBe(false);
+      const [, section, targetSlug] = location.split('/');
+      expect(section, slug).toBe('posts');
+      expect(getDeprecationTarget(targetSlug), slug).toBeNull();
+      expect(slugs.has(targetSlug), slug).toBe(false);
     }
   });
 
-  test('deprecation targets are not themselves deprecated or remapped', () => {
-    const targetSlug = getDeprecationTarget(deprecatedSlug)?.split('/').pop() ?? '';
-    expect(targetSlug).not.toBe('');
-    expect(getDeprecationTarget(targetSlug)).toBeNull();
-    expect(entries.some(([slug]) => slug === targetSlug)).toBe(false);
+  test('deprecated slugs go to a discontinued notice on Leather Docs', () => {
+    expect(getDeprecationTarget(deprecatedSlug)).toBe(ordinalsDeprecationPath);
+    expect(getDeprecationTarget('leather-runes-wallet')).toBe(`${docsGuides}/discontinued/runes`);
   });
 });

@@ -7,14 +7,14 @@ vi.mock('~/constants/cms-client', () => ({ cmsClient: { fetch: vi.fn() } }));
 describe('getSitemapPaths', () => {
   test('lists pages, served posts at their canonical URL, and changelog entries', async () => {
     const paths = await getSitemapPaths({
-      postSlugs: ['what-is-stacks', 'receive-btc', 'send-ordinals'],
+      postSlugs: ['gearing-up-for-2024-with-leather', 'receive-btc', 'send-ordinals'],
       guideSlugs: ['receive-btc', 'send-stx', 'receive-ordinals'],
       changelogSlugs: ['web-portfolio'],
     });
 
     expect(paths).toEqual([
       ...sitemapPagePaths,
-      '/posts/what-is-stacks',
+      '/posts/gearing-up-for-2024-with-leather',
       '/changelog/web-portfolio',
     ]);
   });

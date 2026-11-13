@@ -1,7 +1,7 @@
 import { cmsClient, marketingCmsRequestOptions } from '~/constants/cms-client';
 import { marketingHeaders, marketingMeta } from '~/pages/marketing/shared/marketing-meta';
 import { MarketingPage } from '~/pages/marketing/shared/marketing-page';
-import { isDeprecatedContentSlug } from '~/pages/redirects/shared-redirect-logic';
+import { isRedirectedContentSlug } from '~/pages/redirects/content-slug-resolver';
 
 import { type Route } from './+types/news.route';
 import { NewsPage } from './news-page';
@@ -19,7 +19,7 @@ export async function loader() {
       (await cmsClient.fetch<NewsItem[]>(newsPostsQuery, {}, marketingCmsRequestOptions)) ?? [];
     // Retired runes / ordinals announcements now redirect to their deprecation notice; skip them
     // rather than list a headline that lands somewhere else.
-    return { items: items.filter(item => item.title && !isDeprecatedContentSlug(item.slug)) };
+    return { items: items.filter(item => item.title && !isRedirectedContentSlug(item.slug)) };
   } catch (error) {
     // A Sanity outage renders an empty list rather than a 500
     // eslint-disable-next-line no-console

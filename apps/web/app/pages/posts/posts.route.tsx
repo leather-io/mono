@@ -4,7 +4,7 @@ import { cmsClient, marketingCmsRequestOptions } from '~/constants/cms-client';
 import { SITE_ORIGIN } from '~/constants/constants';
 import { marketingHeaders, marketingMeta } from '~/pages/marketing/shared/marketing-meta';
 import { MarketingPage } from '~/pages/marketing/shared/marketing-page';
-import { isDeprecatedContentSlug } from '~/pages/redirects/shared-redirect-logic';
+import { isRedirectedContentSlug } from '~/pages/redirects/content-slug-resolver';
 
 import { type Route } from './+types/posts.route';
 import { PostsIndex } from './posts-index';
@@ -34,7 +34,7 @@ export async function loader() {
       { excludedCategories: postsIndexExcludedCategories },
       marketingCmsRequestOptions
     );
-    return { posts: selectListedPosts(posts ?? [], isDeprecatedContentSlug) };
+    return { posts: selectListedPosts(posts ?? [], isRedirectedContentSlug) };
   } catch (error) {
     // A Sanity outage renders an empty index rather than a 500
     // eslint-disable-next-line no-console

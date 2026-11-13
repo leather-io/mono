@@ -1,6 +1,7 @@
 import { data, redirect } from 'react-router';
 
 import { cmsClient } from '~/constants/cms-client';
+import { LEATHER_DOCS } from '~/constants/leather-docs';
 
 import {
   type HelpCenterGuideBySlugQueryResult,
@@ -9,11 +10,7 @@ import {
   postBySlugQuery,
 } from '@leather.io/cms';
 
-import {
-  hasLeatherDocsGuide,
-  leatherDocsGuideUrl,
-  toLeatherDocsLocation,
-} from './leather-docs-guides';
+import { hasLeatherDocsGuide, leatherDocsGuideUrl } from './leather-docs-guides';
 import { getLegacyContentTarget } from './legacy-content-redirects';
 import { getDeprecationTarget, isDeprecatedContentSlug } from './shared-redirect-logic';
 
@@ -58,6 +55,8 @@ export async function resolveContentSlug<TPost, TGuide>(
   const deprecationTarget = getDeprecationTarget(slug);
   if (deprecationTarget) return { kind: 'redirect', location: deprecationTarget };
 
+  if (hasLeatherDocsGuide(slug)) return { kind: 'redirect', location: leatherDocsGuideUrl(slug) };
+
   const [guide, post] = await Promise.all([fetchers.fetchGuide(slug), fetchers.fetchPost(slug)]);
 
   // A help center guide is the canonical home for a slug, even when an older post shares it.
@@ -67,11 +66,31 @@ export async function resolveContentSlug<TPost, TGuide>(
   // Slugs from the retired Framer/Notion collection that never made it into Sanity.
   const legacyTarget = getLegacyContentTarget(slug);
   if (legacyTarget?.action === 'redirect') {
-    return { kind: 'redirect', location: toLeatherDocsLocation(legacyTarget.to) };
+    return { kind: 'redirect', location: toFinalLocation(legacyTarget.to) };
   }
   if (legacyTarget?.action === 'retire') return { kind: 'gone' };
 
   return { kind: 'not-found' };
+}
+
+/**
+ * Legacy redirect tables name some targets by an in-app path that now redirects to Leather Docs
+ * (`/support`, `/support/:slug`, `/posts/:slug`); this returns the final URL, so each legacy link
+ * still resolves in a single hop. Other locations pass through unchanged.
+ */
+function toFinalLocation(location: string) {
+  if (location === '/support') return LEATHER_DOCS.guides;
+  const [, prefix, encodedSlug] = /^\/(support|posts)\/([^/]+)$/.exec(location) ?? [];
+  if (!encodedSlug) return location;
+  const slug = decodeURIComponent(encodedSlug);
+  const docsTarget =
+    getDeprecationTarget(slug) ?? (hasLeatherDocsGuide(slug) ? leatherDocsGuideUrl(slug) : null);
+  if (docsTarget) return docsTarget;
+  return prefix === 'support' ? LEATHER_DOCS.guides : location;
+}
+
+export function isRedirectedContentSlug(slug: string) {
+  return isDeprecatedContentSlug(slug) || hasLeatherDocsGuide(slug);
 }
 
 function withSearch(location: string, request: Request) {
@@ -115,20 +134,4 @@ export async function redirectContentSlug<TPost, TGuide>(
 ): Promise<never> {
   const resolution = await resolveContentSlug(slug, fetchers);
   throw unservedContentResponse(resolution, request);
-}
-
-/**
- * The retired help center routes (`/support/:slug`, `/support/guide/:slug`, `/help-center/...`):
- * a slug with a Leather Docs page goes straight there without a Sanity lookup; anything else
- * resolves like any other content slug (a post, a deprecation notice, the Guides home, or 404).
- */
-export async function redirectHelpCenterSlug<TPost, TGuide>(
-  slug: string,
-  request: Request,
-  fetchers: ContentFetchers<TPost, TGuide>
-): Promise<never> {
-  if (!isDeprecatedContentSlug(slug) && hasLeatherDocsGuide(slug)) {
-    throw redirect(withSearch(leatherDocsGuideUrl(slug), request), 301);
-  }
-  return redirectContentSlug(slug, request, fetchers);
 }
