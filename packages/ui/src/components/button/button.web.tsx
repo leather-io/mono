@@ -238,10 +238,7 @@ function renderIcon(icon: ComponentType<IconProps> | ReactElement | undefined, p
   if (isNullish(icon)) return icon;
   if (isValidElement(icon)) {
     if (typeof icon.type === 'string' || !isValidElement<IconProps>(icon)) return icon;
-    return cloneElement<IconProps>(icon, {
-      color: icon.props.color ?? props.color,
-      variant: icon.props.variant ?? props.variant,
-    });
+    return cloneElement<IconProps>(icon, { color: icon.props.color ?? props.color });
   }
   const IconComponent = icon;
   return <IconComponent {...props} />;
