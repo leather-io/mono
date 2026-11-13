@@ -18,6 +18,7 @@ interface StacksTokenDetailsLayoutProps {
   balances: TokenBalanceEntry[];
   activity: BlockchainActivityItem[];
   isActivityLoading: boolean;
+  moreActions?: ReactNode;
 }
 
 export function StacksTokenDetailsLayout({
@@ -29,6 +30,7 @@ export function StacksTokenDetailsLayout({
   balances,
   activity,
   isActivityLoading,
+  moreActions,
 }: StacksTokenDetailsLayoutProps) {
   return (
     <TokenDetailsLayout
@@ -47,6 +49,7 @@ export function StacksTokenDetailsLayout({
       balancesContent={
         <TokenBalancesTab balances={balances} formatAmount={amount => formatCurrency(amount)} />
       }
+      moreActions={moreActions}
       activity={activity}
       isActivityLoading={isActivityLoading}
     />
