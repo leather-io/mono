@@ -39,6 +39,7 @@ minimumReleaseAgeExclude:
   - "@stacks/transactions"
   - "@stacks/common"
   - "@stacks/network"
+  - "@stacks/blockchain-api-client"
 packages:
   - 'apps/*'
   - 'packages/*'

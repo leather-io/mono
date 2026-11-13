@@ -17,6 +17,7 @@ import type {
 
 const principal = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE';
 const mainnet = defaultNetworksKeyedById[WalletDefaultNetworkConfigurationIds.mainnet];
+const txid = '0x2fd347fd2f775db6bec23e566a1d1d4914f10502f6a0d44692e93aa80cf047e4';
 
 const mempoolResponse: HiroPrincipalMempoolTransactionsResponse = {
   total: 1,
@@ -253,8 +254,6 @@ describe(HiroStacksApiClient.name, () => {
   });
 
   describe('getTransactionById', () => {
-    const txid = '0xabc';
-
     it('requests the transaction without heavy fields by default', async () => {
       await makeClient().getTransactionById(txid);
 
@@ -286,6 +285,44 @@ describe(HiroStacksApiClient.name, () => {
         expect.any(Function),
         { skipCache: undefined }
       );
+    });
+  });
+
+  describe('getRawTransactionById', () => {
+    const rawTxResponse = { raw: '0x80800000000400' };
+
+    it('fetches the raw transaction from the v3 endpoint', async () => {
+      get.mockResolvedValue({ data: rawTxResponse });
+      const signal = new AbortController().signal;
+
+      const response = await makeClient().getRawTransactionById(txid, { signal });
+
+      expect(response).toEqual(rawTxResponse);
+      expect(get).toHaveBeenCalledWith(
+        `${mainnet.chain.stacks.url}/extended/v3/transactions/${txid}/raw`,
+        { signal }
+      );
+      expect(add).toHaveBeenCalledWith(RateLimiterType.HiroStacks, {
+        priority: hiroApiRequestsPriorityLevels.getRawTransactionById,
+        signal,
+        throwOnTimeout: true,
+      });
+      expect(fetchWithCache).toHaveBeenCalledWith(
+        ['hiro-stacks-get-raw-transaction-by-id', txid, mainnet.chain.stacks.chainId],
+        expect.any(Function),
+        { skipCache: undefined }
+      );
+    });
+
+    it('bypasses the cache when skipCache is set', async () => {
+      get.mockResolvedValue({ data: rawTxResponse });
+
+      await makeClient().getRawTransactionById(txid, { skipCache: true });
+
+      expect(fetchWithCache).toHaveBeenCalledWith(expect.any(Array), expect.any(Function), {
+        skipCache: true,
+      });
+      expect(get).toHaveBeenCalledTimes(1);
     });
   });
 });
