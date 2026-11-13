@@ -49,9 +49,9 @@ export class BnsV2ApiClient {
       );
       return bnsV2ApiNameResponseSchema.parse(res.data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(['bns-v2-api-name', network, fullName], fetchFn);
+    return await this.cache.fetchWithCache(['bns-v2-api-name', network, fullName], fetchFn, {
+      skipCache,
+    });
   }
 
   public async fetchAddressBnsNames(
@@ -66,9 +66,11 @@ export class BnsV2ApiClient {
       );
       return bnsV2ApiAddressNamesResponseSchema.parse(res.data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(['bns-v2-api-address-names', network, address], fetchFn);
+    return await this.cache.fetchWithCache(
+      ['bns-v2-api-address-names', network, address],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   public async fetchBnsZoneFileRaw(
@@ -83,8 +85,10 @@ export class BnsV2ApiClient {
       );
       return bnsV2ApiZoneFileResponseSchema.parse(res.data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cache.fetchWithCache(['bns-v2-api-zone-file-raw', network, fullName], fetchFn);
+    return await this.cache.fetchWithCache(
+      ['bns-v2-api-zone-file-raw', network, fullName],
+      fetchFn,
+      { skipCache }
+    );
   }
 }
