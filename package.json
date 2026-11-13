@@ -15,7 +15,7 @@
     "check:all": "turbo run check:all",
     "clean": "git clean -dfX",
     "design:align": "node --experimental-strip-types scripts/design/align.ts",
-    "design:check": "eslint -c eslint.design.config.js --no-inline-config",
+    "design:check": "turbo run build --filter=@leather.io/tokens --output-logs=errors-only && eslint -c eslint.design.config.js --no-inline-config",
     "design:scripts:lint": "eslint -c eslint.design-scripts.config.js scripts/design --max-warnings 0 --no-inline-config",
     "design:scripts:typecheck": "tsc -p scripts/design/tsconfig.json",
     "design:test": "node --experimental-strip-types --test eslint-rules/design-system/*.spec.js scripts/design/*.test.ts",

@@ -63,8 +63,8 @@ Mobile requires an `apps/mobile/.env` file with `EXPO_PUBLIC_LAUNCH_DARKLY` set.
 
 - Building or changing UI? Use the `leather-ui` skill and start at `docs/design/i-need-to.md`, which maps each job to one `@leather.io/ui` component.
 - Colours, type and spacing come from `@leather.io/tokens`. Text colour follows the ink ladder in `packages/tokens/README.md`.
-- `docs/design/never.md` lists what UI code must not do. Each item is a rule in `eslint-rules/design-system/` whose message names the fix.
-- Never import `radix-ui` or `@radix-ui/*` outside `packages/ui`.
+- `docs/design/never.md` lists what new UI code must not do, such as importing `radix-ui` or `@radix-ui/*` outside `packages/ui`. Each item is a rule in `eslint-rules/design-system/` whose message names the fix.
+- Root lint enforces those rules only on the toolkit's recipes, recipe gallery and Receive example. Run `pnpm design:check <path>` on new web or extension UI; older code elsewhere still breaks some of them.
 - Design-rule entries in `eslint-suppressions.json` follow the baseline rule under Code style: they only go away.
 - UI change? Check light and dark in the web Playground (`/playground`) and attach before and after screenshots to the PR.
 - New design rules follow `docs/design/updating-the-system.md`: a type, then a lint, then docs. Prose here comes last and cites the incident.
