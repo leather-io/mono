@@ -1,10 +1,9 @@
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 
 import { accountsBalanceStxHandler } from './accounts-address-balance-stx';
-import { transactionWithTransfersHandler } from './address-address-transactions-with-transfers';
 import { hiroInfoHandler } from './info';
-import { mempoolHandler } from './mempool';
 import { poxMainnetHandler } from './pox';
+import { principalsMempoolTransactionsHandler } from './principals-mempool-transactions';
 
 // The pox-5 read layer is pinned to the chain selected in
 // data/pox5-network-config.ts, so mock mode needs the node/account endpoints
@@ -27,6 +26,5 @@ export const pox5PinnedNetworkHandlers = [
   poxMainnetHandler,
   hiroInfoHandler,
   accountsBalanceStxHandler,
-  transactionWithTransfersHandler,
-  mempoolHandler,
+  principalsMempoolTransactionsHandler,
 ].map(atPox5Host);

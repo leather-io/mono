@@ -1,60 +1,49 @@
-import { type StackingClient } from '@stacks/stacking';
-import {
-  type ContractCallTransaction,
-  type ContractCallTransactionMetadata,
-  type MempoolContractCallTransaction,
-  type MempoolTransaction,
-  type Transaction,
-} from '@stacks/stacks-blockchain-api-types';
-import { ClarityType, type ClarityValue, hexToCV } from '@stacks/transactions';
-import { type StacksApiClient } from '~/utils/stacks-api-client';
-import { isContractCallTransaction, isMempoolContractCallTransaction } from '~/utils/transactions';
+import { ClarityType, type ClarityValue } from '@stacks/transactions';
 
-type TransactionPredicate = (t: ContractCallTransactionMetadata, poxContractId: string) => boolean;
-type TransactionConverter<T> = (t: ContractCallTransaction | MempoolContractCallTransaction) => T;
+import type { StacksTransaction } from '@leather.io/models';
+import { isDefined } from '@leather.io/utils';
+
+interface ContractCallMetadata {
+  contract_call: {
+    contract_id: string;
+    function_name: string;
+  };
+}
+
+interface ContractCallTransaction {
+  type: 'contract_call';
+  tx_id: string;
+  contract_call: {
+    contract_id: string;
+    function_name: string;
+    function_args?: { hex: string }[];
+  };
+}
+
+interface OtherTransaction {
+  type: Exclude<StacksTransaction['type'], 'contract_call'>;
+}
+
+interface PendingTransactionsClient {
+  getPrincipalMempoolTransactions(
+    principal: string,
+    signal: AbortSignal
+  ): Promise<{
+    results: { tx_id: string; contract_call?: ContractCallMetadata['contract_call'] }[];
+  }>;
+  getTransactionById(
+    txid: string,
+    signal: AbortSignal,
+    include: 'function_args'[]
+  ): Promise<ContractCallTransaction | OtherTransaction>;
+}
+
+type TransactionPredicate = (t: ContractCallMetadata) => boolean;
+type TransactionConverter<T> = (t: ContractCallTransaction) => T;
 
 export interface PendingTransactionArgs {
-  stackingClient: StackingClient;
-  stacksClient: Pick<
-    StacksApiClient,
-    'getAccountTransactionsWithTransfers' | 'getAddressMempoolTransactions'
-  >;
+  stacksClient: PendingTransactionsClient;
   address: string;
-}
-
-/**
- * Given an array of transactions, ordered from most recent to least recent, returns the most recent
- * successful unanchored transaction calling the PoX's `stack-stx` function in a microblock.
- */
-function findUnanchoredTransaction(
-  transactions: Transaction[],
-  // Until PoX 2 has been fully activated, using this arg to determine the PoX contract id. Once
-  // active, this value can be set to a constant.
-  poxContractId: string,
-  isGoodTransaction: TransactionPredicate
-): ContractCallTransaction | undefined {
-  return transactions.filter(isContractCallTransaction).find(t => {
-    if (!t.is_unanchored) return false;
-
-    const transactionResultCV = hexToCV(t.tx_result.hex);
-    const isOk = transactionResultCV.type === ClarityType.ResponseOk;
-    return isOk && isGoodTransaction(t, poxContractId);
-  });
-}
-/**
- * Given an array of transactions, ordered from most recent to least recent, returns the most recent
- * transaction calling the PoX's `stack-stx` function in the mempool.
- */
-function findMempoolTransaction(
-  transactions: MempoolTransaction[],
-  // Until PoX 2 has been fully activated, using this arg to determine the PoX contract id. Once
-  // active, this value can be set to a constant.
-  poxContractId: string,
-  isGoodTransaction: TransactionPredicate
-) {
-  return transactions.filter(isMempoolContractCallTransaction).find(t => {
-    return isGoodTransaction(t, poxContractId);
-  });
 }
 
 interface GetHasPendingTransactionArgs<T> extends PendingTransactionArgs {
@@ -63,55 +52,25 @@ interface GetHasPendingTransactionArgs<T> extends PendingTransactionArgs {
 }
 
 export async function getHasPendingTransaction<T>({
-  stackingClient,
   stacksClient,
   address,
   transactionPredicate,
   transactionConverter: txToDataConverter,
 }: GetHasPendingTransactionArgs<T>): Promise<null | T> {
   const signal = new AbortController().signal;
-  const [contractPrincipal, accountTransactions, mempoolTransactions] = await Promise.all([
-    stackingClient.getStackingContract(),
-    stacksClient.getAccountTransactionsWithTransfers(address, signal),
-    stacksClient.getAddressMempoolTransactions(address, signal),
+  const mempoolTransactions = await stacksClient.getPrincipalMempoolTransactions(address, signal);
+
+  const pendingContractCall = mempoolTransactions.results.find(
+    ({ contract_call }) => isDefined(contract_call) && transactionPredicate({ contract_call })
+  );
+  if (!pendingContractCall) return null;
+
+  const transaction = await stacksClient.getTransactionById(pendingContractCall.tx_id, signal, [
+    'function_args',
   ]);
+  if (transaction.type !== 'contract_call') return null;
 
-  // NOTE: `results` needs to be cast due to known issues with types,
-  // https://github.com/hirosystems/stacks-blockchain-api/tree/master/client#known-issues
-  const accountTransaction = findUnanchoredTransaction(
-    accountTransactions.results.map(r => r.tx),
-    contractPrincipal,
-    transactionPredicate
-  );
-  const mempoolTransaction = findMempoolTransaction(
-    mempoolTransactions.results,
-    contractPrincipal,
-    transactionPredicate
-  );
-
-  const transaction = getBestTransaction(accountTransaction, mempoolTransaction);
-
-  if (transaction) {
-    return txToDataConverter(transaction);
-  }
-
-  return null;
-}
-
-function getBestTransaction(
-  accountTransaction: ContractCallTransaction | undefined,
-  mempoolTransaction: MempoolContractCallTransaction | undefined
-) {
-  if (!accountTransaction && mempoolTransaction) {
-    return mempoolTransaction;
-  } else if (accountTransaction && !mempoolTransaction) {
-    return accountTransaction;
-  } else if (accountTransaction && mempoolTransaction) {
-    return accountTransaction.nonce > mempoolTransaction.nonce
-      ? accountTransaction
-      : mempoolTransaction;
-  }
-  return undefined;
+  return txToDataConverter(transaction);
 }
 
 export function expectUintCV(valueCV: ClarityValue, argName: string) {
