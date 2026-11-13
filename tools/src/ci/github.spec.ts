@@ -1,7 +1,13 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
 
 import type { CommandRunner } from './exec.js';
-import { GitHubError, createGhCliClient, createGitHubClient, paginate } from './github.js';
+import {
+  GitHubError,
+  createGhCliClient,
+  createGitHubClient,
+  neutraliseMentions,
+  paginate,
+} from './github.js';
 
 interface Sent {
   readonly url: string;
@@ -64,6 +70,20 @@ describe('createGitHubClient', () => {
     expect(sent[0]?.url).toBe('https://api.github.com/graphql');
     expect(sent[0]?.init.body).toBe('{"query":"query { viewer { login } }","variables":{}}');
   });
+
+  test('returns the GraphQL data', async () => {
+    stubFetch([{ status: 200, body: '{"data":{"viewer":{"login":"me"}}}' }]);
+    await expect(
+      createGitHubClient({ token: 'secret' }).graphql('query { viewer { login } }', {})
+    ).resolves.toEqual({ viewer: { login: 'me' } });
+  });
+
+  test('rejects GraphQL errors that come back with a 200', async () => {
+    stubFetch([{ status: 200, body: '{"data":null,"errors":[{"message":"not allowed"}]}' }]);
+    await expect(
+      createGitHubClient({ token: 'secret' }).graphql('mutation { x }', {})
+    ).rejects.toThrow('GitHub GraphQL failed: [{"message":"not allowed"}]');
+  });
 });
 
 describe('paginate', () => {
@@ -122,10 +142,39 @@ describe('createGhCliClient', () => {
     ]);
   });
 
+  test('returns the GraphQL data and rejects GraphQL errors', async () => {
+    const answered = fakeGh({ status: 0, stdout: '{"data":{"ok":true}}', stderr: '' });
+    await expect(createGhCliClient('/repo', answered.run).graphql('q', {})).resolves.toEqual({
+      ok: true,
+    });
+    const refused = fakeGh({ status: 0, stdout: '{"errors":[{"message":"no"}]}', stderr: '' });
+    await expect(createGhCliClient('/repo', refused.run).graphql('q', {})).rejects.toThrow(
+      'GitHub GraphQL failed'
+    );
+  });
+
   test('rejects with gh standard error when the call fails', async () => {
     const gh = fakeGh({ status: 1, stdout: '', stderr: 'HTTP 404: Not Found\n' });
     await expect(createGhCliClient('/repo', gh.run).request('GET', 'repos/o/r')).rejects.toThrow(
       'gh api GET repos/o/r failed: HTTP 404: Not Found'
     );
+  });
+});
+
+describe('neutraliseMentions', () => {
+  it('defuses user and team mentions', () => {
+    expect(neutraliseMentions('ping @alice')).not.toMatch(/@alice/);
+    expect(neutraliseMentions('ask @leather-io/reviewers')).not.toMatch(/@leather-io/);
+  });
+
+  it('keeps package names with a dotted scope intact', () => {
+    expect(neutraliseMentions('import from @leather.io/utils')).toBe(
+      'import from @leather.io/utils'
+    );
+  });
+
+  it('leaves inline code and code blocks untouched', () => {
+    expect(neutraliseMentions('use `@stacks/transactions`')).toBe('use `@stacks/transactions`');
+    expect(neutraliseMentions('```\n@alice\n```')).toBe('```\n@alice\n```');
   });
 });

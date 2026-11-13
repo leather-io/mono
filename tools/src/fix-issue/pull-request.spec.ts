@@ -2,7 +2,7 @@ import { existsSync, writeFileSync } from 'node:fs';
 import { afterEach, describe, expect, test } from 'vitest';
 import { z } from 'zod';
 
-import { runOrThrow } from './exec.js';
+import { runOrThrow } from '../ci/exec.js';
 import { gitBlobSha } from './git.js';
 import { openPullRequest, renderBody, renderScreenshotTable } from './pull-request.js';
 import type { FixStatus } from './status.js';

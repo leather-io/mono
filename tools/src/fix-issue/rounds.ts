@@ -2,7 +2,7 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSyn
 import path from 'node:path';
 import { z } from 'zod';
 
-import { type CommandRunner, runCommand } from './exec.js';
+import { type CommandRunner, runCommand } from '../ci/exec.js';
 import { treeSnapshot } from './git.js';
 import type { FixIssuePaths } from './paths.js';
 import { type Review, readReview } from './review.js';

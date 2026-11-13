@@ -1,5 +1,6 @@
 import type { Command } from 'commander';
 
+import { createGhCliClient, createGitHubClient } from '../ci/github.js';
 import {
   appJwt,
   createInstallationToken,
@@ -8,7 +9,6 @@ import {
 } from '../fix-issue/app-token.js';
 import { briefIssues, dispatch } from '../fix-issue/dispatch.js';
 import { repoRoot } from '../fix-issue/git.js';
-import { createGhCliClient, createGitHubClient } from '../fix-issue/github.js';
 import { fetchIssue } from '../fix-issue/issue.js';
 import { writeStepOutputs } from '../fix-issue/outputs.js';
 import { fixIssuePaths } from '../fix-issue/paths.js';

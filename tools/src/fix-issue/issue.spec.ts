@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
-import { GitHubError } from './github.js';
+import { GitHubError } from '../ci/github.js';
 import { fetchIssue } from './issue.js';
 import { fakeGitHub } from './test/fake-github.js';
 import { type TestRepo, createTestRepo } from './test/test-repo.js';

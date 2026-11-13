@@ -1,5 +1,5 @@
+import { type GitHubClient, GitHubError, type HttpMethod } from '../../ci/github.js';
 import { gitBlobSha } from '../git.js';
-import { type GitHubClient, GitHubError, type HttpMethod } from '../github.js';
 
 interface GitHubCall {
   readonly method: HttpMethod | 'GRAPHQL';

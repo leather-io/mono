@@ -2,7 +2,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { afterEach, describe, expect, test } from 'vitest';
 
-import type { CommandRunner } from './exec.js';
+import type { CommandRunner } from '../ci/exec.js';
 import { captureScreenshots, isScreenshot, maxScreenshotBytes } from './screenshots.js';
 import { type TestRepo, createTestRepo, discardLog, logSink } from './test/test-repo.js';
 
