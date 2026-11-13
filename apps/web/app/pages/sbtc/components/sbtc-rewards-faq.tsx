@@ -1,11 +1,22 @@
 import { useLoaderData } from 'react-router';
 
 import { styled } from 'leather-styles/jsx';
+import { sbtcContent } from '~/content/sbtc-content';
 import { type loader } from '~/pages/sbtc/sbtc.route';
 import { getPostHref } from '~/utils/post-link';
 import { sanitizeContent } from '~/utils/sanitize-content';
 
 import { Accordion, Link } from '@leather.io/ui';
+
+function getCurrentFaqAnswer(id: string, answer: string): string {
+  if (
+    id === '2d1e15c6-3371-4910-968b-86638d7e6192' &&
+    answer.includes('currently expected on September 9, 2026')
+  ) {
+    return `${sbtcContent.rewardsSunset.title}. ${sbtcContent.rewardsSunset.description}`;
+  }
+  return answer;
+}
 
 export function SbtcRewardsFaq() {
   const { sbtcFaq } = useLoaderData<typeof loader>();
@@ -31,7 +42,7 @@ export function SbtcRewardsFaq() {
                 mb="space.02"
                 style={{ whiteSpace: 'pre-line', color: 'black' }}
               >
-                {sanitizeContent(post.answer)}
+                {sanitizeContent(getCurrentFaqAnswer(post._id, post.answer))}
                 <br />
                 <br />
                 <Link

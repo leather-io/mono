@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router';
+import { Outlet } from 'react-router';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '~/constants/query-client';
@@ -23,8 +23,6 @@ async function importAndInitAppServices() {
 }
 
 export default function App() {
-  const navigate = useNavigate();
-
   useDetectLeatherProvider();
 
   useEffect(() => {
@@ -35,9 +33,6 @@ export default function App() {
   }, []);
 
   useOnRouteChange(() => analytics.page());
-  useOnRouteChange(location => {
-    if (location.pathname === '/') void navigate('/staking', { replace: true });
-  });
 
   return (
     <QueryClientProvider client={queryClient}>

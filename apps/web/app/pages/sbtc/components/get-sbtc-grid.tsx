@@ -29,8 +29,8 @@ function BridgeToSbtcCell() {
           <styled.h4 textStyle="heading.05">Bridge BTC to sBTC</styled.h4>
 
           <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
-            Bridge BTC to Stacks using the sBTC protocol and unlock new ways to earn Bitcoin through
-            DeFi apps in Leather.
+            Bridge BTC to Stacks using the sBTC protocol to use it as sBTC in supported DeFi apps.
+            Availability depends on your wallet and provider.
             <LearnMoreLink destination="sbtc-bridge" />
           </styled.p>
         </Box>
@@ -49,9 +49,9 @@ function BridgeToSbtcCell() {
             size="sm"
           >
             {whenExtensionState({
-              connected: leatherInstalled ? 'Bridge' : 'Install Leather to bridge',
+              connected: leatherInstalled ? 'Bridge' : 'Get Leather',
               detected: 'Sign in to bridge',
-              missing: 'Install Leather to bridge',
+              missing: 'Get Leather',
             })}
           </Button>
         </WhenClient>
@@ -77,8 +77,8 @@ function SwapStxToSbtcCell() {
         <Box mt="space.04">
           <styled.h4 textStyle="heading.05">Swap Stacks tokens for sBTC</styled.h4>
           <styled.p textStyle="caption.01" mt="space.01" mr="space.05" color="ink.text-subdued">
-            Swap assets like STX, sBTC, and stablecoins directly from your Leather wallet using
-            integrated DeFi protocols.
+            Swap supported Stacks tokens for sBTC through integrated DeFi protocols. Token pairs and
+            availability depend on your wallet and provider.
             <LearnMoreLink destination="stacks-swap" />
           </styled.p>
         </Box>
@@ -96,9 +96,9 @@ function SwapStxToSbtcCell() {
             size="sm"
           >
             {whenExtensionState({
-              connected: leatherInstalled ? 'Swap' : 'Install Leather to swap',
+              connected: leatherInstalled ? 'Swap' : 'Get Leather',
               detected: 'Sign in to swap',
-              missing: 'Install Leather to swap',
+              missing: 'Get Leather',
             })}
           </Button>
         </WhenClient>

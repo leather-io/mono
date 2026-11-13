@@ -1,5 +1,7 @@
 import { type MetaDescriptor } from 'react-router';
 
+import { SITE_ORIGIN } from './constants';
+
 export const defaultMetaTags = [
   {
     charSet: 'utf-8',
@@ -35,7 +37,7 @@ export const defaultMetaTags = [
   },
   {
     property: 'og:image',
-    content: '/images/leather-og.png',
+    content: `${SITE_ORIGIN}/images/leather-og.png`,
   },
   {
     name: 'robots',

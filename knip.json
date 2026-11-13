@@ -121,16 +121,17 @@
         "config": ["tsconfig.cloudflare.json"]
       },
       "ignoreDependencies": ["leather-styles", "@leather.io/panda-preset"],
-      "ignore": ["stubs/**", "app/layouts/nav/global-loader.styles.ts"]
+      "ignore": [
+        "stubs/**",
+        "app/layouts/nav/global-loader.styles.ts",
+        "app/pages/marketing/shared/motion.styles.ts"
+      ]
     },
     "packages/provider": {
       "entry": ["src/index.ts", "src/mobile.ts"]
     },
     "tools": {
-      "entry": [
-        "src/lt.ts",
-        "src/feature-map/feature-entry.ts"
-      ]
+      "entry": ["src/lt.ts", "src/feature-map/feature-entry.ts"]
     },
     "packages/utils": {
       "ignoreDependencies": ["@types/dompurify"]

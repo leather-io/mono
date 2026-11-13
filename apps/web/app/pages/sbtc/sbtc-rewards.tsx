@@ -54,7 +54,8 @@ export function SbtcRewards(): ReactElement {
         <SbtcRewardsPageHeading />
 
         <ApyRewardHeroCard
-          apyRange="5–8%"
+          label="Yield"
+          apyRange="Variable"
           mt="space.05"
           backgroundImage="url(/images/sbtc-hero.png)"
           backgroundRepeat="no-repeat"
@@ -66,7 +67,7 @@ export function SbtcRewards(): ReactElement {
           <BasicPageSectionHeading
             prefix="Step 1: "
             title="Get sBTC"
-            description="Get sBTC by bridging BTC or swapping other Stacks assets like STX through integrated DeFi protocols."
+            description="Explore ways to get sBTC, including bridging BTC or swapping supported Stacks tokens. Availability depends on your wallet and provider."
             slug="get-sbtc"
             disclaimer="Leather does not operate the sBTC bridge or token swap protocols. Users are responsible for reviewing all terms, pricing, and risks before initiating any transactions."
           />
@@ -77,7 +78,7 @@ export function SbtcRewards(): ReactElement {
           <BasicPageSectionHeading
             prefix="Step 2: "
             title="Choose sBTC rewards provider"
-            description="An sBTC rewards provider is any DeFi protocol that lets users earn yield by deploying sBTC in supported strategies."
+            description="Compare independent providers and review their current strategies, fees and reward terms."
             slug="sbtc-rewards-provider"
             disclaimer="sBTC rewards providers are independent third-party protocols. Leather does not control their reward logic or smart contracts. Users should review platform-specific documentation before committing sBTC."
           />
@@ -88,7 +89,7 @@ export function SbtcRewards(): ReactElement {
             <SbtcProtocolRewardGrid
               enrollAction={
                 <Button size="sm" fullWidth onClick={() => openExternalLink(pool.url)}>
-                  Start earning <RotatedArrow />
+                  View provider <RotatedArrow />
                 </Button>
               }
               key={pool.id}

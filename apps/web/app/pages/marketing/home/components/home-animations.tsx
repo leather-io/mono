@@ -1,0 +1,110 @@
+import { useEffect, useState } from 'react';
+
+import { styled } from 'leather-styles/jsx';
+import { LottieFrame, useLottie } from '~/pages/marketing/shared/lottie-animation';
+import { SplineScene } from '~/pages/marketing/shared/spline-scene';
+
+export const animationsPath = '/marketing/home/animations';
+
+/** "Decentralized swaps": six line-art coins turning on a ring (Spline, one turn per ~16 s). */
+export function SwapsCoins() {
+  const [isSceneReady, setIsSceneReady] = useState(false);
+  return (
+    <styled.div position="relative" width="100%" maxW="640px" justifySelf="center">
+      <styled.img
+        src="/marketing/home/swaps-coins.webp"
+        alt="Hand-drawn Stacks, Bitcoin and sBTC coins tumbling through the air"
+        width="100%"
+        height="auto"
+        style={{
+          aspectRatio: '1200 / 876',
+          opacity: isSceneReady ? 0 : undefined,
+          transition: 'opacity 400ms ease-out',
+        }}
+        loading="lazy"
+      />
+      {/* Sized so the coins match the poster; the tilted stage overhangs its slot */}
+      <styled.div
+        position="absolute"
+        top="50%"
+        left="50%"
+        width="118%"
+        transform={[
+          'translate(-50%, -50%) rotate(6deg)',
+          null,
+          'translate(-50%, -50%) rotate(-15deg)',
+        ]}
+        style={{ aspectRatio: '1.6517' }}
+      >
+        <SplineScene
+          scene={`${animationsPath}/swaps-coins.splinecode`}
+          onReadyChange={setIsSceneReady}
+        />
+      </styled.div>
+    </styled.div>
+  );
+}
+
+const ledgerFadeMs = 400;
+
+/**
+ * Ledger Nano drawn in line art. Plays once each time at least half of it scrolls into view,
+ * fading in, and fades out and rewinds when it leaves. Reduced motion shows the finished drawing.
+ */
+export function LedgerAnimation() {
+  const lottie = useLottie({
+    src: `${animationsPath}/ledger.lottie.json`,
+    loop: false,
+    fit: 'contain',
+    autoplay: false,
+  });
+  const { wrapperRef, animation, reducedMotion } = lottie;
+  // `undefined` until we know motion is allowed, so the SSR still renders at full opacity
+  const [isInView, setIsInView] = useState<boolean>();
+
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (reducedMotion !== false || !wrapper) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(Boolean(entry?.isIntersecting && entry.intersectionRatio >= 0.5)),
+      { threshold: 0.5 }
+    );
+    observer.observe(wrapper);
+    return () => {
+      observer.disconnect();
+      setIsInView(undefined);
+    };
+  }, [wrapperRef, reducedMotion]);
+
+  useEffect(() => {
+    if (!animation || isInView === undefined) return;
+    if (isInView) {
+      animation.goToAndPlay(0, true);
+      return;
+    }
+    // Rewind once faded out, so the next entry draws it again from the start
+    const rewind = setTimeout(() => animation.goToAndStop(0, true), ledgerFadeMs);
+    return () => clearTimeout(rewind);
+  }, [animation, isInView]);
+
+  return (
+    <styled.div
+      style={
+        isInView === undefined
+          ? undefined
+          : {
+              opacity: isInView ? 1 : 0,
+              transition: `opacity ${ledgerFadeMs}ms cubic-bezier(0.25, 1, 0.5, 1)`,
+            }
+      }
+    >
+      <LottieFrame
+        lottie={lottie}
+        poster="/marketing/home/ledger.svg"
+        alt="Line drawing of a Ledger Nano hardware wallet plugged into a USB cable"
+        aspect="680 / 374"
+        fit="contain"
+      />
+    </styled.div>
+  );
+}

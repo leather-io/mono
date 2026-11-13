@@ -22,7 +22,7 @@ export const bitcoinStakingFaqItems: FaqItem[] = [
     id: 'how-long-are-locks',
     question: 'How long is my STX locked?',
     answer:
-      'You choose between 1 and 96 cycles, and a cycle is about two weeks. That sets how often you need to renew rather than how long you are stuck: you can unstake at any time and your STX unlocks when the current cycle ends. At the maximum of 96 cycles you only renew about once every four years, or when the Proof of Transfer contract is upgraded.',
+      'You choose between 1 and 96 cycles, and a cycle is about two weeks. You can request early unstaking outside the closing window. Once the transaction confirms, your STX unlocks at the end of the current cycle. The selected duration determines when your position needs renewal.',
   },
   {
     id: 'what-is-the-minimum',
@@ -34,12 +34,12 @@ export const bitcoinStakingFaqItems: FaqItem[] = [
     id: 'what-happened-to-stacking',
     question: 'What happened to Stacking (pox-4)?',
     answer:
-      'PoX-5 replaces the previous staking protocol entirely. When it activates, STX locked under pox-4 unlocks and every participant needs to re-stake through a PoX-5 pool to keep earning.',
+      'Positions under pox-4 do not carry over to PoX-5. Check your existing position and the current protocol status before re-staking through a PoX-5 pool.',
   },
   {
     id: 'what-happened-to-dual-stacking',
     question: 'What happened to Dual Stacking?',
     answer:
-      'Dual Stacking is winding down and transitions to Bitcoin Staking on August 24, 2026. It keeps paying out until then. Separately, STX locked under pox-4 unlocks at the hard fork, so you still need to re-stake through a PoX-5 pool to keep earning — staking on this page is how you do that.',
+      'Basic sBTC rewards enrollment ended on August 27, 2026. Explore current STX staking pools and independent sBTC providers, and review their eligibility, rewards and payout terms. Check any existing position before starting a new one.',
   },
 ];

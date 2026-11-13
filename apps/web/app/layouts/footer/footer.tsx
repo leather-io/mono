@@ -1,24 +1,31 @@
-import { externalLeatherNavigator } from '~/utils/external-leather-navigator';
+import { LEATHER_DOCS } from '~/constants/leather-docs';
 
 import { FooterLayout as Footer } from './footer.layout';
 
+// The site footer, shared by the app and marketing pages.
 function AppFooter() {
   return (
     <Footer>
       <Footer.Grid>
         <Footer.Column title="Dive deeper">
-          <Footer.Link href="/support">Help Center</Footer.Link>
-          <Footer.Link href="/changelog">Changelog</Footer.Link>
-          <Footer.Link href={externalLeatherNavigator.news}>News</Footer.Link>
-          <Footer.Link withIcon href={externalLeatherNavigator.docs}>
-            Developer docs
+          <Footer.Link withIcon href={LEATHER_DOCS.guides}>
+            Help Center
+          </Footer.Link>
+          <Footer.InternalLink to="/changelog">Changelog</Footer.InternalLink>
+          <Footer.Link withIcon href={LEATHER_DOCS.blog}>
+            Blog
+          </Footer.Link>
+          <Footer.Link withIcon href={LEATHER_DOCS.developers}>
+            Developer Docs
           </Footer.Link>
         </Footer.Column>
 
         <Footer.Column title="Legal & policies">
-          <Footer.Link href="https://leather.io/privacy-policy">Privacy Policy</Footer.Link>
-          <Footer.Link href="https://leather.io/terms">Terms of Service</Footer.Link>
-          <Footer.Link href="https://leather.io/security">Security</Footer.Link>
+          <Footer.InternalLink to="/privacy-policy">Privacy policy</Footer.InternalLink>
+          <Footer.InternalLink to="/terms">Terms of service</Footer.InternalLink>
+          <Footer.Link href={`${LEATHER_DOCS.guides}/wallet-and-security/security`}>
+            Security
+          </Footer.Link>
           <Footer.Link href="https://trustmachines.notion.site/Public-assets-00144dc5c69142199b00788ff61d721c">
             Brand assets
           </Footer.Link>
@@ -40,9 +47,9 @@ function AppFooter() {
       <Footer.LegalText
         mt="space.08"
         product="A Trust Machines product"
-        // Hard coding date as Cloudflare Workers renders new Date() as epoch
-        // start time
-        copyright="© 2025 Leather Wallet, LLC"
+        // No year: Cloudflare Workers renders new Date() as epoch start time, and a hard-coded
+        // year goes stale.
+        copyright="© Leather Wallet LLC"
       />
     </Footer>
   );
