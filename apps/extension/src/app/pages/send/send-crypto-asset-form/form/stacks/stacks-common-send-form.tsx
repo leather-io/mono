@@ -36,6 +36,7 @@ interface StacksCommonSendFormProps {
   selectedAssetField: React.JSX.Element;
   availableTokenBalance: Money;
   fees?: StacksTransactionFees;
+  additionalFields?: React.ReactNode;
 }
 
 export function StacksCommonSendForm({
@@ -46,6 +47,7 @@ export function StacksCommonSendForm({
   selectedAssetField,
   fees,
   availableTokenBalance,
+  additionalFields,
 }: StacksCommonSendFormProps) {
   const navigate = useNavigate();
   const { onFormStateChange } = useUpdatePersistedSendFormValues();
@@ -94,6 +96,7 @@ export function StacksCommonSendForm({
                     {selectedAssetField}
                     <StacksRecipientField />
                     <MemoField />
+                    {additionalFields}
                     <Box mt="space.04" width="100%">
                       <FeesRow fees={fees} isSponsored={false} />
                     </Box>
