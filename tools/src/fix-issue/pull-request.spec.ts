@@ -459,6 +459,23 @@ describe('openPullRequest', () => {
     expect(client.calls).toEqual([]);
   });
 
+  test('refuses a patch that copies a file from outside the repository', async () => {
+    setup(doneStatus);
+    writeFileSync(
+      repo.paths.patchFile,
+      [
+        'diff --git a/../status.json b/apps/extension/leak.txt',
+        'similarity index 100%',
+        'copy from ../status.json',
+        'copy to apps/extension/leak.txt',
+        '',
+      ].join('\n')
+    );
+    const { client, result } = open();
+    await expect(result).rejects.toThrow(/\.\.\/status\.json: does not exist in index/);
+    expect(client.calls).toEqual([]);
+  });
+
   test('refuses to commit when the applied tree holds a change outside the allowed paths', async () => {
     setup(doneStatus);
     repo.write(

@@ -156,7 +156,7 @@ function prepareWorkspace(paths: FixIssuePaths, parentSha: string): string {
         `refusing to apply the patch; only ${allowedPathsDescription} may change:\n  ${refused.join('\n  ')}`
       );
     }
-    runOrThrow('git', ['apply', '--binary', paths.patchFile], { cwd: paths.applyDir });
+    runOrThrow('git', ['apply', '--index', '--binary', paths.patchFile], { cwd: paths.applyDir });
   }
   return paths.applyDir;
 }
