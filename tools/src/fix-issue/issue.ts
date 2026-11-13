@@ -2,7 +2,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { z } from 'zod';
 
-import { type GitHubClient, GitHubError, paginate } from './github.js';
+import { type GitHubClient, GitHubError, paginate } from '../ci/github.js';
 
 const userSchema = z.object({ login: z.string(), type: z.string().optional() }).nullable();
 

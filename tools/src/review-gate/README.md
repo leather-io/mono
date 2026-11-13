@@ -44,8 +44,9 @@ dotfiles included, against both sides of a rename (`sensitive-paths.ts`);
 | `client.ts`          | the GitHub REST calls, each response checked with `schemas.ts`  |
 | `steps.ts`           | the `check` and `sweep` commands                                |
 
-`../ci/` holds the shared pieces: the GitHub request client and Actions helpers (`github.ts`), the
-pinned Claude invocation (`claude.ts`) and the prompt loader (`prompts.ts`).
+`../ci/` holds the shared pieces: the GitHub REST and GraphQL client and Actions helpers
+(`github.ts`), command running (`exec.ts`), the pinned Claude invocation (`claude.ts`) and the
+prompt loader (`prompts.ts`). `client.ts` scopes the shared client to the repository.
 
 ## Prompts
 

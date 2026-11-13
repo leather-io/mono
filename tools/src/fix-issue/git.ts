@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { lstatSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { runCommand, runOrThrow } from './exec.js';
+import { runCommand, runOrThrow } from '../ci/exec.js';
 
 interface ChangedPath {
   readonly path: string;

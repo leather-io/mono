@@ -3,8 +3,8 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
+import type { CommandRunner } from '../ci/exec.js';
 import { briefIssues, dispatch } from './dispatch.js';
-import type { CommandRunner } from './exec.js';
 
 describe('dispatch', () => {
   let runDir: string;

@@ -1,45 +1,163 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, test, vi } from 'vitest';
 
-import { createGitHubRequest, neutraliseMentions } from './github.js';
+import type { CommandRunner } from './exec.js';
+import {
+  GitHubError,
+  createGhCliClient,
+  createGitHubClient,
+  neutraliseMentions,
+  paginate,
+} from './github.js';
 
-function respondWith(body: unknown, status = 200) {
-  const fetchMock = vi.fn(() => Promise.resolve(Response.json(body, { status })));
-  vi.stubGlobal('fetch', fetchMock);
-  return fetchMock;
+interface Sent {
+  readonly url: string;
+  readonly init: RequestInit;
 }
 
-const github = createGitHubRequest({ token: 'token', repository: 'leather-io/mono' });
+function stubFetch(responses: readonly { status: number; body: string }[]) {
+  const sent: Sent[] = [];
+  let index = 0;
+  vi.stubGlobal('fetch', (url: string, init: RequestInit) => {
+    sent.push({ url, init });
+    const { status, body } = responses[Math.min(index, responses.length - 1)] ?? {
+      status: 200,
+      body: '',
+    };
+    index += 1;
+    return Promise.resolve(new Response(body === '' ? null : body, { status }));
+  });
+  return sent;
+}
 
-afterEach(() => {
-  vi.unstubAllGlobals();
-});
+describe('createGitHubClient', () => {
+  afterEach(() => vi.unstubAllGlobals());
 
-describe('createGitHubRequest', () => {
-  it('returns GraphQL data when the response has no errors key', async () => {
-    respondWith({ data: { viewer: { login: 'alice' } } });
-    await expect(github.graphql('query { viewer { login } }', {})).resolves.toEqual({
-      viewer: { login: 'alice' },
+  test('sends an authorized JSON request and parses the response', async () => {
+    const sent = stubFetch([{ status: 201, body: '{"number":7}' }]);
+    const client = createGitHubClient({ token: 'secret', apiUrl: 'https://api.example' });
+    await expect(client.request('POST', '/repos/o/r/pulls', { title: 't' })).resolves.toEqual({
+      number: 7,
+    });
+    expect(sent[0]?.url).toBe('https://api.example/repos/o/r/pulls');
+    expect(sent[0]?.init).toMatchObject({
+      method: 'POST',
+      body: '{"title":"t"}',
+      headers: {
+        authorization: 'Bearer secret',
+        'content-type': 'application/json',
+        'x-github-api-version': '2022-11-28',
+      },
     });
   });
 
-  it('rejects GraphQL errors', async () => {
-    respondWith({ data: null, errors: [{ message: 'nope' }] });
-    await expect(github.graphql('query { viewer { login } }', {})).rejects.toThrow(/nope/);
+  test('returns null for an empty response', async () => {
+    stubFetch([{ status: 204, body: '' }]);
+    const client = createGitHubClient({ token: 'secret' });
+    await expect(client.request('DELETE', 'repos/o/r/git/refs/heads/b')).resolves.toBeNull();
   });
 
-  it('reads every page until a short one', async () => {
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValueOnce(Response.json(Array.from({ length: 100 }, (_, index) => index)))
-      .mockResolvedValueOnce(Response.json([100]));
-    vi.stubGlobal('fetch', fetchMock);
-    await expect(github.requestAllPages('/pulls/1/files')).resolves.toHaveLength(101);
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+  test('throws a GitHubError with the status on a failed request', async () => {
+    stubFetch([{ status: 422, body: '{"message":"exists"}' }]);
+    const client = createGitHubClient({ token: 'secret' });
+    const failure = client.request('POST', 'repos/o/r/git/refs', {});
+    await expect(failure).rejects.toBeInstanceOf(GitHubError);
+    await expect(failure).rejects.toMatchObject({ status: 422 });
   });
 
-  it('rejects a failed request with its status', async () => {
-    respondWith({ message: 'Not Found' }, 404);
-    await expect(github.request('/pulls/1')).rejects.toThrow(/failed with 404/);
+  test('sends GraphQL as a POST to /graphql', async () => {
+    const sent = stubFetch([{ status: 200, body: '{"data":{}}' }]);
+    await createGitHubClient({ token: 'secret' }).graphql('query { viewer { login } }', {});
+    expect(sent[0]?.url).toBe('https://api.github.com/graphql');
+    expect(sent[0]?.init.body).toBe('{"query":"query { viewer { login } }","variables":{}}');
+  });
+
+  test('returns the GraphQL data', async () => {
+    stubFetch([{ status: 200, body: '{"data":{"viewer":{"login":"me"}}}' }]);
+    await expect(
+      createGitHubClient({ token: 'secret' }).graphql('query { viewer { login } }', {})
+    ).resolves.toEqual({ viewer: { login: 'me' } });
+  });
+
+  test('rejects GraphQL errors that come back with a 200', async () => {
+    stubFetch([{ status: 200, body: '{"data":null,"errors":[{"message":"not allowed"}]}' }]);
+    await expect(
+      createGitHubClient({ token: 'secret' }).graphql('mutation { x }', {})
+    ).rejects.toThrow('GitHub GraphQL failed: [{"message":"not allowed"}]');
+  });
+});
+
+describe('paginate', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  test('reads pages until one comes back short', async () => {
+    const full = JSON.stringify(Array.from({ length: 100 }, (_, index) => index));
+    const sent = stubFetch([
+      { status: 200, body: full },
+      { status: 200, body: '[100]' },
+    ]);
+    const items = await paginate(
+      createGitHubClient({ token: 'secret' }),
+      'repos/o/r/pulls?state=open'
+    );
+    expect(items).toHaveLength(101);
+    expect(sent.map(request => request.url)).toEqual([
+      'https://api.github.com/repos/o/r/pulls?state=open&per_page=100&page=1',
+      'https://api.github.com/repos/o/r/pulls?state=open&per_page=100&page=2',
+    ]);
+  });
+
+  test('refuses a response that is not a list', async () => {
+    stubFetch([{ status: 200, body: '{}' }]);
+    await expect(paginate(createGitHubClient({ token: 'secret' }), 'repos/o/r')).rejects.toThrow(
+      'GET repos/o/r did not return a list'
+    );
+  });
+});
+
+describe('createGhCliClient', () => {
+  function fakeGh(result: ReturnType<CommandRunner>) {
+    const calls: { args: readonly string[]; input?: string }[] = [];
+    function run(_command: string, args: readonly string[], options: { input?: string }) {
+      calls.push({ args, input: options.input });
+      return result;
+    }
+    return { calls, run };
+  }
+
+  test('reads through gh api and parses its output', async () => {
+    const gh = fakeGh({ status: 0, stdout: '{"login":"me"}\n', stderr: '' });
+    await expect(createGhCliClient('/repo', gh.run).request('GET', 'user')).resolves.toEqual({
+      login: 'me',
+    });
+    expect(gh.calls).toEqual([{ args: ['api', '--method', 'GET', 'user'], input: undefined }]);
+  });
+
+  test('sends a body as JSON on standard input', async () => {
+    const gh = fakeGh({ status: 0, stdout: '', stderr: '' });
+    await expect(
+      createGhCliClient('/repo', gh.run).request('POST', 'graphql', { query: 'q' })
+    ).resolves.toBeNull();
+    expect(gh.calls).toEqual([
+      { args: ['api', '--method', 'POST', 'graphql', '--input', '-'], input: '{"query":"q"}' },
+    ]);
+  });
+
+  test('returns the GraphQL data and rejects GraphQL errors', async () => {
+    const answered = fakeGh({ status: 0, stdout: '{"data":{"ok":true}}', stderr: '' });
+    await expect(createGhCliClient('/repo', answered.run).graphql('q', {})).resolves.toEqual({
+      ok: true,
+    });
+    const refused = fakeGh({ status: 0, stdout: '{"errors":[{"message":"no"}]}', stderr: '' });
+    await expect(createGhCliClient('/repo', refused.run).graphql('q', {})).rejects.toThrow(
+      'GitHub GraphQL failed'
+    );
+  });
+
+  test('rejects with gh standard error when the call fails', async () => {
+    const gh = fakeGh({ status: 1, stdout: '', stderr: 'HTTP 404: Not Found\n' });
+    await expect(createGhCliClient('/repo', gh.run).request('GET', 'repos/o/r')).rejects.toThrow(
+      'gh api GET repos/o/r failed: HTTP 404: Not Found'
+    );
   });
 });
 

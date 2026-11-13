@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
 
-import { type CommandRunner, runCommand } from './exec.js';
-import type { GitHubClient } from './github.js';
+import { type CommandRunner, runCommand } from '../ci/exec.js';
+import type { GitHubClient } from '../ci/github.js';
 
 type Signer = (digest: Buffer) => Buffer;
 

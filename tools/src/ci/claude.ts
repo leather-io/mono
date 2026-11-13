@@ -1,5 +1,6 @@
-import { spawn } from 'node:child_process';
 import { z } from 'zod';
+
+import { type CommandRunner, runCommand } from './exec.js';
 
 export const claudeModel = 'claude-opus-5-5';
 const claudeEffort = 'high';
@@ -64,24 +65,15 @@ interface RunClaudeOptions {
   readonly cwd: string;
 }
 
-export function runClaude({ args, prompt, cwd }: RunClaudeOptions): Promise<unknown> {
-  return new Promise((resolve, reject) => {
-    const command = process.env.CLAUDE_BIN || 'claude';
-    const child = spawn(command, args, { cwd, stdio: ['pipe', 'pipe', 'inherit'] });
-    let stdout = '';
-    child.stdout.setEncoding('utf8');
-    child.stdout.on('data', (chunk: string) => {
-      stdout += chunk;
-    });
-    child.on('error', reject);
-    child.on('close', code => {
-      const output = parseClaudeOutput(stdout);
-      if (code === 0 && output !== null) {
-        resolve(output);
-      } else {
-        reject(new Error(`Claude exited with ${code} and no structured output`));
-      }
-    });
-    child.stdin.end(prompt);
-  });
+export function runClaude(
+  { args, prompt, cwd }: RunClaudeOptions,
+  run: CommandRunner = runCommand
+): unknown {
+  const result = run(process.env.CLAUDE_BIN || 'claude', args, { cwd, input: prompt });
+  process.stderr.write(result.stderr);
+  const output = parseClaudeOutput(result.stdout);
+  if (result.status !== 0 || output === null) {
+    throw new Error(`Claude exited with ${result.status} and no structured output`);
+  }
+  return output;
 }

@@ -1,7 +1,7 @@
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 
-import { type CommandRunner, runCommand } from './exec.js';
+import { type CommandRunner, runCommand } from '../ci/exec.js';
 
 const workflowFile = 'repo:fix-issue.yml';
 const maxBriefBytes = 60_000;

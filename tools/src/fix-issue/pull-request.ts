@@ -2,9 +2,9 @@ import { existsSync, lstatSync, readFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { z } from 'zod';
 
-import { runCommand, runOrThrow } from './exec.js';
+import { runCommand, runOrThrow } from '../ci/exec.js';
+import { type GitHubClient, paginate } from '../ci/github.js';
 import { allowedPathsDescription, changedPaths, gitBlobSha, headSha, refusedPaths } from './git.js';
-import { type GitHubClient, paginate } from './github.js';
 import type { FixIssuePaths } from './paths.js';
 import { isScreenshot } from './screenshots.js';
 import { type FixStatus, closesNumbers, readStatus } from './status.js';

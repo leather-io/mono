@@ -1,88 +1,117 @@
 import { appendFileSync } from 'node:fs';
 import { z } from 'zod';
 
+import { type CommandRunner, runCommand } from './exec.js';
+
+export type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
+
+export interface GitHubClient {
+  request(method: HttpMethod, path: string, body?: unknown): Promise<unknown>;
+  graphql(query: string, variables: Readonly<Record<string, unknown>>): Promise<unknown>;
+}
+
+export class GitHubError extends Error {
+  readonly status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.status = status;
+  }
+}
+
+interface GitHubClientOptions {
+  readonly token: string;
+  readonly apiUrl?: string;
+}
+
+const defaultApiUrl = 'https://api.github.com';
 const pageSize = 100;
+const maxPages = 30;
 const maxErrorLength = 300;
 
-const pageSchema = z.array(z.unknown());
 const graphqlResponseSchema = z.object({
   data: z.unknown().optional(),
   errors: z.unknown().optional(),
 });
 
-interface RequestOptions {
-  readonly method?: string;
-  readonly body?: unknown;
+function graphqlData(response: unknown): unknown {
+  const result = graphqlResponseSchema.parse(response);
+  if (result.errors !== undefined) {
+    throw new Error(
+      `GitHub GraphQL failed: ${JSON.stringify(result.errors).slice(0, maxErrorLength)}`
+    );
+  }
+  return result.data;
 }
 
-interface GitHubRequest {
-  request(path: string, options?: RequestOptions): Promise<unknown>;
-  requestAllPages(path: string): Promise<unknown[]>;
-  graphql(query: string, variables: Record<string, unknown>): Promise<unknown>;
-}
-
-interface GitHubRequestConfig {
-  readonly token: string;
-  readonly repository: string;
-}
-
-function apiUrl(): string {
-  return process.env.GITHUB_API_URL ?? 'https://api.github.com';
-}
-
-function graphqlUrl(): string {
-  return process.env.GITHUB_GRAPHQL_URL ?? 'https://api.github.com/graphql';
-}
-
-export function createGitHubRequest({ token, repository }: GitHubRequestConfig): GitHubRequest {
-  const headers = {
-    Accept: 'application/vnd.github+json',
-    Authorization: `Bearer ${token}`,
-    'X-GitHub-Api-Version': '2022-11-28',
-  };
-
-  async function request(path: string, { method = 'GET', body }: RequestOptions = {}) {
-    const response = await fetch(`${apiUrl()}/repos/${repository}${path}`, {
+export function createGitHubClient({
+  token,
+  apiUrl = defaultApiUrl,
+}: GitHubClientOptions): GitHubClient {
+  async function send(method: HttpMethod, path: string, body?: unknown): Promise<unknown> {
+    const response = await fetch(`${apiUrl}/${path.replace(/^\//, '')}`, {
       method,
-      headers,
+      headers: {
+        accept: 'application/vnd.github+json',
+        authorization: `Bearer ${token}`,
+        'x-github-api-version': '2022-11-28',
+        ...(body === undefined ? {} : { 'content-type': 'application/json' }),
+      },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
-    if (method === 'DELETE' && response.status === 404) return null;
+    const text = await response.text();
     if (!response.ok) {
-      const detail = (await response.text()).slice(0, maxErrorLength);
-      throw new Error(`GitHub ${method} ${path} failed with ${response.status}: ${detail}`);
-    }
-    const result: unknown = await response.json();
-    return result;
-  }
-
-  async function requestAllPages(path: string) {
-    const items: unknown[] = [];
-    for (let page = 1; ; page++) {
-      const separator = path.includes('?') ? '&' : '?';
-      const batch = pageSchema.parse(
-        await request(`${path}${separator}per_page=${pageSize}&page=${page}`)
+      throw new GitHubError(
+        response.status,
+        `${method} ${path} failed with ${response.status}: ${text}`
       );
-      items.push(...batch);
-      if (batch.length < pageSize) return items;
     }
+    return text === '' ? null : JSON.parse(text);
   }
 
-  async function graphql(query: string, variables: Record<string, unknown>) {
-    const response = await fetch(graphqlUrl(), {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ query, variables }),
+  return {
+    request: send,
+    async graphql(query, variables) {
+      return graphqlData(await send('POST', 'graphql', { query, variables }));
+    },
+  };
+}
+
+export function createGhCliClient(cwd: string, run: CommandRunner = runCommand): GitHubClient {
+  function send(method: HttpMethod, path: string, body?: unknown): Promise<unknown> {
+    const args = ['api', '--method', method, path, ...(body === undefined ? [] : ['--input', '-'])];
+    const result = run('gh', args, {
+      cwd,
+      input: body === undefined ? undefined : JSON.stringify(body),
     });
-    const result = graphqlResponseSchema.parse(await response.json());
-    if (!response.ok || result.errors) {
-      const detail = JSON.stringify(result.errors ?? result).slice(0, maxErrorLength);
-      throw new Error(`GitHub GraphQL failed with ${response.status}: ${detail}`);
+    if (result.status !== 0) {
+      return Promise.reject(new Error(`gh api ${method} ${path} failed: ${result.stderr.trim()}`));
     }
-    return result.data;
+    return Promise.resolve(result.stdout.trim() === '' ? null : JSON.parse(result.stdout));
   }
 
-  return { request, requestAllPages, graphql };
+  return {
+    request: send,
+    async graphql(query, variables) {
+      return graphqlData(await send('POST', 'graphql', { query, variables }));
+    },
+  };
+}
+
+export async function paginate(client: GitHubClient, path: string): Promise<unknown[]> {
+  const separator = path.includes('?') ? '&' : '?';
+  const items: unknown[] = [];
+  for (let page = 1; page <= maxPages; page += 1) {
+    const response = await client.request(
+      'GET',
+      `${path}${separator}per_page=${pageSize}&page=${page}`
+    );
+    if (!Array.isArray(response)) throw new Error(`GET ${path} did not return a list`);
+    const entries: unknown[] = response;
+    items.push(...entries);
+    if (entries.length < pageSize) break;
+  }
+  return items;
 }
 
 const codePattern = /(```[\s\S]*?```|`[^`\n]*`)/;
@@ -100,13 +129,6 @@ export function readRequiredEnv(name: string): string {
   const value = process.env[name];
   if (!value) throw new Error(`${name} is not set`);
   return value;
-}
-
-export function createGitHubRequestFromEnv(): GitHubRequest {
-  return createGitHubRequest({
-    token: readRequiredEnv('GITHUB_TOKEN'),
-    repository: readRequiredEnv('GITHUB_REPOSITORY'),
-  });
 }
 
 export function writeSummary(markdown: string): void {

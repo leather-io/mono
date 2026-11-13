@@ -2,7 +2,7 @@ import { mkdtempSync } from 'node:fs';
 import path from 'node:path';
 
 import { runClaude } from '../ci/claude.js';
-import { describeError, readRequiredEnv, writeSummary } from '../ci/github.js';
+import { createGitHubClient, describeError, readRequiredEnv, writeSummary } from '../ci/github.js';
 import {
   describeGate,
   findApprovers,
@@ -11,7 +11,7 @@ import {
   isForkPullRequest,
 } from './approvals.js';
 import { buildClassifierArgs } from './classifier.js';
-import { createGateClientFromEnv } from './client.js';
+import { createGateClient } from './client.js';
 import {
   type Decision,
   decisionContext,
@@ -31,7 +31,7 @@ import { findSensitiveFiles, readSensitiveGlobs } from './sensitive-paths.js';
 const gateContext = 'review-gate';
 const protectedBaseBranch = 'dev';
 
-type GateClient = ReturnType<typeof createGateClientFromEnv>;
+type GateClient = ReturnType<typeof createGateClient>;
 
 interface GateRun {
   readonly github: GateClient;
@@ -41,17 +41,22 @@ interface GateRun {
 }
 
 function createGateRun(): GateRun {
+  const repository = readRequiredEnv('GITHUB_REPOSITORY');
+  const client = createGitHubClient({
+    token: readRequiredEnv('GITHUB_TOKEN'),
+    apiUrl: process.env.GITHUB_API_URL,
+  });
   return {
-    github: createGateClientFromEnv(),
-    repository: readRequiredEnv('GITHUB_REPOSITORY'),
+    github: createGateClient(client, repository),
+    repository,
     runUrl: readRequiredEnv('RUN_URL'),
     trustedCreator: `${readRequiredEnv('GATE_APP_SLUG')}[bot]`,
   };
 }
 
-async function askClaude(prompt: string): Promise<string | undefined> {
+function askClaude(prompt: string): string | undefined {
   try {
-    const answer = await runClaude({
+    const answer = runClaude({
       args: buildClassifierArgs(),
       prompt,
       cwd: mkdtempSync(path.join(readRequiredEnv('RUNNER_TEMP'), 'review-gate-')),
@@ -82,7 +87,7 @@ async function classify(run: GateRun, pullRequest: PullRequest): Promise<Decisio
   const sensitiveFiles = findSensitiveFiles(files, readSensitiveGlobs());
   const ruleDecision = decideByRules(pullRequest, files, { baseBlobs, sensitiveFiles });
   if (ruleDecision) return resolveDecision({ ruleDecision: JSON.stringify(ruleDecision) });
-  return resolveDecision({ structuredOutput: await askClaude(buildPrompt(pullRequest, files)) });
+  return resolveDecision({ structuredOutput: askClaude(buildPrompt(pullRequest, files)) });
 }
 
 async function recordDecision(
