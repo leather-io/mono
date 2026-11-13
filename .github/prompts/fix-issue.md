@@ -69,18 +69,18 @@ to write in the status file.
 
 ## Rules
 
-- Change files only under `apps/`, `packages/` and `tools/` (and `pnpm-lock.yaml` through `pnpm`).
-  Never touch `.github/` or anything else: the checks fail every round that does, and the workflow
-  then removes those changes and marks the run blocked.
+- Change files only under `apps/` and `packages/` (and `pnpm-lock.yaml` through `pnpm`). Never
+  touch `.github/`, `tools/` or anything else: the checks fail every round that does, and the
+  workflow then removes those changes and marks the run blocked.
 - When the issue or the brief needs a change outside those paths (root config such as `knip.json`,
   `turbo.json`, `eslint.config.js`, `.gitignore`, `.ls-lint.yml` or `.dependency-cruiser.cjs`, root
-  `docs/`, `.claude/`, `.github/`), never work around it. No fake package exports to satisfy knip,
-  no constants or renames to get past a lint rule, no `eslint-disable`, no file moved into a package
-  because its real home is off limits, no copy of a root config inside a package. Do everything that
-  lives under the allowed paths, then add one `handoff` entry per file outside them that still needs
-  to change, saying exactly what a maintainer has to change there. Checks that fail only because a
-  handoff is not done yet go under `tested` as `Not verified: <check> — waits on the handoff to
-  <path>`.
+  `docs/`, `tools/`, `.claude/`, `.github/`), never work around it. No fake package exports to
+  satisfy knip, no constants or renames to get past a lint rule, no `eslint-disable`, no file moved
+  into a package because its real home is off limits, no copy of a root config inside a package. Do
+  everything that lives under the allowed paths, then add one `handoff` entry per file outside them
+  that still needs to change, saying exactly what a maintainer has to change there. Checks that fail
+  only because a handoff is not done yet go under `tested` as `Not verified: <check> — waits on the
+  handoff to <path>`.
 - Change only what the issue needs. Never reformat or re-serialize a file you are not otherwise
   changing (assets such as `.lottie.json` or SVGs included), and leave drive-by refactors, renames
   and cleanups for another issue; the review treats them as defects. When you notice something

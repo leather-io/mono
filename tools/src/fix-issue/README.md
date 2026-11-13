@@ -155,7 +155,7 @@ pull request opens without the table; screenshots never cost the fix. Delete a
 
 Job `open-pull-request` builds `tools` from `dev`, gets only the run's artifact (the patch, the
 status file, the round records and the screenshots), applies
-the patch in a separate git worktree, refuses any path outside `apps/`, `packages/`, `tools/` and
+the patch in a separate git worktree, refuses any path outside `apps/`, `packages/` and
 `pnpm-lock.yaml`, and writes the signed commit to a new `bot/fix-issue-<n>-<run id>` (`pnpm lt fix-issue
 open-pull-request`). The commit carries a `Co-authored-by:` trailer for the person who dispatched
 the run (`github.triggering_actor`, with their public name and GitHub no-reply email; bots are
@@ -204,7 +204,9 @@ both.
 
 `open-pull-request` is the boundary: a fresh runner that builds `tools` from `dev` before reading
 the artifact, runs no code from the patch, applies it in a separate worktree, refuses anything
-outside `apps/`, `packages/`, `tools/` and `pnpm-lock.yaml`, and holds the only write token. It has
+outside `apps/`, `packages/` and `pnpm-lock.yaml`, and holds the only write token. `tools/` is off
+limits as a whole: this job runs `lt`, which loads every module of the package, so a fix that
+changed any of them would, once merged, run next to that token and could loosen these checks. It has
 no access to the Actions cache either (`cache-mode: none`, turbo and pnpm caches off), so nothing
 another job saved runs next to that token. Every GitHub write there uses an installation token of
 the `fix-issue` GitHub App, not the run's

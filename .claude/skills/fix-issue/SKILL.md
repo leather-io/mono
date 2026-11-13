@@ -86,10 +86,10 @@ write access (a `new-issue` issue, or one with a triage work item), which only a
 decisions, the approach, the maintainer changes and the commit subject; the full one otherwise. The
 fixer never sees this conversation, so whatever the issue does not say has to be in the brief.
 
-**Paths the run may not change.** The fixer may only change `apps/`, `packages/`, `tools/` and
+**Paths the run may not change.** The fixer may only change `apps/`, `packages/` and
 `pnpm-lock.yaml`. Check every Touches entry against that before writing the brief. Each one outside
 it (root config such as `knip.json`, `turbo.json`, `eslint.config.js`, `.gitignore`,
-`.dependency-cruiser.cjs`, root `docs/`, `.claude/`, `.github/`) goes under the brief's
+`.dependency-cruiser.cjs`, root `docs/`, `tools/`, `.claude/`, `.github/`) goes under the brief's
 `## Maintainer changes` with the exact change, and is named to the person before dispatch: the run
 does everything else, lists those changes under `## Needs a maintainer` in a draft pull request,
 and a maintainer adds them to that branch before merge. When every Touches entry is outside the
@@ -133,7 +133,7 @@ What comes back, per run, 20 minutes to two hours later:
 
 - a pull request from the fix-issue App on its own `bot/fix-issue-<n>-<run id>` branch;
 - a draft instead when the fixer is blocked, the checks still fail after its rounds, or a change
-  outside `apps/`, `packages/`, `tools/` and `pnpm-lock.yaml` is needed (listed under
+  outside `apps/`, `packages/` and `pnpm-lock.yaml` is needed (listed under
   `## Needs a maintainer`);
 - an issue comment with the questions and any maintainer changes, and no pull request, when the
   run changed nothing.

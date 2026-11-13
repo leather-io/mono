@@ -9,11 +9,11 @@ interface ChangedPath {
   readonly present: boolean;
 }
 
-const allowedPrefixes = ['apps/', 'packages/', 'tools/'];
+const allowedPrefixes = ['apps/', 'packages/'];
 const allowedFiles = ['pnpm-lock.yaml'];
 
 export const allowedPathsDescription =
-  'apps/, packages/, tools/ and pnpm-lock.yaml (.github/ is never allowed)';
+  'apps/, packages/ and pnpm-lock.yaml (.github/ and tools/ are never allowed)';
 
 function isAllowedPath(file: string): boolean {
   return allowedFiles.includes(file) || allowedPrefixes.some(prefix => file.startsWith(prefix));

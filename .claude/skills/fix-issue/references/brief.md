@@ -39,7 +39,7 @@ The issue is the spec; this brief only adds to it.
 
 ## Maintainer changes
 
-- `<path outside apps/, packages/, tools/ and pnpm-lock.yaml>`: <the exact change a maintainer makes there>
+- `<path outside apps/, packages/ and pnpm-lock.yaml>`: <the exact change a maintainer makes there>
 
 ## Out of scope
 
@@ -79,7 +79,7 @@ Expected, Cause, Verify or Done when.
 
 ## Maintainer changes
 
-- `<path outside apps/, packages/, tools/ and pnpm-lock.yaml>`: <the exact change a maintainer makes there>
+- `<path outside apps/, packages/ and pnpm-lock.yaml>`: <the exact change a maintainer makes there>
 
 ## Out of scope
 
@@ -124,8 +124,8 @@ rules that are only the brief's:
 - **Decisions**: `Settled: <choice> — <reason>`. The full template carries the issue's lines and the
   interview's, the short one only the interview's. A brief's line wins over the issue where they
   differ. `Open` lines never appear: an issue with an unanswered decision is not dispatched.
-- **Maintainer changes**: one entry per file outside `apps/`, `packages/`, `tools/` and
-  `pnpm-lock.yaml`, with the exact change (section 4 of the skill).
+- **Maintainer changes**: one entry per file outside `apps/`, `packages/` and `pnpm-lock.yaml`,
+  with the exact change (section 4 of the skill).
 - **Out of scope**: what the interview excluded, plus the areas another dispatch owns (section 5
   of the skill); the full template adds the issue's own list.
 - **Verify** and **Done when**: the issue's own when it has them, otherwise research's.
