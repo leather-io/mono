@@ -9,7 +9,7 @@ export function ChangelogPage({ entries }: ChangelogPageProps) {
   return (
     <ChangelogPageLayout>
       {entries.map((entry, index) => (
-        <ChangelogEntry entry={entry} key={entry._id}>
+        <ChangelogEntry entry={entry} key={entry.slug}>
           <ChangelogEntryLayout
             leftColumn={
               <>
