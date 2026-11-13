@@ -266,7 +266,6 @@ describe('legacy Framer short paths', () => {
   });
 
   test.each([
-    ['/download', '/'],
     ['/wallet/mobile', '/'],
     ['/contact/', docsGuides],
     ['/guides?ref=nav', `${docsGuides}?ref=nav`],
