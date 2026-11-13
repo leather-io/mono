@@ -1,45 +1,30 @@
-import { describe, expect, test, vi } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
 import { getSitemapPaths, renderSitemap, sitemapPagePaths } from './sitemap.utils';
 
-vi.mock('~/constants/cms-client', () => ({ cmsClient: { fetch: vi.fn() } }));
-
 describe('getSitemapPaths', () => {
-  test('lists pages, served posts at their canonical URL, and changelog entries', async () => {
-    const paths = await getSitemapPaths({
-      postSlugs: ['gearing-up-for-2024-with-leather', 'receive-btc', 'send-ordinals'],
-      guideSlugs: ['receive-btc', 'send-stx', 'receive-ordinals'],
-      changelogSlugs: ['web-portfolio'],
-    });
-
-    expect(paths).toEqual([
+  test('lists the public pages and changelog entries', () => {
+    expect(getSitemapPaths(['web-portfolio'])).toEqual([
       ...sitemapPagePaths,
-      '/posts/gearing-up-for-2024-with-leather',
       '/changelog/web-portfolio',
     ]);
   });
+});
 
-  test('never lists a post URL that redirects to a guide or deprecation notice', async () => {
-    const paths = await getSitemapPaths({
-      postSlugs: ['receive-btc', 'send-ordinals'],
-      guideSlugs: ['receive-btc'],
-      changelogSlugs: [],
-    });
-
-    expect(paths).not.toContain('/posts/receive-btc');
-    expect(paths).not.toContain('/posts/send-ordinals');
-  });
+test('lists the legal pages', () => {
+  expect(sitemapPagePaths).toEqual(expect.arrayContaining(['/privacy-policy', '/terms']));
 });
 
 test('leaves out pages that moved to Leather Docs', () => {
-  expect(sitemapPagePaths).not.toContain('/support');
-  expect(sitemapPagePaths).not.toContain('/developers');
+  for (const path of ['/support', '/developers', '/posts', '/news']) {
+    expect(sitemapPagePaths).not.toContain(path);
+  }
 });
 
 describe('renderSitemap', () => {
   test('renders absolute, escaped leather.io URLs', () => {
-    const xml = renderSitemap(['/', '/posts/a&b']);
+    const xml = renderSitemap(['/', '/changelog/a&b']);
     expect(xml).toContain('<loc>https://leather.io/</loc>');
-    expect(xml).toContain('<loc>https://leather.io/posts/a&amp;b</loc>');
+    expect(xml).toContain('<loc>https://leather.io/changelog/a&amp;b</loc>');
   });
 });
