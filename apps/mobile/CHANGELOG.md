@@ -23,6 +23,32 @@
 * axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
 * **mobile:** help header ([764af25](https://github.com/leather-io/mono/commit/764af257655ecb585d6805c5350c3d5fffe7a56a))
 
+## [2.117.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.116.0...@leather.io/mobile-v2.117.0) (2026-11-13)
+
+
+### Features
+
+* **mobile:** token presets and a hidden tokens pill under the list ([#2859](https://github.com/leather-io/mono/issues/2859)) ([9e71d62](https://github.com/leather-io/mono/commit/9e71d6218aca02385ab98330c9ff90c8e85bd2fe))
+
+
+### Bug Fixes
+
+* bitcoinjs-lib audit ([#2959](https://github.com/leather-io/mono/issues/2959)) ([47f9582](https://github.com/leather-io/mono/commit/47f95825a09be6f4ae695e0a2c62bf3268febb30))
+* dependency audit ([#2936](https://github.com/leather-io/mono/issues/2936)) ([cb2ca06](https://github.com/leather-io/mono/commit/cb2ca069eed6769542512e87cfd273b562acf890))
+* **mobile:** keep approvers usable when fee requests fail ([#2932](https://github.com/leather-io/mono/issues/2932)) ([1e05e52](https://github.com/leather-io/mono/commit/1e05e52d5cd8a8ccfad9d56b5ae86de9f7baf631))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.27.0
+    * @leather.io/bitcoin bumped to 0.42.2
+    * @leather.io/features bumped to 1.8.7
+    * @leather.io/queries bumped to 0.18.0
+    * @leather.io/services bumped to 1.67.0
+    * @leather.io/ui bumped to 1.120.0
+
 ## [2.116.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.115.2...@leather.io/mobile-v2.116.0) (2026-10-27)
 
 

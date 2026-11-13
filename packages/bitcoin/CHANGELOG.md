@@ -939,6 +939,13 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.42.2](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.42.1...@leather.io/bitcoin-v0.42.2) (2026-11-13)
+
+
+### Bug Fixes
+
+* bitcoinjs-lib audit ([#2959](https://github.com/leather-io/mono/issues/2959)) ([47f9582](https://github.com/leather-io/mono/commit/47f95825a09be6f4ae695e0a2c62bf3268febb30))
+
 ## [0.42.1](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.42.0...@leather.io/bitcoin-v0.42.1) (2026-10-27)
 
 
