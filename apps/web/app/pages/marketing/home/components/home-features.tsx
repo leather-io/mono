@@ -39,7 +39,6 @@ export function HomeSwapsAndLedger() {
               Swap supported Stacks tokens in your wallet. Review the rate and fees before you
               approve. Available routes depend on the token pair.
             </styled.p>
-            {/* Bitflow is the swap provider on both mobile and the extension */}
             <Flex alignItems="center" gap="space.02" mt="space.05" textStyle="label.02">
               <styled.span color="ink.text-secondary">Powered by</styled.span>
               <styled.img

@@ -2,12 +2,8 @@ import { analytics } from '~/utils/analytics/analytics';
 
 import { type InstallPlatform } from './install-links';
 
-// Click events for the marketing pages. Page views are already sent for every route by
-// `useOnRouteChange(() => analytics.page())` in app.tsx, so nothing here tracks views.
-// Names follow the app's existing `<object>_clicked` snake_case events (sign_in_clicked,
-// external_link_clicked) and go through the same client, so `platform: 'web'` and `version`
-// are added by its default properties. Don't add a `platform` property here: the default
-// would overwrite it.
+// Click events for the marketing pages; page views are tracked for every route in app.tsx.
+// Don't add a `platform` property: the client's default properties would overwrite it.
 export type MarketingSection =
   | 'header'
   | 'home_hero'
@@ -17,7 +13,7 @@ export type MarketingSection =
   | 'apps_core_token'
   | 'install_modal';
 
-export interface MarketingEvents {
+interface MarketingEvents {
   /** The "Install" trigger that opens the install modal (header, /apps "Buy" pill). */
   install_leather_clicked: { section: MarketingSection };
   /** A Chrome Web Store / App Store / Google Play pill. */

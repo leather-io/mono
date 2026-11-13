@@ -1,14 +1,7 @@
-import {
-  type ReactNode,
-  type RefObject,
-  useEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from 'react';
+import { type RefObject, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 import { styled } from 'leather-styles/jsx';
-import type { AnimationItem, AnimationSegment, LottiePlayer } from 'lottie-web';
+import type { AnimationItem, LottiePlayer } from 'lottie-web';
 
 import { loadAnimationWithRetry } from './animation-loading';
 
@@ -142,8 +135,6 @@ interface UseLottieOptions {
   /** URL of the Lottie JSON (self-hosted under /public). */
   src: string;
   loop?: boolean;
-  /** Frame range to play (and loop over) instead of the whole file. */
-  segment?: AnimationSegment;
   /** `cover` crops like `object-fit: cover`, `contain` letterboxes. */
   fit?: 'cover' | 'contain';
   /** Play while on screen and pause while off it. Turn off to drive playback yourself. */
@@ -154,13 +145,7 @@ interface UseLottieOptions {
  * Loads lottie-web and the animation JSON only when the element nears the viewport, and never
  * with prefers-reduced-motion. Destroys the animation on unmount.
  */
-export function useLottie({
-  src,
-  loop = true,
-  segment,
-  fit = 'cover',
-  autoplay = true,
-}: UseLottieOptions) {
+export function useLottie({ src, loop = true, fit = 'cover', autoplay = true }: UseLottieOptions) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
@@ -168,7 +153,6 @@ export function useLottie({
   const isNear = useNearViewport(wrapperRef, motionAllowed);
   const [animation, setAnimation] = useState<AnimationItem | null>(null);
   const [isReady, setIsReady] = useState(false);
-  const [segmentStart, segmentEnd] = segment ?? [];
 
   useEffect(() => {
     const container = containerRef.current;
@@ -189,10 +173,6 @@ export function useLottie({
         loop,
         autoplay: false,
         animationData,
-        initialSegment:
-          segmentStart !== undefined && segmentEnd !== undefined
-            ? [segmentStart, segmentEnd]
-            : undefined,
         rendererSettings: {
           preserveAspectRatio: fit === 'cover' ? 'xMidYMid slice' : 'xMidYMid meet',
         },
@@ -229,7 +209,7 @@ export function useLottie({
       setAnimation(null);
       setIsReady(false);
     };
-  }, [motionAllowed, isNear, src, loop, segmentStart, segmentEnd, fit]);
+  }, [motionAllowed, isNear, src, loop, fit]);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -260,18 +240,10 @@ interface LottieFrameProps {
   /** CSS aspect-ratio of the visual. */
   aspect: string;
   fit?: 'cover' | 'contain';
-  children?: ReactNode;
 }
 
 /** Poster image with the Lottie SVG layered on top once it has loaded. */
-export function LottieFrame({
-  lottie,
-  poster,
-  alt,
-  aspect,
-  fit = 'cover',
-  children,
-}: LottieFrameProps) {
+export function LottieFrame({ lottie, poster, alt, aspect, fit = 'cover' }: LottieFrameProps) {
   return (
     <styled.div
       ref={lottie.wrapperRef}
@@ -297,18 +269,16 @@ export function LottieFrame({
         style={{ visibility: lottie.isReady ? 'visible' : 'hidden' }}
         css={{ '& svg': { display: 'block' } }}
       />
-      {children}
     </styled.div>
   );
 }
 
-interface LottieAnimationProps extends Omit<LottieFrameProps, 'lottie' | 'children'> {
+interface LottieAnimationProps extends Omit<LottieFrameProps, 'lottie'> {
   src: string;
-  segment?: AnimationSegment;
 }
 
 /** Looping Lottie that plays while on screen, with `poster` as its static fallback. */
-export function LottieAnimation({ src, segment, fit, ...frameProps }: LottieAnimationProps) {
-  const lottie = useLottie({ src, segment, fit });
+export function LottieAnimation({ src, fit, ...frameProps }: LottieAnimationProps) {
+  const lottie = useLottie({ src, fit });
   return <LottieFrame lottie={lottie} fit={fit} {...frameProps} />;
 }

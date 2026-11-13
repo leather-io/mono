@@ -23,8 +23,7 @@ export function SwapsCoins() {
         }}
         loading="lazy"
       />
-      {/* As on leather.io: a 1.65:1 stage tilted -15° (+6° on small screens), sized so the coins
-          match the poster. It overhangs the slot; pointer events are off. */}
+      {/* Sized so the coins match the poster; the tilted stage overhangs its slot */}
       <styled.div
         position="absolute"
         top="50%"

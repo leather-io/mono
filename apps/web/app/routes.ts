@@ -7,7 +7,7 @@ import { legacyPathRedirectRoutes } from './pages/redirects/legacy-path-redirect
 
 export default [
   index('pages/marketing/home/home.route.tsx'),
-  // Marketing pages, formerly served by Framer on leather.io
+  // Marketing pages
   route('apps', 'pages/marketing/apps/apps.route.tsx'),
   route('developers', 'pages/marketing/developers/developers.route.tsx'),
   route('news', 'pages/marketing/news/news.route.tsx'),
@@ -39,7 +39,7 @@ export default [
   ...multisigRoutes,
   ...playgroundRoutes,
   ...bitcoinStakingRoutes,
-  // SEO resource routes, formerly served by Framer
+  // SEO resource routes
   route('robots.txt', 'pages/seo/robots.route.ts'),
   route('sitemap.xml', 'pages/seo/sitemap.route.ts'),
   // Fallback route

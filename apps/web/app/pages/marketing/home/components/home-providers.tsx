@@ -14,7 +14,6 @@ import { HomeSection, HomeSectionHeading } from './home-layout';
 
 const StyledLink = styled(Link);
 
-// Leather's orange yield gradient (as on the Framer site's provider cards)
 const yieldGradient =
   'linear-gradient(105deg, {colors.orange.action-primary-default} 0%, #FF9F3A 45%, #FF6534 100%)';
 

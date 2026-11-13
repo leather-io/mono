@@ -2,7 +2,6 @@ import { type StakingPoolSlug } from '~/data/bitcoin-staking-data';
 import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 
 // Content of /explorer, the "Explore" page opened inside the Leather mobile app's in-app browser.
-// Copied from the retired Framer page (leather-io/mono#2579).
 
 const assetDir = '/marketing/explorer';
 
@@ -128,10 +127,7 @@ export const explorerTabs: ExplorerTab[] = [
   {
     id: 'lock-in-a-pool',
     label: 'Lock in a pool',
-    // Framer linked these to app.leather.io/stacking/pool/<slug>; the staking flow now lives at
-    // /staking/pool/<slug>. Framer's "Fast Pool V2" row is gone: there is no such pool to stake in.
     apps: [
-      // Framer showed Hermetica's logo here; this is the app's own Fast Pool icon.
       { name: 'Fast Pool', href: poolPath('fast-pool'), logo: '/icons/fastpool.svg' },
       { name: 'Plan Better', href: poolPath('planbetter'), logo: logo('planbetter') },
       { name: 'Restake', href: poolPath('restake'), logo: logo('restake') },
@@ -142,8 +138,7 @@ export const explorerTabs: ExplorerTab[] = [
   {
     id: 'stay-liquid',
     label: 'Stay liquid',
-    // Framer linked to app.leather.io/stacking/liquid/<slug>, which no longer exists (404).
-    // Liquid stacking happens in the protocols' own apps.
+    // Liquid stacking happens in the protocols' own apps
     apps: [
       { name: 'StackingDAO', href: stackingDaoApp, logo: logo('stacking-dao') },
       { name: 'LISA', href: lisaApp, logo: logo('lisa') },

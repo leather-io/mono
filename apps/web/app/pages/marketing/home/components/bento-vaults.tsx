@@ -14,56 +14,34 @@ import {
 import {
   BentoStage,
   MockupPanel,
+  StatusBadge,
+  TextPair,
+  fadeBottom,
   mockupColor,
   mockupSize,
   mockupType,
+  primaryText,
+  secondaryText,
   stagePx,
+  tokenIconSrc,
+  transitionFor,
   useLoopingSequence,
 } from './bento-mockup';
 
-/**
- * Light-theme values of the product tokens these mockups use that the shared frame doesn't
- * carry. Hex, not Panda tokens, because the panel stays white whatever the page theme is.
- */
 const productColor = {
   backgroundSecondary: '#F9F9F8', // ink.background-secondary
   borderTransparent: '#463f3c1a', // ink.border-transparent
   orange: '#F7931A', // orange.action-primary-default
 } as const;
 
-/**
- * Type and sizing, matched to the other homepage bentos (bento-activity, bento-clarity):
- * list rows are 48 high with 28 px icons; a row's primary line is 12/500 and its secondary
- * line 11 in the secondary colour, on both sides; headline figures 26. Small glyphs sit at 12.
- */
 const rowHeight = mockupSize.rowHeight;
 /** How far a list row bleeds past the content inset, as ListItemBox's does. */
 const rowBleed = 8;
 const iconSize = mockupSize.icon;
 const glyphSize = 12;
-const primaryText: CSSProperties = { ...mockupType.body, fontWeight: 500 };
-const secondaryText: CSSProperties = { ...mockupType.meta, color: mockupColor.secondary };
 
-const ease = 'cubic-bezier(0.25, 1, 0.5, 1)';
 // A small overshoot for the reward beats
 const popEase = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
-
-function transitionFor(
-  isAnimated: boolean,
-  properties: string[],
-  ms = 400,
-  delayMs = 0,
-  timing = ease
-) {
-  if (!isAnimated) return undefined;
-  return properties.map(property => `${property} ${ms}ms ${timing} ${delayMs}ms`).join(', ');
-}
-
-/** Fades a list's top and/or bottom edge, as content scrolling past the panel does. */
-function edgeFade(top: number, bottom: number): CSSProperties {
-  const mask = `linear-gradient(to bottom, transparent, #000 ${stagePx(top)}, #000 calc(100% - ${stagePx(bottom)}), transparent)`;
-  return { maskImage: mask, WebkitMaskImage: mask };
-}
 
 /** Cycles through sample data, wrapping in both directions. */
 function pick<T>(list: readonly [T, ...T[]], index: number): T {
@@ -152,27 +130,6 @@ function CheckGlyph({ color = '#FFFFFF' }: { color?: string }) {
   );
 }
 
-/** A 12 px status badge on an avatar's corner, ringed in the panel colour (as in Activity). */
-function Badge({ children }: { children: ReactNode }) {
-  return (
-    <styled.span
-      position="absolute"
-      display="flex"
-      borderRadius="round"
-      style={{
-        right: stagePx(-2),
-        bottom: stagePx(-2),
-        width: stagePx(glyphSize),
-        height: stagePx(glyphSize),
-        background: mockupColor.panel,
-        boxShadow: `0 0 0 ${stagePx(1.5)} ${mockupColor.panel}`,
-      }}
-    >
-      {children}
-    </styled.span>
-  );
-}
-
 /** Green check badge that pops in: the reward beat. */
 function DoneBadge({ isShown, isAnimated }: { isShown: boolean; isAnimated: boolean }) {
   return (
@@ -192,13 +149,7 @@ function DoneBadge({ isShown, isAnimated }: { isShown: boolean; isAnimated: bool
   );
 }
 
-type Asset = 'btc' | 'stx' | 'sbtc';
-
-const assetIcon: Record<Asset, string> = {
-  btc: '/icons/bitcoin.svg',
-  stx: '/icons/stacks.svg',
-  sbtc: '/icons/sbtc.svg',
-};
+type Asset = keyof typeof tokenIconSrc;
 
 const assetSymbol: Record<Asset, string> = { btc: 'BTC', stx: 'STX', sbtc: 'sBTC' };
 
@@ -218,8 +169,14 @@ function AssetAvatar({
       flexShrink={0}
       style={{ width: stagePx(iconSize), height: stagePx(iconSize) }}
     >
-      <styled.img src={assetIcon[asset]} alt="" width="100%" height="100%" borderRadius="round" />
-      <Badge>
+      <styled.img
+        src={tokenIconSrc[asset]}
+        alt=""
+        width="100%"
+        height="100%"
+        borderRadius="round"
+      />
+      <StatusBadge style={{ display: 'flex', background: mockupColor.panel }}>
         <styled.span
           display="flex"
           className={isAnimated ? undefined : stillSpinner}
@@ -233,32 +190,7 @@ function AssetAvatar({
           </ScaledIcon>
         </styled.span>
         <DoneBadge isShown={isDone} isAnimated={isAnimated} />
-      </Badge>
-    </styled.span>
-  );
-}
-
-/** Two stacked lines, the row text pattern every bento shares. */
-function TextPair({
-  primary,
-  secondary,
-  align = 'left',
-}: {
-  primary: ReactNode;
-  secondary: ReactNode;
-  align?: 'left' | 'right';
-}) {
-  return (
-    <styled.span
-      display="flex"
-      flexDirection="column"
-      minWidth={0}
-      flex={align === 'left' ? 1 : undefined}
-      flexShrink={align === 'right' ? 0 : undefined}
-      style={{ textAlign: align, alignItems: align === 'right' ? 'flex-end' : 'stretch' }}
-    >
-      <styled.span style={primaryText}>{primary}</styled.span>
-      <styled.span style={secondaryText}>{secondary}</styled.span>
+      </StatusBadge>
     </styled.span>
   );
 }
@@ -289,49 +221,34 @@ function TransactionRow({
       style={{
         height: stagePx(rowHeight),
         gap: stagePx(12),
-        // ListItemBox bleeds a little past the content, as in the product
+        // ListItemBox bleeds a little past the content
         margin: `0 ${stagePx(-rowBleed)}`,
         padding: `0 ${stagePx(rowBleed)}`,
       }}
     >
       <AssetAvatar asset={asset} isDone={isDone} isAnimated={isAnimated} />
       <TextPair primary={`Send ${assetSymbol[asset]}`} secondary={caption} />
-      <TextPair primary={amount} secondary={fiat} align="right" />
+      <TextPair primary={amount} secondary={fiat} align="end" />
       {children}
     </styled.div>
   );
 }
 
-// ---------------------------------------------------------------------------------------------
-// Shared vaults — the vault page: balance header (vault/components/vault-balance-hero.tsx) over
-// its pending transactions (vault/components/vault-transactions.tsx). Each signature fills one
-// segment of a row's threshold bar; the last one broadcasts the transaction, which clears, and
-// the queue moves up. Illustrative values at roughly $75,200 / BTC (sBTC is pegged 1:1 to BTC)
-// and $0.43 / STX, as in the other bentos.
-// ---------------------------------------------------------------------------------------------
-
 interface QueuedProposal {
-  /** The vault the transaction spends from */
   account: string;
-  /** BTC vaults send BTC; Stacks vaults hold STX and sBTC, as in the product */
   asset: Asset;
   amount: string;
   fiat: string;
-  /** Signatures the vault's policy requires (its m-of-n's m): one bar segment each */
+  /** Signatures the vault's policy requires: one bar segment each */
   required: number;
-  /** Index into the product's vaultThemes (pages/multisig/multisig-tokens.ts) */
+  /** Index into vaultThemes (pages/multisig/multisig-tokens.ts) */
   theme: number;
-  /** The vault's glyph, one of the product's vaultIcons (edit-vault-modal's icon picker) */
   icon: string;
-  /**
-   * The vault's balance in its native asset (BTC or STX), as the vault page's hero shows it.
-   * Marche is all caps, so an sBTC figure would read "SBTC"; the sBTC lives in the row.
-   */
+  /** In the vault's native asset: Marche is all caps, so an sBTC figure would read "SBTC" */
   balance: string;
   balanceFiat: string;
 }
 
-// One vault per transaction, each in its own product theme: Blue, Bronze, Green, Orange
 const queue: [QueuedProposal, ...QueuedProposal[]] = [
   {
     account: 'Payroll',
@@ -417,14 +334,10 @@ const figureGap = -3;
 const vaultTileSize = figureLine + figureGap + 11.7 - 3.3;
 const balanceHeight = figureLine + figureGap + fiatLine;
 
-// MultisigHero's themed card, inset by the same small gutter on top, left and right
 const heroInset = 10;
 const heroPadding = 20;
 const heroHeight = balanceHeight + heroPadding * 2;
-// The first row sits just under the card: its 48 line centres the content, so the gap reads
-// as the card's own gutter
 const queueTop = heroInset + heroHeight + 2;
-// Rows that fit above the panel's bottom edge
 const visibleRows = Math.ceil((mockupSize.panelHeight - queueTop) / rowHeight);
 
 // AvatarSq's lg glyph-to-tile ratio (30 / 56)
@@ -568,11 +481,8 @@ function VaultGlyph({ icon }: { icon: string }) {
 }
 
 /**
- * AvatarSq with the vault's glyph (pages/multisig/components/avatar-sq.tsx), in the vault's
- * theme. The theme cross-fades with the card's while the glyph rolls to the next vault's. The
- * ring is the product Avatar's own (@leather.io/ui avatar.web.tsx): a 1 px outline inset by
- * 1 px in ink.border-transparent, here at its dark-theme value since the card is a dark
- * surface. Drawn inside the tile so the tile stays flush with the text.
+ * AvatarSq (pages/multisig/components/avatar-sq.tsx) in the vault's theme. The ring is drawn
+ * inside the tile, at its dark-theme value, so the tile stays flush with the text.
  */
 function VaultTile({
   size,
@@ -617,10 +527,7 @@ function VaultTile({
   );
 }
 
-/**
- * The vault page's balance, without the vault name, on its themed card: the vault tile beside
- * the figure and fiat, in white. Tile glyph, figure and fiat roll together to the next vault.
- */
+/** The vault page's balance: tile, figure and fiat roll together to the next vault. */
 function VaultBalance({ active, isAnimated }: { active: number; isAnimated: boolean }) {
   return (
     <styled.div display="flex" style={{ alignItems: 'last baseline', gap: stagePx(12) }}>
@@ -709,12 +616,9 @@ function SignatureProgress({
 }
 
 /**
- * "Shared vaults": a vault page. Its themed balance card belongs to the vault of the pending
- * transaction at the top, which arrives with one signature in. The remaining members sign one
- * by one, each filling a segment of its threshold bar (2, 3 or 4, per the vault's policy); the
- * last one broadcasts it (check badge, the bar turns green), the next proposal gets its first
- * signature, then the top one clears, the queue moves up and the card cross-fades to the next
- * vault's theme and balance. Reduced motion shows the first vault, its transaction broadcast.
+ * A vault page (vault-balance-hero.tsx over vault-transactions.tsx). Members sign the top
+ * transaction one by one until it broadcasts and clears; the card then switches to the next
+ * transaction's vault. Reduced motion shows the first vault, its transaction broadcast.
  */
 export function SharedVaultMockup() {
   // The loop's timing follows the vault on top, so it has as many beats as it needs signatures
@@ -746,101 +650,96 @@ export function SharedVaultMockup() {
   });
 
   return (
-    <BentoStage label="A vault's balance on its themed card over pending BTC, STX and sBTC transactions whose signature bars fill one segment per required signer, then broadcast and clear one by one, the card switching to each next transaction's vault">
-      <div ref={ref} style={{ position: 'absolute', inset: 0 }}>
-        <MockupPanel>
-          {/* MultisigHero, balance variant, in the theme of the vault whose transaction is up */}
-          <styled.div
-            position="absolute"
-            display="flex"
-            alignItems="center"
-            overflow="hidden"
-            style={{
-              top: stagePx(heroInset),
-              left: stagePx(heroInset),
-              right: stagePx(heroInset),
-              height: stagePx(heroHeight),
-              paddingInline: stagePx(heroPadding),
-              borderRadius: stagePx(8),
-            }}
-          >
-            <ThemeBackdrop theme={pick(queue, active).theme} isAnimated={isAnimated} />
-            <styled.div position="relative">
-              <VaultBalance active={active} isAnimated={isAnimated} />
-            </styled.div>
+    <BentoStage
+      ref={ref}
+      label="A vault's balance on its themed card over pending BTC, STX and sBTC transactions whose signature bars fill one segment per required signer, then broadcast and clear one by one, the card switching to each next transaction's vault"
+    >
+      <MockupPanel>
+        {/* MultisigHero, balance variant */}
+        <styled.div
+          position="absolute"
+          display="flex"
+          alignItems="center"
+          overflow="hidden"
+          style={{
+            top: stagePx(heroInset),
+            left: stagePx(heroInset),
+            right: stagePx(heroInset),
+            height: stagePx(heroHeight),
+            paddingInline: stagePx(heroPadding),
+            borderRadius: stagePx(8),
+          }}
+        >
+          <ThemeBackdrop theme={pick(queue, active).theme} isAnimated={isAnimated} />
+          <styled.div position="relative">
+            <VaultBalance active={active} isAnimated={isAnimated} />
           </styled.div>
+        </styled.div>
 
-          <styled.div
-            position="absolute"
-            left="0"
-            right="0"
-            bottom="0"
-            overflow="hidden"
-            style={{ top: stagePx(queueTop), ...edgeFade(0, 36) }}
-          >
-            {rows.map(({ position, slot, signed, isDone }) => {
-              const entry = pick(queue, position);
-              return (
-                <styled.div
-                  key={position}
-                  position="absolute"
-                  style={{
-                    top: 0,
-                    left: stagePx(mockupSize.inset),
-                    right: stagePx(mockupSize.inset),
-                    transform: `translateY(${stagePx(Math.max(slot, 0) * rowHeight)}) scale(${slot < 0 ? 0.97 : 1})`,
-                    opacity: slot < 0 || slot >= visibleRows ? 0 : 1,
-                    // The cleared row fades out first, then the queue closes the gap
-                    transition: transitionFor(
-                      isAnimated,
-                      ['transform', 'opacity'],
-                      slot < 0 ? 220 : 480,
-                      slot < 0 ? 0 : 140
-                    ),
-                  }}
+        <styled.div
+          position="absolute"
+          left="0"
+          right="0"
+          bottom="0"
+          overflow="hidden"
+          style={{ top: stagePx(queueTop), ...fadeBottom(36) }}
+        >
+          {rows.map(({ position, slot, signed, isDone }) => {
+            const entry = pick(queue, position);
+            return (
+              <styled.div
+                key={position}
+                position="absolute"
+                style={{
+                  top: 0,
+                  left: stagePx(mockupSize.inset),
+                  right: stagePx(mockupSize.inset),
+                  transform: `translateY(${stagePx(Math.max(slot, 0) * rowHeight)}) scale(${slot < 0 ? 0.97 : 1})`,
+                  opacity: slot < 0 || slot >= visibleRows ? 0 : 1,
+                  // The cleared row fades out first, then the queue closes the gap
+                  transition: transitionFor(
+                    isAnimated,
+                    ['transform', 'opacity'],
+                    slot < 0 ? 220 : 480,
+                    slot < 0 ? 0 : 140
+                  ),
+                }}
+              >
+                <TransactionRow
+                  asset={entry.asset}
+                  amount={entry.amount}
+                  fiat={entry.fiat}
+                  isDone={isDone}
+                  isAnimated={isAnimated}
+                  caption={
+                    <SwapText
+                      index={isDone ? entry.required + 1 : signed}
+                      isAnimated={isAnimated}
+                      items={[
+                        ...Array.from(
+                          { length: entry.required + 1 },
+                          (_, count) => `${entry.account} · ${count} of ${entry.required} signed`
+                        ),
+                        `${entry.account} · Broadcast`,
+                      ]}
+                    />
+                  }
                 >
-                  <TransactionRow
-                    asset={entry.asset}
-                    amount={entry.amount}
-                    fiat={entry.fiat}
+                  <SignatureProgress
+                    required={entry.required}
+                    signed={signed}
                     isDone={isDone}
                     isAnimated={isAnimated}
-                    caption={
-                      <SwapText
-                        index={isDone ? entry.required + 1 : signed}
-                        isAnimated={isAnimated}
-                        items={[
-                          ...Array.from(
-                            { length: entry.required + 1 },
-                            (_, count) => `${entry.account} · ${count} of ${entry.required} signed`
-                          ),
-                          `${entry.account} · Broadcast`,
-                        ]}
-                      />
-                    }
-                  >
-                    <SignatureProgress
-                      required={entry.required}
-                      signed={signed}
-                      isDone={isDone}
-                      isAnimated={isAnimated}
-                    />
-                  </TransactionRow>
-                </styled.div>
-              );
-            })}
-          </styled.div>
-        </MockupPanel>
-      </div>
+                  />
+                </TransactionRow>
+              </styled.div>
+            );
+          })}
+        </styled.div>
+      </MockupPanel>
     </BentoStage>
   );
 }
-
-// ---------------------------------------------------------------------------------------------
-// Bitcoin Staking bonds — mirrors the extension's In a bond page
-// (apps/extension/src/app/pages/all-balances/bond-positions-detail.tsx) with one
-// BondPositionSection (components/bond-position-section.tsx, bond-detail-row.tsx)
-// ---------------------------------------------------------------------------------------------
 
 const bondDetailRows = [
   ['Amount', '0.50 BTC'],
@@ -864,150 +763,145 @@ function Divider() {
   );
 }
 
-/**
- * "Bitcoin Staking bonds": the extension's In a bond balance. The Period 14 section starts
- * collapsed to its amount, then opens into the bond's details, as tapping it does in the
- * extension. Loops while in view; reduced motion shows it open.
- */
+/** The extension's In a bond page (pages/all-balances/bond-positions-detail.tsx), opening a period. */
 export function BondPositionMockup() {
   const { ref, step, isAnimated } = useLoopingSequence<HTMLDivElement>([1100], 3000);
   const isExpanded = step >= 1;
 
   return (
-    <BentoStage label="The extension's In a bond balance, 0.50 BTC, opening Period 14 to show its amount, STX stacked, unlock date and timelock">
-      <div ref={ref} style={{ position: 'absolute', inset: 0 }}>
-        <MockupPanel style={{ paddingInline: stagePx(mockupSize.inset) }}>
-          {/* Balance header */}
+    <BentoStage
+      ref={ref}
+      label="The extension's In a bond balance, 0.50 BTC, opening Period 14 to show its amount, STX stacked, unlock date and timelock"
+    >
+      <MockupPanel style={{ paddingInline: stagePx(mockupSize.inset) }}>
+        <styled.div
+          display="flex"
+          justifyContent="space-between"
+          alignItems="flex-start"
+          style={{ paddingBlock: stagePx(18) }}
+        >
+          <div>
+            <styled.div display="flex" alignItems="center" style={{ gap: stagePx(4) }}>
+              <styled.span style={primaryText}>In a bond</styled.span>
+              <ScaledIcon size={glyphSize}>
+                <InfoCircleIcon variant="small" color="ink.text-subdued" />
+              </ScaledIcon>
+            </styled.div>
+            <styled.div style={{ ...brandFigure, marginTop: stagePx(4) }}>$31,420.50</styled.div>
+            <styled.div style={{ ...secondaryText, marginTop: stagePx(2) }}>0.50 BTC</styled.div>
+          </div>
+          <styled.img
+            src={tokenIconSrc.btc}
+            alt=""
+            borderRadius="round"
+            style={{ width: stagePx(iconSize), height: stagePx(iconSize) }}
+          />
+        </styled.div>
+
+        <Divider />
+
+        <styled.div style={{ paddingBlock: stagePx(14) }}>
           <styled.div
             display="flex"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            style={{ paddingBlock: stagePx(18) }}
-          >
-            <div>
-              <styled.div display="flex" alignItems="center" style={{ gap: stagePx(4) }}>
-                <styled.span style={primaryText}>In a bond</styled.span>
-                <ScaledIcon size={glyphSize}>
-                  <InfoCircleIcon variant="small" color="ink.text-subdued" />
-                </ScaledIcon>
-              </styled.div>
-              <styled.div style={{ ...brandFigure, marginTop: stagePx(4) }}>$31,420.50</styled.div>
-              <styled.div style={{ ...secondaryText, marginTop: stagePx(2) }}>0.50 BTC</styled.div>
-            </div>
-            <styled.img
-              src="/icons/bitcoin.svg"
-              alt=""
-              borderRadius="round"
-              style={{ width: stagePx(iconSize), height: stagePx(iconSize) }}
-            />
-          </styled.div>
-
-          <Divider />
-
-          {/* BondPositionSection in its CollapsibleSection */}
-          <styled.div style={{ paddingBlock: stagePx(14) }}>
-            <styled.div
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              style={{ gap: stagePx(6), minHeight: stagePx(20) }}
-            >
-              <styled.div display="flex" alignItems="center" style={{ gap: stagePx(6) }}>
-                <styled.span style={primaryText}>Period 14</styled.span>
-                <styled.span
-                  display="inline-flex"
-                  alignItems="center"
-                  borderRadius="round"
-                  style={{
-                    padding: `${stagePx(1)} ${stagePx(6)}`,
-                    background: productColor.backgroundSecondary,
-                    border: `1px solid ${productColor.borderTransparent}`,
-                    ...secondaryText,
-                    fontWeight: 500,
-                  }}
-                >
-                  Active
-                </styled.span>
-              </styled.div>
-              <styled.div display="flex" alignItems="center" style={{ gap: stagePx(6) }}>
-                <span
-                  style={{
-                    ...primaryText,
-                    opacity: isExpanded ? 0 : 1,
-                    transition: transitionFor(isAnimated, ['opacity'], 250),
-                  }}
-                >
-                  0.50 BTC
-                </span>
-                <span
-                  style={{
-                    display: 'inline-flex',
-                    transform: isExpanded ? 'none' : 'rotate(180deg)',
-                    transition: transitionFor(isAnimated, ['transform'], 400),
-                  }}
-                >
-                  <ScaledIcon size={glyphSize}>
-                    <ChevronUpIcon variant="small" />
-                  </ScaledIcon>
-                </span>
-              </styled.div>
-            </styled.div>
-
-            {/* Height animates through the 0fr → 1fr grid track */}
-            <styled.div
-              display="grid"
-              style={{
-                gridTemplateRows: isExpanded ? '1fr' : '0fr',
-                transition: transitionFor(isAnimated, ['grid-template-rows'], 450),
-              }}
-            >
-              <styled.div overflow="hidden" minHeight={0}>
-                <styled.div
-                  display="flex"
-                  flexDirection="column"
-                  style={{ gap: stagePx(7), paddingTop: stagePx(10) }}
-                >
-                  {bondDetailRows.map(([label, value], index) => (
-                    <styled.div
-                      key={label}
-                      display="flex"
-                      justifyContent="space-between"
-                      style={{
-                        gap: stagePx(12),
-                        ...mockupType.body,
-                        opacity: isExpanded ? 1 : 0,
-                        transform: isExpanded ? 'none' : `translateY(${stagePx(6)})`,
-                        transition: transitionFor(
-                          isAnimated,
-                          ['opacity', 'transform'],
-                          380,
-                          isExpanded ? 120 + index * 55 : 0
-                        ),
-                      }}
-                    >
-                      <span style={{ color: mockupColor.secondary }}>{label}</span>
-                      <span style={{ textAlign: 'right' }}>{value}</span>
-                    </styled.div>
-                  ))}
-                </styled.div>
-              </styled.div>
-            </styled.div>
-          </styled.div>
-
-          <Divider />
-
-          <styled.div
-            display="inline-flex"
             alignItems="center"
-            style={{ gap: stagePx(4), paddingBlock: stagePx(14), ...primaryText }}
+            justifyContent="space-between"
+            style={{ gap: stagePx(6), minHeight: stagePx(20) }}
           >
-            Manage in Bitcoin Staking
-            <ScaledIcon size={glyphSize}>
-              <ExternalLinkIcon variant="small" />
-            </ScaledIcon>
+            <styled.div display="flex" alignItems="center" style={{ gap: stagePx(6) }}>
+              <styled.span style={primaryText}>Period 14</styled.span>
+              <styled.span
+                display="inline-flex"
+                alignItems="center"
+                borderRadius="round"
+                style={{
+                  padding: `${stagePx(1)} ${stagePx(6)}`,
+                  background: productColor.backgroundSecondary,
+                  border: `1px solid ${productColor.borderTransparent}`,
+                  ...secondaryText,
+                  fontWeight: 500,
+                }}
+              >
+                Active
+              </styled.span>
+            </styled.div>
+            <styled.div display="flex" alignItems="center" style={{ gap: stagePx(6) }}>
+              <span
+                style={{
+                  ...primaryText,
+                  opacity: isExpanded ? 0 : 1,
+                  transition: transitionFor(isAnimated, ['opacity'], 250),
+                }}
+              >
+                0.50 BTC
+              </span>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  transform: isExpanded ? 'none' : 'rotate(180deg)',
+                  transition: transitionFor(isAnimated, ['transform'], 400),
+                }}
+              >
+                <ScaledIcon size={glyphSize}>
+                  <ChevronUpIcon variant="small" />
+                </ScaledIcon>
+              </span>
+            </styled.div>
           </styled.div>
-        </MockupPanel>
-      </div>
+
+          {/* Height animates through the 0fr → 1fr grid track */}
+          <styled.div
+            display="grid"
+            style={{
+              gridTemplateRows: isExpanded ? '1fr' : '0fr',
+              transition: transitionFor(isAnimated, ['grid-template-rows'], 450),
+            }}
+          >
+            <styled.div overflow="hidden" minHeight={0}>
+              <styled.div
+                display="flex"
+                flexDirection="column"
+                style={{ gap: stagePx(7), paddingTop: stagePx(10) }}
+              >
+                {bondDetailRows.map(([label, value], index) => (
+                  <styled.div
+                    key={label}
+                    display="flex"
+                    justifyContent="space-between"
+                    style={{
+                      gap: stagePx(12),
+                      ...mockupType.body,
+                      opacity: isExpanded ? 1 : 0,
+                      transform: isExpanded ? 'none' : `translateY(${stagePx(6)})`,
+                      transition: transitionFor(
+                        isAnimated,
+                        ['opacity', 'transform'],
+                        380,
+                        isExpanded ? 120 + index * 55 : 0
+                      ),
+                    }}
+                  >
+                    <span style={{ color: mockupColor.secondary }}>{label}</span>
+                    <span style={{ textAlign: 'right' }}>{value}</span>
+                  </styled.div>
+                ))}
+              </styled.div>
+            </styled.div>
+          </styled.div>
+        </styled.div>
+
+        <Divider />
+
+        <styled.div
+          display="inline-flex"
+          alignItems="center"
+          style={{ gap: stagePx(4), paddingBlock: stagePx(14), ...primaryText }}
+        >
+          Manage in Bitcoin Staking
+          <ScaledIcon size={glyphSize}>
+            <ExternalLinkIcon variant="small" />
+          </ScaledIcon>
+        </styled.div>
+      </MockupPanel>
     </BentoStage>
   );
 }

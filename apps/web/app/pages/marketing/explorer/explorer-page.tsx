@@ -60,7 +60,6 @@ function PromoBanner() {
           </styled.span>
         </Flex>
         <Box position="relative" width="120px" height="150px" flexShrink={0} aria-hidden>
-          {/* Stickers pop in (scale 1.15 → 1) and settle at a tilt, as on the Framer site */}
           <styled.img
             src={art.hourglass.src}
             alt={art.hourglass.alt}

@@ -1,20 +1,12 @@
-import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from 'react';
+import { type CSSProperties, type ReactNode, type Ref, useEffect, useRef, useState } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 import { usePrefersReducedMotion } from '~/pages/marketing/shared/lottie-animation';
 
-/**
- * Shared frame for the homepage bento mockups.
- *
- * Measured from the two reference Lotties, "Send and receive" and "Your tokens, at a glance",
- * on their 592 × 444 stage: a 404 × 350 white panel, 47 px from the top, with 15 px titles,
- * 12 px rows, 11 px secondary text and a 26 px headline figure. Every size below is expressed
- * in stage pixels and converted to container units, so an HTML mockup scales with its card
- * exactly like the Lottie art does at every breakpoint.
- */
+// Every size is in pixels of the 592 × 444 card stage, converted to container units so the
+// mockups scale with their card at every breakpoint.
 const stageWidth = 592;
 
-/** Stage pixels → container-relative length. */
 export function stagePx(px: number) {
   return `calc(${px} / ${stageWidth} * 100cqw)`;
 }
@@ -24,7 +16,6 @@ export const mockupSize = {
   panelHeight: 350,
   panelTop: 47,
   panelRadius: 10,
-  /** Horizontal padding inside the panel, as in the Send mockup. */
   inset: 18,
   rowHeight: 48,
   icon: 28,
@@ -37,6 +28,7 @@ export const mockupType = {
   meta: { fontSize: stagePx(11), lineHeight: 1.35 },
 } as const satisfies Record<string, CSSProperties>;
 
+// Hex rather than Panda tokens: the panel stays light whatever the page theme is
 export const mockupColor = {
   panel: '#FFFFFF',
   border: '#E6E4E1',
@@ -44,18 +36,117 @@ export const mockupColor = {
   text: '#12100F',
   secondary: '#8C8A87',
   positive: '#1F9A5D',
+  actionPressed: '#3A3633',
+  hover: '#F5F3F1',
 } as const;
+
+export const primaryText: CSSProperties = { ...mockupType.body, fontWeight: 500 };
+export const secondaryText: CSSProperties = { ...mockupType.meta, color: mockupColor.secondary };
+
+export const insetX: CSSProperties = {
+  paddingLeft: stagePx(mockupSize.inset),
+  paddingRight: stagePx(mockupSize.inset),
+};
+
+export const tokenIconSrc = {
+  btc: '/icons/bitcoin.svg',
+  stx: '/icons/stacks.svg',
+  sbtc: '/icons/sbtc.svg',
+} as const;
+
+const ease = 'cubic-bezier(0.25, 1, 0.5, 1)';
+
+export function transitionFor(
+  isAnimated: boolean,
+  properties: string[],
+  ms = 400,
+  delayMs = 0,
+  timing = ease
+) {
+  if (!isAnimated) return undefined;
+  return properties.map(property => `${property} ${ms}ms ${timing} ${delayMs}ms`).join(', ');
+}
+
+/** Fades the bottom edge of a list that runs past its container. */
+export function fadeBottom(px: number): CSSProperties {
+  const mask = `linear-gradient(to bottom, #000 calc(100% - ${stagePx(px)}), transparent)`;
+  return { maskImage: mask, WebkitMaskImage: mask };
+}
+
+export function StrokeIcon({ size, children }: { size: number; children: ReactNode }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={{ width: stagePx(size), height: stagePx(size), flexShrink: 0, display: 'block' }}
+    >
+      {children}
+    </svg>
+  );
+}
+
+interface TextPairProps {
+  primary: ReactNode;
+  secondary: ReactNode;
+  align?: 'start' | 'end';
+  primaryStyle?: CSSProperties;
+}
+
+/** A row's two stacked lines: the start pair fills the row, the end pair hugs its values. */
+export function TextPair({ primary, secondary, align = 'start', primaryStyle }: TextPairProps) {
+  const isEnd = align === 'end';
+  return (
+    <styled.span
+      display="flex"
+      flexDirection="column"
+      minWidth={0}
+      flex={isEnd ? undefined : 1}
+      flexShrink={isEnd ? 0 : undefined}
+      whiteSpace="nowrap"
+      style={{ textAlign: isEnd ? 'right' : 'left', alignItems: isEnd ? 'flex-end' : 'stretch' }}
+    >
+      <span style={{ ...primaryText, ...primaryStyle }}>{primary}</span>
+      <span style={secondaryText}>{secondary}</span>
+    </styled.span>
+  );
+}
+
+/** A 12 px status badge on an avatar's corner, ringed in the panel colour. */
+export function StatusBadge({ children, style }: { children: ReactNode; style?: CSSProperties }) {
+  return (
+    <styled.span
+      position="absolute"
+      borderRadius="50%"
+      style={{
+        right: stagePx(-2),
+        bottom: stagePx(-2),
+        width: stagePx(12),
+        height: stagePx(12),
+        boxShadow: `0 0 0 ${stagePx(1.5)} ${mockupColor.panel}`,
+        ...style,
+      }}
+    >
+      {children}
+    </styled.span>
+  );
+}
 
 interface BentoStageProps {
   /** Describes the illustration for screen readers. */
   label: string;
+  ref?: Ref<HTMLDivElement>;
   children: ReactNode;
 }
 
-/** The 592 × 444 card visual area; establishes the container the mockup scales against. */
-export function BentoStage({ label, children }: BentoStageProps) {
+/** The card's visual area; establishes the container the mockup scales against. */
+export function BentoStage({ label, ref, children }: BentoStageProps) {
   return (
     <styled.div
+      ref={ref}
       role="img"
       aria-label={label}
       position="relative"
@@ -63,7 +154,6 @@ export function BentoStage({ label, children }: BentoStageProps) {
       overflow="hidden"
       style={{ aspectRatio: '592 / 444', containerType: 'inline-size' }}
     >
-      {/* Mockup content is decorative; the label above carries its meaning */}
       <styled.div aria-hidden position="absolute" inset="0">
         {children}
       </styled.div>
@@ -71,19 +161,8 @@ export function BentoStage({ label, children }: BentoStageProps) {
   );
 }
 
-interface MockupPanelProps {
-  children: ReactNode;
-  /** Stage-pixel height; defaults to the reference 350. */
-  height?: number | 'auto';
-  style?: CSSProperties;
-}
-
-/** The white panel every mockup sits in, at the reference size and position. */
-export function MockupPanel({
-  children,
-  height = mockupSize.panelHeight,
-  style,
-}: MockupPanelProps) {
+/** The white panel every mockup sits in. */
+export function MockupPanel({ children, style }: { children: ReactNode; style?: CSSProperties }) {
   return (
     <styled.div
       position="absolute"
@@ -92,7 +171,7 @@ export function MockupPanel({
       style={{
         top: stagePx(mockupSize.panelTop),
         width: stagePx(mockupSize.panelWidth),
-        height: height === 'auto' ? undefined : stagePx(height),
+        height: stagePx(mockupSize.panelHeight),
         transform: 'translateX(-50%)',
         background: mockupColor.panel,
         border: `1px solid ${mockupColor.border}`,
@@ -108,22 +187,14 @@ export function MockupPanel({
   );
 }
 
-/**
- * Loops a short sequence while at least half of the element is in view, like the Lotties do:
- * steps advance by `stepDelaysMs`, the last step holds for `holdMs`, then it starts over.
- * Server render and reduced motion show the last step only.
- */
-export function useLoopingSequence<T extends Element>(stepDelaysMs: number[], holdMs = 2400) {
+/** Whether at least half of the element is on screen; always false while disabled. */
+export function useIsHalfInView<T extends Element>(isEnabled: boolean) {
   const ref = useRef<T>(null);
-  const reducedMotion = usePrefersReducedMotion();
-  const finalStep = stepDelaysMs.length;
-  const [step, setStep] = useState(finalStep);
   const [isInView, setIsInView] = useState(false);
-  const delaysKey = stepDelaysMs.join(',');
 
   useEffect(() => {
     const element = ref.current;
-    if (reducedMotion !== false || !element || typeof IntersectionObserver === 'undefined') return;
+    if (!isEnabled || !element || typeof IntersectionObserver === 'undefined') return;
     const observer = new IntersectionObserver(
       ([entry]) => setIsInView(Boolean(entry?.isIntersecting && entry.intersectionRatio >= 0.5)),
       { threshold: 0.5 }
@@ -132,12 +203,29 @@ export function useLoopingSequence<T extends Element>(stepDelaysMs: number[], ho
     return () => {
       observer.disconnect();
       setIsInView(false);
-      setStep(finalStep);
     };
-  }, [reducedMotion, finalStep]);
+  }, [isEnabled]);
+
+  return { ref, isInView };
+}
+
+/**
+ * Loops a short sequence while at least half of the element is in view: steps advance by
+ * `stepDelaysMs`, the last step holds for `holdMs`, then it starts over. Server render and
+ * reduced motion show the last step only.
+ */
+export function useLoopingSequence<T extends Element>(stepDelaysMs: number[], holdMs = 2400) {
+  const isAnimated = usePrefersReducedMotion() === false;
+  const { ref, isInView } = useIsHalfInView<T>(isAnimated);
+  const finalStep = stepDelaysMs.length;
+  const [step, setStep] = useState(finalStep);
+  const delaysKey = stepDelaysMs.join(',');
 
   useEffect(() => {
-    if (reducedMotion !== false) return;
+    if (!isAnimated) {
+      setStep(finalStep);
+      return;
+    }
     if (!isInView) {
       setStep(0);
       return;
@@ -159,7 +247,7 @@ export function useLoopingSequence<T extends Element>(stepDelaysMs: number[], ho
       clearInterval(loop);
       timers.forEach(clearTimeout);
     };
-  }, [isInView, reducedMotion, delaysKey, holdMs]);
+  }, [isInView, isAnimated, finalStep, delaysKey, holdMs]);
 
-  return { ref, step, isAnimated: reducedMotion === false };
+  return { ref, step, isAnimated };
 }

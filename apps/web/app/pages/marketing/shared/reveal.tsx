@@ -1,11 +1,4 @@
-import {
-  type ElementType,
-  type HTMLAttributes,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { type HTMLAttributes, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { css, cx } from 'leather-styles/css';
 
@@ -25,25 +18,14 @@ function isInViewport(element: HTMLElement) {
   return rect.bottom > 0 && rect.top < window.innerHeight;
 }
 
-interface RevealProps extends HTMLAttributes<HTMLElement> {
-  /** Share of the element (0–1) that must be on screen before it fades in. Defaults to 0.5. */
-  threshold?: number;
-  /** Element to render. Defaults to `div`. */
-  as?: ElementType;
-}
+const threshold = 0.5;
 
 /**
- * Fades its children in (opacity only, 0.6s) the first time they scroll into view, like the
- * Framer site's section headings. Content already on screen at hydration, and everything under
- * `prefers-reduced-motion: reduce`, is left as is. Layout never changes: only opacity animates.
+ * Fades its children in the first time half of them scrolls into view. Content already on screen
+ * at hydration, and everything under `prefers-reduced-motion: reduce`, is left as is.
  */
-export function Reveal({
-  threshold = 0.5,
-  as: Component = 'div',
-  className,
-  ...props
-}: RevealProps) {
-  const ref = useRef<HTMLElement>(null);
+export function Reveal({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
+  const ref = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<RevealState>('idle');
 
   // Hide below-the-fold content before the browser paints the hydrated page
@@ -71,10 +53,10 @@ export function Reveal({
     );
     observer.observe(element);
     return () => observer.disconnect();
-  }, [state, threshold]);
+  }, [state]);
 
   return (
-    <Component
+    <div
       ref={ref}
       className={cx(revealStyles, className)}
       data-reveal={state === 'idle' ? undefined : state}

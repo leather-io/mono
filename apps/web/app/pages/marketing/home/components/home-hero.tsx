@@ -15,7 +15,13 @@ import { usePrefersReducedMotion } from '~/pages/marketing/shared/lottie-animati
 import { trackMarketingEvent } from '~/pages/marketing/shared/marketing-analytics';
 import { StoreButtons } from '~/pages/marketing/shared/store-buttons';
 
-import { HeroExtension, HeroPhone, type HeroView, heroViewDescriptions } from './hero-mockups';
+import {
+  HeroExtension,
+  HeroPhone,
+  type HeroView,
+  heroViewDescriptions,
+  heroViews,
+} from './hero-mockups';
 
 const partners = [
   { name: 'Coinbase', src: '/marketing/home/partner-coinbase.webp', width: 140 },
@@ -24,10 +30,8 @@ const partners = [
   { name: 'Gate', src: '/marketing/home/partner-gate.webp', width: 106 },
 ];
 
-// Entrance motion rebuilt from the Framer site's appear effects. Pure CSS, so it runs before
-// hydration and without JS. Every entrance starts at opacity 0.001 rather than 0: the SSR HTML stays
-// visible to crawlers and the first paint still counts for LCP. Reduced motion: no animation.
-// The 900–1439px overrides are the Framer site's tablet timings.
+// Entrances are pure CSS, so they run before hydration and without JS. They start at opacity
+// 0.001 rather than 0 so the first paint still counts for LCP.
 type HeroVerb = Exclude<HeroView, 'home'>;
 const headlineLines: { verb: HeroVerb; word: string }[][] = [
   [
@@ -41,7 +45,6 @@ const headlineLines: { verb: HeroVerb; word: string }[][] = [
   [{ verb: 'grow', word: 'Grow.' }],
 ];
 const headlineStartDelay = 0.4;
-// Framer's default per-word stagger for text effects (not stored in the project config)
 const headlineWordStagger = 0.05;
 
 function wordDelay(lineIndex: number, wordIndex: number) {
@@ -50,21 +53,17 @@ function wordDelay(lineIndex: number, wordIndex: number) {
 }
 
 /*
- * Verb-synced stage. The headline starts with every word in full ink and both devices on the
- * wallet home; then one verb at a time stays emphasised while the others fade back, and both
- * devices switch to that verb's screen. After Grow it rests on the full claim again and loops.
- * Each word is a toggle button: picking one shows its screen and pauses the cycle for a while;
- * picking the active word again returns to home. Reduced motion: no auto-advance, still clickable.
+ * The devices cycle through the verbs' screens, emphasising the active verb. Each word is a
+ * toggle: picking one shows its screen and pauses the cycle; picking it again returns to home.
+ * Reduced motion: no auto-advance, still clickable.
  */
-const heroSequence: HeroView[] = ['home', 'buy', 'send', 'swap', 'earn', 'grow'];
-// The first hold starts at mount; the stage drops in at about 1.65 s
 const firstHoldMs = 4400;
 const holdMs = 2800;
 const interactionPauseMs = 8000;
 const stageId = 'home-hero-stage';
 
 function nextView(view: HeroView) {
-  return heroSequence[(heroSequence.indexOf(view) + 1) % heroSequence.length] ?? 'home';
+  return heroViews[(heroViews.indexOf(view) + 1) % heroViews.length] ?? 'home';
 }
 
 function useHeroSequence(isEnabled: boolean) {
@@ -117,7 +116,6 @@ function useIsHeroVisible(ref: RefObject<HTMLElement | null>) {
   return isInView && isPageVisible;
 }
 
-// Words: full ink at rest; while a verb is active the others fall back to a lighter tone
 const wordClass = css({
   display: 'inline-block',
   font: 'inherit',
@@ -138,7 +136,6 @@ const wordClass = css({
   },
 });
 
-// The devices lean back in 3D on wide screens; flat and centred on small ones
 const rigClass = css({
   position: 'absolute',
   inset: 0,
@@ -158,15 +155,13 @@ const deviceShadowClass = css({
 });
 
 /*
- * Entrance: the grey stage opens from top to bottom while the extension, then the phone, rise in
- * from below and settle partly cropped. It waits for the stage to be on screen. The SSR markup
- * starts closed ("pending"); without JS the <noscript> rule below shows it, and reduced motion
- * never applies the closed state at all.
+ * Entrance: the stage opens top to bottom while the devices rise in. The SSR markup starts
+ * closed ("pending"); without JS the <noscript> rule below opens it, and reduced motion never
+ * applies the closed state.
  */
 type Entrance = 'pending' | 'run';
 const revealMs = 850;
 const revealEase = 'cubic-bezier(0.22, 1, 0.36, 1)';
-// The stage used to drop in at about 1.25 s, after the headline words
 const entranceStartMs = 1000;
 
 const stageClass = css({
@@ -189,7 +184,6 @@ const riseClass = css({
   },
 });
 
-// The phone follows the extension by a short stagger
 type RiseStyle = CSSProperties & Record<'--hero-rise-delay', string>;
 const extensionRise: RiseStyle = { '--hero-rise-delay': '180ms' };
 const phoneRise: RiseStyle = { '--hero-rise-delay': '360ms' };
@@ -226,11 +220,7 @@ function useEntrance(targetRef: RefObject<HTMLElement | null>) {
   return entrance;
 }
 
-/*
- * Pointer tilt: the devices keep their rest pose and only turn a little towards the cursor, the
- * phone a bit more because it sits in front. No translation. Smoothed with a lerp on
- * requestAnimationFrame; eases back on leave. Mouse only, and never with reduced motion.
- */
+// The devices turn slightly towards the mouse, smoothed on requestAnimationFrame
 const tiltDegrees = { extension: 3, phone: 4.5 };
 const tiltPerspective = '1800px';
 const tiltLerp = 0.08;
@@ -332,7 +322,6 @@ export function HomeHero() {
                 {line.map(({ verb, word }, wordIndex) => (
                   <Fragment key={verb}>
                     {wordIndex > 0 && ' '}
-                    {/* Each verb shows its screen in the wallet preview below */}
                     <button
                       type="button"
                       className={wordClass}
@@ -389,7 +378,7 @@ export function HomeHero() {
       </Grid>
 
       <noscript dangerouslySetInnerHTML={{ __html: noScriptStyles }} />
-      {/* Observed for the entrance: the stage itself is clipped shut until it opens */}
+      {/* Observed for the entrance, since the stage itself is clipped shut until it opens */}
       <Box ref={revealRef} mt={['space.07', null, '40px']}>
         <Box
           id={stageId}
@@ -405,7 +394,6 @@ export function HomeHero() {
           onPointerMove={onPointerMove}
           onPointerLeave={onPointerLeave}
         >
-          {/* Desktop: the extension in a browser + the phone; mobile: the phone only */}
           <div aria-hidden className={rigClass}>
             <Box
               display={['none', null, 'block']}

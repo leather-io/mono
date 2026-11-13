@@ -1,4 +1,4 @@
-import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from 'react';
+import { type CSSProperties, useEffect, useState } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 import { usePrefersReducedMotion } from '~/pages/marketing/shared/lottie-animation';
@@ -6,60 +6,35 @@ import { usePrefersReducedMotion } from '~/pages/marketing/shared/lottie-animati
 import {
   BentoStage,
   MockupPanel,
+  StatusBadge,
+  TextPair,
+  fadeBottom,
   mockupColor,
   mockupSize,
   mockupType,
+  primaryText,
+  secondaryText,
   stagePx,
+  tokenIconSrc,
+  transitionFor,
+  useIsHalfInView,
 } from './bento-mockup';
 
-// Not in the shared frame: a common ease and duration for the list motion below
-const ease = 'cubic-bezier(0.25, 1, 0.5, 1)';
 const durationMs = 520;
 
-function motion(isAnimated: boolean, properties: string[]): CSSProperties {
-  if (!isAnimated) return {};
-  return {
-    transitionProperty: properties.join(', '),
-    transitionDuration: `${durationMs}ms`,
-    transitionTimingFunction: ease,
-  };
-}
-
-/** Fades the bottom edge of a list that runs past its container, as a scrolled list does. */
-function fadeBottom(px: number): CSSProperties {
-  const mask = `linear-gradient(to bottom, #000 calc(100% - ${stagePx(px)}), transparent)`;
-  return { maskImage: mask, WebkitMaskImage: mask };
-}
-
 /**
- * A conveyor that never rewinds: every `intervalMs` while half the element is in view, one more
- * item arrives at the top. Items are keyed by their arrival number and drawn from a repeating
- * queue, so the list keeps moving without a visible restart. For `settleMs` after each arrival
- * the newest item is still pending. Server render and reduced motion show a settled list.
+ * A list that never rewinds: every `intervalMs` while half the element is in view, one more item
+ * arrives at the top, keyed by its arrival number and drawn from a repeating queue. For
+ * `settleMs` after each arrival the newest item is still pending.
  */
 function useConveyor<T extends Element>(intervalMs: number, settleMs = 0) {
-  const ref = useRef<T>(null);
-  const reducedMotion = usePrefersReducedMotion();
+  const isAnimated = usePrefersReducedMotion() === false;
+  const { ref, isInView } = useIsHalfInView<T>(isAnimated);
   const [arrived, setArrived] = useState(0);
   const [isSettled, setIsSettled] = useState(true);
-  const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
-    const element = ref.current;
-    if (reducedMotion !== false || !element || typeof IntersectionObserver === 'undefined') return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsInView(Boolean(entry?.isIntersecting && entry.intersectionRatio >= 0.5)),
-      { threshold: 0.5 }
-    );
-    observer.observe(element);
-    return () => {
-      observer.disconnect();
-      setIsInView(false);
-    };
-  }, [reducedMotion]);
-
-  useEffect(() => {
-    if (reducedMotion !== false || !isInView) return;
+    if (!isAnimated || !isInView) return;
     let settleTimer: ReturnType<typeof setTimeout> | undefined;
     function advance() {
       setArrived(count => count + 1);
@@ -76,9 +51,9 @@ function useConveyor<T extends Element>(intervalMs: number, settleMs = 0) {
       clearTimeout(settleTimer);
       setIsSettled(true);
     };
-  }, [isInView, reducedMotion, intervalMs, settleMs]);
+  }, [isInView, isAnimated, intervalMs, settleMs]);
 
-  return { ref, arrived, isSettled, isAnimated: reducedMotion === false };
+  return { ref, arrived, isSettled, isAnimated };
 }
 
 /** Arrival numbers on screen, newest first: the next one waiting above, then `visible`, then one leaving. */
@@ -94,18 +69,10 @@ function fromQueue<T>(queue: T[], arrival: number) {
   return queue[((arrival % length) + length) % length];
 }
 
-const tokenIcon = {
-  btc: '/icons/bitcoin.svg',
-  stx: '/icons/stacks.svg',
-  sbtc: '/icons/sbtc.svg',
-} as const;
-
-type Token = keyof typeof tokenIcon;
+type Token = keyof typeof tokenIconSrc;
 type Indicator = 'pending' | 'sent' | 'received' | 'swap';
 
-// Arrow strokes as drawn in packages/ui/src/assets/icons/activity/{sent,received}.svg: a
-// diagonal shaft whose head is an L-corner at the tip. The receive arrow points down-right,
-// so its corner sits bottom-right.
+// Drawn as in packages/ui/src/assets/icons/activity/*.svg
 const arrowGlyph = {
   sent: <path d="M5.88 10.12 10.12 5.88M5.88 5.88h4.24v4.24" />,
   received: <path d="M5.88 5.88l4.24 4.24M5.88 10.12h4.24V5.88" />,
@@ -123,7 +90,7 @@ function Glyph({ indicator, fill }: { indicator: Exclude<Indicator, 'pending'>; 
   );
 }
 
-/** pending.svg: a dark arc that fades along its tail on a white disc, turning while it waits. */
+/** pending.svg, turning while it waits. */
 function PendingGlyph({ isAnimated }: { isAnimated: boolean }) {
   return (
     <svg viewBox="0 0 16 16" width="100%" height="100%">
@@ -148,32 +115,10 @@ function PendingGlyph({ isAnimated }: { isAnimated: boolean }) {
   );
 }
 
-const badgeSize = 12;
-
-function Badge({ children, style }: { children: ReactNode; style?: CSSProperties }) {
-  return (
-    <styled.span
-      position="absolute"
-      borderRadius="50%"
-      style={{
-        right: stagePx(-2),
-        bottom: stagePx(-2),
-        width: stagePx(badgeSize),
-        height: stagePx(badgeSize),
-        // The ring in the panel colour punches the badge out of the icon behind it
-        boxShadow: `0 0 0 ${stagePx(1.5)} ${mockupColor.panel}`,
-        ...style,
-      }}
-    >
-      {children}
-    </styled.span>
-  );
-}
-
 function TokenIcon({ token, size, style }: { token: Token; size: number; style?: CSSProperties }) {
   return (
     <styled.img
-      src={tokenIcon[token]}
+      src={tokenIconSrc[token]}
       alt=""
       position="absolute"
       borderRadius="50%"
@@ -182,7 +127,7 @@ function TokenIcon({ token, size, style }: { token: Token; size: number; style?:
   );
 }
 
-/** ActivityAvatarIcon: the asset, or a dimmed-back pair for swaps, with a status badge. */
+/** ActivityAvatarIcon: the asset, or a pair for swaps, with a status badge. */
 function ActivityAvatar({
   token,
   swapFrom,
@@ -203,11 +148,13 @@ function ActivityAvatar({
       flexShrink="0"
       style={{ width: stagePx(size), height: stagePx(size) }}
     >
-      {/* A pending transaction's asset is dimmed until it confirms, as in the token card */}
       <styled.span
         position="absolute"
         inset="0"
-        style={{ opacity: isPending ? 0.4 : 1, ...motion(isAnimated, ['opacity']) }}
+        style={{
+          opacity: isPending ? 0.4 : 1,
+          transition: transitionFor(isAnimated, ['opacity'], durationMs),
+        }}
       >
         {swapFrom ? (
           <>
@@ -226,12 +173,22 @@ function ActivityAvatar({
           <TokenIcon token={token} size={size} style={{ inset: 0 }} />
         )}
       </styled.span>
-      <Badge style={{ opacity: isPending ? 0 : 1, ...motion(isAnimated, ['opacity']) }}>
+      <StatusBadge
+        style={{
+          opacity: isPending ? 0 : 1,
+          transition: transitionFor(isAnimated, ['opacity'], durationMs),
+        }}
+      >
         <Glyph indicator={indicator} fill={mockupColor.text} />
-      </Badge>
-      <Badge style={{ opacity: isPending ? 1 : 0, ...motion(isAnimated, ['opacity']) }}>
+      </StatusBadge>
+      <StatusBadge
+        style={{
+          opacity: isPending ? 1 : 0,
+          transition: transitionFor(isAnimated, ['opacity'], durationMs),
+        }}
+      >
         <PendingGlyph isAnimated={isAnimated && isPending} />
-      </Badge>
+      </StatusBadge>
     </styled.span>
   );
 }
@@ -239,18 +196,14 @@ function ActivityAvatar({
 interface ActivityItem {
   token: Token;
   swapFrom?: Token;
-  /** Subtitles from packages/features/src/activity/blockchain-activity-copy.ts */
   pendingTitle: string;
   title: string;
   indicator: Exclude<Indicator, 'pending'>;
-  /** Signed crypto amount on top and fiat value below, as in the token card's Activity tab */
   amount: string;
   value: string;
-  /** Receives show their amount in green, as in the app */
   isPositive?: boolean;
 }
 
-// Illustrative values at the rates the Send and token cards imply: about $75,200 / BTC, $0.403 / STX
 const activityQueue: ActivityItem[] = [
   {
     token: 'btc',
@@ -323,8 +276,7 @@ const activityQueue: ActivityItem[] = [
   },
 ];
 
-// Relative times by row, so each one ages as newer activity pushes it down.
-// A pending row reads Pending instead, as in the token card's Activity tab.
+// By row, so each item ages as newer activity pushes it down
 const activityTimes = ['Just now', '3m ago', '12m ago', '41m ago', '1h ago', '2h ago', '3h ago'];
 
 const activityHeader = 62;
@@ -359,7 +311,7 @@ function ActivityRowView({
         gap: stagePx(12),
         transform: `translateY(${stagePx(Math.max(position, 0) * activityRowHeight)}) scale(${position < 0 ? 0.97 : 1})`,
         opacity: isVisible ? 1 : 0,
-        ...motion(isAnimated, ['transform', 'opacity']),
+        transition: transitionFor(isAnimated, ['transform', 'opacity'], durationMs),
       }}
     >
       <ActivityAvatar
@@ -369,74 +321,60 @@ function ActivityRowView({
         isPending={isPending}
         isAnimated={isAnimated}
       />
-      <styled.span display="flex" flexDir="column" flex="1" minWidth="0">
-        <styled.span style={{ ...mockupType.body, fontWeight: 500 }}>
-          {isPending ? item.pendingTitle : item.title}
-        </styled.span>
-        <styled.span style={{ ...mockupType.meta, color: mockupColor.secondary }}>
-          {isPending ? 'Pending' : activityTimes[Math.max(position, 0)]}
-        </styled.span>
-      </styled.span>
-      <styled.span display="flex" flexDir="column" alignItems="flex-end">
-        <styled.span
-          style={{
-            ...mockupType.body,
-            fontWeight: 500,
-            color: amountColor,
-            ...motion(isAnimated, ['color']),
-          }}
-        >
-          {item.amount}
-        </styled.span>
-        <styled.span style={{ ...mockupType.meta, color: mockupColor.secondary }}>
-          {item.value}
-        </styled.span>
-      </styled.span>
+      <TextPair
+        primary={isPending ? item.pendingTitle : item.title}
+        secondary={isPending ? 'Pending' : activityTimes[Math.max(position, 0)]}
+      />
+      <TextPair
+        primary={item.amount}
+        secondary={item.value}
+        align="end"
+        primaryStyle={{
+          color: amountColor,
+          transition: transitionFor(isAnimated, ['color'], durationMs),
+        }}
+      />
     </styled.div>
   );
 }
 
-/**
- * "Know every move": the Activity list from the mobile app (apps/mobile/src/features/activity,
- * rows from packages/features/src/activity). New activity keeps arriving at the top with the
- * spinning pending badge, settles (Sending → Sent, Swapping → Swapped via Bitflow), and pushes
- * older rows down and out.
- */
+/** The mobile Activity list (apps/mobile/src/features/activity): new items arrive pending, then settle. */
 export function ActivityMockup() {
   const { ref, arrived, isSettled, isAnimated } = useConveyor<HTMLDivElement>(2800, 1500);
 
   return (
-    <BentoStage label="The Activity list: new sends, receives, Bitflow swaps and stacking arrive at the top as pending, then confirm">
-      <styled.div ref={ref} position="absolute" inset="0">
-        <MockupPanel>
-          <styled.div
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            style={{ height: stagePx(activityHeader), ...mockupType.title }}
-          >
-            Activity
-          </styled.div>
-          <styled.div
-            position="absolute"
-            left="0"
-            right="0"
-            bottom="0"
-            overflow="hidden"
-            style={{ top: stagePx(activityHeader), ...fadeBottom(20) }}
-          >
-            {conveyorSlots(arrived, activityVisibleRows).map(({ arrival, position }) => (
-              <ActivityRowView
-                key={arrival}
-                item={fromQueue(activityQueue, arrival)}
-                position={position}
-                isPending={position < 0 || (position === 0 && !isSettled)}
-                isAnimated={isAnimated}
-              />
-            ))}
-          </styled.div>
-        </MockupPanel>
-      </styled.div>
+    <BentoStage
+      ref={ref}
+      label="The Activity list: new sends, receives, Bitflow swaps and stacking arrive at the top as pending, then confirm"
+    >
+      <MockupPanel>
+        <styled.div
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          style={{ height: stagePx(activityHeader), ...mockupType.title }}
+        >
+          Activity
+        </styled.div>
+        <styled.div
+          position="absolute"
+          left="0"
+          right="0"
+          bottom="0"
+          overflow="hidden"
+          style={{ top: stagePx(activityHeader), ...fadeBottom(20) }}
+        >
+          {conveyorSlots(arrived, activityVisibleRows).map(({ arrival, position }) => (
+            <ActivityRowView
+              key={arrival}
+              item={fromQueue(activityQueue, arrival)}
+              position={position}
+              isPending={position < 0 || (position === 0 && !isSettled)}
+              isAnimated={isAnimated}
+            />
+          ))}
+        </styled.div>
+      </MockupPanel>
     </BentoStage>
   );
 }
@@ -448,8 +386,7 @@ interface BtcNotification {
   usd: string;
 }
 
-// Copy format from the extension's Bitcoin transaction monitor (sendNotification):
-// title `You ${sent|received} Bitcoin!`, message `Account N ${sent|received} X BTC ($Y.YY)`
+// Copy as the extension's Bitcoin transaction monitor sends it
 const notificationQueue: BtcNotification[] = [
   { isSender: false, account: 1, btc: '0.0042', usd: '315.83' },
   { isSender: true, account: 2, btc: '0.0008', usd: '60.16' },
@@ -496,17 +433,15 @@ function NotificationCard({
         border: `1px solid ${mockupColor.border}`,
         borderRadius: stagePx(notificationRadius),
         boxShadow: `0 ${stagePx(4)} ${stagePx(14)} rgba(18, 16, 15, 0.05)`,
-        // Newer alerts sit above older ones while they slide past
         zIndex: notificationVisible + 1 - position,
         transform:
           position < 0
             ? `translateY(${stagePx(-24)}) scale(0.96)`
             : `translateY(${stagePx(offset)})`,
         opacity: isVisible ? 1 : 0,
-        ...motion(isAnimated, ['transform', 'opacity']),
+        transition: transitionFor(isAnimated, ['transform', 'opacity'], durationMs),
       }}
     >
-      {/* The extension passes its own icon (leather-icon-128.png) as the notification icon */}
       <styled.span
         position="relative"
         flexShrink="0"
@@ -518,17 +453,14 @@ function NotificationCard({
           display="block"
           style={{ width: '100%', height: '100%', borderRadius: stagePx(7) }}
         />
-        {/* Bitcoin-orange status badge, punched out of the app icon like the activity badges */}
-        <Badge style={{ right: stagePx(-3), bottom: stagePx(-3) }}>
+        <StatusBadge style={{ right: stagePx(-3), bottom: stagePx(-3) }}>
           <Glyph indicator={notification.isSender ? 'sent' : 'received'} fill={bitcoinOrange} />
-        </Badge>
+        </StatusBadge>
       </styled.span>
       <styled.span display="flex" flexDir="column" flex="1" minWidth="0">
         <styled.span display="flex" justifyContent="space-between" style={{ gap: stagePx(8) }}>
-          <styled.span style={{ ...mockupType.body, fontWeight: 500 }}>
-            You {verb} Bitcoin!
-          </styled.span>
-          <styled.span style={{ ...mockupType.meta, color: mockupColor.secondary }}>
+          <styled.span style={primaryText}>You {verb} Bitcoin!</styled.span>
+          <styled.span style={secondaryText}>
             {notificationTimes[Math.max(position, 0)]}
           </styled.span>
         </styled.span>
@@ -540,40 +472,37 @@ function NotificationCard({
   );
 }
 
-/**
- * "Get BTC notifications": the browser notifications the extension raises when a monitored
- * Bitcoin address confirms a transaction (apps/extension/src/background/monitors/address-monitors/
- * bitcoin-transaction-monitor.ts). Sends and receives across accounts keep sliding in on top.
- */
+/** The extension's browser notifications for confirmed Bitcoin transactions (bitcoin-transaction-monitor.ts). */
 export function BtcNotificationsMockup() {
   const { ref, arrived, isAnimated } = useConveyor<HTMLDivElement>(2400);
 
   return (
-    <BentoStage label="Browser notifications from Leather, such as You received Bitcoin!, Account 1 received 0.0042 BTC, keep arriving above earlier alerts">
-      <styled.div ref={ref} position="absolute" inset="0">
-        {/* Same footprint as the shared panel; the notifications are the containers */}
-        <styled.div
-          position="absolute"
-          left="50%"
-          style={{
-            top: stagePx(mockupSize.panelTop),
-            width: stagePx(mockupSize.panelWidth),
-            height: stagePx(mockupSize.panelHeight),
-            transform: 'translateX(-50%)',
-            color: mockupColor.text,
-            fontFeatureSettings: '"tnum"',
-            ...fadeBottom(56),
-          }}
-        >
-          {conveyorSlots(arrived, notificationVisible).map(({ arrival, position }) => (
-            <NotificationCard
-              key={arrival}
-              notification={fromQueue(notificationQueue, arrival)}
-              position={position}
-              isAnimated={isAnimated}
-            />
-          ))}
-        </styled.div>
+    <BentoStage
+      ref={ref}
+      label="Browser notifications from Leather, such as You received Bitcoin!, Account 1 received 0.0042 BTC, keep arriving above earlier alerts"
+    >
+      {/* The shared panel's footprint, without the panel */}
+      <styled.div
+        position="absolute"
+        left="50%"
+        style={{
+          top: stagePx(mockupSize.panelTop),
+          width: stagePx(mockupSize.panelWidth),
+          height: stagePx(mockupSize.panelHeight),
+          transform: 'translateX(-50%)',
+          color: mockupColor.text,
+          fontFeatureSettings: '"tnum"',
+          ...fadeBottom(56),
+        }}
+      >
+        {conveyorSlots(arrived, notificationVisible).map(({ arrival, position }) => (
+          <NotificationCard
+            key={arrival}
+            notification={fromQueue(notificationQueue, arrival)}
+            position={position}
+            isAnimated={isAnimated}
+          />
+        ))}
       </styled.div>
     </BentoStage>
   );

@@ -5,7 +5,7 @@ import type { StacksNetworkName } from '@stacks/network';
 // here as each area gains testnet support.
 const nonMainnetRoutePrefixes = ['/multisig'];
 
-// Marketing and content pages (formerly the Framer site) don't depend on the network.
+// Marketing and content pages don't depend on the network.
 const networkAgnosticPaths = ['/'];
 const networkAgnosticRoutePrefixes = [
   '/apps',

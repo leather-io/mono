@@ -91,7 +91,7 @@ export function Nav() {
 
   return (
     <>
-      {/* Mobile: the logo sits above the page header, as on the Framer site */}
+      {/* Mobile: the logo sits above the page header */}
       <styled.div display={['block', 'block', 'none']} px="space.04" pt="space.04">
         <LeatherLogoHomeLink py="space.02" />
       </styled.div>

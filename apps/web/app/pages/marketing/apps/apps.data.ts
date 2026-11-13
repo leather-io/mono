@@ -3,10 +3,6 @@
 
 const assetBase = '/marketing/apps';
 
-// ---------------------------------------------------------------------------------------------
-// Core tokens
-// ---------------------------------------------------------------------------------------------
-
 interface CoreTokenBase {
   symbol: string;
   name?: string;
@@ -60,10 +56,6 @@ export const coreTokens: CoreToken[] = [
   },
 ];
 
-// ---------------------------------------------------------------------------------------------
-// Earning on Stacks
-// ---------------------------------------------------------------------------------------------
-
 interface StakingProvider {
   name: string;
   logo: string;
@@ -116,10 +108,6 @@ export const stakingOptions: StakingOption[] = [
     providers: [{ name: 'Stacking DAO', logo: stackingDaoLogo, rewardDetails: 'stSTX' }],
   },
 ];
-
-// ---------------------------------------------------------------------------------------------
-// Projects (and the featured subset shown in the carousel)
-// ---------------------------------------------------------------------------------------------
 
 export interface Project {
   name: string;

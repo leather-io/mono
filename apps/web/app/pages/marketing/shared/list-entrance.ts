@@ -2,9 +2,8 @@ import { type CSSProperties, useEffect, useState } from 'react';
 
 import { css } from 'leather-styles/css';
 
-// Fade-up for the rows of the /news and /posts lists on first render, like the Framer site's
-// list appear effect. Pure CSS (runs before hydration, ends fully visible, so no-JS and SSR are
-// unaffected). Reduced motion: no animation.
+// Fade-up for the rows of the /news and /posts lists on first render. Pure CSS, so no-JS and SSR
+// are unaffected. Reduced motion: no animation.
 export const listRowEntranceStyles = css({
   _motionSafe: { animation: 'marketingRiseIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both' },
 });

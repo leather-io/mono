@@ -1,7 +1,6 @@
 import { type ReactNode } from 'react';
 
 import { Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
-import { MarketingTag } from '~/pages/marketing/shared/marketing-tag';
 
 import { CheckmarkCircleIcon } from '@leather.io/ui';
 
@@ -44,37 +43,14 @@ export function CheckItem({ children }: { children: ReactNode }) {
   );
 }
 
-type FeatureCardProps = {
+interface FeatureCardProps {
   title: string;
   description: ReactNode;
-  tag?: string;
-} & (
-  | {
-      image: string;
-      imageAlt: string;
-      /** Visual aspect ratio (width / height). */
-      imageAspect: string;
-      visual?: never;
-    }
-  | {
-      /** Replaces the image, e.g. with an animation that keeps the image as its poster. */
-      visual: ReactNode;
-      image?: never;
-      imageAlt?: never;
-      imageAspect?: never;
-    }
-);
+  visual: ReactNode;
+}
 
-/** Grey card with a product visual on top and title (+ platform chip) and copy below. */
-export function FeatureCard({
-  title,
-  description,
-  tag,
-  image,
-  imageAlt,
-  imageAspect,
-  visual,
-}: FeatureCardProps) {
+/** Grey card with a product visual on top and title and copy below. */
+export function FeatureCard({ title, description, visual }: FeatureCardProps) {
   return (
     <styled.article
       display="flex"
@@ -83,29 +59,15 @@ export function FeatureCard({
       borderRadius="sm"
       overflow="hidden"
     >
-      {visual ?? (
-        <styled.img
-          src={image}
-          alt={imageAlt}
-          width="100%"
-          height="auto"
-          style={{ aspectRatio: imageAspect }}
-          objectFit="cover"
-          loading="lazy"
-          decoding="async"
-        />
-      )}
+      {visual}
       <styled.div
         px={['space.05', null, 'space.06']}
         pt="space.05"
         pb={['space.05', null, 'space.06']}
       >
-        <Flex alignItems="center" gap="space.02" flexWrap="wrap">
-          <styled.h3 textStyle="heading.05" fontWeight="400">
-            {title}
-          </styled.h3>
-          {tag && <MarketingTag>{tag}</MarketingTag>}
-        </Flex>
+        <styled.h3 textStyle="heading.05" fontWeight="400">
+          {title}
+        </styled.h3>
         <styled.p textStyle="body.02" lineHeight="24px" color="ink.text-secondary" mt="space.02">
           {description}
         </styled.p>

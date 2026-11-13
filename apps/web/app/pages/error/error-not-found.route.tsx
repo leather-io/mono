@@ -4,7 +4,7 @@ import { defaultMarketingDescription } from '~/pages/marketing/shared/marketing-
 
 import { NotFound } from './not-found';
 
-// Unknown URLs render the not-found page with a real 404 status (as the Framer site's /404 did)
+// Unknown URLs render the not-found page with a real 404 status
 export function loader() {
   return data(null, { status: 404 });
 }

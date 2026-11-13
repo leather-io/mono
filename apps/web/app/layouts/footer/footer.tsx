@@ -2,7 +2,7 @@ import { HELP_CENTER_URL } from '~/constants/environment';
 
 import { FooterLayout as Footer } from './footer.layout';
 
-// The single site footer (app + marketing pages), merged from the retired Framer site's footer.
+// The site footer, shared by the app and marketing pages.
 function AppFooter() {
   return (
     <Footer>
@@ -48,7 +48,7 @@ function AppFooter() {
         mt="space.08"
         product="A Trust Machines product"
         // No year: Cloudflare Workers renders new Date() as epoch start time, and a hard-coded
-        // year goes stale. Matches the Framer site's footer.
+        // year goes stale.
         copyright="© Leather Wallet LLC"
       />
     </Footer>

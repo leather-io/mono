@@ -11,18 +11,14 @@ const storeDetails: Record<InstallPlatform, { label: string; icon: string; store
   android: { label: 'Android', icon: '/marketing/shared/google-play.png', store: 'Google Play' },
 };
 
-type StoreButtonTone = 'light' | 'dark';
-
 interface StoreButtonProps extends HTMLStyledProps<'a'> {
   platform: InstallPlatform;
-  tone?: StoreButtonTone;
   section: MarketingSection;
 }
 
 /** One outlined store pill (icon + platform name) linking to the platform's store listing. */
-function StoreButton({ platform, tone = 'light', section, ...props }: StoreButtonProps) {
+function StoreButton({ platform, section, ...props }: StoreButtonProps) {
   const { label, icon, store } = storeDetails[platform];
-  const isDark = tone === 'dark';
   return (
     <styled.a
       href={installLinks[platform]}
@@ -44,16 +40,14 @@ function StoreButton({ platform, tone = 'light', section, ...props }: StoreButto
       pr="space.04"
       borderRadius="round"
       border="1px solid"
-      borderColor={isDark ? 'rgba(255, 255, 255, 0.24)' : 'ink.border-default'}
-      bg={isDark ? 'transparent' : 'ink.background-primary'}
-      color={isDark ? 'white' : 'ink.text-primary'}
+      borderColor="ink.border-default"
+      bg="ink.background-primary"
+      color="ink.text-primary"
       textStyle="label.03"
       fontSize="14px"
       whiteSpace="nowrap"
       transition="background 120ms ease"
-      _hover={{
-        bg: isDark ? 'rgba(255, 255, 255, 0.08)' : 'ink.component-background-hover',
-      }}
+      _hover={{ bg: 'ink.component-background-hover' }}
       _focusVisible={{ outline: '2px solid', outlineColor: 'blue.border', outlineOffset: '2px' }}
       {...props}
     >
@@ -66,8 +60,6 @@ function StoreButton({ platform, tone = 'light', section, ...props }: StoreButto
 interface StoreButtonsProps {
   /** Which stores to show, in order. Defaults to Chrome, iOS, Android. */
   platforms?: InstallPlatform[];
-  /** `dark` for use on dark/black backgrounds. */
-  tone?: StoreButtonTone;
   /** Optional layout props for the wrapping row (margins, justify, etc). */
   containerProps?: FlexProps;
   /** Where the row sits, reported with each click. */
@@ -77,14 +69,13 @@ interface StoreButtonsProps {
 /** Row of store pills: Chrome Web Store, App Store and Google Play. Each opens in a new tab. */
 export function StoreButtons({
   platforms = defaultPlatforms,
-  tone = 'light',
   containerProps,
   section,
 }: StoreButtonsProps) {
   return (
     <Flex gap="space.02" flexWrap="wrap" {...containerProps}>
       {platforms.map(platform => (
-        <StoreButton key={platform} platform={platform} tone={tone} section={section} />
+        <StoreButton key={platform} platform={platform} section={section} />
       ))}
     </Flex>
   );

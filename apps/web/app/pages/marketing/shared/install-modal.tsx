@@ -30,8 +30,8 @@ const overlayStyles = css({
   '&[data-state=closed]': { animation: 'fadeout 0.2s ease-in both' },
 });
 
-// Desktop: a centred dialog that springs in (opacity, scale 0.7 → 1 and a small offset, as on
-// the Framer site). Mobile: a bottom sheet that slides up. Reduced motion: a short fade only.
+// Desktop: a centred dialog that springs in. Mobile: a bottom sheet that slides up. Reduced
+// motion: a short fade only.
 const contentStyles = css({
   position: 'fixed',
   zIndex: 999,

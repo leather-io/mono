@@ -1,58 +1,30 @@
-import { type CSSProperties, type ReactNode } from 'react';
+import { type CSSProperties } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 
 import {
   BentoStage,
   MockupPanel,
+  StatusBadge,
+  StrokeIcon,
+  TextPair,
+  insetX,
   mockupColor,
   mockupSize,
   mockupType,
+  primaryText,
+  secondaryText,
   stagePx,
+  tokenIconSrc,
+  transitionFor,
   useLoopingSequence,
 } from './bento-mockup';
 
-// Product inks the shared frame doesn't carry (light theme)
 const productColor = {
-  action: '#12100F',
-  actionPressed: '#3A3633',
   disabled: '#F5F3F1',
-  hover: '#F5F3F1',
   pill: '#F0EEEC',
   usdc: '#2775CA',
 } as const;
-
-const ease = 'cubic-bezier(0.25, 1, 0.5, 1)';
-const durationMs = 400;
-
-function transitionFor(isAnimated: boolean, properties: string[], ms = durationMs) {
-  if (!isAnimated) return undefined;
-  return properties.map(property => `${property} ${ms}ms ${ease}`).join(', ');
-}
-
-const insetX: CSSProperties = {
-  paddingLeft: stagePx(mockupSize.inset),
-  paddingRight: stagePx(mockupSize.inset),
-};
-
-const strong: CSSProperties = { ...mockupType.body, fontWeight: 500 };
-const secondary: CSSProperties = { ...mockupType.meta, color: mockupColor.secondary };
-
-function StrokeIcon({ size, children }: { size: number; children: ReactNode }) {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      style={{ width: stagePx(size), height: stagePx(size), flexShrink: 0, display: 'block' }}
-    >
-      {children}
-    </svg>
-  );
-}
 
 function BackChevron() {
   return (
@@ -62,12 +34,7 @@ function BackChevron() {
   );
 }
 
-const tokenIcon = {
-  btc: '/icons/bitcoin.svg',
-  stx: '/icons/stacks.svg',
-  sbtc: '/icons/sbtc.svg',
-  ststx: '/icons/ststx.svg',
-} as const;
+const tokenIcon = { ...tokenIconSrc, ststx: '/icons/ststx.svg' } as const;
 
 type Token = keyof typeof tokenIcon | 'usdcx';
 
@@ -93,42 +60,6 @@ function TokenIcon({ token, size = mockupSize.icon }: { token: Token; size?: num
     <styled.img src={tokenIcon[token]} alt="" borderRadius="50%" display="block" style={box} />
   );
 }
-
-/** Two tightly stacked lines; the pair centres on the icon beside it. */
-function StackedLabel({
-  primary,
-  secondaryText,
-  align = 'start',
-  primaryColor,
-}: {
-  primary: ReactNode;
-  secondaryText: ReactNode;
-  align?: 'start' | 'end';
-  primaryColor?: string;
-}) {
-  return (
-    <styled.span
-      display="flex"
-      flexDir="column"
-      justifyContent="center"
-      minWidth="0"
-      style={{ alignItems: align === 'end' ? 'flex-end' : 'flex-start' }}
-    >
-      <styled.span whiteSpace="nowrap" style={{ ...strong, color: primaryColor }}>
-        {primary}
-      </styled.span>
-      <styled.span whiteSpace="nowrap" style={secondary}>
-        {secondaryText}
-      </styled.span>
-    </styled.span>
-  );
-}
-
-// Illustrative prices, matching the other bentos: about $75,200 / BTC and $0.43 / STX
-
-/* -------------------------------------------------------------------------------------------- */
-/* Send and receive                                                                              */
-/* -------------------------------------------------------------------------------------------- */
 
 const sendHeader = 64;
 const sendBoxRadius = 8;
@@ -156,11 +87,7 @@ const sendSteps = [
   { amount: '50', fiat: '$21.50' },
 ] as const;
 
-/**
- * "Send and receive": the Send form from the mobile app (apps/mobile/src/features/send), as in
- * the Lottie it replaces. 50 STX is typed in, the recipient fills, and Review turns dark and
- * holds, with a press, before the loop starts over. Reduced motion shows the ready form.
- */
+/** The mobile Send form (apps/mobile/src/features/send): an amount and recipient fill in, then Review. */
 export function SendMockup() {
   // 0: empty · 1: "5" · 2: "50" · 3: recipient, Review enabled · 4: pressed · 5: released
   const { ref, step, isAnimated } = useLoopingSequence<HTMLDivElement>(
@@ -172,176 +99,166 @@ export function SendMockup() {
   const hasRecipient = step >= 3;
   const isPressed = step === 4;
   let reviewBackground: string = productColor.disabled;
-  if (hasRecipient) reviewBackground = isPressed ? productColor.actionPressed : productColor.action;
+  if (hasRecipient) reviewBackground = isPressed ? mockupColor.actionPressed : mockupColor.text;
 
   return (
-    <BentoStage label="The Send screen: 50 STX from a Stacks account to a recipient, ready to review">
-      <styled.div ref={ref} position="absolute" inset="0">
-        <MockupPanel>
-          {/* Header: back and title */}
+    <BentoStage
+      ref={ref}
+      label="The Send screen: 50 STX from a Stacks account to a recipient, ready to review"
+    >
+      <MockupPanel>
+        <styled.div
+          position="relative"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          style={{ height: stagePx(sendHeader), ...mockupType.title }}
+        >
+          <styled.span position="absolute" style={{ left: stagePx(mockupSize.inset) }}>
+            <BackChevron />
+          </styled.span>
+          Send
+        </styled.div>
+
+        <styled.div display="flex" flexDir="column" style={insetX}>
+          <styled.div
+            style={{
+              border: `1px solid ${mockupColor.border}`,
+              borderRadius: stagePx(sendBoxRadius),
+            }}
+          >
+            <styled.div
+              display="flex"
+              alignItems="center"
+              style={{
+                height: stagePx(56),
+                gap: stagePx(12),
+                paddingInline: stagePx(12),
+                borderBottom: `1px solid ${mockupColor.border}`,
+              }}
+            >
+              <styled.span position="relative" flexShrink="0">
+                <TokenIcon token="stx" />
+              </styled.span>
+              <TextPair primary="Stacks" secondary="Stacks Blockchain" />
+              <TextPair primary="725 STX" secondary="$311.75" align="end" />
+            </styled.div>
+            <styled.div
+              display="flex"
+              justifyContent="space-between"
+              style={{ height: stagePx(80), padding: `${stagePx(12)} ${stagePx(12)}` }}
+            >
+              <styled.span display="flex" flexDir="column" style={{ gap: stagePx(4) }}>
+                <styled.span
+                  style={{
+                    ...mockupType.headline,
+                    color: hasAmount ? mockupColor.text : mockupColor.secondary,
+                    transition: transitionFor(isAnimated, ['color'], 200),
+                  }}
+                >
+                  {entry.amount}
+                </styled.span>
+                <styled.span
+                  display="flex"
+                  alignItems="center"
+                  style={{ ...secondaryText, gap: stagePx(4) }}
+                >
+                  {entry.fiat}
+                  <StrokeIcon size={11}>
+                    <path d="M5 13V3M2.5 5.5 5 3l2.5 2.5M11 3v10M8.5 10.5 11 13l2.5-2.5" />
+                  </StrokeIcon>
+                </styled.span>
+              </styled.span>
+              <styled.span style={primaryText}>MAX</styled.span>
+            </styled.div>
+          </styled.div>
+
+          <styled.div display="flex" justifyContent="center" style={{ height: stagePx(10) }}>
+            <styled.span
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              position="relative"
+              zIndex="1"
+              style={{
+                width: stagePx(22),
+                height: stagePx(22),
+                marginTop: stagePx(-6),
+                background: mockupColor.panel,
+                border: `1px solid ${mockupColor.border}`,
+                borderRadius: stagePx(4),
+                color: mockupColor.secondary,
+              }}
+            >
+              <StrokeIcon size={11}>
+                <path d="M8 3v10M4 9l4 4 4-4" />
+              </StrokeIcon>
+            </styled.span>
+          </styled.div>
+
           <styled.div
             position="relative"
             display="flex"
             alignItems="center"
-            justifyContent="center"
-            style={{ height: stagePx(sendHeader), ...mockupType.title }}
+            justifyContent="space-between"
+            style={{
+              height: stagePx(48),
+              paddingInline: stagePx(12),
+              border: `1px solid ${mockupColor.border}`,
+              borderRadius: stagePx(sendBoxRadius),
+            }}
           >
-            <styled.span position="absolute" style={{ left: stagePx(mockupSize.inset) }}>
-              <BackChevron />
-            </styled.span>
-            Send
-          </styled.div>
-
-          <styled.div display="flex" flexDir="column" style={insetX}>
-            {/* Asset and amount */}
-            <styled.div
-              style={{
-                border: `1px solid ${mockupColor.border}`,
-                borderRadius: stagePx(sendBoxRadius),
-              }}
-            >
-              <styled.div
-                display="flex"
-                alignItems="center"
-                style={{
-                  height: stagePx(56),
-                  gap: stagePx(12),
-                  paddingInline: stagePx(12),
-                  borderBottom: `1px solid ${mockupColor.border}`,
-                }}
-              >
-                <styled.span position="relative" flexShrink="0">
-                  <TokenIcon token="stx" />
-                </styled.span>
-                <styled.span flex="1" minWidth="0">
-                  <StackedLabel primary="Stacks" secondaryText="Stacks Blockchain" />
-                </styled.span>
-                <StackedLabel primary="725 STX" secondaryText="$311.75" align="end" />
-              </styled.div>
-              <styled.div
-                display="flex"
-                justifyContent="space-between"
-                style={{ height: stagePx(80), padding: `${stagePx(12)} ${stagePx(12)}` }}
-              >
-                <styled.span display="flex" flexDir="column" style={{ gap: stagePx(4) }}>
-                  <styled.span
-                    style={{
-                      ...mockupType.headline,
-                      color: hasAmount ? mockupColor.text : mockupColor.secondary,
-                      transition: transitionFor(isAnimated, ['color'], 200),
-                    }}
-                  >
-                    {entry.amount}
-                  </styled.span>
-                  <styled.span
-                    display="flex"
-                    alignItems="center"
-                    style={{ ...secondary, gap: stagePx(4) }}
-                  >
-                    {entry.fiat}
-                    <StrokeIcon size={11}>
-                      <path d="M5 13V3M2.5 5.5 5 3l2.5 2.5M11 3v10M8.5 10.5 11 13l2.5-2.5" />
-                    </StrokeIcon>
-                  </styled.span>
-                </styled.span>
-                <styled.span style={strong}>MAX</styled.span>
-              </styled.div>
-            </styled.div>
-
-            {/* Swap-direction chip between the two boxes */}
-            <styled.div display="flex" justifyContent="center" style={{ height: stagePx(10) }}>
+            <styled.span display="grid" style={{ ...primaryText, gridTemplateAreas: '"field"' }}>
               <styled.span
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                position="relative"
-                zIndex="1"
                 style={{
-                  width: stagePx(22),
-                  height: stagePx(22),
-                  marginTop: stagePx(-6),
-                  background: mockupColor.panel,
-                  border: `1px solid ${mockupColor.border}`,
-                  borderRadius: stagePx(4),
+                  gridArea: 'field',
                   color: mockupColor.secondary,
+                  opacity: hasRecipient ? 0 : 1,
+                  transition: transitionFor(isAnimated, ['opacity'], 200),
                 }}
               >
-                <StrokeIcon size={11}>
-                  <path d="M8 3v10M4 9l4 4 4-4" />
-                </StrokeIcon>
+                Enter recipient
               </styled.span>
-            </styled.div>
-
-            {/* Recipient */}
-            <styled.div
-              position="relative"
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              style={{
-                height: stagePx(48),
-                paddingInline: stagePx(12),
-                border: `1px solid ${mockupColor.border}`,
-                borderRadius: stagePx(sendBoxRadius),
-              }}
-            >
-              <styled.span display="grid" style={{ ...strong, gridTemplateAreas: '"field"' }}>
-                <styled.span
-                  style={{
-                    gridArea: 'field',
-                    color: mockupColor.secondary,
-                    opacity: hasRecipient ? 0 : 1,
-                    transition: transitionFor(isAnimated, ['opacity'], 200),
-                  }}
-                >
-                  Enter recipient
-                </styled.span>
-                <styled.span
-                  style={{
-                    gridArea: 'field',
-                    opacity: hasRecipient ? 1 : 0,
-                    transform: hasRecipient ? 'none' : `translateY(${stagePx(4)})`,
-                    transition: transitionFor(isAnimated, ['opacity', 'transform']),
-                  }}
-                >
-                  SP2J6…S9EJ7
-                </styled.span>
+              <styled.span
+                style={{
+                  gridArea: 'field',
+                  opacity: hasRecipient ? 1 : 0,
+                  transform: hasRecipient ? 'none' : `translateY(${stagePx(4)})`,
+                  transition: transitionFor(isAnimated, ['opacity', 'transform']),
+                }}
+              >
+                SP2J6…S9EJ7
               </styled.span>
-              <QrIcon />
-            </styled.div>
-
-            {/* Review: disabled until amount and recipient are in, then holds dark */}
-            <styled.div
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              borderRadius="round"
-              style={{
-                height: stagePx(36),
-                marginTop: stagePx(18),
-                ...strong,
-                background: reviewBackground,
-                color: hasRecipient ? '#FFFFFF' : mockupColor.secondary,
-                transform: isPressed ? 'scale(0.97)' : 'none',
-                transition: transitionFor(
-                  isAnimated,
-                  ['background-color', 'color', 'transform'],
-                  300
-                ),
-              }}
-            >
-              Review
-            </styled.div>
+            </styled.span>
+            <QrIcon />
           </styled.div>
-        </MockupPanel>
-      </styled.div>
+
+          <styled.div
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            borderRadius="round"
+            style={{
+              height: stagePx(36),
+              marginTop: stagePx(18),
+              ...primaryText,
+              background: reviewBackground,
+              color: hasRecipient ? '#FFFFFF' : mockupColor.secondary,
+              transform: isPressed ? 'scale(0.97)' : 'none',
+              transition: transitionFor(
+                isAnimated,
+                ['background-color', 'color', 'transform'],
+                300
+              ),
+            }}
+          >
+            Review
+          </styled.div>
+        </styled.div>
+      </MockupPanel>
     </BentoStage>
   );
 }
-
-/* -------------------------------------------------------------------------------------------- */
-/* Your tokens, at a glance                                                                      */
-/* -------------------------------------------------------------------------------------------- */
 
 interface TokenRow {
   token: Token;
@@ -351,7 +268,6 @@ interface TokenRow {
   amount: string;
 }
 
-// Mobile TokenBalance cell: name over ticker on the left, fiat over amount on the right
 const tokenRows: TokenRow[] = [
   { token: 'btc', name: 'Bitcoin', ticker: 'BTC', fiat: '$1,879.93', amount: '0.025' },
   { token: 'stx', name: 'Stacks', ticker: 'STX', fiat: '$311.75', amount: '725' },
@@ -372,7 +288,7 @@ function TokenListView({ isPressed, isAnimated }: { isPressed: boolean; isAnimat
         justifyContent="center"
         style={{ height: stagePx(listHeader), ...insetX, gap: stagePx(2) }}
       >
-        <styled.span style={secondary}>Account 1</styled.span>
+        <styled.span style={secondaryText}>Account 1</styled.span>
         <styled.span style={mockupType.headline}>$2,565.04</styled.span>
       </styled.div>
       {tokenRows.map((row, index) => (
@@ -385,15 +301,13 @@ function TokenListView({ isPressed, isAnimated }: { isPressed: boolean; isAnimat
             ...insetX,
             gap: stagePx(12),
             // The Bitcoin row takes the tap
-            background: index === 0 && isPressed ? productColor.hover : 'transparent',
+            background: index === 0 && isPressed ? mockupColor.hover : 'transparent',
             transition: transitionFor(isAnimated, ['background-color'], 200),
           }}
         >
           <TokenIcon token={row.token} />
-          <styled.span flex="1" minWidth="0">
-            <StackedLabel primary={row.name} secondaryText={row.ticker} />
-          </styled.span>
-          <StackedLabel primary={row.fiat} secondaryText={row.amount} align="end" />
+          <TextPair primary={row.name} secondary={row.ticker} />
+          <TextPair primary={row.fiat} secondary={row.amount} align="end" />
         </styled.div>
       ))}
     </>
@@ -402,7 +316,7 @@ function TokenListView({ isPressed, isAnimated }: { isPressed: boolean; isAnimat
 
 type Indicator = 'pending' | 'sent' | 'received';
 
-// Status badges, redrawn from packages/ui/src/assets/icons/activity/*.svg, as in Know every move
+// Redrawn from packages/ui/src/assets/icons/activity/*.svg
 function IndicatorGlyph({ indicator }: { indicator: Indicator }) {
   if (indicator === 'pending') {
     return (
@@ -448,7 +362,6 @@ interface BtcActivity {
   isPositive?: boolean;
 }
 
-// Titles from packages/features/src/activity/blockchain-activity-copy.ts (Sending / Received / Sent)
 const btcActivity: BtcActivity[] = [
   {
     id: 'sending',
@@ -491,34 +404,22 @@ function ActivityRow({ row }: { row: BtcActivity }) {
         style={{ width: stagePx(size), height: stagePx(size) }}
       >
         <TokenIcon token="btc" />
-        <styled.span
-          position="absolute"
-          borderRadius="50%"
-          style={{
-            right: stagePx(-2),
-            bottom: stagePx(-2),
-            width: stagePx(12),
-            height: stagePx(12),
-            boxShadow: `0 0 0 ${stagePx(1.5)} ${mockupColor.panel}`,
-          }}
-        >
+        <StatusBadge>
           <IndicatorGlyph indicator={row.indicator} />
-        </styled.span>
+        </StatusBadge>
       </styled.span>
-      <styled.span flex="1" minWidth="0">
-        <StackedLabel primary={row.title} secondaryText={row.caption} />
-      </styled.span>
-      <StackedLabel
+      <TextPair primary={row.title} secondary={row.caption} />
+      <TextPair
         primary={row.quote}
-        secondaryText={row.crypto}
+        secondary={row.crypto}
         align="end"
-        primaryColor={row.isPositive ? mockupColor.positive : undefined}
+        primaryStyle={{ color: row.isPositive ? mockupColor.positive : undefined }}
       />
     </styled.div>
   );
 }
 
-// A day of BTC price, sampled; normalised 0–1 (higher is up)
+// A day of BTC price, normalised 0–1
 const priceTrace = [
   0.52, 0.58, 0.55, 0.66, 0.6, 0.7, 0.68, 0.78, 0.72, 0.64, 0.66, 0.58, 0.6, 0.5, 0.42, 0.44, 0.34,
   0.38, 0.26, 0.3, 0.2, 0.22, 0.32, 0.38, 0.34, 0.3, 0.36, 0.3, 0.32, 0.42, 0.38, 0.48, 0.52, 0.46,
@@ -555,7 +456,7 @@ function PriceChart() {
 function InfoTab() {
   return (
     <styled.div display="flex" flexDir="column" style={{ ...insetX, paddingTop: stagePx(12) }}>
-      <styled.span style={strong}>$75,197.01</styled.span>
+      <styled.span style={primaryText}>$75,197.01</styled.span>
       <styled.span style={{ ...mockupType.meta, color: mockupColor.positive }}>
         + $397.12 (+ 0.53%)
       </styled.span>
@@ -565,7 +466,7 @@ function InfoTab() {
       <styled.div
         display="flex"
         justifyContent="space-between"
-        style={{ marginTop: stagePx(12), ...secondary }}
+        style={{ marginTop: stagePx(12), ...secondaryText }}
       >
         {['1D', '1W', '1M', '3M', '6M', '1Y'].map((period, index) => (
           <styled.span
@@ -587,8 +488,6 @@ function InfoTab() {
   );
 }
 
-// Token detail layout, in stage pixels: no title; coin and amounts sit high, and the actions
-// sit midway between the amounts and the tabs
 const detail = {
   backTop: 16,
   coinTop: 22,
@@ -636,7 +535,7 @@ function TokenDetailView({
         style={{ top: stagePx(detail.amountsTop), gap: stagePx(1) }}
       >
         <styled.span style={mockupType.headline}>0.025 BTC</styled.span>
-        <styled.span style={secondary}>$1,879.93</styled.span>
+        <styled.span style={secondaryText}>$1,879.93</styled.span>
       </styled.div>
       <styled.div
         position="absolute"
@@ -657,7 +556,7 @@ function TokenDetailView({
               width: stagePx(84),
               height: stagePx(detail.actionHeight),
               background: productColor.pill,
-              ...strong,
+              ...primaryText,
             }}
           >
             {label}
@@ -665,7 +564,6 @@ function TokenDetailView({
         ))}
       </styled.div>
 
-      {/* Tabs with a full-cell underline */}
       <styled.div
         position="absolute"
         left="0"
@@ -685,7 +583,7 @@ function TokenDetailView({
             alignItems="center"
             justifyContent="center"
             style={{
-              ...strong,
+              ...primaryText,
               color: tab === activeTab ? mockupColor.text : mockupColor.secondary,
               transition: transitionFor(isAnimated, ['color'], 250),
             }}
@@ -706,7 +604,6 @@ function TokenDetailView({
         />
       </styled.div>
 
-      {/* Tab content cross-fades */}
       <styled.div
         position="absolute"
         left="0"
@@ -738,12 +635,7 @@ function TokenDetailView({
   );
 }
 
-/**
- * "Your tokens, at a glance": token balances from the mobile app (TokenBalance cells in
- * apps/mobile/src/features/balances), then Bitcoin's detail with its price (Info) and its
- * activity. Tapping Bitcoin slides the detail in; the loop slides back to the list. Reduced
- * motion shows Bitcoin's activity.
- */
+/** Mobile token balances (apps/mobile/src/features/balances); Bitcoin opens to its price and activity. */
 export function TokensMockup() {
   // 0: list · 1: Bitcoin pressed · 2: detail, Info · 3: detail, Activity
   const { ref, step, isAnimated } = useLoopingSequence<HTMLDivElement>([1500, 240, 2400], 2800);
@@ -751,33 +643,34 @@ export function TokensMockup() {
   const slide = transitionFor(isAnimated, ['transform', 'opacity'], 450);
 
   return (
-    <BentoStage label="Token balances for Bitcoin, Stacks, sBTC, USDCx and stSTX; Bitcoin opens to its price and its activity">
-      <styled.div ref={ref} position="absolute" inset="0">
-        <MockupPanel>
-          <styled.div
-            position="absolute"
-            inset="0"
-            style={{
-              transform: isDetail ? 'translateX(-24%)' : 'none',
-              opacity: isDetail ? 0 : 1,
-              transition: slide,
-            }}
-          >
-            <TokenListView isPressed={step === 1} isAnimated={isAnimated} />
-          </styled.div>
-          <styled.div
-            position="absolute"
-            inset="0"
-            style={{
-              background: mockupColor.panel,
-              transform: isDetail ? 'none' : 'translateX(100%)',
-              transition: slide,
-            }}
-          >
-            <TokenDetailView activeTab={step >= 3 ? 'Activity' : 'Info'} isAnimated={isAnimated} />
-          </styled.div>
-        </MockupPanel>
-      </styled.div>
+    <BentoStage
+      ref={ref}
+      label="Token balances for Bitcoin, Stacks, sBTC, USDCx and stSTX; Bitcoin opens to its price and its activity"
+    >
+      <MockupPanel>
+        <styled.div
+          position="absolute"
+          inset="0"
+          style={{
+            transform: isDetail ? 'translateX(-24%)' : 'none',
+            opacity: isDetail ? 0 : 1,
+            transition: slide,
+          }}
+        >
+          <TokenListView isPressed={step === 1} isAnimated={isAnimated} />
+        </styled.div>
+        <styled.div
+          position="absolute"
+          inset="0"
+          style={{
+            background: mockupColor.panel,
+            transform: isDetail ? 'none' : 'translateX(100%)',
+            transition: slide,
+          }}
+        >
+          <TokenDetailView activeTab={step >= 3 ? 'Activity' : 'Info'} isAnimated={isAnimated} />
+        </styled.div>
+      </MockupPanel>
     </BentoStage>
   );
 }

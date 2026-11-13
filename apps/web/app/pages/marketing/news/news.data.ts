@@ -1,6 +1,5 @@
-// /news lists the Sanity posts in the "News" category (the same 18 items the Framer page showed,
-// minus the ones retired to a deprecation notice). Sanity's `images` field on these posts only
-// carries file names, not uploaded assets, so the covers ship with the app, keyed by slug.
+// /news lists the Sanity posts in the "News" category. Their `images` field only carries file
+// names, not uploaded assets, so the covers ship with the app, keyed by slug.
 
 export interface NewsItem {
   slug: string;
@@ -30,7 +29,6 @@ export const newsPostsQuery = `*[
 
 const newsCoverDir = '/marketing/news';
 
-// Covers downloaded from the Framer CMS into public/marketing/news/<slug>.webp
 const slugsWithCover = new Set([
   'grow-your-bitcoin-mobile-app',
   'grow-your-bitcoin-new-web-app',
@@ -49,7 +47,7 @@ const slugsWithCover = new Set([
   'introducing-leather-the-bitcoin-wallet-for-the-rest-of-us',
 ]);
 
-// Also available as public/marketing/news/<slug>-large.webp for the featured slot
+// Also has public/marketing/news/<slug>-large.webp for the featured slot
 const slugsWithLargeCover = new Set(['grow-your-bitcoin-mobile-app']);
 
 export function getNewsCover(slug: string): NewsCover | null {

@@ -5,52 +5,29 @@ import { styled } from 'leather-styles/jsx';
 import {
   BentoStage,
   MockupPanel,
+  StrokeIcon,
+  TextPair,
+  insetX,
   mockupColor,
   mockupSize,
   mockupType,
+  primaryText,
+  secondaryText,
   stagePx,
+  tokenIconSrc,
+  transitionFor,
   useLoopingSequence,
 } from './bento-mockup';
 
-// Product colours the shared frame doesn't carry: the light theme's action and hover inks
 const productColor = {
-  action: '#12100F',
-  actionPressed: '#3A3633',
-  hover: '#F5F3F1',
   switchBorder: '#D9D6D2',
   switchThumbOff: '#BEB9B5',
   avatar: '#EFEDEA',
 } as const;
 
-const ease = 'cubic-bezier(0.25, 1, 0.5, 1)';
-
-function transitionFor(isAnimated: boolean, properties: string[], ms = 350, delayMs = 0) {
-  if (!isAnimated) return undefined;
-  return properties.map(property => `${property} ${ms}ms ${ease} ${delayMs}ms`).join(', ');
-}
-
-// Header band; the Send mockup's first row starts at 68
 const headerHeight = 64;
 const tokenRowHeight = 46;
 const spamTokenId = 'tlc';
-
-const insetX = { paddingLeft: stagePx(mockupSize.inset), paddingRight: stagePx(mockupSize.inset) };
-
-function StrokeIcon({ size, children }: { size: number; children: ReactNode }) {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      style={{ width: stagePx(size), height: stagePx(size), flexShrink: 0, display: 'block' }}
-    >
-      {children}
-    </svg>
-  );
-}
 
 function TokenIcon({ src, letter }: { src?: string; letter?: string }) {
   const size = stagePx(mockupSize.icon);
@@ -79,8 +56,7 @@ function TokenIcon({ src, letter }: { src?: string; letter?: string }) {
         height: size,
         background: productColor.avatar,
         color: mockupColor.secondary,
-        ...mockupType.body,
-        fontWeight: 500,
+        ...primaryText,
       }}
     >
       {letter}
@@ -88,7 +64,7 @@ function TokenIcon({ src, letter }: { src?: string; letter?: string }) {
   );
 }
 
-/** Two-line item, as the extension's ItemLayout: title and caption left, values right. */
+/** The extension's ItemLayout: title and caption left, values right. */
 function ItemRow({
   img,
   title,
@@ -105,35 +81,19 @@ function ItemRow({
   return (
     <styled.div display="flex" alignItems="center" style={{ gap: stagePx(12), ...style }}>
       {img}
-      <styled.div display="flex" flexDirection="column" flex="1" minWidth="0">
-        <styled.span style={{ ...mockupType.body, fontWeight: 500 }}>{title}</styled.span>
-        <styled.span style={{ ...mockupType.meta, color: mockupColor.secondary }}>
-          {caption}
-        </styled.span>
-      </styled.div>
+      <TextPair primary={title} secondary={caption} />
       {right}
     </styled.div>
   );
 }
 
-function RightValues({ title, caption }: { title: string; caption: string }) {
-  return (
-    <styled.div display="flex" flexDirection="column" alignItems="flex-end">
-      <styled.span style={{ ...mockupType.body, fontWeight: 500 }}>{title}</styled.span>
-      <styled.span style={{ ...mockupType.meta, color: mockupColor.secondary }}>
-        {caption}
-      </styled.span>
-    </styled.div>
-  );
-}
-
-/** The extension's Switch (42 × 24 next to a 40 px avatar), scaled to the 28 px stage icon. */
+/** The extension's Switch, scaled to the stage icon. */
 function MockSwitch({ isOn, isAnimated }: { isOn: boolean; isAnimated: boolean }) {
   const width = 30;
   const height = 18;
   const thumb = 13;
   const gap = 2;
-  const transition = transitionFor(isAnimated, ['background-color', 'border-color']);
+  const transition = transitionFor(isAnimated, ['background-color', 'border-color'], 350);
   return (
     <styled.span
       display="flex"
@@ -143,8 +103,8 @@ function MockSwitch({ isOn, isAnimated }: { isOn: boolean; isAnimated: boolean }
       style={{
         width: stagePx(width),
         height: stagePx(height),
-        border: `1px solid ${isOn ? productColor.action : productColor.switchBorder}`,
-        background: isOn ? productColor.action : mockupColor.panel,
+        border: `1px solid ${isOn ? mockupColor.text : productColor.switchBorder}`,
+        background: isOn ? mockupColor.text : mockupColor.panel,
         transition,
       }}
     >
@@ -156,7 +116,7 @@ function MockSwitch({ isOn, isAnimated }: { isOn: boolean; isAnimated: boolean }
           height: stagePx(thumb),
           background: isOn ? mockupColor.panel : productColor.switchThumbOff,
           transform: `translateX(${stagePx(isOn ? width - 2 - thumb - gap : gap)})`,
-          transition: transitionFor(isAnimated, ['transform', 'background-color']),
+          transition: transitionFor(isAnimated, ['transform', 'background-color'], 350),
         }}
       />
     </styled.span>
@@ -186,77 +146,73 @@ function ScreenHeader({ title }: { title: string }) {
 }
 
 const manageableTokens = [
-  { id: 'btc', name: 'Bitcoin', symbol: 'BTC', src: '/icons/bitcoin.svg' },
-  { id: 'stx', name: 'Stacks', symbol: 'STX', src: '/icons/stacks.svg' },
-  { id: 'sbtc', name: 'sBTC', symbol: 'sBTC', src: '/icons/sbtc.svg' },
+  { id: 'btc', name: 'Bitcoin', symbol: 'BTC', src: tokenIconSrc.btc },
+  { id: 'stx', name: 'Stacks', symbol: 'STX', src: tokenIconSrc.stx },
+  { id: 'sbtc', name: 'sBTC', symbol: 'sBTC', src: tokenIconSrc.sbtc },
   { id: spamTokenId, name: 'Totally Legit Coin', symbol: 'TLC', letter: 'T' },
   { id: 'usdcx', name: 'USDCx', symbol: 'USDCx', src: '/marketing/apps/usdc.svg' },
   { id: 'alex', name: 'ALEX', symbol: 'ALEX', src: '/icons/alex.svg' },
 ] as const;
 
-/**
- * "Show or hide tokens": the extension's Manage tokens page (pages/manage-tokens with
- * CryptoAssetItemToggle rows: icon, name, symbol, switch). The spam token's row is pressed, its
- * switch turns off and the row dims; then it starts over. Reduced motion shows it switched off.
- */
+/** The extension's Manage tokens page (pages/manage-tokens): a spam token gets switched off. */
 export function ManageTokensMockup() {
   const { ref, step, isAnimated } = useLoopingSequence<HTMLDivElement>([1100, 180], 2600);
   const isPressed = step === 1;
   const isSpamHidden = step >= 2;
 
   return (
-    <BentoStage label="The extension's Manage tokens list, with a spam token named Totally Legit Coin switched off">
-      <styled.div ref={ref} position="absolute" inset="0">
-        <MockupPanel>
-          <ScreenHeader title="Manage tokens" />
-          <styled.div display="flex" flexDirection="column" style={insetX}>
-            {manageableTokens.map(token => {
-              const isSpam = token.id === spamTokenId;
-              const isOn = !(isSpam && isSpamHidden);
-              return (
-                <styled.div
-                  key={token.id}
-                  display="flex"
-                  alignItems="center"
+    <BentoStage
+      ref={ref}
+      label="The extension's Manage tokens list, with a spam token named Totally Legit Coin switched off"
+    >
+      <MockupPanel>
+        <ScreenHeader title="Manage tokens" />
+        <styled.div display="flex" flexDirection="column" style={insetX}>
+          {manageableTokens.map(token => {
+            const isSpam = token.id === spamTokenId;
+            const isOn = !(isSpam && isSpamHidden);
+            return (
+              <styled.div
+                key={token.id}
+                display="flex"
+                alignItems="center"
+                style={{
+                  height: stagePx(tokenRowHeight),
+                  margin: `0 ${stagePx(-8)}`,
+                  padding: `0 ${stagePx(8)}`,
+                  borderRadius: stagePx(8),
+                  background: isSpam && isPressed ? mockupColor.hover : 'transparent',
+                  transition: transitionFor(isAnimated, ['background-color'], 200),
+                }}
+              >
+                <ItemRow
                   style={{
-                    height: stagePx(tokenRowHeight),
-                    // Pressable's hover fill bleeds a little past the content, as in the extension
-                    margin: `0 ${stagePx(-8)}`,
-                    padding: `0 ${stagePx(8)}`,
-                    borderRadius: stagePx(8),
-                    background: isSpam && isPressed ? productColor.hover : 'transparent',
-                    transition: transitionFor(isAnimated, ['background-color'], 200),
+                    flex: 1,
+                    opacity: isOn ? 1 : 0.4,
+                    transition: transitionFor(isAnimated, ['opacity'], 400),
                   }}
-                >
-                  <ItemRow
-                    style={{
-                      flex: 1,
-                      opacity: isOn ? 1 : 0.4,
-                      transition: transitionFor(isAnimated, ['opacity'], 400),
-                    }}
-                    img={
-                      'src' in token ? (
-                        <TokenIcon src={token.src} />
-                      ) : (
-                        <TokenIcon letter={token.letter} />
-                      )
-                    }
-                    title={token.name}
-                    caption={token.symbol}
-                  />
-                  <MockSwitch isOn={isOn} isAnimated={isAnimated} />
-                </styled.div>
-              );
-            })}
-          </styled.div>
-        </MockupPanel>
-      </styled.div>
+                  img={
+                    'src' in token ? (
+                      <TokenIcon src={token.src} />
+                    ) : (
+                      <TokenIcon letter={token.letter} />
+                    )
+                  }
+                  title={token.name}
+                  caption={token.symbol}
+                />
+                <MockSwitch isOn={isOn} isAnimated={isAnimated} />
+              </styled.div>
+            );
+          })}
+        </styled.div>
+      </MockupPanel>
     </BentoStage>
   );
 }
 
 function RabbitIcon() {
-  // The extension's Standard fee icon (AnimalRabbitIcon) on its hover-tone avatar
+  // The extension's Standard fee icon (AnimalRabbitIcon)
   return (
     <styled.span
       display="flex"
@@ -289,10 +245,7 @@ function RabbitIcon() {
 
 function Subheader({ children }: { children: ReactNode }) {
   return (
-    <styled.span
-      display="block"
-      style={{ ...mockupType.meta, color: mockupColor.secondary, marginBottom: stagePx(6) }}
-    >
+    <styled.span display="block" style={{ ...secondaryText, marginBottom: stagePx(6) }}>
       {children}
     </styled.span>
   );
@@ -302,8 +255,6 @@ function Divider() {
   return <styled.div style={{ height: '1px', background: mockupColor.divider }} />;
 }
 
-// The extension's request footer renders Button size lg (48 px, pill, label.02 = 15/500) at the
-// popup's scale; the stage's 12 px body is the same type at 0.8, so heights and gaps follow it.
 const buttonBase: CSSProperties = {
   flex: 1,
   height: stagePx(38),
@@ -313,16 +264,10 @@ const buttonBase: CSSProperties = {
   justifyContent: 'center',
   paddingInline: stagePx(13),
   whiteSpace: 'nowrap',
-  ...mockupType.body,
-  fontWeight: 500,
+  ...primaryText,
 };
 
-/**
- * "Review transactions": the extension's Sign transaction approver
- * (features/rpc-stacks-transaction-request, with the mobile approver's "You'll send" wording):
- * what leaves and arrives, the fee, the total spend, and Cancel / Approve. The sections settle in
- * one after another above the actions, then Approve presses. Reduced motion shows the settled screen.
- */
+/** The extension's Sign transaction approver (features/rpc-stacks-transaction-request). */
 export function ReviewTransactionMockup() {
   const { ref, step, isAnimated } = useLoopingSequence<HTMLDivElement>([500, 1700, 160], 2400);
   const isShown = step >= 1;
@@ -339,116 +284,115 @@ export function ReviewTransactionMockup() {
   }
 
   return (
-    <BentoStage label="The extension's Sign transaction screen: send 50 STX and receive sBTC, with the fee, total spend and Approve button">
-      <styled.div ref={ref} position="absolute" inset="0">
-        <MockupPanel style={{ display: 'flex', flexDirection: 'column' }}>
-          {/* Approver header: title, then the requesting app */}
-          <styled.div
+    <BentoStage
+      ref={ref}
+      label="The extension's Sign transaction screen: send 50 STX and receive sBTC, with the fee, total spend and Approve button"
+    >
+      <MockupPanel style={{ display: 'flex', flexDirection: 'column' }}>
+        <styled.div
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          style={{ height: stagePx(68), ...insetX }}
+        >
+          <styled.span style={mockupType.title}>Sign transaction</styled.span>
+          <styled.span
             display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            style={{ height: stagePx(68), ...insetX }}
+            alignItems="center"
+            style={{
+              ...mockupType.meta,
+              color: mockupColor.secondary,
+              gap: stagePx(5),
+              marginTop: stagePx(4),
+            }}
           >
-            <styled.span style={mockupType.title}>Sign transaction</styled.span>
-            <styled.span
-              display="flex"
-              alignItems="center"
-              style={{
-                ...mockupType.meta,
-                color: mockupColor.secondary,
-                gap: stagePx(5),
-                marginTop: stagePx(4),
-              }}
-            >
-              <styled.img
-                src="/icons/bitflow.png"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                borderRadius="3px"
-                style={{ width: stagePx(12), height: stagePx(12) }}
-              />
-              Requested by <span style={{ color: mockupColor.text }}>app.bitflow.finance</span>
-            </styled.span>
-          </styled.div>
+            <styled.img
+              src="/icons/bitflow.png"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              borderRadius="3px"
+              style={{ width: stagePx(12), height: stagePx(12) }}
+            />
+            Requested by <span style={{ color: mockupColor.text }}>app.bitflow.finance</span>
+          </styled.span>
+        </styled.div>
+        <Divider />
+
+        <styled.div style={{ ...insetX, paddingTop: stagePx(10), ...sectionStyle(0) }}>
+          <Subheader>You’ll send</Subheader>
+          <ItemRow
+            img={<TokenIcon src={tokenIconSrc.stx} />}
+            title="Stacks"
+            caption="STX"
+            right={<TextPair primary="50 STX" secondary="$29.10" align="end" />}
+          />
+        </styled.div>
+        <styled.div style={{ ...insetX, paddingTop: stagePx(10), ...sectionStyle(1) }}>
+          <Subheader>You’ll receive</Subheader>
+          <ItemRow
+            img={<TokenIcon src={tokenIconSrc.sbtc} />}
+            title="sBTC"
+            caption="sBTC"
+            right={<TextPair primary="0.00031 sBTC" secondary="$29.04" align="end" />}
+          />
+        </styled.div>
+
+        <styled.div style={{ marginTop: stagePx(12), ...sectionStyle(2) }}>
           <Divider />
-
-          <styled.div style={{ ...insetX, paddingTop: stagePx(10), ...sectionStyle(0) }}>
-            <Subheader>You’ll send</Subheader>
-            <ItemRow
-              img={<TokenIcon src="/icons/stacks.svg" />}
-              title="Stacks"
-              caption="STX"
-              right={<RightValues title="50 STX" caption="$29.10" />}
-            />
-          </styled.div>
-          <styled.div style={{ ...insetX, paddingTop: stagePx(10), ...sectionStyle(1) }}>
-            <Subheader>You’ll receive</Subheader>
-            <ItemRow
-              img={<TokenIcon src="/icons/sbtc.svg" />}
-              title="sBTC"
-              caption="sBTC"
-              right={<RightValues title="0.00031 sBTC" caption="$29.04" />}
-            />
-          </styled.div>
-
-          <styled.div style={{ marginTop: stagePx(12), ...sectionStyle(2) }}>
-            <Divider />
-            <ItemRow
-              style={{ ...insetX, height: stagePx(50) }}
-              img={<RabbitIcon />}
-              title="Standard"
-              caption="~2 min"
-              right={
-                <styled.span display="flex" alignItems="center" style={{ gap: stagePx(6) }}>
-                  <RightValues title="0.003 STX" caption="$0.01" />
-                  <styled.span style={{ color: mockupColor.secondary }}>
-                    <StrokeIcon size={12}>
-                      <path d="M6 3 L11 8 L6 13" />
-                    </StrokeIcon>
-                  </styled.span>
+          <ItemRow
+            style={{ ...insetX, height: stagePx(50) }}
+            img={<RabbitIcon />}
+            title="Standard"
+            caption="~2 min"
+            right={
+              <styled.span display="flex" alignItems="center" style={{ gap: stagePx(6) }}>
+                <TextPair primary="0.003 STX" secondary="$0.01" align="end" />
+                <styled.span style={{ color: mockupColor.secondary }}>
+                  <StrokeIcon size={12}>
+                    <path d="M6 3 L11 8 L6 13" />
+                  </StrokeIcon>
                 </styled.span>
-              }
-            />
-          </styled.div>
+              </styled.span>
+            }
+          />
+        </styled.div>
 
-          {/* Actions footer: Approver.Actions with TransactionActionsTitle, outline Cancel + solid Approve */}
-          <styled.div marginTop="auto" style={{ borderTop: `1px solid ${mockupColor.border}` }}>
-            <styled.div style={{ padding: `${stagePx(19)} ${stagePx(19)}` }}>
-              <styled.div
-                display="flex"
-                justifyContent="space-between"
-                style={{ ...mockupType.body, fontWeight: 500, marginBottom: stagePx(10) }}
+        <styled.div marginTop="auto" style={{ borderTop: `1px solid ${mockupColor.border}` }}>
+          <styled.div style={{ padding: `${stagePx(19)} ${stagePx(19)}` }}>
+            <styled.div
+              display="flex"
+              justifyContent="space-between"
+              style={{ ...primaryText, marginBottom: stagePx(10) }}
+            >
+              <span>Total spend</span>
+              <span>$29.11</span>
+            </styled.div>
+            <styled.div display="flex" style={{ gap: stagePx(13) }}>
+              <styled.span
+                style={{
+                  ...buttonBase,
+                  border: `1px solid ${mockupColor.border}`,
+                  color: mockupColor.text,
+                }}
               >
-                <span>Total spend</span>
-                <span>$29.11</span>
-              </styled.div>
-              <styled.div display="flex" style={{ gap: stagePx(13) }}>
-                <styled.span
-                  style={{
-                    ...buttonBase,
-                    border: `1px solid ${mockupColor.border}`,
-                    color: productColor.action,
-                  }}
-                >
-                  Cancel
-                </styled.span>
-                <styled.span
-                  style={{
-                    ...buttonBase,
-                    background: isPressed ? productColor.actionPressed : productColor.action,
-                    color: mockupColor.panel,
-                    transform: isPressed ? 'scale(0.95)' : 'none',
-                    transition: transitionFor(isAnimated, ['transform', 'background-color'], 200),
-                  }}
-                >
-                  Approve
-                </styled.span>
-              </styled.div>
+                Cancel
+              </styled.span>
+              <styled.span
+                style={{
+                  ...buttonBase,
+                  background: isPressed ? mockupColor.actionPressed : mockupColor.text,
+                  color: mockupColor.panel,
+                  transform: isPressed ? 'scale(0.95)' : 'none',
+                  transition: transitionFor(isAnimated, ['transform', 'background-color'], 200),
+                }}
+              >
+                Approve
+              </styled.span>
             </styled.div>
           </styled.div>
-        </MockupPanel>
-      </styled.div>
+        </styled.div>
+      </MockupPanel>
     </BentoStage>
   );
 }
