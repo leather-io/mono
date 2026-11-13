@@ -86,7 +86,7 @@ export function ChangelogStrip({ entries, heading = 'Changelog', ...props }: Cha
         gap="0"
         border="1px solid"
         borderColor="ink.border-default"
-        borderRadius="sm"
+        borderRadius="md"
         overflow="hidden"
         listStyle="none"
       >

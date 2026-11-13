@@ -1,12 +1,30 @@
 import { css } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
+import { iconRadius } from '~/pages/marketing/shared/marketing-radius';
 import { trackExternalLinkClick } from '~/utils/external-links';
-
-import { squareAvatarRadius } from '@leather.io/ui';
 
 import { type Project } from '../apps.data';
 
 const line = '{colors.ink.border-default}';
+
+type Corner = 'tl' | 'tr' | 'bl' | 'br';
+
+// Column count per breakpoint, matching gridTemplateColumns below.
+const columnsAt = { base: 1, md: 2, lg: 3 } as const;
+
+/** The grid's outer corners that fall on this cell, so the grid reads as one rounded card. */
+function outerCorners(index: number, count: number, columns: number) {
+  const rows = Math.ceil(count / columns);
+  const lastRowStart = (rows - 1) * columns;
+  const corners: Corner[] = [];
+  if (index === 0) corners.push('tl');
+  if (index === Math.min(columns, count) - 1) corners.push('tr');
+  if (index === lastRowStart) corners.push('bl');
+  if (index === count - 1) corners.push('br');
+  // A short last row leaves a step: the cell above the gap closes the right edge.
+  if (rows > 1 && count % columns !== 0 && index === lastRowStart - 1) corners.push('br');
+  return corners.join(' ');
+}
 
 // Each cell draws its own top/left lines inside and right/bottom lines outside its box, so
 // neighbours share a single hairline and a short last row ends with closed cells, not empty ones.
@@ -19,6 +37,24 @@ const projectStyles = css({
   transition: 'background-color 120ms ease',
   _hover: { bg: 'ink.component-background-hover' },
   _focusVisible: { outline: '2px solid', outlineColor: 'blue.border', outlineOffset: '-2px' },
+  '&[data-corners-base~="tl"]': { borderTopLeftRadius: 'md' },
+  '&[data-corners-base~="tr"]': { borderTopRightRadius: 'md' },
+  '&[data-corners-base~="bl"]': { borderBottomLeftRadius: 'md' },
+  '&[data-corners-base~="br"]': { borderBottomRightRadius: 'md' },
+  md: {
+    '&[data-corners-base]': { borderRadius: 0 },
+    '&[data-corners-md~="tl"]': { borderTopLeftRadius: 'md' },
+    '&[data-corners-md~="tr"]': { borderTopRightRadius: 'md' },
+    '&[data-corners-md~="bl"]': { borderBottomLeftRadius: 'md' },
+    '&[data-corners-md~="br"]': { borderBottomRightRadius: 'md' },
+  },
+  lg: {
+    '&[data-corners-base]': { borderRadius: 0 },
+    '&[data-corners-lg~="tl"]': { borderTopLeftRadius: 'md' },
+    '&[data-corners-lg~="tr"]': { borderTopRightRadius: 'md' },
+    '&[data-corners-lg~="bl"]': { borderBottomLeftRadius: 'md' },
+    '&[data-corners-lg~="br"]': { borderBottomRightRadius: 'md' },
+  },
 });
 
 /** 3-column directory of every published app, each linking to the app's site. */
@@ -30,7 +66,7 @@ export function ProjectDirectory({ projects }: { projects: Project[] }) {
       pr="1px"
       pb="1px"
     >
-      {projects.map(project => (
+      {projects.map((project, index) => (
         <li key={project.slug}>
           <a
             href={project.website}
@@ -38,6 +74,9 @@ export function ProjectDirectory({ projects }: { projects: Project[] }) {
             rel="noopener noreferrer"
             aria-label={`${project.name} (opens in a new tab)`}
             className={projectStyles}
+            data-corners-base={outerCorners(index, projects.length, columnsAt.base)}
+            data-corners-md={outerCorners(index, projects.length, columnsAt.md)}
+            data-corners-lg={outerCorners(index, projects.length, columnsAt.lg)}
             onClick={() => trackExternalLinkClick(project.website, { section: 'apps_directory' })}
           >
             <styled.img
@@ -51,7 +90,7 @@ export function ProjectDirectory({ projects }: { projects: Project[] }) {
               outline="1px solid {colors.ink.border-default}"
               outlineOffset="-1px"
               style={{
-                borderRadius: squareAvatarRadius(48),
+                borderRadius: iconRadius(48),
                 background: project.logoBackground,
                 outlineStyle: project.logoBackground === '#FFFFFF' ? 'solid' : 'none',
               }}

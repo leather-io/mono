@@ -4,15 +4,16 @@ import { Link } from 'react-router';
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
 import { ProviderIcon } from '~/components/icons/provider-icon';
 import { trackMarketingEvent } from '~/pages/marketing/shared/marketing-analytics';
+import { iconRadius } from '~/pages/marketing/shared/marketing-radius';
 import { Reveal } from '~/pages/marketing/shared/reveal';
 import { trackExternalLinkClick } from '~/utils/external-links';
 
-import { ArrowLeftIcon, squareAvatarRadius } from '@leather.io/ui';
+import { ArrowLeftIcon } from '@leather.io/ui';
 
 import { type BondTargetRate, formatBondTargetRate } from '../bond-target-rate';
 import { HomeSection, HomeSectionHeading } from './home-layout';
 
-const providerLogoRadius = squareAvatarRadius(32);
+const providerLogoRadius = iconRadius(32);
 
 const StyledLink = styled(Link);
 
@@ -142,7 +143,7 @@ function YieldCard({
         display="block"
         border="1px solid"
         borderColor="ink.border-default"
-        borderRadius="sm"
+        borderRadius="md"
         overflow="hidden"
         className="group"
         _focusVisible={{ outline: '2px solid', outlineColor: 'blue.border', outlineOffset: '2px' }}

@@ -28,7 +28,7 @@ const pillStyles = css({
 // Every card is clickable as a whole through its pill's ::after overlay, so the nested
 // "Circle" link stays a valid, separately focusable link.
 const stretchedLinkStyles = css({
-  _after: { content: '""', position: 'absolute', inset: 0, borderRadius: 'sm' },
+  _after: { content: '""', position: 'absolute', inset: 0, borderRadius: 'md' },
 });
 
 function renderDescription(token: CoreToken) {
@@ -65,7 +65,7 @@ export function CoreTokenCard({ token }: { token: CoreToken }) {
       p="space.05"
       bg="ink.background-secondary"
       border="default"
-      borderRadius="sm"
+      borderRadius="md"
       transition="background-color 120ms ease"
       className="group"
       cursor="pointer"

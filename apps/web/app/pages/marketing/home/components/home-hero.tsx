@@ -389,7 +389,7 @@ export function HomeHero() {
           position="relative"
           overflow="hidden"
           bg="ink.border-default"
-          borderRadius="sm"
+          borderRadius="md"
           aspectRatio={['342 / 500', null, '1196 / 615']}
           onPointerMove={onPointerMove}
           onPointerLeave={onPointerLeave}

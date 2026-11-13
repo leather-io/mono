@@ -2,6 +2,7 @@ import { type CSSProperties } from 'react';
 import { Link } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { iconRadius } from '~/pages/marketing/shared/marketing-radius';
 
 import { ArrowTopRightIcon, Tabs } from '@leather.io/ui';
 
@@ -175,7 +176,7 @@ function AppRow({ app }: { app: ExplorerApp }) {
         alt=""
         width="40px"
         height="40px"
-        borderRadius="xs"
+        style={{ borderRadius: iconRadius(40) }}
         loading="lazy"
         flexShrink={0}
       />

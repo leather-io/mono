@@ -3,15 +3,14 @@ import { Link } from 'react-router';
 
 import { css, cx } from 'leather-styles/css';
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
-
-import { squareAvatarRadius } from '@leather.io/ui';
+import { iconRadius } from '~/pages/marketing/shared/marketing-radius';
 
 import { dualStacking, stakingOptions } from '../apps.data';
 
 // Each card is clickable as a whole through its primary link's ::after overlay, which keeps the
 // provider tables as real tables instead of burying them inside a link.
 const stretchedLinkStyles = css({
-  _after: { content: '""', position: 'absolute', inset: 0, borderRadius: 'sm' },
+  _after: { content: '""', position: 'absolute', inset: 0, borderRadius: 'md' },
   _focusVisible: {
     outline: 'none',
     _after: { outline: '2px solid', outlineColor: 'blue.border', outlineOffset: '-2px' },
@@ -27,7 +26,7 @@ function EarningCard({ children }: { children: ReactNode }) {
       minHeight={[null, null, '406px']}
       p="space.05"
       border="default"
-      borderRadius="sm"
+      borderRadius="md"
       bg="ink.background-primary"
       overflow="hidden"
       className="group"
@@ -144,7 +143,7 @@ function StakingOptionCard({ option }: { option: (typeof stakingOptions)[number]
                     w="32px"
                     h="32px"
                     loading="lazy"
-                    style={{ borderRadius: squareAvatarRadius(32) }}
+                    style={{ borderRadius: iconRadius(32) }}
                   />
                   {provider.name}
                 </Flex>

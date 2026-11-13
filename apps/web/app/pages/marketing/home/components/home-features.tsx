@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { Box, Flex, Grid, styled } from 'leather-styles/jsx';
 import { LottieAnimation } from '~/pages/marketing/shared/lottie-animation';
 import { trackMarketingEvent } from '~/pages/marketing/shared/marketing-analytics';
+import { iconRadius } from '~/pages/marketing/shared/marketing-radius';
 import { Reveal } from '~/pages/marketing/shared/reveal';
 
 import { ActivityMockup, BtcNotificationsMockup } from './bento-activity';
@@ -46,7 +47,7 @@ export function HomeSwapsAndLedger() {
                 alt=""
                 width="20px"
                 height="20px"
-                borderRadius="xs"
+                style={{ borderRadius: iconRadius(20) }}
               />
               <styled.span color="ink.text-primary">Bitflow</styled.span>
             </Flex>

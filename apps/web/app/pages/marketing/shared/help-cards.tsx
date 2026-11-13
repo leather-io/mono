@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 
 import { Box, Grid, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { LEATHER_DOCS } from '~/constants/leather-docs';
+import { iconRadius } from '~/pages/marketing/shared/marketing-radius';
 
 import { GlassesIcon, SupportIcon, TerminalIcon } from '@leather.io/ui';
 
@@ -83,7 +84,7 @@ export function HelpCards(props: HTMLStyledProps<'nav'>) {
               width="48px"
               height="48px"
               bg="ink.background-secondary"
-              borderRadius="xs"
+              style={{ borderRadius: iconRadius(48) }}
               aria-hidden
             >
               {card.icon}

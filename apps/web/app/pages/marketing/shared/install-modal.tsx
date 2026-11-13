@@ -87,7 +87,7 @@ function PlatformCard({ title, description, image, platforms }: PlatformCardProp
       flexDir="column"
       border="1px solid"
       borderColor="ink.border-default"
-      borderRadius="xs"
+      borderRadius="sm"
       overflow="hidden"
     >
       <styled.img

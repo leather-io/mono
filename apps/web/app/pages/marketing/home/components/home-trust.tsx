@@ -61,7 +61,7 @@ export function HomeTrust() {
         mt="space.07"
         border="1px solid"
         borderColor="ink.border-default"
-        borderRadius="sm"
+        borderRadius="md"
         overflow="hidden"
       >
         {trustCards.map((card, index) => (

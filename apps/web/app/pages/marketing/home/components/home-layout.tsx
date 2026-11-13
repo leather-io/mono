@@ -56,7 +56,7 @@ export function FeatureCard({ title, description, visual }: FeatureCardProps) {
       display="flex"
       flexDir="column"
       bg="ink.background-secondary"
-      borderRadius="sm"
+      borderRadius="md"
       overflow="hidden"
     >
       {visual}

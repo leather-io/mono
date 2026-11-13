@@ -15,7 +15,7 @@ const cardStyles = css({
   justifyContent: 'flex-end',
   height: '100%',
   overflow: 'hidden',
-  borderRadius: 'sm',
+  borderRadius: 'md',
   bg: 'ink.background-primary',
   color: 'ink.text-primary',
   _focusVisible: { outline: '2px solid', outlineColor: 'blue.border', outlineOffset: '2px' },
