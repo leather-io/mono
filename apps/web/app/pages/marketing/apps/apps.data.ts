@@ -115,6 +115,8 @@ export interface Project {
   description: string;
   logo: string;
   website: string;
+  /** Fills the icon tile behind logos drawn as a circle, so every icon reads as one shape. */
+  logoBackground?: string;
 }
 
 function project(
@@ -183,19 +185,25 @@ const granite = project(
   'https://www.granite.world',
   'A lending protocol for borrowing stablecoins against sBTC collateral.'
 );
-const hermetica = project(
-  'Hermetica',
-  'hermetica',
-  'logo-hermetica.svg',
-  'https://hermetica.fi',
-  'A synthetic dollar protocol using Bitcoin-based hedging strategies. Yield and terms vary.'
+const hermetica = withLogoBackground(
+  '#FFFFFF',
+  project(
+    'Hermetica',
+    'hermetica',
+    'logo-hermetica.svg',
+    'https://hermetica.fi',
+    'A synthetic dollar protocol using Bitcoin-based hedging strategies. Yield and terms vary.'
+  )
 );
-const lisa = project(
-  'LISA',
-  'lisa',
-  'logo-lisa.webp',
-  'https://www.lisalab.io',
-  'A liquid staking protocol on Stacks. Token support, rewards and redemption terms depend on the protocol.'
+const lisa = withLogoBackground(
+  '#050916',
+  project(
+    'LISA',
+    'lisa',
+    'logo-lisa.webp',
+    'https://www.lisalab.io',
+    'A liquid staking protocol on Stacks. Token support, rewards and redemption terms depend on the protocol.'
+  )
 );
 const stackingDao = project(
   'Stacking DAO',
@@ -218,13 +226,20 @@ const velar = project(
   'https://www.velar.com',
   'A DeFi suite offering trading, liquidity, and launchpad access built on Bitcoin L2s like Stacks'
 );
-const zest = project(
-  'Zest Protocol',
-  'zest',
-  'logo-zest.svg',
-  'https://www.zestprotocol.com',
-  'A borrowing and lending protocol on Stacks.'
+const zest = withLogoBackground(
+  '#282828',
+  project(
+    'Zest Protocol',
+    'zest',
+    'logo-zest.svg',
+    'https://www.zestprotocol.com',
+    'A borrowing and lending protocol on Stacks.'
+  )
 );
+
+function withLogoBackground(logoBackground: string, project: Project): Project {
+  return { ...project, logoBackground };
+}
 
 /** Alphabetical, as on leather.io. */
 export const projects: Project[] = [

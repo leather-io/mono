@@ -2,6 +2,8 @@ import { css } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
 import { trackExternalLinkClick } from '~/utils/external-links';
 
+import { squareAvatarRadius } from '@leather.io/ui';
+
 import { type Project } from '../apps.data';
 
 const line = '{colors.ink.border-default}';
@@ -45,8 +47,14 @@ export function ProjectDirectory({ projects }: { projects: Project[] }) {
               htmlHeight={48}
               w="48px"
               h="48px"
-              borderRadius="round"
               bg="ink.background-secondary"
+              outline="1px solid {colors.ink.border-default}"
+              outlineOffset="-1px"
+              style={{
+                borderRadius: squareAvatarRadius(48),
+                background: project.logoBackground,
+                outlineStyle: project.logoBackground === '#FFFFFF' ? 'solid' : 'none',
+              }}
               objectFit="cover"
               loading="lazy"
               decoding="async"
