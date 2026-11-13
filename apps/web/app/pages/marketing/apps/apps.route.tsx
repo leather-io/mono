@@ -68,6 +68,10 @@ export default function AppsRoute({ loaderData }: Route.ComponentProps) {
 
       <AppsSection id="projects" title="Projects">
         <ProjectDirectory projects={projects} />
+        <styled.p textStyle="caption.01" color="ink.text-secondary" mt="space.04">
+          These are third-party apps that Leather doesn't operate. Review each app's terms and risks
+          before you use it.
+        </styled.p>
       </AppsSection>
 
       <ChangelogStrip entries={loaderData.changelog} mt={['space.08', null, 'space.09']} />

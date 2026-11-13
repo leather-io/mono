@@ -1,5 +1,6 @@
 import { css } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
+import { trackExternalLinkClick } from '~/utils/external-links';
 
 import { type Project } from '../apps.data';
 
@@ -8,9 +9,12 @@ const projectStyles = css({
   flexDirection: 'column',
   height: '100%',
   p: 'space.05',
+  transition: 'background-color 120ms ease',
+  _hover: { bg: 'ink.component-background-hover' },
+  _focusVisible: { outline: '2px solid', outlineColor: 'blue.border', outlineOffset: '-2px' },
 });
 
-/** Bordered 3-column directory of every published app. */
+/** Bordered 3-column directory of every published app, each linking to the app's site. */
 export function ProjectDirectory({ projects }: { projects: Project[] }) {
   return (
     <styled.ul
@@ -23,7 +27,14 @@ export function ProjectDirectory({ projects }: { projects: Project[] }) {
       {projects.map(project => (
         // Hairline dividers between cells that hold for every column count
         <styled.li key={project.slug} boxShadow="-1px -1px 0 0 {colors.ink.border-default}">
-          <div className={projectStyles}>
+          <a
+            href={project.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${project.name} (opens in a new tab)`}
+            className={projectStyles}
+            onClick={() => trackExternalLinkClick(project.website, { section: 'apps_directory' })}
+          >
             <styled.img
               src={project.logo}
               alt=""
@@ -46,7 +57,7 @@ export function ProjectDirectory({ projects }: { projects: Project[] }) {
             >
               {project.description}
             </styled.p>
-          </div>
+          </a>
         </styled.li>
       ))}
     </styled.ul>

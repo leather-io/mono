@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { css, cx } from 'leather-styles/css';
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { trackExternalLinkClick } from '~/utils/external-links';
 
 import { ChevronLeftIcon, ChevronRightIcon } from '@leather.io/ui';
 
@@ -17,6 +18,9 @@ const cardStyles = css({
   borderRadius: 'sm',
   bg: 'ink.background-primary',
   color: 'ink.text-primary',
+  _focusVisible: { outline: '2px solid', outlineColor: 'blue.border', outlineOffset: '2px' },
+  '& img:first-of-type': { transition: 'transform 300ms ease' },
+  _hover: { '& img:first-of-type': { transform: 'scale(1.03)' } },
 });
 
 const coverStyles = css({
@@ -47,7 +51,14 @@ const navButtonStyles = css({
 
 function FeaturedAppCard({ app }: { app: FeaturedApp }) {
   return (
-    <div className={cx('dark', cardStyles)}>
+    <a
+      href={app.website}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${app.name} (opens in a new tab)`}
+      className={cx('dark', cardStyles)}
+      onClick={() => trackExternalLinkClick(app.website, { section: 'apps_featured' })}
+    >
       <img
         src={app.cover.src}
         alt=""
@@ -83,7 +94,7 @@ function FeaturedAppCard({ app }: { app: FeaturedApp }) {
           {app.description}
         </styled.p>
       </Box>
-    </div>
+    </a>
   );
 }
 
