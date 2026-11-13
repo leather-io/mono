@@ -94,10 +94,6 @@ const deprecatedContentRedirects = new Map<string, string>([
   ]),
 ]);
 
-export function isDeprecatedContentSlug(slug: string) {
-  return deprecatedContentRedirects.has(slug);
-}
-
 export function getDeprecationTarget(slug: string) {
   return deprecatedContentRedirects.get(slug) ?? null;
 }

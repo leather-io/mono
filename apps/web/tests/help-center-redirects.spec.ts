@@ -22,10 +22,24 @@ const singleHopRedirects = [
   { from: '/posts/install-leather', to: `${docsGuides}/get-started/install-leather` },
   { from: '/posts/send-ordinals', to: `${docsGuides}/discontinued/ordinals-inscriptions` },
   { from: '/posts/api-sign-psbt', to: `${LEATHER_DOCS.developers}/bitcoin-methods/signpsbt` },
+  // Posts and news are retired for the Leather Docs blog
+  { from: '/posts', to: LEATHER_DOCS.blog },
+  { from: '/news', to: LEATHER_DOCS.blog },
+  { from: '/blog', to: LEATHER_DOCS.blog },
+  { from: '/posts/earn-rewards-sbtc', to: `${LEATHER_DOCS.blog}/earn-rewards-sbtc` },
+  { from: '/posts/how-roo-has-built-a-community-on-bitcoin', to: LEATHER_DOCS.blog },
+  { from: '/posts/tokens-btc', to: LEATHER_DOCS.blog },
+  { from: '/posts/no-such-post', to: LEATHER_DOCS.blog },
 ];
 
 // Content that stays on leather.io, also in one hop
-const onSiteRedirects = [{ from: '/posts/apps-xlink', to: '/posts/brotocol' }];
+const onSiteRedirects = [
+  { from: '/posts/apps-xlink', to: '/apps' },
+  { from: '/posts/brotocol', to: '/apps' },
+  { from: '/posts/privacy-policy', to: '/privacy-policy' },
+  { from: '/posts/terms-of-service', to: '/terms' },
+  { from: '/terms-of-service', to: '/terms' },
+];
 
 test.describe('Help center and developers redirects', () => {
   for (const { from, to } of singleHopRedirects) {
@@ -49,7 +63,6 @@ test.describe('Help center and developers redirects', () => {
   }
 
   for (const path of [
-    '/posts/no-such-post',
     '/support/no-such-guide',
     '/support/guide/no-such-guide',
     '/help-center/a/b',

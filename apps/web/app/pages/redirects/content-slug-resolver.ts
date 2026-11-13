@@ -4,93 +4,66 @@ import { cmsClient } from '~/constants/cms-client';
 import { LEATHER_DOCS } from '~/constants/leather-docs';
 
 import {
-  type HelpCenterGuideBySlugQueryResult,
-  type PostBySlugQueryResult,
-  helpCenterGuideBySlugQuery,
-  postBySlugQuery,
-} from '@leather.io/cms';
-
-import { hasLeatherDocsGuide, leatherDocsGuideUrl } from './leather-docs-guides';
+  hasLeatherDocsBlogPage,
+  hasLeatherDocsGuide,
+  leatherDocsBlogUrl,
+  leatherDocsGuideUrl,
+} from './leather-docs-guides';
 import { getLegacyContentTarget } from './legacy-content-redirects';
-import { getDeprecationTarget, isDeprecatedContentSlug } from './shared-redirect-logic';
-
-export type ContentPost = NonNullable<PostBySlugQueryResult>;
-type ContentGuide = NonNullable<HelpCenterGuideBySlugQueryResult>;
+import { getRetiredPostFallback, getRetiredPostPage } from './retired-posts';
+import { getDeprecationTarget } from './shared-redirect-logic';
 
 /**
- * Where a content slug ends up. Every legacy content URL (`/posts/:slug`,
- * `/support/:slug`, `/support/guide/:slug`, `/help-center/...`) goes through
- * `resolveContentSlug`, so each one either serves, issues exactly one 301 to
- * its final URL, or returns a real 404/410. Nothing redirects to a URL that
- * would itself redirect. Help center guides are no longer served here: they
- * live on Leather Docs (GitBook), see leather-docs-guides.ts.
+ * Where a content slug ends up. The app no longer serves posts or help center guides: every
+ * legacy content URL (`/posts/:slug`, `/support/:slug`, `/support/guide/:slug`,
+ * `/help-center/...`) issues exactly one 301 to its final URL, or returns a real 404. Nothing
+ * redirects to a URL that would itself redirect. Guides and explainers live on Leather Docs
+ * (GitBook), see leather-docs-guides.ts; other posts go to the docs blog, /apps or a legal page.
  */
-type ContentSlugResolution<TPost = ContentPost> =
-  | { kind: 'post'; post: TPost; canonicalPath: string }
-  | { kind: 'redirect'; location: string }
-  | { kind: 'gone' }
-  | { kind: 'not-found' };
+type ContentSlugResolution = { kind: 'redirect'; location: string } | { kind: 'not-found' };
 
-export interface ContentFetchers<TPost = ContentPost, TGuide = ContentGuide> {
-  fetchPost(slug: string): Promise<TPost | null>;
-  fetchGuide(slug: string): Promise<TGuide | null>;
+export interface ContentFetchers {
+  hasPost(slug: string): Promise<boolean>;
+  hasGuide(slug: string): Promise<boolean>;
 }
 
-/** Sanity-backed fetchers used by the routes; tests inject fakes. */
+const contentExistsQuery = `defined(*[_type == $type && slug.current == $slug][0]._id)`;
+
+/** Sanity-backed lookups used by the alias routes; tests inject fakes. */
 export const cmsContentFetchers: ContentFetchers = {
-  fetchPost: slug => cmsClient.fetch(postBySlugQuery, { slug }),
-  fetchGuide: slug => cmsClient.fetch(helpCenterGuideBySlugQuery, { slug }),
+  hasPost: slug => cmsClient.fetch<boolean>(contentExistsQuery, { type: 'post', slug }),
+  hasGuide: slug => cmsClient.fetch<boolean>(contentExistsQuery, { type: 'helpCenterGuide', slug }),
 };
 
-export function postPath(slug: string): `/${string}` {
-  return `/posts/${encodeURIComponent(slug)}`;
-}
-
-export async function resolveContentSlug<TPost, TGuide>(
-  slug: string,
-  fetchers: ContentFetchers<TPost, TGuide>
-): Promise<ContentSlugResolution<TPost>> {
+/** The final URL for a slug known to the repo's redirect data, without asking Sanity. */
+function getKnownContentTarget(slug: string) {
   // Retired ordinals / runes / stamps content always points at its deprecation notice,
   // even where the original post or guide still exists in Sanity.
   const deprecationTarget = getDeprecationTarget(slug);
-  if (deprecationTarget) return { kind: 'redirect', location: deprecationTarget };
-
-  if (hasLeatherDocsGuide(slug)) return { kind: 'redirect', location: leatherDocsGuideUrl(slug) };
-
-  const [guide, post] = await Promise.all([fetchers.fetchGuide(slug), fetchers.fetchPost(slug)]);
-
-  // A help center guide is the canonical home for a slug, even when an older post shares it.
-  if (guide) return { kind: 'redirect', location: leatherDocsGuideUrl(slug) };
-  if (post) return { kind: 'post', post, canonicalPath: postPath(slug) };
-
+  if (deprecationTarget) return deprecationTarget;
+  if (hasLeatherDocsGuide(slug)) return leatherDocsGuideUrl(slug);
+  if (hasLeatherDocsBlogPage(slug)) return leatherDocsBlogUrl(slug);
+  const retiredPostPage = getRetiredPostPage(slug);
+  if (retiredPostPage) return retiredPostPage;
   // Slugs from the retired Framer/Notion collection that never made it into Sanity.
-  const legacyTarget = getLegacyContentTarget(slug);
-  if (legacyTarget?.action === 'redirect') {
-    return { kind: 'redirect', location: toFinalLocation(legacyTarget.to) };
-  }
-  if (legacyTarget?.action === 'retire') return { kind: 'gone' };
+  return getLegacyContentTarget(slug);
+}
+
+export async function resolveContentSlug(
+  slug: string,
+  fetchers: ContentFetchers
+): Promise<ContentSlugResolution> {
+  const knownTarget = getKnownContentTarget(slug);
+  if (knownTarget) return { kind: 'redirect', location: knownTarget };
+
+  const [guide, post] = await Promise.all([fetchers.hasGuide(slug), fetchers.hasPost(slug)]);
+
+  // A help center guide Leather Docs has no page for goes to the Guides home, even when an
+  // older post shares its slug.
+  if (guide) return { kind: 'redirect', location: LEATHER_DOCS.guides };
+  if (post) return { kind: 'redirect', location: getRetiredPostFallback(slug) };
 
   return { kind: 'not-found' };
-}
-
-/**
- * Legacy redirect tables name some targets by an in-app path that now redirects to Leather Docs
- * (`/support`, `/support/:slug`, `/posts/:slug`); this returns the final URL, so each legacy link
- * still resolves in a single hop. Other locations pass through unchanged.
- */
-function toFinalLocation(location: string) {
-  if (location === '/support') return LEATHER_DOCS.guides;
-  const [, prefix, encodedSlug] = /^\/(support|posts)\/([^/]+)$/.exec(location) ?? [];
-  if (!encodedSlug) return location;
-  const slug = decodeURIComponent(encodedSlug);
-  const docsTarget =
-    getDeprecationTarget(slug) ?? (hasLeatherDocsGuide(slug) ? leatherDocsGuideUrl(slug) : null);
-  if (docsTarget) return docsTarget;
-  return prefix === 'support' ? LEATHER_DOCS.guides : location;
-}
-
-export function isRedirectedContentSlug(slug: string) {
-  return isDeprecatedContentSlug(slug) || hasLeatherDocsGuide(slug);
 }
 
 function withSearch(location: string, request: Request) {
@@ -98,40 +71,22 @@ function withSearch(location: string, request: Request) {
   return search ? `${location}${search}` : location;
 }
 
-/**
- * Builds the response for any resolution the current route can't render itself:
- * a single 301 to the final URL, or a 404/410 for the route's error boundary.
- */
-function unservedContentResponse(resolution: ContentSlugResolution<unknown>, request: Request) {
-  switch (resolution.kind) {
-    case 'post':
-      return redirect(withSearch(resolution.canonicalPath, request), 301);
-    case 'redirect':
-      return redirect(withSearch(resolution.location, request), 301);
-    case 'gone':
-      return data('This page has been retired.', { status: 410 });
-    case 'not-found':
-    default:
-      return data('The requested page could not be found.', { status: 404 });
-  }
-}
-
-export async function loadPostBySlug<TPost, TGuide>(
+/** Legacy alias routes (`/guides/:slug`, `/security`, ...): one 301 to the final URL, or a 404. */
+export async function redirectContentSlug(
   slug: string,
   request: Request,
-  fetchers: ContentFetchers<TPost, TGuide>
-): Promise<{ post: TPost }> {
-  const resolution = await resolveContentSlug(slug, fetchers);
-  if (resolution.kind === 'post') return { post: resolution.post };
-  throw unservedContentResponse(resolution, request);
-}
-
-/** Legacy alias routes (`/guides/:slug`, `/security`, ...) never serve content themselves. */
-export async function redirectContentSlug<TPost, TGuide>(
-  slug: string,
-  request: Request,
-  fetchers: ContentFetchers<TPost, TGuide>
+  fetchers: ContentFetchers
 ): Promise<never> {
   const resolution = await resolveContentSlug(slug, fetchers);
-  throw unservedContentResponse(resolution, request);
+  if (resolution.kind === 'redirect') throw redirect(withSearch(resolution.location, request), 301);
+  throw data('The requested page could not be found.', { status: 404 });
+}
+
+/**
+ * `/posts/:slug` always redirects, without asking Sanity: posts are retired, so any slug
+ * without a more specific home goes to /apps or the docs blog.
+ */
+export function redirectPostSlug(slug: string, request: Request): never {
+  const location = getKnownContentTarget(slug) ?? getRetiredPostFallback(slug);
+  throw redirect(withSearch(location, request), 301);
 }

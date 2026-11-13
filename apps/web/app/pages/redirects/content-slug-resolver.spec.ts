@@ -1,10 +1,15 @@
 import { describe, expect, test, vi } from 'vitest';
 import { LEATHER_DOCS } from '~/constants/leather-docs';
+import {
+  LEATHER_DOCS_BLOG_PAGES,
+  LEATHER_DOCS_GUIDE_PAGES,
+  LEATHER_DOCS_RENAMED_PAGES,
+} from '~/constants/leather-docs-pages';
 
 import {
   type ContentFetchers,
-  loadPostBySlug,
   redirectContentSlug,
+  redirectPostSlug,
   resolveContentSlug,
 } from './content-slug-resolver';
 import { getLegacyContentEntries } from './legacy-content-redirects';
@@ -27,22 +32,15 @@ const docsInstallLeather = `${docsGuides}/get-started/install-leather`;
 const docsSendStx = `${docsGuides}/transactions/send-stx`;
 const docsSecureSecretKey = `${docsGuides}/wallet-and-security/secure-secret-key`;
 const docsWhatIsStacks = `${docsGuides}/learn/what-is-stacks`;
-
-interface FakeDoc {
-  _id: string;
-}
+const docsBlog = LEATHER_DOCS.blog;
 
 function createFetchers(content: { posts?: string[]; guides?: string[] } = {}) {
   const posts = new Set([postOnlySlug, guideAndPostSlug, ...(content.posts ?? [])]);
   const guides = new Set([guideOnlySlug, guideAndPostSlug, ...(content.guides ?? [])]);
   return {
-    fetchPost: vi.fn((slug: string) =>
-      Promise.resolve(posts.has(slug) ? { _id: `post-${slug}` } : null)
-    ),
-    fetchGuide: vi.fn((slug: string) =>
-      Promise.resolve(guides.has(slug) ? { _id: `guide-${slug}` } : null)
-    ),
-  } satisfies ContentFetchers<FakeDoc, FakeDoc>;
+    hasPost: vi.fn((slug: string) => Promise.resolve(posts.has(slug))),
+    hasGuide: vi.fn((slug: string) => Promise.resolve(guides.has(slug))),
+  } satisfies ContentFetchers;
 }
 
 function request(path: string) {
@@ -67,9 +65,30 @@ async function captureThrown(promise: Promise<unknown>) {
 }
 
 describe('resolveContentSlug', () => {
-  test('serves a Sanity post at its /posts URL', async () => {
+  test('sends a post with a page on the Leather Docs blog to that page', async () => {
     const resolution = await resolveContentSlug(postOnlySlug, createFetchers());
-    expect(resolution).toMatchObject({ kind: 'post', canonicalPath: `/posts/${postOnlySlug}` });
+    expect(resolution).toEqual({ kind: 'redirect', location: `${docsBlog}/${postOnlySlug}` });
+  });
+
+  test('sends any other Sanity post to the Leather Docs blog', async () => {
+    const slug = 'how-roo-has-built-a-community-on-bitcoin';
+    const resolution = await resolveContentSlug(slug, createFetchers({ posts: [slug] }));
+    expect(resolution).toEqual({ kind: 'redirect', location: docsBlog });
+  });
+
+  test('sends app posts to /apps and legal posts to their page', async () => {
+    expect(await resolveContentSlug('arkadiko', createFetchers())).toEqual({
+      kind: 'redirect',
+      location: '/apps',
+    });
+    expect(await resolveContentSlug('privacy-policy', createFetchers())).toEqual({
+      kind: 'redirect',
+      location: '/privacy-policy',
+    });
+    expect(await resolveContentSlug('terms-of-service', createFetchers())).toEqual({
+      kind: 'redirect',
+      location: '/terms',
+    });
   });
 
   test('prefers the guide on Leather Docs when a post shares its slug', async () => {
@@ -86,31 +105,34 @@ describe('resolveContentSlug', () => {
     const fetchers = createFetchers({ guides: [deprecatedSlug] });
     const resolution = await resolveContentSlug(deprecatedSlug, fetchers);
     expect(resolution).toEqual({ kind: 'redirect', location: ordinalsDeprecationPath });
-    expect(fetchers.fetchGuide).not.toHaveBeenCalled();
-    expect(fetchers.fetchPost).not.toHaveBeenCalled();
+    expect(fetchers.hasGuide).not.toHaveBeenCalled();
+    expect(fetchers.hasPost).not.toHaveBeenCalled();
   });
 
-  test('uses the legacy map only when Sanity has no content for the slug', async () => {
-    expect(await resolveContentSlug('apps-xlink', createFetchers())).toEqual({
+  test('resolves legacy slugs without querying Sanity', async () => {
+    const fetchers = createFetchers();
+    expect(await resolveContentSlug('apps-xlink', fetchers)).toEqual({
       kind: 'redirect',
-      location: '/posts/brotocol',
+      location: '/apps',
     });
-    expect(
-      await resolveContentSlug('apps-xlink', createFetchers({ posts: ['apps-xlink'] }))
-    ).toMatchObject({ kind: 'post' });
+    expect(fetchers.hasPost).not.toHaveBeenCalled();
   });
 
-  test('marks retired legacy slugs as gone and unknown slugs as not found', async () => {
-    expect(await resolveContentSlug('befi-labs', createFetchers())).toEqual({ kind: 'gone' });
+  test('sends formerly retired legacy slugs to the docs blog or /apps', async () => {
+    expect(await resolveContentSlug('befi-labs', createFetchers())).toEqual({
+      kind: 'redirect',
+      location: docsBlog,
+    });
+    expect(await resolveContentSlug('apps-befi-labs', createFetchers())).toEqual({
+      kind: 'redirect',
+      location: '/apps',
+    });
+  });
+
+  test('marks unknown slugs as not found', async () => {
     expect(await resolveContentSlug('no-such-post', createFetchers())).toEqual({
       kind: 'not-found',
     });
-  });
-
-  test('encodes slugs when building canonical paths', async () => {
-    const slug = 'what-is-a-bns-name?';
-    const resolution = await resolveContentSlug(slug, createFetchers({ posts: [slug] }));
-    expect(resolution).toMatchObject({ canonicalPath: '/posts/what-is-a-bns-name%3F' });
   });
 
   test('maps renamed guide slugs to their Leather Docs page', async () => {
@@ -121,50 +143,41 @@ describe('resolveContentSlug', () => {
 });
 
 describe('/posts/:slug', () => {
-  test('serves a post', async () => {
-    const result = await loadPostBySlug(
-      postOnlySlug,
-      request(`/posts/${postOnlySlug}`),
-      createFetchers()
-    );
-    expect(result.post).toEqual({ _id: `post-${postOnlySlug}` });
+  function captureRedirect(slug: string, path = `/posts/${slug}`) {
+    try {
+      redirectPostSlug(slug, request(path));
+    } catch (thrown) {
+      if (thrown instanceof Response) {
+        return { status: thrown.status, location: thrown.headers.get('Location') };
+      }
+    }
+    throw new Error('Expected a redirect');
+  }
+
+  test.each([
+    [guideAndPostSlug, docsReceiveBtc],
+    [deprecatedSlug, ordinalsDeprecationPath],
+    ['api-sign-psbt', `${LEATHER_DOCS.developers}/bitcoin-methods/signpsbt`],
+    [postOnlySlug, `${docsBlog}/${postOnlySlug}`],
+    ['zest', '/apps'],
+    ['apps-xlink', '/apps'],
+    ['apps-not-in-any-table', '/apps'],
+    ['privacy-policy', '/privacy-policy'],
+    ['terms-of-service', '/terms'],
+    // A spotlight and an explainer without a docs page, a formerly retired slug, an unknown slug
+    ['how-roo-has-built-a-community-on-bitcoin', docsBlog],
+    ['leather', docsBlog],
+    ['tokens-btc', docsBlog],
+    ['no-such-post', docsBlog],
+  ])('301s %s once to %s', (slug, location) => {
+    expect(captureRedirect(slug)).toEqual({ status: 301, location });
   });
 
-  test('301s to the guide on Leather Docs when one exists', async () => {
-    const thrown = await captureThrown(
-      loadPostBySlug(guideAndPostSlug, request(`/posts/${guideAndPostSlug}`), createFetchers())
-    );
-    expect(thrown).toEqual({ status: 301, location: docsReceiveBtc });
-  });
-
-  test('301s a deprecated slug once, straight to its discontinued notice', async () => {
-    const thrown = await captureThrown(
-      loadPostBySlug(deprecatedSlug, request(`/posts/${deprecatedSlug}`), createFetchers())
-    );
-    expect(thrown).toEqual({ status: 301, location: ordinalsDeprecationPath });
-  });
-
-  test('301s a legacy Framer slug once and keeps the query string', async () => {
-    const thrown = await captureThrown(
-      loadPostBySlug('tokens-stx', request('/posts/tokens-stx?utm_source=x'), createFetchers())
-    );
-    expect(thrown).toEqual({
+  test('keeps the query string', () => {
+    expect(captureRedirect('tokens-stx', '/posts/tokens-stx?utm_source=x')).toEqual({
       status: 301,
       location: `${docsGuides}/stacking-and-sbtc-reference/stacks-token-stx?utm_source=x`,
     });
-  });
-
-  test('returns 404 for unknown slugs and 410 for retired ones', async () => {
-    expect(
-      await captureThrown(
-        loadPostBySlug('no-such-post', request('/posts/no-such-post'), createFetchers())
-      )
-    ).toEqual({ status: 404, location: null });
-    expect(
-      await captureThrown(
-        loadPostBySlug('befi-labs', request('/posts/befi-labs'), createFetchers())
-      )
-    ).toEqual({ status: 410, location: null });
   });
 });
 
@@ -192,10 +205,10 @@ describe('/support/:slug and /support/guide/:slug', () => {
       redirectContentSlug('send-stx', request('/support/send-stx?utm_source=x'), fetchers)
     );
     expect(thrown).toEqual({ status: 301, location: `${docsSendStx}?utm_source=x` });
-    expect(fetchers.fetchGuide).not.toHaveBeenCalled();
+    expect(fetchers.hasGuide).not.toHaveBeenCalled();
   });
 
-  test('301s a post that is not on Leather Docs to /posts', async () => {
+  test('301s a post that is not on Leather Docs to the docs blog', async () => {
     const thrown = await captureThrown(
       redirectContentSlug(
         'stacking',
@@ -203,7 +216,7 @@ describe('/support/:slug and /support/guide/:slug', () => {
         createFetchers({ posts: ['stacking'] })
       )
     );
-    expect(thrown).toEqual({ status: 301, location: '/posts/stacking' });
+    expect(thrown).toEqual({ status: 301, location: docsBlog });
   });
 
   test('returns 404 for unknown slugs', async () => {
@@ -243,7 +256,8 @@ describe('legacy prefixes', () => {
   );
 
   test.each([
-    ['/guides/stacking', '/posts/stacking', ['stacking']],
+    ['/guides/stacking', docsBlog, ['stacking']],
+    ['/guides/bitflow', '/apps', []],
     ['/guides/start-with-leather', docsGuides, []],
     // Linked from the extension's stx_transferStx approval screen
     ['/guides/send-stacks-from-app', docsSendStx, []],
@@ -258,6 +272,7 @@ describe('legacy prefixes', () => {
 describe('legacy Framer short paths', () => {
   test.each([
     ['/security', `${docsGuides}/wallet-and-security/security`, ['security'], ['security']],
+    ['/wallet-apps', `${docsGuides}/learn/custodial-vs-non-custodial-wallet`, [], []],
   ])('%s resolves through Sanity to %s', async (path, location, posts, guides) => {
     const thrown = await captureThrown(
       legacyPathRedirectLoader(request(path), createFetchers({ posts, guides }))
@@ -278,6 +293,12 @@ describe('legacy Framer short paths', () => {
     ['/help-center', docsGuides],
     ['/developers', LEATHER_DOCS.developers],
     ['/old-page/developer-docs', LEATHER_DOCS.developers],
+    ['/posts', docsBlog],
+    ['/posts/', docsBlog],
+    ['/news', docsBlog],
+    ['/blog?ref=x', `${docsBlog}?ref=x`],
+    ['/old-page/blog', docsBlog],
+    ['/old-page/learn', docsBlog],
   ])('%s redirects to %s', async (path, location) => {
     const response = await legacyPathRedirectLoader(request(path), createFetchers());
     expect(response.status).toBe(301);
@@ -287,23 +308,35 @@ describe('legacy Framer short paths', () => {
 
 describe('no redirect chains', () => {
   const entries = getLegacyContentEntries();
+  const appRoutes = ['/', '/apps', '/privacy-policy', '/terms'];
 
-  test('every legacy slug resolves to a final URL in one hop', async () => {
-    const slugs = new Set(entries.map(([slug]) => slug));
-    for (const [slug, target] of entries) {
-      if (target.action !== 'redirect') continue;
-      const resolution = await resolveContentSlug(slug, createFetchers());
-      expect(resolution.kind, slug).toBe('redirect');
-      if (resolution.kind !== 'redirect') continue;
-      const { location } = resolution;
-      if (location === docsGuides && target.to === '/support') continue;
-      if (location.startsWith(`${docsGuides}/`) || location === '/') continue;
-      // Help center targets resolve to a page on Leather Docs, never the Guides home
-      expect(target.to.startsWith('/support'), slug).toBe(false);
-      const [, section, targetSlug] = location.split('/');
-      expect(section, slug).toBe('posts');
-      expect(getDeprecationTarget(targetSlug), slug).toBeNull();
-      expect(slugs.has(targetSlug), slug).toBe(false);
+  test('every legacy slug points at a final URL', () => {
+    for (const [slug, location] of entries) {
+      if (appRoutes.includes(location)) continue;
+      expect(location.startsWith(`${docsGuides}/`) || location === docsGuides, slug).toBe(true);
+      // Never a path the app itself redirects
+      expect(location, slug).not.toMatch(/^\/(posts|news|support|guides|help-center)\b/);
+    }
+  });
+
+  test('every Leather Docs target is a known docs page', () => {
+    const knownDocsUrls = new Set([
+      docsGuides,
+      docsBlog,
+      ...LEATHER_DOCS_GUIDE_PAGES.map(path => `${docsGuides}/${path}`),
+      ...LEATHER_DOCS_BLOG_PAGES.map(slug => `${docsBlog}/${slug}`),
+      ...[...LEATHER_DOCS_RENAMED_PAGES.values()].map(path => `${docsGuides}/${path}`),
+    ]);
+    for (const [slug, location] of entries) {
+      if (appRoutes.includes(location)) continue;
+      expect(knownDocsUrls.has(location), `${slug} -> ${location}`).toBe(true);
+    }
+  });
+
+  test('legacy entries for app listings keep docs targets and otherwise go to /apps', () => {
+    for (const [slug, location] of entries) {
+      if (!slug.startsWith('apps-')) continue;
+      expect(location === '/apps' || location.startsWith(`${docsGuides}/`), slug).toBe(true);
     }
   });
 

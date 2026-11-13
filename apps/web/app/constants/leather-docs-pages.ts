@@ -168,6 +168,53 @@ export const LEATHER_DOCS_GUIDE_PAGES = [
   'wallet-and-security/wallet-derivation-paths',
 ];
 
+// Every post in the Blog section of Leather Docs, from https://docs.leather.io/sitemap-pages.xml
+// (the pages under /blog/). A page's slug matches the retired post it replaces.
+export const LEATHER_DOCS_BLOG_PAGES = [
+  '5-challenges-of-bitcoin-defi-and-how-nakamoto-could-address-them',
+  'a-bitcoin-user-s-guide-to-mempool-sniping',
+  'a-brief-history-of-welshcorgicoin',
+  'a-faster-more-reliable-leather-with-mempool-space',
+  'alex-labs-bitcoin-defi-damm-2025',
+  'an-overview-of-stacks-defi-in-2024',
+  'another-bitcoin-halving-is-coming-what-it-means-for-bitcoin-users',
+  'bitcoin-is-more',
+  'bitflow-integration',
+  'carbon-country-agrivoltaics-bitcoin-mining-2025',
+  'earn-rewards-sbtc',
+  'gearing-up-for-2024-with-leather',
+  'giving-users-the-best-bitcoin-wallet-balance-displays-usd-balances-in-leather',
+  'grow-your-bitcoin-mobile-app',
+  'grow-your-bitcoin-new-web-app',
+  'hermetica-s-bitcoin-backed-synthetic-dollar',
+  'how-leather-carries-out-secure-transactions',
+  'how-nakamoto-will-help-build-scalable-defi-apps',
+  'how-the-stacks-nakamoto-release-will-contribute-to-bitcoin-security',
+  'how-to-bring-more-builders-to-bitcoin-defi',
+  'impact-landscape-of-bitcoin-layer-2',
+  'in-app-swaps-with-leather-and-alex-are-now-live',
+  'introducing-leather-the-bitcoin-wallet-for-the-rest-of-us',
+  'july-partnerships-roundup-more-avenues-for-rare-sats',
+  'june-partnerships-roundup-making-bitcoin-payments-more-accessible',
+  'nakamoto-impact-bitcoin-mev',
+  'nakamoto1',
+  'partnerships-december-2024',
+  'partnerships-november-2024',
+  'pushing-bitcoin-boundaries-stacks-buidl-battle-winners',
+  'recapping-bitcoin-nashville-2024-why-bitcoin-wallets-need-better-ui-ux',
+  'september-partnerships-roundup',
+  'stacks-memecoins',
+  'stacks-multisig-support-is-live',
+  'the-future-of-bitcoin-bridges-with-teleportdao',
+  'the-legacy-of-bitcoin-pizza-day',
+  'token-privacy-dapp-connections',
+  'troy-cross-bitcoin-energy-societal-transformation',
+  'unpacking-leather-s-new-brand-identity',
+  'what-are-bitcoin-burner-wallets-a-starter-s-guide-to-protecting-your-bitcoin',
+  'what-is-bitcoin-finality-achieving-100-bitcoin-finality-with-stacks',
+  'what-is-digital-matter-theory-dmt-a-stacks-invaders-case-study',
+];
+
 // Post and guide slugs with no same-slug page, mapped to the page that replaced them.
 export const LEATHER_DOCS_RENAMED_PAGES = new Map<string, string>([
   ['what-are-bns-names-(.btc-names)-in-stacks?', 'learn/bns'],

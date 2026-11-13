@@ -5,10 +5,7 @@ import { LEATHER_DOCS } from '~/constants/leather-docs';
 import { type ContentFetchers, redirectContentSlug } from './content-slug-resolver';
 import { getLegacyPathTarget } from './legacy-path-redirects';
 
-export async function legacyPathRedirectLoader<TPost, TGuide>(
-  request: Request,
-  fetchers: ContentFetchers<TPost, TGuide>
-) {
+export async function legacyPathRedirectLoader(request: Request, fetchers: ContentFetchers) {
   const url = new URL(request.url);
   const target = getLegacyPathTarget(url.pathname);
 

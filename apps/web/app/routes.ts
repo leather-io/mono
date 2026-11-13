@@ -9,7 +9,6 @@ export default [
   index('pages/marketing/home/home.route.tsx'),
   // Marketing pages
   route('apps', 'pages/marketing/apps/apps.route.tsx'),
-  route('news', 'pages/marketing/news/news.route.tsx'),
   route('explorer', 'pages/marketing/explorer/explorer.route.tsx'),
   // sBTC
   route('sbtc', 'pages/sbtc/sbtc.route.tsx'),
@@ -22,9 +21,8 @@ export default [
   route('privacy-policy', 'pages/legal/privacy-policy.route.tsx'),
   route('terms', 'pages/legal/terms.route.tsx'),
   // Legacy content: /posts/:slug, /support/:slug and every legacy alias resolve through
-  // pages/redirects/content-slug-resolver.ts (serve, one 301 to the final URL, or 404/410)
-  route('posts', 'pages/posts/posts.route.tsx'),
-  route('posts/:postSlug', 'pages/posts/post.route.tsx'),
+  // pages/redirects/content-slug-resolver.ts (one 301 to the final URL, or 404)
+  route('posts/:slug', 'pages/redirects/post-redirect.route.tsx'),
   // The help center and developers pages moved to Leather Docs (GitBook). /developers, /support,
   // /support/search and /help-center are in legacyPathRedirectRoutes; guide slugs 301 to their page.
   route('support/guide/:slug', 'pages/redirects/support-guide-redirect.route.tsx'),

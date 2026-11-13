@@ -30,10 +30,7 @@ function getHelpCenterSlug(segments: string[]) {
  * URL (one hop): its Leather Docs page, a post, or a deprecation notice. `/help-center/` and the
  * old search page go to the Leather Docs Guides home; any other path is a 404.
  */
-export async function helpCenterWildcardLoader<TPost, TGuide>(
-  request: Request,
-  fetchers: ContentFetchers<TPost, TGuide>
-) {
+export async function helpCenterWildcardLoader(request: Request, fetchers: ContentFetchers) {
   const url = new URL(request.url);
   const segments = splitPath(url.pathname, '/help-center');
 
@@ -48,10 +45,7 @@ export async function helpCenterWildcardLoader<TPost, TGuide>(
 }
 
 /** Framer forwarded leather.io/guides/:slug to /posts/:slug. */
-export async function guidesWildcardLoader<TPost, TGuide>(
-  request: Request,
-  fetchers: ContentFetchers<TPost, TGuide>
-) {
+export async function guidesWildcardLoader(request: Request, fetchers: ContentFetchers) {
   const url = new URL(request.url);
   const segments = splitPath(url.pathname, '/guides');
 

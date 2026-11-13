@@ -6,9 +6,16 @@
  *
  * Kept free of runtime imports so `routes.ts` can read the path list.
  */
-type LegacyPathTarget = { slug: string } | { to: `/${string}` } | { docs: 'guides' | 'developers' };
+type LegacyPathTarget =
+  | { slug: string }
+  | { to: `/${string}` }
+  | { docs: 'guides' | 'developers' | 'blog' };
 
 const legacyPathRedirects = new Map<string, LegacyPathTarget>([
+  // The news and posts pages, retired for the Leather Docs blog
+  ['/posts', { docs: 'blog' }],
+  ['/news', { docs: 'blog' }],
+  ['/blog', { docs: 'blog' }],
   ['/terms-of-service', { to: '/terms' }],
   ['/security', { slug: 'security' }],
   // The wallet download pages were not rebuilt: installing lives on the home page now.
@@ -33,8 +40,8 @@ const legacyPathRedirects = new Map<string, LegacyPathTarget>([
   ['/old-page/install-desktop', { to: '/' }],
   ['/old-page/mobilewaitlist', { to: '/' }],
   ['/old-page/wallet-apps', { slug: 'wallets-comparison' }],
-  ['/old-page/blog', { to: '/posts' }],
-  ['/old-page/learn', { to: '/posts' }],
+  ['/old-page/blog', { docs: 'blog' }],
+  ['/old-page/learn', { docs: 'blog' }],
   ['/old-page/guides', { docs: 'guides' }],
   ['/old-page/frequent-questions', { docs: 'guides' }],
   ['/old-page/contact', { docs: 'guides' }],
