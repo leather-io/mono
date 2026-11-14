@@ -6,6 +6,8 @@ import {
   BITFLOW_KEEPER_API_HOST,
   BITFLOW_KEEPER_API_KEY,
   BITFLOW_PROVIDER_ADDRESS,
+  IS_TEST_ENV,
+  SPONSORSHIP_API_URL,
   WALLET_ENVIRONMENT,
 } from '@shared/environment';
 
@@ -13,10 +15,16 @@ import { ExtensionAuthSessionService } from './extension-auth-session.service';
 import { ExtensionHttpCacheService } from './extension-http-cache.service';
 import { ExtensionSettingsService } from './extension-settings.service';
 
+function getSponsorshipApiUrlOverride() {
+  if (IS_TEST_ENV || !SPONSORSHIP_API_URL) return undefined;
+  return SPONSORSHIP_API_URL;
+}
+
 export function initAppServices() {
   initServicesContainer({
     env: {
       environment: WALLET_ENVIRONMENT,
+      sponsorshipApiUrl: getSponsorshipApiUrlOverride(),
       bitflow: {
         bitflowApiHost: BITFLOW_API_HOST,
         bitflowApiKey: BITFLOW_API_KEY,

@@ -64,6 +64,8 @@ export const querySettingsDepsRegistry = {
   'leather-api--bitcoin-fee-rates': ['network'],
   'bitcoin-transaction-fees-service--get-bitcoin-transaction-fees': ['network'],
   'stacks-transaction-fees-service--get-stacks-transaction-fees': ['network'],
+  // sbtc sponsorship
+  'leather-sponsorship-api--get-quote': ['network'],
   'hiro-stacks-api-client--get-account-nonces': ['network'],
   'hiro-stacks-api-client--get-contract-interface': ['network'],
   'hiro-stacks-api-client--get-raw-transaction-by-id': ['network'],
