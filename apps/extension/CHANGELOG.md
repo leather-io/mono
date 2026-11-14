@@ -40,6 +40,27 @@
 
 ---
 
+## [6.115.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.115.0...@leather.io/extension-v6.115.1) (2026-11-13)
+
+
+### Bug Fixes
+
+* bitcoinjs-lib audit ([#2959](https://github.com/leather-io/mono/issues/2959)) ([47f9582](https://github.com/leather-io/mono/commit/47f95825a09be6f4ae695e0a2c62bf3268febb30))
+* **extension:** correct nfts typo in receive caption ([#2941](https://github.com/leather-io/mono/issues/2941)) ([d15b9ae](https://github.com/leather-io/mono/commit/d15b9aee3278af9cab5318bc713b3cfb35211a64))
+* **extension:** hash structured message bytes for ledger display ([#2949](https://github.com/leather-io/mono/issues/2949)) ([34cb2d8](https://github.com/leather-io/mono/commit/34cb2d886d442ccde2150a6bd126544f90eedce1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.27.0
+    * @leather.io/bitcoin bumped to 0.42.2
+    * @leather.io/features bumped to 1.8.7
+    * @leather.io/queries bumped to 0.18.0
+    * @leather.io/services bumped to 1.67.0
+    * @leather.io/ui bumped to 1.120.0
+
 ## [6.115.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.114.0...@leather.io/extension-v6.115.0) (2026-10-27)
 
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.18.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.17.3...@leather.io/queries-v0.18.0) (2026-11-13)
+
+
+### Features
+
+* **mobile:** token presets and a hidden tokens pill under the list ([#2859](https://github.com/leather-io/mono/issues/2859)) ([9e71d62](https://github.com/leather-io/mono/commit/9e71d6218aca02385ab98330c9ff90c8e85bd2fe))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/services bumped to 1.67.0
+
 ## [0.17.3](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.17.2...@leather.io/queries-v0.17.3) (2026-10-27)
 
 
