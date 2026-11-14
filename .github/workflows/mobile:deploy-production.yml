@@ -2,6 +2,7 @@ name: mobile:deploy-production
 
 permissions:
   contents: read
+cache-mode: none
 defaults:
   run:
     shell: bash
@@ -55,13 +56,6 @@ jobs:
       - name: enforce-cocoapods-version
         working-directory: apps/mobile
         run: bash scripts/enforce-cocoapods-version.sh
-
-      - name: cache-pods
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: apps/mobile/ios/Pods
-          key: pods-${{ hashFiles('apps/mobile/ios/Podfile.lock') }}
-          restore-keys: pods-
 
       - name: build-archive
         working-directory: apps/mobile
@@ -169,15 +163,6 @@ jobs:
           ruby-version: '3.3'
           bundler-cache: true
           working-directory: apps/mobile/fastlane
-
-      - name: cache-gradle
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ hashFiles('apps/mobile/android/**/*.gradle*', 'apps/mobile/android/gradle.properties') }}
-          restore-keys: gradle-
 
       - name: gcp-auth
         id: gcp-auth
