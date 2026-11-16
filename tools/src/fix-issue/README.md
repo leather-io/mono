@@ -234,15 +234,14 @@ stolen token away from everything but bot branches. Keep them as follows:
 - `dev` keeps two approvals from the reviewers team and approval of the most recent push by someone
   other than its pusher, so the App's own approval never counts.
 
-The App can still push anything except workflow files to a `bot/` branch, and CI runs it there. Any
-job that runs on pull requests or on pushes to any branch must therefore skip `bot/` branches
-before it gets a secret, an environment or `contents` or `id-token` write, or calls a reusable
-workflow: `if: ${{ !startsWith(github.head_ref || github.ref_name, 'bot/') }}` on the job, or on
-each step that uses a secret when secrets in steps are all the job gets. `pnpm lt
-bot-branch-secret-guard check` (part of `pnpm lint`, so it runs locally and in CI) fails a job
-without it, apart from the jobs listed in `.github/bot-branch-secret-guard-baseline.json`, whose
-secrets are low-risk; that list only shrinks, and an entry that is no longer needed fails the check
-too.
+The App can still push anything except workflow files to a `bot/` branch, and CI runs it there
+before anyone has reviewed it. Three jobs on pull requests and branch pushes hold a secret today
+(`staging` in `web:staging-build`, `test-coverage` in `repo:code-checks` and `review` in
+`repo:claude-code-review`), and their secrets are low-risk, so they run on bot branches like on any
+other. Nothing checks this for you: a new job of that kind that gets a secret worth protecting, an
+environment or `contents` or `id-token` write must either skip bot branches with
+`if: ${{ !startsWith(github.head_ref || github.ref_name, 'bot/') }}` or take the secret from an
+environment whose rules keep it away from them.
 
 **App setup, once per repository:**
 

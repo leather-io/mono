@@ -22,7 +22,6 @@ describe('refusedPaths', () => {
   test('refuses the tools package, which holds the checks the workflow runs on a fix', () => {
     const files = [
       'tools/src/fix-issue/git.ts',
-      'tools/src/bot-branch-secret-guard/check.ts',
       'tools/src/commands/fix-issue.ts',
       'tools/src/lt.ts',
       'tools/bin/lt.js',
