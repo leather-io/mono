@@ -1,5 +1,6 @@
 import { createRequestHandler } from 'react-router';
 
+import { getCanonicalHostRedirect } from './canonical-host-redirect';
 import { csp } from './csp';
 import { getStagingRedirect } from './staging-redirect';
 
@@ -19,8 +20,8 @@ const requestHandler = createRequestHandler(
 
 export default {
   async fetch(request, env, ctx) {
-    const stagingRedirect = getStagingRedirect(request);
-    if (stagingRedirect) return stagingRedirect;
+    const redirect = getCanonicalHostRedirect(request) ?? getStagingRedirect(request);
+    if (redirect) return redirect;
 
     const response = await requestHandler(request, {
       cloudflare: { env, ctx },
