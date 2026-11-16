@@ -31,7 +31,6 @@ declare global {
     readonly LEATHER_PRIVATE_NETWORK_FLAVOR?: string;
     readonly LEATHER_PRIVATE_NETWORK_NAME?: string;
     readonly LEATHER_PRIVATE_NETWORK_KEY?: string;
-    readonly LEATHER_FRONT_WEB_APP_API_TOKEN?: string;
     readonly LEATHER_MIXPANEL_TOKEN?: string;
     readonly LEATHER_SENTRY_DSN?: string;
     readonly LEATHER_SHOW_MOCK_MODE_TOGGLE?: string;
