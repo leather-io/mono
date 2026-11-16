@@ -6,6 +6,9 @@ import { playgroundRoutes } from './pages/playground/playground.routes';
 
 export default [
   index('pages/marketing/home/home.route.tsx'),
+  // Marketing pages
+  route('apps', 'pages/marketing/apps/apps.route.tsx'),
+  route('explorer', 'pages/marketing/explorer/explorer.route.tsx'),
   // sBTC
   route('sbtc', 'pages/sbtc/sbtc.route.tsx'),
   // Changelog
