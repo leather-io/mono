@@ -16,6 +16,9 @@ export default [
   route('changelog/:slug', 'pages/changelog/changelog-entry.route.tsx'),
   route('changelog.xml', 'pages/changelog/changelog-rss.route.tsx'),
   route('portfolio', 'pages/portfolio/portfolio.route.tsx'),
+  // Legal
+  route('privacy-policy', 'pages/legal/privacy-policy.route.tsx'),
+  route('terms', 'pages/legal/terms.route.tsx'),
   // A fallback to legacy post routes
   route('posts/:postSlug', 'pages/posts/post.route.tsx'),
   route('support', 'pages/support/help-center.route.tsx'),
