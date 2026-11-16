@@ -5,7 +5,7 @@ import { multisigRoutes } from './pages/multisig/multisig.routes';
 import { playgroundRoutes } from './pages/playground/playground.routes';
 
 export default [
-  index('pages/index.route.tsx'),
+  index('pages/marketing/home/home.route.tsx'),
   // sBTC
   route('sbtc', 'pages/sbtc/sbtc.route.tsx'),
   // Changelog
