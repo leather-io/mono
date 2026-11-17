@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import { AuthType, type StacksTransactionWire } from '@stacks/transactions';
 
 import { getSbtcSponsorshipErrorCode } from '@leather.io/services';
+import { delay } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 import { RouteUrls } from '@shared/route-urls';
@@ -27,6 +28,18 @@ import {
 } from './use-build-sbtc-sponsored-transfer';
 
 const timeForApiToUpdate = 250;
+const fundingPendingRetryDelayMs = 3000;
+const fundingPendingMaxRetries = 5;
+
+async function retryWhileFundingPending<T>(submit: () => Promise<T>, retriesLeft: number) {
+  try {
+    return await submit();
+  } catch (error) {
+    if (getSbtcSponsorshipErrorCode(error) !== 'funding_pending' || retriesLeft === 0) throw error;
+    await delay(fundingPendingRetryDelayMs);
+    return retryWhileFundingPending(submit, retriesLeft - 1);
+  }
+}
 
 interface UseSubmitSbtcSponsoredTransactionArgs {
   token: string;
@@ -98,10 +111,11 @@ export function useSubmitSbtcSponsoredTransaction({
       if (!signedTx) return;
 
       try {
-        const result = await submitSponsoredTransaction({
-          quoteId: sponsorship.quoteId,
-          transaction: signedTx.serialize(),
-        });
+        const request = { quoteId: sponsorship.quoteId, transaction: signedTx.serialize() };
+        const result = await retryWhileFundingPending(
+          () => submitSponsoredTransaction(request),
+          fundingPendingMaxRetries
+        );
         analytics.track('broadcast_transaction', { symbol: 'stx' });
         void refreshAccountData(timeForApiToUpdate);
         void navigate(
@@ -113,7 +127,7 @@ export function useSubmitSbtcSponsoredTransaction({
         );
       } catch (error) {
         const code = getSbtcSponsorshipErrorCode(error);
-        if (code === 'quote_expired' || code === 'stale_nonce') return requote();
+        if (code === 'quote_expired') return requote();
         logger.error('Failed to submit the sponsored transaction', error);
         void navigateToError(getSbtcSponsorshipErrorMessage(error));
       }

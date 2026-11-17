@@ -29,6 +29,7 @@ export const sbtcSponsorshipErrorCodeSchema = z.enum([
   'quote_expired',
   'not_eligible',
   'stale_nonce',
+  'funding_pending',
   'broadcast_failed',
   'upstream_unavailable',
   'rate_limited',

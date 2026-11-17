@@ -27,10 +27,12 @@ const unknownSbtcSponsorshipErrorMessage = 'Something went wrong';
 
 const sbtcSponsorshipErrorMessages: Record<SbtcSponsorshipErrorCode, string> = {
   quote_expired: 'The sBTC fee quote expired. Review the updated fee and confirm again.',
-  stale_nonce: 'The account nonce changed. Review the updated transaction and confirm again.',
+  stale_nonce: 'This account has a pending transaction. Wait for it to confirm, then send again.',
+  funding_pending:
+    'The sponsor is still preparing the transaction. Your sBTC has not moved. Try again in a moment.',
   not_eligible: "This transfer isn't eligible for sBTC fee payment",
   broadcast_failed:
-    "The sponsor couldn't broadcast the transaction. Your sBTC hasn't moved. Try again in a moment.",
+    'The transaction may already have been sent. Check your activity before trying again.',
   upstream_unavailable:
     "The sponsor couldn't reach the Stacks network. Your sBTC hasn't moved. Try again in a moment.",
   rate_limited: 'Too many requests. Wait a moment and try again.',

@@ -168,6 +168,30 @@ test.describe('Send sBTC without STX to cover the fee', () => {
     await expect(page.getByText('Sent')).toBeVisible();
   });
 
+  test('resubmits the same transaction while the fee payer funding is pending', async ({
+    extensionId,
+    homePage,
+    onboardingPage,
+    sendPage,
+  }) => {
+    await openSbtcSendForm({ extensionId, homePage, onboardingPage, sendPage });
+    const page = sendPage.page;
+    await mockSbtcSponsorshipSubmit(page, [{ status: 503, code: 'funding_pending' }, {}]);
+    const submittedTransactions: unknown[] = [];
+    page.on('request', request => {
+      if (request.url().includes(sponsorshipSubmitUrl) && request.method() === 'POST')
+        submittedTransactions.push(request.postDataJSON());
+    });
+
+    await waitForSponsoredFeeRow(page);
+    await sendPage.previewSendTxButton.click();
+    await sendPage.confirmSendTransaction();
+
+    await expect(page.getByText('Sent')).toBeVisible({ timeout: sponsoredFeeRowTimeout });
+    test.expect(submittedTransactions).toHaveLength(2);
+    test.expect(submittedTransactions[1]).toEqual(submittedTransactions[0]);
+  });
+
   test('rejects the amount when the balance cannot cover amount plus the sBTC fee', async ({
     extensionId,
     homePage,
