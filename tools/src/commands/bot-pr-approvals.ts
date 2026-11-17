@@ -54,7 +54,7 @@ export function registerBotPrApprovalsCommands(program: Command): void {
     .description('The repo:bot-pr-approvals workflow check')
     .command('check')
     .description(
-      'Fail a fix-issues bot pull request that changes .github/, is approved by whoever dispatched it, or lacks enough approvals from other reviewers'
+      'Fail a fix-issue bot pull request that changes .github/, is approved by whoever dispatched it, or lacks enough approvals from other reviewers'
     )
     .requiredOption('--pr <number>', 'Pull request number')
     .option(

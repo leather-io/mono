@@ -1,31 +1,29 @@
 import { z } from 'zod';
 
-import { type GitHubClient, paginate } from '../fix-issue/github.js';
+import { type GitHubClient, GitHubError, paginate } from '../fix-issue/github.js';
 
-const workflowFile = 'repo:fix-issues.yml';
-const botLogin = 'github-actions[bot]';
-const botBranchPattern = /^bot\/fix-(\d+)$/;
+const workflowPath = '.github/workflows/repo:fix-issue.yml';
+const dispatchEvent = 'workflow_dispatch';
+const botAccountType = 'Bot';
+const botBranchPattern = /^bot\/fix-issue-(\d+)-(\d+)$/;
 const protectedDirectory = '.github/';
-const runsPageSize = 100;
-const maxRunPages = 10;
+const notFoundStatus = 404;
 const decidingStates = new Set(['APPROVED', 'CHANGES_REQUESTED', 'DISMISSED']);
 const summaryHeading = '## bot-pr-approvals';
 
 const accountSchema = z.object({ login: z.string() });
 const pullSchema = z.object({
-  user: accountSchema.nullable(),
+  user: z.object({ login: z.string(), type: z.string() }).nullable(),
   head: z.object({ ref: z.string(), sha: z.string() }),
   draft: z.boolean(),
 });
-const runsSchema = z.object({
-  workflow_runs: z.array(
-    z.object({
-      display_title: z.string(),
-      html_url: z.string(),
-      actor: accountSchema.nullish(),
-      triggering_actor: accountSchema.nullish(),
-    })
-  ),
+const runSchema = z.object({
+  path: z.string(),
+  event: z.string(),
+  display_title: z.string(),
+  html_url: z.string(),
+  actor: accountSchema.nullish(),
+  triggering_actor: accountSchema.nullish(),
 });
 const reviewsSchema = z.array(
   z.object({
@@ -67,28 +65,31 @@ function compareText(a: string, b: string): number {
   return a > b ? 1 : 0;
 }
 
+async function fetchRun(client: GitHubClient, repo: string, runId: string) {
+  try {
+    return runSchema.parse(await client.request('GET', `repos/${repo}/actions/runs/${runId}`));
+  } catch (error) {
+    if (error instanceof GitHubError && error.status === notFoundStatus) return null;
+    throw error;
+  }
+}
+
 async function fetchDispatchers(
   client: GitHubClient,
   repo: string,
+  runId: string,
   title: string
 ): Promise<Dispatcher[]> {
+  const run = await fetchRun(client, repo, runId);
+  if (!run) return [];
+  if (run.path !== workflowPath || run.event !== dispatchEvent || run.display_title !== title) {
+    return [];
+  }
   const dispatchers = new Map<string, Dispatcher>();
-  for (let page = 1; page <= maxRunPages; page += 1) {
-    const { workflow_runs: runs } = runsSchema.parse(
-      await client.request(
-        'GET',
-        `repos/${repo}/actions/workflows/${workflowFile}/runs?event=workflow_dispatch&per_page=${runsPageSize}&page=${page}`
-      )
-    );
-    for (const run of runs.filter(entry => entry.display_title === title)) {
-      for (const account of [run.actor, run.triggering_actor]) {
-        if (!account) continue;
-        const key = `${account.login.toLowerCase()}\n${run.html_url}`;
-        if (!dispatchers.has(key))
-          dispatchers.set(key, { login: account.login, url: run.html_url });
-      }
-    }
-    if (runs.length < runsPageSize) break;
+  for (const account of [run.actor, run.triggering_actor]) {
+    if (!account) continue;
+    const key = account.login.toLowerCase();
+    if (!dispatchers.has(key)) dispatchers.set(key, { login: account.login, url: run.html_url });
   }
   return [...dispatchers.entries()]
     .sort(([a], [b]) => compareText(a, b))
@@ -138,26 +139,26 @@ export async function checkBotPrApprovals({
 }: CheckOptions): Promise<ApprovalsVerdict> {
   const pull = pullSchema.parse(await client.request('GET', `repos/${repo}/pulls/${number}`));
   const author = pull.user?.login ?? '';
-  const issue = botBranchPattern.exec(pull.head.ref)?.[1];
+  const [, issue, runId] = botBranchPattern.exec(pull.head.ref) ?? [];
 
-  if (author !== botLogin || issue === undefined) {
-    const message = `#${number} by ${author} from ${pull.head.ref} is not a fix-issues bot pull request; nothing to check.`;
+  if (pull.user?.type !== botAccountType || issue === undefined || runId === undefined) {
+    const message = `#${number} by ${author} from ${pull.head.ref} is not a fix-issue bot pull request; nothing to check.`;
     return { passed: true, messages: [message], summary: [summaryHeading, '', message] };
   }
 
-  const title = `fix-issues: #${issue}`;
-  const dispatchers = await fetchDispatchers(client, repo, title);
+  const title = `fix-issue: #${issue}`;
+  const dispatchers = await fetchDispatchers(client, repo, runId, title);
   const summary = [
     summaryHeading,
     '',
-    `Fix-issues pull request #${number} for issue #${issue} (\`${pull.head.ref}\` at \`${pull.head.sha}\`, draft: ${pull.draft}).`,
+    `Fix-issue pull request #${number} for issue #${issue} (\`${pull.head.ref}\` at \`${pull.head.sha}\`, draft: ${pull.draft}).`,
     '',
     '### Dispatched by',
     '',
   ];
 
   if (dispatchers.length === 0) {
-    const reason = `no workflow_dispatch run of ${workflowFile} titled '${title}' was found; a bot pull request nobody dispatched is blocked`;
+    const reason = `run ${runId} is not a ${dispatchEvent} run of ${workflowPath} titled '${title}'; a bot pull request nobody dispatched is blocked`;
     return {
       passed: false,
       messages: [reason],
@@ -179,7 +180,7 @@ export async function checkBotPrApprovals({
 
   const violations = [
     ...protectedChanges.map(
-      file => `${file} is changed; a fix-issues pull request may never change ${protectedDirectory}`
+      file => `${file} is changed; a fix-issue pull request may never change ${protectedDirectory}`
     ),
     ...offenders.map(({ login, url }) => `approval by ${login} is not allowed: dispatched ${url}`),
     ...(independent.length < requiredApprovals
