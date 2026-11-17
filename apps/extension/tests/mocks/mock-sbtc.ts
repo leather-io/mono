@@ -7,8 +7,8 @@ import {
 } from './constants';
 
 const sbtcEmilyUrl = `${SBTC_EMILY_API_URL}/deposit*`;
-const sbtcSponsorshipQuoteUrl = '**/v1/sponsorship/quote';
-const sbtcSponsorshipSubmitUrl = '**/v1/sponsorship/submit';
+const sbtcSponsorshipQuoteUrl = '**/v1/sponsorship/quote?network=*';
+const sbtcSponsorshipSubmitUrl = '**/v1/sponsorship/submit?network=*';
 
 export const SBTC_SPONSORSHIP_TXID =
   '9b709768122e6c62a37b087106cc9c23280ed6242b565484b6cc4e6a43ae1155';

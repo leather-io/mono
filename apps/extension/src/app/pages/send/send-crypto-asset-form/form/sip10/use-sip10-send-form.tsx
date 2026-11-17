@@ -5,7 +5,8 @@ import { type FormikHelpers } from 'formik';
 import { z } from 'zod';
 
 import type { CryptoAssetBalance, Money, Sip10Asset } from '@leather.io/models';
-import { convertAmountToBaseUnit, subtractMoney } from '@leather.io/utils';
+import { getSbtcSponsorshipNetwork } from '@leather.io/services';
+import { convertAmountToBaseUnit, isDefined, subtractMoney } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 import { type StacksSendFormValues } from '@shared/models/form.model';
@@ -24,6 +25,7 @@ import { useToast } from '@app/features/toasts/use-toast';
 import { useStxAddressBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { useStacksTransactionFees } from '@app/query/stacks/fees/stacks-transaction-fees.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 import {
   useFtTokenTransferUnsignedTx,
@@ -47,6 +49,7 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
     decimals: info.decimals,
   });
   const policy = useCurrentPolicy();
+  const currentNetwork = useCurrentNetwork();
   const toast = useToast();
   const stxAddress = useCurrentStacksAccountAddress();
   const stxBalance = useStxAddressBalance(stxAddress);
@@ -61,8 +64,14 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
   );
 
   const isStacksPolicy = policy?.chain === 'stacks';
+  const hasSponsorshipService = isDefined(
+    getSbtcSponsorshipNetwork(currentNetwork.chain.stacks.chainId)
+  );
   const canPayFeeInSbtc =
-    releaseSbtcSponsorship && isSbtcContractPrincipal(info.contractId) && !isStacksPolicy;
+    releaseSbtcSponsorship &&
+    hasSponsorshipService &&
+    isSbtcContractPrincipal(info.contractId) &&
+    !isStacksPolicy;
 
   const availableTokenBalance = balance.availableBalance;
 

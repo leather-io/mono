@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
 
 import { LEATHER_API_URL_PRODUCTION, LEATHER_API_URL_STAGING } from '@leather.io/constants';
+import { type NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
 
 import type { Environment } from '../../environment';
 import { RateLimiterService, type RateLimiterType } from '../../rate-limiter/rate-limiter.service';
@@ -27,15 +28,22 @@ class ImmediateRateLimiterService extends RateLimiterService {
   }
 }
 
-const settingsService: SettingsService = {
-  getSettings() {
-    throw new Error('Settings should not be read in this test');
-  },
-};
+function createSettingsService(network: NetworkConfiguration): SettingsService {
+  return {
+    getSettings() {
+      return { network, quoteCurrency: 'USD', assetVisibility: {} };
+    },
+  };
+}
 
-function createClient(environment: Environment = { environment: 'production' }) {
+function createClient(
+  environment: Environment = { environment: 'production' },
+  network = defaultNetworksKeyedById.mainnet
+) {
+  const settingsService = createSettingsService(network);
   return new LeatherSponsorshipApiClient(
     environment,
+    settingsService,
     new ImmediateRateLimiterService(settingsService)
   );
 }
@@ -63,7 +71,7 @@ describe(LeatherSponsorshipApiClient.name, () => {
     expect(result).toEqual(quoteResponse);
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [url, init] = fetchMock.mock.calls[0];
-    expect(url).toBe(`${LEATHER_API_URL_PRODUCTION}/v1/sponsorship/quote`);
+    expect(url).toBe(`${LEATHER_API_URL_PRODUCTION}/v1/sponsorship/quote?network=mainnet`);
     expect(init?.method).toBe('POST');
     expect(init?.body).toBeUndefined();
     expect(new Headers(init?.headers).get('X-Client-ID')).toBeTruthy();
@@ -78,7 +86,7 @@ describe(LeatherSponsorshipApiClient.name, () => {
     await createClient({ environment: 'development' }).fetchQuote();
 
     const [url] = fetchMock.mock.calls[0];
-    expect(url).toBe(`${LEATHER_API_URL_STAGING}/v1/sponsorship/quote`);
+    expect(url).toBe(`${LEATHER_API_URL_STAGING}/v1/sponsorship/quote?network=mainnet`);
   });
 
   test('treats an explicit sponsorship API URL as the base that serves quote and submit', async () => {
@@ -93,7 +101,35 @@ describe(LeatherSponsorshipApiClient.name, () => {
     }).fetchQuote();
 
     const [url] = fetchMock.mock.calls[0];
-    expect(url).toBe('http://localhost:8791/quote');
+    expect(url).toBe('http://localhost:8791/quote?network=mainnet');
+  });
+
+  test('sends the testnet network on a testnet chain', async () => {
+    const fetchMock = vi.fn<(url: string) => Promise<Response>>(() =>
+      Promise.resolve(jsonResponse(quoteResponse))
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    await createClient(
+      { environment: 'production' },
+      defaultNetworksKeyedById.testnet
+    ).fetchQuote();
+
+    const [url] = fetchMock.mock.calls[0];
+    expect(url).toBe(`${LEATHER_API_URL_PRODUCTION}/v1/sponsorship/quote?network=testnet`);
+  });
+
+  test('refuses to call the API on a chain without a sponsorship service', async () => {
+    const fetchMock = vi.fn<(url: string) => Promise<Response>>();
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(
+      createClient(
+        { environment: 'production' },
+        defaultNetworksKeyedById.stakingTestnet
+      ).fetchQuote()
+    ).rejects.toThrow('not available on this network');
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   test('submits the signed transaction as JSON and returns txid plus the sponsored hex', async () => {
@@ -107,7 +143,7 @@ describe(LeatherSponsorshipApiClient.name, () => {
 
     expect(result).toEqual({ txid: 'abc', transaction: '00deadbeef' });
     const [url, init] = fetchMock.mock.calls[0];
-    expect(url).toBe(`${LEATHER_API_URL_PRODUCTION}/v1/sponsorship/submit`);
+    expect(url).toBe(`${LEATHER_API_URL_PRODUCTION}/v1/sponsorship/submit?network=mainnet`);
     expect(new Headers(init?.headers).get('Content-Type')).toBe('application/json');
     expect(typeof init?.body === 'string' ? JSON.parse(init.body) : undefined).toEqual(
       submitRequest

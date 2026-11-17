@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { ChainId } from '@leather.io/models';
+
 import { LeatherApiError } from './leather-api.error';
 
 export const sbtcSponsorshipQuoteResponseSchema = z.object({
@@ -32,8 +34,13 @@ export const sbtcSponsorshipErrorCodeSchema = z.enum([
   'funding_pending',
   'broadcast_failed',
   'upstream_unavailable',
-  'rate_limited',
 ]);
+
+export function getSbtcSponsorshipNetwork(chainId: number) {
+  if (chainId === ChainId.Mainnet) return 'mainnet';
+  if (chainId === ChainId.Testnet) return 'testnet';
+  return undefined;
+}
 
 export type SbtcSponsorshipErrorCode = z.infer<typeof sbtcSponsorshipErrorCodeSchema>;
 

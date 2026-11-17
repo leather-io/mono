@@ -8,12 +8,15 @@ import { Types } from '../../../inversify.types';
 import type { Environment } from '../../environment';
 import { leatherApiPriorities } from '../../rate-limiter/leather-rate-limiter';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
+import { selectStacksChainId } from '../../settings/settings.selectors';
+import type { SettingsService } from '../../settings/settings.service';
 import type { ApiRequestOptions } from '../types';
 import { LeatherApiError, readLeatherApiErrorData } from './leather-api.error';
 import {
   type SbtcSponsorshipQuoteResponse,
   type SbtcSponsorshipSubmitRequest,
   type SbtcSponsorshipSubmitResponse,
+  getSbtcSponsorshipNetwork,
   sbtcSponsorshipQuoteResponseSchema,
   sbtcSponsorshipSubmitResponseSchema,
 } from './leather-sponsorship-api.types';
@@ -39,9 +42,18 @@ export class LeatherSponsorshipApiClient {
 
   constructor(
     @inject(Types.Environment) env: Environment,
+    @inject(Types.SettingsService) private readonly settingsService: SettingsService,
     private readonly rateLimiter: RateLimiterService
   ) {
     this.baseUrl = getSponsorshipApiBaseUrl(env);
+  }
+
+  private getNetworkQuery() {
+    const network = getSbtcSponsorshipNetwork(
+      selectStacksChainId(this.settingsService.getSettings())
+    );
+    if (!network) throw new Error('sBTC fee sponsorship is not available on this network');
+    return `?network=${network}`;
   }
 
   private async post<T>(
@@ -49,7 +61,7 @@ export class LeatherSponsorshipApiClient {
     responseSchema: ZodType<T>,
     { body, signal }: { body?: unknown; signal?: AbortSignal }
   ): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${path}`, {
+    const response = await fetch(`${this.baseUrl}${path}${this.getNetworkQuery()}`, {
       method: 'POST',
       headers: {
         ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),

@@ -33,9 +33,7 @@ const sbtcSponsorshipErrorMessages: Record<SbtcSponsorshipErrorCode, string> = {
   not_eligible: "This transfer isn't eligible for sBTC fee payment",
   broadcast_failed:
     'The transaction may already have been sent. Check your activity before trying again.',
-  upstream_unavailable:
-    "The sponsor couldn't reach the Stacks network. Your sBTC hasn't moved. Try again in a moment.",
-  rate_limited: 'Too many requests. Wait a moment and try again.',
+  upstream_unavailable: "The sponsor couldn't be reached. Check your activity before trying again.",
 };
 
 const sbtcSponsorshipIneligibilityMessages: Partial<Record<string, string>> = {
