@@ -1,10 +1,13 @@
-import { GetRawTransactionResult } from '@stacks/stacks-blockchain-api-types';
 import { ClarityAbi, ClarityValue, cvToHex, hexToCV } from '@stacks/transactions';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { inject, injectable } from 'inversify';
 
 import { DEFAULT_LIST_LIMIT } from '@leather.io/constants';
-import type { StacksAccountNonces, StacksTransaction } from '@leather.io/models';
+import type {
+  StacksAccountNonces,
+  StacksRawTransaction,
+  StacksTransaction,
+} from '@leather.io/models';
 import { generateRandomStacksAddress } from '@leather.io/stacks';
 
 import { Types } from '../../../inversify.types';
@@ -17,7 +20,6 @@ import { HiroMultiPageRequest, fetchHiroCursorPages, fetchHiroPages } from './hi
 import { hiroApiRequestsPriorityLevels } from './hiro-request-priorities';
 import {
   CallReadOnlyFunctionArgs,
-  HiroAddressBalanceResponse,
   HiroAddressFtBalancesResponse,
   HiroAddressStxBalanceResponse,
   HiroAddressTransaction,
@@ -72,39 +74,6 @@ export class HiroStacksApiClient {
       },
       timeout: 30000,
     });
-  }
-
-  public async getAddressBalances(
-    address: string,
-    { signal, skipCache }: ApiRequestOptions = {}
-  ): Promise<HiroAddressBalanceResponse> {
-    const fetchFn = async () => {
-      const res = await this.limiter.add(
-        RateLimiterType.HiroStacks,
-        () =>
-          this._axios.get<HiroAddressBalanceResponse>(
-            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/address/${address}/balances`,
-            {
-              signal,
-            }
-          ),
-        {
-          priority: hiroApiRequestsPriorityLevels.getAccountBalance,
-          signal,
-          throwOnTimeout: true,
-        }
-      );
-      return res.data;
-    };
-    return await this.cache.fetchWithCache(
-      [
-        'hiro-stacks-get-address-balances',
-        address,
-        selectStacksChainId(this.settings.getSettings()),
-      ],
-      fetchFn,
-      { skipCache }
-    );
   }
 
   public async getAddressStxBalance(
@@ -766,13 +735,13 @@ export class HiroStacksApiClient {
   public async getRawTransactionById(
     txid: string,
     { signal, skipCache }: ApiRequestOptions = {}
-  ): Promise<GetRawTransactionResult> {
+  ): Promise<StacksRawTransaction> {
     const fetchFn = async () => {
       const res = await this.limiter.add(
         RateLimiterType.HiroStacks,
         () =>
-          this._axios.get<GetRawTransactionResult>(
-            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/tx/${txid}/raw`,
+          this._axios.get<StacksRawTransaction>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/transactions/${txid}/raw`,
             { signal }
           ),
         {
