@@ -187,7 +187,7 @@ async function checkPullRequest(
     await github.createStatus(headSha, {
       state: 'error',
       context: gateContext,
-      description: 'Could not decide or count approvals. Comment /review-gate to retry.',
+      description: 'Could not decide or count approvals. Re-run repo:review-gate to retry.',
       target_url: runUrl,
     });
     throw error;
@@ -196,19 +196,14 @@ async function checkPullRequest(
 
 interface CheckOptions {
   readonly pr: string;
-  readonly requestedBy?: string;
 }
 
-export async function runCheck({ pr, requestedBy }: CheckOptions): Promise<void> {
+export async function runCheck({ pr }: CheckOptions): Promise<void> {
   const number = Number(pr);
   if (!Number.isInteger(number) || number <= 0) {
     throw new Error(`${pr} is not a pull request number.`);
   }
   const run = createGateRun();
-  if (requestedBy !== undefined && !hasWriteAccess(await run.github.getPermission(requestedBy))) {
-    writeSummary(`Ignored: ${requestedBy} has no write access, so cannot run the review gate.`);
-    return;
-  }
   await checkPullRequest(run, await run.github.getPullRequest(number), { fromSweep: false });
 }
 

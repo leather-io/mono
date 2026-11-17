@@ -13,7 +13,6 @@ export function registerReviewGateCommands(program: Command): void {
       'Decide how many reviews a pull request needs, then count approvals and report the gate'
     )
     .requiredOption('--pr <number>', 'the pull request to check')
-    .option('--requested-by <login>', 'only run when this commenter has write access')
     .action(reviewGate.runCheck);
   gate
     .command('sweep')

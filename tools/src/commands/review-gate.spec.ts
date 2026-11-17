@@ -722,32 +722,9 @@ describe('review-gate commands', () => {
         gateStatus(
           'review-gate',
           'error',
-          'Could not decide or count approvals. Comment /review-gate to retry.'
+          'Could not decide or count approvals. Re-run repo:review-gate to retry.'
         )
       );
-    });
-
-    test('ignores a /review-gate comment from someone without write access', async () => {
-      github.pullRequests.set(7, pullRequest(7));
-      github.permissions.set('outsider', 'read');
-
-      await run(['check', '--pr', '7', '--requested-by', 'outsider']);
-
-      expect(github.statuses.size).toBe(0);
-      expect(github.calls).toEqual([{ method: 'GET', path: '/collaborators/outsider/permission' }]);
-      expect(summary()).toContain(
-        'Ignored: outsider has no write access, so cannot run the review gate.'
-      );
-    });
-
-    test('runs for a /review-gate comment from a writer', async () => {
-      github.pullRequests.set(7, pullRequest(7));
-      github.files.set(7, [changedFile(plainFile)]);
-      github.reviews.set(7, [approval(reviewer)]);
-
-      await run(['check', '--pr', '7', '--requested-by', reviewer]);
-
-      expect(latestStatus(headSha, 'review-gate')?.state).toBe('success');
     });
   });
 

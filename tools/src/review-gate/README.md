@@ -13,7 +13,6 @@ nothing.
 
 ```
 pull_request, pull_request_review  ─▶ repo:review-gate-dispatch ─▶ workflow_dispatch on dev ─┐
-/review-gate comment (writers)     ─▶ issue_comment, dev's workflow ───────────────────────┤
                                                                                            ▼
                                    check: pending ─▶ classify (once per head) ─▶ count approvals
 schedule, every 5 minutes          ─▶ sweep: count approvals on every open fork pull request
@@ -28,7 +27,6 @@ schedule, every 5 minutes          ─▶ sweep: count approvals on every open f
 Classifying applies the path rules (`rules.ts`) first and asks Claude, with no tools and the tier
 schema, only when none decides. Anything invalid fails closed to 2 reviews, and a fallback is
 retried on the next check. A fork pull request is never classified and always needs 2 approvals.
-`check --requested-by <login>` does nothing unless that commenter has write access.
 
 Sensitive paths live in `.github/review-gate/sensitive-paths.yml` and are matched with `minimatch`,
 dotfiles included, against both sides of a rename (`sensitive-paths.ts`);
@@ -58,7 +56,7 @@ a JSON payload on standard input, since the classifier has no tools, and Claude 
 ## Trust
 
 `repo:review-gate` only runs from `dev`: `workflow_dispatch` is started with `--ref dev`,
-`issue_comment` and `schedule` always use the default branch, and the App key sits in the
+`schedule` always uses the default branch, and the App key sits in the
 `review-gate` environment, whose deployment branches are limited to `dev`. A pull request can edit
 `repo:review-gate-dispatch`, but the most it can do is not start the gate, or start it from its own
 branch, where the environment refuses the key. Either way no App status appears and the pull
