@@ -1,0 +1,51 @@
+name: repo:bot-pr-approvals
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+  pull_request_review:
+    types:
+      - submitted
+      - edited
+      - dismissed
+
+# GITHUB_TOKEN default permissions disabled; jobs declare their own.
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  bot-pr-approvals:
+    name: bot-pr-approvals
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read # checkout only; the script reads GitHub and never writes to the repository
+      pull-requests: read # read the pull request and its reviews
+      actions: read # list the repo:fix-issues runs to find who dispatched the pull request
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+          persist-credentials: false
+
+      - uses: $/.github/actions/provision
+        with:
+          TURBO_CACHE: 'false'
+          PNPM_CACHE: 'false'
+
+      - name: build-tools
+        run: pnpm --filter @leather.io/tools build
+
+      - name: check-dispatcher-approvals
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REQUIRED_APPROVALS: '2'
+        run: pnpm lt bot-pr-approvals check --pr "$PR_NUMBER" --required-approvals "$REQUIRED_APPROVALS"

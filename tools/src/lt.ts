@@ -1,6 +1,7 @@
 import { program } from 'commander';
 
 import {
+  registerBotPrApprovalsCommands,
   registerChangelogCommands,
   registerFeatureMapCommands,
   registerFixIssueCommands,
@@ -8,6 +9,7 @@ import {
 
 program.name('lt').description('Leather monorepo tools').version('1.0.0');
 
+registerBotPrApprovalsCommands(program);
 registerChangelogCommands(program);
 registerFeatureMapCommands(program);
 registerFixIssueCommands(program);
