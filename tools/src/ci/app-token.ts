@@ -2,7 +2,8 @@ import { createHash } from 'node:crypto';
 import { z } from 'zod';
 
 import { type CommandRunner, runCommand } from './exec.js';
-import type { GitHubClient } from './github.js';
+import { type GitHubClient, createGitHubClient, readRequiredEnv } from './github.js';
+import { writeStepOutputs } from './outputs.js';
 
 type Signer = (digest: Buffer) => Buffer;
 
@@ -10,11 +11,7 @@ const clockSkewSeconds = 60;
 const jwtLifetimeSeconds = 540;
 const signingAlgorithm = 'RSASSA_PKCS1_V1_5_SHA_256';
 
-const appTokenPermissions: Readonly<Record<string, 'write'>> = {
-  contents: 'write',
-  pull_requests: 'write',
-  issues: 'write',
-};
+export type TokenPermissions = Readonly<Record<string, 'read' | 'write'>>;
 
 const installationSchema = z.object({ id: z.number() });
 const accessTokenSchema = z.object({
@@ -72,6 +69,7 @@ interface InstallationTokenOptions {
   readonly appClient: GitHubClient;
   tokenClient(token: string): GitHubClient;
   readonly repo: string;
+  readonly permissions: TokenPermissions;
 }
 
 export async function revokeInstallationToken(client: GitHubClient): Promise<void> {
@@ -82,6 +80,7 @@ export async function createInstallationToken({
   appClient,
   tokenClient,
   repo,
+  permissions: requested,
 }: InstallationTokenOptions): Promise<string> {
   const [, name] = repo.split('/');
   if (!name) throw new Error(`'${repo}' is not an owner/name repository`);
@@ -91,11 +90,11 @@ export async function createInstallationToken({
   const { token, permissions } = accessTokenSchema.parse(
     await appClient.request('POST', `app/installations/${id}/access_tokens`, {
       repositories: [name],
-      permissions: appTokenPermissions,
+      permissions: requested,
     })
   );
   const extra = Object.keys(permissions).filter(
-    scope => scope !== 'metadata' && appTokenPermissions[scope] === undefined
+    scope => scope !== 'metadata' && requested[scope] === undefined
   );
   if (extra.length > 0) {
     await revokeInstallationToken(tokenClient(token));
@@ -104,4 +103,30 @@ export async function createInstallationToken({
     );
   }
   return token;
+}
+
+interface AppTokenOutputOptions {
+  readonly clientId: string;
+  readonly kmsKeyId: string;
+  readonly permissions: TokenPermissions;
+}
+
+export async function writeAppTokenOutput({
+  clientId,
+  kmsKeyId,
+  permissions,
+}: AppTokenOutputOptions): Promise<void> {
+  const apiUrl = process.env.GITHUB_API_URL;
+  const jwt = appJwt(clientId, kmsSigner(kmsKeyId), Date.now());
+  const token = await createInstallationToken({
+    appClient: createGitHubClient({ token: jwt, apiUrl }),
+    tokenClient(installationToken) {
+      return createGitHubClient({ token: installationToken, apiUrl });
+    },
+    repo: readRequiredEnv('GITHUB_REPOSITORY'),
+    permissions,
+  });
+  console.log(`::add-mask::${token}`);
+  writeStepOutputs({ token });
+  console.log('app-token: created an installation token that expires within an hour');
 }
