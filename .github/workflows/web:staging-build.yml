@@ -51,7 +51,6 @@ jobs:
       - name: build-web-app
         working-directory: apps/web
         env:
-          LEATHER_FRONT_WEB_APP_API_TOKEN: ${{ secrets.FRONT_WEB_APP_API_TOKEN }}
           LEATHER_TARGET: staging
           PRIVATE_NETWORK_FLAVOR: testnet
           PRIVATE_NETWORK_NAME: BTC Staking Testnet
