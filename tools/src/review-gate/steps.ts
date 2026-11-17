@@ -6,8 +6,11 @@ import { createGitHubClient, describeError, readRequiredEnv, writeSummary } from
 import {
   describeGate,
   findApprovers,
+  findDispatchers,
+  findFixIssueRun,
   findSharedHeadPullRequests,
   hasWriteAccess,
+  isDispatcher,
   isForkPullRequest,
 } from './approvals.js';
 import { buildClassifierArgs } from './classifier.js';
@@ -128,6 +131,20 @@ interface CheckMode {
   readonly fromSweep: boolean;
 }
 
+async function countReviewers(
+  github: GateClient,
+  number: number,
+  approvers: ReturnType<typeof findApprovers>,
+  requiredTeams: ReadonlySet<number>
+): Promise<number> {
+  if (requiredTeams.size > 0) {
+    const teamReviewIds = await github.listTeamReviewIds(number, requiredTeams);
+    return approvers.filter(({ reviewId }) => teamReviewIds.has(reviewId)).length;
+  }
+  const permissions = await Promise.all(approvers.map(({ login }) => github.getPermission(login)));
+  return permissions.filter(hasWriteAccess).length;
+}
+
 async function countApprovals(
   run: GateRun,
   pullRequest: PullRequest,
@@ -136,23 +153,37 @@ async function countApprovals(
   const { github, runUrl, trustedCreator } = run;
   const { number } = pullRequest;
   const headSha = pullRequest.head.sha;
-  const [reviews, statuses, commitPullRequests] = await Promise.all([
+  const fixIssueRun = fromFork ? null : findFixIssueRun(pullRequest);
+  const [reviews, statuses, commitPullRequests, requiredTeams, workflowRun] = await Promise.all([
     github.listReviews(number),
     github.listStatuses(headSha),
     github.listCommitPullRequests(headSha),
+    github.listRequiredReviewerTeams(pullRequest.base.ref),
+    fixIssueRun ? github.getWorkflowRun(fixIssueRun.runId) : null,
   ]);
   const required = requiredApprovals(statuses, { fromFork, trustedCreator });
+  const dispatchers = fixIssueRun ? findDispatchers(workflowRun, fixIssueRun.issue) : [];
   const approvers = findApprovers(reviews, { headSha, author: pullRequest.user.login });
-  const permissions = await Promise.all(approvers.map(login => github.getPermission(login)));
-  const approvals = permissions.filter(hasWriteAccess).length;
+  const independent = approvers.filter(({ login }) => !isDispatcher(login, dispatchers));
+  const approvals = await countReviewers(github, number, independent, requiredTeams);
   const sharedWith = findSharedHeadPullRequests(commitPullRequests, { number, headSha });
-  const gate = describeGate({ approvals, required, sharedWith, fromFork });
+  const gate = describeGate({
+    approvals,
+    required,
+    sharedWith,
+    fromFork,
+    undispatched: fixIssueRun !== null && dispatchers.length === 0,
+    dispatcherApprovals: approvers
+      .filter(({ login }) => isDispatcher(login, dispatchers))
+      .map(({ login }) => login),
+  });
   const latest = statuses.find(
     status => status.context === gateContext && status.creator?.login === trustedCreator
   );
   if (fromSweep && latest?.state === gate.state && latest.description === gate.description) return;
   await github.createStatus(headSha, { ...gate, context: gateContext, target_url: runUrl });
-  writeSummary(`#${number}: ${gate.description} on ${headSha}.`);
+  const dispatchedBy = dispatchers.length > 0 ? ` Dispatched by ${dispatchers.join(', ')}.` : '';
+  writeSummary(`#${number}: ${gate.description} on ${headSha}.${dispatchedBy}`);
 }
 
 async function checkPullRequest(

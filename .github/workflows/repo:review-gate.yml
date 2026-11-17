@@ -41,6 +41,7 @@ jobs:
         with:
           client-id: ${{ vars.REVIEW_GATE_APP_CLIENT_ID }}
           private-key: ${{ secrets.REVIEW_GATE_APP_PRIVATE_KEY }}
+          permission-actions: read # read the fix-issue run behind a bot pull request to find who dispatched it
           permission-contents: read # read the base tree to spot renames that hide a diff
           permission-pull-requests: write # read the pull request, its files and reviews, and keep one review gate comment up to date
           permission-statuses: write # record the decision and report the gate result as commit statuses on the head

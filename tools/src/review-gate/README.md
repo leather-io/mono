@@ -28,6 +28,17 @@ Classifying applies the path rules (`rules.ts`) first and asks Claude, with no t
 schema, only when none decides. Anything invalid fails closed to 2 reviews, and a fallback is
 retried on the next check. A fork pull request is never classified and always needs 2 approvals.
 
+Which approvals count: the latest review of each person, when it approves the head commit and is
+not the author's or a bot's. When a ruleset on `dev` requires approvals from a team, only reviews
+GitHub attributes to that team count (`onBehalfOf` on the review), so the gate counts what the
+ruleset counts; without such a rule, only reviews by people with write access count.
+
+A pull request the fix-issue workflow opened (a bot author on `bot/fix-issue-<issue>-<run id>`) is
+answered for by whoever dispatched that run. The gate reads the run named in the branch, and the
+approval of its actor or of whoever re-ran it never counts. When the run is missing, or is not a
+`workflow_dispatch` run of `repo:fix-issue` for that issue, the gate fails: a bot pull request
+nobody dispatched is blocked.
+
 Sensitive paths live in `.github/review-gate/sensitive-paths.yml` and are matched with `minimatch`,
 dotfiles included, against both sides of a rename (`sensitive-paths.ts`);
 `sensitive-paths.spec.ts` keeps the list in step with the repository.
@@ -38,8 +49,8 @@ dotfiles included, against both sides of a rename (`sensitive-paths.ts`);
 | `sensitive-paths.ts` | reading and matching the sensitive path list                    |
 | `classifier.ts`      | the classifier's Claude arguments                               |
 | `decision.ts`        | the tier schema, fail-closed decisions, status and comment text |
-| `approvals.ts`       | counting approvers, shared-head detection, the gate status      |
-| `client.ts`          | the GitHub REST calls, each response checked with `schemas.ts`  |
+| `approvals.ts`       | approvers, fix-issue dispatchers, shared heads, the gate status |
+| `client.ts`          | the GitHub calls, each response checked with `schemas.ts`       |
 | `steps.ts`           | the `check` and `sweep` commands                                |
 
 `../ci/` holds the shared pieces: the GitHub REST and GraphQL client and Actions helpers

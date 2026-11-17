@@ -18,13 +18,18 @@ export const pullRequestSchema = z.object({
   state: z.string(),
   title: z.string(),
   body: z.string().nullable(),
-  user: loginSchema,
-  head: z.object({ sha: z.string(), repo: z.object({ full_name: z.string() }).nullable() }),
+  user: z.object({ login: z.string(), type: z.string() }),
+  head: z.object({
+    sha: z.string(),
+    ref: z.string(),
+    repo: z.object({ full_name: z.string() }).nullable(),
+  }),
   base: z.object({ sha: z.string(), ref: z.string() }),
 });
 export type PullRequest = z.infer<typeof pullRequestSchema>;
 
 export const reviewSchema = z.object({
+  id: z.number(),
   user: z.object({ login: z.string(), type: z.string() }).nullable(),
   state: z.string(),
   commit_id: z.string().nullable(),
@@ -55,6 +60,47 @@ export type IssueComment = z.infer<typeof issueCommentSchema>;
 
 export const permissionSchema = z.object({ permission: z.string() });
 export type Permission = z.infer<typeof permissionSchema>;
+
+export const workflowRunSchema = z.object({
+  path: z.string(),
+  event: z.string(),
+  display_title: z.string(),
+  html_url: z.string(),
+  actor: loginSchema.nullish(),
+  triggering_actor: loginSchema.nullish(),
+});
+export type WorkflowRun = z.infer<typeof workflowRunSchema>;
+
+export const branchRulesSchema = z.array(
+  z.object({
+    type: z.string(),
+    parameters: z
+      .object({
+        required_reviewers: z
+          .array(z.object({ reviewer: z.object({ id: z.number(), type: z.string() }) }))
+          .optional(),
+      })
+      .nullish(),
+  })
+);
+
+export const teamReviewsSchema = z.object({
+  repository: z.object({
+    pullRequest: z.object({
+      reviews: z.object({
+        nodes: z.array(
+          z.object({
+            databaseId: z.number().nullable(),
+            onBehalfOf: z.object({
+              nodes: z.array(z.object({ databaseId: z.number().nullable() }).nullable()),
+            }),
+          })
+        ),
+        pageInfo: z.object({ hasNextPage: z.boolean(), endCursor: z.string().nullable() }),
+      }),
+    }),
+  }),
+});
 
 export const treeSchema = z.object({
   truncated: z.boolean(),

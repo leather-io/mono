@@ -23,6 +23,11 @@ const headSha = 'head-sha';
 const baseSha = 'base-sha';
 const author = 'author';
 const reviewer = 'reviewer';
+const headRef = 'fix/footer-copy';
+const fixIssueBot = 'leather-fix-issue[bot]';
+const fixIssueRunId = '987';
+const dispatcher = 'dispatcher';
+const reviewersTeamId = 19686212;
 const sensitiveFile = 'packages/crypto/src/derive.ts';
 const plainFile = 'apps/web/app/components/footer.tsx';
 
@@ -41,12 +46,17 @@ interface FakePullRequest {
   readonly state: string;
   readonly title: string;
   readonly body: string | null;
-  readonly user: { readonly login: string };
-  readonly head: { readonly sha: string; readonly repo: { readonly full_name: string } | null };
+  readonly user: { readonly login: string; readonly type: string };
+  readonly head: {
+    readonly sha: string;
+    readonly ref: string;
+    readonly repo: { readonly full_name: string } | null;
+  };
   readonly base: { readonly sha: string; readonly ref: string };
 }
 
 interface FakeReview {
+  readonly id: number;
   readonly user: { readonly login: string; readonly type: string } | null;
   readonly state: string;
   readonly commit_id: string | null;
@@ -87,6 +97,9 @@ interface FakeGitHub {
   readonly commitPullRequests: Map<string, FakeCommitPullRequest[]>;
   readonly permissions: Map<string, string>;
   readonly baseBlobs: Map<string, string>;
+  readonly workflowRuns: Map<string, unknown>;
+  readonly requiredTeams: number[];
+  readonly teamReviews: Map<number, number[]>;
   readonly calls: ApiCall[];
   readonly targetUrls: string[];
   override: Override;
@@ -110,15 +123,33 @@ function pullRequest(number: number, overrides: Partial<FakePullRequest> = {}): 
     state: 'open',
     title: 'Tweak the footer copy',
     body: 'Shorter footer text.',
-    user: { login: author },
-    head: { sha: headSha, repo: { full_name: repoName } },
+    user: { login: author, type: 'User' },
+    head: { sha: headSha, ref: headRef, repo: { full_name: repoName } },
     base: { sha: baseSha, ref: 'dev' },
     ...overrides,
   };
 }
 
 function forkPullRequest(number: number, sha: string): FakePullRequest {
-  return pullRequest(number, { head: { sha, repo: { full_name: 'someone/mono' } } });
+  return pullRequest(number, { head: { sha, ref: headRef, repo: { full_name: 'someone/mono' } } });
+}
+
+function fixIssuePullRequest(number: number): FakePullRequest {
+  return pullRequest(number, {
+    user: { login: fixIssueBot, type: 'Bot' },
+    head: { sha: headSha, ref: `bot/fix-issue-12-${fixIssueRunId}`, repo: { full_name: repoName } },
+  });
+}
+
+function fixIssueRun(dispatcher: string) {
+  return {
+    path: '.github/workflows/repo:fix-issue.yml',
+    event: 'workflow_dispatch',
+    display_title: 'fix-issue: #12',
+    html_url: `https://github.com/${repoName}/actions/runs/${fixIssueRunId}`,
+    actor: { login: dispatcher },
+    triggering_actor: { login: dispatcher },
+  };
 }
 
 function changedFile(filename: string, overrides: Partial<FakeFile> = {}): FakeFile {
@@ -132,8 +163,17 @@ function changedFile(filename: string, overrides: Partial<FakeFile> = {}): FakeF
   };
 }
 
+let nextReviewId = 1;
+
 function approval(login: string, overrides: Partial<FakeReview> = {}): FakeReview {
-  return { user: { login, type: 'User' }, state: 'APPROVED', commit_id: headSha, ...overrides };
+  nextReviewId += 1;
+  return {
+    id: nextReviewId,
+    user: { login, type: 'User' },
+    state: 'APPROVED',
+    commit_id: headSha,
+    ...overrides,
+  };
 }
 
 function gateStatus(context: string, state: string, description: string): FakeStatus {
@@ -265,6 +305,32 @@ const routes: readonly FakeRoute[] = [
   },
   {
     method: 'GET',
+    pattern: /^\/actions\/runs\/(\d+)$/,
+    handle(github, id) {
+      const found = github.workflowRuns.get(id);
+      return found ? json(found) : notFound();
+    },
+  },
+  {
+    method: 'GET',
+    pattern: /^\/rules\/branches\/(.+)$/,
+    handle(github) {
+      return json([
+        { type: 'deletion', parameters: null },
+        {
+          type: 'pull_request',
+          parameters: {
+            required_reviewers: github.requiredTeams.map(id => ({
+              minimum_approvals: 2,
+              reviewer: { id, type: 'Team' },
+            })),
+          },
+        },
+      ]);
+    },
+  },
+  {
+    method: 'GET',
     pattern: /^\/git\/trees\/([^/]+)$/,
     handle(github, sha) {
       if (sha !== baseSha) return notFound();
@@ -280,7 +346,22 @@ const routes: readonly FakeRoute[] = [
   },
 ];
 
+function teamReviews(github: FakeGitHub): Response {
+  const nodes = [...github.teamReviews].map(([databaseId, teams]) => ({
+    databaseId,
+    onBehalfOf: { nodes: teams.map(team => ({ databaseId: team })) },
+  }));
+  return json({
+    data: {
+      repository: {
+        pullRequest: { reviews: { nodes, pageInfo: { hasNextPage: false, endCursor: null } } },
+      },
+    },
+  });
+}
+
 function route(github: FakeGitHub, method: string, url: URL, init?: RequestInit): Response {
+  if (method === 'POST' && url.pathname === '/graphql') return teamReviews(github);
   const prefix = `/repos/${repoName}`;
   const repoPath = url.pathname.startsWith(prefix) ? url.pathname.slice(prefix.length) : '';
   for (const fakeRoute of routes) {
@@ -301,6 +382,9 @@ function stubGitHub(): FakeGitHub {
     commitPullRequests: new Map(),
     permissions: new Map([[reviewer, 'write']]),
     baseBlobs: new Map(),
+    workflowRuns: new Map(),
+    requiredTeams: [],
+    teamReviews: new Map(),
     calls: [],
     targetUrls: [],
     override: () => undefined,
@@ -535,7 +619,11 @@ describe('review-gate commands', () => {
         if (method !== 'GET' || requestPath !== '/pulls/7') return undefined;
         reads += 1;
         return reads > 1
-          ? json(pullRequest(7, { head: { sha: 'newer-sha', repo: { full_name: repoName } } }))
+          ? json(
+              pullRequest(7, {
+                head: { sha: 'newer-sha', ref: headRef, repo: { full_name: repoName } },
+              })
+            )
           : undefined;
       };
 
@@ -690,6 +778,91 @@ describe('review-gate commands', () => {
           'Head commit is also the head of #9. Push a commit unique to this pull request.'
         )
       );
+    });
+
+    describe('a fix-issue bot pull request', () => {
+      beforeEach(() => {
+        github.pullRequests.set(7, fixIssuePullRequest(7));
+        github.statuses.set(headSha, [
+          gateStatus('review-gate/decision', 'success', '1 review required: Footer copy'),
+        ]);
+        github.workflowRuns.set(fixIssueRunId, fixIssueRun(dispatcher));
+        github.permissions.set(dispatcher, 'admin');
+      });
+
+      test('never counts the approval of whoever dispatched the fix', async () => {
+        github.reviews.set(7, [approval(dispatcher)]);
+
+        await run(['check', '--pr', '7']);
+
+        expect(latestStatus(headSha, 'review-gate')).toEqual(
+          gateStatus(
+            'review-gate',
+            'failure',
+            '0 of 1 required approvals; dispatcher dispatched the fix, so cannot approve it'
+          )
+        );
+        expect(summary()).toContain('Dispatched by dispatcher.');
+      });
+
+      test('passes on the approval of someone else', async () => {
+        github.reviews.set(7, [approval(dispatcher), approval(reviewer)]);
+
+        await run(['check', '--pr', '7']);
+
+        expect(latestStatus(headSha, 'review-gate')?.state).toBe('success');
+      });
+
+      test('fails when its branch names no fix-issue run a person dispatched', async () => {
+        github.workflowRuns.delete(fixIssueRunId);
+        github.reviews.set(7, [approval(reviewer)]);
+
+        await run(['check', '--pr', '7']);
+
+        expect(latestStatus(headSha, 'review-gate')).toEqual(
+          gateStatus(
+            'review-gate',
+            'failure',
+            'No fix-issue run dispatched by a person was found for this bot pull request.'
+          )
+        );
+      });
+    });
+
+    describe('when dev requires approvals from a reviewers team', () => {
+      beforeEach(() => {
+        github.requiredTeams.push(reviewersTeamId);
+        github.pullRequests.set(7, pullRequest(7));
+        github.statuses.set(headSha, [
+          gateStatus('review-gate/decision', 'success', '2 reviews required: Big change'),
+        ]);
+        github.permissions.set('second-writer', 'write');
+      });
+
+      test('counts only approvals GitHub attributes to that team', async () => {
+        const fromTeam = approval(reviewer);
+        github.reviews.set(7, [fromTeam, approval('second-writer')]);
+        github.teamReviews.set(fromTeam.id, [reviewersTeamId]);
+
+        await run(['check', '--pr', '7']);
+
+        expect(latestStatus(headSha, 'review-gate')).toEqual(
+          gateStatus('review-gate', 'failure', '1 of 2 required approvals')
+        );
+        expect(github.calls.some(call => call.path.includes('/collaborators/'))).toBe(false);
+      });
+
+      test('passes once enough team approvals are in', async () => {
+        const first = approval(reviewer);
+        const second = approval('second-writer');
+        github.reviews.set(7, [first, second]);
+        github.teamReviews.set(first.id, [reviewersTeamId]);
+        github.teamReviews.set(second.id, [reviewersTeamId]);
+
+        await run(['check', '--pr', '7']);
+
+        expect(latestStatus(headSha, 'review-gate')?.state).toBe('success');
+      });
     });
 
     test('never classifies a fork pull request and always requires two approvals', async () => {
