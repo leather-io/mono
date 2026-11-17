@@ -1,0 +1,113 @@
+name: repo:review-gate
+run-name: "review-gate: ${{ inputs.pr && format('#{0}', inputs.pr) || github.event.issue.number && format('#{0}', github.event.issue.number) || 'fork sweep' }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: The pull request to check
+        type: number
+        required: true
+  issue_comment:
+    types: [created]
+  schedule:
+    - cron: '*/5 * * * *'
+
+permissions: {}
+
+jobs:
+  check:
+    name: check
+    if: >-
+      github.ref_name == 'dev' && (
+        github.event_name == 'workflow_dispatch' || (
+          github.event_name == 'issue_comment' &&
+          github.event.issue.pull_request &&
+          startsWith(github.event.comment.body, '/review-gate') &&
+          contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)
+        )
+      )
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: review-gate
+    concurrency:
+      group: review-gate-${{ inputs.pr || github.event.issue.number }}
+      cancel-in-progress: false
+    permissions:
+      contents: read # checkout of dev only; every GitHub write uses the review gate app token
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: $/.github/actions/setup-tools
+
+      - uses: $/.github/actions/install-claude-code
+        id: claude-cli
+
+      - name: app-token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.REVIEW_GATE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.REVIEW_GATE_APP_PRIVATE_KEY }}
+          permission-contents: read # read the base tree to spot renames that hide a diff
+          permission-pull-requests: write # read the pull request, its files and reviews, and keep one review gate comment up to date
+          permission-statuses: write # record the decision and report the gate result as commit statuses on the head
+
+      - name: check-dispatched-pull-request
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          GATE_APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          CLAUDE_BIN: ${{ steps.claude-cli.outputs.path }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PR: ${{ inputs.pr }}
+        run: pnpm lt review-gate check --pr "$PR"
+
+      - name: check-commented-pull-request
+        if: github.event_name == 'issue_comment'
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          GATE_APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          CLAUDE_BIN: ${{ steps.claude-cli.outputs.path }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PR: ${{ github.event.issue.number }}
+          REQUESTED_BY: ${{ github.event.comment.user.login }}
+        run: pnpm lt review-gate check --pr "$PR" --requested-by "$REQUESTED_BY"
+
+  sweep:
+    name: sweep
+    if: github.event_name == 'schedule' && github.ref_name == 'dev'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: review-gate
+    concurrency:
+      group: review-gate-sweep
+      cancel-in-progress: false
+    permissions:
+      contents: read # checkout of dev only; every GitHub write uses the review gate app token
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: $/.github/actions/setup-tools
+
+      - name: app-token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.REVIEW_GATE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.REVIEW_GATE_APP_PRIVATE_KEY }}
+          permission-pull-requests: write # read fork pull requests and their reviews
+          permission-statuses: write # report the gate result as a commit status on each fork head
+
+      - name: sweep-fork-pull-requests
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          GATE_APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: pnpm lt review-gate sweep

@@ -42,23 +42,25 @@ How rounds end, and what `round finish` and `strip-forbidden` do after them, is 
 
 ## Modules
 
-| Module                              | Responsibility                                                                                           |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `status.ts`                         | the fixer status schema and its rules (subject, required entries, screenshots)                           |
-| `review.ts`                         | the review schema                                                                                        |
-| `git.ts`                            | changed paths, allowed paths, tree snapshots, blob hashes                                                |
-| `verify.ts`                         | the verification gate                                                                                    |
-| `strip.ts`                          | removing changes outside the allowed paths, with a blocking question                                     |
-| `rounds.ts`                         | round verify (clears the last round, snapshots for the review), review check, end and finish             |
-| `screenshots.ts`                    | capture before and after, PNG checks                                                                     |
-| `issue.ts`                          | fetch and render the issue                                                                               |
-| `pull-request.ts`                   | patch in a separate worktree, signed commit, screenshots, pull request or questions comment, superseding |
-| `app-token.ts`                      | the App JWT signed through KMS, the installation token and its revoke                                    |
-| `stop-guard.ts`                     | the Stop hook that keeps an agent working until its output file is valid                                 |
-| `dispatch.ts`                       | dispatching one brief of a run directory                                                                 |
-| `run-status.ts`                     | the latest run and pull request per issue, and the questions of blocked drafts                           |
-| `github.ts`                         | the GitHub REST and GraphQL client, over a token or the `gh` CLI                                         |
-| `exec.ts`, `outputs.ts`, `paths.ts` | running commands, step outputs, the paths under `tmp/fix-issue/`                                         |
+| Module                   | Responsibility                                                                                           |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `status.ts`              | the fixer status schema and its rules (subject, required entries, screenshots)                           |
+| `review.ts`              | the review schema                                                                                        |
+| `git.ts`                 | changed paths, allowed paths, tree snapshots, blob hashes                                                |
+| `verify.ts`              | the verification gate                                                                                    |
+| `strip.ts`               | removing changes outside the allowed paths, with a blocking question                                     |
+| `rounds.ts`              | round verify (clears the last round, snapshots for the review), review check, end and finish             |
+| `screenshots.ts`         | capture before and after, PNG checks                                                                     |
+| `issue.ts`               | fetch and render the issue                                                                               |
+| `pull-request.ts`        | patch in a separate worktree, signed commit, screenshots, pull request or questions comment, superseding |
+| `app-token.ts`           | the App JWT signed through KMS, the installation token and its revoke                                    |
+| `stop-guard.ts`          | the Stop hook that keeps an agent working until its output file is valid                                 |
+| `dispatch.ts`            | dispatching one brief of a run directory                                                                 |
+| `run-status.ts`          | the latest run and pull request per issue, and the questions of blocked drafts                           |
+| `outputs.ts`, `paths.ts` | step outputs, the paths under `tmp/fix-issue/`                                                           |
+
+The GitHub REST and GraphQL client (over a token or the `gh` CLI) and command running live in
+`../ci/` (`github.ts`, `exec.ts`), shared with the review gate.
 
 Specs sit next to each module and use the helpers in `test/`: `test-repo.ts` (a throwaway git repository) and
 `fake-github.ts` (a recording GitHub client) instead of real tools.

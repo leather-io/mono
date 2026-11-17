@@ -2310,6 +2310,9 @@ importers:
       commander:
         specifier: 12.0.0
         version: 12.0.0
+      minimatch:
+        specifier: 10.2.3
+        version: 10.2.3
       typescript:
         specifier: 5.9.3
         version: 5.9.3

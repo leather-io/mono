@@ -1,3 +1,6 @@
+import { appendFileSync } from 'node:fs';
+import { z } from 'zod';
+
 import { type CommandRunner, runCommand } from './exec.js';
 
 export type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
@@ -24,6 +27,22 @@ interface GitHubClientOptions {
 const defaultApiUrl = 'https://api.github.com';
 const pageSize = 100;
 const maxPages = 30;
+const maxErrorLength = 300;
+
+const graphqlResponseSchema = z.object({
+  data: z.unknown().optional(),
+  errors: z.unknown().optional(),
+});
+
+function graphqlData(response: unknown): unknown {
+  const result = graphqlResponseSchema.parse(response);
+  if (result.errors !== undefined) {
+    throw new Error(
+      `GitHub GraphQL failed: ${JSON.stringify(result.errors).slice(0, maxErrorLength)}`
+    );
+  }
+  return result.data;
+}
 
 export function createGitHubClient({
   token,
@@ -53,7 +72,7 @@ export function createGitHubClient({
   return {
     request: send,
     async graphql(query, variables) {
-      return send('POST', 'graphql', { query, variables });
+      return graphqlData(await send('POST', 'graphql', { query, variables }));
     },
   };
 }
@@ -73,8 +92,8 @@ export function createGhCliClient(cwd: string, run: CommandRunner = runCommand):
 
   return {
     request: send,
-    graphql(query, variables) {
-      return send('POST', 'graphql', { query, variables });
+    async graphql(query, variables) {
+      return graphqlData(await send('POST', 'graphql', { query, variables }));
     },
   };
 }
@@ -93,4 +112,38 @@ export async function paginate(client: GitHubClient, path: string): Promise<unkn
     if (entries.length < pageSize) break;
   }
   return items;
+}
+
+const codePattern = /(```[\s\S]*?```|`[^`\n]*`)/;
+
+export function neutraliseMentions(text: string): string {
+  return text
+    .split(codePattern)
+    .map((part, index) =>
+      index % 2 === 1 ? part : part.replace(/@(?=[\w-])(?![\w-]*\.[\w.-]*\/)/g, '@​')
+    )
+    .join('');
+}
+
+export function readRequiredEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) throw new Error(`${name} is not set`);
+  return value;
+}
+
+export function writeSummary(markdown: string): void {
+  const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+  if (summaryPath) appendFileSync(summaryPath, `${markdown}\n`);
+  console.log(markdown);
+}
+
+export function describeError(error: unknown, maxLength = maxErrorLength): string {
+  const message = error instanceof Error ? error.message : String(error);
+  return message.slice(0, maxLength);
+}
+
+export function describeZodError(error: z.ZodError): string {
+  return error.issues
+    .map(issue => `${issue.path.map(String).join('.') || 'value'}: ${issue.message}`)
+    .join('; ');
 }

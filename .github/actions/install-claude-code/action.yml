@@ -1,0 +1,29 @@
+name: install-claude-code
+description: Install the pinned Claude Code CLI binary for the review gate and Claude review
+
+outputs:
+  path:
+    description: Absolute path of the installed claude executable
+    value: ${{ steps.install.outputs.path }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: install-claude-code-cli
+      id: install
+      shell: bash
+      env:
+        CLAUDE_CODE_VERSION: 2.1.301
+        CLAUDE_CODE_SHA256: bc1aad9982c7b59c7d889ff92595d61cf46e0a6eae074cb551d932a989bcd222
+      run: |
+        if [ "$RUNNER_OS" != "Linux" ] || [ "$RUNNER_ARCH" != "X64" ]; then
+          echo "::error::The pinned checksum is for linux-x64, not $RUNNER_OS-$RUNNER_ARCH."
+          exit 1
+        fi
+        binary="$RUNNER_TEMP/claude-code-$CLAUDE_CODE_VERSION/claude"
+        mkdir -p "$(dirname "$binary")"
+        curl --fail --silent --show-error --location --retry 3 --output "$binary" \
+          "https://downloads.claude.ai/claude-code-releases/$CLAUDE_CODE_VERSION/linux-x64/claude"
+        echo "$CLAUDE_CODE_SHA256  $binary" | sha256sum --check --strict
+        chmod +x "$binary"
+        echo "path=$binary" >> "$GITHUB_OUTPUT"
