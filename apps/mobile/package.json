@@ -73,7 +73,7 @@
     "@types/react-dom": "19.1.11",
     "axios": "1.20.0",
     "bignumber.js": "9.1.2",
-    "bitcoinjs-lib": "7.0.1",
+    "bitcoinjs-lib": "7.0.5",
     "buffer": "6.0.3",
     "dayjs": "1.11.13",
     "expo": "54.0.32",

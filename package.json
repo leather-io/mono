@@ -14,6 +14,11 @@
     "build:web": "BUILD_TARGET=web turbo run build --filter=@leather.io/web",
     "check:all": "turbo run check:all",
     "clean": "git clean -dfX",
+    "design:align": "node --experimental-strip-types scripts/design/align.ts",
+    "design:check": "turbo run build --filter=@leather.io/tokens --output-logs=errors-only && eslint -c eslint.design.config.js --no-inline-config",
+    "design:scripts:lint": "eslint -c eslint.design-scripts.config.js scripts/design --max-warnings 0 --no-inline-config",
+    "design:scripts:typecheck": "tsc -p scripts/design/tsconfig.json",
+    "design:test": "node --experimental-strip-types --test eslint-rules/design-system/*.spec.js scripts/design/*.test.ts",
     "dev": "turbo run build:watch",
     "format": "turbo run format",
     "format:check": "turbo run format:check",
@@ -21,7 +26,7 @@
     "install:fresh": "pnpm install:clean && pnpm i",
     "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh",
     "knip": "knip",
-    "lint": "turbo run lint",
+    "lint": "pnpm design:scripts:lint && turbo run lint",
     "lint:deps": "pnpm dependency-cruiser --ignore-known .dependency-cruiser-known-violations.json .",
     "lint:filenames": "pnpm ls-lint",
     "lint:fix": "turbo run lint:fix",
@@ -35,7 +40,7 @@
     "test:coverage": "turbo run test:coverage",
     "test:e2e": "playwright test",
     "test:unit": "turbo run test:unit",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "pnpm design:scripts:typecheck && turbo run typecheck"
   },
   "devDependencies": {
     "@babel/runtime": "7.26.0",
@@ -102,7 +107,8 @@
       "@reown/appkit-wallet>zod": "4.6.7",
       "@sanity/codegen>zod": "4.6.7",
       "follow-redirects@>=1.0.0 <1.16.2": ">=1.16.2 <2",
-      "node-forge@>=1.0.0 <1.4.1": ">=1.4.1 <2"
+      "node-forge@>=1.0.0 <1.4.1": ">=1.4.1 <2",
+      "bitcoinjs-lib@>=6.0.0 <6.1.8": ">=6.1.8 <7"
     },
     "patchedDependencies": {
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",

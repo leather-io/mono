@@ -28,23 +28,23 @@ describe('parseExtensionVersion', () => {
 });
 
 describe('isExtensionVersionSupported', () => {
-  test('minimum version is 6.112.0', () => {
-    expect(minSupportedExtensionVersion).toBe('6.112.0');
+  test('minimum version is 6.116.0', () => {
+    expect(minSupportedExtensionVersion).toBe('6.116.0');
   });
 
   test('refuses older versions', () => {
-    expect(isExtensionVersionSupported('6.111.0')).toBe(false);
-    expect(isExtensionVersionSupported('6.111.9')).toBe(false);
+    expect(isExtensionVersionSupported('6.115.0')).toBe(false);
+    expect(isExtensionVersionSupported('6.115.9')).toBe(false);
     expect(isExtensionVersionSupported('5.999.0')).toBe(false);
-    expect(isExtensionVersionSupported('6.111.0.512')).toBe(false);
+    expect(isExtensionVersionSupported('6.115.0.512')).toBe(false);
   });
 
   test('accepts the minimum version and newer', () => {
-    expect(isExtensionVersionSupported('6.112.0')).toBe(true);
-    expect(isExtensionVersionSupported('6.112.1')).toBe(true);
-    expect(isExtensionVersionSupported('6.113.0')).toBe(true);
+    expect(isExtensionVersionSupported('6.116.0')).toBe(true);
+    expect(isExtensionVersionSupported('6.116.1')).toBe(true);
+    expect(isExtensionVersionSupported('6.117.0')).toBe(true);
     expect(isExtensionVersionSupported('7.0.0')).toBe(true);
-    expect(isExtensionVersionSupported('6.112.0.42')).toBe(true);
+    expect(isExtensionVersionSupported('6.116.0.42')).toBe(true);
   });
 
   test('accepts unparsable versions', () => {

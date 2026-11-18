@@ -15,7 +15,7 @@ export function useStacksRawTransaction(txid: string) {
     if (isUndefined(rawTxData)) return { isLoadingRawTx, rawTx: undefined };
     const match = rawTxCache.get(txid);
     if (match) return { isLoadingRawTx, rawTx: deserializeTransaction(match) };
-    rawTxCache.set(txid, rawTxData.raw_tx);
-    return { isLoadingRawTx, rawTx: deserializeTransaction(rawTxData.raw_tx) };
+    rawTxCache.set(txid, rawTxData.raw);
+    return { isLoadingRawTx, rawTx: deserializeTransaction(rawTxData.raw) };
   }, [isLoadingRawTx, rawTxData, txid]);
 }
