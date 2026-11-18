@@ -1,11 +1,11 @@
-import { Link, MetaDescriptor } from 'react-router';
+import { Link, type MetaDescriptor } from 'react-router';
 
 import { cmsClient, getBlockText, urlFor } from '~/constants/cms-client';
 
 import { changelogEntryBySlugQuery } from '@leather.io/cms';
 import { ArrowLeftIcon, Button } from '@leather.io/ui';
 
-import { Route } from './+types/changelog-entry.route';
+import { type Route } from './+types/changelog-entry.route';
 import { ChangelogEntry } from './components/changelog-entry';
 import { ChangelogEntryLayout, ChangelogPageLayout } from './components/changelog-page-layout';
 

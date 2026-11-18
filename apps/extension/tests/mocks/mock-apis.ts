@@ -6,16 +6,20 @@ import {
 } from './mock-alex-assets';
 import { mockBitcoinFeeRequests } from './mock-bitcoin-fees';
 import { mockBitflowRequests } from './mock-bitflow';
+import { mockCmsRequests } from './mock-cms';
 import { mockLaunchDarkly } from './mock-launchdarkly';
 import { mockLeatherApiRequests } from './mock-leather-api';
 import { mockMarketDataRequests } from './mock-market-data';
+import { mockNetworkValidationRequests } from './mock-network-validation';
 import { mockMainnetTestAccountSbtcDepositRequests } from './mock-sbtc';
 import { mockMainnetTestAccountStacksBalancesRequest } from './mock-stacks-balances';
 import { mockMainnetTestAccountStacksBalancesV2Request } from './mock-stacks-balances-v2';
 import { mockBnsV2NamesRequestEmpty } from './mock-stacks-bns';
+import { mockStacksContractInterfaceRequests } from './mock-stacks-contract-interfaces';
 import { mockStacksFeeRequests } from './mock-stacks-fees';
 import { mockMainnetTestAccountStacksFTsRequest } from './mock-stacks-fts';
 import { mockMainnetTestAccountStacksNFTsRequest } from './mock-stacks-nfts';
+import { mockStacksStakingRequests } from './mock-stacks-staking';
 import {
   mockMainnetTestAccountStacksTxsRequests,
   mockWildcardStacksTxsRequests,
@@ -30,6 +34,8 @@ export async function setupMockApis(page: Page | BrowserContext) {
     page.route(/chrome-extension/, route => route.continue()),
     page.route('https://api.hiro.so/', route => route.fulfill()),
     page.route('https://api.testnet.hiro.so/', route => route.fulfill()),
+    page.route('https://api.staking-testnet.hiro.so/', route => route.fulfill()),
+    page.route('https://api.private-1.hiro.so/', route => route.fulfill()),
     mockWildcardBitcoinTxsRequests(page),
     mockWildcardStacksTxsRequests(page),
     mockMainnetTestAccountBitcoinRequests(page),
@@ -48,5 +54,9 @@ export async function setupMockApis(page: Page | BrowserContext) {
     mockLaunchDarkly(page),
     mockBnsV2NamesRequestEmpty(page),
     mockBitflowRequests(page),
+    mockStacksStakingRequests(page),
+    mockCmsRequests(page),
+    mockNetworkValidationRequests(page),
+    mockStacksContractInterfaceRequests(page),
   ]);
 }

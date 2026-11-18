@@ -141,14 +141,14 @@ describe('activity-view', () => {
     });
 
     it('sets activityLink to null when asset is missing', () => {
-      const activity = {
+      const activity: ConnectAppActivity = {
         ...baseActivity,
         type: 'connectApp',
         appName: 'Test App',
         appUrl: 'https://test.com',
       };
 
-      const result = createActivityView(activity as any, defaultCurrentNetwork);
+      const result = createActivityView(activity, defaultCurrentNetwork);
 
       expect(result.activityLink).toBeNull();
     });

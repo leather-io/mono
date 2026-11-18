@@ -4,11 +4,10 @@ import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { css } from 'leather-styles/css';
 import { Stack, styled } from 'leather-styles/jsx';
 
-import { Button, Sheet } from '@leather.io/ui';
+import { Button, Sheet, useOnMount } from '@leather.io/ui';
 
 import { analytics } from '@shared/utils/analytics';
 
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { ButtonRow } from '@app/components/layout';
 
 interface TaprootUtxoWarningResponse {

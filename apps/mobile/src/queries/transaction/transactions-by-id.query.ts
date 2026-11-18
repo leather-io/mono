@@ -6,19 +6,16 @@ import {
   createBitcoinTransactionByTxIdQueryConfig,
   createStacksTransactionByIdQueryConfig,
 } from '@leather.io/queries';
-import { createGetTransactionByIdQueryOptions } from '@leather.io/query';
 import { uniqueArray } from '@leather.io/utils';
 
-import { useStacksClient } from '../stacks/stacks-client';
-
 export function useGetTransactionByIdListQuery(txids: string[]) {
-  const client = useStacksClient();
+  const settings = useUserSettings();
   const uniqueTxids = uniqueArray(txids);
 
   return useQueries({
     queries: uniqueTxids.map(txid => {
       return {
-        ...createGetTransactionByIdQueryOptions({ client, txid }),
+        ...createStacksTransactionByIdQueryConfig(txid, settings),
       };
     }),
   });

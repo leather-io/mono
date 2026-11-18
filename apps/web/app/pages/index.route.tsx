@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { MetaDescriptor, useNavigate } from 'react-router';
+import { type MetaDescriptor, useNavigate } from 'react-router';
 
 export function meta() {
   return [{ httpEquiv: 'refresh', content: '0;url=/staking' }] satisfies MetaDescriptor[];

@@ -7,7 +7,7 @@ import { WaitlistIds } from '@/features/waitlist/ids';
 import { t } from '@lingui/core/macro';
 import * as Clipboard from 'expo-clipboard';
 
-import { Box, Button, SheetInstance, Text, useTheme } from '@leather.io/ui/native';
+import { Box, Button, type SheetInstance, Text, useTheme } from '@leather.io/ui/native';
 
 import { MnemonicWordBox } from './mnemonic-word-box';
 
@@ -36,6 +36,14 @@ export function MnemonicDisplay({
   if (!mnemonic) return null;
   const mnemonicWords = mnemonic.split(' ');
 
+  async function copyMnemonic(mnemonicToCopy: string) {
+    await Clipboard.setStringAsync(mnemonicToCopy);
+    displayToast({
+      title: t`Copied to clipboard`,
+      type: 'success',
+    });
+  }
+
   return (
     <>
       <Box pb="3">
@@ -47,13 +55,7 @@ export function MnemonicDisplay({
         {passphrase && <PassphraseDisplay passphrase={passphrase} />}
         <Box pt="4" gap="2" flexDirection="row" justifyContent="space-between">
           <Button
-            onPress={async () => {
-              await Clipboard.setStringAsync(mnemonic);
-              displayToast({
-                title: t`Copied to clipboard`,
-                type: 'success',
-              });
-            }}
+            onPress={() => void copyMnemonic(mnemonic)}
             flex={1}
             style={{ borderColor: theme.colors['ink.text-primary'] }}
             variant="outline"

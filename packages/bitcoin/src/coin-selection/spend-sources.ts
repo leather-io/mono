@@ -3,9 +3,9 @@ import BigNumber from 'bignumber.js';
 import type { Money } from '@leather.io/models';
 import { createMoney, sumNumbers } from '@leather.io/utils';
 
-import { SupportedPaymentType, inferPaymentTypeFromAddress } from '../utils/bitcoin.utils';
+import { type SupportedPaymentType, inferPaymentTypeFromAddress } from '../utils/bitcoin.utils';
 import { createBitcoinAddress } from '../validation/bitcoin-address';
-import { InputData } from './coin-selection.utils';
+import { type InputData } from './coin-selection.utils';
 
 export interface SpendSourcesSummary {
   nativeSegwit: Money;
@@ -23,11 +23,11 @@ function inferSpendSourceType(address: string): SupportedPaymentType | null {
   }
 }
 
-function sumInputValues<T extends InputData>(inputs: T[]) {
+function sumInputValues(inputs: InputData[]) {
   return createMoney(sumNumbers(inputs.map(input => input.value)), 'BTC');
 }
 
-export function summarizeSpendSources<T extends InputData>(inputs: T[]): SpendSourcesSummary {
+export function summarizeSpendSources(inputs: InputData[]): SpendSourcesSummary {
   const nativeSegwitInputs = inputs.filter(
     input => inferSpendSourceType(input.address) === 'p2wpkh'
   );

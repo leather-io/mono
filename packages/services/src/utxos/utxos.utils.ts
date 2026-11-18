@@ -1,20 +1,26 @@
-import { AccountAddresses, BitcoinTransaction, OwnedUtxo, Utxo, UtxoId } from '@leather.io/models';
-import { sumNumbers } from '@leather.io/utils';
+import {
+  type AccountAddresses,
+  type BitcoinTransaction,
+  type OwnedUtxo,
+  type Utxo,
+  type UtxoId,
+} from '@leather.io/models';
+import { isDefined, sumNumbers } from '@leather.io/utils';
 
 import {
-  LeatherApiStakingBond,
-  LeatherApiUtxo,
+  type LeatherApiStakingBond,
+  type LeatherApiUtxo,
 } from '../infrastructure/api/leather/leather-api.client';
-import { MempoolDescriptorUtxo } from '../infrastructure/api/mempool/mempool-api.schema';
+import { type MempoolDescriptorUtxo } from '../infrastructure/api/mempool/mempool-api.schema';
 import {
   isOutboundTx,
   isPendingTx,
   readTxOwnedVins,
 } from '../transactions/bitcoin-transactions.utils';
-import { AccountRequestAddressExclusionOptions } from '../types/request.types';
+import { type AccountRequestAddressExclusionOptions } from '../types/request.types';
 import type { UtxoTotals } from './utxos.service';
 
-export function getUtxoIdFromOutpoint(outpoint: string) {
+export function getUtxoIdFromOutpoint(outpoint: string | null | undefined) {
   const splits = outpoint?.split(':');
   if (!splits || splits.length !== 2 || isNaN(Number(splits[1]))) return; // invalid outpoint
   return {
@@ -69,17 +75,20 @@ export function getOutboundUtxos(txs: BitcoinTransaction[], fingerprint: string)
     .filter(isOutboundTx)
     .map(readTxOwnedVins)
     .flat()
-    .map(vin => ({
-      txid: vin.txid!,
-      vout: vin.n,
-      address: vin.address ?? '',
-      path: vin.path ?? '',
-      value: Number(vin.value),
-      keyOrigin: vin.path ? getKeyOrigin(fingerprint, vin.path) : '',
-      // there's a chance the page of txs doesnt include the original, to get height but because its outbound, we know it is confirmed.
-      // in these cases, fallback to a default height
-      height: txMap.get(vin.txid!)?.height ?? fallbackUtxoHeight,
-    }));
+    .map(vin => {
+      const { txid } = vin;
+      if (txid === undefined) return undefined;
+      return {
+        txid,
+        vout: vin.n,
+        address: vin.address ?? '',
+        path: vin.path ?? '',
+        value: Number(vin.value),
+        keyOrigin: vin.path ? getKeyOrigin(fingerprint, vin.path) : '',
+        height: txMap.get(txid)?.height ?? fallbackUtxoHeight,
+      };
+    })
+    .filter(isDefined);
 }
 
 export function createOwnedUtxoFromMempool(

@@ -11,7 +11,7 @@ export function useVaultAccounts(network: AuthNetworkId, vaultId: string | undef
   const session = useSession(network);
   return useQuery({
     queryKey: multisigVaultKeys.accounts(network, session?.identity.address, vaultId),
-    queryFn: ({ signal }) => {
+    queryFn({ signal }) {
       if (!vaultId) throw new Error('useVaultAccounts requires a vaultId');
       return getMultisigService().listVaultAccounts(network, vaultId, signal);
     },
@@ -24,7 +24,7 @@ export function useVaultAccount(network: AuthNetworkId, accountId: string | unde
   const session = useSession(network);
   return useQuery({
     queryKey: multisigVaultKeys.account(network, session?.identity.address, accountId),
-    queryFn: ({ signal }) => {
+    queryFn({ signal }) {
       if (!accountId) throw new Error('useVaultAccount requires an accountId');
       return getMultisigService().getVaultAccount(network, accountId, signal);
     },

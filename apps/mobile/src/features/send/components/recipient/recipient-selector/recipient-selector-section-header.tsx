@@ -1,4 +1,4 @@
-import { RecipientSectionId } from '@/features/send/components/recipient/recipient.types';
+import { type RecipientSectionId } from '@/features/send/components/recipient/recipient.types';
 import { t } from '@lingui/core/macro';
 
 import { Box, Text } from '@leather.io/ui/native';

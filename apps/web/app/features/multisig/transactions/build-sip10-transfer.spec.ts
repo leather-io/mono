@@ -2,6 +2,7 @@ import {
   AddressHashMode,
   AddressVersion,
   FungibleConditionCode,
+  PayloadType,
   PostConditionMode,
   PostConditionType,
   addressFromPublicKeys,
@@ -98,6 +99,8 @@ describe(buildUnsignedMultisigSip10Transfer.name, () => {
     const tx = await buildTransfer();
 
     if (!isSip10TransferContactCall(tx)) throw new Error('Expected a SIP-10 transfer call');
+    if (tx.payload.payloadType !== PayloadType.ContractCall)
+      throw new Error('Expected a SIP-10 transfer call');
     expect(addressToString(tx.payload.contractAddress)).toEqual(
       'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT'
     );

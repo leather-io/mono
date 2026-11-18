@@ -1,6 +1,6 @@
 import { t } from '@lingui/core/macro';
 
-import { SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import {
   AssetAvatarIcon,
   Box,

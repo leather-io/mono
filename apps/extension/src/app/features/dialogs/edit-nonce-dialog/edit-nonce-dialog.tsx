@@ -4,14 +4,13 @@ import { useLocation, useNavigate } from 'react-router';
 import { useFormikContext } from 'formik';
 import { Stack, styled } from 'leather-styles/jsx';
 
-import { Link, Sheet, SheetHeader } from '@leather.io/ui';
+import { Link, Sheet, SheetHeader, useOnMount } from '@leather.io/ui';
 
 import {
   type StacksSendFormValues,
   type StacksTransactionFormValues,
 } from '@shared/models/form.model';
 
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 
 import { EditNonceForm } from './components/edit-nonce-form';

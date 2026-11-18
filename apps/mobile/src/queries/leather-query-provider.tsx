@@ -1,13 +1,15 @@
 import { type ReactNode, createContext, useContext, useMemo } from 'react';
 
 import { ChainId } from '@stacks/network';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { type QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { NetworkConfiguration, NetworkModes } from '@leather.io/models';
+import { type NetworkConfiguration, type NetworkModes } from '@leather.io/models';
+
+const stacksTestnetChainId: number = ChainId.Testnet;
 
 const LeatherNetworkContext = createContext<NetworkConfiguration | null>(null);
 
-export function useLeatherNetwork(): NetworkConfiguration {
+function useLeatherNetwork(): NetworkConfiguration {
   const leatherNetwork = useContext(LeatherNetworkContext);
 
   if (!leatherNetwork) {
@@ -23,7 +25,7 @@ interface NetworkState extends NetworkConfiguration {
 }
 
 function isStacksTestnet(network: NetworkConfiguration) {
-  return network.chain.stacks.chainId === ChainId.Testnet;
+  return network.chain.stacks.chainId === stacksTestnetChainId;
 }
 function getStacksNetworkMode(network: NetworkConfiguration) {
   return isStacksTestnet(network) ? 'testnet' : 'mainnet';

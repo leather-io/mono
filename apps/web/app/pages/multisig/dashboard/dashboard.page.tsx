@@ -210,7 +210,7 @@ export function MultisigDashboardPage() {
                 />
               ))}
             {!isResolvingVaults && sortedVaults.length === 0 && (
-              <EmptyVaults onCreate={() => navigate(multisigPaths.createVault)} />
+              <EmptyVaults onCreate={() => void navigate(multisigPaths.createVault)} />
             )}
             {sortedVaults.map(vault => (
               <VaultCard
@@ -219,12 +219,12 @@ export function MultisigDashboardPage() {
                 onClick={() =>
                   vault.membershipStatus === 'invited'
                     ? setInviteVault(vault)
-                    : navigate(multisigPaths.vault(vault.id))
+                    : void navigate(multisigPaths.vault(vault.id))
                 }
               />
             ))}
             {sortedVaults.length > 0 && (
-              <CreateVaultTile onClick={() => navigate(multisigPaths.createVault)} />
+              <CreateVaultTile onClick={() => void navigate(multisigPaths.createVault)} />
             )}
           </Flex>
           {!btcSession && (

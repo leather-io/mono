@@ -9,6 +9,7 @@ import {
   HIRO_API_BASE_URL_TESTNET,
   type Money,
 } from '@leather.io/models';
+import { useOnMount } from '@leather.io/ui';
 import { convertAmountToBaseUnit, isDefined, scaleValue } from '@leather.io/utils';
 
 import { IS_TEST_ENV, MIXPANEL_TOKEN } from '@shared/environment';
@@ -25,7 +26,6 @@ import { store } from '@app/store';
 import { selectActiveWalletType } from '@app/store/common/wallet-type.selectors';
 import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
 
-import { useOnMount } from './hooks/use-on-mount';
 import { origin } from './initial-search-params';
 
 const defaultStaticAnalyticContext = {

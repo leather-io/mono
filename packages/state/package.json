@@ -35,7 +35,6 @@
     "@leather.io/constants": "workspace:*",
     "@leather.io/crypto": "workspace:*",
     "@leather.io/models": "workspace:*",
-    "@leather.io/query": "workspace:*",
     "@leather.io/services": "workspace:*",
     "@leather.io/stacks": "workspace:*",
     "@leather.io/ui": "workspace:*",
@@ -51,7 +50,7 @@
     "react-dom": "19.1.0",
     "remeda": "2.21.2",
     "sbtc": "0.3.2",
-    "zod": "4.0.17"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",

@@ -1,4 +1,4 @@
-import { TransactionErrorKey } from '@leather.io/models';
+import { type TransactionErrorKey } from '@leather.io/models';
 
 export type StacksErrorKey =
   | TransactionErrorKey

@@ -3,14 +3,14 @@ import { useCallback } from 'react';
 import type { PrivateKey } from '@stacks/common';
 import { type ClarityValue, type TupleCV } from '@stacks/transactions';
 
-import { isString } from '@leather.io/utils';
-
-import { signMessage, signStructuredDataMessage } from '@shared/crypto/sign-message';
-import { createDelay } from '@shared/utils';
+import { signMessage, signStructuredDataMessage } from '@leather.io/stacks';
+import { delay, isString } from '@leather.io/utils';
 
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
-export const improveUxWithShortDelayAsStacksSigningIsSoFast = createDelay(600);
+export async function improveUxWithShortDelayAsStacksSigningIsSoFast() {
+  return delay(600);
+}
 
 export function useMessageSignerStacksSoftwareWallet() {
   const account = useCurrentStacksAccount();

@@ -10,15 +10,21 @@ interface ConfirmationHarnessProps {
   pool?: BitcoinStakingPool | null;
   onConfirm(): void;
   isBusy?: boolean;
+  entered?: { stakeAmount: number | undefined; cycles: number | undefined };
 }
 
-function ConfirmationHarness({ pool = null, onConfirm, isBusy }: ConfirmationHarnessProps) {
+function ConfirmationHarness({
+  pool = null,
+  onConfirm,
+  isBusy,
+  entered = { stakeAmount: 3200, cycles: 12 },
+}: ConfirmationHarnessProps) {
   const acknowledgment = useStakingAcknowledgment('fast-pool:3200:12');
   return (
     <StakingConfirmationSteps
       pool={pool}
-      stakeAmount={3200}
-      cycles={12}
+      stakeAmount={entered.stakeAmount}
+      cycles={entered.cycles}
       estimatedUnlockDate={new Date('2027-03-25T12:00:00Z')}
       acknowledgment={acknowledgment}
       onConfirm={onConfirm}
@@ -73,6 +79,17 @@ describe(StakingConfirmationSteps.name, () => {
     expect(screen.getByRole('checkbox').hasAttribute('disabled')).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: 'Confirm and start staking' }));
     expect(onConfirm).not.toHaveBeenCalled();
+  });
+
+  test('shows a placeholder and no cycles before an amount and cycles are entered', () => {
+    render(
+      <ConfirmationHarness
+        onConfirm={vi.fn()}
+        entered={{ stakeAmount: undefined, cycles: undefined }}
+      />
+    );
+    expect(screen.getByText('—')).toBeTruthy();
+    expect(screen.queryByText(/cycles?$/)).toBeNull();
   });
 
   test.each([

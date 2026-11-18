@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { sanitizeContent } from '~/utils/sanitize-content';

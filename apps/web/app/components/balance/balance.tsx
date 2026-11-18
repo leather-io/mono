@@ -1,7 +1,7 @@
 import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
 import { addOperator } from '@leather.io/features';
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 import { type FormatAmountOptions } from '@leather.io/utils';
 
 import { emptyAmountPlaceholder } from './constants';

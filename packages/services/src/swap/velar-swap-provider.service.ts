@@ -3,7 +3,6 @@ import { isNonNullish } from 'remeda';
 
 import { stxAsset } from '@leather.io/constants';
 import {
-  FungibleAssetId,
   SwapExecutionData,
   SwapProviderAsset,
   SwapProviderId,
@@ -18,6 +17,7 @@ import {
   unitToFractionalUnit,
 } from '@leather.io/utils';
 
+import { toFungibleAssetId } from '../assets/fungible-asset-id.utils';
 import { FungibleAssetService } from '../assets/fungible-asset.service';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import { VelarSdkClient, VelarSdkToken } from '../infrastructure/api/velar/velar-sdk.client';
@@ -130,7 +130,9 @@ export class VelarSwapProviderService implements SwapProviderService {
     const promises = pathKeys
       .map(key => allSwapAssets.find(a => a.providerAssetId === key))
       .filter(isNonNullish)
-      .map(a => this.fungibleAssetService.getAsset(a.assetId as FungibleAssetId, signal));
+      .map(a => toFungibleAssetId(a.assetId))
+      .filter(isNonNullish)
+      .map(assetId => this.fungibleAssetService.getAsset(assetId, signal));
     const results = await Promise.allSettled(promises);
     return results
       .map(result => (result.status === 'fulfilled' ? result.value : null))
@@ -147,8 +149,13 @@ export class VelarSwapProviderService implements SwapProviderService {
       throw new Error('Invalid quote provider id');
     }
 
+    const stxAddress = request.account.stacks?.stxAddress;
+    if (!stxAddress) {
+      throw new Error('Stacks address required for swap execution');
+    }
+
     const swapData = await this.velarClient.getSwap(
-      request.account.stacks!.stxAddress,
+      stxAddress,
       quote.providerQuoteData.baseProviderAssetId,
       quote.providerQuoteData.targetProviderAssetId,
       convertAmountToBaseUnit(quote.baseAmount).toNumber(),

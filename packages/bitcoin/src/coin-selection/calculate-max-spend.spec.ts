@@ -65,6 +65,24 @@ describe(calculateMaxSpend.name, () => {
     expect(maxBitcoinSpend.spendAllFee).toEqual(58600);
   });
 
+  test('with p2wsh multisig input sizing the spendable amount shrinks', () => {
+    const singleSigSpend = calculateMaxSpend({
+      recipient,
+      utxos: mockUtxos,
+      feeRate: 30,
+    });
+    const multisigSpend = calculateMaxSpend({
+      recipient,
+      utxos: mockUtxos,
+      feeRate: 30,
+      inputSizing: { paymentType: 'p2wsh', threshold: 2, signerCount: 3 },
+    });
+    expect(multisigSpend.amount.amount.toNumber()).toBeLessThan(
+      singleSigSpend.amount.amount.toNumber()
+    );
+    expect(multisigSpend.spendAllFee).toBeGreaterThan(singleSigSpend.spendAllFee);
+  });
+
   describe('with taproot UTXOs', () => {
     const taprootRecipient = recipientAddress;
 

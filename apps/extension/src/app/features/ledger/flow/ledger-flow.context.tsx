@@ -10,8 +10,8 @@ import {
 import { useSearchParams } from 'react-router';
 
 import type { SupportedBlockchains } from '@leather.io/models';
+import { useOnMount } from '@leather.io/ui';
 
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { isPopupMode } from '@app/common/utils';
 
 import { consumeLedgerFlowHandoff, ledgerFlowHandoffParam } from './ledger-flow-handoff';

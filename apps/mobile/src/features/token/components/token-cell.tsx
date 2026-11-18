@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { Loading } from '@/components/loading/loading';
 import { TestId } from '@/shared/test-id';

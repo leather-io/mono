@@ -1,15 +1,13 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
-import * as RadixTooltip from '@radix-ui/react-tooltip';
 import { Theme as RadixTheme } from '@radix-ui/themes';
 
+import { useOnMount } from '@leather.io/ui';
 import { noop } from '@leather.io/utils';
 
 import { store } from '@app/store';
 import { settingsActions } from '@app/store/settings/settings.actions';
 import { useUserSelectedTheme } from '@app/store/settings/settings.selectors';
-
-import { useOnMount } from './hooks/use-on-mount';
 
 export const themeLabelMap = {
   light: 'Light',
@@ -95,9 +93,7 @@ export function ThemeSwitcherProvider({ children }: ThemeSwitcherProviderProps) 
 
   return (
     <ThemeContext.Provider value={{ theme, userSelectedTheme, setUserSelectedTheme }}>
-      <RadixTheme appearance={theme}>
-        <RadixTooltip.Provider delayDuration={300}>{children}</RadixTooltip.Provider>
-      </RadixTheme>
+      <RadixTheme appearance={theme}>{children}</RadixTheme>
     </ThemeContext.Provider>
   );
 }

@@ -14,6 +14,7 @@ import {
   type MarketData,
   type Money,
   type NetworkConfiguration,
+  type NextNonce,
   type QuoteCurrency,
   type StacksProtocol,
   type SwapExecutionData,
@@ -23,7 +24,6 @@ import {
   type TransactionFeeQuote,
   type TransactionFeeTier,
 } from '@leather.io/models';
-import { type NextNonce } from '@leather.io/query';
 import {
   type AccountSwapAsset,
   type BitcoinCoinSelectionService,

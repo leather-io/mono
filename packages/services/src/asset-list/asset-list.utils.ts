@@ -1,3 +1,5 @@
+import type BigNumber from 'bignumber.js';
+
 import type {
   CryptoAssetChain,
   FungibleCryptoAsset,
@@ -53,6 +55,10 @@ export function filterByHasBalance(item: AssetListItem): boolean {
   return item.balance ? isMoneyGreaterThanZero(item.balance.crypto.totalBalance) === true : false;
 }
 
+function toSortNumber(amount: BigNumber | undefined) {
+  return amount === undefined ? 0 : Number(amount);
+}
+
 function getSortValue(item: AssetListItem, field: AssetListSortField): number | string {
   switch (field) {
     case 'name':
@@ -60,9 +66,9 @@ function getSortValue(item: AssetListItem, field: AssetListSortField): number | 
     case 'marketCap':
       return item.marketStats?.marketCap ?? 0;
     case 'quoteTotalBalance':
-      return Number(item.balance?.quote.totalBalance.amount ?? 0);
+      return toSortNumber(item.balance?.quote.totalBalance.amount);
     case 'quoteAvailableBalance':
-      return Number(item.balance?.quote.availableBalance.amount ?? 0);
+      return toSortNumber(item.balance?.quote.availableBalance.amount);
     case 'change1d':
       return item.marketStats?.priceChange['1d'] ?? 0;
     case 'change1w':
@@ -76,7 +82,7 @@ function getSortValue(item: AssetListItem, field: AssetListSortField): number | 
     case 'distributionScore':
       return item.analytics?.distributionScore ?? 0;
     case 'price':
-      return Number(item.marketData?.price.amount ?? 0);
+      return toSortNumber(item.marketData?.price.amount);
     case 'holderCount':
       return item.analytics?.holderCount ?? 0;
     default:

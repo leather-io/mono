@@ -2,21 +2,21 @@ import { useMemo } from 'react';
 import { useColorScheme } from 'react-native';
 import { useSelector } from 'react-redux';
 
-import { AvailableLanguageCode } from '@/i18n/languages';
+import { type AvailableLanguageCode } from '@/i18n/languages';
 import { analytics } from '@/utils/analytics';
 import { whenTheme } from '@/utils/when-theme';
 import type { StacksNetwork } from '@stacks/network';
 
 import { getBtcSignerLibNetworkConfigByMode } from '@leather.io/bitcoin';
 import {
-  AccountDisplayPreference,
+  type AccountDisplayPreference,
   type AccountId,
-  AnalyticsPreference,
-  BitcoinUnit,
-  DefaultNetworkConfigurations,
-  QuoteCurrency,
+  type AnalyticsPreference,
+  type BitcoinUnit,
+  type DefaultNetworkConfigurations,
+  type QuoteCurrency,
 } from '@leather.io/models';
-import { SerializedCryptoAssetId } from '@leather.io/utils';
+import { type SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { useAppDispatch } from '../utils';
 import {
@@ -38,6 +38,7 @@ import {
   selectPrivacyModePreference,
   selectSecurityLevelPreference,
   selectThemePreference,
+  selectTokenPreset,
 } from './settings.read';
 import {
   userChangedAccountDisplayPreference,
@@ -57,17 +58,20 @@ import {
   userChangedQuoteCurrencyPreference,
   userChangedSecurityLevelPreference,
   userChangedThemePreference,
+  userChangedTokenPreset,
 } from './settings.write';
+import { getDefaultAssetVisibilityPolicy } from './token-preset';
 import {
-  AppIconPreference,
-  CurrentAccount,
-  HapticsPreference,
-  LanguagePreferenceSource,
-  LastActiveTimestamp,
-  NotificationsPreference,
-  PrivacyModePreference,
-  SecurityLevelPreference,
-  ThemePreference,
+  type AppIconPreference,
+  type CurrentAccount,
+  type HapticsPreference,
+  type LanguagePreferenceSource,
+  type LastActiveTimestamp,
+  type NotificationsPreference,
+  type PrivacyModePreference,
+  type SecurityLevelPreference,
+  type ThemePreference,
+  type TokenPreset,
 } from './utils';
 
 export function useSettings() {
@@ -89,6 +93,11 @@ export function useSettings() {
   const languagePreference = useSelector(selectLanguagePreference);
   const languagePreferenceSource = useSelector(selectLanguagePreferenceSource);
   const assetVisibility = useSelector(selectAssetVisibility);
+  const tokenPreset = useSelector(selectTokenPreset);
+  const defaultAssetVisibility = useMemo(
+    () => getDefaultAssetVisibilityPolicy(tokenPreset),
+    [tokenPreset]
+  );
   const currentAccount = useSelector(selectCurrentAccount);
   const appIconPreference = useSelector(selectAppIconPreference);
 
@@ -112,6 +121,8 @@ export function useSettings() {
     languagePreference,
     languagePreferenceSource,
     assetVisibility,
+    tokenPreset,
+    defaultAssetVisibility,
     currentAccount,
     appIconPreference,
     whenTheme: whenTheme(themeDerivedFromThemePreference),
@@ -120,6 +131,12 @@ export function useSettings() {
     },
     changeAssetVisibility(assetId: SerializedCryptoAssetId, value: boolean) {
       dispatch(userChangedAssetVisibility({ assetId, value }));
+    },
+    changeTokenPreset(preset: TokenPreset) {
+      dispatch(userChangedTokenPreset(preset));
+      analytics.track('user_setting_updated', {
+        token_preset: preset,
+      });
     },
     changeAppIconPreference(icon: AppIconPreference) {
       dispatch(userChangedAppIconPreference(icon));

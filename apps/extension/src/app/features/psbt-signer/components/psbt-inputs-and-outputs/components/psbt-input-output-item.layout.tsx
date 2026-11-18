@@ -1,10 +1,9 @@
 import { Box, Flex, HStack, styled } from 'leather-styles/jsx';
 
-import { CopyIcon, Flag, Link } from '@leather.io/ui';
+import { BasicTooltip, CopyIcon, Flag, Link } from '@leather.io/ui';
 
 import { useBitcoinExplorerLink } from '@app/common/hooks/use-bitcoin-explorer-link';
 import { useClipboard } from '@app/common/hooks/use-copy-to-clipboard';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 interface PsbtInputOutputItemLayoutProps {
   address: string;

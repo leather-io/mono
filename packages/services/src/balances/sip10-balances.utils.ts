@@ -1,4 +1,4 @@
-import { CryptoAssetBalance } from '@leather.io/models';
+import { type CryptoAssetBalance } from '@leather.io/models';
 import { aggregateBaseCryptoAssetBalances } from '@leather.io/utils';
 
 import type { Sip10AddressBalance, Sip10Balance } from './sip10-balances.service';
@@ -6,7 +6,7 @@ import type { Sip10AddressBalance, Sip10Balance } from './sip10-balances.service
 export function combineSip10Balances(addressBalances: Sip10AddressBalance[]): Sip10Balance[] {
   return addressBalances
     .flatMap(entry => entry.sip10s)
-    .reduce((acc, tokenBalance) => {
+    .reduce<Sip10Balance[]>((acc, tokenBalance) => {
       const existingBalance = acc.find(b => b.asset.symbol === tokenBalance.asset.symbol);
       if (existingBalance) {
         existingBalance.crypto = aggregateBaseCryptoAssetBalances([
@@ -25,7 +25,7 @@ export function combineSip10Balances(addressBalances: Sip10AddressBalance[]): Si
         });
       }
       return acc;
-    }, [] as Sip10Balance[]);
+    }, []);
 }
 
 export function sortByAvailableQuoteBalance(

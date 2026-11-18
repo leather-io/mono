@@ -1,8 +1,6 @@
 import { styled } from 'leather-styles/jsx';
 
-import { InfoCircleIcon } from '@leather.io/ui';
-
-import { BasicTooltip } from './basic-tooltip';
+import { BasicTooltip, InfoCircleIcon } from '@leather.io/ui';
 
 interface InfoTooltipProps {
   label?: string;

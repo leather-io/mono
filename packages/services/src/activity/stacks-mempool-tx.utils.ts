@@ -3,12 +3,19 @@ import type {
   HiroStacksTransaction,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 
-export function isMempoolTx(
+type StacksTxByStatus =
+  | { readonly mempoolTx: HiroStacksMempoolTransaction; readonly confirmedTx?: undefined }
+  | { readonly mempoolTx?: undefined; readonly confirmedTx: HiroStacksTransaction };
+
+export function getStacksTxByStatus(
   tx: HiroStacksTransaction | HiroStacksMempoolTransaction
-): tx is HiroStacksMempoolTransaction {
-  return (
-    tx.tx_status !== 'success' &&
-    tx.tx_status !== 'abort_by_post_condition' &&
-    tx.tx_status !== 'abort_by_response'
-  );
+): StacksTxByStatus {
+  switch (tx.tx_status) {
+    case 'success':
+    case 'abort_by_post_condition':
+    case 'abort_by_response':
+      return { confirmedTx: tx };
+    default:
+      return { mempoolTx: tx };
+  }
 }

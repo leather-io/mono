@@ -2,7 +2,7 @@
   "name": "@leather.io/stacks",
   "author": "leather.io",
   "description": "Stacks package for Leather",
-  "version": "1.22.8",
+  "version": "1.22.9",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -34,7 +34,7 @@
     "@stacks/transactions": "7.5.0",
     "bignumber.js": "9.1.2",
     "c32check": "2.0.0",
-    "zod": "4.0.17"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",

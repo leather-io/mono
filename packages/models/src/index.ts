@@ -25,6 +25,7 @@ export * from './multisig.model';
 export * from './network/network.model';
 export * from './network/network.schema';
 export * from './settings.model';
+export * from './stacks-nonce.model';
 export * from './protocols/stacks-protocol.model';
 export * from './swap/swap.model';
 export * from './token-analytics.model';

@@ -12,10 +12,10 @@ import {
   type StacksFeeEstimate,
   type StacksTransactionFees,
 } from '@leather.io/models';
+import { SkeletonLoader } from '@leather.io/ui';
 import { convertAmountToBaseUnit, createMoney, isNumber, isString } from '@leather.io/utils';
 
 import { useConvertCryptoCurrencyToFiatAmount } from '@app/common/hooks/use-convert-to-fiat-amount';
-import { LoadingRectangle } from '@app/components/loading-rectangle';
 
 import { CustomFeeField } from './components/custom-fee-field';
 import { FeeEstimateSelect } from './components/fee-estimate-select';
@@ -128,7 +128,7 @@ export function FeesRow({
     [feeTypeHelper, feeHelper, estimates, defaultFeeValue]
   );
 
-  if (!hasFeeEstimates || !fees) return <LoadingRectangle height="32px" width="100%" />;
+  if (!hasFeeEstimates || !fees) return <SkeletonLoader isLoading height="32px" width="100%" />;
 
   return (
     <FeesRowLayout

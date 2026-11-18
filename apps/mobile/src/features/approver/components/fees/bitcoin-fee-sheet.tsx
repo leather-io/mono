@@ -1,8 +1,8 @@
 import { useBtcMarketDataQuery } from '@/queries/market-data/btc-market-data.query';
 import BigNumber from 'bignumber.js';
 
-import { AverageBitcoinFeeRates, FeeTypes } from '@leather.io/models';
-import { SheetRef } from '@leather.io/ui/native';
+import { type AverageBitcoinFeeRates, FeeTypes } from '@leather.io/models';
+import { type SheetRef } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback, createMoney } from '@leather.io/utils';
 
 import { BitcoinFeeOption } from './bitcoin-fee-option';

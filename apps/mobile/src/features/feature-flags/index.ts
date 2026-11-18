@@ -26,7 +26,7 @@ export async function setupFeatureFlags() {
     // TODO: handle this error properly
     throw new Error('No device id detected');
   }
-  featureFlagClient.identify({ kind: 'user', key: deviceId }).catch((e: any) => {
+  featureFlagClient.identify({ kind: 'user', key: deviceId }).catch((e: unknown) => {
     // TODO: analytics?
     // eslint-disable-next-line no-console
     console.log(e);

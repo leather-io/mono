@@ -2,12 +2,11 @@ import { useNavigate } from 'react-router';
 
 import { z } from 'zod';
 
-import { Sheet, SheetHeader } from '@leather.io/ui';
+import { Sheet, SheetHeader, useOnMount } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { useRouteState } from '@app/common/hooks/use-route-state';
 
 import { BroadcastErrorLayout } from './components/broadcast-error.layout';

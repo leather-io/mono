@@ -1,8 +1,8 @@
 import { AmountSendMaxButton } from '@/components/amount-field/amount-send-max-button';
-import { InputCurrencyMode } from '@/utils/types';
+import { type InputCurrencyMode } from '@/utils/types';
 
-import { CryptoCurrency, MarketData, QuoteCurrency } from '@leather.io/models';
-import { Box, Theme } from '@leather.io/ui/native';
+import { type CryptoCurrency, type MarketData, type QuoteCurrency } from '@leather.io/models';
+import { Box, type Theme } from '@leather.io/ui/native';
 
 import { AmountFieldPrimaryValue } from './amount-field-primary-value';
 import { AmountFieldSecondaryValue } from './amount-field-secondary-value';

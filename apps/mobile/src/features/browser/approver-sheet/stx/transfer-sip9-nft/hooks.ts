@@ -4,10 +4,10 @@ import { getApproverFee } from '@/features/approver/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { bytesToHex } from '@stacks/common';
-import { StacksNetwork } from '@stacks/network';
+import { type StacksNetwork } from '@stacks/network';
 import { Pc, hexToCV, serializeCV } from '@stacks/transactions';
 
-import { RpcRequest, stxTransferSip9Nft } from '@leather.io/rpc';
+import { type RpcRequest, type stxTransferSip9Nft } from '@leather.io/rpc';
 import {
   TransactionTypes,
   createSip9FnArgs,
@@ -90,7 +90,11 @@ export function useTransferSip9NftTxHex({
       network,
     ]
   );
+  async function loadTxHex() {
+    setTxHex(await getTxHex());
+  }
+
   useOnMount(() => {
-    void getTxHex().then(txHex => setTxHex(txHex));
+    void loadTxHex();
   });
 }

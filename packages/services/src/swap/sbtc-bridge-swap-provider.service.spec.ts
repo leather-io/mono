@@ -2,11 +2,14 @@ import { ClarityType, type ClarityValue } from '@stacks/transactions';
 import { AxiosError, AxiosHeaders, type AxiosResponse } from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 
+import { defaultNetworksKeyedById } from '@leather.io/models';
+
 import type { EmilyApiClient } from '../infrastructure/api/emily/emily-api.client';
 import type { EmilyDepositRequest } from '../infrastructure/api/emily/emily-api.types';
 import type { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import type { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
-import type { SettingsService } from '../infrastructure/settings/settings.service';
+import { createMock } from '../test/create-mock';
+import { createTestSettingsService } from '../test/transactions-fixtures';
 import { SbtcBridgeSwapProviderService } from './sbtc-bridge-swap-provider.service';
 
 vi.mock('@leather.io/utils', async () => ({
@@ -46,12 +49,10 @@ function makeService({
   notifyDeposit?: ReturnType<typeof vi.fn>;
   callReadOnlyFunction?: ReturnType<typeof vi.fn>;
 } = {}) {
-  const leatherApiClient = {} as unknown as LeatherApiClient;
-  const emilyApiClient = { notifyDeposit } as unknown as EmilyApiClient;
-  const stacksApiClient = { callReadOnlyFunction } as unknown as HiroStacksApiClient;
-  const settingsService = {
-    getSettings: () => ({ network: { chain: { bitcoin: { mode: 'mainnet' } } } }),
-  } as unknown as SettingsService;
+  const leatherApiClient = createMock<LeatherApiClient>({});
+  const emilyApiClient = createMock<EmilyApiClient>({ notifyDeposit });
+  const stacksApiClient = createMock<HiroStacksApiClient>({ callReadOnlyFunction });
+  const settingsService = createTestSettingsService(defaultNetworksKeyedById.mainnet);
   return {
     service: new SbtcBridgeSwapProviderService(
       leatherApiClient,

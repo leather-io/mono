@@ -77,7 +77,7 @@ export class BitflowAmmLpService implements YieldProductService {
       const principal = getPrincipalFromAssetString(ftBalance.token);
       if (poolMap[principal]) {
         calls.push(
-          this.getBitflowAmmLpPosition(Number(ftBalance.balance ?? 0), poolMap[principal], signal)
+          this.getBitflowAmmLpPosition(Number(ftBalance.balance), poolMap[principal], signal)
         );
       }
     }

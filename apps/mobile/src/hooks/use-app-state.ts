@@ -12,7 +12,7 @@ export function useAppState({
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
       Platform.select({
-        ios: () => {
+        ios() {
           if (appState.current === 'background' && nextAppState === 'active') {
             onAppForeground?.();
           }
@@ -20,7 +20,7 @@ export function useAppState({
             onAppBackground?.();
           }
         },
-        android: () => {
+        android() {
           if (nextAppState === 'active') {
             onAppForeground?.();
           }

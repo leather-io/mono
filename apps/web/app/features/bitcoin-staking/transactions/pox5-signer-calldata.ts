@@ -1,9 +1,9 @@
-import { StacksNetworkName } from '@stacks/network';
+import { type StacksNetworkName } from '@stacks/network';
 import { poxAddressToBtcAddress, poxAddressToTuple } from '@stacks/stacking';
 import {
   ClarityType,
-  ClarityValue,
-  TupleCV,
+  type ClarityValue,
+  type TupleCV,
   bufferCV,
   deserializeCV,
   noneCV,

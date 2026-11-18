@@ -1,9 +1,11 @@
-import { ReactNode, createContext, useCallback, useContext, useMemo, useRef } from 'react';
-import { AnimatedRef, runOnUI, scrollTo } from 'react-native-reanimated';
+import { type ReactNode, createContext, useCallback, useContext, useMemo, useRef } from 'react';
+import { runOnUI, scrollTo } from 'react-native-reanimated';
+
+import { type ScreenScrollRef } from '@/components/screen/screen-scroll-ref';
 
 interface TabLayoutContextValue {
   tabBarHeight: number;
-  registerScrollRef(tabName: string, ref: AnimatedRef<any>): () => void;
+  registerScrollRef(tabName: string, ref: ScreenScrollRef): () => void;
   scrollToTop(tabName: string): void;
 }
 
@@ -15,9 +17,9 @@ interface TabLayoutProviderProps {
 }
 
 export function TabLayoutProvider({ children, tabBarHeight }: TabLayoutProviderProps) {
-  const scrollRefs = useRef(new Map<string, AnimatedRef<any>>());
+  const scrollRefs = useRef(new Map<string, ScreenScrollRef>());
 
-  const registerScrollRef = useCallback((tabName: string, ref: AnimatedRef<any>) => {
+  const registerScrollRef = useCallback((tabName: string, ref: ScreenScrollRef) => {
     scrollRefs.current.set(tabName, ref);
     return () => {
       scrollRefs.current.delete(tabName);
