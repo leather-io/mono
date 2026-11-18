@@ -5,12 +5,16 @@ import ts from 'typescript';
 import {
   type EvaluatedString,
   type StringTable,
+  collectDescendants,
   evaluateStringExpression,
+  findDescendant,
+  findTopLevelDeclaration,
   getLine,
   getPropertyName,
-  hasExportModifier,
   parseSourceFile,
+  topLevelDeclarations,
   unwrapExpression,
+  walkDescendants,
 } from './ts-ast.js';
 
 export interface RoutedRoute {
@@ -169,63 +173,34 @@ function collectGates(node: ts.Node): string[] {
 }
 
 function findDynamicImportSpecifier(node: ts.Node): string | undefined {
-  let specifier: string | undefined;
-  function visit(child: ts.Node) {
-    if (specifier !== undefined) return;
-    if (
-      ts.isCallExpression(child) &&
-      child.expression.kind === ts.SyntaxKind.ImportKeyword &&
-      child.arguments[0] &&
-      ts.isStringLiteral(child.arguments[0])
-    ) {
-      specifier = child.arguments[0].text;
-      return;
+  return findDescendant(node, child => {
+    if (!ts.isCallExpression(child) || child.expression.kind !== ts.SyntaxKind.ImportKeyword) {
+      return undefined;
     }
-    ts.forEachChild(child, visit);
-  }
-  visit(node);
-  return specifier;
+    const argument = child.arguments[0];
+    return argument && ts.isStringLiteral(argument) ? argument.text : undefined;
+  });
 }
 
 function findLazyComponentName(node: ts.Node): string | undefined {
-  let name: string | undefined;
-  function visit(child: ts.Node) {
-    if (name !== undefined) return;
+  return findDescendant(node, child => {
     if (ts.isPropertyAssignment(child) && getPropertyName(child.name) === lazyComponentProperty) {
-      if (ts.isIdentifier(child.initializer)) name = child.initializer.text;
-      return;
+      return ts.isIdentifier(child.initializer) ? child.initializer.text : undefined;
     }
     if (ts.isShorthandPropertyAssignment(child) && child.name.text === lazyComponentProperty) {
-      name = child.name.text;
-      return;
+      return child.name.text;
     }
-    ts.forEachChild(child, visit);
-  }
-  visit(node);
-  return name;
-}
-
-function findDeclaration(sourceFile: ts.SourceFile, name: string): ts.Node | undefined {
-  for (const statement of sourceFile.statements) {
-    if (ts.isFunctionDeclaration(statement) && statement.name?.text === name) return statement;
-    if (!ts.isVariableStatement(statement)) continue;
-    for (const declaration of statement.declarationList.declarations) {
-      if (ts.isIdentifier(declaration.name) && declaration.name.text === name) return declaration;
-    }
-  }
-  return undefined;
+    return undefined;
+  });
 }
 
 function collectGatesWithin(node: ts.Node): string[] {
   const gates: string[] = [];
-  function visit(child: ts.Node) {
-    if (isJsxElementLike(child)) {
-      gates.push(...collectGates(child));
-      return;
-    }
-    ts.forEachChild(child, visit);
-  }
-  visit(node);
+  walkDescendants(node, child => {
+    if (!isJsxElementLike(child)) return false;
+    gates.push(...collectGates(child));
+    return true;
+  });
   return gates;
 }
 
@@ -235,8 +210,8 @@ function collectLazyGates(lazyAttribute: ts.JsxAttribute, state: WalkState): str
   if (specifier === undefined || componentName === undefined) return [];
   const sourceFile = state.imports.resolve(specifier, state.sourceFile.fileName);
   if (!sourceFile) return [];
-  const declaration = findDeclaration(sourceFile, componentName);
-  return declaration ? collectGatesWithin(declaration) : [];
+  const declaration = findTopLevelDeclaration(sourceFile, componentName);
+  return declaration ? collectGatesWithin(declaration.node) : [];
 }
 
 function joinPath(parent: string, own: string): string {
@@ -291,48 +266,34 @@ function collectParameterNames(fn: ts.FunctionDeclaration): Set<string> {
 }
 
 function findTemplateParam(fn: ts.FunctionDeclaration): string | undefined {
+  if (!fn.body) return undefined;
   const parameterNames = collectParameterNames(fn);
-  let found: string | undefined;
-  function visit(node: ts.Node) {
-    if (found) return;
+  return findDescendant(fn.body, node => {
     const route = asRouteElement(node);
-    if (route) {
-      const pathAttribute = findAttribute(route, pathAttributeName);
-      const expression = pathAttribute ? attributeExpression(pathAttribute) : undefined;
-      if (expression && ts.isIdentifier(expression) && parameterNames.has(expression.text)) {
-        found = expression.text;
-        return;
-      }
+    const pathAttribute = route ? findAttribute(route, pathAttributeName) : undefined;
+    const expression = pathAttribute ? attributeExpression(pathAttribute) : undefined;
+    if (expression && ts.isIdentifier(expression) && parameterNames.has(expression.text)) {
+      return expression.text;
     }
-    ts.forEachChild(node, visit);
-  }
-  if (fn.body) visit(fn.body);
-  return found;
+    return undefined;
+  });
 }
 
 function collectTemplates(sourceFile: ts.SourceFile): Map<string, RouteTemplate> {
   const templates = new Map<string, RouteTemplate>();
-  for (const statement of sourceFile.statements) {
-    if (!ts.isFunctionDeclaration(statement) || !statement.name || !statement.body) continue;
-    const paramName = findTemplateParam(statement);
+  for (const { name, node } of topLevelDeclarations(sourceFile)) {
+    if (!ts.isFunctionDeclaration(node) || !node.body) continue;
+    const paramName = findTemplateParam(node);
     if (!paramName) continue;
-    templates.set(statement.name.text, { paramName, body: statement.body, sourceFile });
+    templates.set(name, { paramName, body: node.body, sourceFile });
   }
   return templates;
 }
 
 function collectExportedComponents(sourceFile: ts.SourceFile): string[] {
-  const names: string[] = [];
-  for (const statement of sourceFile.statements) {
-    if (!hasExportModifier(statement)) continue;
-    if (ts.isFunctionDeclaration(statement) && statement.name) names.push(statement.name.text);
-    if (ts.isVariableStatement(statement)) {
-      for (const declaration of statement.declarationList.declarations) {
-        if (ts.isIdentifier(declaration.name)) names.push(declaration.name.text);
-      }
-    }
-  }
-  return names.filter(name => componentNamePattern.test(name));
+  return topLevelDeclarations(sourceFile)
+    .filter(declaration => declaration.exported && componentNamePattern.test(declaration.name))
+    .map(declaration => declaration.name);
 }
 
 function collectMountedComponentFiles(
@@ -340,46 +301,37 @@ function collectMountedComponentFiles(
   components: ReadonlyMap<string, ts.SourceFile>
 ): ts.SourceFile[] {
   const files: ts.SourceFile[] = [];
-  function visit(node: ts.Node) {
+  walkDescendants(sourceFile, node => {
     const route = asRouteElement(node);
-    if (route) {
-      const elementAttribute = findAttribute(route, elementAttributeName);
-      for (const tag of elementAttribute ? collectChildTagNames(elementAttribute) : []) {
-        const component = components.get(tag);
-        if (component && component !== sourceFile) files.push(component);
-      }
+    const elementAttribute = route ? findAttribute(route, elementAttributeName) : undefined;
+    for (const tag of elementAttribute ? collectChildTagNames(elementAttribute) : []) {
+      const component = components.get(tag);
+      if (component && component !== sourceFile) files.push(component);
     }
-    ts.forEachChild(node, visit);
-  }
-  visit(sourceFile);
+    return false;
+  });
   return files;
 }
 
 function collectLocalJsx(sourceFile: ts.SourceFile): Map<string, ts.Node> {
   const locals = new Map<string, ts.Node>();
-  for (const statement of sourceFile.statements) {
-    if (!ts.isVariableStatement(statement)) continue;
-    for (const declaration of statement.declarationList.declarations) {
-      if (!ts.isIdentifier(declaration.name) || !declaration.initializer) continue;
-      const initializer = unwrapExpression(declaration.initializer);
-      if (isJsxElementLike(initializer) || ts.isJsxFragment(initializer)) {
-        locals.set(declaration.name.text, initializer);
-      }
+  for (const { name, initializer } of topLevelDeclarations(sourceFile)) {
+    if (!initializer) continue;
+    if (isJsxElementLike(initializer) || ts.isJsxFragment(initializer)) {
+      locals.set(name, initializer);
     }
   }
   return locals;
 }
 
 function collectSplicedNames(sourceFile: ts.SourceFile): Set<string> {
-  const names = new Set<string>();
-  function visit(node: ts.Node) {
-    if (ts.isJsxExpression(node) && node.expression && ts.isIdentifier(node.expression)) {
-      names.add(node.expression.text);
-    }
-    ts.forEachChild(node, visit);
-  }
-  visit(sourceFile);
-  return names;
+  return new Set(
+    collectDescendants(sourceFile, node =>
+      ts.isJsxExpression(node) && node.expression && ts.isIdentifier(node.expression)
+        ? node.expression.text
+        : undefined
+    )
+  );
 }
 
 function descendIntoMountedComponents(

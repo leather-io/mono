@@ -179,6 +179,12 @@ function model(overrides: Partial<FeatureMapModel>): FeatureMapModel {
       line: 1,
       members: ['mockStacksFeeRequests'],
     },
+    verifyMocks: new Set([
+      'setupMockApis',
+      'mockStacksFeeRequests',
+      'mockMixedUtxosForSend',
+      'mockNativeSegwitOnlyUtxosForSend',
+    ]),
     specs: new Map([
       [
         'apps/extension/tests/specs/onboarding/onboarding.spec.ts',
@@ -320,6 +326,24 @@ describe(checkFeatureMap.name, () => {
         expect.stringContaining("selectors.ready 'raw-id' must reference a *Selectors member"),
       ])
     );
+  });
+
+  test('rejects mocks the verify registry cannot apply', () => {
+    const unregistered = feature({
+      preconditions: { session: 'signed-in', mocks: ['mockWithArgs'] },
+    });
+    const result = checkFeatureMap(
+      model({
+        features: [...claimersExcept('home-tokens'), unregistered],
+        mocks: new Map([
+          ['setupMockApis', { file: 'mock-apis.ts', line: 1 }],
+          ['mockWithArgs', { file: 'mock-utxos.ts', line: 1 }],
+        ]),
+      })
+    );
+    expect(result.errors).toEqual([
+      "entry 'home-tokens' (apps/extension/tests/feature-map/home.features.ts:1): mock 'mockWithArgs' is exported but not registered in apps/extension/tests/verify/mock-registry.ts, so lt verify cannot apply it. Fix: add it to contextMocks or pageMocks there (wrapping any arguments) or drop it from the entry.",
+    ]);
   });
 
   test('surfaces parse errors, duplicate ids and unresolved router paths', () => {
@@ -486,7 +510,7 @@ describe('rpc handler coverage', () => {
   });
 });
 
-describe('router flags and orphan sheets', () => {
+describe('router flags, orphan sheets, exclusive mocks and open actions', () => {
   test('requires an entry to list every flag its routes are mounted behind', () => {
     const sell = feature({ id: 'sell', routes: [{ value: '/sell', ref: 'RouteUrls.Sell' }] });
     const result = checkFeatureMap(model({ features: [...claimersExcept('sell'), sell] }));
@@ -508,6 +532,85 @@ describe('router flags and orphan sheets', () => {
     );
     expect(result.errors).toEqual([
       "entry 'orphan' (apps/extension/tests/feature-map/home.features.ts:1): route 'edit-tx-nonce' is not mounted under any of this entry's routes; it only nests under other screens. Fix: move it to the entry whose route mounts it.",
+    ]);
+  });
+
+  test('rejects mocks that route the same requests', () => {
+    const clash = feature({
+      preconditions: {
+        session: 'signed-in',
+        mocks: ['mockMixedUtxosForSend', 'mockNativeSegwitOnlyUtxosForSend'],
+      },
+    });
+    const mocks = new Map([
+      ['mockMixedUtxosForSend', { file: 'mock-utxos.ts', line: 1 }],
+      ['mockNativeSegwitOnlyUtxosForSend', { file: 'mock-utxos.ts', line: 2 }],
+    ]);
+    const result = checkFeatureMap(
+      model({ features: [...claimersExcept('home-tokens'), clash], mocks })
+    );
+    expect(result.errors).toEqual([
+      "entry 'home-tokens' (apps/extension/tests/feature-map/home.features.ts:1): mocks 'mockMixedUtxosForSend' and 'mockNativeSegwitOnlyUtxosForSend' route the same requests, so the later one wins and the other never applies. Fix: keep the one the entry's screen state needs.",
+    ]);
+  });
+
+  test('accepts open actions only on exposed page objects with no required arguments', () => {
+    const pageObjectActions = new Map([
+      [
+        'HomePage.lock',
+        {
+          file: 'home.page.ts',
+          line: 1,
+          className: 'HomePage',
+          requiredParameters: 0,
+          isStatic: false,
+        },
+      ],
+      [
+        'HomePage.switchAccount',
+        {
+          file: 'home.page.ts',
+          line: 2,
+          className: 'HomePage',
+          requiredParameters: 1,
+          isStatic: false,
+        },
+      ],
+      [
+        'HomePage.create',
+        {
+          file: 'home.page.ts',
+          line: 3,
+          className: 'HomePage',
+          requiredParameters: 0,
+          isStatic: true,
+        },
+      ],
+      [
+        'ReceivePage.open',
+        {
+          file: 'receive.page.ts',
+          line: 1,
+          className: 'ReceivePage',
+          requiredParameters: 0,
+          isStatic: false,
+        },
+      ],
+    ]);
+    const opener = feature({
+      open: ['HomePage.lock', 'HomePage.switchAccount', 'HomePage.create', 'ReceivePage.open'],
+    });
+    const result = checkFeatureMap(
+      model({ features: [...claimersExcept('home-tokens'), opener], pageObjectActions })
+    );
+    expect(result.errors).toEqual([
+      expect.stringContaining(
+        "open action 'HomePage.switchAccount' needs 1 argument; verify calls open actions with none"
+      ),
+      expect.stringContaining("open action 'HomePage.create' is static"),
+      expect.stringContaining(
+        "open action 'ReceivePage.open' is on ReceivePage, which verify does not expose. Fix: use a method of GlobalPage, HomePage, OnboardingPage, SendPage, SwapRevampPage, NetworkPage, SettingsPage, SwitchAccountPage."
+      ),
     ]);
   });
 });

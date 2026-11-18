@@ -52,7 +52,6 @@
         "leather-styles/*": ["./leather-styles/*"]
       },
       "ignoreDependencies": [
-        "@leather.io/tools",
         "assert",
         "browserify-fs",
         "url",
@@ -127,7 +126,14 @@
       "entry": ["src/index.ts", "src/mobile.ts"]
     },
     "tools": {
-      "entry": ["src/lt.ts", "src/feature-map/feature-entry.ts"]
+      "entry": [
+        "src/lt.ts",
+        "src/feature-map/feature-entry.ts",
+        "src/verify/verify-contract.ts",
+        "src/verify/state-evidence.ts",
+        "src/verify/console-verdict.ts",
+        "src/verify/network-classification.ts"
+      ]
     },
     "packages/utils": {
       "ignoreDependencies": ["@types/dompurify"]
