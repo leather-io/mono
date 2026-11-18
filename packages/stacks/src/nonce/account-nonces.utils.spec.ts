@@ -26,6 +26,7 @@ function createPendingTx(nonce: number): StacksMempoolTransaction {
     sponsor: null,
     fee_rate: '180',
     receipt_time: 1_700_000_000,
+    receipt_time_iso: '2023-11-14T22:13:20.000Z',
     receipt_block_height: 100,
     status: 'pending',
     replaced_by_tx_id: null,

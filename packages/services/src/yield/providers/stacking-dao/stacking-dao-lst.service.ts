@@ -14,7 +14,7 @@ import { FungibleAssetService } from '../../../assets/fungible-asset.service';
 import { HiroStacksApiClient } from '../../../infrastructure/api/hiro/hiro-stacks-api.client';
 import type {
   HiroAddressFtBalancesResponse,
-  HiroNftHolding,
+  HiroPrincipalNftBalance,
 } from '../../../infrastructure/api/hiro/hiro-stacks-api.types';
 import { LeatherApiClient } from '../../../infrastructure/api/leather/leather-api.client';
 import { MarketDataService } from '../../../market/market-data.service';
@@ -110,7 +110,7 @@ export class StackingDaoLstService {
 
   public async getLstWithdrawals(
     lst: 'ststx' | 'ststxbtc',
-    nftHoldings: HiroNftHolding[],
+    nftHoldings: HiroPrincipalNftBalance[],
     signal?: AbortSignal
   ): Promise<StackingDaoLstWithdrawal[]> {
     const withdrawalNftIds = nftHoldings

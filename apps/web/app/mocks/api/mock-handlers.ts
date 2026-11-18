@@ -3,7 +3,6 @@ import { HttpResponse, http } from 'msw';
 import { delay } from '@leather.io/utils';
 
 import { accountsHandler } from './hiro.so/accounts-address';
-import { accountsBalanceHandler } from './hiro.so/accounts-address-balance';
 import { accountsBalanceStxHandler } from './hiro.so/accounts-address-balance-stx';
 import { transactionWithTransfersHandler } from './hiro.so/address-address-transactions-with-transfers';
 import { blockTimesHandler } from './hiro.so/block-times';
@@ -29,9 +28,9 @@ import {
   pox5GetEarnedStakerRewardsHandler,
   pox5GetPoxAddrHandler,
 } from './hiro.so/pox5-signer-manager';
+import { principalsBalancesStxHandler } from './hiro.so/principals-balances-stx';
 import { stackingDaoContractCallHandler } from './hiro.so/stacking-dao-core-v4';
 import { ststxTokenBalanceContractCallHandler } from './hiro.so/ststx-token-get-balance';
-import { nftHoldingsHandler } from './hiro.so/tokens-nft-holdings';
 import { leatherMarketPricesHandler } from './leather.io/market-prices';
 import { multisigHandlers } from './leather.io/multisig';
 import { leatherPingHandler } from './leather.io/ping';
@@ -51,9 +50,8 @@ const endpoints = [
   poxGetStackerInfoHandler,
   poxMainnetHandler,
   accountsHandler,
-  accountsBalanceHandler,
+  principalsBalancesStxHandler,
   hiroInfoHandler,
-  nftHoldingsHandler,
   transactionWithTransfersHandler,
   mempoolHandler,
   ststxTokenBalanceContractCallHandler,

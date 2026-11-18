@@ -19,11 +19,17 @@ import {
   createActivityTokenTransferTx,
   removeActivityBlockTimes,
 } from '../test/activity-fixtures';
+import {
+  createTestPrincipalMempoolContractCallTx,
+  createTestPrincipalMempoolSmartContractTx,
+  createTestPrincipalMempoolTokenTransferTx,
+} from '../test/transactions-fixtures';
 import { type StacksAssetTransferWithInfo } from './stacks-asset-transfer.utils';
 import { getStacksTxByStatus } from './stacks-mempool-tx.utils';
 import {
   getEventsByTxId,
   mapContractCallActivity,
+  mapPendingStacksTxActivity,
   mapSmartContractActivity,
   mapStacksTxBlockHeight,
   mapStacksTxBlockTime,
@@ -539,5 +545,166 @@ describe('getEventsByTxId', () => {
 
   it('returns empty map for empty events', () => {
     expect(getEventsByTxId([])).toEqual(new Map());
+  });
+});
+
+describe('mapPendingStacksTxActivity', () => {
+  const account: AccountAddresses = {
+    id: { fingerprint: 'xyz', accountIndex: 0 },
+    stacks: { stxAddress: 'ST123' },
+  };
+  const pendingProps = {
+    level: ActivityLevels.account,
+    account: account.id,
+    status: OnChainActivityStatuses.pending,
+  };
+
+  it('maps a pending stx transfer sent by the account to a send activity', () => {
+    const tx = createTestPrincipalMempoolTokenTransferTx({
+      tx_id: '0xsend',
+      sender: { address: 'ST123', nonce: 1 },
+      receipt_time: 1_700_000_000,
+      token_transfer: { recipient: 'ST456', amount: '1000', memo: null },
+    });
+    expect(mapPendingStacksTxActivity(tx, account)).toEqual([
+      {
+        type: OnChainActivityTypes.sendAsset,
+        receivers: ['ST456'],
+        asset: stxAsset,
+        amount: initBigNumber(1000),
+        timestamp: 1_700_000_000,
+        txid: '0xsend',
+        ...pendingProps,
+      },
+    ]);
+  });
+
+  it('maps a pending stx transfer to the account to a receive activity', () => {
+    const tx = createTestPrincipalMempoolTokenTransferTx({
+      tx_id: '0xreceive',
+      sender: { address: 'ST456', nonce: 1 },
+      receipt_time: 1_700_000_000,
+      token_transfer: { recipient: 'ST123', amount: '2000', memo: null },
+    });
+    expect(mapPendingStacksTxActivity(tx, account)).toEqual([
+      {
+        type: OnChainActivityTypes.receiveAsset,
+        senders: ['ST456'],
+        asset: stxAsset,
+        amount: initBigNumber(2000),
+        timestamp: 1_700_000_000,
+        txid: '0xreceive',
+        ...pendingProps,
+      },
+    ]);
+  });
+
+  it('maps a pending contract call sent by the account to an execute activity', () => {
+    const tx = createTestPrincipalMempoolContractCallTx({
+      tx_id: '0xcall',
+      sender: { address: 'ST123', nonce: 2 },
+      receipt_time: 1_700_000_000,
+      contract_call: { contract_id: 'ST1.contract', function_name: 'transfer' },
+    });
+    expect(mapPendingStacksTxActivity(tx, account)).toEqual([
+      {
+        type: OnChainActivityTypes.executeSmartContract,
+        contractId: 'ST1.contract',
+        functionName: 'transfer',
+        timestamp: 1_700_000_000,
+        txid: '0xcall',
+        ...pendingProps,
+      },
+    ]);
+  });
+
+  it('maps a pending contract deploy sent by the account to a deploy activity', () => {
+    const tx = createTestPrincipalMempoolSmartContractTx({
+      tx_id: '0xdeploy',
+      sender: { address: 'ST123', nonce: 3 },
+      receipt_time: 1_700_000_000,
+      smart_contract: { contract_id: 'ST123.my-contract', clarity_version: 3 },
+    });
+    expect(mapPendingStacksTxActivity(tx, account)).toEqual([
+      {
+        type: OnChainActivityTypes.deploySmartContract,
+        contractId: 'ST123.my-contract',
+        timestamp: 1_700_000_000,
+        txid: '0xdeploy',
+        ...pendingProps,
+      },
+    ]);
+  });
+
+  it('maps a pending contract call with an outgoing token transfer to a send activity', () => {
+    const token = createActivitySip10Asset({ assetId: 'ST000.token::xyz' });
+    const tx = createTestPrincipalMempoolContractCallTx({
+      tx_id: '0xsip10',
+      sender: { address: 'ST123', nonce: 2 },
+      receipt_time: 1_700_000_000,
+    });
+    const transfers = [
+      {
+        assetCategory: CryptoAssetCategories.fungible,
+        assetId: 'ST000.token::xyz',
+        asset: token,
+        sender: 'ST123',
+        tokenValue: '500',
+      },
+    ];
+    expect(mapPendingStacksTxActivity(tx, account, transfers)).toEqual([
+      {
+        type: OnChainActivityTypes.sendAsset,
+        asset: token,
+        amount: initBigNumber(500),
+        receivers: [],
+        timestamp: 1_700_000_000,
+        txid: '0xsip10',
+        ...pendingProps,
+      },
+    ]);
+  });
+
+  it('maps a pending contract deploy with transfers to transfer and deploy activities', () => {
+    const tx = createTestPrincipalMempoolSmartContractTx({
+      tx_id: '0xdeploywithstx',
+      sender: { address: 'ST123', nonce: 3 },
+      receipt_time: 1_700_000_000,
+      smart_contract: { contract_id: 'ST123.my-contract', clarity_version: 3 },
+    });
+    const transfers = [
+      {
+        assetCategory: CryptoAssetCategories.fungible,
+        assetId: 'STX',
+        asset: stxAsset,
+        sender: 'ST123',
+        tokenValue: '1000',
+      },
+    ];
+    expect(mapPendingStacksTxActivity(tx, account, transfers)).toEqual([
+      {
+        type: OnChainActivityTypes.sendAsset,
+        asset: stxAsset,
+        amount: initBigNumber(1000),
+        receivers: [],
+        timestamp: 1_700_000_000,
+        txid: '0xdeploywithstx',
+        ...pendingProps,
+      },
+      {
+        type: OnChainActivityTypes.deploySmartContract,
+        contractId: 'ST123.my-contract',
+        timestamp: 1_700_000_000,
+        txid: '0xdeploywithstx',
+        ...pendingProps,
+      },
+    ]);
+  });
+
+  it('ignores pending contract calls the account did not send', () => {
+    const tx = createTestPrincipalMempoolContractCallTx({
+      sender: { address: 'ST456', nonce: 2 },
+    });
+    expect(mapPendingStacksTxActivity(tx, account)).toEqual([]);
   });
 });

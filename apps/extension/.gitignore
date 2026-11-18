@@ -20,6 +20,7 @@ release_body.md
 trace*
 /test-results/
 /playwright-report/
+/blob-report/
 /playwright/.cache/
 leather-styles
 .netlify
