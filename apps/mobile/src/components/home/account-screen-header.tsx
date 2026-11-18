@@ -2,7 +2,7 @@ import { Screen } from '@/components/screen/screen';
 import { HeaderActions } from '@/components/screen/screen-header/components/header-actions';
 import { AccountHeader } from '@/features/account/components/account-header';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import { Box } from '@leather.io/ui/native';
 
 interface AccountScreenHeaderProps {

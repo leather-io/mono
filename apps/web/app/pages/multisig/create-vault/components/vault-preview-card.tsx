@@ -7,7 +7,7 @@ import { AvatarCircle } from '../../components/avatar-circle';
 import { AvatarSq } from '../../components/avatar-sq';
 import { ChainAvatar } from '../../components/chain-avatar';
 import type { Chain } from '../../data/multisig-types';
-import { vaultTheme } from '../../multisig-tokens';
+import { defaultVaultIcon, vaultTheme } from '../../multisig-tokens';
 import type { MemberDraft } from './member-rows';
 
 interface VaultPreviewCardProps {
@@ -69,7 +69,7 @@ export function VaultPreviewCard({
         color={theme.dark ? 'white' : 'ink.text-primary'}
         style={{ background: theme.background }}
       >
-        <AvatarSq chain={chain} icon="vault" themeId={themeId} size="lg" />
+        <AvatarSq chain={chain} icon={defaultVaultIcon} themeId={themeId} size="lg" />
         <styled.div textStyle="heading.05">{name || 'Vault name'}</styled.div>
       </Flex>
 

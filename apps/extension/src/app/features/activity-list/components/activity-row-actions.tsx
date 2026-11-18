@@ -31,10 +31,10 @@ function StacksActivityAction({ txid }: ActivityActionProps) {
   return (
     <StacksTransactionActionMenu
       onIncreaseFee={() =>
-        navigateToTransactionAction(txid, StacksTransactionActionType.IncreaseFee)
+        void navigateToTransactionAction(txid, StacksTransactionActionType.IncreaseFee)
       }
       onCancelTransaction={() =>
-        navigateToTransactionAction(txid, StacksTransactionActionType.Cancel)
+        void navigateToTransactionAction(txid, StacksTransactionActionType.Cancel)
       }
     />
   );

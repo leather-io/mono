@@ -1,4 +1,4 @@
-import { HDKey, Versions } from '@scure/bip32';
+import { HDKey, type Versions } from '@scure/bip32';
 import {
   mnemonicToSeed,
   mnemonicToSeedSync,

@@ -1,15 +1,21 @@
 import { usePox5CycleClock } from '../../hooks/use-pox5-cycle-clock';
-import { Pox5Position, usePox5Position } from '../../hooks/use-pox5-position';
+import { type Pox5Position, usePox5Position } from '../../hooks/use-pox5-position';
 import {
   usePox5PoxInfoQuery,
   usePox5SecondsUntilNextCycleQuery,
 } from '../../queries/pox5-node.query';
 import {
-  Pox5ClaimableRewards,
+  type Pox5ClaimableRewards,
   usePox5ClaimableRewards,
   usePox5PayoutPreferenceQuery,
 } from '../../queries/pox5-stacking.query';
-import { Pox5PayoutPreference } from '../../transactions/pox5-signer-calldata';
+import { type Pox5PayoutPreference } from '../../transactions/pox5-signer-calldata';
+import {
+  canPayoutInBtc,
+  customPoolPayoutMode,
+  getPoolPayoutMode,
+  isBtcPayoutRequired,
+} from '../../utils/pool-payout';
 import { estimateDateFromBurnBlocks } from '../../utils/pox5-cycle-clock';
 
 export interface ActiveStakingDetails {
@@ -34,12 +40,14 @@ interface UseActiveStakingInfoResult {
 export function useActiveStakingInfo(): UseActiveStakingInfoResult {
   const { isLoading: positionIsLoading, position } = usePox5Position();
   const { cycleClock } = usePox5CycleClock();
-  const claimable = usePox5ClaimableRewards();
+  const activePool = position.status === 'active' ? position.pool : null;
+  const payoutMode = activePool ? getPoolPayoutMode(activePool) : customPoolPayoutMode;
+  const claimable = usePox5ClaimableRewards({ enabled: !isBtcPayoutRequired(payoutMode) });
   const poxInfoQuery = usePox5PoxInfoQuery();
   const secondsUntilNextCycleQuery = usePox5SecondsUntilNextCycleQuery();
 
   const signerManagerContractId =
-    position.status === 'active' && position.pool?.supportsBtcPayout !== false
+    position.status === 'active' && canPayoutInBtc(payoutMode)
       ? position.info.signerManagerContractId
       : undefined;
   const payoutPreferenceQuery = usePox5PayoutPreferenceQuery(signerManagerContractId);
@@ -51,12 +59,13 @@ export function useActiveStakingInfo(): UseActiveStakingInfoResult {
   const poxInfo = poxInfoQuery.data;
   const endCycle = position.info.firstRewardCycle + position.info.numCycles;
 
-  const unlockDate = (() => {
+  function getUnlockDate() {
     if (!poxInfo || !cycleClock) return null;
     const unlockBurnHeight =
       poxInfo.first_burnchain_block_height + endCycle * poxInfo.reward_cycle_length;
     return estimateDateFromBurnBlocks(unlockBurnHeight - cycleClock.currentBurnHeight, new Date());
-  })();
+  }
+  const unlockDate = getUnlockDate();
 
   return {
     isLoading: positionIsLoading,
@@ -72,7 +81,7 @@ export function useActiveStakingInfo(): UseActiveStakingInfoResult {
           ? Math.round(secondsUntilNextCycleQuery.data / (60 * 60 * 24))
           : null,
       claimable,
-      payoutPreference: payoutPreferenceQuery.data ?? null,
+      payoutPreference: payoutPreferenceQuery.data?.preference ?? null,
     },
   };
 }

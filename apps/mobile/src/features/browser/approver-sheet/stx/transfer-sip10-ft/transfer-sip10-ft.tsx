@@ -5,17 +5,17 @@ import { BaseStxTxApproverLayout } from '@/features/approver/layouts/base-stx-tx
 import { getTxOptions } from '@/features/approver/utils';
 import { useBroadcastStacksTransaction } from '@/queries/stacks/use-broadcast-stacks-transaction';
 import { useAccounts } from '@/store/accounts/accounts.read';
-import { App } from '@/store/apps/utils';
+import { type App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings';
-import { deserializeTransaction } from '@stacks/transactions';
+import { AuthType, deserializeTransaction } from '@stacks/transactions';
 
 import {
-  RpcRequest,
-  RpcResponse,
+  type RpcRequest,
+  type RpcResponse,
   createRpcSuccessResponse,
-  stxTransferSip10Ft,
+  type stxTransferSip10Ft,
 } from '@leather.io/rpc';
 
 import { useTransferSip10FtTxHex } from './hooks';
@@ -50,6 +50,7 @@ export function TransferSip10FtApprover({
     setTxHex,
     nonce,
     network,
+    sponsored: request.params.sponsored,
   });
   const signer = useStacksSigners().fromAccountId(accountId)[0];
   const { mutateAsync: broadcastTransaction } = useBroadcastStacksTransaction();
@@ -64,6 +65,16 @@ export function TransferSip10FtApprover({
   async function onApprove() {
     assertStacksSigner(signer);
     const signedTx = await signer?.sign(tx);
+
+    if (signedTx.auth.authType === AuthType.Sponsored) {
+      sendResult(
+        createRpcSuccessResponse('stx_transferSip10Ft', {
+          id: request.id,
+          result: { transaction: signedTx.serialize() },
+        })
+      );
+      return null;
+    }
 
     try {
       const broadcastResult = await broadcastTransaction({ tx: signedTx, stacksNetwork: network });

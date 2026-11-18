@@ -3,16 +3,12 @@ import { Route } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 
-import { ledgerBitcoinTxSigningRoutes } from '@app/features/ledger/flows/bitcoin-tx-signing/ledger-bitcoin-sign-tx-container';
-import { ledgerStacksMessageSigningRoutes } from '@app/features/ledger/flows/stacks-message-signing/ledger-stacks-sign-msg.routes';
-import { ledgerConfirmBtcPolicyAddressRoutes } from '@app/pages/rpc-btc-add-account/ledger/ledger-confirm-btc-policy-address';
 import { RpcBtcAddAccount } from '@app/pages/rpc-btc-add-account/rpc-btc-add-account';
 import { RpcGetAddresses } from '@app/pages/rpc-get-addresses/rpc-get-addresses';
 import { rpcSendTransferRoutes } from '@app/pages/rpc-send-transfer/rpc-send-transfer.routes';
 import { RpcSignPsbt } from '@app/pages/rpc-sign-psbt/rpc-sign-psbt';
 import { RpcSignPsbtSummary } from '@app/pages/rpc-sign-psbt/rpc-sign-psbt-summary';
 import { RpcStacksMessageSigning } from '@app/pages/rpc-sign-stacks-message/rpc-sign-stacks-message';
-import { ledgerConfirmStxPolicyAddressRoutes } from '@app/pages/rpc-stx-add-account/ledger/ledger-confirm-stx-policy-address';
 import { RpcStxAddAccount } from '@app/pages/rpc-stx-add-account/rpc-stx-add-account';
 import { rpcStxCallContractRoutes } from '@app/pages/rpc-stx-call-contract/rpc-stx-call-contract.routes';
 import { rpcStxDeployContractRoutes } from '@app/pages/rpc-stx-deploy-contract/rpc-stx-deploy-contract.routes';
@@ -41,9 +37,7 @@ export const rpcRequestRoutes = (
           <RpcBtcAddAccount />
         </AccountGate>
       }
-    >
-      {ledgerConfirmBtcPolicyAddressRoutes}
-    </Route>
+    />
     <Route
       path={RouteUrls.RpcStxAddAccount}
       element={
@@ -51,9 +45,7 @@ export const rpcRequestRoutes = (
           <RpcStxAddAccount />
         </AccountGate>
       }
-    >
-      {ledgerConfirmStxPolicyAddressRoutes}
-    </Route>
+    />
 
     {rpcSendTransferRoutes}
     {rpcStxCallContractRoutes}
@@ -71,9 +63,7 @@ export const rpcRequestRoutes = (
         );
         return { Component: RpcSignBip322MessageRoute };
       }}
-    >
-      {ledgerBitcoinTxSigningRoutes}
-    </Route>
+    />
     <Route
       path={RouteUrls.RpcSignPsbt}
       element={
@@ -81,9 +71,7 @@ export const rpcRequestRoutes = (
           <RpcSignPsbt />
         </AccountGate>
       }
-    >
-      {ledgerBitcoinTxSigningRoutes}
-    </Route>
+    />
     <Route
       path={RouteUrls.RpcSignPsbtSummary}
       element={
@@ -101,8 +89,6 @@ export const rpcRequestRoutes = (
           </Suspense>
         </AccountGate>
       }
-    >
-      {ledgerStacksMessageSigningRoutes}
-    </Route>
+    />
   </>
 );

@@ -21,7 +21,6 @@ import BigNumber from 'bignumber.js';
 import * as Clipboard from 'expo-clipboard';
 
 import {
-  PsbtOutputWithAddress,
   getBitcoinFees,
   getPsbtAsTransaction,
   getPsbtDetails,
@@ -30,13 +29,13 @@ import {
 import { btcAsset } from '@leather.io/constants';
 import { makeActivityLink } from '@leather.io/features';
 import {
-  AccountId,
-  AverageBitcoinFeeRates,
-  BitcoinNetworkModes,
+  type AccountId,
+  type AverageBitcoinFeeRates,
+  type BitcoinNetworkModes,
   FeeTypes,
 } from '@leather.io/models';
-import { RpcParams, signPsbt } from '@leather.io/rpc';
-import { Approver, Box, SentIcon, SheetInstance, Text } from '@leather.io/ui/native';
+import { type RpcParams, type signPsbt } from '@leather.io/rpc';
+import { Approver, Box, SentIcon, type SheetInstance, Text } from '@leather.io/ui/native';
 import {
   baseCurrencyAmountInQuoteWithFallback,
   createMoney,
@@ -48,6 +47,7 @@ import { ApproverButtons } from '../approver/components/approver-buttons';
 import { BitcoinFeesSheet } from '../approver/components/fees/bitcoin-fee-sheet';
 import { BtcStatusRow } from '../approver/components/status-row/btc-status-row';
 import { useOpenUrl } from '../browser/browser/use-open-url';
+import { PsbtRequestNoBroadcastWarningLabel } from './components/psbt-request-no-broadcast-warning-label';
 import { PsbtRequestSighashWarningLabel } from './components/psbt-request-sighash-warning-label';
 import { PsbtRequestUnknownOutputWarningLabel } from './components/psbt-request-unknown-output-warning-label';
 import { UnrecognizedOutputsCard } from './components/unrecognized-outputs-card';
@@ -60,6 +60,7 @@ interface PsbtSignerProps extends AccountId {
   origin?: string;
   psbtHex: string;
   broadcast: RpcParams<typeof signPsbt>['broadcast'];
+  signOnly?: boolean;
   allowedSighash?: RpcParams<typeof signPsbt>['allowedSighash'];
   signAtIndex?: RpcParams<typeof signPsbt>['signAtIndex'];
   network?: BitcoinNetworkModes;
@@ -69,13 +70,13 @@ interface PsbtSignerProps extends AccountId {
   onClose(): void;
 }
 export function PsbtSigner(props: PsbtSignerProps) {
-  const { data: feeRates } = useAverageBitcoinFeeRates();
-  if (!feeRates) return null;
-  return <BasePsbtSigner feeRates={feeRates} {...props} />;
+  const feeRatesQuery = useAverageBitcoinFeeRates();
+  if (feeRatesQuery.isPending) return null;
+  return <BasePsbtSigner feeRates={feeRatesQuery.data} {...props} />;
 }
 
 interface BasePsbtSignerProps extends PsbtSignerProps {
-  feeRates: AverageBitcoinFeeRates;
+  feeRates?: AverageBitcoinFeeRates;
 }
 function BasePsbtSigner(props: BasePsbtSignerProps) {
   const {
@@ -88,6 +89,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
     signAtIndex,
     allowedSighash,
     broadcast,
+    signOnly = false,
     feeEditorEnabled,
     network: requestedNetwork,
     origin,
@@ -131,29 +133,26 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
     [psbtHex, network, psbtAddresses]
   );
 
-  const recipients = psbtDetails.psbtOutputs
-    .filter(
-      (output): output is PsbtOutputWithAddress =>
-        !!output.address && !psbtAddresses.includes(output.address)
-    )
-    .map(output => ({
-      amount: createMoney(new BigNumber(output.value), 'BTC'),
-      address: output.address,
-    }));
+  const recipients = psbtDetails.psbtOutputs.flatMap(output => {
+    const { address } = output;
+    if (!address || psbtAddresses.includes(address)) return [];
+    return [{ amount: createMoney(new BigNumber(output.value), 'BTC'), address }];
+  });
 
   const unrecognizedOutputs = psbtDetails.psbtOutputs.filter(output => output.address === null);
 
   const coinSelectionUtxos = utxos.value?.available ?? [];
 
-  const fees = getBitcoinFees({
-    feeRates,
-    recipients,
-    utxos: coinSelectionUtxos,
-    isSendingMax: false,
+  const [selectedFeeType, setSelectedFeeType] = useState<FeeTypes>(() => {
+    if (!feeRates) return FeeTypes.Custom;
+    const fees = getBitcoinFees({
+      feeRates,
+      recipients,
+      utxos: coinSelectionUtxos,
+      isSendingMax: false,
+    });
+    return getFeeType({ psbtFee: psbtDetails.fee, fees });
   });
-  const [selectedFeeType, setSelectedFeeType] = useState<FeeTypes>(
-    getFeeType({ psbtFee: psbtDetails.fee, fees })
-  );
 
   const { txVBytes } = getSizeInfo({
     utxos: psbtDetails.psbtInputs,
@@ -180,6 +179,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
   // is, only append new inputs and outputs, leaving the existing ones
   // untouched.
   function onChangeFee(feeType: FeeTypes) {
+    if (!feeRates) return;
     const feeRateMap: Partial<Record<FeeTypes, number>> = {
       [FeeTypes.Low]: feeRates.hourFee.toNumber(),
       [FeeTypes.Middle]: feeRates.halfHourFee.toNumber(),
@@ -246,6 +246,14 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
     }
   }
 
+  const signOnlyButtonLabels = signOnly
+    ? {
+        approveLabel: t`Sign transaction`,
+        submittingLabel: t`Signing...`,
+        submittedLabel: t`Signed`,
+      }
+    : {};
+
   function onViewDetails() {
     if (!broadcastedTxid) return;
 
@@ -269,7 +277,8 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
     <>
       <Approver requester={origin}>
         <Approver.Container>
-          <Approver.Header title={t`Send token`} />
+          <Approver.Header title={signOnly ? t`Sign transaction` : t`Send token`} />
+          {signOnly && <PsbtRequestNoBroadcastWarningLabel origin={origin} />}
           {psbtDetails.isPsbtMutable && <PsbtRequestSighashWarningLabel origin={origin} />}
           {unrecognizedOutputs.length > 0 && (
             <PsbtRequestUnknownOutputWarningLabel origin={origin} />
@@ -299,7 +308,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
 
           <Approver.Section>
             <BitcoinFeeCard
-              disabled={!feeEditorEnabled}
+              disabled={!feeEditorEnabled || !feeRates}
               feeType={selectedFeeType}
               amount={psbtDetails.fee}
               onPress={() => feeSheetRef.current?.present()}
@@ -328,6 +337,7 @@ function BasePsbtSigner(props: BasePsbtSignerProps) {
             onCopy={broadcast ? onCopy : undefined}
             onViewDetails={broadcast ? onViewDetails : undefined}
             onClose={onClose}
+            {...signOnlyButtonLabels}
           />
         </Approver.Footer>
       </Approver>

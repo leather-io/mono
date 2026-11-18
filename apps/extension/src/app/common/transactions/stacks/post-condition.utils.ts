@@ -42,7 +42,7 @@ export function getAmountFromPostCondition(pc: NonPoxPostConditionWire) {
   if (pc.conditionType === PostConditionType.Fungible) return pc.amount.toString();
   if (pc.conditionType === PostConditionType.STX || pc.conditionType === PostConditionType.Staking)
     return stacksValue({ value: pc.amount.toString(), withTicker: false });
-  return '';
+  return undefined;
 }
 
 export function getSymbolFromPostCondition(pc: NonPoxPostConditionWire) {
@@ -125,7 +125,7 @@ function getTitleFromConditionCode(
     case NonFungibleConditionCode.MaybeSent:
       return 'may transfer';
     default:
-      return '';
+      return undefined;
   }
 }
 
@@ -133,7 +133,7 @@ export function getPostConditionTitle(
   pc: NonPoxPostConditionWire,
   context: PostConditionVerb = 'transfer'
 ) {
-  return getTitleFromConditionCode(pc.conditionCode, context) || '';
+  return getTitleFromConditionCode(pc.conditionCode, context);
 }
 
 export function getPoxConditionTitle(code: PoxConditionCode) {
@@ -145,6 +145,6 @@ export function getPoxConditionTitle(code: PoxConditionCode) {
     case PoxConditionCode.WillPerform:
       return 'must perform a PoX action';
     default:
-      return '';
+      return undefined;
   }
 }

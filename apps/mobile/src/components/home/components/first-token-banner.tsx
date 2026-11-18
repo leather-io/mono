@@ -1,6 +1,7 @@
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
+import exchangeIconsImage from '@leather.io/ui/assets/images/exchange-icons.png';
 import { Box, Text } from '@leather.io/ui/native';
 
 export function FirstTokenBanner() {
@@ -13,11 +14,7 @@ export function FirstTokenBanner() {
         </Text>
       </Box>
       <Box>
-        <Image
-          style={{ height: 48, width: 80 }}
-          contentFit="cover"
-          source={require('@leather.io/ui/assets/images/exchange-icons.png')}
-        />
+        <Image style={{ height: 48, width: 80 }} contentFit="cover" source={exchangeIconsImage} />
       </Box>
     </Box>
   );

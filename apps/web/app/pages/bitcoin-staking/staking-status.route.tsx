@@ -1,4 +1,4 @@
-import { MetaDescriptor, Navigate } from 'react-router';
+import { type MetaDescriptor, Navigate } from 'react-router';
 
 import { Stack, styled } from 'leather-styles/jsx';
 import { WhenClient } from '~/components/when-client';

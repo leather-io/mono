@@ -1,5 +1,5 @@
 import { type Page, expect } from '@playwright/test';
-import { overrideLaunchDarklyFlags } from '@tests/mocks/mock-launchdarkly';
+import type { TestRpcResponse } from '@tests/leather-provider';
 import { exampleStacksMultisigPublicKeys } from '@tests/mocks/mock-policies';
 import { makeLedgerTestAccountWalletState } from '@tests/page-object-models/onboarding.page';
 
@@ -8,24 +8,23 @@ import { test } from '../../fixtures/fixtures';
 function openStxAddAccount(page: Page, publicKeys: string[]) {
   return page.evaluate(
     ({ publicKeys }) =>
-      void (window as any).LeatherProvider?.request('stx_addAccount', {
+      void window.LeatherProvider?.request('stx_addAccount', {
         name: 'Shared treasury',
         publicKeys,
         threshold: 2,
-      }).catch((e: unknown) => e),
+      }).catch((e: TestRpcResponse) => e),
     { publicKeys }
   );
 }
 
 test.describe('Rpc: stx_addAccount from a Ledger wallet', () => {
-  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page, context }) => {
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await overrideLaunchDarklyFlags(context, { releaseAddAccount: true });
     await onboardingPage.signInWithLedgerAccount(
       extensionId,
       makeLedgerTestAccountWalletState(['stacks'])
     );
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('verify routes into the ledger flow instead of finalizing inline', async ({

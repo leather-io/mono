@@ -1,4 +1,5 @@
 import {
+  BasicTooltip,
   CopyIcon,
   IconButton,
   ItemLayoutWithButtons,
@@ -7,8 +8,6 @@ import {
   ShieldIcon,
 } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
-
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 interface ReceiveItemProps {
   address?: string;

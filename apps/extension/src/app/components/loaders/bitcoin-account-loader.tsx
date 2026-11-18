@@ -1,6 +1,6 @@
 import type { DistributedOmit } from 'type-fest';
 
-import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
+import { type BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import type { AccountId } from '@leather.io/models';
 
 import { useCurrentAccountId } from '@app/store/accounts/account';

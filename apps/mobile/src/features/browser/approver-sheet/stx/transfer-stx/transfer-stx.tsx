@@ -5,13 +5,18 @@ import { BaseStxTxApproverLayout } from '@/features/approver/layouts/base-stx-tx
 import { getTxOptions } from '@/features/approver/utils';
 import { useBroadcastStacksTransaction } from '@/queries/stacks/use-broadcast-stacks-transaction';
 import { useAccounts } from '@/store/accounts/accounts.read';
-import { App } from '@/store/apps/utils';
+import { type App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { useNetworkPreferenceStacksNetwork } from '@/store/settings/settings';
-import { deserializeTransaction } from '@stacks/transactions';
+import { AuthType, deserializeTransaction } from '@stacks/transactions';
 
-import { RpcRequest, RpcResponse, createRpcSuccessResponse, stxTransferStx } from '@leather.io/rpc';
+import {
+  type RpcRequest,
+  type RpcResponse,
+  createRpcSuccessResponse,
+  type stxTransferStx,
+} from '@leather.io/rpc';
 
 import { useTransferStxTxHex } from './hooks';
 
@@ -53,6 +58,16 @@ export function TransferStxApprover({
     assertStacksSigner(signer);
 
     const signedTx = await signer.sign(tx);
+
+    if (signedTx.auth.authType === AuthType.Sponsored) {
+      sendResult(
+        createRpcSuccessResponse('stx_transferStx', {
+          id: request.id,
+          result: { transaction: signedTx.serialize() },
+        })
+      );
+      return null;
+    }
 
     try {
       const broadcastResult = await broadcastTransaction({ tx: signedTx, stacksNetwork: network });

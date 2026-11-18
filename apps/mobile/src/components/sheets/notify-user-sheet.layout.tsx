@@ -1,8 +1,9 @@
+import unavailableFeatureImage from '@/assets/unavailable-feature.png';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
-import { Box, Button, Sheet, SheetRef, Text } from '@leather.io/ui/native';
+import { Box, Button, Sheet, type SheetRef, Text } from '@leather.io/ui/native';
 
 export interface NotifyUserSheetData {
   title: string;
@@ -31,11 +32,7 @@ export function NotifyUserSheetLayout({
   return (
     <Sheet onDismiss={onCloseSheet} ref={sheetRef}>
       <Sheet.View>
-        <Image
-          style={{ height: 180 }}
-          contentFit="cover"
-          source={require('@/assets/unavailable-feature.png')}
-        />
+        <Image style={{ height: 180 }} contentFit="cover" source={unavailableFeatureImage} />
         <Box p="5" justifyContent="space-between" gap="5">
           <Box gap="4">
             <Text variant="heading05">{sheetData?.title}</Text>

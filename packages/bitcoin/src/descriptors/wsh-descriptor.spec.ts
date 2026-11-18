@@ -1,9 +1,10 @@
-import { checksum } from '@bitcoinerlab/descriptors';
+import { checksum } from '@bitcoinerlab/descriptors-core';
 import { ripemd160 } from '@noble/hashes/ripemd160';
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
+import { Psbt } from 'bitcoinjs-lib';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -11,7 +12,9 @@ import {
   makeNativeSegwitAccountXpub,
   makeNativeSegwitAddressPubkey,
 } from '../mocks/key-mocks';
+import { expectDefined } from '../test-utils/expect-defined';
 import {
+  type FinalizeWshDescriptorPsbtResult,
   compileWshDescriptor,
   extractWshDescriptorPreimages,
   finalizeWshDescriptorPsbt,
@@ -206,11 +209,11 @@ describe('wsh-descriptor', () => {
     const accountKeychain = makeNativeSegwitAccountKeychain(1);
     const compiled = compileWshDescriptor(`wsh(sortedmulti(2,${xpubA}/0/7,${xpubB}/0/7))`);
 
-    const match = findAccountDescriptorKey(compiled, accountKeychain)!;
+    const match = expectDefined(findAccountDescriptorKey(compiled, accountKeychain));
     expect(match.changeIndex).toBe(0);
     expect(match.addressIndex).toBe(7);
     expect(bytesToHex(match.key.pubkey)).toBe(
-      bytesToHex(accountKeychain.deriveChild(0).deriveChild(7).publicKey!)
+      bytesToHex(expectDefined(accountKeychain.deriveChild(0).deriveChild(7).publicKey))
     );
   });
 
@@ -218,7 +221,7 @@ describe('wsh-descriptor', () => {
     const accountKeychain = makeNativeSegwitAccountKeychain(1);
     const compiled = compileWshDescriptor(`wsh(multi(2,${xpubA}/1/4,${xpubB}/1/4))`);
 
-    const match = findAccountDescriptorKey(compiled, accountKeychain)!;
+    const match = expectDefined(findAccountDescriptorKey(compiled, accountKeychain));
     expect(match.changeIndex).toBe(1);
     expect(match.addressIndex).toBe(4);
   });
@@ -235,10 +238,10 @@ describe('wsh-descriptor', () => {
     ).derive("m/84'/0'/0'").publicExtendedKey;
     const compiled = compileWshDescriptor(`wsh(multi(2,${tpubSamePath}/0/9,${tpubCosigner}/0/9))`);
 
-    const match = findAccountDescriptorKey(compiled, accountKeychain)!;
+    const match = expectDefined(findAccountDescriptorKey(compiled, accountKeychain));
     expect(match.addressIndex).toBe(9);
     expect(bytesToHex(match.key.pubkey)).toBe(
-      bytesToHex(accountKeychain.deriveChild(0).deriveChild(9).publicKey!)
+      bytesToHex(expectDefined(accountKeychain.deriveChild(0).deriveChild(9).publicKey))
     );
   });
 
@@ -246,7 +249,7 @@ describe('wsh-descriptor', () => {
     const accountKeychain = makeNativeSegwitAccountKeychain(1);
     const compiled = compileWshDescriptor(`wsh(and_v(v:after(5),pk(${bytesToHex(pubkeyA)})))`);
 
-    const match = findAccountDescriptorKey(compiled, accountKeychain)!;
+    const match = expectDefined(findAccountDescriptorKey(compiled, accountKeychain));
     expect(match.changeIndex).toBe(0);
     expect(match.addressIndex).toBe(0);
     expect(match.key.bip32).toBeUndefined();
@@ -254,7 +257,7 @@ describe('wsh-descriptor', () => {
 
   it('does not match a raw pubkey derived from a non-zero address index', () => {
     const accountKeychain = makeNativeSegwitAccountKeychain(1);
-    const pubkeyAtIndexOne = accountKeychain.deriveChild(0).deriveChild(1).publicKey!;
+    const pubkeyAtIndexOne = expectDefined(accountKeychain.deriveChild(0).deriveChild(1).publicKey);
     const compiled = compileWshDescriptor(
       `wsh(and_v(v:after(5),pk(${bytesToHex(pubkeyAtIndexOne)})))`
     );
@@ -270,7 +273,7 @@ describe('wsh-descriptor', () => {
     );
     expect(compiled.keyPathIndexes).toEqual({ changeIndex: 0, addressIndex: 7 });
 
-    const match = findAccountDescriptorKey(compiled, accountKeychain)!;
+    const match = expectDefined(findAccountDescriptorKey(compiled, accountKeychain));
     expect(match.addressIndex).toBe(7);
   });
 
@@ -284,7 +287,7 @@ describe('wsh-descriptor', () => {
   it('rejects an extended key carrying the account pubkey but a different chain code', () => {
     const accountKeychain = makeNativeSegwitAccountKeychain(1);
     const forgedKey = new HDKey({
-      publicKey: accountKeychain.publicKey!,
+      publicKey: expectDefined(accountKeychain.publicKey),
       chainCode: new Uint8Array(32).fill(7),
     });
     expect(forgedKey.publicExtendedKey).not.toBe(accountKeychain.publicExtendedKey);
@@ -311,17 +314,22 @@ describe('wsh-descriptor', () => {
       index: 0,
       witnessUtxo: { script: scriptPubKey, amount: 20_000n },
     });
-    tx.addOutput({ script: btc.p2wpkh(signingChild.publicKey!).script, amount: 19_000n });
+    tx.addOutput({
+      script: btc.p2wpkh(expectDefined(signingChild.publicKey)).script,
+      amount: 19_000n,
+    });
 
     const [index] = getDescriptorMatchingInputIndexes(tx, scriptPubKey);
     tx.updateInput(index, { witnessScript });
 
-    const signed = tx.signIdx(signingChild.privateKey!, index);
+    const signed = tx.signIdx(expectDefined(signingChild.privateKey), index);
     expect(signed).toBe(true);
 
     const partialSig = tx.getInput(index).partialSig;
     expect(partialSig).toBeDefined();
-    expect(bytesToHex(partialSig![0][0])).toBe(bytesToHex(signingChild.publicKey!));
+    expect(bytesToHex(expectDefined(partialSig)[0][0])).toBe(
+      bytesToHex(expectDefined(signingChild.publicKey))
+    );
   });
 
   it('matches PSBT inputs locked by the descriptor scriptPubKey', () => {
@@ -337,7 +345,9 @@ describe('wsh-descriptor', () => {
       txid: hexToBytes('11'.repeat(32)),
       index: 0,
       witnessUtxo: {
-        script: btc.p2wpkh(HDKey.fromMasterSeed(new Uint8Array(32).fill(3)).publicKey!).script,
+        script: btc.p2wpkh(
+          expectDefined(HDKey.fromMasterSeed(new Uint8Array(32).fill(3)).publicKey)
+        ).script,
         amount: 10_000n,
       },
     });
@@ -436,10 +446,12 @@ describe('wsh-descriptor', () => {
 
   it('derives every wildcard at the index when sorting sortedmulti() keys, like the library', () => {
     function pubkeyAtOneOne(seedByte: number) {
-      return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte))
-        .derive("m/84'/0'/0'")
-        .deriveChild(1)
-        .deriveChild(1).publicKey!;
+      return expectDefined(
+        HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte))
+          .derive("m/84'/0'/0'")
+          .deriveChild(1)
+          .deriveChild(1).publicKey
+      );
     }
     const sortedPubkeys = [pubkeyAtOneOne(1), pubkeyAtOneOne(2)].sort((a, b) =>
       bytesToHex(a) < bytesToHex(b) ? -1 : 1
@@ -521,7 +533,7 @@ describe('wsh-descriptor', () => {
 
   it('builds a Ledger key expression for an xpub key by adding the origin', () => {
     const { scriptPubKey, keys } = compileWshDescriptor(descriptor);
-    const accountKey = findAccountKeyByPubkey(keys, pubkeyA)!;
+    const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     const keyOrigin = "e87a850b/84'/0'/0'";
     const ledgerDescriptor = toLedgerSignableDescriptor(descriptor, accountKey, xpubA, keyOrigin);
 
@@ -535,7 +547,7 @@ describe('wsh-descriptor', () => {
   it('strips the stale checksum when rewriting a checksummed descriptor for Ledger', () => {
     const checksummedDescriptor = `${descriptor}#${checksum(descriptor)}`;
     const { scriptPubKey, keys } = compileWshDescriptor(checksummedDescriptor);
-    const accountKey = findAccountKeyByPubkey(keys, pubkeyA)!;
+    const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     const keyOrigin = "e87a850b/84'/0'/0'";
 
     const ledgerDescriptor = toLedgerSignableDescriptor(
@@ -556,7 +568,7 @@ describe('wsh-descriptor', () => {
   it('builds a Ledger key expression for a raw pubkey by substituting the account xpub', () => {
     const rawPubkeyDescriptor = `wsh(and_v(v:after(5),pk(${bytesToHex(pubkeyA)})))`;
     const { scriptPubKey, keys } = compileWshDescriptor(rawPubkeyDescriptor);
-    const accountKey = findAccountKeyByPubkey(keys, pubkeyA)!;
+    const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     expect(accountKey.bip32).toBeUndefined();
 
     const keyOrigin = "e87a850b/84'/0'/0'";
@@ -578,11 +590,11 @@ describe('wsh-descriptor', () => {
   it('does not rewrite a key that already has an origin', () => {
     const keyOrigin = "e87a850b/84'/0'/0'";
     const { keys } = compileWshDescriptor(descriptor);
-    const accountKey = findAccountKeyByPubkey(keys, pubkeyA)!;
+    const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     const ledgerDescriptor = toLedgerSignableDescriptor(descriptor, accountKey, xpubA, keyOrigin);
 
     const { keys: ledgerKeys } = compileWshDescriptor(ledgerDescriptor);
-    const ledgerAccountKey = findAccountKeyByPubkey(ledgerKeys, pubkeyA)!;
+    const ledgerAccountKey = expectDefined(findAccountKeyByPubkey(ledgerKeys, pubkeyA));
     expect(toLedgerSignableDescriptor(ledgerDescriptor, ledgerAccountKey, xpubA, keyOrigin)).toBe(
       ledgerDescriptor
     );
@@ -590,7 +602,7 @@ describe('wsh-descriptor', () => {
 
   it('rewrites every occurrence of a repeated xpub key on multiple branches', () => {
     const { keys } = compileWshDescriptor(`wsh(pk(${xpubA}/0/0))`);
-    const accountKey = findAccountKeyByPubkey(keys, pubkeyA)!;
+    const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     const keyOrigin = "e87a850b/84'/0'/0'";
     // The same key on two branches (same sub-path).
     const repeated = `wsh(and_v(v:pk(${xpubA}/0/0),pk(${xpubA}/0/0)))`;
@@ -602,7 +614,7 @@ describe('wsh-descriptor', () => {
   it('rewrites every occurrence of a repeated raw-pubkey key on multiple branches', () => {
     const pubkeyHex = bytesToHex(pubkeyA);
     const { keys } = compileWshDescriptor(`wsh(pk(${pubkeyHex}))`);
-    const accountKey = findAccountKeyByPubkey(keys, pubkeyA)!;
+    const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     expect(accountKey.bip32).toBeUndefined();
     const keyOrigin = "e87a850b/84'/0'/0'";
     const repeated = `wsh(and_v(v:pk(${pubkeyHex}),pk(${pubkeyHex})))`;
@@ -635,7 +647,7 @@ describe('wsh-descriptor', () => {
 
   it('throws when the account key cannot be located in the descriptor (no silent no-op)', () => {
     const { keys } = compileWshDescriptor(`wsh(pk(${xpubA}/0/0))`);
-    const accountKey = findAccountKeyByPubkey(keys, pubkeyA)!;
+    const accountKey = expectDefined(findAccountKeyByPubkey(keys, pubkeyA));
     const keyOrigin = "e87a850b/84'/0'/0'";
     // Descriptor uses a different key (xpubB) than the matched accountKey (xpubA).
     expect(() =>
@@ -656,12 +668,17 @@ interface BuildPolicyTxOptions {
   sha256?: [Uint8Array, Uint8Array][];
   lockTime?: number;
   sequence?: number;
+  version?: number;
   foreignInput?: boolean;
 }
 
 function buildPolicyTx(descriptor: string, options: BuildPolicyTxOptions) {
   const { scriptPubKey, witnessScript } = compileWshDescriptor(descriptor);
-  const tx = new btc.Transaction({ allowUnknownInputs: true, lockTime: options.lockTime ?? 0 });
+  const tx = new btc.Transaction({
+    allowUnknownInputs: true,
+    lockTime: options.lockTime ?? 0,
+    ...(options.version !== undefined ? { version: options.version } : {}),
+  });
   tx.addInput({
     txid: hexToBytes('00'.repeat(32)),
     index: 0,
@@ -676,14 +693,37 @@ function buildPolicyTx(descriptor: string, options: BuildPolicyTxOptions) {
       index: 0,
       sequence: 0xffffffff,
       witnessUtxo: {
-        script: btc.p2wpkh(deriveAddressIndexKey(3).publicKey!).script,
+        script: btc.p2wpkh(expectDefined(deriveAddressIndexKey(3).publicKey)).script,
         amount: 10_000n,
       },
     });
-  tx.addOutput({ script: btc.p2wpkh(deriveAddressIndexKey(1).publicKey!).script, amount: 18_000n });
-  for (const seed of options.signWith) tx.signIdx(deriveAddressIndexKey(seed).privateKey!, 0);
+  tx.addOutput({
+    script: btc.p2wpkh(expectDefined(deriveAddressIndexKey(1).publicKey)).script,
+    amount: 18_000n,
+  });
+  for (const seed of options.signWith)
+    tx.signIdx(expectDefined(deriveAddressIndexKey(seed).privateKey), 0);
   return tx;
 }
+
+function rewriteFirstPartialSig(
+  psbtBytes: Uint8Array,
+  rewrite: (signature: Uint8Array) => Uint8Array
+) {
+  const psbt = Psbt.fromBuffer(Buffer.from(psbtBytes));
+  const partialSig = expectDefined(psbt.data.inputs[0].partialSig)[0];
+  partialSig.signature = rewrite(partialSig.signature);
+  return psbt.toBuffer();
+}
+
+function getFinalizedRawTx(result: FinalizeWshDescriptorPsbtResult) {
+  if (result.status !== 'finalized')
+    throw new Error(`Expected a finalized psbt, got ${result.status}`);
+  return result.rawTx;
+}
+
+const finalized = { status: 'finalized' };
+const unsatisfied = { status: 'unsatisfied' };
 
 describe('finalizeWshDescriptorPsbt', () => {
   const singleSig = `wsh(pk(${xpubA}/0/0))`;
@@ -695,13 +735,10 @@ describe('finalizeWshDescriptorPsbt', () => {
 
   it('finalizes a single-key policy and returns a broadcastable raw tx', () => {
     const psbt = buildPolicyTx(singleSig, { signWith: [1] }).toPSBT();
-    const rawTx = finalizeWshDescriptorPsbt({
-      signedPsbt: psbt,
-      preimagePsbt: psbt,
-      descriptor: singleSig,
-    });
-    expect(rawTx).not.toBeNull();
-    const decoded = btc.Transaction.fromRaw(hexToBytes(rawTx!), { allowUnknownInputs: true });
+    const rawTx = getFinalizedRawTx(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: singleSig })
+    );
+    const decoded = btc.Transaction.fromRaw(hexToBytes(rawTx), { allowUnknownInputs: true });
     expect(decoded.inputsLength).toBe(1);
     expect(decoded.getInput(0).finalScriptWitness?.length).toBeGreaterThan(0);
   });
@@ -715,42 +752,166 @@ describe('finalizeWshDescriptorPsbt', () => {
     const psbt = buildPolicyTx(timelock, { signWith: [1], lockTime, sequence }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
-    ).not.toBeNull();
+    ).toMatchObject(finalized);
   });
 
-  it('returns null when a required co-signer signature is missing', () => {
+  it('returns unsatisfied when a required co-signer signature is missing', () => {
     const psbt = buildPolicyTx(multiSig, { signWith: [1] }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: multiSig })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 
   it('finalizes when every required signature is present', () => {
     const psbt = buildPolicyTx(multiSig, { signWith: [1, 2] }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: multiSig })
-    ).not.toBeNull();
+    ).toMatchObject(finalized);
+  });
+
+  it('returns unsatisfied when a merged co-signer signature is corrupted', () => {
+    const psbt = rewriteFirstPartialSig(
+      buildPolicyTx(multiSig, { signWith: [1, 2] }).toPSBT(),
+      signature => {
+        const corrupted = Uint8Array.from(signature);
+        const sValueLastByte = corrupted.length - 2;
+        corrupted[sValueLastByte] = corrupted[sValueLastByte] ^ 0xff;
+        return corrupted;
+      }
+    );
+    expect(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: multiSig })
+    ).toEqual(unsatisfied);
+  });
+
+  it('returns unsatisfied when a merged co-signer signature declares a sighash it was not made for', () => {
+    const psbt = rewriteFirstPartialSig(
+      buildPolicyTx(multiSig, { signWith: [1, 2] }).toPSBT(),
+      signature => {
+        const relabelled = Uint8Array.from(signature);
+        relabelled[relabelled.length - 1] = btc.SigHash.NONE;
+        return relabelled;
+      }
+    );
+    expect(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: multiSig })
+    ).toEqual(unsatisfied);
+  });
+
+  it('returns unsatisfied when the timelock branch is planned but the tx locktime does not meet it', () => {
+    const psbt = buildPolicyTx(timelock, { signWith: [1] }).toPSBT();
+    expect(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
+    ).toEqual(unsatisfied);
+  });
+
+  it('returns unsatisfied when the timelock is met but the input sequence is final', () => {
+    const probe = makeWshDescriptorInstance(timelock, 0, {
+      signersPubKeys: [Buffer.from(pubkeyA)],
+    });
+    const lockTime = probe.getLockTime() || 0;
+    const psbt = buildPolicyTx(timelock, {
+      signWith: [1],
+      lockTime,
+      sequence: 0xffffffff,
+    }).toPSBT();
+    expect(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
+    ).toEqual(unsatisfied);
+  });
+
+  it('finalizes the timelock branch with an RBF-signalling sequence', () => {
+    const probe = makeWshDescriptorInstance(timelock, 0, {
+      signersPubKeys: [Buffer.from(pubkeyA)],
+    });
+    const lockTime = probe.getLockTime() || 0;
+    const psbt = buildPolicyTx(timelock, {
+      signWith: [1],
+      lockTime,
+      sequence: 0xfffffffd,
+    }).toPSBT();
+    expect(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
+    ).toMatchObject(finalized);
+  });
+
+  it('finalizes the timelock branch when the tx locktime exceeds the required height', () => {
+    const psbt = buildPolicyTx(timelock, {
+      signWith: [1],
+      lockTime: 1500,
+      sequence: 0xfffffffe,
+    }).toPSBT();
+    expect(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
+    ).toMatchObject(finalized);
+  });
+
+  it('returns unsatisfied when a time-based locktime is set for a height-based lock', () => {
+    const psbt = buildPolicyTx(timelock, {
+      signWith: [1],
+      lockTime: 600_000_000,
+      sequence: 0xfffffffe,
+    }).toPSBT();
+    expect(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: timelock })
+    ).toEqual(unsatisfied);
+  });
+
+  describe('relative timelock', () => {
+    const relativeTimelock = `wsh(and_v(v:older(144),pk(${xpubA}/0/0)))`;
+    const timeTypedSequence = 0x00400000 | 144;
+    const disabledSequence = 0x80000000 + 144;
+
+    function finalizeWithSequence(sequence: number, version?: number) {
+      const psbt = buildPolicyTx(relativeTimelock, { signWith: [1], sequence, version }).toPSBT();
+      return finalizeWshDescriptorPsbt({
+        signedPsbt: psbt,
+        preimagePsbt: psbt,
+        descriptor: relativeTimelock,
+      });
+    }
+
+    it('finalizes with the exact required sequence', () => {
+      expect(finalizeWithSequence(144)).toMatchObject(finalized);
+    });
+
+    it('finalizes when the input sequence exceeds the required blocks', () => {
+      expect(finalizeWithSequence(200)).toMatchObject(finalized);
+    });
+
+    it('returns unsatisfied when the input sequence is below the required blocks', () => {
+      expect(finalizeWithSequence(100)).toEqual(unsatisfied);
+    });
+
+    it('returns unsatisfied when the input sequence is time-based for a block-based lock', () => {
+      expect(finalizeWithSequence(timeTypedSequence)).toEqual(unsatisfied);
+    });
+
+    it('returns unsatisfied when the input sequence has the disable flag set', () => {
+      expect(finalizeWithSequence(disabledSequence)).toEqual(unsatisfied);
+    });
+
+    it('returns unsatisfied when the tx version predates BIP-68', () => {
+      expect(finalizeWithSequence(144, 1)).toEqual(unsatisfied);
+    });
   });
 
   it('finalizes a 2-of-3 sortedmulti once any two signatures are present', () => {
     const twoOfThree = `wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0,${makeNativeSegwitAccountXpub(3)}/0/0))`;
     const psbt = buildPolicyTx(twoOfThree, { signWith: [2, 3] }).toPSBT();
-    const rawTx = finalizeWshDescriptorPsbt({
-      signedPsbt: psbt,
-      preimagePsbt: psbt,
-      descriptor: twoOfThree,
-    });
-    expect(rawTx).not.toBeNull();
-    const decoded = btc.Transaction.fromRaw(hexToBytes(rawTx!), { allowUnknownInputs: true });
+    const rawTx = getFinalizedRawTx(
+      finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: twoOfThree })
+    );
+    const decoded = btc.Transaction.fromRaw(hexToBytes(rawTx), { allowUnknownInputs: true });
     expect(decoded.getInput(0).finalScriptWitness?.length).toBeGreaterThan(0);
   });
 
-  it('returns null for a 2-of-3 sortedmulti with only one signature', () => {
+  it('returns unsatisfied for a 2-of-3 sortedmulti with only one signature', () => {
     const twoOfThree = `wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0,${makeNativeSegwitAccountXpub(3)}/0/0))`;
     const psbt = buildPolicyTx(twoOfThree, { signWith: [1] }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: twoOfThree })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 
   it('finalizes a coordinator-style origin-prefixed sortedmulti psbt', () => {
@@ -762,19 +923,20 @@ describe('finalizeWshDescriptorPsbt', () => {
         preimagePsbt: psbt,
         descriptor: coordinatorDescriptor,
       })
-    ).not.toBeNull();
+    ).toMatchObject(finalized);
   });
 
   it('finalizes a sortedmulti policy when every required signature is present', () => {
     const sortedMultiSig = `wsh(sortedmulti(2,${xpubA}/0/0,${xpubB}/0/0))`;
     const psbt = buildPolicyTx(sortedMultiSig, { signWith: [1, 2] }).toPSBT();
-    const rawTx = finalizeWshDescriptorPsbt({
-      signedPsbt: psbt,
-      preimagePsbt: psbt,
-      descriptor: sortedMultiSig,
-    });
-    expect(rawTx).not.toBeNull();
-    const decoded = btc.Transaction.fromRaw(hexToBytes(rawTx!), { allowUnknownInputs: true });
+    const rawTx = getFinalizedRawTx(
+      finalizeWshDescriptorPsbt({
+        signedPsbt: psbt,
+        preimagePsbt: psbt,
+        descriptor: sortedMultiSig,
+      })
+    );
+    const decoded = btc.Transaction.fromRaw(hexToBytes(rawTx), { allowUnknownInputs: true });
     expect(decoded.getInput(0).finalScriptWitness?.length).toBeGreaterThan(0);
   });
 
@@ -785,14 +947,14 @@ describe('finalizeWshDescriptorPsbt', () => {
     }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: hashlock })
-    ).not.toBeNull();
+    ).toMatchObject(finalized);
   });
 
-  it('returns null when a required preimage is missing', () => {
+  it('returns unsatisfied when a required preimage is missing', () => {
     const psbt = buildPolicyTx(hashlock, { signWith: [1] }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: hashlock })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 
   it('relays a preimage from the original psbt when the signed psbt dropped it', () => {
@@ -803,17 +965,110 @@ describe('finalizeWshDescriptorPsbt', () => {
     }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt, preimagePsbt, descriptor: hashlock })
-    ).not.toBeNull();
+    ).toMatchObject(finalized);
   });
 
-  it('returns null when a non-descriptor input cannot be finalized', () => {
+  it('returns unsatisfied when the signed psbt spends the descriptor input in a different transaction', () => {
+    const { scriptPubKey, witnessScript } = compileWshDescriptor(singleSig);
+    const divergentTx = new btc.Transaction({ allowUnknownInputs: true });
+    divergentTx.addInput({
+      txid: hexToBytes('00'.repeat(32)),
+      index: 0,
+      sequence: 0xffffffff,
+      witnessUtxo: { script: scriptPubKey, amount: 20_000n },
+      witnessScript,
+    });
+    divergentTx.addOutput({
+      script: btc.p2wpkh(expectDefined(deriveAddressIndexKey(9).publicKey)).script,
+      amount: 18_000n,
+    });
+    divergentTx.signIdx(expectDefined(deriveAddressIndexKey(1).privateKey), 0);
+
+    const preimagePsbt = buildPolicyTx(singleSig, { signWith: [] }).toPSBT();
+    expect(
+      finalizeWshDescriptorPsbt({
+        signedPsbt: divergentTx.toPSBT(),
+        preimagePsbt,
+        descriptor: singleSig,
+      })
+    ).toEqual(unsatisfied);
+  });
+
+  it('returns unsatisfied when the signed psbt reorders the inputs of the preimage psbt', () => {
+    const { scriptPubKey, witnessScript } = compileWshDescriptor(singleSig);
+    const descriptorInput = {
+      txid: hexToBytes('00'.repeat(32)),
+      index: 0,
+      sequence: 0xffffffff,
+      witnessUtxo: { script: scriptPubKey, amount: 20_000n },
+      witnessScript,
+    };
+    const foreignInput = {
+      txid: hexToBytes('11'.repeat(32)),
+      index: 0,
+      sequence: 0xffffffff,
+      witnessUtxo: {
+        script: btc.p2wpkh(expectDefined(deriveAddressIndexKey(3).publicKey)).script,
+        amount: 10_000n,
+      },
+    };
+    const output = {
+      script: btc.p2wpkh(expectDefined(deriveAddressIndexKey(1).publicKey)).script,
+      amount: 18_000n,
+    };
+
+    const preimageTx = new btc.Transaction({ allowUnknownInputs: true });
+    preimageTx.addInput(foreignInput);
+    preimageTx.addInput(descriptorInput);
+    preimageTx.addOutput(output);
+
+    const signedTx = new btc.Transaction({ allowUnknownInputs: true });
+    signedTx.addInput(descriptorInput);
+    signedTx.addInput(foreignInput);
+    signedTx.addOutput(output);
+    signedTx.signIdx(expectDefined(deriveAddressIndexKey(1).privateKey), 0);
+
+    expect(
+      finalizeWshDescriptorPsbt({
+        signedPsbt: signedTx.toPSBT(),
+        preimagePsbt: preimageTx.toPSBT(),
+        descriptor: singleSig,
+      })
+    ).toEqual(unsatisfied);
+  });
+
+  it('returns unsatisfied when the two psbts differ only in locktime', () => {
+    const signedPsbt = buildPolicyTx(singleSig, { signWith: [1] }).toPSBT();
+    const preimagePsbt = buildPolicyTx(singleSig, { signWith: [], lockTime: 1 }).toPSBT();
+    expect(finalizeWshDescriptorPsbt({ signedPsbt, preimagePsbt, descriptor: singleSig })).toEqual(
+      unsatisfied
+    );
+  });
+
+  it('returns unsatisfied when the two psbts differ only in version', () => {
+    const signedPsbt = buildPolicyTx(singleSig, { signWith: [1], version: 1 }).toPSBT();
+    const preimagePsbt = buildPolicyTx(singleSig, { signWith: [] }).toPSBT();
+    expect(finalizeWshDescriptorPsbt({ signedPsbt, preimagePsbt, descriptor: singleSig })).toEqual(
+      unsatisfied
+    );
+  });
+
+  it('returns unsatisfied when the two psbts differ only in an input sequence', () => {
+    const signedPsbt = buildPolicyTx(singleSig, { signWith: [1], sequence: 0xfffffffe }).toPSBT();
+    const preimagePsbt = buildPolicyTx(singleSig, { signWith: [] }).toPSBT();
+    expect(finalizeWshDescriptorPsbt({ signedPsbt, preimagePsbt, descriptor: singleSig })).toEqual(
+      unsatisfied
+    );
+  });
+
+  it('returns unsatisfied when a non-descriptor input cannot be finalized', () => {
     const psbt = buildPolicyTx(singleSig, { signWith: [1], foreignInput: true }).toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: singleSig })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 
-  it('returns null when no psbt input is locked by the descriptor', () => {
+  it('returns unsatisfied when no psbt input is locked by the descriptor', () => {
     const tx = new btc.Transaction();
     tx.addInput({
       txid: hexToBytes('22'.repeat(32)),
@@ -824,17 +1079,17 @@ describe('finalizeWshDescriptorPsbt', () => {
     const psbt = tx.toPSBT();
     expect(
       finalizeWshDescriptorPsbt({ signedPsbt: psbt, preimagePsbt: psbt, descriptor: singleSig })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 
-  it('returns null when the signed psbt is missing the input index the preimage psbt matched', () => {
+  it('returns unsatisfied when the signed psbt is missing the input index the preimage psbt matched', () => {
     const { scriptPubKey, witnessScript } = compileWshDescriptor(singleSig);
     const preimageTx = new btc.Transaction({ allowUnknownInputs: true });
     preimageTx.addInput({
       txid: hexToBytes('11'.repeat(32)),
       index: 0,
       witnessUtxo: {
-        script: btc.p2wpkh(deriveAddressIndexKey(3).publicKey!).script,
+        script: btc.p2wpkh(expectDefined(deriveAddressIndexKey(3).publicKey)).script,
         amount: 10_000n,
       },
     });
@@ -854,10 +1109,34 @@ describe('finalizeWshDescriptorPsbt', () => {
         preimagePsbt: preimageTx.toPSBT(),
         descriptor: singleSig,
       })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 
-  it('returns null for malformed psbt bytes', () => {
+  it('returns unsatisfied when the signed psbt input at the matched index is not locked by the descriptor', () => {
+    const accountKey = deriveAddressIndexKey(1);
+    const signedTx = new btc.Transaction();
+    signedTx.addInput({
+      txid: hexToBytes('00'.repeat(32)),
+      index: 0,
+      witnessUtxo: {
+        script: btc.p2wpkh(expectDefined(accountKey.publicKey)).script,
+        amount: 20_000n,
+      },
+    });
+    signedTx.addOutput({ script: btc.p2wpkh(pubkeyA).script, amount: 18_000n });
+    signedTx.signIdx(expectDefined(accountKey.privateKey), 0);
+
+    const preimagePsbt = buildPolicyTx(singleSig, { signWith: [] }).toPSBT();
+    expect(
+      finalizeWshDescriptorPsbt({
+        signedPsbt: signedTx.toPSBT(),
+        preimagePsbt,
+        descriptor: singleSig,
+      })
+    ).toEqual(unsatisfied);
+  });
+
+  it('returns unsatisfied for malformed psbt bytes', () => {
     const malformed = new Uint8Array([1, 2, 3]);
     expect(
       finalizeWshDescriptorPsbt({
@@ -865,7 +1144,7 @@ describe('finalizeWshDescriptorPsbt', () => {
         preimagePsbt: malformed,
         descriptor: singleSig,
       })
-    ).toBeNull();
+    ).toEqual(unsatisfied);
   });
 });
 

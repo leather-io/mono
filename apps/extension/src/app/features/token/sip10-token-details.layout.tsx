@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
 import type { BlockchainActivityItem } from '@leather.io/features';
-import type { Money } from '@leather.io/models';
+import type { FungibleCryptoAsset, Money } from '@leather.io/models';
 
 import { TokenDetailsLayout } from './token-details.layout';
 
@@ -9,28 +9,28 @@ interface Sip10TokenDetailsLayoutProps {
   icon: ReactNode;
   name: string;
   symbol: string;
+  asset: FungibleCryptoAsset;
   availableBalance: Money;
   fiatBalance: Money;
   price?: Money;
-  changePercent: number;
-  priceChangeDelta?: string;
   descriptionText: string;
   contractDetails: string;
   activity: BlockchainActivityItem[];
+  isActivityLoading: boolean;
 }
 
 export function Sip10TokenDetailsLayout({
   icon,
   name,
   symbol,
+  asset,
   availableBalance,
   fiatBalance,
   price,
-  changePercent,
-  priceChangeDelta,
   descriptionText,
   contractDetails,
   activity,
+  isActivityLoading,
 }: Sip10TokenDetailsLayoutProps) {
   return (
     <TokenDetailsLayout
@@ -39,16 +39,16 @@ export function Sip10TokenDetailsLayout({
       symbol={symbol}
       receiveView="stx"
       swapChain="stacks"
-      availableBalance={availableBalance}
+      balance={availableBalance}
       fiatBalance={fiatBalance}
       name={`${name} (${symbol})`}
+      asset={asset}
       price={price}
-      changePercent={changePercent}
-      priceChangeDelta={priceChangeDelta}
       layer="Layer 2 (Stacks)"
       contractDetails={contractDetails}
       descriptionText={descriptionText}
       activity={activity}
+      isActivityLoading={isActivityLoading}
     />
   );
 }

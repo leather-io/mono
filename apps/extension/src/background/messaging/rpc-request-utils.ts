@@ -1,6 +1,6 @@
 import type { To } from 'react-router';
 
-import { z } from 'zod';
+import { type z } from 'zod';
 
 import {
   RpcErrorCode,
@@ -20,7 +20,7 @@ import {
   getPermissionsByOrigin,
   isConnectedToExistingWallet,
 } from '@shared/permissions/permission.helpers';
-import { RouteUrls } from '@shared/route-urls';
+import { type RouteUrls } from '@shared/route-urls';
 import {
   RpcErrorMessage,
   getRpcParamErrorsFormatted,
@@ -46,9 +46,19 @@ export function getOriginatingFrameFromPort(port: chrome.runtime.Port): Originat
   return { frameId: getFrameIdFromPort(port), tabId: getTabIdFromPort(port) };
 }
 
-function getOriginFromPort(port: chrome.runtime.Port) {
+export function getOriginFromPort(port: chrome.runtime.Port) {
   if (port.sender?.url) return new URL(port.sender.url).origin;
   return port.sender?.origin;
+}
+
+function getTopOriginFromPort(port: chrome.runtime.Port) {
+  const tabUrl = port.sender?.tab?.url;
+  if (!tabUrl) return undefined;
+  try {
+    return new URL(tabUrl).origin;
+  } catch {
+    return undefined;
+  }
 }
 
 function getHostnameFromPort(port: chrome.runtime.Port) {
@@ -62,7 +72,7 @@ function getHostnameFromPort(port: chrome.runtime.Port) {
 // https://github.com/microsoft/playwright/issues/5593
 async function openRequestInFullPage(path: string | To, urlParams: URLSearchParams) {
   return chrome.tabs.create({
-    url: chrome.runtime.getURL(`index.html#${path}?${urlParams.toString()}`),
+    url: chrome.runtime.getURL(`index.html#${String(path)}?${urlParams.toString()}`),
   });
 }
 
@@ -72,7 +82,7 @@ interface ListenForPopupCloseArgs {
   // TabID from requesting tab, to which request should be returned
   tabId?: number;
   frameId: number;
-  response: any;
+  response: unknown;
 }
 export function listenForPopupClose({ frameId, id, tabId, response }: ListenForPopupCloseArgs) {
   chrome.windows.onRemoved.addListener(winId => {
@@ -85,7 +95,7 @@ export function listenForPopupClose({ frameId, id, tabId, response }: ListenForP
 interface SendErrorResponseOnUserPopupCloseArgs {
   tabId?: number;
   frameId: number;
-  id: number;
+  id?: number;
   request: RpcRequests;
   message?: string;
 }
@@ -130,7 +140,9 @@ export function createConnectingAppMetadataSearchParams(
   const origin = getOriginFromPort(port);
   const tabId = getTabIdFromPort(port);
   const frameId = getFrameIdFromPort(port);
-  urlParams.set('origin', origin ?? '');
+  const topOrigin = getTopOriginFromPort(port);
+  if (origin) urlParams.set('origin', origin);
+  if (topOrigin) urlParams.set('topOrigin', topOrigin);
   urlParams.set('frameId', frameId.toString());
   urlParams.set('tabId', tabId.toString());
   otherParams.forEach(([key, value]) => urlParams.append(key, value));
@@ -168,7 +180,7 @@ export async function triggerRequestPopupWindowOpen(path: RouteUrls, urlParams: 
 
 export async function triggerSwapWindowOpen(path: To, urlParams: URLSearchParams) {
   if (IS_TEST_ENV) return openRequestInFullPage(path, urlParams);
-  return popup({ url: `/popup.html#${path}?${urlParams.toString()}` });
+  return popup({ url: `/popup.html#${String(path)}?${urlParams.toString()}` });
 }
 
 type ValidationResult = 'success' | 'failure';
@@ -235,7 +247,7 @@ async function checkConnectedWalletExists(
 ): Promise<ConnectedWalletCheckResult> {
   const tabId = getTabIdFromPort(port);
   const frameId = getFrameIdFromPort(port);
-  const state = (await getRootState()) as MaybePreMultiWalletRootState | null;
+  const state: MaybePreMultiWalletRootState | null = await getRootState();
   if (!state) return { status: 'failure', reason: 'missing-state', frameId, tabId };
 
   const walletEntities = state.wallets?.entities;

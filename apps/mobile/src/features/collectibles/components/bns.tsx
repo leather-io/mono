@@ -2,13 +2,13 @@ import { Image } from 'expo-image';
 
 import { Box, Pressable, Text } from '@leather.io/ui/native';
 
-import { CollectibleImageProps } from './collectible-image';
+import { type CollectibleImageProps } from './collectible-image';
 
 export function BnsImage({ alt, src, height = 200, onPress }: CollectibleImageProps) {
   return (
     <Pressable onPress={onPress} disabled={!onPress}>
       <Box height={height} overflow="hidden" bg="ink.background-secondary" position="relative">
-        <Image source={src} alt={alt} style={{ height: height }} />
+        <Image source={src} alt={alt} style={{ height }} />
         <Box
           position="absolute"
           bottom={0}

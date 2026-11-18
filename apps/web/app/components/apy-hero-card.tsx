@@ -1,5 +1,5 @@
 import { Box, Flex } from 'leather-styles/jsx';
-import { HTMLStyledProps } from 'leather-styles/types';
+import { type HTMLStyledProps } from 'leather-styles/types';
 import { ValueHoverCard } from '~/components/value-hover-card';
 import { learnArticles } from '~/content/learn-content';
 

@@ -1,3 +1,5 @@
+import type * as ReactModule from 'react';
+
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
@@ -20,7 +22,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock('react', async importOriginal => {
-  const actual = await importOriginal<typeof import('react')>();
+  const actual = await importOriginal<typeof ReactModule>();
   return {
     ...actual,
     useMemo<T>(factory: () => T) {
@@ -154,6 +156,31 @@ describe(useBondProposalRoute.name, () => {
       psbtHex: buildBondPsbtHex(),
     });
     expect(route?.status).toBe('matched');
+  });
+
+  test('matches a bond descriptor with a raw compressed pubkey counterparty', () => {
+    const rawCounterpartyKey = bytesToHex(makeNativeSegwitAddressPubkey(9));
+    const rawKeyBondDescriptor = instantiateBondDescriptor({
+      unlockHeight,
+      hash,
+      counterpartyKey: rawCounterpartyKey,
+      ...getBondVaultKeys(policyDescriptor),
+    });
+
+    const route = useBondProposalRoute({
+      descriptor: rawKeyBondDescriptor,
+      psbtHex: buildBondPsbtHex(),
+    });
+    expect(route).toEqual({
+      status: 'matched',
+      policy: bitcoinPolicy,
+      bondDescriptor: rawKeyBondDescriptor,
+      unlockHeight,
+      hash,
+      counterpartyKey: rawCounterpartyKey,
+      vaultThreshold: 2,
+      vaultKeyCount: 3,
+    });
   });
 
   test('errors when the descriptor is missing', () => {

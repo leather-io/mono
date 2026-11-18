@@ -1,14 +1,20 @@
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { Flex, styled } from 'leather-styles/jsx';
 
-import { RouteUrls } from '@shared/route-urls';
+import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
+import { RouteUrls } from '@shared/route-urls';
+import { replaceRouteParams } from '@shared/utils/replace-route-params';
+
+import { useNavigateToSendForm } from '@app/common/hooks/use-navigate-to-send-form';
+import { useSwapAvailability } from '@app/common/hooks/use-swap-availability';
 import type { ReceiveView } from '@app/common/receive/receive';
 import { useReceiveDialog } from '@app/common/receive/use-receive-dialog-context';
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useFlags } from '@app/features/feature-flags';
+import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 
 interface TokenDetailsPillButtonProps {
   label: string;
@@ -47,6 +53,7 @@ export type SwapChain = 'bitcoin' | 'stacks';
 
 interface TokenDetailsActionsRowProps {
   symbol: string;
+  assetId: SerializedCryptoAssetId;
   receiveView: ReceiveView;
   swapChain: SwapChain;
   isBuyEnabled?: boolean;
@@ -55,15 +62,18 @@ interface TokenDetailsActionsRowProps {
 
 export function TokenDetailsActionsRow({
   symbol,
+  assetId,
   receiveView,
   swapChain,
   isBuyEnabled = true,
   isSwapEnabled = true,
 }: TokenDetailsActionsRowProps) {
   const navigate = useNavigate();
-  const location = useLocation();
+  const navigateToSendForm = useNavigateToSendForm();
   const { showReceive } = useReceiveDialog();
   const { releaseOnramperBuy } = useFlags();
+  const swapAvailability = useSwapAvailability();
+  const { isMainnet } = useCurrentNetworkState();
 
   function pageModeRoutingAction(url: string) {
     return whenPageMode({
@@ -89,18 +99,16 @@ export function TokenDetailsActionsRow({
       margin="0 auto"
     >
       <TokenDetailsPillButton
-        label="Send"
-        onClick={() =>
-          void navigate(RouteUrls.SendCryptoAsset, { state: { backgroundLocation: location } })
-        }
-        testId="token-details-send-btn"
-      />
-      <TokenDetailsPillButton
         label="Receive"
         onClick={() => showReceive(receiveView)}
         testId="token-details-receive-btn"
       />
-      {releaseOnramperBuy && (
+      <TokenDetailsPillButton
+        label="Send"
+        onClick={() => void navigateToSendForm(assetId)}
+        testId="token-details-send-btn"
+      />
+      {releaseOnramperBuy && isMainnet && (
         <TokenDetailsPillButton
           label="Buy"
           disabled={!isBuyEnabled}
@@ -110,12 +118,13 @@ export function TokenDetailsActionsRow({
       )}
       <TokenDetailsPillButton
         label="Swap"
-        disabled={!isSwapEnabled}
+        disabled={!isSwapEnabled || !swapAvailability.isEnabled}
         onClick={() =>
           void navigate(
-            RouteUrls.Swap.replace('{chain}', swapChain)
-              .replace(':base', symbol)
-              .replace(':quote?', '')
+            replaceRouteParams(RouteUrls.Swap, { base: symbol, quote: '' }).replace(
+              '{chain}',
+              swapChain
+            )
           )
         }
         testId="token-details-swap-btn"

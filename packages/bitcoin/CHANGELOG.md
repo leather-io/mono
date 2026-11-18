@@ -939,6 +939,121 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.42.1](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.42.0...@leather.io/bitcoin-v0.42.1) (2026-10-27)
+
+
+### Bug Fixes
+
+* body-parser and undici audit ([#2912](https://github.com/leather-io/mono/issues/2912)) ([2bee4e7](https://github.com/leather-io/mono/commit/2bee4e772dd95fff8406822a62225854fb708fbd))
+* enforce runtime circular dependency detection ([#2852](https://github.com/leather-io/mono/issues/2852)) ([857e0f7](https://github.com/leather-io/mono/commit/857e0f79d75025cc0da9f31a78c875fa64ed5eba))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.41.0
+    * @leather.io/crypto bumped to 1.13.11
+    * @leather.io/models bumped to 0.63.1
+    * @leather.io/utils bumped to 0.55.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.25.4
+
+## [0.42.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.41.0...@leather.io/bitcoin-v0.42.0) (2026-10-06)
+
+
+### Features
+
+* spending sources foundation + btc send flow ([#2820](https://github.com/leather-io/mono/issues/2820)) ([181c4f7](https://github.com/leather-io/mono/commit/181c4f71366f1cb4a744ae04d261f1fa63d75f30))
+
+## [0.41.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.40.2...@leather.io/bitcoin-v0.41.0) (2026-09-29)
+
+
+### Features
+
+* fully move to dmk btc/stx dmk packages ([#2763](https://github.com/leather-io/mono/issues/2763)) ([c4bb5f3](https://github.com/leather-io/mono/commit/c4bb5f39ed9f2ff88ce59c325e86dda0cb87568b))
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.40.0
+    * @leather.io/crypto bumped to 1.13.10
+    * @leather.io/models bumped to 0.63.0
+    * @leather.io/utils bumped to 0.54.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/rpc bumped to 2.25.3
+    * @leather.io/test-config bumped to 0.1.4
+    * @leather.io/tsconfig-config bumped to 0.11.2
+
+## [0.40.2](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.40.1...@leather.io/bitcoin-v0.40.2) (2026-09-14)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.4
+    * @leather.io/crypto bumped to 1.13.9
+    * @leather.io/utils bumped to 0.53.1
+  * devDependencies
+    * @leather.io/rpc bumped to 2.25.2
+
+## [0.40.1](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.40.0...@leather.io/bitcoin-v0.40.1) (2026-09-10)
+
+
+### Bug Fixes
+
+* **bitcoin:** verify psbt consistency in wsh descriptor finalization ([#2701](https://github.com/leather-io/mono/issues/2701)) ([68e36b4](https://github.com/leather-io/mono/commit/68e36b4e1e43a96e1343d1506e3c279829c5d6eb))
+* **extension:** block psbt signing with disallowed sighash types ([#2667](https://github.com/leather-io/mono/issues/2667)) ([9b4d0f4](https://github.com/leather-io/mono/commit/9b4d0f46d6e77cbbda5da1b519ae853514fd1c30))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.3
+    * @leather.io/crypto bumped to 1.13.8
+    * @leather.io/models bumped to 0.62.0
+    * @leather.io/utils bumped to 0.53.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.25.1
+
+## [0.40.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.39.6...@leather.io/bitcoin-v0.40.0) (2026-08-27)
+
+
+### Features
+
+* bond exit ([#2648](https://github.com/leather-io/mono/issues/2648)) ([289275f](https://github.com/leather-io/mono/commit/289275f169a4b0563d2fec662e48c9a844792bf3))
+
+
+### Bug Fixes
+
+* add @stacks/connect ([#2580](https://github.com/leather-io/mono/issues/2580)) ([625b20b](https://github.com/leather-io/mono/commit/625b20b6a68ee0c1bba63e892b46b837561b71e9))
+* **bitcoin:** accept multi form in bond descriptor matching ([#2673](https://github.com/leather-io/mono/issues/2673)) ([77ad173](https://github.com/leather-io/mono/commit/77ad1735df93eec653557a807bf2ab4b9c9503d5))
+* **bitcoin:** resolve the bond co-signer as an extended key so ledger can sign ([#2674](https://github.com/leather-io/mono/issues/2674)) ([7828c5b](https://github.com/leather-io/mono/commit/7828c5b4db6273f03873239138a5589f2296fc2b))
+* **extension:** classify psbt inputs by script type when building signing config ([#2680](https://github.com/leather-io/mono/issues/2680)) ([263e3c2](https://github.com/leather-io/mono/commit/263e3c28d3975ee0e0fb2ec8607421a75c81230b))
+* update ledger dependencies ([#2661](https://github.com/leather-io/mono/issues/2661)) ([7ef2061](https://github.com/leather-io/mono/commit/7ef20613d3a4858da6f6102bb586bbb370201e4b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.2
+    * @leather.io/crypto bumped to 1.13.7
+    * @leather.io/models bumped to 0.61.1
+    * @leather.io/utils bumped to 0.52.7
+  * devDependencies
+    * @leather.io/rpc bumped to 2.25.0
+
 ## [0.39.6](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.39.5...@leather.io/bitcoin-v0.39.6) (2026-08-18)
 
 

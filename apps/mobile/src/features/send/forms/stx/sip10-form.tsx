@@ -12,7 +12,12 @@ import { useSendFlowContext } from '@/features/send/send-flow-provider';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
 
-import { MarketData, Money, QuoteCurrency, Sip10Asset } from '@leather.io/models';
+import {
+  type MarketData,
+  type Money,
+  type QuoteCurrency,
+  type Sip10Asset,
+} from '@leather.io/models';
 import { Button, Sip10AvatarIcon } from '@leather.io/ui/native';
 import { isNumber } from '@leather.io/utils';
 
@@ -146,7 +151,10 @@ export function Sip10Form({
           )}
         />
 
-        <Button onPress={onSubmit} disabled={!form.formState.isValid}>{t`Review`}</Button>
+        <Button
+          onPress={event => void onSubmit(event)}
+          disabled={!form.formState.isValid}
+        >{t`Review`}</Button>
       </SendFormFooter>
     </SendFormContainer>
   );

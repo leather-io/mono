@@ -3,12 +3,11 @@ import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-accou
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
 
-import { QuoteCurrency } from '@leather.io/models';
 import {
   createBtcAggregateBalanceQueryConfig,
   createBtcBalanceQueryConfig,
 } from '@leather.io/queries';
-import { AccountRequest, UserSettings } from '@leather.io/services';
+import { type AccountRequest, type UserSettings } from '@leather.io/services';
 
 import { balanceQueryOptions } from './balance-query-options';
 
@@ -45,7 +44,7 @@ function useBtcAccountBalanceQuery(request: AccountRequest) {
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,
-    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    quoteCurrency: fiatCurrencyPreference,
     assetVisibility,
   };
 
@@ -59,7 +58,7 @@ function useBtcAggregateBalanceQuery(requests: AccountRequest[]) {
   const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const settings: UserSettings = {
     network: networkPreference,
-    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
+    quoteCurrency: fiatCurrencyPreference,
     assetVisibility,
   };
 

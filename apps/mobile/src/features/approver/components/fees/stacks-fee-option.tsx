@@ -1,6 +1,6 @@
 import { formatCurrency } from '@/utils/currency-formatter';
 
-import { FeeTypes, Money } from '@leather.io/models';
+import { type FeeTypes, type Money } from '@leather.io/models';
 
 import { getStacksFeeData } from '../../utils';
 import { BaseFeeOption } from './base-fee-option';

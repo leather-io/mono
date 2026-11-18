@@ -1,9 +1,9 @@
-import { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 
 import { Balance } from '@/components/balance/balance';
 
-import { MarketData, Money } from '@leather.io/models';
-import { Avatar, Box, Cell, ChevronRightIcon, IconProps } from '@leather.io/ui/native';
+import { type MarketData, type Money } from '@leather.io/models';
+import { Avatar, Box, Cell, ChevronRightIcon, type IconProps } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuoteWithFallback } from '@leather.io/utils';
 
 interface BaseFeeCardProps {

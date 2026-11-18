@@ -72,7 +72,8 @@ export class BtcBalancesService {
   ): Promise<AccountQuotedBtcBalance> {
     const utxos = await this.utxosService.getAccountUtxos(request, signal);
 
-    const totalBalance = createMoney(sumUtxoValues(utxos.confirmed), 'BTC');
+    const lockedBalance = createMoney(sumUtxoValues(utxos.locked), 'BTC');
+    const totalBalance = createMoney(sumUtxoValues([...utxos.confirmed, ...utxos.locked]), 'BTC');
     const inboundBalance = createMoney(sumUtxoValues(utxos.inbound), 'BTC');
     const outboundBalance = createMoney(sumUtxoValues(utxos.outbound), 'BTC');
     const dustBalance = createMoney(sumUtxoValues(utxos.dust), 'BTC');
@@ -87,14 +88,16 @@ export class BtcBalancesService {
         inboundBalance,
         outboundBalance,
         dustBalance,
-        unspendableBalance
+        unspendableBalance,
+        lockedBalance
       ),
       quote: createBtcBalance(
         baseCurrencyAmountInQuote(totalBalance, btcMarketData),
         baseCurrencyAmountInQuote(inboundBalance, btcMarketData),
         baseCurrencyAmountInQuote(outboundBalance, btcMarketData),
         baseCurrencyAmountInQuote(dustBalance, btcMarketData),
-        baseCurrencyAmountInQuote(unspendableBalance, btcMarketData)
+        baseCurrencyAmountInQuote(unspendableBalance, btcMarketData),
+        baseCurrencyAmountInQuote(lockedBalance, btcMarketData)
       ),
     };
   }

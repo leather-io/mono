@@ -1,188 +1,50 @@
-import { LEDGER_APPS_MAP, promptOpenAppOnDevice } from './generic-ledger-utils';
+import { prepareLedgerDeviceForAppFn } from './generic-ledger-utils';
 
-const mocks = vi.hoisted(() => ({
-  create: vi.fn(),
-  list: vi.fn(),
-  getAppAndVersion: vi.fn(),
-  delay: vi.fn<(ms: number) => Promise<void>>(() => Promise.resolve()),
-  warn: vi.fn(),
-}));
+const noAccessibleDeviceError = {
+  _tag: 'NoAccessibleDeviceError',
+  originalError: new Error('No device selected'),
+  message: 'No accessible device',
+};
 
-vi.mock('@ledgerhq/hw-transport-webusb', () => ({
-  default: { create: mocks.create, list: mocks.list },
-}));
-
-vi.mock('ledger-bitcoin', () => ({
-  default: vi.fn(() => ({ getAppAndVersion: mocks.getAppAndVersion })),
-}));
-
-vi.mock('@leather.io/utils', async importOriginal => {
-  const actual = await importOriginal<typeof import('@leather.io/utils')>();
-  return { ...actual, delay: mocks.delay };
-});
-
-vi.mock('@shared/logger', () => ({
-  logger: { warn: mocks.warn },
-}));
-
-interface FakeTransport {
-  send: ReturnType<typeof vi.fn>;
-  close: ReturnType<typeof vi.fn>;
+function connectAndSettle<App>(connectAppFn: () => Promise<App>) {
+  const onError = vi.fn();
+  const setLoadingState = vi.fn();
+  const result = prepareLedgerDeviceForAppFn(connectAppFn)({ onError, setLoadingState });
+  return { onError, setLoadingState, result };
 }
 
-function makeFakeTransport(): FakeTransport {
-  return {
-    send: vi.fn().mockResolvedValue(undefined),
-    close: vi.fn().mockResolvedValue(undefined),
-  };
-}
-
-const openStacksAppApdu = [0xe0, 0xd8, 0x00, 0x00, Buffer.from('Stacks', 'ascii')];
-const quitAppApdu = [0xb0, 0xa7, 0x00, 0x00];
-
-describe(promptOpenAppOnDevice.name, () => {
-  let transports: FakeTransport[] = [];
-
+describe(prepareLedgerDeviceForAppFn.name, () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    transports = [];
-    mocks.create.mockImplementation(() => {
-      const transport = makeFakeTransport();
-      transports.push(transport);
-      return Promise.resolve(transport);
-    });
-    mocks.list.mockImplementation(() => Promise.resolve([{}]));
+    vi.useFakeTimers();
   });
 
-  test('settles without opening further transports when the requested app is already open', async () => {
-    mocks.getAppAndVersion.mockResolvedValue({ name: LEDGER_APPS_MAP.STACKS });
-
-    await promptOpenAppOnDevice(LEDGER_APPS_MAP.STACKS);
-
-    expect(mocks.create).toHaveBeenCalledOnce();
-    expect(transports[0].close).toHaveBeenCalledOnce();
-    expect(transports[0].send).not.toHaveBeenCalled();
-    expect(mocks.list).not.toHaveBeenCalled();
-    expect(mocks.delay).toHaveBeenCalledOnce();
-    expect(mocks.delay).toHaveBeenCalledWith(500);
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
-  test('quits the open app before opening the requested one', async () => {
-    mocks.getAppAndVersion.mockResolvedValue({ name: LEDGER_APPS_MAP.BITCOIN_MAINNET });
-
-    await promptOpenAppOnDevice(LEDGER_APPS_MAP.STACKS);
-
-    expect(mocks.create).toHaveBeenCalledTimes(3);
-    expect(transports[1].send).toHaveBeenCalledWith(...quitAppApdu);
-    expect(transports[2].send).toHaveBeenCalledWith(...openStacksAppApdu);
-  });
-
-  test('skips quitting when the device is on the main menu', async () => {
-    mocks.getAppAndVersion.mockResolvedValue({ name: LEDGER_APPS_MAP.MAIN_MENU });
-
-    await promptOpenAppOnDevice(LEDGER_APPS_MAP.STACKS);
-
-    expect(mocks.create).toHaveBeenCalledTimes(2);
-    expect(transports[1].send).toHaveBeenCalledWith(...openStacksAppApdu);
-  });
-
-  test('only closes the probe transport, never the app-switching ones', async () => {
-    mocks.getAppAndVersion.mockResolvedValue({ name: LEDGER_APPS_MAP.BITCOIN_MAINNET });
-
-    await promptOpenAppOnDevice(LEDGER_APPS_MAP.STACKS);
-
-    expect(transports[0].close).toHaveBeenCalledOnce();
-    expect(transports[1].close).not.toHaveBeenCalled();
-    expect(transports[2].close).not.toHaveBeenCalled();
-  });
-
-  test('closes the probe transport when reading the open app fails', async () => {
-    mocks.getAppAndVersion.mockRejectedValue(new Error('disconnected'));
-
-    await expect(promptOpenAppOnDevice(LEDGER_APPS_MAP.STACKS)).rejects.toThrow('disconnected');
-
-    expect(mocks.create).toHaveBeenCalledOnce();
-    expect(transports[0].close).toHaveBeenCalledOnce();
-  });
-
-  test('still resolves when closing a transport fails', async () => {
-    mocks.getAppAndVersion.mockResolvedValue({ name: LEDGER_APPS_MAP.MAIN_MENU });
-    mocks.create.mockImplementation(() => {
-      const transport = makeFakeTransport();
-      transport.close.mockRejectedValue(new Error('already closed'));
-      transports.push(transport);
-      return Promise.resolve(transport);
-    });
-
-    await expect(promptOpenAppOnDevice(LEDGER_APPS_MAP.STACKS)).resolves.toBeUndefined();
-
-    expect(mocks.warn).toHaveBeenCalled();
-  });
-
-  test('resolves when the device disconnects while the open app apdu is in flight', async () => {
-    mocks.getAppAndVersion.mockResolvedValue({ name: LEDGER_APPS_MAP.MAIN_MENU });
-    mocks.create
-      .mockImplementationOnce(() => {
-        const transport = makeFakeTransport();
-        transports.push(transport);
-        return Promise.resolve(transport);
-      })
-      .mockImplementationOnce(() => {
-        const transport = makeFakeTransport();
-        transport.send.mockRejectedValue(new Error('The device was disconnected.'));
-        transports.push(transport);
-        return Promise.resolve(transport);
-      });
-
-    await expect(promptOpenAppOnDevice(LEDGER_APPS_MAP.STACKS)).resolves.toBeUndefined();
-
-    expect(transports[1].close).not.toHaveBeenCalled();
-  });
-
-  test('closes the transport and rethrows when opening the app fails for another reason', async () => {
-    mocks.getAppAndVersion.mockResolvedValue({ name: LEDGER_APPS_MAP.MAIN_MENU });
-    mocks.create
-      .mockImplementationOnce(() => {
-        const transport = makeFakeTransport();
-        transports.push(transport);
-        return Promise.resolve(transport);
-      })
-      .mockImplementationOnce(() => {
-        const transport = makeFakeTransport();
-        transport.send.mockRejectedValue(new Error('Condition of use not satisfied'));
-        transports.push(transport);
-        return Promise.resolve(transport);
-      });
-
-    await expect(promptOpenAppOnDevice(LEDGER_APPS_MAP.STACKS)).rejects.toThrow(
-      'Condition of use not satisfied'
+  test('resolves with the connected app and clears the loading state', async () => {
+    const app = { name: 'Stacks' };
+    const { onError, setLoadingState, result } = connectAndSettle(
+      vi.fn<() => Promise<typeof app>>().mockResolvedValue(app)
     );
 
-    expect(transports[1].close).toHaveBeenCalledOnce();
+    await vi.runAllTimersAsync();
+
+    await expect(result).resolves.toBe(app);
+    expect(onError).not.toHaveBeenCalled();
+    expect(setLoadingState.mock.calls).toEqual([[true], [false]]);
   });
 
-  test('polls until a re-enumerated device appears before resolving', async () => {
-    mocks.getAppAndVersion.mockResolvedValue({ name: LEDGER_APPS_MAP.MAIN_MENU });
-    const staleDevice = {};
-    mocks.list
-      .mockResolvedValueOnce([staleDevice])
-      .mockResolvedValueOnce([staleDevice])
-      .mockResolvedValueOnce([staleDevice])
-      .mockResolvedValue([{}]);
+  test('passes the original device-kit error to onError', async () => {
+    const { onError, setLoadingState, result } = connectAndSettle(
+      vi.fn<() => Promise<never>>().mockRejectedValue(noAccessibleDeviceError)
+    );
+    const rejection = expect(result).rejects.toThrow('Unable to initiate Ledger app');
 
-    await promptOpenAppOnDevice(LEDGER_APPS_MAP.STACKS);
+    await vi.runAllTimersAsync();
 
-    expect(mocks.list).toHaveBeenCalledTimes(4);
-    expect(mocks.delay.mock.calls.filter(([ms]) => ms === 100)).toHaveLength(2);
-  });
-
-  test('gives up waiting for re-enumeration after the timeout', async () => {
-    mocks.getAppAndVersion.mockResolvedValue({ name: LEDGER_APPS_MAP.MAIN_MENU });
-    const staleDevice = {};
-    mocks.list.mockResolvedValue([staleDevice]);
-
-    await expect(promptOpenAppOnDevice(LEDGER_APPS_MAP.STACKS)).resolves.toBeUndefined();
-
-    expect(mocks.delay.mock.calls.filter(([ms]) => ms === 100)).toHaveLength(50);
+    await rejection;
+    expect(onError).toHaveBeenCalledWith(noAccessibleDeviceError);
+    expect(setLoadingState.mock.calls).toEqual([[true], [false]]);
   });
 });

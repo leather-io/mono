@@ -1,15 +1,15 @@
-import { ComponentPropsWithoutRef, RefObject } from 'react';
-import { TextInput as RNTextInput } from 'react-native';
+import { type ComponentPropsWithoutRef, type RefObject } from 'react';
+import { type TextInput as RNTextInput } from 'react-native';
 
 import { t } from '@lingui/core/macro';
 import {
-  BaseTheme,
-  LayoutProps,
-  OpacityProps,
-  ResponsiveValue,
-  SpacingProps,
-  SpacingShorthandProps,
-  VisibleProps,
+  type BaseTheme,
+  type LayoutProps,
+  type OpacityProps,
+  type ResponsiveValue,
+  type SpacingProps,
+  type SpacingShorthandProps,
+  type VisibleProps,
   composeRestyleFunctions,
   layout,
   opacity,
@@ -22,8 +22,8 @@ import {
 import {
   Box,
   Text,
-  TextInputProps,
-  Theme,
+  type TextInputProps,
+  type Theme,
   TextInput as UITextInput,
   useTheme,
 } from '@leather.io/ui/native';

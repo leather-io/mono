@@ -114,6 +114,66 @@
   * devDependencies
     * @leather.io/models bumped to 0.44.1
 
+## [3.26.1](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.26.0...@leather.io/analytics-v3.26.1) (2026-10-27)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.63.1
+
+## [3.26.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.25.1...@leather.io/analytics-v3.26.0) (2026-09-29)
+
+
+### Features
+
+* **extension:** new swaps flow with sBTC bridging ([#2554](https://github.com/leather-io/mono/issues/2554)) ([65c8518](https://github.com/leather-io/mono/commit/65c85186c847b2e99fd062d00997c81932268bc5))
+* **extension:** tell users when a new version is available ([#2793](https://github.com/leather-io/mono/issues/2793)) ([6ef500a](https://github.com/leather-io/mono/commit/6ef500afb68f502e3de3873d55397ca9ed4bd45e))
+* token price history graph ([#2764](https://github.com/leather-io/mono/issues/2764)) ([b7c56bc](https://github.com/leather-io/mono/commit/b7c56bc7eb49b3a38ea7f40c6332e6c5ce390f93))
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.63.0
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/test-config bumped to 0.1.4
+
+## [3.25.1](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.25.0...@leather.io/analytics-v3.25.1) (2026-09-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.62.0
+
+## [3.25.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.24.0...@leather.io/analytics-v3.25.0) (2026-08-27)
+
+
+### Features
+
+* **web:** update-stake signer-manager switching ([#2657](https://github.com/leather-io/mono/issues/2657)) ([5b7f7d8](https://github.com/leather-io/mono/commit/5b7f7d8f0cf948a1d23bd08ee5843274b073e701))
+
+
+### Bug Fixes
+
+* add all balances settings tab ([#2552](https://github.com/leather-io/mono/issues/2552)) ([1ef1c33](https://github.com/leather-io/mono/commit/1ef1c33ecb393f6e2d87f0829773e88e7a59fcfa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.61.1
+
 ## [3.24.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.23.0...@leather.io/analytics-v3.24.0) (2026-08-18)
 
 

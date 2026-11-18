@@ -41,7 +41,10 @@ export function SelectAsset() {
   useEffect(() => {
     // BTC users need to choose taproot or native segwit address
     if (isDefined(selectedAssets) && selectedAssets.length === 1) {
-      navigate('asset-details', { asset: selectedAssets[0]!, accountName: account?.name ?? '' });
+      const [onlyAsset] = selectedAssets;
+      if (isDefined(onlyAsset)) {
+        navigate('asset-details', { asset: onlyAsset, accountName: account?.name ?? '' });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

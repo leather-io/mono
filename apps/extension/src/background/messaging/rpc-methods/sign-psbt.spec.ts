@@ -4,12 +4,19 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { RpcErrorCode } from '@leather.io/rpc';
 
+import { createMockPort } from '../create-mock-port';
 import { signPsbtHandler } from './sign-psbt';
 
 type SignPsbtRequest = Parameters<(typeof signPsbtHandler)[1]>[0];
 
 const mocks = vi.hoisted(() => ({
-  createConnectingAppSearchParamsWithLastKnownAccount: vi.fn(),
+  createConnectingAppSearchParamsWithLastKnownAccount:
+    vi.fn<
+      (
+        port: chrome.runtime.Port,
+        otherParams: [string, string][]
+      ) => Promise<{ frameId: number; urlParams: URLSearchParams; tabId: number }>
+    >(),
   triggerRequestPopupWindowOpen: vi.fn(),
   sendErrorResponseOnUserPopupClose: vi.fn(),
   trackRpcRequestError: vi.fn(),
@@ -17,7 +24,7 @@ const mocks = vi.hoisted(() => ({
   sendMessage: vi.fn(),
 }));
 
-vi.mock('../rpc-message-handler', () => ({
+vi.mock('../define-rpc-request-handler', () => ({
   defineRpcRequestHandler: (method: string, handler: unknown) => [method, handler],
 }));
 
@@ -51,21 +58,17 @@ function makePsbtHex() {
 
 const bondDescriptor = 'wsh(and_v(v:after(1000),multi(1,unimportant)))';
 
-function makeRequest(params: Record<string, unknown>): SignPsbtRequest {
-  const request: unknown = {
+function makeRequest(params: SignPsbtRequest['params']): SignPsbtRequest {
+  return {
     jsonrpc: '2.0',
     id: 'req-1',
     method: 'signPsbt',
     params,
   };
-  return request as SignPsbtRequest;
 }
 
 function buildPort() {
-  const port: unknown = {
-    sender: { frameId, url: 'https://app.example.com', tab: { id: tabId } },
-  };
-  return port as chrome.runtime.Port;
+  return createMockPort({ frameId, url: 'https://app.example.com', tab: { id: tabId } });
 }
 
 function invokeHandler(request: SignPsbtRequest) {
@@ -79,6 +82,10 @@ function mockPolicyBoundConnection() {
     urlParams: new URLSearchParams({ policyId: 'f1f1f1f1/0/bc1qpolicy/mainnet' }),
     tabId,
   });
+}
+
+function objectContaining(expected: Record<string, unknown>): unknown {
+  return expect.objectContaining(expected);
 }
 
 describe('signPsbtHandler', () => {
@@ -105,7 +112,7 @@ describe('signPsbtHandler', () => {
     expect(mocks.sendMessage).toHaveBeenCalledWith(
       tabId,
       expect.objectContaining({
-        error: expect.objectContaining({
+        error: objectContaining({
           code: RpcErrorCode.INVALID_PARAMS,
           message: 'Proposing a transaction requires a descriptor',
         }),

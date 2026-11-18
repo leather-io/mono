@@ -1,5 +1,5 @@
 import {
-  NonFungiblePostConditionWire,
+  type NonFungiblePostConditionWire,
   PostConditionPrincipalId,
   addressToString,
 } from '@stacks/transactions';

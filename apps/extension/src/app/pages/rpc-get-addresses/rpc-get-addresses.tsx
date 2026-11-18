@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { closeWindow } from '@shared/utils';
 
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
+import { CrossOriginFrameCallout } from '@app/components/cross-origin-frame-callout';
 import { CurrentAccountDisplayer } from '@app/features/current-account/current-account-displayer';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
 
@@ -38,12 +39,15 @@ export function RpcGetAddresses() {
       requester={origin}
       onClickRequestedByLink={focusInitiatingTab}
       banner={
-        missingChain ? (
-          <GetAddressesMissingAccountCallout
-            missingChain={missingChain}
-            hasAvailableRequestedChain={hasAvailableRequestedChain}
-          />
-        ) : undefined
+        <>
+          <CrossOriginFrameCallout mt="space.03" mb="space.05" width="100%" />
+          {missingChain ? (
+            <GetAddressesMissingAccountCallout
+              missingChain={missingChain}
+              hasAvailableRequestedChain={hasAvailableRequestedChain}
+            />
+          ) : undefined}
+        </>
       }
       switchAccount={
         <CurrentAccountDisplayer

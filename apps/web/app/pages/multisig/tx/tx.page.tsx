@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { Box, Flex } from 'leather-styles/jsx';
+import { z } from 'zod';
 import { useProposalActivityItem } from '~/features/multisig/activity/use-proposal-activity-item';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
@@ -17,6 +18,7 @@ import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useMultisigTransaction } from '~/features/multisig/vaults/use-vault-transactions';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
+import { useRouteState } from '~/hooks/use-route-state';
 import { useUserSettings } from '~/hooks/use-user-settings';
 import { useBlockchainActivityByTxIdDetailQuery } from '~/queries/activity/blockchain-activity.query';
 import { useMarketDataQuery } from '~/queries/market-data/market-data.query';
@@ -65,16 +67,16 @@ function isAwaitingSignatureFrom(
   return transaction.status === 'pending' && !signed;
 }
 
-function readAutoSign(state: unknown): boolean {
-  return (
-    typeof state === 'object' && state !== null && 'autoSign' in state && state.autoSign === true
-  );
-}
+const autoSignRouteStateSchema = z
+  .object({ autoSign: z.literal(true) })
+  .nullable()
+  .catch(null);
 
 export function TxDetailPage() {
   const { vaultId, txId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const autoSign = useRouteState(autoSignRouteStateSchema) !== null;
   // location.key is 'default' only when this is the first entry in the session's
   // history (deep link / refresh), where there is nowhere to go back to.
   const canGoBack = location.key !== 'default';
@@ -99,7 +101,7 @@ export function TxDetailPage() {
 
   const onchainDetail = useBlockchainActivityByTxIdDetailQuery(
     getMultisigAccountAddresses(account.data),
-    transaction.data?.txId ?? '',
+    transaction.data?.txId ?? undefined,
     settings,
     Boolean(transaction.data?.txId && account.data)
   );
@@ -112,7 +114,7 @@ export function TxDetailPage() {
 
   useEffect(() => {
     if (autoSignStarted) return;
-    if (!readAutoSign(location.state)) return;
+    if (!autoSign) return;
     if (!transaction.data || !account.data) return;
     if (!isAwaitingSignatureFrom(transaction.data, account.data, me.data?.address)) return;
     setAutoSignStarted(true);
@@ -121,7 +123,7 @@ export function TxDetailPage() {
       { transaction: transaction.data, account: account.data },
       {
         onSuccess: () => toast.success('Signature added'),
-        onError: err => {
+        onError(err) {
           const message = formatTransactionActionError(err);
           if (message) toast.error(message);
         },
@@ -129,7 +131,7 @@ export function TxDetailPage() {
     );
   }, [
     autoSignStarted,
-    location.state,
+    autoSign,
     location.pathname,
     transaction.data,
     account.data,
@@ -185,10 +187,8 @@ export function TxDetailPage() {
 
   const proposer = vault.data.members.find(member => member.user?.id === tx.proposerUserId);
   const isMine = tx.proposerUserId === me.data?.id;
-  const proposerName = isMine
-    ? 'Me'
-    : proposer?.name || (proposer ? truncateMiddle(proposer.address) : 'Unknown');
-  const proposerLabel = `${proposerName}${isMine ? ' (you)' : ''}`;
+  const proposerName = proposer?.name || (proposer ? truncateMiddle(proposer.address) : 'Unknown');
+  const proposerLabel = `${proposerName}${isMine ? ' (me)' : ''}`;
   const initiationDate = formatRelativeTime(new Date(tx.proposalTimestamp * 1000));
 
   const memo =
@@ -198,8 +198,16 @@ export function TxDetailPage() {
   const effectiveStatus = reconcileStatus(tx.status, onchainDetail.data?.activity.status);
   const feeFiat = toFiat(item.activity?.fee, marketData.data);
   const heroTimeline = tx.broadcastAt
-    ? { verb: 'Broadcast', when: formatRelativeDateTime(new Date(tx.broadcastAt)) }
-    : { verb: 'Proposed', when: formatRelativeDateTime(new Date(tx.proposalTimestamp * 1000)) };
+    ? {
+        verb: 'Broadcast',
+        when: formatRelativeDateTime(new Date(tx.broadcastAt)),
+        showProposer: false,
+      }
+    : {
+        verb: 'Proposed',
+        when: formatRelativeDateTime(new Date(tx.proposalTimestamp * 1000)),
+        showProposer: true,
+      };
 
   function showActionError(err: Error) {
     const message = formatTransactionActionError(err);
@@ -231,7 +239,7 @@ export function TxDetailPage() {
     <MultisigPage
       title="Transaction details"
       backTo={multisigPaths.account(vault.data.id, tx.vaultAccountId)}
-      onBack={canGoBack ? () => navigate(-1) : undefined}
+      onBack={canGoBack ? () => void navigate(-1) : undefined}
     >
       <Flex
         direction={['column', 'column', 'row']}
@@ -252,10 +260,15 @@ export function TxDetailPage() {
             caption={
               <Flex alignItems="center" gap="space.02">
                 <span>
-                  {heroTimeline.verb} {heroTimeline.when} by
+                  {heroTimeline.verb} {heroTimeline.when}
+                  {heroTimeline.showProposer && ' by'}
                 </span>
-                <AvatarCircle name={proposerName} size="sm" />
-                <span>{proposerName}</span>
+                {heroTimeline.showProposer && (
+                  <>
+                    <AvatarCircle name={proposerName} size="sm" />
+                    <span>{proposerLabel}</span>
+                  </>
+                )}
               </Flex>
             }
             proposal={{
@@ -271,12 +284,13 @@ export function TxDetailPage() {
           />
         </Box>
         <Box flex={['1', '1', '1']} width="100%" minWidth={0}>
-          <SectionLabel>Signatures</SectionLabel>
+          <SectionLabel noGutter>Signatures</SectionLabel>
           <SignerRollcall
             vault={vault.data}
             account={acct}
             transaction={tx}
             currentUserAddress={me.data?.address}
+            currentUserId={me.data?.id}
             isSigning={signTransaction.isPending}
             isCancelling={cancelTransaction.isPending}
             isBroadcasting={broadcastTransaction.isPending}

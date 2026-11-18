@@ -1,10 +1,10 @@
 import { useSearchParams } from 'react-router';
 
-import { BitcoinStakingPool, getPoolBySignerManager } from '~/data/bitcoin-staking-data';
+import { type BitcoinStakingPool, getPoolBySignerManager } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { byosmContractParam } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 
-import { SignerManagerValidation } from '../queries/create-get-pox5-signer-manager-validation-query-options';
+import { type SignerManagerValidation } from '../queries/create-get-pox5-signer-manager-validation-query-options';
 import { usePox5SignerManagerValidationQuery } from '../queries/pox5-stacking.query';
 import { parseByosmContractInput } from './byosm-contract-schema';
 

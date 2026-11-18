@@ -58,9 +58,7 @@ test.describe('Bitcoin RBF increase fee', () => {
     await expect(increaseFeeBtn).toBeVisible();
     await increaseFeeBtn.click();
 
-    const feeInput = page.getByTestId(ActivitySelectors.TransactionActionFeeInput);
-    await feeInput.clear();
-    await feeInput.fill('25');
+    await homePage.setBitcoinIncreasedFeeRate('25');
 
     const submitBtn = page.getByTestId(ActivitySelectors.TransactionSubmitAction);
     await submitBtn.click();
@@ -108,10 +106,7 @@ test.describe('Bitcoin RBF increase fee', () => {
     await expect(increaseFeeBtn).toBeVisible();
     await increaseFeeBtn.click();
 
-    const feeInput = page.getByTestId(ActivitySelectors.TransactionActionFeeInput);
-
-    await feeInput.clear();
-    await feeInput.fill('10');
+    await homePage.setBitcoinIncreasedFeeRate('10');
 
     const submitBtn = page.getByTestId(ActivitySelectors.TransactionSubmitAction);
     await submitBtn.click();
@@ -139,6 +134,6 @@ test.describe('Bitcoin RBF increase fee', () => {
     const activityList = page.getByTestId(ActivitySelectors.ActivityList);
     await expect(activityList).toBeVisible();
     await expect(activityList.getByText('BTC', { exact: true })).toBeVisible();
-    await expect(page.getByText('Increase fee')).not.toBeVisible();
+    await expect(page.getByText('Increase fee')).toBeHidden();
   });
 });

@@ -247,6 +247,63 @@
     * @leather.io/models bumped to 0.44.1
     * @leather.io/rpc bumped to 2.20.17
 
+## [1.5.58](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.5.57...@leather.io/sdk-v1.5.58) (2026-10-27)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.63.1
+    * @leather.io/rpc bumped to 2.25.4
+
+## [1.5.57](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.5.56...@leather.io/sdk-v1.5.57) (2026-09-29)
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.63.0
+    * @leather.io/rpc bumped to 2.25.3
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/test-config bumped to 0.1.4
+
+## [1.5.56](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.5.55...@leather.io/sdk-v1.5.56) (2026-09-14)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.25.2
+
+## [1.5.55](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.5.54...@leather.io/sdk-v1.5.55) (2026-09-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.62.0
+    * @leather.io/rpc bumped to 2.25.1
+
+## [1.5.54](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.5.53...@leather.io/sdk-v1.5.54) (2026-08-27)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.61.1
+    * @leather.io/rpc bumped to 2.25.0
+
 ## [1.5.53](https://github.com/leather-io/mono/compare/@leather.io/sdk-v1.5.52...@leather.io/sdk-v1.5.53) (2026-08-18)
 
 

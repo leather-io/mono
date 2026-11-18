@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
 
-import { RootState } from '@app/store';
+import { type RootState } from '@app/store/store';
 
 import { policyAdapter } from './policy.slice';
 

@@ -2,7 +2,9 @@ import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
 
-import { RootState } from '@app/store';
+import { type RootState } from '@app/store/store';
+
+import { defaultTokenDetailsTab } from './settings.slice';
 
 function selectSettings(state: RootState) {
   return state.settings;
@@ -68,4 +70,13 @@ function useSeenFeatureIntros() {
 export function useHasSeenFeature(featureId: string) {
   const seenFeatureIntros = useSeenFeatureIntros();
   return seenFeatureIntros.includes(featureId);
+}
+
+const selectTokenDetailsTab = createSelector(
+  selectSettings,
+  state => state.tokenDetailsTab ?? defaultTokenDetailsTab
+);
+
+export function useTokenDetailsTab() {
+  return useSelector(selectTokenDetailsTab);
 }

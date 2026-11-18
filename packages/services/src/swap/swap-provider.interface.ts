@@ -1,16 +1,16 @@
 import type BigNumber from 'bignumber.js';
 
 import {
-  FungibleCryptoAsset,
+  type FungibleCryptoAsset,
   type Money,
-  SwapExecutionData,
-  SwapProviderAsset,
-  SwapProviderId,
-  SwapQuote,
-  SwappableFungibleCryptoAsset,
+  type SwapExecutionData,
+  type SwapProviderAsset,
+  type SwapProviderId,
+  type SwapQuote,
+  type SwappableFungibleCryptoAsset,
 } from '@leather.io/models';
 
-import { AccountRequest } from '../types';
+import { type AccountRequest } from '../types';
 
 export interface GetTargetProviderAssetsParams {
   baseAsset: FungibleCryptoAsset;

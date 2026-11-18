@@ -34,6 +34,7 @@ interface VaultActivityRowProps {
   needsAttention?: boolean;
   location?: ActivityRowLocation;
   href?: string;
+  variant?: 'boxed' | 'plain';
   onClick?(): void;
 }
 
@@ -85,6 +86,7 @@ export function VaultActivityRow({
   needsAttention,
   location,
   href,
+  variant = 'boxed',
   onClick,
 }: VaultActivityRowProps) {
   const { view } = item;
@@ -96,6 +98,7 @@ export function VaultActivityRow({
   return (
     <ListItemBox
       density={scale === 'compact' ? 'compact' : 'default'}
+      variant={variant}
       highlight={needsAttention ? 'attention' : undefined}
       href={href}
       onClick={onClick}

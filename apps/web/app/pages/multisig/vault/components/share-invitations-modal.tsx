@@ -1,7 +1,10 @@
+import { useLayoutEffect, useRef } from 'react';
+
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { CopyAddress } from '~/components/copy-address';
 import { useToast } from '~/features/toasts/use-toast';
 
+import { LEATHER_APP_URL } from '@leather.io/constants';
 import type { Vault, VaultMember } from '@leather.io/models';
 import {
   BasicTooltip,
@@ -16,6 +19,7 @@ import {
 import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
+import { multisigPaths } from '../../multisig.constants';
 import { chainFromNetwork } from '../../multisig.utils';
 
 interface ShareInvitationsModalProps {
@@ -26,7 +30,7 @@ interface ShareInvitationsModalProps {
 }
 
 function inviteLink(vault: Vault): string {
-  return `https://leather.io/multisig?invite=${encodeURIComponent(vault.id)}`;
+  return `${LEATHER_APP_URL}${multisigPaths.index}?invite=${encodeURIComponent(vault.id)}`;
 }
 
 function inviteMessage(vault: Vault, member: VaultMember, creatorName: string | null): string {
@@ -97,9 +101,36 @@ function PendingStatus() {
   );
 }
 
-function CopyMessageButton({ message }: { message: string }) {
-  const { success: showToast } = useToast();
-  const { onCopy } = useClipboard(message);
+function useInvitationClipboard(value: string, isShowing: boolean) {
+  const { onCopy } = useClipboard(value);
+  const lifetime = useRef({ active: false });
+
+  useLayoutEffect(() => {
+    const currentLifetime = { active: isShowing };
+    lifetime.current = currentLifetime;
+    return () => {
+      currentLifetime.active = false;
+    };
+  }, [isShowing]);
+
+  async function copy(): Promise<boolean | undefined> {
+    const currentLifetime = lifetime.current;
+    if (!currentLifetime.active) return undefined;
+    const copied = await onCopy();
+    return currentLifetime.active ? copied : undefined;
+  }
+
+  return { onCopy: copy };
+}
+
+function CopyMessageButton({ message, isShowing }: { message: string; isShowing: boolean }) {
+  const { success: showToast, error: showErrorToast } = useToast();
+  const { onCopy } = useInvitationClipboard(message, isShowing);
+  async function copyMessage() {
+    const copied = await onCopy();
+    if (copied === true) showToast('Invite message copied');
+    if (copied === false) showErrorToast('Unable to copy invite message. Try again.');
+  }
   return (
     <BasicTooltip
       asChild
@@ -112,10 +143,7 @@ function CopyMessageButton({ message }: { message: string }) {
           height="30px"
           px="space.03"
           textStyle="label.03"
-          onClick={() => {
-            onCopy();
-            showToast('Invite message copied');
-          }}
+          onClick={() => void copyMessage()}
         >
           <Flex alignItems="center" gap="space.01">
             <CopyIcon variant="small" />
@@ -127,9 +155,14 @@ function CopyMessageButton({ message }: { message: string }) {
   );
 }
 
-function CopyLinkButton({ link }: { link: string }) {
-  const { success: showToast } = useToast();
-  const { onCopy } = useClipboard(link);
+function CopyLinkButton({ link, isShowing }: { link: string; isShowing: boolean }) {
+  const { success: showToast, error: showErrorToast } = useToast();
+  const { onCopy } = useInvitationClipboard(link, isShowing);
+  async function copyLink() {
+    const copied = await onCopy();
+    if (copied === true) showToast('Invite link copied');
+    if (copied === false) showErrorToast('Unable to copy invite link. Try again.');
+  }
   return (
     <Button
       variant="solid"
@@ -138,10 +171,7 @@ function CopyLinkButton({ link }: { link: string }) {
       px="space.03"
       textStyle="label.03"
       flexShrink={0}
-      onClick={() => {
-        onCopy();
-        showToast('Invite link copied');
-      }}
+      onClick={() => void copyLink()}
     >
       <Flex alignItems="center" gap="space.01" color="ink.background-primary">
         <LinkIcon />
@@ -159,11 +189,13 @@ function PendingInviteRow({
   member,
   creatorName,
   showDivider,
+  isShowing,
 }: {
   vault: Vault;
   member: VaultMember;
   creatorName: string | null;
   showDivider: boolean;
+  isShowing: boolean;
 }) {
   return (
     <Box
@@ -185,8 +217,11 @@ function PendingInviteRow({
         caption={<CopyAddress addr={member.address} wide />}
         action={
           <Flex alignItems="center" gap="space.02" flexShrink={0}>
-            <CopyMessageButton message={inviteMessage(vault, member, creatorName)} />
-            <CopyLinkButton link={inviteLink(vault)} />
+            <CopyMessageButton
+              message={inviteMessage(vault, member, creatorName)}
+              isShowing={isShowing}
+            />
+            <CopyLinkButton link={inviteLink(vault)} isShowing={isShowing} />
           </Flex>
         }
       />
@@ -229,6 +264,7 @@ export function ShareInvitationsModal({
                 member={member}
                 creatorName={creatorName}
                 showDivider={index > 0}
+                isShowing={isShowing}
               />
             ))}
           </Box>

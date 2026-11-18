@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router';
 
-import { Box, styled } from 'leather-styles/jsx';
+import { Box, Flex, styled } from 'leather-styles/jsx';
 import type { VaultActivityItem } from '~/features/multisig/activity/harmonize-vault-activity';
 
 import type { ActivityGroup } from '@leather.io/features';
@@ -14,6 +14,10 @@ import { type ActivityRowLocation, VaultActivityRow } from './vault-activity-row
 interface VaultActivityListProps {
   items: VaultActivityItem[];
   scale?: TransactionRowScale;
+  // 'plain' renders bare rows without the bordered list container — for
+  // read-only embeds (e.g. the asset detail sheet) where rows aren't clickable
+  // and the surrounding section already provides the frame.
+  variant?: 'contained' | 'plain';
   limit?: number;
   vaultNamesById?: ReadonlyMap<string, string>;
   accountNamesById?: ReadonlyMap<string, string>;
@@ -95,6 +99,7 @@ function groupVaultActivityByTier(items: VaultActivityItem[]): ActivityGroup<Vau
 export function VaultActivityList({
   items,
   scale,
+  variant = 'contained',
   limit,
   vaultNamesById,
   accountNamesById,
@@ -112,6 +117,7 @@ export function VaultActivityList({
         key={`${item.view.key}:${item.vaultAccountId ?? ''}`}
         item={item}
         scale={scale}
+        variant={variant === 'plain' ? 'plain' : 'boxed'}
         needsAttention={needsAttention(item)}
         location={location}
         href={link?.href}
@@ -126,6 +132,33 @@ export function VaultActivityList({
   // with a single tier (e.g. history only) renders as a plain list.
   const showLabels = tiers.length > 1;
 
+  const overflowNote =
+    limit !== undefined && items.length > limit ? (
+      <styled.p
+        textStyle="caption.01"
+        color="ink.text-subdued"
+        textAlign="center"
+        px="space.04"
+        py="space.03"
+      >
+        Open an account to view its full history
+      </styled.p>
+    ) : null;
+
+  if (variant === 'plain') {
+    return (
+      <Flex direction="column" gap="space.02">
+        {tiers.map(tier => (
+          <Flex key={tier.key} direction="column" gap="space.03">
+            {showLabels ? <GroupLabel>{tier.label}</GroupLabel> : null}
+            {tier.items.map(renderRow)}
+          </Flex>
+        ))}
+        {overflowNote}
+      </Flex>
+    );
+  }
+
   return (
     <ListContainer p="space.02">
       {tiers.map(tier => (
@@ -134,17 +167,7 @@ export function VaultActivityList({
           {tier.items.map(renderRow)}
         </Box>
       ))}
-      {limit !== undefined && items.length > limit ? (
-        <styled.p
-          textStyle="caption.01"
-          color="ink.text-subdued"
-          textAlign="center"
-          px="space.04"
-          py="space.03"
-        >
-          Open an account to view its full history
-        </styled.p>
-      ) : null}
+      {overflowNote}
     </ListContainer>
   );
 }

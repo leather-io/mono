@@ -87,7 +87,7 @@ export function PsbtDescriptorPolicy({
           <Stack gap="space.04">
             <Stack gap="space.01">
               <styled.span textStyle="label.02">From block {bondDetails.unlockHeight}</styled.span>
-              <styled.span textStyle="caption.01" color="ink.text-subdued">
+              <styled.span textStyle="caption.01" color="ink.text-secondary">
                 Requires{' '}
                 {formatVaultCosigners(bondDetails.vaultThreshold, bondDetails.vaultKeyCount)}
               </styled.span>
@@ -96,18 +96,18 @@ export function PsbtDescriptorPolicy({
               <styled.span textStyle="label.02">
                 Before block {bondDetails.unlockHeight}
               </styled.span>
-              <styled.span textStyle="caption.01" color="ink.text-subdued">
+              <styled.span textStyle="caption.01" color="ink.text-secondary">
                 Requires{' '}
                 {formatVaultCosigners(bondDetails.vaultThreshold, bondDetails.vaultKeyCount)}, plus
                 a signature from the counterparty key and the secret matching the SHA-256 hash
               </styled.span>
-              <styled.span textStyle="caption.01" color="ink.text-subdued">
+              <styled.span textStyle="caption.01" color="ink.text-secondary">
                 Counterparty key
               </styled.span>
               <styled.code textStyle="caption.01" wordBreak="break-all">
                 {bondDetails.counterpartyKey}
               </styled.code>
-              <styled.span textStyle="caption.01" color="ink.text-subdued">
+              <styled.span textStyle="caption.01" color="ink.text-secondary">
                 SHA-256 hash
               </styled.span>
               <styled.code textStyle="caption.01" wordBreak="break-all">

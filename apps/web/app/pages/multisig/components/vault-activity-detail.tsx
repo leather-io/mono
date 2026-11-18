@@ -8,6 +8,7 @@ import { getActivityActionLine } from '~/features/multisig/activity/activity-act
 import {
   type BlockchainActivityView,
   getBitcoinExplorerLink,
+  getStacksExplorerApiUrl,
   getStacksExplorerLink,
 } from '@leather.io/features';
 import type {
@@ -53,6 +54,7 @@ function explorerLink(
   if (chain === 'bitcoin') {
     return getBitcoinExplorerLink({
       networkPreference: network.chain.bitcoin.bitcoinNetwork,
+      bitcoinUrl: network.chain.bitcoin.bitcoinUrl,
       id: txid,
       type: 'tx',
     });
@@ -61,6 +63,7 @@ function explorerLink(
     mode: network.chain.bitcoin.mode,
     type: 'txid',
     value: txid,
+    apiUrl: getStacksExplorerApiUrl(network.chain.stacks.url),
   });
 }
 
@@ -163,6 +166,7 @@ export function VaultActivityDetail({
                 mode,
                 type: 'address',
                 value: activity.contract.contractId,
+                apiUrl: getStacksExplorerApiUrl(network.chain.stacks.url),
               })}
               withIcon
             >

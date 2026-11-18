@@ -1,21 +1,20 @@
-import { ChainId } from '@stacks/network';
-
 import {
   BITCOIN_API_BASE_URL_MAINNET,
   BITCOIN_API_BASE_URL_TESTNET4,
-  type BitcoinNetwork,
   type NetworkConfiguration,
   bitcoinNetworkToNetworkMode,
   bitcoinNetworks,
 } from '@leather.io/models';
+import { stacksChainIdToCoreNetworkMode } from '@leather.io/stacks';
 
-import { PersistedNetworkConfiguration } from './networks.slice';
+import { type PersistedNetworkConfiguration } from './networks.slice';
 
 function checkBitcoinNetworkProperties(
   network: PersistedNetworkConfiguration
 ): PersistedNetworkConfiguration {
   if (!network.bitcoinNetwork || !network.bitcoinUrl) {
-    const bitcoinNetwork = network.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet4';
+    const isMainnet = stacksChainIdToCoreNetworkMode(network.chainId) === 'mainnet';
+    const bitcoinNetwork = isMainnet ? 'mainnet' : 'testnet4';
     return {
       id: network.id,
       name: network.name,
@@ -24,31 +23,29 @@ function checkBitcoinNetworkProperties(
       url: network.url,
       bitcoinNetwork,
       mode: bitcoinNetworkToNetworkMode(bitcoinNetwork),
-      bitcoinUrl:
-        network.chainId === ChainId.Mainnet
-          ? BITCOIN_API_BASE_URL_MAINNET
-          : BITCOIN_API_BASE_URL_TESTNET4,
+      bitcoinUrl: isMainnet ? BITCOIN_API_BASE_URL_MAINNET : BITCOIN_API_BASE_URL_TESTNET4,
     };
   } else {
     return network;
   }
 }
 
-function isValidBitcoinNetwork(network: string): network is BitcoinNetwork {
-  return bitcoinNetworks.includes(network as BitcoinNetwork);
+function findValidBitcoinNetwork(network: string) {
+  return bitcoinNetworks.find(bitcoinNetwork => bitcoinNetwork === network);
 }
 
 export function transformNetworkStateToMultichainStucture(
   state: Record<string, PersistedNetworkConfiguration>
-) {
+): Record<string, NetworkConfiguration> {
   return Object.fromEntries(
-    Object.entries(state)
-      .map(([key, network]) => {
-        if (!network) return ['', null];
-        const { id, name, chainId, subnetChainId, url, bitcoinNetwork, bitcoinUrl } =
-          checkBitcoinNetworkProperties(network);
+    Object.entries(state).flatMap(([key, network]): [string, NetworkConfiguration][] => {
+      if (!network) return [];
+      const { id, name, chainId, subnetChainId, url, bitcoinNetwork, bitcoinUrl } =
+        checkBitcoinNetworkProperties(network);
+      const validBitcoinNetwork = findValidBitcoinNetwork(bitcoinNetwork);
 
-        return [
+      return [
+        [
           key,
           {
             id,
@@ -62,16 +59,16 @@ export function transformNetworkStateToMultichainStucture(
               },
               bitcoin: {
                 blockchain: 'bitcoin',
-                bitcoinNetwork: isValidBitcoinNetwork(bitcoinNetwork) ? bitcoinNetwork : 'testnet4',
-                mode: isValidBitcoinNetwork(bitcoinNetwork)
-                  ? bitcoinNetworkToNetworkMode(bitcoinNetwork)
+                bitcoinNetwork: validBitcoinNetwork ?? 'testnet4',
+                mode: validBitcoinNetwork
+                  ? bitcoinNetworkToNetworkMode(validBitcoinNetwork)
                   : 'testnet',
                 bitcoinUrl: bitcoinUrl ?? BITCOIN_API_BASE_URL_TESTNET4,
               },
             },
           },
-        ];
-      })
-      .filter(([_, value]) => value !== null)
-  ) as Record<string, NetworkConfiguration>;
+        ],
+      ];
+    })
+  );
 }

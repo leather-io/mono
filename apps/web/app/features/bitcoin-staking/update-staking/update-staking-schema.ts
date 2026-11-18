@@ -6,11 +6,21 @@ import {
   validateStxAmountPrecision,
 } from '~/utils/validators/stx-amount-validator';
 
-import { isValidBitcoinAddress, isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
-import { BitcoinNetworkModes } from '@leather.io/models';
-import { stxToMicroStx } from '@leather.io/utils';
+import { type BitcoinNetworkModes } from '@leather.io/models';
+import { type stxToMicroStx } from '@leather.io/utils';
 
-import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
+import {
+  type PoolMinStake,
+  buildPayoutPreference,
+  formatMinStakeStx,
+  meetsPoolMinStake,
+  stxInputToMicroStx,
+  validatePayoutSatsFields,
+  validateRewardAddress,
+  wantsBtcPayout,
+} from '../start-staking/utils/staking-form-schema';
+import { type Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
+import { type PoolPayoutMode, isBtcPayoutRequired } from '../utils/pool-payout';
 
 export const updateStakingMessages = {
   nothingToUpdate:
@@ -24,25 +34,31 @@ export const updateStakingMessages = {
 // an existing BTC payout setting.
 function normalizePayout(payout: Pox5PayoutPreference | null | undefined): string | null {
   if (!payout) return null;
-  return `${payout.btcRewardAddress}:${payout.maxFeeSats}`;
+  return `${payout.btcRewardAddress}:${payout.maxFeeSats ?? ''}:${payout.minClaimSats ?? ''}`;
 }
 
 interface CreateUpdateStakingSchemaArgs {
   availableBalance: ReturnType<typeof stxToMicroStx>;
   maxCyclesToExtend: number;
-  supportsBtcPayout: boolean;
+  payoutMode: PoolPayoutMode;
+  supportsMinClaim: boolean;
   networkMode: BitcoinNetworkModes;
   currentPayout: Pox5PayoutPreference | null;
   isSwitching: boolean;
+  currentAmountMicroStx?: bigint;
+  minStake?: PoolMinStake;
 }
 
 export function createUpdateStakingSchema({
   availableBalance,
   maxCyclesToExtend,
-  supportsBtcPayout,
+  payoutMode,
+  supportsMinClaim,
   networkMode,
   currentPayout,
   isSwitching,
+  currentAmountMicroStx,
+  minStake,
 }: CreateUpdateStakingSchemaArgs) {
   const chooseExtendCycles =
     maxCyclesToExtend === 0
@@ -51,10 +67,10 @@ export function createUpdateStakingSchema({
   return z
     .object({
       cyclesToExtend: z.coerce
-        .number({ error: () => chooseExtendCycles })
-        .int(chooseExtendCycles)
-        .min(0, chooseExtendCycles)
-        .max(maxCyclesToExtend, chooseExtendCycles),
+        .number()
+        .catch(Number.NaN)
+        .refine(value => Number.isInteger(value), chooseExtendCycles)
+        .refine(value => value >= 0 && value <= maxCyclesToExtend, chooseExtendCycles),
       amountIncrease: z
         .string()
         .optional()
@@ -70,38 +86,43 @@ export function createUpdateStakingSchema({
       payoutEnabled: z.boolean(),
       rewardAddress: z.string().optional(),
       maxFeeSats: z.string().optional(),
+      minClaimSats: z.string().optional(),
     })
     .superRefine((data, ctx) => {
-      if (supportsBtcPayout && data.payoutEnabled) {
-        if (!data.rewardAddress || !isValidBitcoinAddress(data.rewardAddress)) {
-          ctx.addIssue({
-            code: 'custom',
-            message: validationMessages.addressNotValid,
-            path: ['rewardAddress'],
-          });
-        } else if (!isValidBitcoinNetworkAddress(data.rewardAddress, networkMode)) {
-          ctx.addIssue({
-            code: 'custom',
-            message: validationMessages.addressIncorrectNetwork,
-            path: ['rewardAddress'],
-          });
-        }
-        if (!data.maxFeeSats || !/^\d+$/.test(data.maxFeeSats) || BigInt(data.maxFeeSats) <= 0n) {
-          ctx.addIssue({
-            code: 'custom',
-            message: validationMessages.enterMaxWithdrawalFee,
-            path: ['maxFeeSats'],
-          });
+      if (wantsBtcPayout(data, payoutMode)) {
+        validateRewardAddress(data.rewardAddress, networkMode, message =>
+          ctx.addIssue({ code: 'custom', message, path: ['rewardAddress'] })
+        );
+        if (!isBtcPayoutRequired(payoutMode)) {
+          validatePayoutSatsFields(data, supportsMinClaim, (message, path) =>
+            ctx.addIssue({ code: 'custom', message, path: [path] })
+          );
         }
       }
 
-      const increase = data.amountIncrease ? Number(data.amountIncrease) : 0;
-      const formPayout =
-        supportsBtcPayout && data.payoutEnabled && data.rewardAddress && data.maxFeeSats
-          ? `${data.rewardAddress}:${data.maxFeeSats}`
-          : null;
-      const payoutChanged = formPayout !== normalizePayout(currentPayout);
-      if (!isSwitching && data.cyclesToExtend === 0 && increase === 0 && !payoutChanged) {
+      const increaseMicroStx =
+        data.amountIncrease && /^\d+(\.\d+)?$/.test(data.amountIncrease)
+          ? stxInputToMicroStx(data.amountIncrease)
+          : 0n;
+      if (
+        minStake &&
+        currentAmountMicroStx !== undefined &&
+        !meetsPoolMinStake(currentAmountMicroStx + increaseMicroStx, minStake)
+      ) {
+        ctx.addIssue({
+          code: 'custom',
+          message: validationMessages.totalStakeBelowPoolMinimum(
+            minStake.poolName,
+            formatMinStakeStx(minStake)
+          ),
+          path: ['amountIncrease'],
+        });
+      }
+
+      const payoutChanged =
+        normalizePayout(buildPayoutPreference(data, payoutMode, supportsMinClaim)) !==
+        normalizePayout(currentPayout);
+      if (!isSwitching && data.cyclesToExtend === 0 && increaseMicroStx === 0n && !payoutChanged) {
         ctx.addIssue({
           code: 'custom',
           message: updateStakingMessages.nothingToUpdate,

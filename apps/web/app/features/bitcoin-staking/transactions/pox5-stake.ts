@@ -1,15 +1,15 @@
 import {
-  ClarityValue,
+  type ClarityValue,
   contractPrincipalCV,
   postConditionToHex,
   serializeCV,
   uintCV,
 } from '@stacks/transactions';
 import { POX5_MAX_NUM_CYCLES } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
-import { StxCallContractParams } from '~/utils/leather-sdk';
+import { type StxCallContractParams } from '~/utils/leather-sdk';
 
 import { parseContractId } from '../utils/contract-id';
-import { Pox5PayoutPreference, encodeSignerCalldata } from './pox5-signer-calldata';
+import { type Pox5PayoutPreference, encodeSignerCalldata } from './pox5-signer-calldata';
 
 export interface StakeArgs {
   signerManagerContractId: string;

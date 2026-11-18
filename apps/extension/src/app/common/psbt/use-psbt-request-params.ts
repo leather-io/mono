@@ -7,6 +7,7 @@ import { initialSearchParams } from '../initial-search-params';
 
 export function useRpcSignPsbtParams() {
   const { frameId, origin, tabId } = useDefaultRequestParams();
+  const allowedSighash = initialSearchParams.getAll('allowedSighash');
   const broadcast = initialSearchParams.get('broadcast');
   const descriptor = initialSearchParams.get('descriptor');
   const psbtHex = initialSearchParams.get('hex');
@@ -15,6 +16,7 @@ export function useRpcSignPsbtParams() {
 
   return useMemo(
     () => ({
+      allowedSighash: undefinedIfLengthZero(ensureArray(allowedSighash).map(h => Number(h))),
       broadcast: broadcast === 'true',
       descriptor: descriptor ?? undefined,
       frameId,
@@ -24,6 +26,6 @@ export function useRpcSignPsbtParams() {
       signAtIndex: undefinedIfLengthZero(ensureArray(signAtIndex).map(h => Number(h))),
       tabId: tabId ?? 0,
     }),
-    [broadcast, descriptor, frameId, origin, psbtHex, requestId, signAtIndex, tabId]
+    [allowedSighash, broadcast, descriptor, frameId, origin, psbtHex, requestId, signAtIndex, tabId]
   );
 }

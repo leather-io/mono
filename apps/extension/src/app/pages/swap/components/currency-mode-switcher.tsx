@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Box, styled } from 'leather-styles/jsx';
 
-import { SecondaryAmount } from '@leather.io/state/swap';
+import { type SecondaryAmount } from '@leather.io/state/swap';
 import { ArrowTopBottomIcon, SkeletonLoader } from '@leather.io/ui';
 import { assertUnreachable } from '@leather.io/utils';
 

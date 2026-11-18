@@ -4,7 +4,7 @@ import {
   type NetworkConfiguration,
   WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
-import { type RpcParams, stxAddAccount } from '@leather.io/rpc';
+import { type RpcParams, type stxAddAccount } from '@leather.io/rpc';
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
 
 import { makePolicyId } from '@app/store/policy/policy-store.utils';

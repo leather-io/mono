@@ -5,7 +5,6 @@ import { groupBy, isNonNullish, keys } from 'remeda';
 import {
   CryptoAssetBalance,
   CryptoAssetId,
-  FungibleAssetId,
   FungibleCryptoAsset,
   type Money,
   SwapAsset,
@@ -21,20 +20,26 @@ import {
   isSameAsset,
   matchesAssetId,
   serializeAssetId,
+  withTimeout,
 } from '@leather.io/utils';
 
+import { toFungibleAssetId } from '../assets/fungible-asset-id.utils';
 import { FungibleAssetService } from '../assets/fungible-asset.service';
 import { AccountQuotedBtcBalance, BtcBalancesService } from '../balances/btc-balances.service';
 import { Sip10AddressBalance, Sip10BalancesService } from '../balances/sip10-balances.service';
 import { AddressQuotedStxBalance, StxBalancesService } from '../balances/stx-balances.service';
+import type { EmilyDepositRequest } from '../infrastructure/api/emily/emily-api.types';
 import { AccountRequest } from '../types';
 import { AlexSwapProviderService } from './alex-swap-provider.service';
 import { BitflowBffApiSwapProviderService } from './bitflow-bff-api-swap-provider.service';
 import { BitflowSdkSwapProviderService } from './bitflow-sdk-swap-provider.service';
 import { SbtcBridgeSwapProviderService } from './sbtc-bridge-swap-provider.service';
+import type { SbtcDepositNotificationResult } from './sbtc-bridge-swap-provider.utils';
 import { SwapProviderService } from './swap-provider.interface';
 import { hasValidMinReceiveAmountPostCondition } from './swap.utils';
 import { VelarSwapProviderService } from './velar-swap-provider.service';
+
+const swapQuoteTimeoutMs = 10_000;
 
 export interface AccountSwapAsset extends SwapAsset {
   balance?: {
@@ -60,7 +65,6 @@ export class SwapService {
 
   private getSwapProviderServices(): SwapProviderService[] {
     return [
-      this.velarProvider,
       this.alexProvider,
       this.bitflowSdkProvider,
       this.bitflowBffApiProvider,
@@ -69,7 +73,13 @@ export class SwapService {
   }
 
   private getSwapProviderServiceById(providerId: SwapProviderId): SwapProviderService {
-    return this.getSwapProviderServices().find(service => service.providerId === providerId)!;
+    const providerService = this.getSwapProviderServices().find(
+      service => service.providerId === providerId
+    );
+    if (!providerService) {
+      throw new Error(`No swap provider service registered for provider: ${providerId}`);
+    }
+    return providerService;
   }
 
   public async getAccountBaseSwapAssets(
@@ -141,10 +151,15 @@ export class SwapService {
   }
 
   public async getBaseSwapAssets(signal?: AbortSignal): Promise<SwapAsset[]> {
-    const providerSwapAssets = await Promise.all(
+    const providerSwapAssets = await Promise.allSettled(
       this.getSwapProviderServices().map(service => service.getBaseProviderAssets(signal))
     );
-    return await this.combineProviderAssets(providerSwapAssets.flat());
+    return await this.combineProviderAssets(
+      providerSwapAssets
+        .filter(result => result.status === 'fulfilled')
+        .map(result => result.value)
+        .flat()
+    );
   }
 
   public async getTargetSwapAssets(
@@ -165,8 +180,13 @@ export class SwapService {
         signal
       )
     );
-    const targetAssets = await Promise.all(providerServiceCalls);
-    return await this.combineProviderAssets(targetAssets.flat());
+    const targetAssets = await Promise.allSettled(providerServiceCalls);
+    return await this.combineProviderAssets(
+      targetAssets
+        .filter(result => result.status === 'fulfilled')
+        .map(result => result.value)
+        .flat()
+    );
   }
 
   private async combineProviderAssets(
@@ -177,9 +197,10 @@ export class SwapService {
     );
 
     const assetResults = await Promise.allSettled(
-      keys(groupedAssets).map(key =>
-        this.fungibleAssetService.getVisibleAsset(deserializeAssetId(key) as FungibleAssetId)
-      )
+      keys(groupedAssets)
+        .map(key => toFungibleAssetId(deserializeAssetId(key)))
+        .filter(isNonNullish)
+        .map(assetId => this.fungibleAssetService.getSwapAsset(assetId))
     );
 
     function assetsToSwapAssets(result: PromiseSettledResult<FungibleCryptoAsset | null>) {
@@ -211,20 +232,26 @@ export class SwapService {
           b => b.providerId === targetProviderAsset.providerId
         );
         if (!baseProviderAsset) return;
-        return this.getSwapProviderServiceById(targetProviderAsset.providerId).getSwapQuotes(
-          {
-            baseAsset: baseAsset.asset,
-            baseProviderAsset: baseProviderAsset,
-            targetAsset: targetAsset.asset,
-            targetProviderAsset: targetProviderAsset,
-            baseAmount,
-          },
-          signal
+        return withTimeout(
+          this.getSwapProviderServiceById(targetProviderAsset.providerId).getSwapQuotes(
+            {
+              baseAsset: baseAsset.asset,
+              baseProviderAsset,
+              targetAsset: targetAsset.asset,
+              targetProviderAsset,
+              baseAmount,
+            },
+            signal
+          ),
+          swapQuoteTimeoutMs
         );
       })
       .filter(isNonNullish);
-    const swapQuotes = await Promise.all(providerServiceCalls);
-    return swapQuotes.flat();
+    const swapQuotes = await Promise.allSettled(providerServiceCalls);
+    return swapQuotes
+      .filter(result => result.status === 'fulfilled')
+      .map(result => result.value)
+      .flat();
   }
 
   public async getSwapExecutionData(
@@ -247,5 +274,15 @@ export class SwapService {
       throw new Error('Min receive amount post condition not found');
     }
     return executionData;
+  }
+
+  public async getSbtcSignersPublicKey(signal?: AbortSignal): Promise<string> {
+    return this.sbtcBridgeProvider.getSignersPublicKey({ signal });
+  }
+
+  public async notifySbtcDeposit(
+    request: EmilyDepositRequest
+  ): Promise<SbtcDepositNotificationResult> {
+    return this.sbtcBridgeProvider.notifyDeposit(request);
   }
 }

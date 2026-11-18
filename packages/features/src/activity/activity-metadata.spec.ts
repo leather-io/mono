@@ -5,6 +5,7 @@ import type {
   ConnectAppActivity,
   DeploySmartContractActivity,
   ExecuteSmartContractActivity,
+  GeneralActivity,
   LockAssetActivity,
   ReceiveAssetActivity,
   SendAssetActivity,
@@ -45,24 +46,24 @@ describe('activity-metadata', () => {
     });
 
     it('returns false for activity without txid', () => {
-      const activity = {
+      const activity: ConnectAppActivity = {
         ...baseActivity,
         type: 'connectApp',
         appName: 'Test App',
         appUrl: 'https://test.com',
       };
-      expect(hasTxDetails(activity as any)).toBe(false);
+      expect(hasTxDetails(activity)).toBe(false);
     });
 
     it('returns false for activity without status', () => {
-      const activity = {
-        ...baseActivity,
-        txid: 'tx123',
+      const baseActivityWithTxid = { ...baseActivity, txid: 'tx123' };
+      const activity: ConnectAppActivity = {
+        ...baseActivityWithTxid,
         type: 'connectApp',
         appName: 'Test App',
         appUrl: 'https://test.com',
       };
-      expect(hasTxDetails(activity as any)).toBe(false);
+      expect(hasTxDetails(activity)).toBe(false);
     });
   });
 
@@ -194,40 +195,46 @@ describe('activity-metadata', () => {
       expect(getActivityTitle(activity)).toBe('Message App');
     });
 
-    it('returns Wallet Activity when app name is missing', () => {
-      const activity = {
+    it('returns Wallet Activity when app name is empty', () => {
+      const activity: ConnectAppActivity = {
         ...baseActivity,
         type: 'connectApp',
+        appName: '',
         appUrl: 'https://app.com',
       };
-      expect(getActivityTitle(activity as any)).toBe('Wallet Activity');
+      expect(getActivityTitle(activity)).toBe('Wallet Activity');
     });
 
     it('returns title for announcement activity', () => {
-      const activity = {
-        ...baseActivity,
+      const activity: GeneralActivity = {
+        level: 'app',
+        timestamp: 0,
         type: 'receiveAnnouncement',
         title: 'Important Update',
-        body: 'Check this out',
+        message: 'Check this out',
       };
-      expect(getActivityTitle(activity as any)).toBe('Important Update');
+      expect(getActivityTitle(activity)).toBe('Important Update');
     });
 
-    it('returns Announcement when title is missing', () => {
-      const activity = {
-        ...baseActivity,
+    it('returns Announcement when title is empty', () => {
+      const activity: GeneralActivity = {
+        level: 'app',
+        timestamp: 0,
         type: 'walletAdded',
-        body: 'Wallet was added',
+        title: '',
+        message: 'Wallet was added',
       };
-      expect(getActivityTitle(activity as any)).toBe('Announcement');
+      expect(getActivityTitle(activity)).toBe('Announcement');
     });
 
     it('returns Unknown for unrecognized activity types', () => {
-      const activity = {
+      const activity: ConnectAppActivity = {
         ...baseActivity,
-        type: 'unknownType',
+        type: 'connectApp',
+        appName: 'Test App',
+        appUrl: 'https://test.com',
       };
-      expect(getActivityTitle(activity as any)).toBe('Unknown');
+      expect(getActivityTitle(Object.assign(activity, { type: 'unknownType' }))).toBe('Unknown');
     });
   });
 

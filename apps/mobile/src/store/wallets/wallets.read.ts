@@ -1,16 +1,16 @@
-import { WalletId } from '@leather.io/models';
+import { type WalletId } from '@leather.io/models';
 import {
-  AddWalletPayload,
-  WalletStore,
+  type AddWalletPayload,
+  type WalletStore,
   userAddsWallet,
   userRemovesWallet,
   walletAdapter,
 } from '@leather.io/state/wallet';
 
-import { RootState } from '..';
-import { Account } from '../accounts/accounts';
+import { type Account } from '../accounts/accounts';
 import { useAccountsByFingerprint } from '../accounts/accounts.read';
 import { mnemonicStore } from '../secure-store/mnemonic-store';
+import { type RootState } from '../store';
 import { useAppDispatch, useAppSelector } from '../utils';
 
 const selectors = walletAdapter.getSelectors((state: RootState) => state.wallets);

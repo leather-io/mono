@@ -24,7 +24,7 @@ export function createBnsNameQueryConfig(fullName: string, settings: UserSetting
     retryOnMount: false,
     staleTime: 3600000,
     gcTime: 3600000,
-  } satisfies UseQueryOptions<BnsName | null, Error>;
+  } satisfies UseQueryOptions<BnsName | null>;
 }
 
 export function createAccountPrimaryBnsProfileQueryKey(
@@ -52,7 +52,7 @@ export function createAccountPrimaryBnsProfileQueryConfig(
     retryOnMount: false,
     staleTime: 3600000,
     gcTime: 3600000,
-  } satisfies UseQueryOptions<BnsProfile | null, Error>;
+  } satisfies UseQueryOptions<BnsProfile | null>;
 }
 
 export function createAccountBnsNamesQueryKey(request: AccountRequest, settings: UserSettings) {
@@ -74,5 +74,5 @@ export function createAccountBnsNamesQueryConfig(request: AccountRequest, settin
     retryOnMount: false,
     staleTime: 3600000,
     gcTime: 3600000,
-  } satisfies UseQueryOptions<AccountBnsName[], Error>;
+  } satisfies UseQueryOptions<AccountBnsName[]>;
 }

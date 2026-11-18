@@ -7,8 +7,11 @@ type RouteParams = Record<string, string | number | undefined>;
  * @returns The route string with parameters replaced.
  */
 export function replaceRouteParams(route: string, params: RouteParams): string {
-  return Object.entries(params).reduce(
-    (path, [key, value]) => path.replace(`:${key}`, value?.toString() ?? ''),
-    route
-  );
+  return Object.entries(params).reduce((path, [key, value]) => {
+    const encodedValue = value === undefined ? '' : encodeURIComponent(value);
+    const optionalSegment = `/:${key}?`;
+    if (encodedValue === '' && path.includes(optionalSegment))
+      return path.replace(optionalSegment, '');
+    return path.replace(`:${key}?`, encodedValue).replace(`:${key}`, encodedValue);
+  }, route);
 }

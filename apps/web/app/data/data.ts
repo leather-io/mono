@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { typedKeys } from '~/utils/typed-keys';
 
 // Providers are partner entities that offer yeild based services
 const providers = {
@@ -12,6 +13,11 @@ const providers = {
     name: 'Fast Pool',
     url: 'https://fastpool.org',
   },
+  esbeeDao: {
+    providerId: 'esbeeDao',
+    name: 'Esbee DAO',
+    url: 'https://www.esbee-dao.org',
+  },
   fastPoolV2: {
     providerId: 'fastPoolV2',
     name: 'Fast Pool V2',
@@ -21,6 +27,11 @@ const providers = {
     providerId: 'planbetter',
     name: 'PlanBetter',
     url: 'https://planbetter.com',
+  },
+  asymmetricResearch: {
+    providerId: 'asymmetricResearch',
+    name: 'Asymmetric Research',
+    url: 'https://www.asymmetric.re',
   },
   restake: {
     providerId: 'restake',
@@ -45,7 +56,7 @@ const providers = {
 } as const;
 
 export type ProviderId = keyof typeof providers;
-export const providerIdSchema = z.enum(Object.keys(providers) as [ProviderId, ...ProviderId[]]);
+export const providerIdSchema = z.enum(typedKeys(providers));
 
 export interface LiquidStackingPool {
   providerId: ProviderId;
@@ -61,7 +72,7 @@ const liquidStackingPoolData = {
     ...providers.stackingDao,
     slug: 'stacking-dao',
     estApr: '5%',
-    fee: '5%',
+    fee: '10%',
     payout: 'stSTX',
   },
   lisa: {

@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/require-await */
+import { ClarityType } from '@stacks/transactions';
+import BigNumber from 'bignumber.js';
 import { inject, injectable } from 'inversify';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
@@ -9,18 +11,25 @@ import {
   SwapProviderAsset,
   SwapProviderId,
 } from '@leather.io/models';
-import { createMoney, getAssetId, isSameAsset, isSameAssetId } from '@leather.io/utils';
+import { createMoney, delay, getAssetId, isSameAsset, isSameAssetId } from '@leather.io/utils';
 
 import { EmilyApiClient } from '../infrastructure/api/emily/emily-api.client';
+import type { EmilyDepositRequest } from '../infrastructure/api/emily/emily-api.types';
+import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
+import type { ApiRequestOptions } from '../infrastructure/api/types';
 import { selectBitcoinNetworkMode } from '../infrastructure/settings/settings.selectors';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
 import {
+  type SbtcDepositNotificationResult,
   calculateSignerSweepTxFee,
+  classifySbtcNotifyError,
+  getRemainingSbtcSupply,
   getSbtcBridgeExecutionConstraints,
   getSbtcWithdrawalContractCallData,
   sbtcStacksAddressMap,
+  toXOnlyPublicKeyHex,
 } from './sbtc-bridge-swap-provider.utils';
 import {
   type GetSwapExecutionDataParams,
@@ -29,6 +38,9 @@ import {
   SwapProviderService,
 } from './swap-provider.interface';
 import { mapToStacksProtocol } from './swap.utils';
+
+const sbtcNotifyMaxAttempts = 3;
+const sbtcNotifyRetryDelayMs = 1_000;
 
 @injectable()
 export class SbtcBridgeSwapProviderService implements SwapProviderService {
@@ -43,14 +55,74 @@ export class SbtcBridgeSwapProviderService implements SwapProviderService {
   constructor(
     private readonly leatherApiClient: LeatherApiClient,
     private readonly emilyApiClient: EmilyApiClient,
+    private readonly stacksApiClient: HiroStacksApiClient,
     @inject(Types.SettingsService) private readonly settingsService: SettingsService
   ) {}
 
-  private getSbtcSwapAsset(): SwapProviderAsset {
+  private getSbtcContractAddress() {
     const network = bitcoinNetworkModeToCoreNetworkMode(
       selectBitcoinNetworkMode(this.settingsService.getSettings())
     );
-    const sbtcAddress = sbtcStacksAddressMap[network];
+    return sbtcStacksAddressMap[network];
+  }
+
+  private async getSbtcTotalSupply({ signal }: ApiRequestOptions): Promise<BigNumber | null> {
+    try {
+      const result = await this.stacksApiClient.callReadOnlyFunction(
+        {
+          contractAddress: this.getSbtcContractAddress(),
+          contractName: 'sbtc-token',
+          functionName: 'get-total-supply',
+          functionArgs: [],
+        },
+        { signal }
+      );
+      if (result.type !== ClarityType.ResponseOk || result.value.type !== ClarityType.UInt) {
+        return null;
+      }
+      return new BigNumber(result.value.value.toString());
+    } catch {
+      return null;
+    }
+  }
+
+  async getSignersPublicKey({ signal }: ApiRequestOptions = {}): Promise<string> {
+    const result = await this.stacksApiClient.callReadOnlyFunction(
+      {
+        contractAddress: this.getSbtcContractAddress(),
+        contractName: 'sbtc-registry',
+        functionName: 'get-current-aggregate-pubkey',
+        functionArgs: [],
+      },
+      { signal }
+    );
+    if (result.type !== ClarityType.Buffer) {
+      throw new Error('Unexpected response from sbtc-registry get-current-aggregate-pubkey');
+    }
+    return toXOnlyPublicKeyHex(result.value);
+  }
+
+  async notifyDeposit(request: EmilyDepositRequest): Promise<SbtcDepositNotificationResult> {
+    return this.notifyDepositWithRetry(request, sbtcNotifyMaxAttempts);
+  }
+
+  private async notifyDepositWithRetry(
+    request: EmilyDepositRequest,
+    attemptsRemaining: number
+  ): Promise<SbtcDepositNotificationResult> {
+    try {
+      await this.emilyApiClient.notifyDeposit(request);
+      return { status: 'notified' };
+    } catch (error) {
+      const { retryable, failure } = classifySbtcNotifyError(error);
+      if (!retryable || attemptsRemaining <= 1) return failure;
+      await delay(sbtcNotifyRetryDelayMs);
+      return this.notifyDepositWithRetry(request, attemptsRemaining - 1);
+    }
+  }
+
+  private getSbtcSwapAsset(): SwapProviderAsset {
+    const sbtcAddress = this.getSbtcContractAddress();
     return {
       providerId: this.providerId,
       providerAssetId: `${sbtcAddress}.sbtc-token::sbtc-token`,
@@ -81,17 +153,19 @@ export class SbtcBridgeSwapProviderService implements SwapProviderService {
     { baseAsset, baseAmount, targetAsset }: GetSwapQuotesParams,
     signal?: AbortSignal
   ): Promise<SbtcBridgeSwapQuote[]> {
-    const [swapDexMap, sbtcLimits, btcFeeRates] = await Promise.all([
+    const bridgeTxType = baseAsset.symbol === btcAsset.symbol ? 'deposit' : 'withdrawal';
+    const [swapDexMap, sbtcLimits, btcFeeRates, sbtcTotalSupply] = await Promise.all([
       this.leatherApiClient.fetchSwapDexes({ signal }),
       this.emilyApiClient.getSbtcLimits({ signal }),
       this.leatherApiClient.fetchBitcoinFeeRates(),
+      bridgeTxType === 'deposit' ? this.getSbtcTotalSupply({ signal }) : Promise.resolve(null),
     ]);
-    const bridgeTxType = baseAsset.symbol === btcAsset.symbol ? 'deposit' : 'withdrawal';
 
     const executionConstraints = getSbtcBridgeExecutionConstraints({
       bridgeTxType,
       bridgeAmount: baseAmount.amount,
       sbtcLimits,
+      remainingSupply: getRemainingSbtcSupply(sbtcLimits.pegCap, sbtcTotalSupply),
     });
     // Use high rate to calculate estimated signer Tx fee
     const signerSweepTxFeeSats = calculateSignerSweepTxFee(bridgeTxType, btcFeeRates.high.rate);

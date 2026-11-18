@@ -4,13 +4,17 @@ import { Box } from 'leather-styles/jsx';
 
 import { isBigInt, isTypedArray } from '@leather.io/utils';
 
-function parseJsonReadable(value: any) {
+function parseJsonReadable(value: unknown) {
   if (isBigInt(value)) return value.toString();
   if (isTypedArray(value)) return bytesToHex(value);
   return value;
 }
 
-export function Json(value: any) {
+interface JsonProps {
+  value: unknown;
+}
+
+export function Json(value: JsonProps) {
   return (
     <Box
       className={css({
@@ -23,7 +27,7 @@ export function Json(value: any) {
       textStyle="caption.01"
       mt="space.05"
     >
-      <pre>{JSON.stringify(value, (_, v) => parseJsonReadable(v), 2)}</pre>
+      <pre>{JSON.stringify(value, (_, v: unknown) => parseJsonReadable(v), 2)}</pre>
     </Box>
   );
 }

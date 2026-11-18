@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
+import { z } from 'zod';
+
+import { useRouteState } from '@app/common/hooks/use-route-state';
 import { Content } from '@app/components/layout';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
@@ -15,13 +18,15 @@ import {
 } from '@app/store/in-memory-key/in-memory-key.selectors';
 import { SecretKey } from '@app/ui/components/secret-key/secret-key';
 
+const viewSecretKeyRouteStateSchema = z.object({ fingerprint: z.string().optional() }).nullish();
+
 export function UnlockedViewSecretKey() {
-  const { state } = useLocation();
+  const fingerprint = useRouteState(viewSecretKeyRouteStateSchema)?.fingerprint;
   const navigate = useNavigate();
   const activeWalletSecretKey = useActiveWalletSecretKey();
-  const requestedWalletSecretKey = useWalletSecretKey(state?.fingerprint);
+  const requestedWalletSecretKey = useWalletSecretKey(fingerprint);
 
-  const secretKey = state?.fingerprint ? requestedWalletSecretKey : activeWalletSecretKey;
+  const secretKey = fingerprint ? requestedWalletSecretKey : activeWalletSecretKey;
 
   useEffect(() => {
     if (!secretKey) void navigate(-1);
@@ -44,7 +49,7 @@ export function UnlockedViewSecretKey() {
             words, you lose your account."
             />
           }
-          rightColumn={<SecretKey secretKey={secretKey} onDone={() => navigate(-1)} />}
+          rightColumn={<SecretKey secretKey={secretKey} onDone={() => void navigate(-1)} />}
         />
       </Content>
     </>

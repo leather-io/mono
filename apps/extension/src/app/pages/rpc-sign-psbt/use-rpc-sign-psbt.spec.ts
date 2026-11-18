@@ -1,3 +1,6 @@
+import type * as ReactModule from 'react';
+import type * as ReactRouterModule from 'react-router';
+
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
@@ -8,6 +11,9 @@ import { createMoney } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 import { RpcErrorMessage } from '@shared/rpc/methods/validation.utils';
+import type * as SharedUtilsModule from '@shared/utils';
+
+import type * as NetworksSelectorsModule from '@app/store/networks/networks.selectors';
 
 import { useRpcSignPsbt } from './use-rpc-sign-psbt';
 
@@ -18,7 +24,7 @@ const mocks = vi.hoisted(() => ({
   sendMessage: vi.fn(),
   useRpcSignPsbtParams: vi.fn(),
   useDescriptorPsbtDetails: vi.fn(),
-  useCryptoCurrencyMarketDataMeanAverage: vi.fn(),
+  useCryptoCurrencyMarketData: vi.fn(),
   calculateBitcoinFiatValue: vi.fn(),
   getDefaultSigningConfig: vi.fn(),
   signDescriptorPsbt: vi.fn(),
@@ -28,21 +34,31 @@ const mocks = vi.hoisted(() => ({
   refetchUtxos: vi.fn(),
   useBondProposalRoute: vi.fn(),
   proposeMultisigTransaction: vi.fn(),
+  useCurrentAccountNativeSegwitIndexZeroPayer: vi.fn(),
+  useCurrentAccountTaprootIndexZeroPayer: vi.fn(),
   useCurrentNetwork: vi.fn(),
 }));
 
+function expectNavigationState(state: Record<string, unknown>): unknown {
+  const expectedState: unknown = expect.objectContaining(state);
+  return expect.objectContaining({ state: expectedState });
+}
+
 vi.mock('react', async importOriginal => {
-  const actual = await importOriginal<typeof import('react')>();
+  const actual = await importOriginal<typeof ReactModule>();
   return {
     ...actual,
     useEffect(effect: () => void) {
       effect();
     },
+    useMemo<T>(factory: () => T) {
+      return factory();
+    },
   };
 });
 
 vi.mock('react-router', async importOriginal => {
-  const actual = await importOriginal<typeof import('react-router')>();
+  const actual = await importOriginal<typeof ReactRouterModule>();
   return { ...actual, useNavigate: () => mocks.navigate };
 });
 
@@ -58,12 +74,12 @@ vi.mock('@app/features/multisig/use-propose-multisig-transaction', () => ({
 }));
 
 vi.mock('@app/store/networks/networks.selectors', async importOriginal => {
-  const actual = await importOriginal<typeof import('@app/store/networks/networks.selectors')>();
+  const actual = await importOriginal<typeof NetworksSelectorsModule>();
   return { ...actual, useCurrentNetwork: mocks.useCurrentNetwork };
 });
 
 vi.mock('@shared/utils', async importOriginal => {
-  const actual = await importOriginal<typeof import('@shared/utils')>();
+  const actual = await importOriginal<typeof SharedUtilsModule>();
   return { ...actual, closeWindow: mocks.closeWindow };
 });
 
@@ -102,7 +118,7 @@ vi.mock('@app/query/bitcoin/utxos/utxos.hooks', () => ({
 }));
 
 vi.mock('@app/query/common/market-data/market-data.hooks', () => ({
-  useCryptoCurrencyMarketDataMeanAverage: mocks.useCryptoCurrencyMarketDataMeanAverage,
+  useCryptoCurrencyMarketData: mocks.useCryptoCurrencyMarketData,
   useCalculateBitcoinFiatValue: () => mocks.calculateBitcoinFiatValue,
 }));
 
@@ -112,6 +128,14 @@ vi.mock('@app/store/accounts/blockchain/bitcoin/bitcoin.hooks', () => ({
 
 vi.mock('./descriptor-psbt.hooks', () => ({
   useSignDescriptorPsbt: () => mocks.signDescriptorPsbt,
+}));
+
+vi.mock('@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks', () => ({
+  useCurrentAccountNativeSegwitIndexZeroPayer: mocks.useCurrentAccountNativeSegwitIndexZeroPayer,
+}));
+
+vi.mock('@app/store/accounts/blockchain/bitcoin/taproot-account.hooks', () => ({
+  useCurrentAccountTaprootIndexZeroPayer: mocks.useCurrentAccountTaprootIndexZeroPayer,
 }));
 
 interface MockBroadcastTxArgs {
@@ -142,6 +166,7 @@ const xpubA = makeNativeSegwitAccountXpub(1);
 const xpubB = makeNativeSegwitAccountXpub(2);
 const singleSigDescriptor = `wsh(pk(${xpubA}/0/0))`;
 const multiSigDescriptor = `wsh(multi(2,${xpubB}/0/0,${xpubA}/0/0))`;
+const timelockDescriptor = `wsh(and_v(v:after(1000),pk(${xpubA}/0/0)))`;
 const requestId = 'request-id';
 const origin = 'https://example.com';
 const frameId = 42;
@@ -182,15 +207,18 @@ function buildTransferTx({ signed }: { signed: boolean }) {
 }
 
 function setRpcSignPsbtParams({
+  allowedSighash,
   broadcast,
   descriptor,
   psbtHex,
 }: {
+  allowedSighash?: number[];
   broadcast: boolean;
   descriptor?: string;
   psbtHex: string;
 }) {
   mocks.useRpcSignPsbtParams.mockReturnValue({
+    allowedSighash,
     broadcast,
     descriptor,
     frameId,
@@ -218,6 +246,25 @@ const transferTotals = {
   fee: createMoney(2_000, 'BTC'),
 };
 
+const transferInputAddress =
+  btc.p2wpkh(requireBytes(deriveAddressIndexKey(5).publicKey)).address ?? '';
+
+function buildDisallowedSighashTx(sighashType: number) {
+  const key = deriveAddressIndexKey(5);
+  const tx = new btc.Transaction();
+  tx.addInput({
+    txid: hexToBytes('22'.repeat(32)),
+    index: 0,
+    witnessUtxo: { script: btc.p2wpkh(requireBytes(key.publicKey)).script, amount: 20_000n },
+    sighashType,
+  });
+  tx.addOutput({
+    script: btc.p2wpkh(requireBytes(deriveAddressIndexKey(6).publicKey)).script,
+    amount: 18_000n,
+  });
+  return tx;
+}
+
 describe(useRpcSignPsbt.name, () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -225,12 +272,19 @@ describe(useRpcSignPsbt.name, () => {
     mocks.sendMessage.mockResolvedValue(undefined);
     mocks.useDescriptorPsbtDetails.mockReturnValue(null);
     mocks.refetchUtxos.mockResolvedValue(undefined);
-    mocks.useCryptoCurrencyMarketDataMeanAverage.mockReturnValue({
+    mocks.useCryptoCurrencyMarketData.mockReturnValue({
       price: createMoney(0, 'USD'),
     });
     mocks.calculateBitcoinFiatValue.mockReturnValue(createMoney(0, 'USD'));
     mocks.getDefaultSigningConfig.mockReturnValue([]);
+    mocks.getPsbtAsTransaction.mockImplementation((hex: string) =>
+      btc.Transaction.fromPSBT(hexToBytes(hex))
+    );
     mocks.useBondProposalRoute.mockReturnValue(null);
+    mocks.useCurrentAccountNativeSegwitIndexZeroPayer.mockReturnValue({
+      address: transferInputAddress,
+    });
+    mocks.useCurrentAccountTaprootIndexZeroPayer.mockReturnValue({ address: '' });
     mocks.useCurrentNetwork.mockReturnValue({
       id: 'mainnet',
       chain: { bitcoin: { mode: 'mainnet' } },
@@ -279,7 +333,7 @@ describe(useRpcSignPsbt.name, () => {
     expect(mocks.refetchUtxos).toHaveBeenCalled();
     expect(mocks.navigate).toHaveBeenCalledWith(
       RouteUrls.RpcSignPsbtSummary,
-      expect.objectContaining({ state: expect.objectContaining({ txId: 'txid-123' }) })
+      expectNavigationState({ txId: 'txid-123' })
     );
     expect(mocks.closeWindow).not.toHaveBeenCalled();
   });
@@ -289,6 +343,28 @@ describe(useRpcSignPsbt.name, () => {
     const signedTx = buildPolicyTx(multiSigDescriptor, [1]);
     const signedPsbtHex = bytesToHex(signedTx.toPSBT());
     setRpcSignPsbtParams({ broadcast: true, descriptor: multiSigDescriptor, psbtHex });
+    mocks.signDescriptorPsbt.mockResolvedValue(signedTx);
+
+    await useRpcSignPsbt().onSignPsbt({ inputs: [] });
+
+    expect(mocks.broadcastTx).not.toHaveBeenCalled();
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      createRpcSuccessResponse('signPsbt', {
+        id: requestId,
+        result: { hex: signedPsbtHex },
+      }),
+      { frameId }
+    );
+    expect(mocks.closeWindow).toHaveBeenCalled();
+    expect(mocks.navigate).not.toHaveBeenCalled();
+  });
+
+  test('falls back to returning the partially signed psbt when the tx cannot satisfy the descriptor timelock', async () => {
+    const psbtHex = bytesToHex(buildPolicyTx(timelockDescriptor, []).toPSBT());
+    const signedTx = buildPolicyTx(timelockDescriptor, [1]);
+    const signedPsbtHex = bytesToHex(signedTx.toPSBT());
+    setRpcSignPsbtParams({ broadcast: true, descriptor: timelockDescriptor, psbtHex });
     mocks.signDescriptorPsbt.mockResolvedValue(signedTx);
 
     await useRpcSignPsbt().onSignPsbt({ inputs: [] });
@@ -351,6 +427,18 @@ describe(useRpcSignPsbt.name, () => {
     });
   });
 
+  test('keeps the request open for a retry when descriptor Ledger signing is dismissed', async () => {
+    const psbtHex = bytesToHex(buildPolicyTx(singleSigDescriptor, []).toPSBT());
+    setRpcSignPsbtParams({ broadcast: true, descriptor: singleSigDescriptor, psbtHex });
+    mocks.signDescriptorPsbt.mockResolvedValue(null);
+
+    await useRpcSignPsbt().onSignPsbt({ inputs: [] });
+
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
+    expect(mocks.navigate).not.toHaveBeenCalled();
+    expect(mocks.closeWindow).not.toHaveBeenCalled();
+  });
+
   test('responds with the signed psbt in the error payload when broadcast fails', async () => {
     const psbtHex = bytesToHex(buildPolicyTx(singleSigDescriptor, []).toPSBT());
     const signedTx = buildPolicyTx(singleSigDescriptor, [1]);
@@ -385,9 +473,6 @@ describe(useRpcSignPsbt.name, () => {
     const signedTx = buildTransferTx({ signed: true });
     const signedPsbtHex = bytesToHex(signedTx.toPSBT());
     setRpcSignPsbtParams({ broadcast: true, psbtHex });
-    mocks.getPsbtAsTransaction.mockImplementation((hex: string) =>
-      btc.Transaction.fromPSBT(hexToBytes(hex))
-    );
     mocks.signPsbt.mockResolvedValue(signedTx);
     const broadcastedTxs = mockBroadcastSuccess('txid-456');
 
@@ -404,16 +489,13 @@ describe(useRpcSignPsbt.name, () => {
     );
     expect(mocks.navigate).toHaveBeenCalledWith(
       RouteUrls.RpcSignPsbtSummary,
-      expect.objectContaining({ state: expect.objectContaining({ txId: 'txid-456' }) })
+      expectNavigationState({ txId: 'txid-456' })
     );
   });
 
   test('navigates to an error when the non-descriptor psbt cannot be finalized', async () => {
     const psbtHex = bytesToHex(buildTransferTx({ signed: false }).toPSBT());
     setRpcSignPsbtParams({ broadcast: true, psbtHex });
-    mocks.getPsbtAsTransaction.mockImplementation((hex: string) =>
-      btc.Transaction.fromPSBT(hexToBytes(hex))
-    );
     mocks.signPsbt.mockResolvedValue(buildTransferTx({ signed: false }));
 
     await useRpcSignPsbt().onSignPsbt({ inputs: [], ...transferTotals });
@@ -422,18 +504,25 @@ describe(useRpcSignPsbt.name, () => {
     expect(mocks.sendMessage).not.toHaveBeenCalled();
     expect(mocks.navigate).toHaveBeenCalledWith(
       RouteUrls.RequestError,
-      expect.objectContaining({
-        state: expect.objectContaining({ title: 'Failed to finalize tx' }),
-      })
+      expectNavigationState({ title: 'Failed to finalize tx' })
     );
+  });
+
+  test('keeps the request open for a retry when non-descriptor Ledger signing is dismissed', async () => {
+    const psbtHex = bytesToHex(buildTransferTx({ signed: false }).toPSBT());
+    setRpcSignPsbtParams({ broadcast: true, psbtHex });
+    mocks.signPsbt.mockResolvedValue(null);
+
+    await useRpcSignPsbt().onSignPsbt({ inputs: [], ...transferTotals });
+
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
+    expect(mocks.navigate).not.toHaveBeenCalled();
+    expect(mocks.closeWindow).not.toHaveBeenCalled();
   });
 
   test('sends no response at all when broadcast is requested without transfer totals', async () => {
     const psbtHex = bytesToHex(buildTransferTx({ signed: false }).toPSBT());
     setRpcSignPsbtParams({ broadcast: true, psbtHex });
-    mocks.getPsbtAsTransaction.mockImplementation((hex: string) =>
-      btc.Transaction.fromPSBT(hexToBytes(hex))
-    );
     mocks.signPsbt.mockResolvedValue(buildTransferTx({ signed: true }));
 
     await useRpcSignPsbt().onSignPsbt({ inputs: [] });
@@ -442,6 +531,94 @@ describe(useRpcSignPsbt.name, () => {
     expect(mocks.sendMessage).not.toHaveBeenCalled();
     expect(mocks.closeWindow).not.toHaveBeenCalled();
     expect(mocks.navigate).not.toHaveBeenCalled();
+  });
+
+  test('rejects signing when an input to sign carries a disallowed sighash', async () => {
+    const psbtHex = bytesToHex(buildDisallowedSighashTx(btc.SigHash.NONE).toPSBT());
+    setRpcSignPsbtParams({ broadcast: false, psbtHex });
+    const { hasDisallowedSighash, onSignPsbt } = useRpcSignPsbt();
+
+    expect(hasDisallowedSighash).toBe(true);
+
+    await onSignPsbt({ inputs: [] });
+
+    expect(mocks.signPsbt).not.toHaveBeenCalled();
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      createRpcErrorResponse('signPsbt', {
+        id: requestId,
+        error: {
+          code: RpcErrorCode.INVALID_PARAMS,
+          message: RpcErrorMessage.DisallowedSighash,
+        },
+      }),
+      { frameId }
+    );
+    expect(mocks.navigate).toHaveBeenCalledWith(
+      RouteUrls.RequestError,
+      expectNavigationState({ title: 'Signing not permitted' })
+    );
+  });
+
+  test('signs when the request opts into the sighash type through allowedSighash', async () => {
+    const psbtHex = bytesToHex(buildDisallowedSighashTx(btc.SigHash.NONE).toPSBT());
+    setRpcSignPsbtParams({ allowedSighash: [btc.SigHash.NONE], broadcast: false, psbtHex });
+    const signedTx = buildTransferTx({ signed: true });
+    const signedPsbtHex = bytesToHex(signedTx.toPSBT());
+    mocks.signPsbt.mockResolvedValue(signedTx);
+
+    const { hasDisallowedSighash, onSignPsbt } = useRpcSignPsbt();
+
+    expect(hasDisallowedSighash).toBe(false);
+
+    await onSignPsbt({ inputs: [] });
+
+    expect(mocks.signPsbt).toHaveBeenCalledWith(
+      expect.objectContaining({ allowedSighash: [btc.SigHash.NONE] })
+    );
+    expect(mocks.sendMessage).toHaveBeenCalledWith(
+      tabId,
+      createRpcSuccessResponse('signPsbt', {
+        id: requestId,
+        result: { hex: signedPsbtHex },
+      }),
+      { frameId }
+    );
+  });
+
+  test('ignores a disallowed sighash on inputs the wallet does not own', () => {
+    const psbtHex = bytesToHex(buildDisallowedSighashTx(btc.SigHash.NONE).toPSBT());
+    setRpcSignPsbtParams({ broadcast: false, psbtHex });
+    mocks.useCurrentAccountNativeSegwitIndexZeroPayer.mockReturnValue({
+      address: 'bc1qunrelatedaddress',
+    });
+
+    const { hasDisallowedSighash } = useRpcSignPsbt();
+
+    expect(hasDisallowedSighash).toBe(false);
+  });
+
+  test('rejects a descriptor psbt with a disallowed sighash regardless of allowedSighash', () => {
+    const psbtHex = bytesToHex(buildPolicyTx(singleSigDescriptor, []).toPSBT());
+    setRpcSignPsbtParams({
+      allowedSighash: [btc.SigHash.NONE],
+      broadcast: false,
+      descriptor: singleSigDescriptor,
+      psbtHex,
+    });
+    mocks.useDescriptorPsbtDetails.mockReturnValue({ hasDisallowedSighash: true });
+
+    const { hasDisallowedSighash } = useRpcSignPsbt();
+
+    expect(hasDisallowedSighash).toBe(true);
+  });
+
+  test('rejects signing when the psbt cannot be parsed for the sighash check', () => {
+    setRpcSignPsbtParams({ broadcast: false, psbtHex: '0001' });
+
+    const { hasDisallowedSighash } = useRpcSignPsbt();
+
+    expect(hasDisallowedSighash).toBe(true);
   });
 
   test('rejects the request when the user cancels', () => {
@@ -545,6 +722,19 @@ describe(useRpcSignPsbt.name, () => {
     expect(mocks.navigate).toHaveBeenCalledWith(RouteUrls.RequestError, {
       state: { message: 'coordinator rejected', title: 'Unable to propose transaction' },
     });
+    expect(mocks.closeWindow).not.toHaveBeenCalled();
+  });
+
+  test('keeps the request open for a retry when Ledger signing of the proposal is dismissed', async () => {
+    const psbtHex = bytesToHex(buildPolicyTx(multiSigDescriptor, []).toPSBT());
+    setRpcSignPsbtParams({ broadcast: false, descriptor: 'bond', psbtHex });
+    mocks.useBondProposalRoute.mockReturnValue(makeMatchedBondRoute());
+    mocks.proposeMultisigTransaction.mockResolvedValue(null);
+
+    await useRpcSignPsbt().onSignPsbt({ inputs: [] });
+
+    expect(mocks.sendMessage).not.toHaveBeenCalled();
+    expect(mocks.navigate).not.toHaveBeenCalled();
     expect(mocks.closeWindow).not.toHaveBeenCalled();
   });
 

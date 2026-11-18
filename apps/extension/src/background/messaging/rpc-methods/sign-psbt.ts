@@ -13,10 +13,10 @@ import {
   validateRpcParams,
 } from '@shared/rpc/methods/validation.utils';
 
+import { defineRpcRequestHandler } from '../define-rpc-request-handler';
 import { trackRpcRequestError, trackRpcRequestSuccess } from '../rpc-helpers';
-import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
-  RequestParams,
+  type RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
@@ -120,6 +120,11 @@ export const signPsbtHandler = defineRpcRequestHandler(signPsbt.method, async (r
   if (isDefined(request.params.signAtIndex))
     ensureArray(request.params.signAtIndex).forEach(index =>
       requestParams.push(['signAtIndex', index.toString()])
+    );
+
+  if (isDefined(request.params.allowedSighash))
+    request.params.allowedSighash.forEach(sighash =>
+      requestParams.push(['allowedSighash', sighash.toString()])
     );
 
   const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(

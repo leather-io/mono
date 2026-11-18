@@ -1,7 +1,7 @@
-import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated';
+import Animated, { type FlatListPropsWithLayout } from 'react-native-reanimated';
 
 import { useScreenScrollContext } from '@/components/screen/screen-scroll-context';
-import { NormalizeScrollContainerProps } from '@/components/screen/screen.types';
+import { type NormalizeScrollContainerProps } from '@/components/screen/screen.types';
 import { useSafeBottomInset } from '@/components/screen/use-safe-bottom-inset';
 
 type ScreenListProps<T> = NormalizeScrollContainerProps<FlatListPropsWithLayout<T>>;

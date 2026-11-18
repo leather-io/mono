@@ -8,11 +8,11 @@ import { createSelector } from '@reduxjs/toolkit';
 import memoize from 'just-memoize';
 
 import {
-  BitcoinAccountKeychain,
-  BitcoinNativeSegwitPayer,
-  BitcoinPayerInfo,
-  BitcoinTaprootPayer,
-  WithDerivePayer,
+  type BitcoinAccountKeychain,
+  type BitcoinNativeSegwitPayer,
+  type BitcoinPayerInfo,
+  type BitcoinTaprootPayer,
+  type WithDerivePayer,
   bitcoinNetworkModeToCoreNetworkMode,
   deriveBitcoinPayerFromAccount,
   inferNetworkFromPath,
@@ -26,9 +26,9 @@ import {
   extractKeyOriginPathFromDescriptor,
   validateKeyOriginPath,
 } from '@leather.io/crypto';
-import { BitcoinNetworkModes, bitcoinNetworkToNetworkMode } from '@leather.io/models';
+import { type BitcoinNetworkModes, bitcoinNetworkToNetworkMode } from '@leather.io/models';
 import {
-  BitcoinKeychain,
+  type BitcoinKeychain,
   descriptorKeychainSelectors,
   filterKeychainsByAccountIndex,
 } from '@leather.io/state/keychains';
@@ -86,7 +86,7 @@ function isNativeSegwitAccount(account: BitcoinAccountKeychain) {
   return inferPaymentTypeFromPath(account.keyOrigin) === 'p2wpkh';
 }
 
-function splitByPaymentTypes<T extends BitcoinAccountKeychain>(accounts: T[]) {
+function splitByPaymentTypes(accounts: BitcoinAccountKeychain[]) {
   const nativeSegwit = accounts.find(isNativeSegwitAccount);
 
   const taproot = accounts.find(isTaprootAccount);

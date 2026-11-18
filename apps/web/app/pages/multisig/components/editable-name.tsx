@@ -106,8 +106,8 @@ export function EditableName({
           </Flex>
         }
       >
-        <Flex direction="column" gap="space.04" p="space.05">
-          <Input.Root>
+        <Flex direction="column" gap="space.04" px="space.05" pt="space.05" pb="space.02">
+          <Input.Root style={{ minHeight: '48px' }}>
             <Input.Field
               autoFocus
               value={draft}

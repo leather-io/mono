@@ -84,47 +84,20 @@ describe(createGetPox5PayoutPreferenceQueryOptions.name, () => {
     expect(disabled.enabled).toBe(false);
   });
 
-  test('returns null when no preference is stored', async () => {
+  test('returns a null preference when none is stored', async () => {
     const options = createGetPox5PayoutPreferenceQueryOptions({
       address,
       signerManagerContractId,
       networkName: 'mainnet',
       client: makeClient({ okay: true, result: `0x${serializeCV(noneCV())}` }),
     });
-    await expect(options.queryFn()).resolves.toBeNull();
-  });
-
-  test('decodes a stored preference', async () => {
-    const options = createGetPox5PayoutPreferenceQueryOptions({
-      address,
-      signerManagerContractId,
-      networkName: 'mainnet',
-      client: makeClient({ okay: true, result: serializePreference() }),
-    });
     await expect(options.queryFn()).resolves.toEqual({
-      btcRewardAddress,
-      maxFeeSats: 2500n,
+      preference: null,
+      supportsMinClaim: true,
     });
   });
 
-  test('reads get-pox-addr first and never calls the v2 function on a v1 contract', async () => {
-    const { client, calledFunctions } = makeVersionedClient({
-      'get-pox-addr': { okay: true, result: serializePreference() },
-    });
-    const options = createGetPox5PayoutPreferenceQueryOptions({
-      address,
-      signerManagerContractId,
-      networkName: 'mainnet',
-      client,
-    });
-    await expect(options.queryFn()).resolves.toEqual({
-      btcRewardAddress,
-      maxFeeSats: 2500n,
-    });
-    expect(calledFunctions).toEqual(['get-pox-addr']);
-  });
-
-  test('falls back to get-payout-config and decodes its min-claim tuple on a v2 contract', async () => {
+  test('reads get-payout-config first and decodes its min-claim tuple on a v2 contract', async () => {
     const { client, calledFunctions } = makeVersionedClient({
       'get-payout-config': { okay: true, result: serializePayoutConfig() },
     });
@@ -135,10 +108,56 @@ describe(createGetPox5PayoutPreferenceQueryOptions.name, () => {
       client,
     });
     await expect(options.queryFn()).resolves.toEqual({
-      btcRewardAddress,
-      maxFeeSats: 2500n,
+      preference: {
+        btcRewardAddress,
+        maxFeeSats: 2500n,
+        minClaimSats: 3047n,
+      },
+      supportsMinClaim: true,
     });
-    expect(calledFunctions).toEqual(['get-pox-addr', 'get-payout-config']);
+    expect(calledFunctions).toEqual(['get-payout-config']);
+  });
+
+  test('falls back to get-pox-addr on a v1 contract', async () => {
+    const { client, calledFunctions } = makeVersionedClient({
+      'get-pox-addr': { okay: true, result: serializePreference() },
+    });
+    const options = createGetPox5PayoutPreferenceQueryOptions({
+      address,
+      signerManagerContractId,
+      networkName: 'mainnet',
+      client,
+    });
+    await expect(options.queryFn()).resolves.toEqual({
+      preference: {
+        btcRewardAddress,
+        maxFeeSats: 2500n,
+      },
+      supportsMinClaim: false,
+    });
+    expect(calledFunctions).toEqual(['get-payout-config', 'get-pox-addr']);
+  });
+
+  test('detects min-claim support on a contract exposing both reads', async () => {
+    const { client, calledFunctions } = makeVersionedClient({
+      'get-pox-addr': { okay: true, result: serializePreference() },
+      'get-payout-config': { okay: true, result: serializePayoutConfig() },
+    });
+    const options = createGetPox5PayoutPreferenceQueryOptions({
+      address,
+      signerManagerContractId,
+      networkName: 'mainnet',
+      client,
+    });
+    await expect(options.queryFn()).resolves.toEqual({
+      preference: {
+        btcRewardAddress,
+        maxFeeSats: 2500n,
+        minClaimSats: 3047n,
+      },
+      supportsMinClaim: true,
+    });
+    expect(calledFunctions).toEqual(['get-payout-config']);
   });
 
   test('throws when the contract exposes neither payout read', async () => {
@@ -150,7 +169,7 @@ describe(createGetPox5PayoutPreferenceQueryOptions.name, () => {
       client,
     });
     await expect(options.queryFn()).rejects.toThrowError(
-      `${signerManagerContractId} exposes none of: get-pox-addr, get-payout-config`
+      `${signerManagerContractId} exposes none of: get-payout-config, get-pox-addr`
     );
   });
 

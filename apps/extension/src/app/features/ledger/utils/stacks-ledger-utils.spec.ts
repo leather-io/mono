@@ -6,11 +6,17 @@ import {
   isSingleSig,
   makeUnsignedSTXTokenTransfer,
 } from '@stacks/transactions';
-import StacksApp, { LedgerError } from '@zondax/ledger-stacks';
+import { LedgerError } from '@zondax/ledger-stacks';
 
+import {
+  isLedgerDeviceDisconnectedError,
+  isLedgerDeviceLockedError,
+} from '../dmk/ledger-dmk-errors';
+import { makeFakeLedgerStacksApp } from './ledger-app.mocks';
 import {
   MINIMUM_STACKS_APP_VERSION,
   MINIMUM_STACKS_APP_VERSION_MULTISIG_ADDRESS,
+  getStacksAppVersion,
   isStxAddressResponseRejected,
   isStxAddressResponseSuccess,
   makeStxMultisigAddressOptions,
@@ -86,6 +92,52 @@ function makeAddressResponse(returnCode: number) {
     address: 'SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB',
   };
 }
+
+describe(getStacksAppVersion.name, () => {
+  function makeVersionResponse(returnCode: number, errorMessage: string) {
+    return {
+      returnCode,
+      errorMessage,
+      testMode: false,
+      major: 0,
+      minor: 26,
+      patch: 19,
+      deviceLocked: false,
+      targetId: '',
+    };
+  }
+
+  test('returns the version tagged with the app name and chain', async () => {
+    const app = makeFakeLedgerStacksApp({
+      getVersion: vi.fn().mockResolvedValue(makeVersionResponse(LedgerError.NoErrors, 'No errors')),
+    });
+
+    await expect(getStacksAppVersion(app)).resolves.toMatchObject({
+      name: 'Stacks',
+      chain: 'stacks',
+      major: 0,
+      minor: 26,
+      patch: 19,
+    });
+  });
+
+  test('keeps the disconnect cause when the transport fails during the version check', async () => {
+    const response = Object.assign(makeVersionResponse(0xffff, 'Unknown transport error'), {
+      cause: { _tag: 'DeviceDisconnectedWhileSendingError' },
+    });
+    const app = makeFakeLedgerStacksApp({ getVersion: vi.fn().mockResolvedValue(response) });
+
+    await expect(getStacksAppVersion(app)).rejects.toSatisfy(isLedgerDeviceDisconnectedError);
+  });
+
+  test('keeps the status code when the device is locked during the version check', async () => {
+    const app = makeFakeLedgerStacksApp({
+      getVersion: vi.fn().mockResolvedValue(makeVersionResponse(0x5515, 'Unknown Status Code')),
+    });
+
+    await expect(getStacksAppVersion(app)).rejects.toSatisfy(isLedgerDeviceLockedError);
+  });
+});
 
 describe(stacksChainIdToSingleSigAddressVersion.name, () => {
   test('maps the mainnet chain id to the mainnet single sig version', () => {
@@ -232,28 +284,28 @@ describe(isStxAddressResponseSuccess.name, () => {
 
 describe(showStxAddressOnDevice.name, () => {
   test('shows the account derivation path with the given address version', async () => {
-    const app: StacksApp = Object.create(StacksApp.prototype);
-    app.showAddressAndPubKey = vi.fn(() =>
+    const showAddressAndPubKey = vi.fn(() =>
       Promise.resolve(makeAddressResponse(LedgerError.NoErrors))
     );
+    const app = makeFakeLedgerStacksApp({ showAddressAndPubKey });
 
     await showStxAddressOnDevice(app)("m/44'/5757'/0'/0/3", AddressVersion.MainnetSingleSig);
 
-    expect(app.showAddressAndPubKey).toHaveBeenCalledWith(
+    expect(showAddressAndPubKey).toHaveBeenCalledWith(
       "m/44'/5757'/0'/0/3",
       AddressVersion.MainnetSingleSig
     );
   });
 
   test('shows a ledger live derivation path unchanged', async () => {
-    const app: StacksApp = Object.create(StacksApp.prototype);
-    app.showAddressAndPubKey = vi.fn(() =>
+    const showAddressAndPubKey = vi.fn(() =>
       Promise.resolve(makeAddressResponse(LedgerError.NoErrors))
     );
+    const app = makeFakeLedgerStacksApp({ showAddressAndPubKey });
 
     await showStxAddressOnDevice(app)("m/44'/5757'/3'/0/0", AddressVersion.MainnetSingleSig);
 
-    expect(app.showAddressAndPubKey).toHaveBeenCalledWith(
+    expect(showAddressAndPubKey).toHaveBeenCalledWith(
       "m/44'/5757'/3'/0/0",
       AddressVersion.MainnetSingleSig
     );
@@ -262,10 +314,10 @@ describe(showStxAddressOnDevice.name, () => {
 
 describe(showStxMultisigAddressOnDevice.name, () => {
   test('shows the multisig address for the account derivation path and options', async () => {
-    const app: StacksApp = Object.create(StacksApp.prototype);
-    app.showMultisigAddressAndPubKey = vi.fn(() =>
+    const showMultisigAddressAndPubKey = vi.fn(() =>
       Promise.resolve(makeAddressResponse(LedgerError.NoErrors))
     );
+    const app = makeFakeLedgerStacksApp({ showMultisigAddressAndPubKey });
     const options = {
       numRequired: 2,
       deviceKeyIndex: 0,
@@ -279,7 +331,7 @@ describe(showStxMultisigAddressOnDevice.name, () => {
       options
     );
 
-    expect(app.showMultisigAddressAndPubKey).toHaveBeenCalledWith(
+    expect(showMultisigAddressAndPubKey).toHaveBeenCalledWith(
       "m/44'/5757'/0'/0/3",
       AddressVersion.MainnetMultiSig,
       options
@@ -289,22 +341,22 @@ describe(showStxMultisigAddressOnDevice.name, () => {
 
 describe(validateStacksAppVersion.name, () => {
   test('rejects versions below the minimum', () => {
-    expect(validateStacksAppVersion({ major: 0, minor: 26, patch: 16 })).toEqual({
+    expect(validateStacksAppVersion({ major: 0, minor: 26, patch: 18 })).toEqual({
       meetsMinimum: false,
-      currentVersion: '0.26.16',
+      currentVersion: '0.26.18',
     });
     expect(validateStacksAppVersion({ major: 0, minor: 25, patch: 99 }).meetsMinimum).toBe(false);
   });
 
   test('accepts the exact minimum version', () => {
-    expect(validateStacksAppVersion({ major: 0, minor: 26, patch: 17 })).toEqual({
+    expect(validateStacksAppVersion({ major: 0, minor: 26, patch: 19 })).toEqual({
       meetsMinimum: true,
       currentVersion: MINIMUM_STACKS_APP_VERSION,
     });
   });
 
   test('accepts versions above the minimum', () => {
-    expect(validateStacksAppVersion({ major: 0, minor: 26, patch: 18 }).meetsMinimum).toBe(true);
+    expect(validateStacksAppVersion({ major: 0, minor: 26, patch: 20 }).meetsMinimum).toBe(true);
     expect(validateStacksAppVersion({ major: 0, minor: 27, patch: 0 }).meetsMinimum).toBe(true);
     expect(validateStacksAppVersion({ major: 1, minor: 0, patch: 0 }).meetsMinimum).toBe(true);
   });

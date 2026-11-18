@@ -1,6 +1,6 @@
 import {
-  SignerManagerFacts,
-  UpdateStakeSummaryInput,
+  type SignerManagerFacts,
+  type UpdateStakeSummaryInput,
   buildSignerManagerOptions,
   buildUpdateStakeSummaryRows,
   currentCustomRowId,
@@ -10,21 +10,21 @@ import {
 const stackingDaoFacts: SignerManagerFacts = {
   name: 'Stacking DAO',
   isCustom: false,
-  supportsBtcPayout: false,
+  payoutMode: 'sbtc',
   feeBips: 0,
 };
 
 const senseiNodeFacts: SignerManagerFacts = {
   name: 'SenseiNode',
   isCustom: false,
-  supportsBtcPayout: true,
+  payoutMode: 'sbtc-or-btc',
   feeBips: 1000,
 };
 
 const customFacts: SignerManagerFacts = {
   name: 'SP4SZ…DPBG.custom-signer-manager',
   isCustom: true,
-  supportsBtcPayout: true,
+  payoutMode: 'sbtc-or-btc',
   feeBips: null,
 };
 
@@ -60,7 +60,7 @@ describe(buildUpdateStakeSummaryRows.name, () => {
       { kind: 'diff', label: 'Fee', from: '0%', to: '10%', isCritical: true },
       { kind: 'diff', label: 'Rewards token', from: 'sBTC', to: 'sBTC / BTC' },
       { kind: 'value', label: 'Amount staked', value: '3,200 STX, moves in full' },
-      { kind: 'value', label: 'Locked until', value: 'Cycle 122' },
+      { kind: 'value', label: 'Scheduled end', value: 'Cycle 122' },
       {
         kind: 'value',
         label: 'Effective',
@@ -74,7 +74,7 @@ describe(buildUpdateStakeSummaryRows.name, () => {
     const rows = buildUpdateStakeSummaryRows({
       ...baseInput,
       current: senseiNodeFacts,
-      target: { ...stackingDaoFacts, supportsBtcPayout: true },
+      target: { ...stackingDaoFacts, payoutMode: 'sbtc-or-btc' },
     });
     const feeRow = rows.find(row => row.label === 'Fee');
     expect(feeRow).toEqual({
@@ -155,7 +155,7 @@ describe(buildUpdateStakeSummaryRows.name, () => {
     });
     expect(rows).toEqual([
       { kind: 'diff', label: 'Amount staked', from: '3,200 STX', to: '3,210 STX' },
-      { kind: 'diff', label: 'Locked until', from: 'Cycle 122', to: 'Cycle 124' },
+      { kind: 'diff', label: 'Scheduled end', from: 'Cycle 122', to: 'Cycle 124' },
       {
         kind: 'value',
         label: 'Effective',

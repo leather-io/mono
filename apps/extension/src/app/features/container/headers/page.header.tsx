@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
@@ -31,7 +31,7 @@ export function PageHeader({
   const navigate = useNavigate();
 
   // pages with nested dialogs specify onBackLocation to prevent navigate(-1) re-opening the dialog
-  const onGoBack = onBackLocation ? () => navigate(onBackLocation) : () => navigate(-1);
+  const onGoBack = onBackLocation ? () => void navigate(onBackLocation) : () => void navigate(-1);
   const canGoBack = !isSummaryPage;
   return (
     <Header px={{ base: 'space.04', sm: 'space.00' }}>
@@ -45,7 +45,7 @@ export function PageHeader({
                 dataTestId={SharedComponentsSelectors.HeaderBackBtn}
               />
             )}
-            <LogoBox onClick={() => navigate(RouteUrls.Home)} />
+            <LogoBox onClick={() => void navigate(RouteUrls.Home)} />
           </>
         }
         centerCol={
@@ -61,7 +61,7 @@ export function PageHeader({
               <HeaderActionButton
                 icon={<CloseIcon />}
                 dataTestId={SharedComponentsSelectors.HeaderCloseBtn}
-                onAction={() => navigate(RouteUrls.Home)}
+                onAction={() => void navigate(RouteUrls.Home)}
               />
             ) : (
               <styled.div hideBelow={isSettingsVisibleOnSm ? undefined : 'sm'}>

@@ -31,36 +31,42 @@ export function getAssumedZeroIndexSigningConfig({
   const indexes = indexesToSign ?? makeNumberRange(tx.inputsLength);
   return {
     forAccountIndex(accountIndex: number): BitcoinInputSigningConfig[] {
-      return indexes.map(inputIndex => {
+      return indexes.flatMap(inputIndex => {
         const input = tx.getInput(inputIndex);
 
         if (isUndefined(input.index)) throw new Error('Input must have an index for payment type');
-        const paymentType = getInputPaymentType(input, network);
+        const paymentType = getInputPaymentType(input);
 
         switch (paymentType) {
           case 'p2wpkh':
-            return {
-              index: inputIndex,
-              derivationPath: makeNativeSegwitAddressIndexDerivationPath({
-                network,
-                accountIndex,
-                changeIndex: 0,
-                addressIndex: 0,
-              }),
-            };
+            return [
+              {
+                index: inputIndex,
+                derivationPath: makeNativeSegwitAddressIndexDerivationPath({
+                  network,
+                  accountIndex,
+                  changeIndex: 0,
+                  addressIndex: 0,
+                }),
+              },
+            ];
           case 'p2tr':
-            return {
-              index: inputIndex,
-              derivationPath: makeTaprootAddressIndexDerivationPath({
-                network,
-                accountIndex,
-                changeIndex: 0,
-                addressIndex: 0,
-              }),
-            };
+            return [
+              {
+                index: inputIndex,
+                derivationPath: makeTaprootAddressIndexDerivationPath({
+                  network,
+                  accountIndex,
+                  changeIndex: 0,
+                  addressIndex: 0,
+                }),
+              },
+            ];
           default:
-            logger.error('Cannot assume zero index for non-segwit input types');
-            return { index: inputIndex, derivationPath: '' };
+            logger.warn(
+              `Skipping input ${inputIndex}, cannot sign ${paymentType} without a descriptor`
+            );
+            return [];
         }
       });
     },

@@ -4,24 +4,32 @@ import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to
 import { RouteUrls } from '@shared/route-urls';
 import { replaceRouteParams } from '@shared/utils/replace-route-params';
 
+import { defineRpcRequestHandler } from '../define-rpc-request-handler';
 import { trackRpcRequestSuccess } from '../rpc-helpers';
-import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
   createConnectingAppSearchParamsWithLastKnownAccount,
   triggerSwapWindowOpen,
 } from '../rpc-request-utils';
+
+const swapAssetSymbolRegex = /^[a-zA-Z0-9$._-]{1,32}$/;
+
+function toSwapAssetSymbol(value?: string) {
+  return value && swapAssetSymbolRegex.test(value) ? value : undefined;
+}
 
 export const openSwapHandler = defineRpcRequestHandler(openSwap.method, async (request, port) => {
   const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
     port,
     [['requestId', request.id]]
   );
-  const { base = 'STX', quote } = request?.params || {};
+  const params = request?.params || {};
+  const base = toSwapAssetSymbol(params.base) ?? 'STX';
+  const quote = toSwapAssetSymbol(params.quote);
 
   if (base === 'BTC') {
     await triggerSwapWindowOpen(
       replaceRouteParams(RouteUrls.Swap, {
-        base: base,
+        base,
         quote: quote ?? '',
       }).replace('{chain}', 'bitcoin'),
       urlParams
@@ -29,7 +37,7 @@ export const openSwapHandler = defineRpcRequestHandler(openSwap.method, async (r
   } else {
     await triggerSwapWindowOpen(
       replaceRouteParams(RouteUrls.Swap, {
-        base: base,
+        base,
         quote: quote ?? '',
       }).replace('{chain}', 'stacks'),
       urlParams

@@ -1,5 +1,6 @@
 import { injectable } from 'inversify';
 import { values } from 'remeda';
+import { z } from 'zod';
 
 import {
   type StacksProtocol,
@@ -13,9 +14,7 @@ import {
   type LeatherApiProtocol,
 } from '../infrastructure/api/leather/leather-api.client';
 
-function isStacksProtocolAction(value: string): value is StacksProtocolAction {
-  return stacksProtocolActions.some(candidate => candidate === value);
-}
+const stacksProtocolActionSchema = z.enum(stacksProtocolActions);
 
 @injectable()
 export class StacksProtocolService {
@@ -52,7 +51,8 @@ export class StacksProtocolService {
   ): Promise<StacksProtocolAction | null> {
     const contractMap = await this.leatherApiClient.fetchProtocolContracts(protocolId, { signal });
     const action = contractMap[contractName]?.[functionName];
-    return action !== undefined && isStacksProtocolAction(action) ? action : null;
+    const parsedAction = stacksProtocolActionSchema.safeParse(action);
+    return parsedAction.success ? parsedAction.data : null;
   }
 
   private mapApiProtocol(apiProtocol: LeatherApiProtocol): StacksProtocol {

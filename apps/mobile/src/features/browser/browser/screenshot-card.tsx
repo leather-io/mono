@@ -1,7 +1,7 @@
 import { Dimensions } from 'react-native';
 
 import { userRemovesApp } from '@/store/apps/apps.write';
-import { App } from '@/store/apps/utils';
+import { type App } from '@/store/apps/utils';
 import { useAppDispatch } from '@/store/utils';
 import { Image } from 'expo-image';
 

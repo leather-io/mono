@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 
-import { Box, BoxProps, Flex, styled } from 'leather-styles/jsx';
+import { Box, type BoxProps, Flex, styled } from 'leather-styles/jsx';
 
 import { Flag } from '@leather.io/ui';
 
-interface ConnectCardProps extends BoxProps {
+interface ConnectCardProps extends Omit<BoxProps, 'title'> {
   title: ReactNode;
   description: ReactNode;
   footer?: ReactNode;
@@ -29,6 +29,7 @@ export function ConnectCard({ title, description, footer, children, ...props }: 
       animationFillMode="both"
       opacity="0"
       transform="translateY(20px)"
+      pointerEvents="auto"
       {...props}
     >
       <Flag
@@ -48,7 +49,7 @@ export function ConnectCard({ title, description, footer, children, ...props }: 
   );
 }
 
-interface ConnectActionRowProps extends BoxProps {
+interface ConnectActionRowProps extends Omit<BoxProps, 'title'> {
   img: ReactNode;
   title: ReactNode;
   description: ReactNode;

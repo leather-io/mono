@@ -1,7 +1,7 @@
-import { ResponsiveValue } from '@shopify/restyle';
+import { type ResponsiveValue } from '@shopify/restyle';
 
-import { Theme } from '../../theme-native';
-import { Box, BoxProps } from '../box/box.native';
+import { type Theme } from '../../theme-native';
+import { Box, type BoxProps } from '../box/box.native';
 import { Text } from '../text/text.native';
 
 type BadgeVariant = 'default' | 'info' | 'success' | 'warning' | 'error';
@@ -51,9 +51,16 @@ export interface BadgeProps extends BoxProps {
   variant?: BadgeVariant;
   size?: BadgeSize;
   outlined?: boolean;
+  textColor?: 'primary';
 }
 
-export function Badge({ variant = 'default', size = 'sm', outlined, ...props }: BadgeProps) {
+export function Badge({
+  variant = 'default',
+  size = 'sm',
+  outlined,
+  textColor,
+  ...props
+}: BadgeProps) {
   const styles = badgeVariants[variant];
 
   return (
@@ -68,7 +75,7 @@ export function Badge({ variant = 'default', size = 'sm', outlined, ...props }: 
       px="2"
       {...props}
     >
-      <Text variant="label03" color={styles.color}>
+      <Text variant="label03" color={textColor === 'primary' ? 'ink.text-primary' : styles.color}>
         {props.label}
       </Text>
     </Box>

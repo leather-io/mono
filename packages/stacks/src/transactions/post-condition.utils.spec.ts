@@ -36,7 +36,7 @@ describe('getPostCondition', () => {
   });
 
   it('should return post condition if it is a valid pc hex string', () => {
-    (isString as unknown as ReturnType<typeof vi.fn>).mockReturnValue(true);
+    vi.mocked(isString).mockReturnValue(true);
     const result = PostConditionModule.getPostCondition(mockPostConditionHex);
     expect(isString).toHaveBeenCalledWith(mockPostConditionHex);
     expect(result).toStrictEqual(mockDeserializedPostCondition);
@@ -44,17 +44,17 @@ describe('getPostCondition', () => {
 
   it('should throw an error if not a valid pc hex string', () => {
     const mockInvalidHex = 'abcd1234';
-    (isString as unknown as ReturnType<typeof vi.fn>).mockReturnValue(true);
+    vi.mocked(isString).mockReturnValue(true);
     try {
       PostConditionModule.getPostCondition(mockInvalidHex);
     } catch (err) {
       expect(isString).toHaveBeenCalledWith(mockInvalidHex);
-      expect((err as Error).message).toBe('Not a serialized post condition');
+      expect(err).toHaveProperty('message', 'Not a serialized post condition');
     }
   });
 
   it('should return post condition directly if already a PostCondition object', () => {
-    (isString as unknown as ReturnType<typeof vi.fn>).mockReturnValue(false);
+    vi.mocked(isString).mockReturnValue(false);
     const result = PostConditionModule.getPostCondition(mockStxPostCondition);
     expect(result).toStrictEqual(postConditionToWire(mockStxPostCondition));
   });

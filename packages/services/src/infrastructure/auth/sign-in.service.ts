@@ -10,12 +10,13 @@ import { decodeAuthIdentity } from './sign-in.utils';
 export class SignInService {
   constructor(private readonly authApiClient: LeatherAuthApiClient) {}
 
-  async signIn({ network, application, payload }: SignInInput): Promise<AuthSession> {
+  async signIn({ network, domain, application, payload }: SignInInput): Promise<AuthSession> {
     if (!application.every(app => authApplications.includes(app))) {
       throw new Error('Invalid application');
     }
     const { accessToken, refreshToken } = await this.authApiClient.authenticate({
       network,
+      domain,
       application,
       signature: payload.signature,
       publicKey: payload.publicKey,

@@ -1,15 +1,16 @@
 import { useMemo } from 'react';
 
-import { FormikHelpers } from 'formik';
-import * as yup from 'yup';
+import { type FormikHelpers } from 'formik';
+import { z } from 'zod';
 
 import type { CryptoAssetBalance, Sip10Asset } from '@leather.io/models';
 import { convertAmountToBaseUnit } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
-import { StacksSendFormValues } from '@shared/models/form.model';
+import { type StacksSendFormValues } from '@shared/models/form.model';
 
 import { getSafeImageCanonicalUri } from '@app/common/stacks-utils';
+import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
 import { stacksFungibleTokenAmountValidator } from '@app/common/validation/forms/amount-validators';
 import { useStacksTransactionFees } from '@app/query/stacks/fees/stacks-transaction-fees.hooks';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
@@ -63,12 +64,14 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
     symbol: info.symbol,
     decimals: info.decimals,
     avatar: createFtAvatar(),
-    validationSchema: yup.object({
-      amount: stacksFungibleTokenAmountValidator(availableTokenBalance),
-      recipient,
-      memo,
-      nonce,
-    }),
+    validationSchema: createFormikValidationSchema(
+      z.object({
+        amount: stacksFungibleTokenAmountValidator(availableTokenBalance),
+        recipient,
+        memo,
+        nonce,
+      })
+    ),
 
     async previewTransaction(
       values: StacksSendFormValues,

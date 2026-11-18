@@ -1,4 +1,4 @@
-import { IconSize } from '../../icons/icon/icon.shared';
+import { type IconSize } from '../../icons/icon/icon.shared';
 
 export type AvatarVariant = 'circle' | 'square';
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';

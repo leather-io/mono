@@ -6,6 +6,7 @@ import * as btc from '@scure/btc-signer';
 import {
   compileWshDescriptor,
   getAddressFromOutScript,
+  getBitcoinInputValue,
   getBtcSignerLibNetworkConfigByMode,
   getDescriptorInputsWithDisallowedSighash,
   getDescriptorMatchingInputIndexes,
@@ -14,7 +15,6 @@ import {
 import type { Money } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-import { getBitcoinInputValue } from '@shared/crypto/bitcoin/bitcoin.utils';
 import { logger } from '@shared/logger';
 
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -39,12 +39,13 @@ export interface DescriptorPsbtDetails {
 // no descriptor), so the approval screen can fall back to a raw warning rather
 // than misleading numbers.
 export function useDescriptorPsbtDetails(
-  psbtHex: string,
-  descriptor: string
+  psbtHex: string | null | undefined,
+  descriptor: string | null | undefined
 ): DescriptorPsbtDetails | null {
   const network = useCurrentNetwork();
 
   return useMemo(() => {
+    if (!psbtHex || !descriptor) return null;
     try {
       const bitcoinNetwork = getBtcSignerLibNetworkConfigByMode(network.chain.bitcoin.mode);
       const { scriptPubKey } = compileWshDescriptor(descriptor);

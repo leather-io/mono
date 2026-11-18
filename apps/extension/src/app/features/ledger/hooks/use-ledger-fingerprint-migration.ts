@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 
 import { bytesToHex } from '@noble/hashes/utils';
-import type StacksApp from '@zondax/ledger-stacks';
 
 import { logger } from '@shared/logger';
 import { assumedZeroFingerprint } from '@shared/utils';
@@ -11,13 +10,15 @@ import { useCurrentAccountId } from '@app/store/accounts/account';
 import { migrateLedgerStacksFingerprint } from '@app/store/wallets/wallet.actions';
 import { useWalletEntities } from '@app/store/wallets/wallet.selectors';
 
+import type { LedgerStacksApp } from '../utils/ledger-app';
+
 export function useLedgerFingerprintMigration() {
   const dispatch = useAppDispatch();
   const wallets = useWalletEntities();
   const currentAccount = useCurrentAccountId();
 
   return useCallback(
-    async (stacksApp: StacksApp): Promise<void> => {
+    async ({ app }: LedgerStacksApp): Promise<void> => {
       const currentWallet = wallets[currentAccount.fingerprint];
 
       function isMigrationNeeded() {
@@ -31,7 +32,7 @@ export function useLedgerFingerprintMigration() {
       logger.info('Ledger fingerprint migration required, requesting fingerprint from device');
 
       try {
-        const fingerprintResp = await stacksApp.getMasterFingerprint();
+        const fingerprintResp = await app.getMasterFingerprint();
         const actualFingerprint = bytesToHex(fingerprintResp.fingerprint);
 
         void dispatch(migrateLedgerStacksFingerprint({ fingerprint: actualFingerprint }));

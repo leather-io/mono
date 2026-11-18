@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { BreakpointToken, token } from 'leather-styles/tokens';
+import { type BreakpointToken, token } from 'leather-styles/tokens';
 
 function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(() => window.matchMedia(query).matches);

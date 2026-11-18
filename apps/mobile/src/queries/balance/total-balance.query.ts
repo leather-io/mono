@@ -1,9 +1,13 @@
-import { FetchState, toFetchState } from '@/components/loading/fetch-state';
+import { type FetchState, toFetchState } from '@/components/loading/fetch-state';
 import { useStxTotalBalance } from '@/queries/balance/stx-balance.query';
 import { useSettings } from '@/store/settings/settings';
 
-import { Money } from '@leather.io/models';
-import { QuotedBtcBalance, QuotedStxBalance, Sip10AggregateBalance } from '@leather.io/services';
+import { type Money } from '@leather.io/models';
+import {
+  type QuotedBtcBalance,
+  type QuotedStxBalance,
+  type Sip10AggregateBalance,
+} from '@leather.io/services';
 import { createMoney, isDefined, sumMoney } from '@leather.io/utils';
 
 import { useBtcTotalBalance } from './btc-balance.query';

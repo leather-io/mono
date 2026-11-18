@@ -1,22 +1,15 @@
 import { z } from 'zod';
 
+import { getNetworkTypeFromAddress } from '@leather.io/bitcoin';
 import { type BitcoinNetworkModes } from '@leather.io/models';
-import type { RpcParams, sendTransfer } from '@leather.io/rpc';
 import { uniqueArray } from '@leather.io/utils';
 
 import { FormErrorMessages } from '@shared/error-messages';
-import {
-  btcAddressNetworkValidator,
-  getNetworkTypeFromAddress,
-} from '@shared/forms/address-validators';
+import { btcAddressNetworkValidator } from '@shared/forms/address-validators';
 import { checkIfDigitsOnly } from '@shared/forms/amount-validators';
+import { stringField } from '@shared/forms/field-schemas';
 
-import {
-  accountSchema,
-  formatValidationErrors,
-  getRpcParamErrors,
-  validateRpcParams,
-} from './validation.utils';
+import { accountSchema, formatValidationErrors, getRpcParamErrors } from './validation.utils';
 
 export const defaultRpcSendTransferNetwork = 'mainnet';
 
@@ -44,6 +37,7 @@ export const rpcSendTransferParamsSchemaLegacy = z.object({
   address: z.string(),
   amount: z.string(),
   network: z.string().optional(),
+  broadcast: z.boolean().optional(),
 });
 
 /** @knipignore */
@@ -51,6 +45,7 @@ export const rpcSendTransferParamsSchema = z
   .object({
     account: accountSchema.optional(),
     network: z.string().optional(),
+    broadcast: z.boolean().optional(),
     recipients: z
       .array(
         z.object({
@@ -78,8 +73,10 @@ export const rpcSendTransferParamsSchema = z
       const networkMode = defaultNetworkIdToBitcoinNetworkMode(network);
       if (!networkMode) return true;
 
-      const addressNetworks = recipients.map(recipient =>
-        btcAddressNetworkValidator(networkMode).isValidSync(recipient.address)
+      const addressNetworks = recipients.map(
+        recipient =>
+          stringField().check(btcAddressNetworkValidator(networkMode)).safeParse(recipient.address)
+            .success
       );
 
       return !addressNetworks.some(val => val === false);
@@ -88,21 +85,14 @@ export const rpcSendTransferParamsSchema = z
   );
 
 export function convertRpcSendTransferLegacyParamsToNew(
-  params: Extract<RpcParams<typeof sendTransfer>, { address: string }>
+  params: z.infer<typeof rpcSendTransferParamsSchemaLegacy>
 ) {
   return {
     recipients: [{ address: params.address, amount: params.amount }],
     network: params.network,
     account: params.account,
+    broadcast: params.broadcast,
   };
-}
-
-export function validateRpcSendTransferLegacyParams(obj: unknown) {
-  return validateRpcParams(obj, rpcSendTransferParamsSchemaLegacy);
-}
-
-export function validateRpcSendTransferParams(obj: unknown) {
-  return validateRpcParams(obj, rpcSendTransferParamsSchema);
 }
 
 export function getRpcSendTransferParamErrors(obj: unknown) {

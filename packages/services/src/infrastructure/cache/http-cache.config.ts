@@ -1,6 +1,6 @@
 import { daysInMs, hoursInMs, minutesInMs, secondsInMs, weeksInMs } from '@leather.io/utils';
 
-import { HttpCacheOptions } from './http-cache.service';
+import { type HttpCacheOptions } from './http-cache.service';
 
 export type HttpCacheKey =
   // BnsV2Client
@@ -21,14 +21,21 @@ export type HttpCacheKey =
   | 'hiro-stacks-get-principal-transactions'
   | 'hiro-stacks-get-principal-balance-changes'
   | 'hiro-stacks-get-transaction-events'
-  | 'hiro-stacks-get-address-mempool-transactions'
+  | 'hiro-stacks-get-principal-mempool-transactions'
   | 'hiro-stacks-get-transaction-by-id'
+  | 'hiro-stacks-get-raw-transaction-by-id'
+  | 'hiro-stacks-get-contract-interface'
+  | 'hiro-stacks-get-ft-metadata'
   | 'hiro-stacks-get-nft-metadata'
-  | 'hiro-stacks-get-nft-holdings'
+  | 'hiro-stacks-get-principal-nft-balances'
   | 'hiro-stacks-call-read-only-function'
   | 'hiro-stacks-get-transfer-fee-rate'
   | 'hiro-stacks-get-transaction-fee-estimate'
   | 'hiro-stacks-get-api-status'
+  | 'hiro-stacks-get-pox-info'
+  | 'hiro-stacks-get-staking-bonds'
+  | 'hiro-stacks-get-staking-bond'
+  | 'hiro-stacks-get-principal-staking-bonds'
 
   // MempoolApiClient
   | 'mempool-api-address-utxos'
@@ -38,6 +45,7 @@ export type HttpCacheKey =
   // LeatherApiClient
   | 'leather-api-utxos'
   | 'leather-api-utxos-address'
+  | 'leather-api-staking-bonds'
   | 'leather-api-bitcoin-descriptor-transactions'
   | 'leather-api-bitcoin-address-transactions'
   | 'leather-api-bitcoin-transaction-by-txid'
@@ -109,14 +117,21 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'hiro-stacks-get-principal-transactions': { ttl: secondsInMs(10) },
   'hiro-stacks-get-principal-balance-changes': { ttl: secondsInMs(10) },
   'hiro-stacks-get-transaction-events': { ttl: secondsInMs(10) },
-  'hiro-stacks-get-address-mempool-transactions': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-principal-mempool-transactions': { ttl: secondsInMs(10) },
   'hiro-stacks-get-transaction-by-id': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-raw-transaction-by-id': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-contract-interface': { ttl: minutesInMs(30) },
+  'hiro-stacks-get-ft-metadata': { ttl: weeksInMs(8) },
   'hiro-stacks-get-nft-metadata': { ttl: weeksInMs(8) },
-  'hiro-stacks-get-nft-holdings': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-principal-nft-balances': { ttl: secondsInMs(10) },
   'hiro-stacks-call-read-only-function': { ttl: secondsInMs(15) },
   'hiro-stacks-get-transfer-fee-rate': { ttl: secondsInMs(4) },
   'hiro-stacks-get-transaction-fee-estimate': { ttl: secondsInMs(4) },
   'hiro-stacks-get-api-status': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-pox-info': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-staking-bonds': { ttl: minutesInMs(5) },
+  'hiro-stacks-get-staking-bond': { ttl: minutesInMs(5) },
+  'hiro-stacks-get-principal-staking-bonds': { ttl: minutesInMs(1) },
 
   'mempool-api-address-utxos': { ttl: secondsInMs(5) },
   'mempool-api-address-transactions': { ttl: secondsInMs(5) },
@@ -124,6 +139,7 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
 
   'leather-api-utxos': { ttl: secondsInMs(10) },
   'leather-api-utxos-address': { ttl: secondsInMs(10) },
+  'leather-api-staking-bonds': { ttl: minutesInMs(1) },
   'leather-api-bitcoin-descriptor-transactions': { ttl: secondsInMs(10) },
   'leather-api-bitcoin-address-transactions': { ttl: secondsInMs(10) },
   'leather-api-bitcoin-transaction-by-txid': { ttl: secondsInMs(10) },
@@ -172,5 +188,5 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'velar-sdk-get-token-pairs': { ttl: hoursInMs(1) },
   'velar-sdk-get-computed-amount': { ttl: secondsInMs(30) },
 
-  'emily-api-get-sbtc-limits': { ttl: hoursInMs(12) },
+  'emily-api-get-sbtc-limits': { ttl: secondsInMs(30) },
 };

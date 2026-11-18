@@ -28,9 +28,13 @@ export const querySettingsDepsRegistry = {
   'sip10-balances-service--get-sip10-account-balance': ['currency', 'network', 'assetVisibility'],
   'account-balances-service--get-total-balance': ['currency', 'network', 'assetVisibility'],
   'account-balances-service--get-available-balance': ['currency', 'network', 'assetVisibility'],
+  'account-balances-service--get-locked-balance': ['currency', 'network'],
   'account-balances-service--get-unlocked-balance': ['currency', 'network', 'assetVisibility'],
   // utxos
   'utxos-service--get-account-utxos': ['network'],
+  // bitcoin staking
+  'bitcoin-staking-service--get-account-staking-positions': ['network'],
+  'bitcoin-staking-service--get-upcoming-bond-enrollment-window': ['network'],
   // fungible asset info
   'fungible-asset-info-service--get-asset-description': [],
   'sip10-asset-service--get-asset-by-principal': ['network'],
@@ -60,4 +64,14 @@ export const querySettingsDepsRegistry = {
   'leather-api--bitcoin-fee-rates': ['network'],
   'bitcoin-transaction-fees-service--get-bitcoin-transaction-fees': ['network'],
   'stacks-transaction-fees-service--get-stacks-transaction-fees': ['network'],
+  'hiro-stacks-api-client--get-account-nonces': ['network'],
+  'hiro-stacks-api-client--get-contract-interface': ['network'],
+  'hiro-stacks-api-client--get-raw-transaction-by-id': ['network'],
+  'hiro-stacks-api-client--get-network-status': [],
+  'hiro-stacks-api-client--get-ft-metadata': ['network'],
+  'hiro-stacks-api-client--get-principal-mempool-transactions': ['network'],
+  'hiro-stacks-api-client--get-address-transactions': ['network'],
+  'mempool-api-client--fetch-address-bitcoin-txs': ['network'],
+  'alex-sdk-client--fetch-swappable-currency': [],
+  'alex-sdk-client--get-latest-prices': [],
 } as const satisfies Record<string, readonly QuerySettingsDep[]>;

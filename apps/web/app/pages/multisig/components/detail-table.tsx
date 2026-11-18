@@ -79,7 +79,7 @@ function DetailLink({ to, children }: { to: string; children: ReactNode }) {
     <StyledLink
       to={to}
       borderBottom="1px solid"
-      borderColor="ink.text-non-interactive"
+      borderColor="ink.border-default"
       _hover={{ borderColor: 'ink.action-primary-hover' }}
       _focus={{ borderColor: 'ink.action-primary-hover' }}
       outline={0}

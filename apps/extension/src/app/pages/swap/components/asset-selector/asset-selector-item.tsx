@@ -1,8 +1,9 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
+import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
 import { styled } from 'leather-styles/jsx';
 
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 import { ItemLayout } from '@leather.io/ui';
 
 import { formatCurrency } from '@app/common/currency-formatter';
@@ -18,6 +19,7 @@ interface AssetSelectorItemProps {
 
 export function AssetSelectorItem({
   name,
+  symbol,
   icon,
   balance,
   quoteBalance,
@@ -26,6 +28,8 @@ export function AssetSelectorItem({
   return (
     <styled.button
       onClick={onPress}
+      data-testid={SwapRevampSelectors.AssetItem}
+      data-symbol={symbol}
       display="flex"
       width="100%"
       justifyContent="space-between"

@@ -4,8 +4,14 @@ import { atom, useAtom } from 'jotai';
 
 const bus = new EventTarget();
 
+class AssetHoverOnEvent extends Event {
+  constructor(readonly detail: { symbol: string }) {
+    super('cursor-hover-on');
+  }
+}
+
 function emitAssetHoverOn(symbol: string) {
-  bus.dispatchEvent(new CustomEvent('cursor-hover-on', { detail: { symbol } }));
+  bus.dispatchEvent(new AssetHoverOnEvent({ symbol }));
 }
 
 function emitAssetHoverOff() {
@@ -19,8 +25,8 @@ export function usePortfolioEvents(listener?: (symbol: string | null) => void) {
 
   useEffect(() => {
     function handleHoverOn(event: Event) {
-      const customEvent = event as CustomEvent;
-      const symbol = customEvent.detail.symbol;
+      if (!(event instanceof AssetHoverOnEvent)) return;
+      const symbol = event.detail.symbol;
       setHoveredSymbol(symbol);
       listener?.(symbol);
     }

@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { RpcErrorCode, type RpcRequests } from '@leather.io/rpc';
 
+import { createMockPort } from './create-mock-port';
 import {
   createConnectingAppMetadataSearchParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
@@ -30,10 +31,12 @@ const frameId = 42;
 const tabId = 7;
 const request: RpcRequests = { jsonrpc: '2.0', id: 'req-1', method: 'supportedMethods' };
 
-function buildPort() {
-  return {
-    sender: { frameId, url: `https://${hostname}`, tab: { id: tabId } },
-  } as unknown as chrome.runtime.Port;
+function buildPort(tabUrl?: string) {
+  return createMockPort({ frameId, url: `https://${hostname}`, tab: { id: tabId, url: tabUrl } });
+}
+
+function objectContaining(expected: Record<string, unknown>): unknown {
+  return expect.objectContaining(expected);
 }
 
 function buildWalletEntities(fingerprints: string[]) {
@@ -75,6 +78,21 @@ describe(createConnectingAppMetadataSearchParams.name, () => {
     expect(result.tabId).toBe(tabId);
     expect(result.urlParams.get('frameId')).toBe(frameId.toString());
     expect(result.urlParams.get('tabId')).toBe(tabId.toString());
+  });
+
+  test('sets the frame origin and the top-level tab origin', () => {
+    const result = createConnectingAppMetadataSearchParams(
+      buildPort('https://top.example.com/some/page')
+    );
+
+    expect(result.urlParams.get('origin')).toBe(`https://${hostname}`);
+    expect(result.urlParams.get('topOrigin')).toBe('https://top.example.com');
+  });
+
+  test('omits the top origin when the sender tab has no url', () => {
+    const result = createConnectingAppMetadataSearchParams(buildPort());
+
+    expect(result.urlParams.get('topOrigin')).toBeNull();
   });
 });
 
@@ -168,7 +186,7 @@ describe('validateConnectedWalletExists', () => {
       tabId,
       expect.objectContaining({
         id: request.id,
-        error: expect.objectContaining({ code: RpcErrorCode.UNAUTHENTICATED }),
+        error: objectContaining({ code: RpcErrorCode.UNAUTHENTICATED }),
       }),
       { frameId }
     );
@@ -183,7 +201,7 @@ describe('validateConnectedWalletExists', () => {
     expect(mocks.sendMessage).toHaveBeenCalledWith(
       tabId,
       expect.objectContaining({
-        error: expect.objectContaining({ code: RpcErrorCode.UNAUTHENTICATED }),
+        error: objectContaining({ code: RpcErrorCode.UNAUTHENTICATED }),
       }),
       { frameId }
     );
@@ -245,7 +263,7 @@ describe('validateConnectedWalletExists', () => {
 
     expect(mocks.sendMessage).toHaveBeenCalledWith(
       tabId,
-      expect.objectContaining({ error: expect.objectContaining({ message: errorMessage }) }),
+      expect.objectContaining({ error: objectContaining({ message: errorMessage }) }),
       { frameId }
     );
   });

@@ -1,4 +1,4 @@
-import { leather } from '~/utils/leather-sdk';
+import { multisigLeather } from '~/features/multisig/extension/multisig-leather-client';
 
 import {
   extractWshMultisigSignatures,
@@ -32,7 +32,7 @@ export async function signBtcTransaction(
   const descriptor = resolveProposalSigningDescriptor(getMultisigDescriptor(account), psbtHex);
   const mySigner = account.signers.find(signer => signer.signingPubkey === signerPubkey);
   const walletAccount = walletAccountIndexFromPath(mySigner?.xpubOriginPath ?? null);
-  const { hex } = await leather.signPsbt({
+  const { hex } = await multisigLeather.signPsbt({
     hex: psbtHex,
     descriptor,
     network: resolveWalletRpcNetwork(transaction.network),

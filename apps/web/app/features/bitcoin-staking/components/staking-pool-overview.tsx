@@ -1,18 +1,16 @@
 import { css } from 'leather-styles/css';
 import { Box, Flex, Stack, VStack, styled } from 'leather-styles/jsx';
 import type { ColorToken } from 'leather-styles/tokens';
-import { BasicHoverCard } from '~/components/basic-hover-card';
 import { InfoGrid } from '~/components/info-grid/info-grid';
+import { InfoTooltipIcon } from '~/components/info-tooltip-icon';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { EM_DASH } from '~/constants/constants';
 import { bitcoinStakingContent, bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
-import { BitcoinStakingPool } from '~/data/bitcoin-staking-data';
+import { type BitcoinStakingPool } from '~/data/bitcoin-staking-data';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { MEAN_BURN_BLOCK_SECONDS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 import { StakingPoolAvatar } from '~/pages/bitcoin-staking/components/staking-pool-avatar';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
-
-import { InfoCircleIcon } from '@leather.io/ui';
 
 import type { CycleClockInfo } from '../utils/pox5-cycle-clock';
 import { PoolFeeValue } from './pool-fee-value';
@@ -51,48 +49,59 @@ function humanizeSeconds(seconds: number) {
   return `${Math.round(hours / 24)} days`;
 }
 
-interface InfoTooltipIconProps {
-  title: string;
-  explanation: string;
-  ariaLabel: string;
-  size?: number;
-  color?: ColorToken;
-}
-
-// Kept in the text flow rather than made a flex sibling, so the icon follows the
-// last word wherever the label wraps instead of detaching to the right. A flex
-// parent would blockify HoverCard.Trigger's anchor and break that.
-function InfoTooltipIcon({
-  title,
-  explanation,
-  ariaLabel,
-  size = 16,
-  color = 'ink.text-subdued',
-}: InfoTooltipIconProps) {
-  return (
-    <BasicHoverCard title={title} content={explanation}>
-      <styled.span
-        display="inline-flex"
-        alignItems="center"
-        height="1lh"
-        verticalAlign="top"
-        ml="space.01"
-        cursor="help"
-        aria-label={ariaLabel}
-      >
-        <InfoCircleIcon variant="small" width={size} height={size} color={color} />
-      </styled.span>
-    </BasicHoverCard>
-  );
-}
-
 // Inline elements only: ValueDisplayer renders the name inside an h4, which
 // takes phrasing content.
-function InfoLabel({ label, explanation }: { label: string; explanation: string }) {
+interface InfoLabelProps {
+  label: string;
+  explanation: string;
+  learnMoreUrl?: string;
+}
+
+function InfoLabel({ label, explanation, learnMoreUrl }: InfoLabelProps) {
   return (
     <>
       {label}
-      <InfoTooltipIcon title={label} explanation={explanation} ariaLabel={`About ${label}`} />
+      <InfoTooltipIcon
+        title={label}
+        explanation={explanation}
+        learnMoreUrl={learnMoreUrl}
+        ariaLabel={`About ${label}`}
+      />
+    </>
+  );
+}
+
+function rewardsTokenExplanation(pool: BitcoinStakingPool): string {
+  if (pool.operatorBtcPayout) {
+    return bitcoinStakingContent.operatorPayout.rewardsTokenExplanation(
+      pool.name,
+      pool.operatorBtcPayout.cadence
+    );
+  }
+  return bitcoinStakingContent.poolOverviewInfo.rewardsToken;
+}
+
+function feeExplanation(pool: BitcoinStakingPool): string {
+  if (pool.operatorBtcPayout) return bitcoinStakingContent.operatorPayout.feeExplanation(pool.name);
+  if (pool.requiresSelfClaim) return bitcoinStakingContent.selfClaim.explanation;
+  return bitcoinStakingContent.poolOverviewInfo.fee;
+}
+
+function RewardsTokenValue({ pool }: { pool: BitcoinStakingPool }) {
+  if (pool.operatorBtcPayout) {
+    return (
+      <>
+        BTC
+        <Box textStyle="label.03">
+          {bitcoinStakingContent.operatorPayout.rewardsTokenCaption(pool.name)}
+        </Box>
+      </>
+    );
+  }
+  return (
+    <>
+      sBTC
+      <Box textStyle="label.03">{bitcoinStakingContent.heroYieldLabel}</Box>
     </>
   );
 }
@@ -187,15 +196,11 @@ export function StakingPoolOverview({
           name={
             <InfoLabel
               label={bitcoinStakingLabels.rewardsToken}
-              explanation={bitcoinStakingContent.poolOverviewInfo.rewardsToken}
+              explanation={rewardsTokenExplanation(pool)}
+              learnMoreUrl={pool.operatorBtcPayout?.termsUrl}
             />
           }
-          value={
-            <>
-              sBTC
-              <Box textStyle="label.03">{bitcoinStakingContent.heroYieldLabel}</Box>
-            </>
-          }
+          value={<RewardsTokenValue pool={pool} />}
         />
       </InfoGrid.Cell>
       <InfoGrid.Cell gridColumn={['2', '2', '3']} gridRow={['2', '2', '1']}>
@@ -203,7 +208,8 @@ export function StakingPoolOverview({
           name={
             <InfoLabel
               label={bitcoinStakingLabels.fee}
-              explanation={bitcoinStakingContent.poolOverviewInfo.fee}
+              explanation={feeExplanation(pool)}
+              learnMoreUrl={pool.operatorBtcPayout?.termsUrl}
             />
           }
           value={<PoolFeeValue pool={pool} signerManagerContractId={signerManagerContractId} />}

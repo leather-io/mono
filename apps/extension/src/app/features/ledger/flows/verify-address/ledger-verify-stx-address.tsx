@@ -1,18 +1,20 @@
 import { useNavigate } from 'react-router';
 
-import StacksApp, { ResponseAddress } from '@zondax/ledger-stacks';
+import type { ResponseAddress } from '@zondax/ledger-stacks';
 
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
 
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
-import { ledgerRequestKeysRoutes } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys-route-generator';
-import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
+import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
+import { useLedgerFlow, useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
+import { type LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
 import { useRequestLedgerKeys } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
-import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
+import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
+import type { LedgerStacksApp } from '@app/features/ledger/utils/ledger-app';
 import { isLedgerOnDeviceAddressConfirmed } from '@app/features/ledger/utils/ledger-descriptor-address';
 import {
   MINIMUM_STACKS_APP_VERSION,
@@ -29,13 +31,11 @@ import {
   stacksChainIdToSingleSigAddressVersion,
 } from '@app/features/ledger/utils/stacks-ledger-utils';
 import { stacksVersionGate } from '@app/features/ledger/utils/stacks-version-gate';
-import { useToast } from '@app/features/toasts/use-toast';
+import { toastDurations, useToast } from '@app/features/toasts/use-toast';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import type { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 import { useCurrentNetwork, useNetworks } from '@app/store/networks/networks.selectors';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
-
-import { verifyAddressPaths } from './verify-address-paths';
 
 type ShowAddressOutcome =
   | { status: 'shown'; response: ResponseAddress }
@@ -44,10 +44,13 @@ type ShowAddressOutcome =
 interface LedgerVerifyStxAddressProps {
   variant: 'stx' | 'stxMultisig';
 }
-function LedgerVerifyStxAddress({ variant }: LedgerVerifyStxAddressProps) {
+export function LedgerVerifyStxAddress({ variant }: LedgerVerifyStxAddressProps) {
   const navigate = useNavigate();
   const toast = useToast();
-  const ledgerNavigate = useLedgerNavigate();
+  const dmk = useLedgerDmk();
+  const signerActions = useSignerActionController();
+  const ledgerNavigate = useLedgerSteps();
+  const { close } = useLedgerFlow();
   const network = useCurrentNetwork();
   const networks = useNetworks();
   const stacksAccount = useCurrentStacksAccount();
@@ -65,7 +68,7 @@ function LedgerVerifyStxAddress({ variant }: LedgerVerifyStxAddressProps) {
   }
 
   async function showAddressOnDevice(
-    app: StacksApp,
+    app: LedgerStacksApp,
     account: StacksAccount
   ): Promise<ShowAddressOutcome> {
     if (variant !== 'stxMultisig') {
@@ -105,32 +108,32 @@ function LedgerVerifyStxAddress({ variant }: LedgerVerifyStxAddressProps) {
     return { status: 'shown', response };
   }
 
-  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection } =
-    useRequestLedgerKeys<StacksApp>({
+  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection, isConnectionCancellable } =
+    useRequestLedgerKeys<LedgerStacksApp>({
       chain: 'stacks',
-      connectApp: connectLedgerStacksApp,
+      connectApp(options) {
+        return connectLedgerStacksApp(dmk, { ...options, runAction: signerActions.run });
+      },
       getAppVersion: getStacksAppVersion,
       isAppOpen: isStacksAppOpen,
       passesAdditionalVersionCheck: stacksVersionGate(ledgerNavigate, minimumAppVersion),
       onSuccess() {
-        toast.success('Address verified on your Ledger');
+        toast.success('Address verified on your Ledger', { duration: toastDurations.standard });
+        close();
         void navigate(RouteUrls.Home, { replace: true });
       },
       async pullKeysFromDevice(app) {
         function fail(message?: string): { status: 'failure' } {
           analytics.track('address_verification_completed', { type: variant, verified: false });
-          void ledgerNavigate.toErrorStep('stacks', message);
+          ledgerNavigate.toErrorStep('stacks', message);
           return { status: 'failure' };
         }
         const expectedAddress = getExpectedAddress();
         if (!stacksAccount || !expectedAddress) {
-          void ledgerNavigate.toErrorStep('stacks');
+          ledgerNavigate.toErrorStep('stacks');
           return { status: 'failure' };
         }
-        void ledgerNavigate.toDeviceBusyStep(
-          'Confirm the address on your Ledger…',
-          expectedAddress
-        );
+        ledgerNavigate.toDeviceBusyStep('Confirm the address on your Ledger…', expectedAddress);
         const outcome = await showAddressOnDevice(app, stacksAccount);
         if (outcome.status === 'error') return fail(outcome.message);
         if (isStxAddressResponseRejected(outcome.response)) {
@@ -154,24 +157,15 @@ function LedgerVerifyStxAddress({ variant }: LedgerVerifyStxAddressProps) {
     awaitingDeviceConnection,
   };
 
-  const canCancelLedgerAction = useCancelLedgerAction(awaitingDeviceConnection);
+  const canCancelLedgerAction = useCancelLedgerAction({
+    awaitingDeviceConnection,
+    isConnectionCancellable,
+  });
   return (
     <RequestKeysFlow
       context={ledgerContextValue}
       isActionCancellableByUser={canCancelLedgerAction}
+      onCancelAction={signerActions.cancelActive}
     />
   );
 }
-
-export const verifyStxAddressRoutes = (
-  <>
-    {ledgerRequestKeysRoutes({
-      path: verifyAddressPaths.stx,
-      component: <LedgerVerifyStxAddress variant="stx" />,
-    })}
-    {ledgerRequestKeysRoutes({
-      path: verifyAddressPaths.stxMultisig,
-      component: <LedgerVerifyStxAddress variant="stxMultisig" />,
-    })}
-  </>
-);

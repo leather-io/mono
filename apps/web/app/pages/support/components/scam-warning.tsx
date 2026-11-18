@@ -9,7 +9,7 @@ export function ScamWarning() {
         <styled.h4 textStyle="label.02">Stay safe from scams</styled.h4>
         <InfoCircleIcon color="ink.action-primary-default" variant="small" />
       </Box>
-      <styled.p textStyle="caption.01" color="ink.action-primary-hover">
+      <styled.p textStyle="caption.01" color="ink.text-secondary">
         Leather will never contact you first via direct messages on any platform. If someone reaches
         out claiming to be from Leather and offering help, they're a scammer.
         <br />
@@ -17,11 +17,11 @@ export function ScamWarning() {
         Never share your Secret Key or personal information—not even with Leather staff. We will
         never ask for it to resolve any issue. Keep it private and secure at all times.
       </styled.p>
-      <styled.p textStyle="label.03" color="ink.action-primary-hover" mt="space.06">
+      <styled.p textStyle="label.03" color="ink.text-secondary" mt="space.06">
         Contact us via{' '}
         <styled.a
           href="mailto:support@leather.io"
-          color="ink.action-primary-hover"
+          color="ink.text-secondary"
           textDecoration="underline"
         >
           support@leather.io

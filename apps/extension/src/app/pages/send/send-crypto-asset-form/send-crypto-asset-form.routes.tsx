@@ -1,14 +1,11 @@
 import { Suspense } from 'react';
-import { Navigate, Route } from 'react-router';
+import { Route } from 'react-router';
 
 import { RouteUrls } from '@shared/route-urls';
 
 import { BroadcastErrorSheet } from '@app/components/broadcast-error-dialog/broadcast-error-dialog';
 import { FullPageWithHeaderLoadingSpinner } from '@app/components/loading-spinner';
 import { EditNonceSheet } from '@app/features/dialogs/edit-nonce-dialog/edit-nonce-dialog';
-import { ledgerBitcoinTxSigningRoutes } from '@app/features/ledger/flows/bitcoin-tx-signing/ledger-bitcoin-sign-tx-container';
-import { ledgerStacksMessageSigningRoutes } from '@app/features/ledger/flows/stacks-message-signing/ledger-stacks-sign-msg.routes';
-import { ledgerStacksTxSigningRoutes } from '@app/features/ledger/flows/stacks-tx-signing/ledger-sign-stacks-tx-container';
 import { StacksHighFeeWarningContainer } from '@app/features/stacks-high-fee-warning/stacks-high-fee-warning-container';
 import { SendBtcDisabled } from '@app/pages/send/choose-crypto-asset/send-btc-disabled';
 import { AccountGate } from '@app/routes/account-gate';
@@ -38,12 +35,6 @@ const editNonceSheetRoute = <Route path={RouteUrls.EditNonce} element={<EditNonc
 const broadcastErrorSheetRoute = (
   <Route path="confirm/broadcast-error" element={<BroadcastErrorSheet />} />
 );
-const ledgerSignStacksProposalRoute = (
-  <Route path={RouteUrls.LedgerSignStacksProposal}>
-    {ledgerStacksMessageSigningRoutes}
-    <Route index element={<Navigate to=".." replace />} />
-  </Route>
-);
 
 export const sendCryptoAssetFormRoutes = (
   <Route>
@@ -63,18 +54,13 @@ export const sendCryptoAssetFormRoutes = (
         path={RouteUrls.SendCryptoAssetForm.replace(':symbol', 'btc')}
         element={<BtcSendForm />}
       >
-        {ledgerBitcoinTxSigningRoutes}
         {recipientAccountsSheetRoute}
       </Route>
       <Route path={RouteUrls.SendBtcDisabled} element={<SendBtcDisabled />} />
       <Route path={RouteUrls.SendBtcError} element={<BroadcastError />} />
 
-      <Route path={RouteUrls.SendBtcConfirmation} element={<BtcSendFormConfirmation />}>
-        {ledgerBitcoinTxSigningRoutes}
-      </Route>
-      <Route path={RouteUrls.SendBtcChooseFee} element={<BtcChooseFee />}>
-        {ledgerBitcoinTxSigningRoutes}
-      </Route>
+      <Route path={RouteUrls.SendBtcConfirmation} element={<BtcSendFormConfirmation />} />
+      <Route path={RouteUrls.SendBtcChooseFee} element={<BtcChooseFee />} />
       <Route path={RouteUrls.SentBtcTxSummary} element={<BtcSentSummary />} />
     </Route>
 
@@ -93,10 +79,7 @@ export const sendCryptoAssetFormRoutes = (
     <Route
       path={`${RouteUrls.SendCryptoAssetForm.replace(':symbol', 'stx')}/confirm`}
       element={<StacksSendFormConfirmation />}
-    >
-      {ledgerStacksTxSigningRoutes}
-      {ledgerSignStacksProposalRoute}
-    </Route>
+    />
 
     <Route
       path={RouteUrls.SendSip10Form}
@@ -110,10 +93,7 @@ export const sendCryptoAssetFormRoutes = (
       {editNonceSheetRoute}
       {recipientAccountsSheetRoute}
     </Route>
-    <Route path="/send/:symbol/:contractId/confirm" element={<StacksSendFormConfirmation />}>
-      {ledgerStacksTxSigningRoutes}
-      {ledgerSignStacksProposalRoute}
-    </Route>
+    <Route path="/send/:symbol/:contractId/confirm" element={<StacksSendFormConfirmation />} />
     <Route path={RouteUrls.SentProposalSummary} element={<ProposalSentSummary />} />
     <Route path={RouteUrls.SentStxTxSummary} element={<StacksChainTxSummaryRoute />} />
   </Route>

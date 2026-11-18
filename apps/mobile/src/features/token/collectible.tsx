@@ -4,7 +4,7 @@ import { Screen } from '@/components/screen/screen';
 import { HeaderSubtitle } from '@/components/screen/screen-header/components/header-title';
 import { NetworkBadge } from '@/features/settings/network-badge';
 
-import { NonFungibleCryptoAsset } from '@leather.io/models';
+import { type NonFungibleCryptoAsset } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 
 interface CollectibleProps {

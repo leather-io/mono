@@ -13,11 +13,23 @@ interface ApproverButtonsProps {
   onCopy?(): void;
   onViewDetails?(): void;
   isSubmitDisabled?: boolean;
+  approveLabel?: string;
+  submittingLabel?: string;
+  submittedLabel?: string;
 }
 export function ApproverButtons(props: ApproverButtonsProps) {
   const { approverState, approverButtons } = useApproverButtons();
 
-  const { onBack, onApprove, onClose, onCopy, onViewDetails } = props;
+  const {
+    onBack,
+    onApprove,
+    onClose,
+    onCopy,
+    onViewDetails,
+    approveLabel = t`Approve`,
+    submittingLabel = t`Submitting...`,
+    submittedLabel = t`Submitted`,
+  } = props;
 
   async function onApproveWrapper() {
     try {
@@ -36,8 +48,12 @@ export function ApproverButtons(props: ApproverButtonsProps) {
           <Button variant="outline" flex={1} onPress={onBack}>
             {t`Cancel`}
           </Button>
-          <Button flex={1} onPress={onApproveWrapper} disabled={props.isSubmitDisabled}>
-            {t`Approve`}
+          <Button
+            flex={1}
+            onPress={() => void onApproveWrapper()}
+            disabled={props.isSubmitDisabled}
+          >
+            {approveLabel}
           </Button>
         </Approver.Actions>
       );
@@ -48,7 +64,11 @@ export function ApproverButtons(props: ApproverButtonsProps) {
           <Button variant="outline" flex={1} onPress={onBack}>
             {t`Cancel`}
           </Button>
-          <Button flex={1} onPress={onApproveWrapper} disabled={props.isSubmitDisabled}>
+          <Button
+            flex={1}
+            onPress={() => void onApproveWrapper()}
+            disabled={props.isSubmitDisabled}
+          >
             {t`Retry`}
           </Button>
         </Approver.Actions>
@@ -57,7 +77,7 @@ export function ApproverButtons(props: ApproverButtonsProps) {
       return (
         <Approver.Actions>
           <Button flex={1} iconStart={() => <SpinnerIcon invertColors />}>
-            {t`Submitting...`}
+            {submittingLabel}
           </Button>
         </Approver.Actions>
       );
@@ -70,7 +90,7 @@ export function ApproverButtons(props: ApproverButtonsProps) {
             iconStart={() => <CheckmarkCircleIcon color="ink.background-primary" />}
             bg="green.action-primary-default"
           >
-            {t`Submitted`}
+            {submittedLabel}
           </Button>
         </Approver.Actions>
       );

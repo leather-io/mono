@@ -4,11 +4,10 @@ import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { css } from 'leather-styles/css';
 import { Stack, styled } from 'leather-styles/jsx';
 
-import { Button, Sheet } from '@leather.io/ui';
+import { Button, Sheet, useOnMount } from '@leather.io/ui';
 
 import { analytics } from '@shared/utils/analytics';
 
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { ButtonRow } from '@app/components/layout';
 
 interface TaprootUtxoWarningResponse {
@@ -45,15 +44,15 @@ export const TaprootUtxoWarningDialog = createCallable<void, TaprootUtxoWarningR
         >
           <styled.h3 textStyle="heading.05">This transaction includes taproot UTXOs</styled.h3>
 
-          <styled.p textStyle="body.02" color="ink.text-subdued">
+          <styled.p textStyle="body.02" color="ink.text-secondary">
             This transaction spends from taproot UTXOs. These UTXOs may contain ordinal
             inscriptions, rune, or BRC-20 tokens.
           </styled.p>
-          <styled.p textStyle="body.02" color="ink.text-subdued">
+          <styled.p textStyle="body.02" color="ink.text-secondary">
             If you want to protect these assets, cancel this transaction and transfer them to
             another wallet.
           </styled.p>
-          <styled.p textStyle="body.02" color="ink.text-subdued">
+          <styled.p textStyle="body.02" color="ink.text-secondary">
             Reach out to our support (
             <a
               className={css({ textDecorationLine: 'underline' })}

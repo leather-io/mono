@@ -1,7 +1,7 @@
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { type UseQueryResult, useQueries, useQuery } from '@tanstack/react-query';
 import {
-  BitcoinStakingPool,
-  BitcoinStakingProviderId,
+  type BitcoinStakingPool,
+  type BitcoinStakingProviderId,
   getPrimarySignerManagerContract,
 } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
@@ -9,17 +9,21 @@ import { useLeatherConnect } from '~/store/addresses';
 
 import { usePox5StackingClient, usePox5StacksClient } from '../hooks/use-pox5-clients';
 import { getPox5TxRefetchInterval } from '../transactions/pox5-tx-status';
+import { getExpectedFeeBips } from '../utils/pool-fee';
 import { getPox5ContractId } from '../utils/pox5-contracts';
 import { createGetPox5DelegatedAmountQueryOptions } from './create-get-pox5-delegated-amount-query-options';
 import {
-  Pox5EarnedRewards,
+  type Pox5EarnedRewards,
   createGetPox5EarnedRewardsQueryOptions,
 } from './create-get-pox5-earned-rewards-query-options';
-import { createGetPox5PayoutPreferenceQueryOptions } from './create-get-pox5-payout-preference-query-options';
+import {
+  type Pox5PayoutPreferenceResult,
+  createGetPox5PayoutPreferenceQueryOptions,
+} from './create-get-pox5-payout-preference-query-options';
 import { createGetPox5PoolFeeQueryOptions } from './create-get-pox5-pool-fee-query-options';
 import { createGetPox5SignerManagerValidationQueryOptions } from './create-get-pox5-signer-manager-validation-query-options';
 import {
-  Pox5StakerInfo,
+  type Pox5StakerInfo,
   createGetPox5StakerInfoQueryOptions,
 } from './create-get-pox5-staker-info-query-options';
 import { createGetPox5TransactionQueryOptions } from './create-get-pox5-transaction-query-options';
@@ -47,7 +51,9 @@ export function usePox5StakerInfoQuery() {
   );
 }
 
-export function usePox5PayoutPreferenceQuery(signerManagerContractId: string | undefined) {
+export function usePox5PayoutPreferenceQuery(
+  signerManagerContractId: string | undefined
+): UseQueryResult<Pox5PayoutPreferenceResult | null> {
   const { stacksAccount } = useLeatherConnect();
   const client = usePox5StacksClient();
 
@@ -94,7 +100,8 @@ export function usePox5PoolFeesByProvider(
     }
   });
   fetchedPools.forEach((pool, index) => {
-    feeBipsByProvider[pool.providerId] = feeQueries[index]?.data ?? null;
+    const fee = feeQueries[index]?.data;
+    feeBipsByProvider[pool.providerId] = fee ? getExpectedFeeBips(fee) : null;
   });
   return feeBipsByProvider;
 }
@@ -130,7 +137,7 @@ export function usePox5PoolTotalStaked(signerManagerContractIds: string[]): Pox5
 
   const resolvedAmounts = delegatedQueries
     .map(query => query.data)
-    .filter((amount): amount is bigint => amount !== null && amount !== undefined);
+    .filter(amount => amount !== null && amount !== undefined);
   const hasAllAmounts =
     signerManagerContractIds.length > 0 &&
     resolvedAmounts.length === signerManagerContractIds.length;
@@ -198,7 +205,7 @@ function getClaimableCycles(
   currentCycleId: number | undefined
 ): number[] {
   if (!info || currentCycleId === undefined) return [];
-  const lastEarnedCycle = Math.min(currentCycleId - 1, info.firstRewardCycle + info.numCycles - 1);
+  const lastEarnedCycle = Math.min(currentCycleId, info.firstRewardCycle + info.numCycles - 1);
   if (lastEarnedCycle < info.firstRewardCycle) return [];
   const firstShownCycle = Math.max(
     info.firstRewardCycle,
@@ -216,14 +223,21 @@ export interface Pox5ClaimableRewards {
   byCycle: Pox5EarnedRewards[];
 }
 
-export function usePox5ClaimableRewards(): Pox5ClaimableRewards {
+interface UsePox5ClaimableRewardsArgs {
+  enabled?: boolean;
+}
+
+export function usePox5ClaimableRewards({
+  enabled = true,
+}: UsePox5ClaimableRewardsArgs = {}): Pox5ClaimableRewards {
   const { stacksAccount } = useLeatherConnect();
   const client = usePox5StacksClient();
+  const pox5ContractId = usePox5ContractId();
   const stakerInfoQuery = usePox5StakerInfoQuery();
   const poxInfoQuery = usePox5PoxInfoQuery();
 
   const stakerInfo = stakerInfoQuery.data;
-  const cycles = getClaimableCycles(stakerInfo, poxInfoQuery.data?.current_cycle.id);
+  const cycles = enabled ? getClaimableCycles(stakerInfo, poxInfoQuery.data?.current_cycle.id) : [];
 
   const rewardsQueries = useQueries({
     queries: cycles.map(cycle =>
@@ -231,6 +245,7 @@ export function usePox5ClaimableRewards(): Pox5ClaimableRewards {
         address: stacksAccount?.address,
         signerManagerContractId: stakerInfo?.signerManagerContractId,
         cycle,
+        pox5ContractId,
         client,
       })
     ),
@@ -243,9 +258,10 @@ export function usePox5ClaimableRewards(): Pox5ClaimableRewards {
 
   return {
     isLoading:
-      stakerInfoQuery.isLoading ||
-      poxInfoQuery.isLoading ||
-      rewardsQueries.some(query => query.isLoading),
+      enabled &&
+      (stakerInfoQuery.isLoading ||
+        poxInfoQuery.isLoading ||
+        rewardsQueries.some(query => query.isLoading)),
     totalEarned: byCycle.reduce((sum, rewards) => sum + rewards.earned, 0n),
     byCycle,
   };

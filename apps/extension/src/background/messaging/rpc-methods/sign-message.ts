@@ -13,12 +13,14 @@ import {
   getRpcSignMessageParamErrors,
   validateRpcSignMessageParams,
 } from '@shared/rpc/methods/sign-message';
+import { shouldRefuseSignInMessageSigning } from '@shared/rpc/sign-in-message-veto';
 
+import { defineRpcRequestHandler } from '../define-rpc-request-handler';
 import { trackRpcRequestError, trackRpcRequestSuccess } from '../rpc-helpers';
-import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
-  RequestParams,
+  type RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
+  getOriginFromPort,
   getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
@@ -55,8 +57,25 @@ export const signMessageHandler = defineRpcRequestHandler(
       return;
     }
 
+    if (shouldRefuseSignInMessageSigning(request.params.message, getOriginFromPort(port))) {
+      void trackRpcRequestError({ endpoint: 'signMessage', error: 'Sign-in domain mismatch' });
+
+      void sendMessageToOriginatingFrame(
+        getOriginatingFrameFromPort(port),
+        createRpcErrorResponse('signMessage', {
+          id: request.id,
+          error: {
+            code: RpcErrorCode.PERMISSION_DENIED,
+            message:
+              'This is a Leather sign-in message and its Domain line does not match the requesting origin.',
+          },
+        })
+      );
+      return;
+    }
+
     const paymentType: Extract<'p2tr' | 'p2wpkh', PaymentTypes> =
-      (request.params as any).paymentType ?? 'p2wpkh';
+      request.params.paymentType ?? 'p2wpkh';
 
     if (!isSupportedMessageSigningPaymentType(paymentType)) {
       void trackRpcRequestError({ endpoint: 'signMessage', error: 'Unsupported payment type' });
@@ -79,13 +98,13 @@ export const signMessageHandler = defineRpcRequestHandler(
 
     const requestParams: RequestParams = [
       ['message', request.params.message],
-      ['network', (request.params as any).network ?? 'mainnet'],
+      ['network', request.params.network ?? 'mainnet'],
       ['paymentType', paymentType],
       ['requestId', request.id],
     ];
 
-    if (isDefined((request.params as any).account)) {
-      requestParams.push(['accountIndex', (request.params as any).account.toString()]);
+    if (isDefined(request.params.account)) {
+      requestParams.push(['accountIndex', request.params.account.toString()]);
     }
 
     const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(

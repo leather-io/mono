@@ -14,14 +14,16 @@ function decodeWitnessStack(bytes: Uint8Array): Buffer[] {
   const buffer = Buffer.from(bytes);
   let offset = 0;
   const count = decodeVaruint(buffer, offset);
-  offset += decodeVaruint.bytes;
+  if (count.numberValue === null) throw new Error('Witness item count exceeds safe range');
+  offset += count.bytes;
 
   const items: Buffer[] = [];
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < count.numberValue; i++) {
     const length = decodeVaruint(buffer, offset);
-    offset += decodeVaruint.bytes;
-    items.push(buffer.subarray(offset, offset + length));
-    offset += length;
+    if (length.numberValue === null) throw new Error('Witness item length exceeds safe range');
+    offset += length.bytes;
+    items.push(buffer.subarray(offset, offset + length.numberValue));
+    offset += length.numberValue;
   }
   if (offset !== buffer.length) throw new Error('Trailing bytes after witness stack');
   return items;
@@ -56,14 +58,14 @@ export function verifyP2wpkhBip322Signature(
     const toSign = new bitcoin.Transaction();
     toSign.version = 0;
     toSign.addInput(virtualToSpend.getHash(), 0, 0);
-    toSign.addOutput(bitcoin.script.compile([bitcoin.script.OPS.OP_RETURN]), 0);
+    toSign.addOutput(bitcoin.script.compile([bitcoin.script.OPS.OP_RETURN]), 0n);
 
     const scriptCode = bitcoin.payments.p2pkh({ pubkey: publicKey, network: networkConfig }).output;
     if (!scriptCode) return false;
 
     const { signature: compactSignature, hashType } =
       bitcoin.script.signature.decode(encodedSignature);
-    const sighash = toSign.hashForWitnessV0(0, scriptCode, 0, hashType);
+    const sighash = toSign.hashForWitnessV0(0, scriptCode, 0n, hashType);
 
     return ecc.verify(sighash, publicKey, compactSignature);
   } catch {

@@ -6,6 +6,11 @@ import { useInterval } from './use-interval.shared';
 
 vi.useFakeTimers();
 
+function defined<T>(value: T | null | undefined): T {
+  if (value === null || value === undefined) throw new Error('Expected value to be defined');
+  return value;
+}
+
 describe('useInterval', () => {
   beforeEach(() => vi.clearAllTimers());
   afterEach(() => vi.clearAllMocks());
@@ -127,7 +132,7 @@ describe('useInterval', () => {
     const newNextRunTime = result.current.nextRunTime;
     expect(newNextRunTime).not.toBe(null);
     expect(initialNextRunTime).not.toBe(null);
-    expect(newNextRunTime!).toBeGreaterThan(initialNextRunTime!);
+    expect(defined(newNextRunTime)).toBeGreaterThan(defined(initialNextRunTime));
   });
 
   it('exposes correct lastStartedAt', () => {
@@ -140,11 +145,11 @@ describe('useInterval', () => {
 
     const firstStartedAt = result.current.lastStartedAt;
     expect(firstStartedAt).not.toBe(null);
-    expect(firstStartedAt!).toBeGreaterThan(0);
+    expect(defined(firstStartedAt)).toBeGreaterThan(0);
 
     act(() => void vi.advanceTimersByTime(1000));
     expect(result.current.lastStartedAt).not.toBe(null);
-    expect(result.current.lastStartedAt!).toBeGreaterThan(firstStartedAt!);
+    expect(defined(result.current.lastStartedAt)).toBeGreaterThan(defined(firstStartedAt));
   });
 
   it('exposes correct lastCompletedAt', async () => {
@@ -169,7 +174,7 @@ describe('useInterval', () => {
     });
 
     expect(result.current.lastCompletedAt).not.toBe(null);
-    expect(result.current.lastCompletedAt!).toBeGreaterThan(0);
+    expect(defined(result.current.lastCompletedAt)).toBeGreaterThan(0);
     const firstCompletedAt = result.current.lastCompletedAt;
 
     act(() => void vi.advanceTimersByTime(1000));
@@ -179,7 +184,7 @@ describe('useInterval', () => {
       await Promise.resolve();
     });
     expect(result.current.lastCompletedAt).not.toBe(null);
-    expect(result.current.lastCompletedAt!).toBeGreaterThan(firstCompletedAt!);
+    expect(defined(result.current.lastCompletedAt)).toBeGreaterThan(defined(firstCompletedAt));
   });
 
   it('calls onError and stops when stopOnError=true', () => {
@@ -325,8 +330,10 @@ describe('useInterval', () => {
     expect(result.current.lastStartedAt).toBeGreaterThan(0);
     expect(result.current.lastCompletedAt).toBe(null);
     expect(result.current.nextRunTime).not.toBe(null);
-    expect(result.current.nextRunTime).toBeGreaterThan(result.current.lastStartedAt!);
-    expect(result.current.nextRunTime).toBeLessThanOrEqual(result.current.lastStartedAt! + 1000);
+    expect(result.current.nextRunTime).toBeGreaterThan(defined(result.current.lastStartedAt));
+    expect(result.current.nextRunTime).toBeLessThanOrEqual(
+      defined(result.current.lastStartedAt) + 1000
+    );
   });
 
   it('initializes with correct state when enabled=true, runImmediately=true', () => {
@@ -381,7 +388,7 @@ describe('useInterval', () => {
 
     expect(result.current.status).toBe('scheduled');
     const afterCompletionStartedAt = result.current.lastStartedAt;
-    expect(afterCompletionStartedAt).toBeGreaterThan(initialStartedAt!);
+    expect(afterCompletionStartedAt).toBeGreaterThan(defined(initialStartedAt));
 
     act(() => void vi.advanceTimersByTime(1000));
     expect(result.current.status).toBe('invoking');
@@ -410,7 +417,7 @@ describe('useInterval', () => {
     });
 
     const afterFirstCompletion = result.current.lastStartedAt;
-    expect(afterFirstCompletion).toBeGreaterThan(firstStartedAt!);
+    expect(afterFirstCompletion).toBeGreaterThan(defined(firstStartedAt));
   });
 
   it('maintains invariant: idle status means null nextRunTime', () => {
@@ -458,12 +465,12 @@ describe('useInterval', () => {
 
     expect(result.current.lastStartedAt).not.toBe(null);
     expect(result.current.nextRunTime).not.toBe(null);
-    expect(result.current.lastStartedAt).toBeLessThanOrEqual(result.current.nextRunTime!);
+    expect(result.current.lastStartedAt).toBeLessThanOrEqual(defined(result.current.nextRunTime));
 
     act(() => void vi.advanceTimersByTime(1000));
     expect(result.current.lastStartedAt).not.toBe(null);
     expect(result.current.nextRunTime).not.toBe(null);
-    expect(result.current.lastStartedAt).toBeLessThanOrEqual(result.current.nextRunTime!);
+    expect(result.current.lastStartedAt).toBeLessThanOrEqual(defined(result.current.nextRunTime));
   });
 
   it('preserves lastStartedAt and lastCompletedAt when error stops interval', () => {
@@ -518,8 +525,8 @@ describe('useInterval', () => {
 
     expect(result.current.status).toBe('scheduled');
     expect(result.current.lastStartedAt).not.toBe(null);
-    expect(result.current.lastStartedAt).toBeGreaterThan(firstStartedAt!);
+    expect(result.current.lastStartedAt).toBeGreaterThan(defined(firstStartedAt));
     expect(result.current.nextRunTime).not.toBe(null);
-    expect(result.current.nextRunTime).toBeGreaterThan(result.current.lastStartedAt!);
+    expect(result.current.nextRunTime).toBeGreaterThan(defined(result.current.lastStartedAt));
   });
 });

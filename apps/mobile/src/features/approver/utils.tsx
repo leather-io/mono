@@ -1,21 +1,21 @@
 import { calculateDefaultStacksFee } from '@/features/send/utils';
 import { t } from '@lingui/core/macro';
 import { bytesToHex } from '@noble/hashes/utils';
-import { StacksNetwork } from '@stacks/network';
+import { type StacksNetwork } from '@stacks/network';
 import {
-  ContractCallPayload,
+  type ContractCallPayload,
   PayloadType,
-  PayloadWire,
-  SmartContractPayloadWire,
-  StacksTransactionWire,
-  TokenTransferPayloadWire,
-  VersionedSmartContractPayloadWire,
+  type PayloadWire,
+  type SmartContractPayloadWire,
+  type StacksTransactionWire,
+  type TokenTransferPayloadWire,
+  type VersionedSmartContractPayloadWire,
   addressToString,
   cvToString,
 } from '@stacks/transactions';
 
 import { FeeTypes } from '@leather.io/models';
-import { StacksSigner, createTransferSip10TxHex } from '@leather.io/stacks';
+import { type StacksSigner, createTransferSip10TxHex } from '@leather.io/stacks';
 import {
   AnimalChameleonIcon,
   AnimalEagleIcon,
@@ -109,15 +109,13 @@ export function assertContractDeployPayload(
     throw new Error('This component should only be used for contract deploys');
 }
 
-export function isTokenTransfer(payload: PayloadWire): payload is TokenTransferPayloadWire {
+export function isTokenTransfer(payload: PayloadWire) {
   return payload.payloadType === PayloadType.TokenTransfer;
 }
-export function isContractCall(payload: PayloadWire): payload is ContractCallPayload {
+export function isContractCall(payload: PayloadWire) {
   return payload.payloadType === PayloadType.ContractCall;
 }
-export function isContractDeploy(
-  payload: PayloadWire
-): payload is VersionedSmartContractPayloadWire | SmartContractPayloadWire {
+export function isContractDeploy(payload: PayloadWire) {
   return (
     payload.payloadType === PayloadType.SmartContract ||
     payload.payloadType === PayloadType.VersionedSmartContract
@@ -141,6 +139,10 @@ export function getDefaultFee() {
   return createMoneyFromDecimal(defaultFee, 'STX');
 }
 
+export function getApproverFee(sponsored: boolean | undefined) {
+  return sponsored ? createMoneyFromDecimal(0, 'STX') : getDefaultFee();
+}
+
 export function getTransferSip10TxHex(props: {
   signer: StacksSigner;
   assetId: string;
@@ -149,7 +151,8 @@ export function getTransferSip10TxHex(props: {
   nonce: number;
   network: StacksNetwork;
   memo?: string;
+  sponsored?: boolean;
 }) {
-  const fee = getDefaultFee();
+  const fee = getApproverFee(props.sponsored);
   return createTransferSip10TxHex({ ...props, fee });
 }

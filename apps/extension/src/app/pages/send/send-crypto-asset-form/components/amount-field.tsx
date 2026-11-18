@@ -53,7 +53,7 @@ export function AmountField({
   switchableAmount,
   tokenSymbol,
 }: AmountFieldProps) {
-  const [field, meta, helpers] = useField('amount');
+  const [field, meta, helpers] = useField<string>('amount');
 
   const showError = useShowFieldError('amount');
   const [fontSize, setFontSize] = useState(maxFontSize);

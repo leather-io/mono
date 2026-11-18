@@ -372,7 +372,7 @@ describe('createBlockchainActivityView', () => {
 
   it('routes all copy through an injected translate', () => {
     function translate(template: string, values: Record<string, string> = {}) {
-      return template.replace(/{(\w+)}/g, (_m, key) => values[key] ?? '').toUpperCase();
+      return template.replace(/{(\w+)}/g, (_m, key: string) => values[key] ?? '').toUpperCase();
     }
     const view = createBlockchainActivityView(
       makeActivity({ action: 'send', counterparty: 'SP123', balanceChanges: [sentBtc] }),

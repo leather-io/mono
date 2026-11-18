@@ -1,4 +1,4 @@
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 
 import { AccountActions } from './components/account-actions';
 import { AccountStacking } from './components/account-stacking';

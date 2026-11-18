@@ -1,7 +1,7 @@
 import { CryptoAssetCategories, CryptoAssetChains, CryptoAssetProtocols } from '@leather.io/models';
 import { getSip10TokenNameWithOverrides } from '@leather.io/utils';
 
-import { LeatherApiSip10Token } from '../infrastructure/api/leather/leather-api.client';
+import { type LeatherApiSip10Token } from '../infrastructure/api/leather/leather-api.client';
 import {
   createSip10Asset,
   getAddressFromAssetIdentifier,

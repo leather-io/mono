@@ -1,17 +1,17 @@
-import { StackingClient } from '@stacks/stacking';
-import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
+import { type StackingClient } from '@stacks/stacking';
+import { type BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { analytics } from '~/utils/analytics/analytics';
-import { StxCallContractParams } from '~/utils/leather-sdk';
-import { WalletTransactionResult } from '~/utils/wallet';
+import { type StxCallContractParams } from '~/utils/leather-sdk';
+import { type WalletTransactionResult } from '~/utils/wallet';
 
 import { getPox5ContractId } from '../utils/pox5-contracts';
 import { getCycleContextFromPoxInfo, getStakeStartBurnHeight } from '../utils/pox5-cycle-clock';
 import { getPoolContractData } from './pool-contract-data';
-import { ClaimStakerRewardsArgs } from './pox5-claim-rewards';
-import { Pox5PayoutPreference } from './pox5-signer-calldata';
-import { StakeUpdateArgs } from './pox5-stake-update';
-import { UnstakeArgs } from './pox5-unstake';
+import { type ClaimStakerRewardsArgs } from './pox5-claim-rewards';
+import { type Pox5PayoutPreference } from './pox5-signer-calldata';
+import { type StakeUpdateArgs } from './pox5-stake-update';
+import { type UnstakeArgs } from './pox5-unstake';
 
 interface StakingWallet {
   stxCallContract(params: StxCallContractParams): Promise<WalletTransactionResult>;
@@ -33,7 +33,7 @@ interface CreateStakeMutationOptionsArgs {
 export function createStakeMutationOptions({ wallet, client }: CreateStakeMutationOptionsArgs) {
   return {
     mutationKey: ['pox5-stake', wallet, client],
-    mutationFn: async (values: StakeMutationValues) => {
+    async mutationFn(values: StakeMutationValues) {
       // Fetched at submit time: the contract rejects a start-burn-ht that does
       // not resolve to the next reward cycle, so a cached height near a cycle
       // boundary would make the transaction fail.
@@ -80,7 +80,7 @@ export function createStakeUpdateMutationOptions({
 }: CreateStakeUpdateMutationOptionsArgs) {
   return {
     mutationKey: ['pox5-stake-update', wallet, client],
-    mutationFn: async (values: StakeUpdateMutationValues) => {
+    async mutationFn(values: StakeUpdateMutationValues) {
       const poxInfo = await client.getPoxInfo();
       const { clock } = getCycleContextFromPoxInfo(poxInfo);
       if (clock.isInPreparePhase) {
@@ -130,7 +130,7 @@ interface CreateUnstakeMutationOptionsArgs {
 export function createUnstakeMutationOptions({ wallet, client }: CreateUnstakeMutationOptionsArgs) {
   return {
     mutationKey: ['pox5-unstake', wallet, client],
-    mutationFn: async (values: UnstakeMutationValues) => {
+    async mutationFn(values: UnstakeMutationValues) {
       const poxInfo = await client.getPoxInfo();
       const { clock } = getCycleContextFromPoxInfo(poxInfo);
       if (clock.isInPreparePhase) {
@@ -163,7 +163,7 @@ export function createClaimRewardsMutationOptions({
 }: CreateClaimRewardsMutationOptionsArgs) {
   return {
     mutationKey: ['pox5-claim-rewards', wallet],
-    mutationFn: async (values: ClaimRewardsMutationValues) => {
+    async mutationFn(values: ClaimRewardsMutationValues) {
       const options = getPoolContractData(values.signerManagerContractId).claimStakerRewards({
         signerManagerContractId: values.signerManagerContractId,
         stakerAddress: values.stakerAddress,

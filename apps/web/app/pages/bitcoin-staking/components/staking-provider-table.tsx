@@ -3,8 +3,9 @@ import { Link as RouterLink, useNavigate } from 'react-router';
 import { css, cx } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
 import { link as linkRecipe } from 'leather-styles/recipes';
-import { HTMLStyledProps } from 'leather-styles/types';
+import { type HTMLStyledProps } from 'leather-styles/types';
 import { ChainLogoIcon } from '~/components/icons/chain-logo';
+import { InfoTooltipIcon } from '~/components/info-tooltip-icon';
 import { LearnHoverCard } from '~/components/learn-hover-card';
 import {
   ForceRowHeight,
@@ -13,10 +14,10 @@ import {
   rowPadding,
   theadBorderBottom,
 } from '~/components/table';
-import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
+import { bitcoinStakingContent, bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
 import { learnArticles } from '~/content/learn-content';
 import {
-  BitcoinStakingPool,
+  type BitcoinStakingPool,
   bitcoinStakingPoolList,
   getSignerManagerContracts,
   getStakingPoolFromSlug,
@@ -26,6 +27,11 @@ import {
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
 import { PoolFeeValue } from '~/features/bitcoin-staking/components/pool-fee-value';
 import { PoolTvlValue } from '~/features/bitcoin-staking/components/pool-tvl-value';
+import {
+  getPoolPayoutMode,
+  getRewardsTokenLabel,
+  getRewardsTokenSymbol,
+} from '~/features/bitcoin-staking/utils/pool-payout';
 import { stakingPaths } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
 
 import { ArrowLeftIcon, Flag } from '@leather.io/ui';
@@ -46,6 +52,8 @@ function StakingProviderRow({ pool }: StakingProviderRowProps) {
   const navigate = useNavigate();
   const slug = stakingProviderIdToSlug(pool.providerId);
   const { to } = useStakingPoolLink(slug);
+  const payoutMode = getPoolPayoutMode(pool);
+  const { operatorPayout } = bitcoinStakingContent;
 
   return (
     <Table.Row
@@ -59,11 +67,34 @@ function StakingProviderRow({ pool }: StakingProviderRowProps) {
           color="ink.text-primary"
         >
           {pool.name}
+          {pool.requiresSelfClaim && (
+            <styled.span display="block" textStyle="label.03" color="ink.text-subdued">
+              {bitcoinStakingLabels.selfClaimOnly}
+              <InfoTooltipIcon
+                title={bitcoinStakingLabels.selfClaimOnly}
+                explanation={bitcoinStakingContent.selfClaim.explanation}
+                ariaLabel={`About ${bitcoinStakingLabels.selfClaimOnly}`}
+                size={12}
+              />
+            </styled.span>
+          )}
+          {pool.operatorBtcPayout && (
+            <styled.span display="block" textStyle="label.03" color="ink.text-subdued">
+              {operatorPayout.badge}
+              <InfoTooltipIcon
+                title={operatorPayout.badge}
+                explanation={operatorPayout.explanation(pool.name)}
+                learnMoreUrl={pool.operatorBtcPayout.termsUrl}
+                ariaLabel={`About ${operatorPayout.badge}`}
+                size={12}
+              />
+            </styled.span>
+          )}
         </Flag>
       </styled.td>
       <styled.td px="space.04" textAlign="left" color="black">
-        <Flag spacing="space.02" img={<ChainLogoIcon symbol="sBTC" />}>
-          {pool.supportsBtcPayout ? 'sBTC / BTC' : 'sBTC'}
+        <Flag spacing="space.02" img={<ChainLogoIcon symbol={getRewardsTokenSymbol(payoutMode)} />}>
+          {getRewardsTokenLabel(payoutMode)}
         </Flag>
       </styled.td>
       <styled.td px="space.04" textAlign="right" color="black">

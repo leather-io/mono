@@ -1,8 +1,12 @@
+import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
+import { createBase58check } from '@scure/base';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
+import { Psbt } from 'bitcoinjs-lib';
 
 import { compileWshDescriptor } from '@leather.io/bitcoin';
+import { fingerprintAsNumberToHex } from '@leather.io/crypto';
 
 import { useSignDescriptorPsbt } from './descriptor-psbt.hooks';
 
@@ -11,14 +15,9 @@ const mocks = vi.hoisted(() => {
   return {
     walletState,
     signPsbt: vi.fn(),
-    toConnectAndSignBitcoinTransactionStep: vi.fn(),
-    listenForBitcoinTxLedgerSigning: vi.fn(),
+    signWithLedger:
+      vi.fn<(request: { psbt: Uint8Array; descriptor?: string }) => Promise<unknown>>(),
   };
-});
-
-vi.mock('react-router', async importOriginal => {
-  const actual = await importOriginal<typeof import('react-router')>();
-  return { ...actual, useLocation: () => ({ pathname: '/' }) };
 });
 
 vi.mock('@app/common/use-wallet-type', () => ({
@@ -30,14 +29,8 @@ vi.mock('@app/common/use-wallet-type', () => ({
   }),
 }));
 
-vi.mock('@app/features/ledger/flows/bitcoin-tx-signing/bitcoin-tx-signing-event-listeners', () => ({
-  listenForBitcoinTxLedgerSigning: mocks.listenForBitcoinTxLedgerSigning,
-}));
-
-vi.mock('@app/features/ledger/hooks/use-ledger-navigate', () => ({
-  useLedgerNavigate: () => ({
-    toConnectAndSignBitcoinTransactionStep: mocks.toConnectAndSignBitcoinTransactionStep,
-  }),
+vi.mock('@app/features/ledger/flow/ledger-flow.context', () => ({
+  useLedgerFlow: () => ({ sign: mocks.signWithLedger }),
 }));
 
 vi.mock('@app/features/psbt-signer/hooks/use-psbt-signer', () => ({
@@ -65,12 +58,18 @@ function makeNativeSegwitAccountKeychain(seedByte: number) {
   return HDKey.fromMasterSeed(new Uint8Array(32).fill(seedByte)).derive("m/84'/0'/0'");
 }
 
+function makeFingerprint(fingerprint: number) {
+  return hexToBytes(fingerprintAsNumberToHex(fingerprint));
+}
+
 function deriveAddressIndexKey(seedByte: number) {
   return makeNativeSegwitAccountKeychain(seedByte).deriveChild(0).deriveChild(0);
 }
 
 const accountKeychain = makeNativeSegwitAccountKeychain(1);
 const accountAddressIndexKey = deriveAddressIndexKey(1);
+const cosignerRootKeychain = HDKey.fromMasterSeed(new Uint8Array(32).fill(2));
+const cosignerFingerprint = makeFingerprint(cosignerRootKeychain.fingerprint);
 const cosignerAddressIndexKey = deriveAddressIndexKey(2);
 const accountDerivationPath = "m/84'/0'/0'/0/0";
 const multiSigDescriptor = `wsh(multi(2,${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/0,${accountKeychain.publicExtendedKey}/0/0))`;
@@ -80,6 +79,7 @@ const vaultIndexDescriptor = `wsh(sortedmulti(2,${makeNativeSegwitAccountKeychai
 const mixedKeyPathDescriptor = `wsh(multi(2,${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/0,${accountKeychain.publicExtendedKey}/0/7))`;
 const accountVaultIndexKey = makeNativeSegwitAccountKeychain(1).deriveChild(0).deriveChild(7);
 const cosignerVaultIndexKey = makeNativeSegwitAccountKeychain(2).deriveChild(0).deriveChild(7);
+const base58check = createBase58check(sha256);
 
 function buildDescriptorTx(descriptor: string, signWith: HDKey[]) {
   const { scriptPubKey, witnessScript } = compileWshDescriptor(descriptor);
@@ -100,6 +100,29 @@ function buildDescriptorTx(descriptor: string, signWith: HDKey[]) {
 
 function buildDescriptorPsbtHex(descriptor: string, signWith: HDKey[]) {
   return bytesToHex(buildDescriptorTx(descriptor, signWith).toPSBT());
+}
+
+function addCosignerXpubMetadata(psbtHex: string) {
+  const psbt = Psbt.fromBuffer(hexToBytes(psbtHex));
+  psbt.updateGlobal({
+    globalXpub: [
+      {
+        extendedPubkey: base58check.decode(makeNativeSegwitAccountKeychain(2).publicExtendedKey),
+        masterFingerprint: cosignerFingerprint,
+        path: "m/84'/0'/0'",
+      },
+    ],
+  });
+  psbt.updateInput(0, {
+    bip32Derivation: [
+      {
+        masterFingerprint: cosignerFingerprint,
+        pubkey: requireBytes(cosignerAddressIndexKey.publicKey),
+        path: "m/84'/0'/0'/0/0",
+      },
+    ],
+  });
+  return bytesToHex(psbt.toBuffer());
 }
 
 function buildNonDescriptorPsbtHex() {
@@ -155,6 +178,7 @@ describe(useSignDescriptorPsbt.name, () => {
       });
 
       const signedTx = await useSignDescriptorPsbt()(psbtHex, multiSigDescriptor);
+      if (!signedTx) throw new Error('Expected a signed transaction');
 
       expect(hasPartialSigFor(signedTx, 0, requireBytes(accountAddressIndexKey.publicKey))).toBe(
         true
@@ -172,6 +196,7 @@ describe(useSignDescriptorPsbt.name, () => {
       });
 
       const signedTx = await useSignDescriptorPsbt()(psbtHex, vaultIndexDescriptor);
+      if (!signedTx) throw new Error('Expected a signed transaction');
 
       expect(mocks.signPsbt).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -222,49 +247,83 @@ describe(useSignDescriptorPsbt.name, () => {
       await expect(useSignDescriptorPsbt()(psbtHex, rawPubkeyCosignerDescriptor)).rejects.toThrow(
         'Ledger cannot sign this descriptor'
       );
-      expect(mocks.toConnectAndSignBitcoinTransactionStep).not.toHaveBeenCalled();
-      expect(mocks.listenForBitcoinTxLedgerSigning).not.toHaveBeenCalled();
+      expect(mocks.signWithLedger).not.toHaveBeenCalled();
     });
 
-    test('threads the prepared psbt, signing config, location and descriptor through the ledger flow', async () => {
+    test('hydrates a raw co-signer key from psbt xpub metadata', async () => {
+      const psbtHex = addCosignerXpubMetadata(
+        buildDescriptorPsbtHex(rawPubkeyCosignerDescriptor, [])
+      );
+      const deviceSignedTx = buildDescriptorTx(rawPubkeyCosignerDescriptor, [
+        accountAddressIndexKey,
+      ]);
+      mocks.signWithLedger.mockResolvedValue({ status: 'signed', value: deviceSignedTx });
+
+      const signedTx = await useSignDescriptorPsbt()(psbtHex, rawPubkeyCosignerDescriptor);
+
+      expect(signedTx).toBe(deviceSignedTx);
+      const openCall = mocks.signWithLedger.mock.calls[0];
+      if (!openCall) throw new Error('Expected the Ledger flow to open');
+      const ledgerDescriptor: unknown = openCall[0].descriptor;
+      if (typeof ledgerDescriptor !== 'string') throw new Error('Expected Ledger descriptor');
+      expect(ledgerDescriptor).toContain(
+        `${makeNativeSegwitAccountKeychain(2).publicExtendedKey}/0/0`
+      );
+      expect(ledgerDescriptor).not.toContain(bytesToHex(cosignerFingerprint));
+      expect(bytesToHex(compileWshDescriptor(ledgerDescriptor).scriptPubKey)).toBe(
+        bytesToHex(compileWshDescriptor(rawPubkeyCosignerDescriptor).scriptPubKey)
+      );
+    });
+
+    test('threads the prepared psbt, signing config and descriptor through the ledger flow', async () => {
       const psbtHex = buildDescriptorPsbtHex(multiSigDescriptor, [cosignerAddressIndexKey]);
       const deviceSignedTx = buildDescriptorTx(multiSigDescriptor, [
         cosignerAddressIndexKey,
         accountAddressIndexKey,
       ]);
       let threadedPsbt: Uint8Array | undefined;
-      mocks.toConnectAndSignBitcoinTransactionStep.mockImplementation((psbt: Uint8Array) => {
-        threadedPsbt = psbt;
+      mocks.signWithLedger.mockImplementation((request: { psbt: Uint8Array }) => {
+        threadedPsbt = request.psbt;
+        return Promise.resolve({ status: 'signed', value: deviceSignedTx });
       });
-      mocks.listenForBitcoinTxLedgerSigning.mockResolvedValue(deviceSignedTx);
 
       const signedTx = await useSignDescriptorPsbt()(psbtHex, multiSigDescriptor);
+      if (!signedTx) throw new Error('Expected a signed transaction');
+      const anyPsbtBytes: unknown = expect.any(Uint8Array);
 
       expect(signedTx).toBe(deviceSignedTx);
-      expect(mocks.toConnectAndSignBitcoinTransactionStep).toHaveBeenCalledWith(
-        expect.any(Uint8Array),
-        [{ index: 0, derivationPath: accountDerivationPath }],
-        { pathname: '/' },
-        multiSigDescriptor
-      );
+      expect(mocks.signWithLedger).toHaveBeenCalledWith({
+        kind: 'sign-bitcoin-tx',
+        psbt: anyPsbtBytes,
+        inputsToSign: [{ index: 0, derivationPath: accountDerivationPath }],
+        descriptor: multiSigDescriptor,
+        settleOnRejection: false,
+      });
       const threadedTx = btc.Transaction.fromPSBT(requireBytes(threadedPsbt));
       const { witnessScript } = compileWshDescriptor(multiSigDescriptor);
       expect(bytesToHex(requireBytes(threadedTx.getInput(0).witnessScript))).toEqual(
         bytesToHex(witnessScript)
       );
-      expect(mocks.listenForBitcoinTxLedgerSigning).toHaveBeenCalledWith(
-        bytesToHex(requireBytes(threadedPsbt))
-      );
     });
 
     test('rejects when the device result lacks the wallet signature', async () => {
       const psbtHex = buildDescriptorPsbtHex(multiSigDescriptor, [cosignerAddressIndexKey]);
-      mocks.listenForBitcoinTxLedgerSigning.mockResolvedValue(
-        buildDescriptorTx(multiSigDescriptor, [cosignerAddressIndexKey])
-      );
+      mocks.signWithLedger.mockResolvedValue({
+        status: 'signed',
+        value: buildDescriptorTx(multiSigDescriptor, [cosignerAddressIndexKey]),
+      });
 
       await expect(useSignDescriptorPsbt()(psbtHex, multiSigDescriptor)).rejects.toThrow(
         'Failed to add signature to descriptor input'
+      );
+    });
+
+    test('rejects with the settlement error when the ledger flow fails', async () => {
+      const psbtHex = buildDescriptorPsbtHex(multiSigDescriptor, [cosignerAddressIndexKey]);
+      mocks.signWithLedger.mockResolvedValue({ status: 'failed', error: 'Rejected by user' });
+
+      await expect(useSignDescriptorPsbt()(psbtHex, multiSigDescriptor)).rejects.toThrow(
+        'Rejected by user'
       );
     });
   });

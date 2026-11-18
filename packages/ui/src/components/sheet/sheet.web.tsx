@@ -1,4 +1,4 @@
-import { JSXElementConstructor, ReactElement, ReactNode, cloneElement } from 'react';
+import { type ReactElement, type ReactNode, cloneElement } from 'react';
 
 import { type CssFunction, css } from 'leather-styles/css';
 import { Box } from 'leather-styles/jsx';
@@ -20,7 +20,7 @@ interface RadixDialogProps extends SheetProps {
   description?: string;
   children: ReactNode;
   footer?: ReactNode;
-  header?: ReactElement<any, string | JSXElementConstructor<any>>;
+  header?: ReactElement<Pick<SheetProps, 'onClose'>>;
   onGoBack?(): void;
   wrapChildren?: boolean;
   variant?: SheetVariant;
@@ -84,8 +84,11 @@ export function Sheet({
             bg: 'overlay',
             position: 'fixed',
             inset: 0,
-            animation: 'overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+            animation: 'fadein 150ms cubic-bezier(0.16, 1, 0.3, 1)',
             zIndex: 999,
+            '&[data-state=closed]': {
+              animation: 'fadeout 150ms cubic-bezier(0.16, 1, 0.3, 1)',
+            },
           })}
         >
           <RadixDialog.Content
@@ -110,6 +113,9 @@ export function Sheet({
               '&[data-state=open]': {
                 animation: { base: '', md: 'contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1)' },
               },
+              '&[data-state=closed]': {
+                animation: { base: '', md: 'fadeout 150ms cubic-bezier(0.16, 1, 0.3, 1)' },
+              },
               ...variantMap[variant],
             })}
           >
@@ -120,7 +126,8 @@ export function Sheet({
                 style={{
                   height: '100%',
                   maxHeight: contentMaxHeight,
-                  marginBottom: footer ? token('sizes.footerHeight') : token('spacing.space.04'),
+                  minHeight: 0,
+                  marginBottom: footer ? 0 : token('spacing.space.04'),
                   overflowY: 'auto',
                 }}
               >
@@ -129,7 +136,11 @@ export function Sheet({
             ) : (
               children
             )}
-            {footer && <SheetFooter>{footer}</SheetFooter>}
+            {footer && (
+              <SheetFooter position="static" flexShrink={0}>
+                {footer}
+              </SheetFooter>
+            )}
           </RadixDialog.Content>
         </RadixDialog.Overlay>
       </RadixDialog.Portal>
