@@ -58,7 +58,9 @@ branch, where the environment refuses the key. Either way no App status appears 
 request stays blocked.
 
 The gate never checks out or runs pull request code. It reads the pull request and its reviews
-through the API and parses every response against a schema before anything acts on it.
+through the API and parses every response against a schema before anything acts on it. The job has
+no access to the Actions cache (`cache-mode: none`, pnpm cache off in `setup-tools`), so nothing
+another job saved runs next to the App token.
 
 The App's private key never reaches the runner. It lives in AWS KMS: the `aws-credentials` step
 logs in to AWS through GitHub's OIDC token, then `pnpm lt review-gate app-token create` has KMS sign

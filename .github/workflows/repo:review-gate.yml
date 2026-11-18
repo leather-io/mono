@@ -17,6 +17,7 @@ jobs:
     if: github.ref_name == 'dev'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    cache-mode: none
     environment: review-gate
     concurrency:
       group: review-gate-${{ inputs.pr }}
