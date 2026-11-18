@@ -1,3 +1,4 @@
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { HStack, Stack, styled } from 'leather-styles/jsx';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 
@@ -16,7 +17,7 @@ export function PreparePhaseCallout({ secondsUntilStakingReopens }: PreparePhase
       borderWidth={1}
       borderColor="ink.border-default"
       borderRadius="sm"
-      data-testid="prepare-phase-callout"
+      data-testid={BitcoinStakingSelectors.PreparePhaseCallout}
     >
       <Flag
         img={<Avatar size="lg" variant="square" icon={<ArrowRotateClockwiseIcon />} />}

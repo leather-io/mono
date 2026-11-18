@@ -1,3 +1,4 @@
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { HStack, Stack, styled } from 'leather-styles/jsx';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 import { POX5_SIGNER_SET_MIN_USTX } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
@@ -20,7 +21,7 @@ export function PoolHealthWarning({ totalStakedMicroStx }: PoolHealthWarningProp
       borderWidth={1}
       borderColor="ink.border-default"
       borderRadius="sm"
-      data-testid="pool-health-warning"
+      data-testid={BitcoinStakingSelectors.PoolHealthWarning}
     >
       <Flag img={<ErrorCircleIcon />} align="top">
         <Stack gap="space.01">

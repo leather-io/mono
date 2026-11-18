@@ -1,3 +1,4 @@
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { Stack, styled } from 'leather-styles/jsx';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 import { type BitcoinStakingPool } from '~/data/bitcoin-staking-data';
@@ -86,7 +87,7 @@ export function StakingConfirmationSteps({
               onClick={() => {
                 if (acknowledgment.requireAccepted()) onConfirm();
               }}
-              data-testid="confirmation-stake-button"
+              data-testid={BitcoinStakingSelectors.ConfirmationStakeButton}
             >
               {content.confirmStake}
             </Button>

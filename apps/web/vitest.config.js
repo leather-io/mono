@@ -8,6 +8,7 @@ export default defineProject({
   resolve: {
     alias: {
       '~': path.resolve(__dirname, 'app'),
+      '@tests': path.resolve(__dirname, 'tests'),
       'leather-styles': path.resolve(__dirname, 'leather-styles'),
       axios: path.resolve(__dirname, 'node_modules/axios/dist/esm/axios.js'),
     },
