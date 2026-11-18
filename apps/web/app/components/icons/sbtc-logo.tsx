@@ -1,6 +1,6 @@
 import { styled } from 'leather-styles/jsx';
-import { HTMLStyledProps } from 'leather-styles/types';
-import { ImageSizeProps } from '~/utils/types';
+import { type HTMLStyledProps } from 'leather-styles/types';
+import { type ImageSizeProps } from '~/utils/types';
 
 export function SbtcLogo(props: HTMLStyledProps<'img'> & ImageSizeProps) {
   return (

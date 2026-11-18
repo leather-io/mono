@@ -1,4 +1,4 @@
-import { Container, Newable } from 'inversify';
+import { Container, type Newable } from 'inversify';
 
 import { ActivityService } from './activity/activity.service';
 import { BlockchainActivityService } from './activity/blockchain-activity.service';
@@ -16,16 +16,19 @@ import { Sip9sService } from './collectibles/sip9s.service';
 import { ComplianceService } from './compliance/compliance.service';
 import { BitcoinTransactionFeesService } from './fees/bitcoin-transaction-fees.service';
 import { StacksTransactionFeesService } from './fees/stacks-transaction-fees.service';
+import { AlexSdkClient } from './infrastructure/api/alex/alex-sdk.client';
 import { BnsV2ApiClient } from './infrastructure/api/bns-v2/bns-v2-api.client';
 import { HiroStacksApiClient } from './infrastructure/api/hiro/hiro-stacks-api.client';
 import { LeatherApiClient } from './infrastructure/api/leather/leather-api.client';
 import { LeatherAuthApiClient } from './infrastructure/api/leather/leather-auth-api.client';
+import { MempoolApiClient } from './infrastructure/api/mempool/mempool-api.client';
 import type { AuthSessionService } from './infrastructure/auth/auth-session.service';
 import { SignInService } from './infrastructure/auth/sign-in.service';
-import { HttpCacheService } from './infrastructure/cache/http-cache.service';
-import { Environment } from './infrastructure/environment';
+import { type HttpCacheService } from './infrastructure/cache/http-cache.service';
+import { type Environment } from './infrastructure/environment';
 import { installHiroPartnerFetch } from './infrastructure/hiro-partner-fetch';
-import { SettingsService } from './infrastructure/settings/settings.service';
+import { RateLimiterService } from './infrastructure/rate-limiter/rate-limiter.service';
+import { type SettingsService } from './infrastructure/settings/settings.service';
 import { Types } from './inversify.types';
 import { MarketDataService } from './market/market-data.service';
 import { MarketHistoryService } from './market/market-history.service';
@@ -33,6 +36,7 @@ import { MarketStatsService } from './market/market-stats.service';
 import { MultisigService } from './multisig/multisig.service';
 import { NotificationsService } from './notifications/notifications.service';
 import { StacksProtocolService } from './protocols/stacks-protocol.service';
+import { BitcoinStakingService } from './staking/bitcoin-staking.service';
 import { SwapService } from './swap/swap.service';
 import { TokenAnalyticsService } from './token-analytics/token-analytics.service';
 import { BitcoinTransactionsService } from './transactions/bitcoin-transactions.service';
@@ -108,6 +112,9 @@ export function getSip10AssetService() {
 }
 export function getUtxosService() {
   return getServicesContainer().get(UtxosService);
+}
+export function getBitcoinStakingService() {
+  return getServicesContainer().get(BitcoinStakingService);
 }
 export function getStacksTransactionsService() {
   return getServicesContainer().get(StacksTransactionsService);
@@ -209,9 +216,18 @@ export function getHiroStacksApiClient() {
 export function getBnsV2ApiClient() {
   return getServicesContainer().get(BnsV2ApiClient);
 }
+export function getMempoolApiClient() {
+  return getServicesContainer().get(MempoolApiClient);
+}
+export function getAlexSdkClient() {
+  return getServicesContainer().get(AlexSdkClient);
+}
 /* 
   Infrastructure
 */
 export function getHttpCacheService() {
   return getServicesContainer().get<HttpCacheService>(Types.CacheService);
+}
+export function getRateLimiterService() {
+  return getServicesContainer().get(RateLimiterService);
 }

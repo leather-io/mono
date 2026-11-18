@@ -1,6 +1,8 @@
+import { type CSSProperties } from 'react';
+
 import { css } from 'leather-styles/css';
-import { Box, Flex, FlexProps } from 'leather-styles/jsx';
-import { SpacingToken, Token, token } from 'leather-styles/tokens';
+import { Box, Flex, type FlexProps } from 'leather-styles/jsx';
+import { type SpacingToken, token } from 'leather-styles/tokens';
 
 import type { FlagAlignment } from './flag.shared';
 
@@ -38,6 +40,10 @@ export function Flag({
   children,
   ...props
 }: FlagProps) {
+  const flagSpacingStyle: CSSProperties & Record<'--flag-spacing', string> = {
+    '--flag-spacing': token.var(`spacing.${spacing}`),
+  };
+
   return (
     <Flex
       flexDirection={reverse ? 'row-reverse' : 'row'}
@@ -54,9 +60,7 @@ export function Flag({
           mr: reverse ? undefined : 'var(--flag-spacing)',
           ml: reverse ? 'var(--flag-spacing)' : undefined,
         })}
-        style={
-          { '--flag-spacing': token.var(('spacing.' + spacing) as Token) } as React.CSSProperties
-        }
+        style={flagSpacingStyle}
       >
         {img}
       </div>

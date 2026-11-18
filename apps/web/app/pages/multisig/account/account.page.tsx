@@ -70,7 +70,7 @@ export function AccountDetailPage() {
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
   const accountBalance = useVaultAccountBalance(account.data);
   const accountAssets = useVaultAccountAssets(account.data);
-  const updateAccount = useUpdateVaultAccount(network, vaultId ?? '');
+  const updateAccount = useUpdateVaultAccount(network, vaultId);
   const { addAccountToWallet, isAddingToWallet, isAddedToWallet } = useAddAccountToWallet(
     vault.data,
     account.data

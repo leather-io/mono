@@ -5,7 +5,7 @@ import { getChainDisplayLabel, getProtocolDisplayLabel } from '@/shared/display-
 import { t } from '@lingui/core/macro';
 
 import { formatAttributeValue, getSip9Info } from '@leather.io/features';
-import { Sip9Asset } from '@leather.io/models';
+import { type Sip9Asset } from '@leather.io/models';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { Collectible, useCollectibleHeight } from '../collectible';

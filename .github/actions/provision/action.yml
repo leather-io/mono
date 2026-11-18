@@ -8,24 +8,46 @@ inputs:
     description: 'Node.js major version to install'
     required: false
     default: '22'
+  TURBO_CACHE:
+    description: 'Boolean value to restore and save the turbo task cache between jobs'
+    required: false
+    default: 'true'
+  PNPM_CACHE:
+    description: 'Boolean value to restore and save the pnpm store cache; turn it off in jobs that run untrusted code, since setup-node saves the store after the job on a cache miss'
+    required: false
+    default: 'true'
 
 runs:
   using: 'composite'
   steps:
-    - uses: pnpm/action-setup@903f9c1a6ebcba6cf41d87230be49611ac97822e # v6.0.3
-      with:
-        version: '10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319'
+    - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
 
-    - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+    - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
       with:
         node-version: ${{ inputs.NODE_VERSION }}
         registry-url: 'https://registry.npmjs.org/'
-        cache: 'pnpm'
+        cache: ${{ inputs.PNPM_CACHE == 'true' && 'pnpm' || '' }}
+        package-manager-cache: ${{ inputs.PNPM_CACHE == 'true' }}
 
     - env:
         PROVISION_MOBILE: ${{ inputs.PROVISION_MOBILE }}
       shell: bash
       run: pnpm install --ignore-scripts
+
+    - name: cache-turbo
+      if: inputs.TURBO_CACHE == 'true'
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: .turbo
+        key: ${{ runner.os }}-turbo-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.workflow }}-${{ github.job }}-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-turbo-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.workflow }}-${{ github.job }}-
+          ${{ runner.os }}-turbo-${{ hashFiles('pnpm-lock.yaml') }}-
+
+    - name: prune-turbo-cache
+      if: inputs.TURBO_CACHE == 'true'
+      shell: bash
+      run: find .turbo/cache -type f -mtime +7 -delete || true
 
     - name: build-panda
       shell: bash

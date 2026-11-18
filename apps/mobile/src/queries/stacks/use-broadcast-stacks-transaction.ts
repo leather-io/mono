@@ -1,5 +1,5 @@
-import { StacksNetwork } from '@stacks/network';
-import { StacksTransactionWire, broadcastTransaction } from '@stacks/transactions';
+import { type StacksNetwork } from '@stacks/network';
+import { type StacksTransactionWire, broadcastTransaction } from '@stacks/transactions';
 import { useMutation } from '@tanstack/react-query';
 
 import { getErrorMessage } from '@leather.io/stacks';

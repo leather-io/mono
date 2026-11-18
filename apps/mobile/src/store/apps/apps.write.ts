@@ -2,7 +2,7 @@ import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit
 
 import { handleAppResetWithState, handleEntityActionWith } from '@leather.io/state';
 
-import { App } from './utils';
+import { type App } from './utils';
 
 export const appsAdapter = createEntityAdapter<App, string>({
   selectId: app => app.origin,

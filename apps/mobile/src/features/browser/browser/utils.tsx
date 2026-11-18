@@ -1,14 +1,15 @@
-import { ComponentProps, RefObject } from 'react';
-import ViewShot, { captureRef } from 'react-native-view-shot';
+import { type ComponentProps, type RefObject } from 'react';
+import { type default as ViewShot, captureRef } from 'react-native-view-shot';
 
-import { App } from '@/store/apps/utils';
+import { type App } from '@/store/apps/utils';
 import { getDappMap } from '@/utils/dapps';
 import * as Application from 'expo-application';
 import { File, Paths } from 'expo-file-system';
 
+import { LEATHER_GITBOOK_DEVS } from '@leather.io/constants';
 import {
-  RpcRequest,
-  RpcResponse,
+  type RpcRequest,
+  type RpcResponse,
   createRpcSuccessResponse,
   endpoints,
   getInfo,
@@ -80,7 +81,7 @@ const supportedMethodsLinks = Object.keys(endpoints)
   .filter(method => !unsupportedMethods.includes(method))
   .map(method => ({
     name: method,
-    docsUrl: 'https://leather.gitbook.io/developers',
+    docsUrl: LEATHER_GITBOOK_DEVS,
   }));
 
 export function createSupportedMethodsResponse(
@@ -89,7 +90,7 @@ export function createSupportedMethodsResponse(
   return createRpcSuccessResponse(supportedMethods.method, {
     id: request.id,
     result: {
-      documentation: 'https://leather.gitbook.io/developers/home/welcome',
+      documentation: LEATHER_GITBOOK_DEVS,
       methods: supportedMethodsLinks,
     },
   });

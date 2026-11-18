@@ -9,7 +9,11 @@ import { Types } from '../../../inversify.types';
 import type { AuthSessionService } from '../../auth/auth-session.service';
 import type { Environment } from '../../environment';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
-import { LeatherApiError, readLeatherApiErrorData } from './leather-api.error';
+import {
+  LeatherApiError,
+  assertLeatherApiData,
+  readLeatherApiErrorData,
+} from './leather-api.error';
 import { LeatherApiPageRequest } from './leather-api.pagination';
 import { paths } from './leather-api.types';
 
@@ -58,28 +62,31 @@ export class LeatherAuthApiClient {
     const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
       this.client.POST('/v1/auth', { body })
     );
-    return data!;
+    return assertLeatherApiData(data);
   }
 
   async refreshAccessToken(refreshToken: string, signal?: AbortSignal) {
     const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
       this.client.POST('/v1/auth/refresh', { body: { refreshToken }, signal })
     );
-    return data!;
+    return assertLeatherApiData(data);
   }
 
   async fetchMultisigMe(network: AuthNetworkId, { signal }: { signal?: AbortSignal } = {}) {
     return this.authed(network, headers =>
       this.rateLimiter.add(RateLimiterType.Leather, async () => {
         const { data } = await this.client.GET('/v1/multisig/me', { signal, headers });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
 
   async fetchMultisigVaults(
     network: AuthNetworkId,
-    filters?: { status?: VaultStatus; membershipStatus?: VaultMembershipStatus },
+    filters?: {
+      status?: VaultStatus;
+      membershipStatus?: Exclude<VaultMembershipStatus, 'declined'>;
+    },
     { signal }: { signal?: AbortSignal } = {}
   ) {
     return this.authed(network, headers =>
@@ -89,7 +96,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -106,7 +113,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -128,7 +135,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -147,7 +154,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -164,7 +171,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -181,7 +188,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -198,7 +205,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -215,7 +222,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -234,7 +241,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -251,7 +258,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -268,7 +275,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -287,7 +294,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -306,7 +313,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -330,7 +337,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -347,7 +354,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -366,7 +373,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -383,7 +390,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -400,7 +407,7 @@ export class LeatherAuthApiClient {
           headers,
           signal,
         });
-        return data!;
+        return assertLeatherApiData(data);
       })
     );
   }
@@ -423,26 +430,39 @@ export class LeatherAuthApiClient {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), refreshTimeoutMs);
 
-    const refresh = this.refreshAccessToken(refreshToken, controller.signal)
-      .then(({ accessToken }) => {
-        const current = this.sessions.getSession(network);
-        if (current?.refreshToken !== refreshToken) {
-          const currentAccessToken = current?.accessToken;
-          if (!currentAccessToken) {
-            throw new Error('Session changed during refresh');
-          }
-          return currentAccessToken;
-        }
-        this.sessions.onTokenRefreshed(network, accessToken);
-        return accessToken;
-      })
-      .finally(() => {
-        clearTimeout(timeout);
-        this.refreshInFlight.delete(network);
-      });
+    const refresh = this.refreshAndStoreAccessToken(
+      network,
+      refreshToken,
+      controller.signal,
+      timeout
+    );
 
     this.refreshInFlight.set(network, refresh);
     return refresh;
+  }
+
+  private async refreshAndStoreAccessToken(
+    network: AuthNetworkId,
+    refreshToken: string,
+    signal: AbortSignal,
+    timeout: ReturnType<typeof setTimeout>
+  ): Promise<string> {
+    try {
+      const { accessToken } = await this.refreshAccessToken(refreshToken, signal);
+      const current = this.sessions.getSession(network);
+      if (current?.refreshToken !== refreshToken) {
+        const currentAccessToken = current?.accessToken;
+        if (!currentAccessToken) {
+          throw new Error('Session changed during refresh');
+        }
+        return currentAccessToken;
+      }
+      this.sessions.onTokenRefreshed(network, accessToken);
+      return accessToken;
+    } finally {
+      clearTimeout(timeout);
+      this.refreshInFlight.delete(network);
+    }
   }
 
   private async authed<T>(

@@ -1,7 +1,7 @@
-import { ColorToken, token } from 'leather-styles/tokens';
+import { type ColorToken, token } from 'leather-styles/tokens';
 
 import { cryptoAssetColors } from '@leather.io/constants';
-import { SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type SwappableFungibleCryptoAsset } from '@leather.io/models';
 
 type Variant = 'initial' | 'active' | 'invalid';
 

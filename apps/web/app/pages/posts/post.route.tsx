@@ -2,9 +2,9 @@ import { cmsClient } from '~/constants/cms-client';
 import { Post } from '~/pages/posts/post';
 import { getDeprecationRedirect } from '~/pages/redirects/shared-redirect-logic';
 
-import { PostBySlugQueryResult, postBySlugQuery } from '@leather.io/cms';
+import { type PostBySlugQueryResult, postBySlugQuery } from '@leather.io/cms';
 
-import { Route } from './+types/post.route';
+import { type Route } from './+types/post.route';
 
 export async function loader({
   params,

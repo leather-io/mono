@@ -1,11 +1,11 @@
-import { PayloadType, StacksTransactionWire } from '@stacks/transactions';
+import { PayloadType, type StacksTransactionWire } from '@stacks/transactions';
 
-import { StacksTransactionFeeQuote, TransactionFeeTier } from '@leather.io/models';
+import { type StacksTransactionFeeQuote, type TransactionFeeTier } from '@leather.io/models';
 import { isSip9TransferContactCall, isSip10TransferContactCall } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
-import { HiroTransactionFeeEstimateResponse } from '../infrastructure/api/hiro/hiro-stacks-api.types';
-import { StacksFeeConfig } from '../infrastructure/app-config/app-config.service';
+import { type HiroTransactionFeeEstimateResponse } from '../infrastructure/api/hiro/hiro-stacks-api.types';
+import { type StacksFeeConfig } from '../infrastructure/app-config/app-config.service';
 import { calculateFeeRate, enforceFeeBounds, enforceFeeMinimum } from './transaction-fees.utils';
 
 /*
@@ -13,14 +13,21 @@ import { calculateFeeRate, enforceFeeBounds, enforceFeeMinimum } from './transac
 */
 export function getStacksTxFeeDefaultAmounts(
   unsignedTx: StacksTransactionWire,
-  config: StacksFeeConfig
+  config: StacksFeeConfig,
+  estimatedTxSize: number
 ): Record<TransactionFeeTier, number> {
   const payloadTypeFees = getStacksTxPayloadTypeFees(unsignedTx, config);
+  const minimumFee = getStacksMinimumFeeAmount(estimatedTxSize, config);
   return {
-    high: payloadTypeFees.high.default,
-    standard: payloadTypeFees.standard.default,
-    low: payloadTypeFees.low.default,
+    high: enforceFeeMinimum(payloadTypeFees.high.default, minimumFee),
+    standard: enforceFeeMinimum(payloadTypeFees.standard.default, minimumFee),
+    low: enforceFeeMinimum(payloadTypeFees.low.default, minimumFee),
   };
+}
+
+export function getStacksMinimumFeeAmount(estimatedTxSize: number, config: StacksFeeConfig) {
+  const minimumRelayFeeRate = Math.max(1, config.minimumRelayFeeRate);
+  return Math.ceil(minimumRelayFeeRate * estimatedTxSize);
 }
 
 export function getStacksTxPayloadTypeFees(
@@ -54,7 +61,7 @@ export function getStacksTxFeeBoundedEstimates(
   config: StacksFeeConfig
 ): Record<TransactionFeeTier, number> {
   const payloadTypeConfig = getStacksTxPayloadTypeFees(unsignedTx, config);
-  const minRelayFee = config.minimumRelayFeeRate * estimatedTxSize;
+  const minRelayFee = getStacksMinimumFeeAmount(estimatedTxSize, config);
   return {
     low: enforceFeeMinimum(
       enforceFeeBounds(

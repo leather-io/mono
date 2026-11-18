@@ -1,15 +1,15 @@
-import { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 import { useWindowDimensions } from 'react-native';
 
 import { ErrorFallbackTab } from '@/components/error/error';
-import { FetchState } from '@/components/loading/fetch-state';
+import { type FetchState } from '@/components/loading/fetch-state';
 import { Screen } from '@/components/screen/screen';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { CollectiblesListLoading } from '@/features/token/components/collectibles-list-loading';
 import { EmptyCollectiblesContent } from '@/features/token/components/empty-collectibles-content';
 import { useRouter } from 'expo-router';
 
-import { NonFungibleCryptoAsset } from '@leather.io/models';
+import { type NonFungibleCryptoAsset } from '@leather.io/models';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
 import { useCollectibleDetailsFlag } from '../feature-flags';

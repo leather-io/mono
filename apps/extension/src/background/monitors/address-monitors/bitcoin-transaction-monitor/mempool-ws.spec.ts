@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   type MempoolWsBitcoinTx,
   type MempoolWsBtcPrice,
+  parseMempoolWsBitcoinTxMessage,
   readMempooWsBtcPriceUsd,
   readMempoolWsBitcoinTxAddressResult,
 } from './mempool-ws';
@@ -80,5 +81,41 @@ describe('readMempoolWsBitcoinTxAddressResult', () => {
     const result = readMempoolWsBitcoinTxAddressResult(receiverAddress1, mockMempoolWsBitcoinTx);
     expect(result.fee).toEqual(feeAmount);
     expect(result.blockHeight).toEqual(blockHeight);
+  });
+});
+
+describe('parseMempoolWsBitcoinTxMessage', () => {
+  const validTx = {
+    txid: 'tx1',
+    vin: [{ txid: 'prevtx', prevout: { scriptpubkey_address: 'bc1sender', value: 1000 } }],
+    vout: [{ scriptpubkey_address: 'bc1receiver', value: 900 }],
+    fee: 100,
+    status: { confirmed: true, block_height: null },
+  };
+
+  it('keeps valid transactions when another transaction in the batch is malformed', () => {
+    const message = parseMempoolWsBitcoinTxMessage({
+      'multi-address-transactions': {
+        bc1receiver: { mempool: [], confirmed: [{ txid: 'broken' }, validTx], removed: [] },
+      },
+    });
+
+    expect(message?.['multi-address-transactions'].bc1receiver?.confirmed).toEqual([validTx]);
+  });
+
+  it('keeps other addresses when one address entry is malformed', () => {
+    const message = parseMempoolWsBitcoinTxMessage({
+      'multi-address-transactions': {
+        bc1broken: { confirmed: 'not-a-list' },
+        bc1receiver: { confirmed: [validTx] },
+      },
+    });
+
+    expect(message?.['multi-address-transactions'].bc1broken?.confirmed).toEqual([]);
+    expect(message?.['multi-address-transactions'].bc1receiver?.confirmed).toEqual([validTx]);
+  });
+
+  it('returns null for a message without address transactions', () => {
+    expect(parseMempoolWsBitcoinTxMessage({ conversions: { USD: 1 } })).toBeNull();
   });
 });

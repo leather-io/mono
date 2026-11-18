@@ -7,7 +7,7 @@ import {
 import { analytics } from '@/utils/analytics';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { AccountId, type CryptoAssetProtocol } from '@leather.io/models';
+import { type AccountId, type CryptoAssetProtocol } from '@leather.io/models';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 interface UseTokenTrackingProps {

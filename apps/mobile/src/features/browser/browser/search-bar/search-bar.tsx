@@ -1,12 +1,12 @@
-import { RefObject, useRef } from 'react';
-import { Keyboard, TextInput as RNTextInput } from 'react-native';
+import { type RefObject, useRef } from 'react';
+import { Keyboard, type TextInput as RNTextInput } from 'react-native';
 import Animated from 'react-native-reanimated';
-import WebView, { WebViewNavigation } from 'react-native-webview';
+import type { default as WebView, WebViewNavigation } from 'react-native-webview';
 
 import { GradientBorder } from '@/components/gradient-border';
 import {
   BrowserLoading,
-  BrowserLoadingMethods,
+  type BrowserLoadingMethods,
 } from '@/features/account/components/browser-loading';
 import { LEATHER_APPS_URL } from '@/shared/constants';
 import { useRouter } from 'expo-router';

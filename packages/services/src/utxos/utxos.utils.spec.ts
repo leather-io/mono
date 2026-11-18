@@ -1,16 +1,19 @@
-import { OwnedUtxo, Utxo, UtxoId } from '@leather.io/models';
+import { type AccountAddresses, type OwnedUtxo, type Utxo, type UtxoId } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
 import {
-  LeatherApiBitcoinTransaction,
-  LeatherApiUtxo,
+  type LeatherApiBitcoinTransaction,
+  type LeatherApiStakingBond,
+  type LeatherApiUtxo,
 } from '../infrastructure/api/leather/leather-api.client';
 import {
+  createLockedUtxosFromBonds,
   createOwnedUtxoFromLeather,
   dustSatThreshold,
   fallbackUtxoHeight,
   filterMatchesAnyUtxoId,
   filterOutMatchesAnyUtxoId,
+  getBondStakerAddress,
   getKeyOrigin,
   getOutboundUtxos,
   getUtxoIdFromOutpoint,
@@ -36,13 +39,13 @@ describe(getUtxoIdFromOutpoint.name, () => {
     expect(getUtxoIdFromOutpoint('abcdef12345')).toEqual(undefined);
     expect(getUtxoIdFromOutpoint('abcdef:abcdef')).toEqual(undefined);
     expect(getUtxoIdFromOutpoint('')).toEqual(undefined);
-    expect(getUtxoIdFromOutpoint(null!)).toEqual(undefined);
-    expect(getUtxoIdFromOutpoint(undefined!)).toEqual(undefined);
+    expect(getUtxoIdFromOutpoint(null)).toEqual(undefined);
+    expect(getUtxoIdFromOutpoint(undefined)).toEqual(undefined);
   });
 });
 
 describe('utxo list filtering', () => {
-  const utxos = [
+  const utxos: Utxo[] = [
     {
       txid: '1234',
       vout: 0,
@@ -63,9 +66,9 @@ describe('utxo list filtering', () => {
       vout: 3,
       value: 100000,
     },
-  ] as Utxo[];
+  ];
 
-  const ids = [
+  const ids: UtxoId[] = [
     {
       txid: '1234',
       vout: 4,
@@ -82,7 +85,7 @@ describe('utxo list filtering', () => {
       txid: '5050',
       vout: 5,
     },
-  ] as UtxoId[];
+  ];
 
   describe(filterMatchesAnyUtxoId.name, () => {
     it('filters for matching utxos against list of utxo ids', () => {
@@ -130,7 +133,7 @@ describe('utxo list filtering', () => {
 });
 
 describe(isUnconfirmedUtxo.name, () => {
-  const utxos = [
+  const utxos: Utxo[] = [
     {
       txid: '1234',
       vout: 0,
@@ -153,7 +156,7 @@ describe(isUnconfirmedUtxo.name, () => {
       vout: 3,
       value: 100000,
     },
-  ] as Utxo[];
+  ];
 
   it('should filter confirmed tx with a block height value', () => {
     const unconfirmedUtxos = utxos.filter(isUnconfirmedUtxo);
@@ -177,22 +180,26 @@ describe(utxoToId.name, () => {
     const txid = 'txid';
     const vout = 2;
     const utxoId = { txid, vout };
-    const utxo = {
+    const utxo: Utxo = {
       ...utxoId,
       value: 50000,
-    } as unknown as Utxo;
+    };
     expect(utxoToId(utxo)).toEqual(utxoId);
   });
 });
 
 describe(isDustUtxo.name, () => {
   it('returns a boolean reflecting whether utxo value is less than dust sat threshold', () => {
-    const dustUtxo = {
+    const dustUtxo: Utxo = {
+      txid: 'dust',
+      vout: 0,
       value: dustSatThreshold - 1,
-    } as unknown as Utxo;
-    const nonDustUtxo = {
+    };
+    const nonDustUtxo: Utxo = {
+      txid: 'non-dust',
+      vout: 0,
       value: dustSatThreshold + 1,
-    } as unknown as Utxo;
+    };
     expect(isDustUtxo(dustUtxo)).toEqual(true);
     expect(isDustUtxo(nonDustUtxo)).toEqual(false);
   });
@@ -200,26 +207,34 @@ describe(isDustUtxo.name, () => {
 
 describe(sumUtxoValues.name, () => {
   it('returns summed values of all utxo in list', () => {
-    const utxos = [
+    const utxos: Utxo[] = [
       {
+        txid: '1',
+        vout: 0,
         value: 10000,
       },
       {
+        txid: '2',
+        vout: 0,
         value: 20000,
       },
       {
+        txid: '3',
+        vout: 0,
         value: 30000,
       },
       {
+        txid: '4',
+        vout: 0,
         value: 40000,
       },
-    ] as Utxo[];
+    ];
     expect(sumUtxoValues(utxos)).toEqual(initBigNumber('100000'));
   });
 });
 
 describe(selectUniqueUtxoIds.name, () => {
-  const utxos = [
+  const utxos: Utxo[] = [
     {
       txid: '1234',
       vout: 0,
@@ -245,7 +260,7 @@ describe(selectUniqueUtxoIds.name, () => {
       vout: 0,
       value: 300000,
     },
-  ] as Utxo[];
+  ];
 
   it('removes duplicate UTXOs, keeping first occurrence', () => {
     expect(selectUniqueUtxoIds(utxos)).toEqual([
@@ -375,22 +390,45 @@ describe(getOutboundUtxos.name, () => {
     expect(originalHeightUtxos[0].height).toEqual(ORIGINAL_TX_HEIGHT);
     expect(defaultHeightUtxos[0].height).toEqual(fallbackUtxoHeight);
   });
+
+  it('skips owned vins without a txid', () => {
+    const outboundUtxos = getOutboundUtxos(
+      [
+        {
+          txid: '5',
+          vin: [
+            {
+              n: 0,
+              value: '10000',
+              address: 'bc1q123',
+              owned: true,
+              path: 'bc1q123-path',
+            },
+          ],
+          vout: [],
+        },
+      ],
+      'fingerprint'
+    );
+
+    expect(outboundUtxos).toEqual([]);
+  });
 });
 
 describe(createOwnedUtxoFromLeather.name, () => {
   it('maps a Leather API UTXO to an Owned UTXO', () => {
     const fingerprint = 'deadbeef';
-    const utxo = {
+    const utxo: LeatherApiUtxo = {
       txid: '1234',
       vout: 0,
-      value: 100000,
+      value: '100000',
       address: 'bc1q123',
       path: 'bc1q123-path',
-    } as unknown as LeatherApiUtxo;
+    };
     const ownedUtxo = createOwnedUtxoFromLeather(utxo, fingerprint);
     expect(ownedUtxo.txid).toEqual(utxo.txid);
     expect(ownedUtxo.vout).toEqual(utxo.vout);
-    expect(ownedUtxo.value).toEqual(utxo.value);
+    expect(ownedUtxo.value).toEqual(100000);
     expect(ownedUtxo.address).toEqual(utxo.address);
     expect(ownedUtxo.path).toEqual(utxo.path);
     expect(ownedUtxo.keyOrigin).toEqual('deadbeef/bc1q123-path');
@@ -447,6 +485,7 @@ describe(getUtxoTotals.name, () => {
       dust: [],
       unspendable: [],
       available: [],
+      locked: [],
     });
   });
 
@@ -504,5 +543,97 @@ describe(getUtxoTotals.name, () => {
     expect(sumUtxoValues(totals.available)).toEqual(
       sumUtxoValues(totals.confirmed).minus(sumUtxoValues(totals.unspendable))
     );
+  });
+});
+
+describe(getBondStakerAddress.name, () => {
+  const hdAccount: AccountAddresses = {
+    id: { fingerprint: 'deadbeef', accountIndex: 0 },
+    bitcoin: {
+      type: 'hd',
+      taprootDescriptor: 'tr(...)',
+      nativeSegwitDescriptor: 'wpkh(...)',
+      zeroIndexNativeSegwitPayerAddress: 'bc1qpayer',
+    },
+  };
+
+  it('uses the zero-index native segwit payer address for hd accounts', () => {
+    expect(getBondStakerAddress(hdAccount)).toEqual('bc1qpayer');
+  });
+
+  it('returns null for hd accounts without a payer address', () => {
+    const account: AccountAddresses = {
+      ...hdAccount,
+      bitcoin: { type: 'hd', taprootDescriptor: 'tr(...)', nativeSegwitDescriptor: 'wpkh(...)' },
+    };
+    expect(getBondStakerAddress(account)).toBeNull();
+  });
+
+  it('returns null when native segwit addresses are excluded', () => {
+    expect(getBondStakerAddress(hdAccount, { nativeSegwitAddresses: true })).toBeNull();
+  });
+
+  it('uses the fixed address for fixed-address accounts', () => {
+    const account: AccountAddresses = {
+      id: { fingerprint: 'multisig-fp', accountIndex: 0 },
+      bitcoin: { type: 'fixedAddress', address: 'bc1qvault', paymentType: 'p2wsh' },
+    };
+    expect(getBondStakerAddress(account)).toEqual('bc1qvault');
+  });
+
+  it('returns null for accounts without bitcoin address info', () => {
+    expect(getBondStakerAddress({ id: { fingerprint: 'no-btc', accountIndex: 0 } })).toBeNull();
+  });
+});
+
+describe(createLockedUtxosFromBonds.name, () => {
+  const bond: LeatherApiStakingBond = {
+    bondIndex: 4,
+    stxAddress: 'SP1STAKER',
+    enrollmentTxId: '0xenroll',
+    registeredAtBurnHeight: 900_000,
+    exitAnnouncedAtBurnHeight: null,
+    outputs: [
+      {
+        txid: 'lock-a',
+        vout: 1,
+        amountSats: '200000000',
+        unlockBurnHeight: 922_900,
+        lockScriptHex: '00',
+        spent: false,
+        lastCheckedAt: null,
+      },
+      {
+        txid: 'lock-b',
+        vout: 0,
+        amountSats: '50000000',
+        unlockBurnHeight: 922_900,
+        lockScriptHex: '00',
+        spent: true,
+        lastCheckedAt: '2026-09-01T00:00:00.000Z',
+      },
+    ],
+  };
+
+  it('maps unspent lock outputs to utxos and drops spent ones', () => {
+    expect(createLockedUtxosFromBonds([bond])).toEqual([
+      { txid: 'lock-a', vout: 1, value: 200_000_000 },
+    ]);
+  });
+
+  it('flattens outputs across bonds', () => {
+    const second: LeatherApiStakingBond = {
+      ...bond,
+      bondIndex: 5,
+      outputs: [{ ...bond.outputs[0], txid: 'lock-c', amountSats: '100' }],
+    };
+    expect(createLockedUtxosFromBonds([bond, second])).toEqual([
+      { txid: 'lock-a', vout: 1, value: 200_000_000 },
+      { txid: 'lock-c', vout: 1, value: 100 },
+    ]);
+  });
+
+  it('returns an empty list for no bonds', () => {
+    expect(createLockedUtxosFromBonds([])).toEqual([]);
   });
 });

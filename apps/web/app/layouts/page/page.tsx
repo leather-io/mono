@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 
 import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
@@ -56,7 +56,11 @@ export function LearnMoreLink({ destination }: LearnMoreLinkProps) {
   return (
     <styled.span>
       {' '}
-      <Link href={href} style={{ fontSize: 'inherit', display: 'inline', whiteSpace: 'nowrap' }}>
+      <Link
+        href={href}
+        {...(isUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        style={{ fontSize: 'inherit', display: 'inline', whiteSpace: 'nowrap' }}
+      >
         Learn more
       </Link>
     </styled.span>

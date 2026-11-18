@@ -1,22 +1,24 @@
-import { StackingClient } from '@stacks/stacking';
+import { type StackingClient } from '@stacks/stacking';
 import {
-  ContractCallTransaction,
-  ContractCallTransactionMetadata,
-  MempoolContractCallTransaction,
-  MempoolTransaction,
-  Transaction,
+  type ContractCallTransaction,
+  type ContractCallTransactionMetadata,
+  type MempoolContractCallTransaction,
+  type MempoolTransaction,
+  type Transaction,
 } from '@stacks/stacks-blockchain-api-types';
-import { ClarityType, ClarityValue, hexToCV } from '@stacks/transactions';
+import { ClarityType, type ClarityValue, hexToCV } from '@stacks/transactions';
+import { type StacksApiClient } from '~/utils/stacks-api-client';
 import { isContractCallTransaction, isMempoolContractCallTransaction } from '~/utils/transactions';
-
-import { StacksClient } from '@leather.io/query';
 
 type TransactionPredicate = (t: ContractCallTransactionMetadata, poxContractId: string) => boolean;
 type TransactionConverter<T> = (t: ContractCallTransaction | MempoolContractCallTransaction) => T;
 
 export interface PendingTransactionArgs {
   stackingClient: StackingClient;
-  stacksClient: StacksClient;
+  stacksClient: Pick<
+    StacksApiClient,
+    'getAccountTransactionsWithTransfers' | 'getAddressMempoolTransactions'
+  >;
   address: string;
 }
 
@@ -31,14 +33,13 @@ function findUnanchoredTransaction(
   poxContractId: string,
   isGoodTransaction: TransactionPredicate
 ): ContractCallTransaction | undefined {
-  return transactions.find(t => {
-    if (!isContractCallTransaction(t)) return false;
+  return transactions.filter(isContractCallTransaction).find(t => {
     if (!t.is_unanchored) return false;
 
     const transactionResultCV = hexToCV(t.tx_result.hex);
     const isOk = transactionResultCV.type === ClarityType.ResponseOk;
     return isOk && isGoodTransaction(t, poxContractId);
-  }) as ContractCallTransaction; // Casting as type is checked in `if` statement above.
+  });
 }
 /**
  * Given an array of transactions, ordered from most recent to least recent, returns the most recent
@@ -51,11 +52,9 @@ function findMempoolTransaction(
   poxContractId: string,
   isGoodTransaction: TransactionPredicate
 ) {
-  return transactions.find(t => {
-    if (!isMempoolContractCallTransaction(t)) return false;
-
+  return transactions.filter(isMempoolContractCallTransaction).find(t => {
     return isGoodTransaction(t, poxContractId);
-  }) as MempoolContractCallTransaction; // Casting as type is checked in `if` statement above.
+  });
 }
 
 interface GetHasPendingTransactionArgs<T> extends PendingTransactionArgs {
@@ -101,7 +100,7 @@ export async function getHasPendingTransaction<T>({
 
 function getBestTransaction(
   accountTransaction: ContractCallTransaction | undefined,
-  mempoolTransaction: MempoolContractCallTransaction
+  mempoolTransaction: MempoolContractCallTransaction | undefined
 ) {
   if (!accountTransaction && mempoolTransaction) {
     return mempoolTransaction;

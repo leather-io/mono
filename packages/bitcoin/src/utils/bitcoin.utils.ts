@@ -2,7 +2,7 @@ import { hexToBytes } from '@noble/hashes/utils';
 import { HDKey } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
-import { TransactionInput, TransactionOutput } from '@scure/btc-signer/psbt';
+import { type TransactionInput, type TransactionOutput } from '@scure/btc-signer/psbt';
 import type { BitcoinPayer, BitcoinTaprootPayer } from 'signer/bitcoin-payer';
 
 import { HD_KEY_VERSIONS_BY_NETWORK } from '@leather.io/constants';
@@ -11,14 +11,16 @@ import {
   deriveKeychainFromXpub,
   extractPurposeFromPath,
 } from '@leather.io/crypto';
-import { BitcoinAddress, BitcoinNetworkModes, NetworkModes } from '@leather.io/models';
+import {
+  type BitcoinAddress,
+  type BitcoinNetworkModes,
+  type NetworkModes,
+} from '@leather.io/models';
 import type { BitcoinPaymentTypes } from '@leather.io/rpc';
 import { isDefined, isUndefined, whenNetwork } from '@leather.io/utils';
 
-import { getTaprootPayment } from '../payments/p2tr-address-gen';
-import { getNativeSegwitPaymentFromAddressIndex } from '../payments/p2wpkh-address-gen';
 import { createBitcoinAddress } from '../validation/bitcoin-address';
-import { BtcSignerNetwork, getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
+import { type BtcSignerNetwork, getBtcSignerLibNetworkConfigByMode } from './bitcoin.network';
 
 export interface BitcoinAccount {
   type: BitcoinPaymentTypes;
@@ -46,8 +48,8 @@ export function bitcoinNetworkModeToCoreNetworkMode(mode: BitcoinNetworkModes) {
 type BitcoinNetworkMap<T> = Record<BitcoinNetworkModes, T>;
 
 export function whenBitcoinNetwork(mode: BitcoinNetworkModes) {
-  return <T extends BitcoinNetworkMap<unknown>>(networkMap: T) =>
-    networkMap[mode] as T[BitcoinNetworkModes];
+  return <T extends BitcoinNetworkMap<unknown>>(networkMap: T): T[BitcoinNetworkModes] =>
+    networkMap[mode];
 }
 
 /**
@@ -155,10 +157,14 @@ export function btcSignerLibPaymentTypeToPaymentTypeMap(
   return paymentTypeMap[payment];
 }
 
-export function isBtcSignerLibPaymentType(
-  payment: string
-): payment is BtcSignerLibPaymentTypeIdentifers {
-  return payment in paymentTypeMap;
+export function isBtcSignerLibPaymentType(payment: string) {
+  return (
+    payment === 'wpkh' ||
+    payment === 'wsh' ||
+    payment === 'tr' ||
+    payment === 'pkh' ||
+    payment === 'sh'
+  );
 }
 
 export function parseKnownPaymentType(
@@ -176,6 +182,9 @@ export function whenPaymentType(mode: BitcoinPaymentTypes | BtcSignerLibPaymentT
 
 export type SupportedPaymentType = 'p2wpkh' | 'p2tr';
 export type SupportedPaymentTypeMap<T> = Record<SupportedPaymentType, T>;
+export function isSupportedPaymentType(paymentType: string) {
+  return paymentType === 'p2wpkh' || paymentType === 'p2tr';
+}
 export function whenSupportedPaymentType(mode: SupportedPaymentType) {
   return <T>(paymentMap: SupportedPaymentTypeMap<T>): T => paymentMap[mode];
 }
@@ -239,8 +248,10 @@ export function getHdKeyVersionsFromNetwork(network: NetworkModes) {
 
 function getBitcoinInputScript(input: TransactionInput) {
   if (isDefined(input.witnessUtxo)) return input.witnessUtxo.script;
-  if (isDefined(input.nonWitnessUtxo) && isDefined(input.index))
-    return input.nonWitnessUtxo.outputs[input.index]?.script;
+  if (isDefined(input.nonWitnessUtxo) && isDefined(input.index)) {
+    const script: unknown = input.nonWitnessUtxo.outputs[input.index]?.script;
+    return script instanceof Uint8Array ? script : undefined;
+  }
   return undefined;
 }
 
@@ -259,59 +270,11 @@ export function getInputPaymentType(input: TransactionInput): BitcoinPaymentType
   return btcSignerLibPaymentTypeToPaymentTypeMap(scriptType);
 }
 
-interface GetAddressArgs {
+export interface GetAddressArgs {
   changeIndex: number;
   addressIndex: number;
   keychain?: HDKey;
   network: BitcoinNetworkModes;
-}
-
-export function getTaprootAddress({
-  changeIndex,
-  addressIndex,
-  keychain,
-  network,
-}: GetAddressArgs) {
-  if (!keychain) throw new Error('Expected keychain to be provided');
-
-  if (keychain.depth !== DerivationPathDepth.Account)
-    throw new Error('Expects keychain to be on the account index');
-
-  const addresskeychain = deriveAddressIndexKeychainFromAccount(keychain)({
-    changeIndex,
-    addressIndex,
-  });
-
-  if (!addresskeychain.publicKey) throw new Error('Expected publicKey to be defined');
-
-  const payment = getTaprootPayment(addresskeychain.publicKey, network);
-
-  if (!payment.address) throw new Error('Expected address to be defined');
-  return payment.address;
-}
-
-export function getNativeSegwitAddress({
-  changeIndex,
-  addressIndex,
-  keychain,
-  network,
-}: GetAddressArgs) {
-  if (!keychain) throw new Error('Expected keychain to be provided');
-
-  if (keychain.depth !== DerivationPathDepth.Account)
-    throw new Error('Expects keychain to be on the account index');
-
-  const addressKeychain = deriveAddressIndexKeychainFromAccount(keychain)({
-    changeIndex,
-    addressIndex,
-  });
-
-  if (!addressKeychain.publicKey) throw new Error('Expected publicKey to be defined');
-
-  const payment = getNativeSegwitPaymentFromAddressIndex(addressKeychain, network);
-
-  if (!payment.address) throw new Error('Expected address to be defined');
-  return payment.address;
 }
 
 /**

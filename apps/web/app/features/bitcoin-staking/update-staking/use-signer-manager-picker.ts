@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 import {
-  BitcoinStakingPool,
-  StakingPoolSlug,
+  type BitcoinStakingPool,
+  type StakingPoolSlug,
   bitcoinStakingPoolList,
   getPoolBySignerManager,
   getPrimarySignerManagerContract,
@@ -12,7 +12,7 @@ import { pox5NetworkConfig } from '~/data/pox5-network-config';
 
 import { parseByosmContractInput } from '../byosm/byosm-contract-schema';
 import {
-  ByosmSignerManagerState,
+  type ByosmSignerManagerState,
   useSignerManagerContractInput,
 } from '../byosm/use-byosm-signer-manager';
 import { currentCustomRowId, customRowId } from './update-staking-summary';
@@ -38,8 +38,6 @@ interface UseSignerManagerPickerResult {
   isCustomSelected: boolean;
   target: SignerManagerTarget | null;
   isSwitching: boolean;
-  termsAccepted: boolean;
-  toggleTermsAccepted(): void;
 }
 
 export function useSignerManagerPicker({
@@ -54,14 +52,12 @@ export function useSignerManagerPicker({
   );
   const [customInput, setCustomInput] = useState('');
   const [submittedCustomInput, setSubmittedCustomInput] = useState<string | null>(null);
-  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const isCustomSelected = selectedRowId === customRowId;
   const customState = useSignerManagerContractInput(isCustomSelected ? submittedCustomInput : null);
 
   function selectRow(rowId: string) {
     setSelectedRowId(rowId);
-    setTermsAccepted(false);
     if (rowId !== customRowId) {
       setCustomInput('');
       setSubmittedCustomInput(null);
@@ -71,7 +67,6 @@ export function useSignerManagerPicker({
   function onCustomInputChange(value: string) {
     setCustomInput(value);
     setSubmittedCustomInput(null);
-    setTermsAccepted(false);
   }
 
   function validateCustom() {
@@ -96,7 +91,7 @@ export function useSignerManagerPicker({
     setSubmittedCustomInput(customInput);
   }
 
-  const target = ((): SignerManagerTarget | null => {
+  function getTarget(): SignerManagerTarget | null {
     if (selectedRowId === currentRowId) return null;
     if (isCustomSelected) {
       if (customState.status !== 'valid') return null;
@@ -110,7 +105,8 @@ export function useSignerManagerPicker({
     );
     if (!contractId) return null;
     return { contractId, pool: selectedPool };
-  })();
+  }
+  const target = getTarget();
 
   return {
     selectedRowId,
@@ -122,9 +118,5 @@ export function useSignerManagerPicker({
     isCustomSelected,
     target,
     isSwitching: target !== null,
-    termsAccepted,
-    toggleTermsAccepted() {
-      setTermsAccepted(accepted => !accepted);
-    },
   };
 }

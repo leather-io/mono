@@ -38,14 +38,14 @@ export function BondSpendingConditions({ details }: BondSpendingConditionsProps)
         </styled.span>
         <styled.span
           textStyle="caption.01"
-          color="ink.text-subdued"
+          color="ink.text-secondary"
           data-testid="bond-vault-policy"
         >
           Requires {requirement}
         </styled.span>
         {ownerKey ? (
           <>
-            <styled.span textStyle="caption.01" color="ink.text-subdued">
+            <styled.span textStyle="caption.01" color="ink.text-secondary">
               Owner key
             </styled.span>
             <styled.code textStyle="caption.01" wordBreak="break-all" data-testid="bond-owner-key">
@@ -58,13 +58,13 @@ export function BondSpendingConditions({ details }: BondSpendingConditionsProps)
         <styled.span textStyle="label.02">Before block {details.unlockHeight}</styled.span>
         <styled.span
           textStyle="caption.01"
-          color="ink.text-subdued"
+          color="ink.text-secondary"
           data-testid="bond-early-exit-policy"
         >
           Requires {requirement}, plus a signature from the counterparty key and the secret matching
           the SHA-256 hash
         </styled.span>
-        <styled.span textStyle="caption.01" color="ink.text-subdued">
+        <styled.span textStyle="caption.01" color="ink.text-secondary">
           Counterparty key
         </styled.span>
         <styled.code
@@ -74,7 +74,7 @@ export function BondSpendingConditions({ details }: BondSpendingConditionsProps)
         >
           {details.counterpartyKey}
         </styled.code>
-        <styled.span textStyle="caption.01" color="ink.text-subdued">
+        <styled.span textStyle="caption.01" color="ink.text-secondary">
           SHA-256 hash
         </styled.span>
         <styled.code textStyle="caption.01" wordBreak="break-all" data-testid="bond-hash">

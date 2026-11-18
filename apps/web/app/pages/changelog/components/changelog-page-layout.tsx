@@ -2,7 +2,7 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Page } from '~/layouts/page/page';
 import { openExternalLink } from '~/utils/external-links';
 
-import { Button, FeedIcon, HasChildren } from '@leather.io/ui';
+import { Button, FeedIcon, type HasChildren } from '@leather.io/ui';
 
 interface ChangelogPageLayoutProps {
   children: React.ReactNode;

@@ -2,11 +2,11 @@ import {
   CryptoAssetCategories,
   CryptoAssetChains,
   CryptoAssetProtocols,
-  Sip10Asset,
+  type Sip10Asset,
 } from '@leather.io/models';
 import { getSip10TokenNameWithOverrides, getTicker, isUndefined } from '@leather.io/utils';
 
-import { LeatherApiSip10Token } from '../infrastructure/api/leather/leather-api.client';
+import { type LeatherApiSip10Token } from '../infrastructure/api/leather/leather-api.client';
 
 export function isTransferableSip10Token(token: LeatherApiSip10Token) {
   return !isUndefined(token.decimals) && !isUndefined(token.name) && !isUndefined(token.symbol);

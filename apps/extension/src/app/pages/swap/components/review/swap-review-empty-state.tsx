@@ -22,8 +22,8 @@ export function SwapReviewEmptyState({ onBack }: SwapReviewEmptyStateProps) {
       <Flex direction="column" gap="space.02" alignItems="center" px="space.05">
         <styled.span textStyle="label.01">No quotes available</styled.span>
         <styled.span textStyle="body.02" color="ink.text-subdued" textAlign="center">
-          Not enough liquidity or no route available right now. Try a smaller amount or check back
-          later.
+          Not enough liquidity or no route available right now. Try a smaller amount, check back
+          later, or visit the token issuer's site for other options.
         </styled.span>
       </Flex>
       <Button size="sm" variant="outline" onClick={onBack}>

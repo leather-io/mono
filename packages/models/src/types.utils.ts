@@ -12,7 +12,7 @@ export type LiteralUnion<LiteralType, BaseType extends Primitive> =
 
 export type Entries<T> = { [K in keyof T]: [K, T[K]] }[keyof T][];
 
-export type ReplaceTypes<T, Replacements extends { [K in keyof T]?: any }> = Omit<
+export type ReplaceTypes<T, Replacements extends { [K in keyof T]?: unknown }> = Omit<
   T,
   keyof Replacements
 > & {

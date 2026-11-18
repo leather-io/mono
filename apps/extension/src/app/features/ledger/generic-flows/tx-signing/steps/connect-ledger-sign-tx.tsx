@@ -1,5 +1,5 @@
 import { CommonLedgerDeviceInlineWarnings } from '@app/features/ledger/components/ledger-inline-warnings';
-import { ConnectLedger } from '@app/features/ledger/generic-steps';
+import { ConnectLedger } from '@app/features/ledger/generic-steps/connect-device/connect-ledger';
 import { useWhenReattemptingLedgerConnection } from '@app/features/ledger/hooks/use-when-reattempt-ledger-connection';
 
 import { useLedgerTxSigningContext } from '../ledger-sign-tx.context';
@@ -8,7 +8,7 @@ export function ConnectLedgerSignTx() {
   const { chain, signTransaction, latestDeviceResponse, awaitingDeviceConnection } =
     useLedgerTxSigningContext();
 
-  useWhenReattemptingLedgerConnection(() => signTransaction());
+  useWhenReattemptingLedgerConnection(() => void signTransaction());
 
   return (
     <ConnectLedger
@@ -20,7 +20,7 @@ export function ConnectLedgerSignTx() {
           latestDeviceResponse={latestDeviceResponse}
         />
       }
-      onConnectLedger={signTransaction}
+      onConnectLedger={() => void signTransaction()}
       showInstructions={false}
     />
   );

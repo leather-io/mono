@@ -5,7 +5,7 @@ import { createUpdateStakingSchema, updateStakingMessages } from './update-staki
 const baseArgs = {
   availableBalance: stxToMicroStx(1_000),
   maxCyclesToExtend: 10,
-  supportsBtcPayout: false,
+  payoutMode: 'sbtc' as const,
   supportsMinClaim: false,
   networkMode: 'mainnet' as const,
   currentPayout: null,
@@ -59,7 +59,7 @@ describe(createUpdateStakingSchema.name, () => {
 
     const supportedSchema = createUpdateStakingSchema({
       ...baseArgs,
-      supportsBtcPayout: true,
+      payoutMode: 'sbtc-or-btc' as const,
       isSwitching: true,
     });
     const supportedResult = supportedSchema.safeParse(withPayout);
@@ -77,7 +77,7 @@ describe(createUpdateStakingSchema.name, () => {
   test('treats a payout change alone as an update', () => {
     const schema = createUpdateStakingSchema({
       ...baseArgs,
-      supportsBtcPayout: true,
+      payoutMode: 'sbtc-or-btc' as const,
       currentPayout: null,
     });
     const result = schema.safeParse({
@@ -97,7 +97,7 @@ describe(createUpdateStakingSchema.name, () => {
     };
     const schema = createUpdateStakingSchema({
       ...baseArgs,
-      supportsBtcPayout: true,
+      payoutMode: 'sbtc-or-btc' as const,
       supportsMinClaim: true,
       currentPayout,
     });
@@ -111,5 +111,99 @@ describe(createUpdateStakingSchema.name, () => {
 
     expect(schema.safeParse(unchangedPayout).success).toBe(false);
     expect(schema.safeParse({ ...unchangedPayout, minClaimSats: '25000' }).success).toBe(true);
+  });
+
+  describe('for an operator-paid pool', () => {
+    const registeredAddress = 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq';
+    const currentPayout = { btcRewardAddress: registeredAddress };
+    const schema = createUpdateStakingSchema({
+      ...baseArgs,
+      payoutMode: 'btc-only' as const,
+      currentPayout,
+    });
+
+    test('requires a valid payout address even with the toggle off', () => {
+      const result = schema.safeParse({ ...emptyUpdate, cyclesToExtend: 2, rewardAddress: '' });
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.issues.map(issue => issue.path[0])).toEqual(['rewardAddress']);
+      }
+    });
+
+    test('ignores the fee inputs', () => {
+      const result = schema.safeParse({
+        ...emptyUpdate,
+        cyclesToExtend: 2,
+        rewardAddress: registeredAddress,
+        maxFeeSats: '0',
+        minClaimSats: 'abc',
+      });
+      expect(result.success).toBe(true);
+    });
+
+    test('treats keeping the registered address as no payout change', () => {
+      const result = schema.safeParse({ ...emptyUpdate, rewardAddress: registeredAddress });
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.issues[0]?.message).toBe(updateStakingMessages.nothingToUpdate);
+      }
+    });
+
+    test('treats a new payout address alone as an update', () => {
+      const result = schema.safeParse({
+        ...emptyUpdate,
+        rewardAddress: 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4',
+      });
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe('when switching to a pool with a minimum stake', () => {
+    const minStake = { poolName: 'PlanBetter', minStakeMicroStx: 1_000_000_000n };
+    const address = 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq';
+
+    test('rejects a switch whose total stays below the minimum', () => {
+      const schema = createUpdateStakingSchema({
+        ...baseArgs,
+        payoutMode: 'btc-only' as const,
+        isSwitching: true,
+        currentAmountMicroStx: 400_000_000n,
+        minStake,
+      });
+      const result = schema.safeParse({ ...emptyUpdate, rewardAddress: address });
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const issue = result.error.issues.find(candidate => candidate.path[0] === 'amountIncrease');
+        expect(issue?.message).toBe(
+          'PlanBetter requires a total stake of at least 1,000 STX; add more STX to switch'
+        );
+      }
+    });
+
+    test('accepts a switch once the increase lifts the total to the minimum', () => {
+      const schema = createUpdateStakingSchema({
+        ...baseArgs,
+        payoutMode: 'btc-only' as const,
+        isSwitching: true,
+        currentAmountMicroStx: 400_000_000n,
+        minStake,
+      });
+      expect(
+        schema.safeParse({ ...emptyUpdate, amountIncrease: '600', rewardAddress: address }).success
+      ).toBe(true);
+    });
+
+    test('never blocks an existing member, whose position already meets the floor', () => {
+      const schema = createUpdateStakingSchema({
+        ...baseArgs,
+        payoutMode: 'btc-only' as const,
+        currentPayout: { btcRewardAddress: address },
+        currentAmountMicroStx: 1_000_000_000n,
+        minStake,
+      });
+      expect(
+        schema.safeParse({ ...emptyUpdate, cyclesToExtend: 1, rewardAddress: address }).success
+      ).toBe(true);
+    });
   });
 });

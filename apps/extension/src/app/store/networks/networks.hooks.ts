@@ -1,11 +1,10 @@
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
 import {
   ChainId,
   STACKS_MAINNET,
   STACKS_TESTNET,
-  StacksNetwork,
+  type StacksNetwork,
   TransactionVersion,
 } from '@stacks/network';
 
@@ -13,16 +12,16 @@ import {
   HIRO_API_BASE_URL_NAKAMOTO_TESTNET,
   bitcoinNetworkToNetworkMode,
 } from '@leather.io/models';
-import { whenStacksChainId } from '@leather.io/stacks';
+import { stacksChainIdToCoreNetworkMode, whenStacksChainId } from '@leather.io/stacks';
 
-import { useAppDispatch } from '@app/store';
+import { useAppDispatch } from '@app/store/store';
 
 import { networksActions, userEditsNetwork, userRemovesNetwork } from './networks.actions';
-import { selectAppRequestedNetworkId, useCurrentNetwork } from './networks.selectors';
+import { useCurrentNetwork } from './networks.selectors';
 import type { PersistedNetworkConfiguration } from './networks.slice';
 
 export function getStacksNetworkFromChainId(chainId: number) {
-  if (chainId === ChainId.Mainnet) return STACKS_MAINNET;
+  if (stacksChainIdToCoreNetworkMode(chainId) === 'mainnet') return STACKS_MAINNET;
   return STACKS_TESTNET;
 }
 
@@ -30,10 +29,12 @@ export function useCurrentNetworkState() {
   const currentNetwork = useCurrentNetwork();
 
   return useMemo(() => {
-    const isTestnet = currentNetwork.chain.stacks.chainId !== ChainId.Mainnet;
+    const isTestnet =
+      stacksChainIdToCoreNetworkMode(currentNetwork.chain.stacks.chainId) !== 'mainnet';
     const isNakamotoTestnet =
       currentNetwork.chain.stacks.url === HIRO_API_BASE_URL_NAKAMOTO_TESTNET;
-    return { ...currentNetwork, isTestnet, isNakamotoTestnet };
+    const isMainnet = !isTestnet && currentNetwork.chain.bitcoin.mode === 'mainnet';
+    return { ...currentNetwork, isTestnet, isMainnet, isNakamotoTestnet };
   }, [currentNetwork]);
 }
 
@@ -101,8 +102,4 @@ export function useNetworksActions() {
     }),
     [dispatch]
   );
-}
-
-export function useAppRequestedNetworkId() {
-  return useSelector(selectAppRequestedNetworkId);
 }

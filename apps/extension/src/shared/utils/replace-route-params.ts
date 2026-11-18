@@ -8,7 +8,7 @@ type RouteParams = Record<string, string | number | undefined>;
  */
 export function replaceRouteParams(route: string, params: RouteParams): string {
   return Object.entries(params).reduce((path, [key, value]) => {
-    const encodedValue = encodeURIComponent(value?.toString() ?? '');
+    const encodedValue = value === undefined ? '' : encodeURIComponent(value);
     const optionalSegment = `/:${key}?`;
     if (encodedValue === '' && path.includes(optionalSegment))
       return path.replace(optionalSegment, '');

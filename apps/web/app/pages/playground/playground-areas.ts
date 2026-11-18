@@ -38,6 +38,29 @@ export interface PlaygroundArea {
 
 export const playgroundAreas: PlaygroundArea[] = [
   {
+    slug: 'recipes',
+    title: 'Leather recipes',
+    description: 'Reusable Leather compositions with live examples.',
+    status: 'living',
+    section: 'extension',
+  },
+  {
+    slug: 'receive-example',
+    title: 'Receive example',
+    description: 'Complete fixture-only receive flow using the Leather Design Toolkit.',
+    status: 'living',
+    section: 'extension',
+  },
+  {
+    slug: 'staking-acknowledgment',
+    title: 'Staking acknowledgment',
+    description: 'Review the start-staking and switch-pool acknowledgment across payout models.',
+    status: 'exploration',
+    section: 'web-app',
+    issue: 2605,
+    appShell: true,
+  },
+  {
     slug: 'component-gallery',
     title: 'Component gallery',
     description:

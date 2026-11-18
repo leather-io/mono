@@ -7,6 +7,7 @@ import { RpcErrorCode } from '@leather.io/rpc';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import { createMockPort } from '../create-mock-port';
 import { btcAddAccountHandler } from './btc-add-account';
 
 type BtcAddAccountRequest = Parameters<(typeof btcAddAccountHandler)[1]>[0];
@@ -23,7 +24,7 @@ const mocks = vi.hoisted(() => ({
   sendMessage: vi.fn(),
 }));
 
-vi.mock('../rpc-message-handler', () => ({
+vi.mock('../define-rpc-request-handler', () => ({
   defineRpcRequestHandler: (method: string, handler: unknown) => [method, handler],
 }));
 
@@ -89,9 +90,13 @@ function makeRequest(descriptor: string): BtcAddAccountRequest {
 }
 
 function invokeHandler(descriptor: string) {
-  const port: chrome.runtime.Port = Object.create(null);
+  const port = createMockPort({ frameId: mocks.frameId, tab: { id: mocks.tabId } });
   const [, handler] = btcAddAccountHandler;
   return handler(makeRequest(descriptor), port);
+}
+
+function objectContaining(expected: Record<string, unknown>): unknown {
+  return expect.objectContaining(expected);
 }
 
 function expectPopupOpened() {
@@ -107,7 +112,7 @@ function expectRejectedAsUnsupported() {
   expect(mocks.sendMessage).toHaveBeenCalledWith(
     mocks.tabId,
     expect.objectContaining({
-      error: expect.objectContaining({
+      error: objectContaining({
         code: RpcErrorCode.INVALID_PARAMS,
         message: unsupportedDescriptorMessage,
       }),

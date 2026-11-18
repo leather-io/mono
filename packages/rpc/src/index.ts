@@ -1,6 +1,7 @@
-import { z } from 'zod';
+import { values } from 'remeda';
+import { type z } from 'zod';
 
-import { ValueOf } from '@leather.io/models';
+import { type ValueOf } from '@leather.io/models';
 
 import { btcAddAccount } from './methods/bitcoin/btc-add-account';
 import { sendTransfer } from './methods/bitcoin/send-transfer';
@@ -23,7 +24,11 @@ import { stxTransferSip10Ft } from './methods/stacks/stx-transfer-sip10-ft';
 import { stxTransferStx } from './methods/stacks/stx-transfer-stx';
 import { stxUpdateProfile } from './methods/stacks/stx-update-profile';
 import { supportedMethods } from './methods/supported-methods';
-import { ExtractErrorResponse, ExtractSuccessResponse, RpcSuccessResponse } from './rpc/schemas';
+import {
+  type ExtractErrorResponse,
+  type ExtractSuccessResponse,
+  type RpcSuccessResponse,
+} from './rpc/schemas';
 
 export * from './rpc/schemas';
 export * from './rpc/helpers';
@@ -98,18 +103,15 @@ export type RpcMethodNames = keyof RpcEndpointMap;
 export interface RequestFn {
   (
     arg: 'getAddresses',
-    params: { network?: string; allowPolicyAccounts: true }
-  ): Promise<ExtractSuccessResponse<RpcEndpointMap['getAddresses']['response']>>;
+    params: { network?: string; allowPolicyAccounts: false }
+  ): Promise<RpcSuccessResponse<SingleSigAddressResponseBody>>;
   (
     arg: 'getAddresses',
-    params?: { network?: string; allowPolicyAccounts?: false }
-  ): Promise<RpcSuccessResponse<SingleSigAddressResponseBody>>;
-  <
-    T extends RpcMethodNames,
-    P extends RpcEndpointMap[T]['request'] extends { params?: infer P } ? P : never,
-  >(
+    params?: { network?: string; allowPolicyAccounts?: true }
+  ): Promise<ExtractSuccessResponse<RpcEndpointMap['getAddresses']['response']>>;
+  <T extends RpcMethodNames>(
     arg: T,
-    params: P
+    params: RpcEndpointMap[T]['request'] extends { params?: infer P } ? P : never
     // `Promise` throws if unsuccessful, so here we extract the successful response
   ): Promise<ExtractSuccessResponse<RpcEndpointMap[T]['response']>>;
   <T extends RpcMethodNames>(
@@ -154,8 +156,9 @@ export interface LeatherProvider {
 export function createRpcSuccessResponse<T extends RpcMethodNames>(
   _method: T,
   response: Omit<ExtractSuccessResponse<RpcEndpointMap[T]['response']>, 'jsonrpc'>
-) {
-  return { jsonrpc: '2.0', ...response } as ExtractSuccessResponse<RpcEndpointMap[T]['response']>;
+): ExtractSuccessResponse<RpcEndpointMap[T]['response']>;
+export function createRpcSuccessResponse(_method: RpcMethodNames, response: object) {
+  return { jsonrpc: '2.0', ...response };
 }
 
 /**
@@ -164,12 +167,13 @@ export function createRpcSuccessResponse<T extends RpcMethodNames>(
 export function createRpcErrorResponse<T extends RpcMethodNames>(
   _method: T,
   error: Omit<ExtractErrorResponse<RpcEndpointMap[T]['response']>, 'jsonrpc'>
-) {
-  return { jsonrpc: '2.0', ...error } as RpcEndpointMap[T]['response'];
+): RpcEndpointMap[T]['response'];
+export function createRpcErrorResponse(_method: RpcMethodNames, error: object) {
+  return { jsonrpc: '2.0', ...error };
 }
 
 export function parseEndpointRequest(data: unknown): RpcRequests | undefined {
-  const endpointRequests = Object.values(endpoints).map(endpoint => endpoint.request);
+  const endpointRequests = values(endpoints).map(endpoint => endpoint.request);
   const endpoint = endpointRequests.find(req => req.safeParse(data).success);
   return endpoint?.safeParse(data).data;
 }

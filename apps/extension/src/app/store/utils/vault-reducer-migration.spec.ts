@@ -3,15 +3,21 @@ import { vi } from 'vitest';
 
 import { assumedZeroFingerprint } from '@shared/utils';
 
+import type { initialKeysState } from '../software-keys/software-key.slice';
 import { migrateVaultReducerStoreToNewStateStructure } from './vault-reducer-migration';
 
-(globalThis as any).localStorage = new LocalStorageMock();
+Reflect.set(globalThis, 'localStorage', new LocalStorageMock());
+
+function createEmptyKeysState(): typeof initialKeysState {
+  return { ids: [], entities: {} };
+}
 
 describe(migrateVaultReducerStoreToNewStateStructure.name, () => {
   describe('no migration needed scenario', () => {
     test('nothing happens when no localStorage values are detected', () => {
-      const returnedValue = migrateVaultReducerStoreToNewStateStructure({} as any);
-      expect(returnedValue).toEqual({});
+      const emptyKeysState = createEmptyKeysState();
+      const returnedValue = migrateVaultReducerStoreToNewStateStructure(emptyKeysState);
+      expect(returnedValue).toEqual(emptyKeysState);
     });
   });
 
@@ -22,16 +28,16 @@ describe(migrateVaultReducerStoreToNewStateStructure.name, () => {
     });
 
     test('that it reads localstorage wallet values', () => {
-      vi.spyOn(global.localStorage.__proto__, 'getItem');
+      const getItemSpy = vi.spyOn(LocalStorageMock.prototype, 'getItem');
 
-      migrateVaultReducerStoreToNewStateStructure({} as any);
+      migrateVaultReducerStoreToNewStateStructure(createEmptyKeysState());
 
-      expect(localStorage.getItem).toHaveBeenCalledWith('stacks-wallet-salt');
-      expect(localStorage.getItem).toHaveBeenCalledWith('stacks-wallet-encrypted-key');
+      expect(getItemSpy).toHaveBeenCalledWith('stacks-wallet-salt');
+      expect(getItemSpy).toHaveBeenCalledWith('stacks-wallet-encrypted-key');
     });
 
     test('that it returns a migrated state object when wallet values are detected', () => {
-      const returnedValue = migrateVaultReducerStoreToNewStateStructure({} as any);
+      const returnedValue = migrateVaultReducerStoreToNewStateStructure(createEmptyKeysState());
       expect(returnedValue).toEqual({
         ids: [assumedZeroFingerprint],
         entities: {
@@ -46,10 +52,10 @@ describe(migrateVaultReducerStoreToNewStateStructure.name, () => {
     });
 
     test('it removes the existing localStorage values', () => {
-      vi.spyOn(global.localStorage.__proto__, 'removeItem');
-      migrateVaultReducerStoreToNewStateStructure({} as any);
-      expect(localStorage.removeItem).toHaveBeenCalledWith('stacks-wallet-salt');
-      expect(localStorage.removeItem).toHaveBeenCalledWith('stacks-wallet-encrypted-key');
+      const removeItemSpy = vi.spyOn(LocalStorageMock.prototype, 'removeItem');
+      migrateVaultReducerStoreToNewStateStructure(createEmptyKeysState());
+      expect(removeItemSpy).toHaveBeenCalledWith('stacks-wallet-salt');
+      expect(removeItemSpy).toHaveBeenCalledWith('stacks-wallet-encrypted-key');
     });
   });
 });

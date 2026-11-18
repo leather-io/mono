@@ -1,3 +1,5 @@
+import { entries } from 'remeda';
+
 type ObjectValue = string | number | boolean | null | NestedObject | ObjectValue[];
 interface NestedObject {
   [key: string]: ObjectValue;
@@ -44,7 +46,7 @@ export function flattenObject(input: ObjectValue, prefix = ''): FlattenedObject 
       Object.assign(result, flattened);
     });
   } else {
-    Object.entries(input).forEach(([key, value]) => {
+    entries(input).forEach(([key, value]) => {
       const newKey = prefix === '' ? key : `${prefix}.${key}`;
       const flattened = flattenObject(value, newKey);
       Object.assign(result, flattened);

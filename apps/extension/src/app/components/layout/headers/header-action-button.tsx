@@ -1,4 +1,4 @@
-import { FlexProps } from 'leather-styles/jsx';
+import { type FlexProps } from 'leather-styles/jsx';
 
 import { IconButton } from '@leather.io/ui';
 

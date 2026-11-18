@@ -4,8 +4,8 @@ import { useFormikContext } from 'formik';
 import { Flex } from 'leather-styles/jsx';
 
 import { type BitcoinNetwork } from '@leather.io/models';
+import { useOnMount } from '@leather.io/ui';
 
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import type { AddNetworkFormValues } from '@app/pages/network/components/use-add-network';
 
 import { BitcoinApiSection } from './bitcoin-api-section';

@@ -11,7 +11,7 @@ import {
   createMarketData,
   createMarketPair,
 } from '@leather.io/models';
-import { createGetAlexSwappableCurrenciesQueryOptions } from '@leather.io/query';
+import { createAlexSwappableCurrenciesQueryConfig } from '@leather.io/queries';
 import { getPrincipalFromAssetString } from '@leather.io/stacks';
 import {
   convertAmountToFractionalUnit,
@@ -20,13 +20,14 @@ import {
   sortAssetsByName,
 } from '@leather.io/utils';
 
+import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useStxAddressAvailableUnlockedBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { useSip10AddressTransferableTokenBalances } from '@app/query/stacks/sip10/sip10-balance.hooks';
 
 import { useAlexSdkLatestPricesQuery } from './alex-sdk-latest-prices.query';
 import { useGetAlexSwappableCurrenciesQuery } from './alex-sdk-swappable-currency.query';
 
-export interface SwapAsset {
+interface SwapAsset {
   address?: string;
   balance: Money;
   tokenId: Currency;
@@ -38,7 +39,7 @@ export interface SwapAsset {
   principal: string;
 }
 
-export function useAlexCurrencyPriceAsMarketData() {
+function useAlexCurrencyPriceAsMarketData() {
   const { data: supportedCurrencies = [] } = useGetAlexSwappableCurrenciesQuery();
   const { data: prices } = useAlexSdkLatestPricesQuery();
 
@@ -47,10 +48,10 @@ export function useAlexCurrencyPriceAsMarketData() {
       const tokenInfo = supportedCurrencies
         .filter(isDefined)
         .find(token => getPrincipalFromAssetString(token.underlyingToken) === principal);
-      if (!prices || !tokenInfo)
+      const currencyPrice = tokenInfo && prices?.[tokenInfo.id];
+      if (currencyPrice === undefined)
         return createMarketData(createMarketPair(symbol, 'USD'), createMoney(0, 'USD'));
-      const currency = tokenInfo.id;
-      const price = convertAmountToFractionalUnit(new BigNumber(prices[currency] ?? 0), 2);
+      const price = convertAmountToFractionalUnit(new BigNumber(currencyPrice), 2);
       return createMarketData(createMarketPair(symbol, 'USD'), createMoney(price, 'USD'));
     },
     [prices, supportedCurrencies]
@@ -104,9 +105,10 @@ function useCreateSwapAsset(address: string) {
 }
 
 export function useAlexSwappableAssets(address: string) {
+  const settings = useUserSettings();
   const createSwapAsset = useCreateSwapAsset(address);
   return useQuery({
-    ...createGetAlexSwappableCurrenciesQueryOptions(),
+    ...createAlexSwappableCurrenciesQueryConfig(settings),
     select: resp => sortAssetsByName(resp.map(createSwapAsset).filter(isDefined)),
   });
 }

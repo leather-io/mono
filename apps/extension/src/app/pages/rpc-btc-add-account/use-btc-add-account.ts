@@ -27,7 +27,6 @@ import { useCurrentNativeSegwitAccount } from '@app/store/accounts/blockchain/bi
 import { useActiveWalletType } from '@app/store/common/wallet-type.selectors';
 import { useNetworks } from '@app/store/networks/networks.selectors';
 
-import { usePolicyFeatureGate } from '../policy-feature-gate';
 import {
   type BtcAddAccountKind,
   type PolicyMatchStatus,
@@ -71,12 +70,6 @@ export function useBtcAddAccount() {
   const registerBtcPolicy = useRegisterBtcPolicy();
   const networks = useNetworks();
   const walletType = useActiveWalletType();
-  const { isFeatureEnabled, rejectAsUnsupported } = usePolicyFeatureGate({
-    method: request.method,
-    frameId,
-    id: request.id,
-    tabId,
-  });
 
   const timelock = useMemo(
     () => matchTimelockedDescriptor(request.params.descriptor),
@@ -202,8 +195,6 @@ export function useBtcAddAccount() {
     walletType,
     isLedgerVerifyUnsupported,
     canApprove: matchStatus === 'match' && address !== null && !isLedgerVerifyUnsupported,
-    isFeatureEnabled,
-    rejectAsUnsupported,
     focusInitiatingTab,
     finalize,
   };

@@ -1,4 +1,4 @@
-import { GridProps } from 'leather-styles/jsx';
+import { type GridProps } from 'leather-styles/jsx';
 
 import { InfoGrid } from '../../../components/info-grid/info-grid';
 

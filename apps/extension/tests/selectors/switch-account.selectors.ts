@@ -1,16 +1,18 @@
-export enum SwitchAccountSelectors {
-  WalletActionMenuTrigger = 'wallet-action-menu-trigger',
-  AccountActionMenuTrigger = 'account-action-menu-trigger',
-  CreateAccountBtn = 'create-account-btn',
-  WalletHeaderName = 'wallet-header-name',
-  WalletHeaderLedgerIndicator = 'wallet-header-ledger-indicator',
-  RenameWalletInput = 'rename-wallet-input',
-  RenameWalletSaveBtn = 'rename-wallet-save-btn',
-  RenameAccountInput = 'rename-account-input',
-  RenameAccountSaveBtn = 'rename-account-save-btn',
-  RemoveWalletConfirmBtn = 'remove-wallet-confirm-btn',
-  PolicyActionMenuTrigger = 'policy-action-menu-trigger',
-  RenamePolicyInput = 'rename-policy-input',
-  RenamePolicySaveBtn = 'rename-policy-save-btn',
-  RemovePolicyConfirmBtn = 'remove-policy-confirm-btn',
-}
+export const SwitchAccountSelectors = {
+  WalletActionMenuTrigger: 'wallet-action-menu-trigger',
+  AccountActionMenuTrigger: 'account-action-menu-trigger',
+  CreateAccountBtn: 'create-account-btn',
+  WalletHeaderName: 'wallet-header-name',
+  WalletHeaderLedgerIndicator: 'wallet-header-ledger-indicator',
+  RenameWalletInput: 'rename-wallet-input',
+  RenameWalletSaveBtn: 'rename-wallet-save-btn',
+  RenameAccountInput: 'rename-account-input',
+  RenameAccountSaveBtn: 'rename-account-save-btn',
+  RemoveWalletConfirmBtn: 'remove-wallet-confirm-btn',
+  PolicyActionMenuTrigger: 'policy-action-menu-trigger',
+  RenamePolicyInput: 'rename-policy-input',
+  RenamePolicySaveBtn: 'rename-policy-save-btn',
+  RemovePolicyConfirmBtn: 'remove-policy-confirm-btn',
+} as const;
+export type SwitchAccountSelectors =
+  (typeof SwitchAccountSelectors)[keyof typeof SwitchAccountSelectors];

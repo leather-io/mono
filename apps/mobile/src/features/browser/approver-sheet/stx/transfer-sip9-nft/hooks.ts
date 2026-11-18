@@ -1,13 +1,13 @@
 import { useCallback } from 'react';
 
-import { getDefaultFee } from '@/features/approver/utils';
+import { getApproverFee } from '@/features/approver/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { bytesToHex } from '@stacks/common';
-import { StacksNetwork } from '@stacks/network';
+import { type StacksNetwork } from '@stacks/network';
 import { Pc, hexToCV, serializeCV } from '@stacks/transactions';
 
-import { RpcRequest, stxTransferSip9Nft } from '@leather.io/rpc';
+import { type RpcRequest, type stxTransferSip9Nft } from '@leather.io/rpc';
 import {
   TransactionTypes,
   createSip9FnArgs,
@@ -37,7 +37,7 @@ export function useTransferSip9NftTxHex({
   const getTxHex = useCallback(
     async function getTxHex() {
       const signer = fromAccountId(accountId)[0];
-      const fee = getDefaultFee();
+      const fee = getApproverFee(request.params.sponsored);
 
       assertStacksSigner(signer);
       const { contractAddress, contractAssetName, contractName } = getStacksAssetStringParts(
@@ -62,6 +62,7 @@ export function useTransferSip9NftTxHex({
         nonce,
         fee,
         network,
+        sponsored: request.params.sponsored,
         postConditions: [
           Pc.principal(currentStacksAddress)
             .willSendAsset()
@@ -83,12 +84,17 @@ export function useTransferSip9NftTxHex({
       request.params.asset,
       request.params.assetId,
       request.params.recipient,
+      request.params.sponsored,
       accountId,
       nonce,
       network,
     ]
   );
+  async function loadTxHex() {
+    setTxHex(await getTxHex());
+  }
+
   useOnMount(() => {
-    void getTxHex().then(txHex => setTxHex(txHex));
+    void loadTxHex();
   });
 }

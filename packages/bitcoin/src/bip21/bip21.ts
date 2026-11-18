@@ -1,4 +1,4 @@
-import { Bip21Options, decode, encode } from 'bip21';
+import { type Bip21Options, decode, encode } from 'bip21';
 
 import { isError } from '@leather.io/utils';
 
@@ -18,7 +18,7 @@ type Bip21Result =
     };
 
 export const bip21 = {
-  decode: (uri: string, urnScheme?: string): Bip21Result => {
+  decode(uri: string, urnScheme?: string): Bip21Result {
     try {
       const { address, options } = decode(uri, urnScheme);
       return {
@@ -32,7 +32,7 @@ export const bip21 = {
       };
     }
   },
-  encode: (address: string, options: Bip21Options, urnScheme?: string) => {
+  encode(address: string, options: Bip21Options, urnScheme?: string) {
     try {
       return encode(address, options, urnScheme);
     } catch {

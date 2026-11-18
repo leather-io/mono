@@ -1,6 +1,15 @@
 import { describe, expect, test } from 'vitest';
 
+import { isRecord } from '@shared/utils/is-record';
+
 import { migrateToAccountsSlice } from './migrate-3-4';
+
+function readPath(value: unknown, ...path: string[]): unknown {
+  return path.reduce<unknown>((current, key) => {
+    if (!isRecord(current)) throw new Error(`Cannot read "${key}" of a non-object value`);
+    return current[key];
+  }, value);
+}
 
 const softwareFingerprint = 'a1b2c3d4';
 const ledgerFingerprint = 'e5f6a7b8';
@@ -20,12 +29,12 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([
+    expect(readPath(result, 'accounts', 'ids')).toEqual([
       `${softwareFingerprint}/0`,
       `${softwareFingerprint}/1`,
       `${softwareFingerprint}/2`,
     ]);
-    expect(result.accounts.entities[`${softwareFingerprint}/0`]).toEqual({
+    expect(readPath(result, 'accounts', 'entities', `${softwareFingerprint}/0`)).toEqual({
       id: `${softwareFingerprint}/0`,
     });
   });
@@ -39,8 +48,11 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.settings).toEqual({ userSelectedTheme: 'system', dismissedMessages: [] });
-    expect(result.accounts).toEqual({ ids: [], entities: {} });
+    expect(readPath(result, 'settings')).toEqual({
+      userSelectedTheme: 'system',
+      dismissedMessages: [],
+    });
+    expect(readPath(result, 'accounts')).toEqual({ ids: [], entities: {} });
   });
 
   test('derives Ledger wallet account count from its keychains', () => {
@@ -68,7 +80,10 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([`${ledgerFingerprint}/0`, `${ledgerFingerprint}/1`]);
+    expect(readPath(result, 'accounts', 'ids')).toEqual([
+      `${ledgerFingerprint}/0`,
+      `${ledgerFingerprint}/1`,
+    ]);
   });
 
   test('skips Ledger keychains with malformed descriptors instead of throwing', () => {
@@ -92,7 +107,9 @@ describe(migrateToAccountsSlice.name, () => {
     };
 
     expect(() => migrateToAccountsSlice(inputState)).not.toThrow();
-    expect(migrateToAccountsSlice(inputState).accounts.ids).toEqual([`${ledgerFingerprint}/0`]);
+    expect(readPath(migrateToAccountsSlice(inputState), 'accounts', 'ids')).toEqual([
+      `${ledgerFingerprint}/0`,
+    ]);
   });
 
   test('falls back to a single account when no index information exists', () => {
@@ -109,7 +126,7 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([`${softwareFingerprint}/0`]);
+    expect(readPath(result, 'accounts', 'ids')).toEqual([`${softwareFingerprint}/0`]);
   });
 
   test('derives a stacks-only Ledger wallet account count from its stacks keychains', () => {
@@ -145,7 +162,7 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([
+    expect(readPath(result, 'accounts', 'ids')).toEqual([
       `${ledgerFingerprint}/0`,
       `${ledgerFingerprint}/1`,
       `${ledgerFingerprint}/2`,
@@ -176,7 +193,7 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([
+    expect(readPath(result, 'accounts', 'ids')).toEqual([
       `${softwareFingerprint}/0`,
       `${softwareFingerprint}/1`,
       `${ledgerFingerprint}/0`,
@@ -207,7 +224,7 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([
+    expect(readPath(result, 'accounts', 'ids')).toEqual([
       `${softwareFingerprint}/0`,
       `${softwareFingerprint}/1`,
       `${softwareFingerprint}/2`,
@@ -230,7 +247,7 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([`${softwareFingerprint}/0`]);
+    expect(readPath(result, 'accounts', 'ids')).toEqual([`${softwareFingerprint}/0`]);
   });
 
   test('preserves existing account metadata for derived ids and drops stale ones', () => {
@@ -258,14 +275,17 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([`${softwareFingerprint}/0`, `${softwareFingerprint}/1`]);
-    expect(result.accounts.entities['stale/0']).toBeUndefined();
-    expect(result.accounts.entities[`${softwareFingerprint}/0`]).toEqual({
+    expect(readPath(result, 'accounts', 'ids')).toEqual([
+      `${softwareFingerprint}/0`,
+      `${softwareFingerprint}/1`,
+    ]);
+    expect(readPath(result, 'accounts', 'entities', 'stale/0')).toBeUndefined();
+    expect(readPath(result, 'accounts', 'entities', `${softwareFingerprint}/0`)).toEqual({
       id: `${softwareFingerprint}/0`,
       name: 'Custom name',
       status: 'hidden',
     });
-    expect(result.accounts.entities[`${softwareFingerprint}/1`]).toEqual({
+    expect(readPath(result, 'accounts', 'entities', `${softwareFingerprint}/1`)).toEqual({
       id: `${softwareFingerprint}/1`,
     });
   });
@@ -295,7 +315,7 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(migratedState);
 
-    expect(result.accounts).toEqual(migratedState.accounts);
+    expect(readPath(result, 'accounts')).toEqual(migratedState.accounts);
   });
 
   test('ignores keychain entities absent from the keychains ids list', () => {
@@ -323,7 +343,7 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([`${ledgerFingerprint}/0`]);
+    expect(readPath(result, 'accounts', 'ids')).toEqual([`${ledgerFingerprint}/0`]);
   });
 
   test('is idempotent when re-run on an already-migrated state', () => {
@@ -341,7 +361,7 @@ describe(migrateToAccountsSlice.name, () => {
     const once = migrateToAccountsSlice(inputState);
     const twice = migrateToAccountsSlice(once);
 
-    expect(twice.accounts).toEqual(once.accounts);
+    expect(readPath(twice, 'accounts')).toEqual(readPath(once, 'accounts'));
   });
 
   test('produces an empty accounts slice when wallets is undefined', () => {
@@ -349,7 +369,7 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts).toEqual({ ids: [], entities: {} });
+    expect(readPath(result, 'accounts')).toEqual({ ids: [], entities: {} });
   });
 
   test('repairs a missing highestAccountIndex from the legacy currentAccountIndex', () => {
@@ -366,12 +386,12 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([
+    expect(readPath(result, 'accounts', 'ids')).toEqual([
       `${softwareFingerprint}/0`,
       `${softwareFingerprint}/1`,
       `${softwareFingerprint}/2`,
     ]);
-    expect(result.chains.stx[softwareFingerprint].highestAccountIndex).toBe(2);
+    expect(readPath(result, 'chains', 'stx', softwareFingerprint, 'highestAccountIndex')).toBe(2);
   });
 
   test('repairs a missing highestAccountIndex from the active account index', () => {
@@ -389,12 +409,12 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([
+    expect(readPath(result, 'accounts', 'ids')).toEqual([
       `${softwareFingerprint}/0`,
       `${softwareFingerprint}/1`,
       `${softwareFingerprint}/2`,
     ]);
-    expect(result.chains.stx[softwareFingerprint].highestAccountIndex).toBe(2);
+    expect(readPath(result, 'chains', 'stx', softwareFingerprint, 'highestAccountIndex')).toBe(2);
   });
 
   test('creates a chains.stx entry and repairs from the active index when none exists', () => {
@@ -412,13 +432,13 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([
+    expect(readPath(result, 'accounts', 'ids')).toEqual([
       `${softwareFingerprint}/0`,
       `${softwareFingerprint}/1`,
       `${softwareFingerprint}/2`,
       `${softwareFingerprint}/3`,
     ]);
-    expect(result.chains.stx[softwareFingerprint]).toEqual({
+    expect(readPath(result, 'chains', 'stx', softwareFingerprint)).toEqual({
       highestAccountIndex: 3,
       currentAccountStacksDescriptor: '',
     });
@@ -449,9 +469,11 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.chains.stx[softwareFingerprint].highestAccountIndex).toBe(0);
-    expect(result.chains.stx[secondSoftwareFingerprint].highestAccountIndex).toBe(2);
-    expect(result.accounts.ids).toEqual([
+    expect(readPath(result, 'chains', 'stx', softwareFingerprint, 'highestAccountIndex')).toBe(0);
+    expect(
+      readPath(result, 'chains', 'stx', secondSoftwareFingerprint, 'highestAccountIndex')
+    ).toBe(2);
+    expect(readPath(result, 'accounts', 'ids')).toEqual([
       `${softwareFingerprint}/0`,
       `${secondSoftwareFingerprint}/0`,
       `${secondSoftwareFingerprint}/1`,
@@ -475,8 +497,8 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.chains.stx[softwareFingerprint].highestAccountIndex).toBe(5);
-    expect(result.accounts.ids).toHaveLength(6);
+    expect(readPath(result, 'chains', 'stx', softwareFingerprint, 'highestAccountIndex')).toBe(5);
+    expect(readPath(result, 'accounts', 'ids')).toHaveLength(6);
   });
 
   test('leaves chains.stx untouched for ledger wallets', () => {
@@ -500,8 +522,8 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.chains.stx).toEqual({});
-    expect(result.accounts.ids).toEqual([`${ledgerFingerprint}/0`]);
+    expect(readPath(result, 'chains', 'stx')).toEqual({});
+    expect(readPath(result, 'accounts', 'ids')).toEqual([`${ledgerFingerprint}/0`]);
   });
 
   test('is idempotent when re-run after repairing a missing highestAccountIndex', () => {
@@ -519,8 +541,8 @@ describe(migrateToAccountsSlice.name, () => {
     const once = migrateToAccountsSlice(inputState);
     const twice = migrateToAccountsSlice(once);
 
-    expect(twice.accounts).toEqual(once.accounts);
-    expect(twice.chains.stx).toEqual(once.chains.stx);
+    expect(readPath(twice, 'accounts')).toEqual(readPath(once, 'accounts'));
+    expect(readPath(twice, 'chains', 'stx')).toEqual(readPath(once, 'chains', 'stx'));
   });
 
   test('materializes assumed-zero-fingerprint ids for a stacks-only Ledger and preserves metadata', () => {
@@ -559,8 +581,8 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([`${assumedZero}/0`, `${assumedZero}/1`]);
-    expect(result.accounts.entities[`${assumedZero}/0`]).toEqual({
+    expect(readPath(result, 'accounts', 'ids')).toEqual([`${assumedZero}/0`, `${assumedZero}/1`]);
+    expect(readPath(result, 'accounts', 'entities', `${assumedZero}/0`)).toEqual({
       id: `${assumedZero}/0`,
       name: 'My Stacks Acct',
       status: 'hidden',
@@ -600,7 +622,7 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([
+    expect(readPath(result, 'accounts', 'ids')).toEqual([
       `${ledgerFingerprint}/0`,
       `${ledgerFingerprint}/1`,
       `${ledgerFingerprint}/2`,
@@ -620,8 +642,8 @@ describe(migrateToAccountsSlice.name, () => {
 
     expect(() => migrateToAccountsSlice(inputState)).not.toThrow();
     const result = migrateToAccountsSlice(inputState);
-    expect(result.accounts.ids).toEqual([]);
-    expect(result.wallets.entities[ledgerFingerprint]).toBeDefined();
+    expect(readPath(result, 'accounts', 'ids')).toEqual([]);
+    expect(readPath(result, 'wallets', 'entities', ledgerFingerprint)).toBeDefined();
   });
 
   test('repairs an active account that is not materialized to the wallets first account', () => {
@@ -646,8 +668,11 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([`${ledgerFingerprint}/0`]);
-    expect(result.active.account).toEqual({ fingerprint: ledgerFingerprint, accountIndex: 0 });
+    expect(readPath(result, 'accounts', 'ids')).toEqual([`${ledgerFingerprint}/0`]);
+    expect(readPath(result, 'active', 'account')).toEqual({
+      fingerprint: ledgerFingerprint,
+      accountIndex: 0,
+    });
   });
 
   test('leaves a materialized active account unchanged', () => {
@@ -665,7 +690,10 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.active.account).toEqual({ fingerprint: softwareFingerprint, accountIndex: 1 });
+    expect(readPath(result, 'active', 'account')).toEqual({
+      fingerprint: softwareFingerprint,
+      accountIndex: 1,
+    });
   });
 
   test('scrubs the legacy currentAccountIndex field from chains.stx', () => {
@@ -690,7 +718,7 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.chains.stx[softwareFingerprint]).toEqual({
+    expect(readPath(result, 'chains', 'stx', softwareFingerprint)).toEqual({
       currentAccountStacksDescriptor: 'desc',
       highestAccountIndex: 1,
     });
@@ -726,14 +754,14 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([
+    expect(readPath(result, 'accounts', 'ids')).toEqual([
       `${softwareFingerprint}/0`,
       `${softwareFingerprint}/1`,
       `${softwareFingerprint}/2`,
       `${softwareFingerprint}/3`,
       `${softwareFingerprint}/4`,
     ]);
-    expect(result.chains.stx[softwareFingerprint].highestAccountIndex).toBe(4);
+    expect(readPath(result, 'chains', 'stx', softwareFingerprint, 'highestAccountIndex')).toBe(4);
   });
 
   test('ignores wallet entities absent from the wallets ids list', () => {
@@ -756,7 +784,7 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.ids).toEqual([`${softwareFingerprint}/0`]);
+    expect(readPath(result, 'accounts', 'ids')).toEqual([`${softwareFingerprint}/0`]);
   });
 
   test('is idempotent for a ledger wallet', () => {
@@ -785,7 +813,7 @@ describe(migrateToAccountsSlice.name, () => {
     const once = migrateToAccountsSlice(inputState);
     const twice = migrateToAccountsSlice(once);
 
-    expect(twice.accounts).toEqual(once.accounts);
+    expect(readPath(twice, 'accounts')).toEqual(readPath(once, 'accounts'));
   });
 
   test('drops an unexpected status value while preserving active and hidden', () => {
@@ -810,15 +838,15 @@ describe(migrateToAccountsSlice.name, () => {
 
     const result = migrateToAccountsSlice(inputState);
 
-    expect(result.accounts.entities[`${softwareFingerprint}/0`]).toEqual({
+    expect(readPath(result, 'accounts', 'entities', `${softwareFingerprint}/0`)).toEqual({
       id: `${softwareFingerprint}/0`,
       status: 'active',
     });
-    expect(result.accounts.entities[`${softwareFingerprint}/1`]).toEqual({
+    expect(readPath(result, 'accounts', 'entities', `${softwareFingerprint}/1`)).toEqual({
       id: `${softwareFingerprint}/1`,
       status: 'hidden',
     });
-    expect(result.accounts.entities[`${softwareFingerprint}/2`]).toEqual({
+    expect(readPath(result, 'accounts', 'entities', `${softwareFingerprint}/2`)).toEqual({
       id: `${softwareFingerprint}/2`,
     });
   });

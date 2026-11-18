@@ -46,7 +46,7 @@ function showCameraAlert() {
     },
     {
       text: messages.actionLabel,
-      onPress: () => Linking.openSettings(),
+      onPress: () => void Linking.openSettings(),
     },
   ]);
 }

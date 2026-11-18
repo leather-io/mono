@@ -1,25 +1,32 @@
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import GenericError from '@assets/images/generic-error.png';
 import { Flex, styled } from 'leather-styles/jsx';
-import get from 'lodash.get';
+import { z } from 'zod';
 
 import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
+import { useRouteState } from '@app/common/hooks/use-route-state';
+
+const broadcastErrorSheetRouteStateSchema = z
+  .object({
+    message: z.string().optional(),
+    proposeMode: z.boolean().optional(),
+  })
+  .catch({});
+
 export function BroadcastErrorSheet() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const message = get(location.state, 'message', '');
-  const proposeMode = Boolean(get(location.state, 'proposeMode', false));
+  const { message, proposeMode } = useRouteState(broadcastErrorSheetRouteStateSchema);
   const action = proposeMode ? 'propose' : 'broadcast';
 
   return (
     <Sheet
       isShowing
       header={<SheetHeader />}
-      onClose={() => navigate('..')}
+      onClose={() => void navigate('..')}
       footer={
-        <Button fullWidth onClick={() => navigate('..')} mt="space.05">
+        <Button fullWidth onClick={() => void navigate('..')} mt="space.05">
           Close
         </Button>
       }

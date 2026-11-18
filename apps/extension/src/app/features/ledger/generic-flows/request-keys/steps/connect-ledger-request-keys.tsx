@@ -7,7 +7,7 @@ export function ConnectLedgerRequestKeys() {
   const { pullPublicKeysFromDevice, latestDeviceResponse, awaitingDeviceConnection, chain } =
     useLedgerRequestKeysContext();
 
-  useWhenReattemptingLedgerConnection(() => pullPublicKeysFromDevice());
+  useWhenReattemptingLedgerConnection(() => void pullPublicKeysFromDevice());
 
   return (
     <ConnectLedger
@@ -20,7 +20,7 @@ export function ConnectLedgerRequestKeys() {
         />
       }
       showInstructions
-      onConnectLedger={pullPublicKeysFromDevice}
+      onConnectLedger={() => void pullPublicKeysFromDevice()}
     />
   );
 }

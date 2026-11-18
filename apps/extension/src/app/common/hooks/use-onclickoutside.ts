@@ -1,4 +1,4 @@
-import { RefObject, useEffect } from 'react';
+import { type RefObject, useEffect } from 'react';
 
 import arePassiveEventsSupported from 'are-passive-events-supported';
 import useLatest from 'use-latest';
@@ -15,7 +15,7 @@ type Handler = (event: PossibleEvent) => void;
 
 const events: HandledEvents = [MOUSEDOWN, TOUCHSTART];
 
-function getOptions(event: HandledEventsType) {
+function getOptions(event: HandledEventsType): AddEventListenerOptions | undefined {
   if (event !== TOUCHSTART) {
     return;
   }
@@ -41,13 +41,14 @@ export function useOnClickOutside(
     }
 
     function listener(event: PossibleEvent) {
-      if (!ref.current || !handlerRef.current || ref.current.contains(event.target as Node)) {
+      const target = event.target instanceof Node ? event.target : null;
+      if (!ref.current || !handlerRef.current || ref.current.contains(target)) {
         return;
       }
 
       const clickedElementIsAnException = exceptionIds
         .map(el => document.getElementById(el))
-        .some(el => el?.contains(event.target as Node));
+        .some(el => el?.contains(target));
 
       if (clickedElementIsAnException) {
         return;
@@ -62,7 +63,7 @@ export function useOnClickOutside(
 
     return () => {
       events.forEach(event => {
-        document.removeEventListener(event, listener, getOptions(event) as EventListenerOptions);
+        document.removeEventListener(event, listener, getOptions(event));
       });
     };
   }, [ref, handlerRef, noHandler, exceptionIds]);

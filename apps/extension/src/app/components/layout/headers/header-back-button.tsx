@@ -14,7 +14,7 @@ export function HeaderBackButton({ onBack }: HeaderBackButtonProps) {
   return (
     <HeaderActionButton
       icon={<ArrowLeftIcon />}
-      onAction={() => (onBack ? onBack() : navigate(-1))}
+      onAction={() => (onBack ? onBack() : void navigate(-1))}
       dataTestId={SharedComponentsSelectors.HeaderBackBtn}
     />
   );

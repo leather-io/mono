@@ -9,7 +9,7 @@ import {
 const querySettingsDepExtractors: Record<QuerySettingsDep, (settings: UserSettings) => unknown> = {
   currency: settings => settings.quoteCurrency,
   network: settings => settings.network.id,
-  assetVisibility: settings => settings.assetVisibility,
+  assetVisibility: settings => [settings.assetVisibility, settings.defaultAssetVisibility],
 };
 
 export function createServiceQueryKey(

@@ -1,7 +1,7 @@
 import { usePressedState } from '../../hooks/use-pressed-state.native';
-import { Box, BoxProps } from '../box/box.native';
-import { PressableRef } from '../pressable/pressable-core.native';
-import { Pressable, PressableProps } from '../pressable/pressable.native';
+import { Box, type BoxProps } from '../box/box.native';
+import { type PressableRef } from '../pressable/pressable-core.native';
+import { Pressable, type PressableProps } from '../pressable/pressable.native';
 import { CellAsideNative } from './components/cell-aside.native';
 import { CellContent } from './components/cell-content.native';
 import { CellIcon } from './components/cell-icon.native';

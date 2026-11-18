@@ -5,8 +5,8 @@ import { ValueDisplayer } from '~/components/value-displayer/default-value-displ
 import { EM_DASH } from '~/constants/constants';
 import { bitcoinStakingLabels } from '~/content/bitcoin-staking-content';
 import {
-  BitcoinStakingPool,
-  StakingPoolSlug,
+  type BitcoinStakingPool,
+  type StakingPoolSlug,
   getSignerManagerContracts,
 } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
@@ -14,8 +14,13 @@ import { StackingInfoGridLayout } from '~/features/stacking/components/stacking-
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { PoolTvlValue } from '../../components/pool-tvl-value';
-import { Pox5StakerInfo } from '../../queries/create-get-pox5-staker-info-query-options';
-import { ActiveStakingDetails } from '../hooks/use-active-staking-info';
+import { type Pox5StakerInfo } from '../../queries/create-get-pox5-staker-info-query-options';
+import {
+  getPoolPayoutMode,
+  getRewardsTokenSymbol,
+  isBtcPayoutRequired,
+} from '../../utils/pool-payout';
+import { type ActiveStakingDetails } from '../hooks/use-active-staking-info';
 import { StakingActionButtons } from './staking-action-buttons';
 
 interface StakingPositionGridProps {
@@ -35,6 +40,8 @@ export function StakingPositionGrid({ poolSlug, pool, info, details }: StakingPo
   const tvlSignerManagerContractIds = poolSignerManagerContractIds.length
     ? poolSignerManagerContractIds
     : [info.signerManagerContractId];
+  const payoutMode = getPoolPayoutMode(pool);
+  const defaultPayoutLabel = isBtcPayoutRequired(payoutMode) ? EM_DASH : 'sBTC on Stacks';
 
   return (
     <StackingInfoGridLayout
@@ -115,7 +122,13 @@ export function StakingPositionGrid({ poolSlug, pool, info, details }: StakingPo
             }
           />
         ),
-        rewardsToken: <ValueDisplayer gap="space.04" name="Rewards token" value="sBTC" />,
+        rewardsToken: (
+          <ValueDisplayer
+            gap="space.04"
+            name="Rewards token"
+            value={getRewardsTokenSymbol(payoutMode)}
+          />
+        ),
         poolAddress: (
           <ValueDisplayer
             gap="space.04"
@@ -136,7 +149,7 @@ export function StakingPositionGrid({ poolSlug, pool, info, details }: StakingPo
                   wide
                 />
               ) : (
-                'sBTC on Stacks'
+                defaultPayoutLabel
               )
             }
           />

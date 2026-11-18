@@ -1,11 +1,15 @@
+import { useNavigate } from 'react-router';
+
 import { btcAsset } from '@leather.io/constants';
 import type { AccountAddresses, AccountId } from '@leather.io/models';
+import { isBaseEntirelyDisabled } from '@leather.io/state/swap';
 import { BtcAvatarIcon } from '@leather.io/ui';
-import { createMoney } from '@leather.io/utils';
+import { aggregateBtcBalances, getAssetId } from '@leather.io/utils';
+
+import { RouteUrls } from '@shared/route-urls';
 
 import { useReceiveDialog } from '@app/common/receive/use-receive-dialog-context';
-import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
-import { useToast } from '@app/features/toasts/use-toast';
+import { useSwapDisabledPairs } from '@app/pages/swap/hooks/use-swap-disabled-pairs';
 import { useBlockchainActivityByAssetId } from '@app/query/activity/blockchain-activity.query';
 import {
   useNativeSegwitBtcAccountBalance,
@@ -13,7 +17,10 @@ import {
 } from '@app/query/bitcoin/balance/btc-balance.hooks';
 
 import { BitcoinTokenDetailsLayout } from './bitcoin-token-details.layout';
+import type { TokenAddressEntry } from './components/token-balances-tab';
+import { useCopyAddress } from './hooks/use-copy-address';
 import { useTokenMarketInfo } from './hooks/use-token-market-info';
+import { getBtcBalanceEntries } from './token-balances.utils';
 import { TokenDetailsError } from './token-details-error';
 import { TokenDetailsLoading } from './token-details-loading';
 
@@ -22,18 +29,16 @@ interface BitcoinTokenDetailsProps {
   account: AccountAddresses;
 }
 export function BitcoinTokenDetails({ accountId, account }: BitcoinTokenDetailsProps) {
+  const navigate = useNavigate();
   const { showReceive } = useReceiveDialog();
-  const toast = useToast();
+  const copyAddress = useCopyAddress();
 
   const nativeSegwitBalance = useNativeSegwitBtcAccountBalance(accountId);
   const taprootBalance = useTaprootBtcAccountBalance(accountId);
   const marketInfo = useTokenMarketInfo(btcAsset);
+  const disabledPairs = useSwapDisabledPairs();
+  const isSwapEnabled = !isBaseEntirelyDisabled(getAssetId(btcAsset), disabledPairs);
   const activityQuery = useBlockchainActivityByAssetId(account, btcAsset);
-
-  function handleCopyAddress(address: string) {
-    void copyToClipboard(address);
-    toast.success('Address copied to clipboard');
-  }
 
   function handleOpenReceive() {
     showReceive('btc');
@@ -61,50 +66,54 @@ export function BitcoinTokenDetails({ accountId, account }: BitcoinTokenDetailsP
     return <TokenDetailsLoading title="Bitcoin" />;
   }
 
-  const nativeBtc = nativeSegwitBalance.value.btc.totalBalance;
-  const taprootBtc = taprootBalance.value.btc.totalBalance;
-  const totalBalance = createMoney(nativeBtc.amount.plus(taprootBtc.amount), nativeBtc.symbol);
+  const btc = aggregateBtcBalances([nativeSegwitBalance.value.btc, taprootBalance.value.btc]);
+  const quote = aggregateBtcBalances([nativeSegwitBalance.value.quote, taprootBalance.value.quote]);
 
-  const nativeQuote = nativeSegwitBalance.value.quote.totalBalance;
-  const taprootQuote = taprootBalance.value.quote.totalBalance;
-  const fiatBalance = createMoney(nativeQuote.amount.plus(taprootQuote.amount), nativeQuote.symbol);
+  const balances = getBtcBalanceEntries(
+    { btc, quote },
+    category => void navigate(RouteUrls.AllBalancesDetail.replace(':category', category))
+  );
 
   const hdBitcoin = account.bitcoin?.type === 'hd' ? account.bitcoin : undefined;
   const nativeSegwitAddress = hdBitcoin?.zeroIndexNativeSegwitPayerAddress;
   const taprootAddress = hdBitcoin?.zeroIndexTaprootPayerAddress;
 
-  const balances = [
-    {
+  const addresses: TokenAddressEntry[] = [];
+
+  if (nativeSegwitAddress) {
+    addresses.push({
       title: 'Native Segwit',
       address: nativeSegwitAddress,
-      btcBalance: nativeSegwitBalance.value.btc.availableBalance,
-      fiatBalance: nativeSegwitBalance.value.quote.availableBalance,
-      onPressAddress: nativeSegwitAddress
-        ? () => handleCopyAddress(nativeSegwitAddress)
-        : undefined,
+      amount: nativeSegwitBalance.value.btc.availableBalance,
+      fiatAmount: nativeSegwitBalance.value.quote.availableBalance,
+      onPressAddress: () => copyAddress(nativeSegwitAddress),
       onPressRow: handleOpenReceive,
-    },
-    {
+    });
+  }
+
+  if (taprootAddress) {
+    addresses.push({
       title: 'Taproot',
       address: taprootAddress,
-      btcBalance: taprootBalance.value.btc.availableBalance,
-      fiatBalance: taprootBalance.value.quote.availableBalance,
-      onPressAddress: taprootAddress ? () => handleCopyAddress(taprootAddress) : undefined,
+      amount: taprootBalance.value.btc.availableBalance,
+      fiatAmount: taprootBalance.value.quote.availableBalance,
+      onPressAddress: () => copyAddress(taprootAddress),
       onPressRow: handleOpenReceive,
-    },
-  ];
+    });
+  }
 
   return (
     <BitcoinTokenDetailsLayout
       icon={<BtcAvatarIcon size="xl" />}
-      totalBalance={totalBalance}
-      fiatBalance={fiatBalance}
-      price={marketInfo.price!}
-      changePercent={marketInfo.changePercent}
-      priceChangeDelta={marketInfo.priceChangeDelta}
+      balance={btc.totalBalance}
+      fiatBalance={quote.totalBalance}
+      price={marketInfo.price}
       descriptionText={marketInfo.descriptionText}
       balances={balances}
+      addresses={addresses}
       activity={activityQuery.data ?? []}
+      isActivityLoading={activityQuery.isLoading}
+      isSwapEnabled={isSwapEnabled}
     />
   );
 }

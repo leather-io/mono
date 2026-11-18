@@ -3,7 +3,7 @@ import { useStxMarketDataQuery } from '@/queries/market-data/stx-market-data.que
 import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 
 export function usePreloadStxData(account: AccountId) {
   const { fingerprint, accountIndex } = account;

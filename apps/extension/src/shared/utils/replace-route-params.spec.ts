@@ -59,6 +59,16 @@ describe(replaceRouteParams.name, () => {
     );
   });
 
+  it('encodes a serialized asset id into a single decodable segment', () => {
+    const path = replaceRouteParams(RouteUrls.Swap, {
+      base: 'STX',
+      quote: 'sip10|SP1.sbtc-token::sbtc-token',
+    });
+
+    expect(path).toEqual('/swap/{chain}/STX/sip10%7CSP1.sbtc-token%3A%3Asbtc-token');
+    expect(decodeURIComponent(path.split('/')[4])).toEqual('sip10|SP1.sbtc-token::sbtc-token');
+  });
+
   it('replaces numeric values', () => {
     expect(replaceRouteParams('/accounts/:index', { index: 4 })).toEqual('/accounts/4');
   });

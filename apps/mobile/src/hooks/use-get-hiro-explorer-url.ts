@@ -1,6 +1,8 @@
 import { useSettings } from '@/store/settings/settings';
 import { ChainId } from '@stacks/network';
 
+const stacksMainnetChainId: number = ChainId.Mainnet;
+
 type HiroExplorerUrlType = 'block' | 'contract' | 'address';
 interface UseGetHiroExplorerUrlProps {
   type: HiroExplorerUrlType;
@@ -11,6 +13,6 @@ export function useGetHiroExplorerUrl({ type, value }: UseGetHiroExplorerUrlProp
   const hiroExplorerUrl = `https://explorer.hiro.so/`;
   const { networkPreference } = useSettings();
   const chainName =
-    networkPreference.chain.stacks.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet';
+    networkPreference.chain.stacks.chainId === stacksMainnetChainId ? 'mainnet' : 'testnet';
   return `${hiroExplorerUrl}/${type}/${value}?chain=${chainName}`;
 }

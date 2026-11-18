@@ -1,6 +1,7 @@
 export * from './message-signing';
 export * from './mocks/mocks';
 export * from './multisig/stx-proposal-domain';
+export * from './nonce/account-nonces.utils';
 export * from './signer/signer';
 export * from './stacks.utils';
 export * from './transactions/create-tx-hex';

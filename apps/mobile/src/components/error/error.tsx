@@ -1,11 +1,12 @@
 import { ScrollView } from 'react-native-gesture-handler';
 
+import eggImage from '@/assets/stickers/egg.png';
 import { useSafeBottomInset } from '@/components/screen/use-safe-bottom-inset';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 
-import { Box, Button, HasChildren, Text } from '@leather.io/ui/native';
+import { Box, Button, type HasChildren, Text } from '@leather.io/ui/native';
 
 import { EmptyLayout, EmptyLayoutTab } from '../loading/empty-layout';
 
@@ -22,11 +23,7 @@ export function ErrorFallbackTab() {
     <EmptyLayoutTab
       image={
         <Box>
-          <Image
-            style={{ height: 219, width: 270 }}
-            contentFit="contain"
-            source={require('@/assets/stickers/egg.png')}
-          />
+          <Image style={{ height: 219, width: 270 }} contentFit="contain" source={eggImage} />
         </Box>
       }
     >
@@ -46,11 +43,7 @@ function ErrorFallback({ error, onRetry }: ErrorProps) {
     <EmptyLayout
       image={
         <Box pt="8">
-          <Image
-            style={{ height: 219, width: 270 }}
-            contentFit="contain"
-            source={require('@/assets/stickers/egg.png')}
-          />
+          <Image style={{ height: 219, width: 270 }} contentFit="contain" source={eggImage} />
         </Box>
       }
     >

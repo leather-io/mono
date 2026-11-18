@@ -10,7 +10,7 @@ import {
   isStxAsset,
 } from '@leather.io/models';
 import { type AccountSwapAsset } from '@leather.io/services';
-import { getAssetId } from '@leather.io/utils';
+import { getAssetId, getPinnedAssetPriority, isPinnedAsset } from '@leather.io/utils';
 
 import { type DisabledPairRule } from '../swap-state.types';
 import { isBaseEntirelyDisabled, isPairDisabled } from './disabled-pairs';
@@ -21,10 +21,6 @@ interface PriorityAssetConfig {
 }
 
 const assetOrderPriority: Record<string, PriorityAssetConfig> = {
-  BTC: { protocol: 'nativeBtc', priority: 0 },
-  STX: { protocol: 'nativeStx', priority: 1 },
-  sBTC: { protocol: 'sip10', priority: 2 },
-  USDCx: { protocol: 'sip10', priority: 3 },
   USDh: { protocol: 'sip10', priority: 4 },
   stSTX: { protocol: 'sip10', priority: 4 },
   aeUSDC: { protocol: 'sip10', priority: 4 },
@@ -99,6 +95,7 @@ function isRelevantSwapAsset(swapAsset: AccountSwapAsset, type: 'base' | 'target
 }
 
 function getCurrencyPriority(swapAsset: AccountSwapAsset): number {
+  if (isPinnedAsset(swapAsset.asset)) return getPinnedAssetPriority(swapAsset.asset);
   const config = assetOrderPriority[swapAsset.asset.symbol];
   if (config && swapAsset.asset.protocol === config.protocol) {
     return config.priority;

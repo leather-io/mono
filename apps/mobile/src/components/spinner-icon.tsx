@@ -6,6 +6,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import spinnerDarkImage from '@/assets/spinner-dark.png';
+import spinnerLightImage from '@/assets/spinner-light.png';
 import { useSettings } from '@/store/settings/settings';
 import { Image } from 'expo-image';
 
@@ -42,22 +44,14 @@ export function SpinnerIcon({ invertColors, width = 24, height = 24 }: SpinnerIc
             }}
             style={{ height, width }}
             contentFit="cover"
-            source={
-              invertColors
-                ? require('@/assets/spinner-dark.png')
-                : require('@/assets/spinner-light.png')
-            }
+            source={invertColors ? spinnerDarkImage : spinnerLightImage}
           />
         ),
         dark: (
           <Image
             style={{ height, width }}
             contentFit="cover"
-            source={
-              invertColors
-                ? require('@/assets/spinner-light.png')
-                : require('@/assets/spinner-dark.png')
-            }
+            source={invertColors ? spinnerLightImage : spinnerDarkImage}
           />
         ),
       })}

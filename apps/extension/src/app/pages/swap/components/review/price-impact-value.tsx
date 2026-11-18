@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js';
+import type BigNumber from 'bignumber.js';
 import { Flex, styled } from 'leather-styles/jsx';
 import type { ColorToken } from 'leather-styles/tokens';
 

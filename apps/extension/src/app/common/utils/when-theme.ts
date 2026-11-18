@@ -1,6 +1,9 @@
 type Theme = 'light' | 'dark';
-type ThemeMap<T> = Record<Theme, T>;
+interface ThemeMap<TLight, TDark> {
+  light: TLight;
+  dark: TDark;
+}
 
 export function whenTheme(theme: Theme) {
-  return <T extends ThemeMap<unknown>>(map: T) => map[theme] as T[Theme];
+  return <TLight, TDark>(map: ThemeMap<TLight, TDark>) => map[theme];
 }

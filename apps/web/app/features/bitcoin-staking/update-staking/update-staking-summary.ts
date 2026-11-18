@@ -1,13 +1,17 @@
 import { EM_DASH } from '~/constants/constants';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
-import { BitcoinStakingPool, BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
+import {
+  type BitcoinStakingPool,
+  type BitcoinStakingProviderId,
+} from '~/data/bitcoin-staking-data';
 import { toHumanReadableMicroStx } from '~/utils/unit-convert';
 
 import { truncateMiddle } from '@leather.io/utils';
 
 import { formatFeeBips } from '../utils/pool-fee';
-import { SignerManagerOption } from './components/choose-signer-manager';
-import { SidebarSummaryRow } from './components/sidebar-summary-card';
+import { type PoolPayoutMode, getPoolPayoutMode, getRewardsTokenLabel } from '../utils/pool-payout';
+import { type SignerManagerOption } from './components/choose-signer-manager';
+import { type SidebarSummaryRow } from './components/sidebar-summary-card';
 
 const switchContent = bitcoinStakingContent.switchSignerManager;
 const summaryContent = switchContent.summary;
@@ -15,14 +19,10 @@ const summaryContent = switchContent.summary;
 export const customRowId = 'custom';
 export const currentCustomRowId = 'current-custom';
 
-function rewardsTokenLabel(supportsBtcPayout: boolean): string {
-  return supportsBtcPayout ? 'sBTC / BTC' : 'sBTC';
-}
-
 export interface SignerManagerFacts {
   name: string;
   isCustom: boolean;
-  supportsBtcPayout: boolean;
+  payoutMode: PoolPayoutMode;
   feeBips: number | null;
 }
 
@@ -45,7 +45,7 @@ export function buildSignerManagerOptions({
     return {
       providerId: pool.providerId,
       name: pool.name,
-      meta: `${feeLabel} fee · ${rewardsTokenLabel(pool.supportsBtcPayout)}`,
+      meta: `${feeLabel} fee · ${getRewardsTokenLabel(getPoolPayoutMode(pool))}`,
       isCurrent: currentPool?.providerId === pool.providerId,
     };
   });
@@ -98,7 +98,7 @@ function buildRewardsTokenRow(
       value: summaryContent.customRewardsValue,
     };
   }
-  const targetLabel = rewardsTokenLabel(target.supportsBtcPayout);
+  const targetLabel = getRewardsTokenLabel(target.payoutMode);
   if (current.isCustom) {
     return {
       kind: 'diff',
@@ -107,7 +107,7 @@ function buildRewardsTokenRow(
       to: targetLabel,
     };
   }
-  const currentLabel = rewardsTokenLabel(current.supportsBtcPayout);
+  const currentLabel = getRewardsTokenLabel(current.payoutMode);
   if (currentLabel === targetLabel) return null;
   return { kind: 'diff', label: summaryContent.rewardsToken, from: currentLabel, to: targetLabel };
 }

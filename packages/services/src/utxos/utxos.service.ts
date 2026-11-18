@@ -1,18 +1,19 @@
 import { inject, injectable } from 'inversify';
 
-import { OwnedUtxo } from '@leather.io/models';
-import { hasBitcoinAddress } from '@leather.io/utils';
+import { OwnedUtxo, Utxo } from '@leather.io/models';
 
 import { LeatherApiClient } from '../infrastructure/api/leather/leather-api.client';
 import { MempoolApiClient } from '../infrastructure/api/mempool/mempool-api.client';
-import { selectBitcoinNetworkMode } from '../infrastructure/settings/settings.selectors';
+import { getMempoolUrlFromUserSettings } from '../infrastructure/api/mempool/mempool-api.utils';
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
 import { BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
 import { AccountRequest } from '../types/request.types';
 import {
+  createLockedUtxosFromBonds,
   createOwnedUtxoFromLeather,
   createOwnedUtxoFromMempool,
+  getBondStakerAddress,
   getUtxoTotals,
 } from './utxos.utils';
 
@@ -23,6 +24,7 @@ export interface UtxoTotals {
   dust: OwnedUtxo[];
   unspendable: OwnedUtxo[];
   available: OwnedUtxo[];
+  locked: Utxo[];
 }
 
 export const emptyUtxos: UtxoTotals = {
@@ -32,6 +34,7 @@ export const emptyUtxos: UtxoTotals = {
   dust: [],
   unspendable: [],
   available: [],
+  locked: [],
 };
 
 const btcTxPageRequest = { page: 1, pageSize: 750 };
@@ -47,11 +50,19 @@ export class UtxosService {
   /**
    * Retrieve categorized UTXO lists for given Bitcoin account.
    */
-  public async getAccountUtxos(
+  public async getAccountUtxos(request: AccountRequest, signal?: AbortSignal): Promise<UtxoTotals> {
+    const [ownedUtxos, locked] = await Promise.all([
+      this.getAccountOwnedUtxos(request, signal),
+      this.getAccountLockedUtxos(request, signal),
+    ]);
+    return { ...ownedUtxos, locked };
+  }
+
+  private async getAccountOwnedUtxos(
     { account, exclusions }: AccountRequest,
     signal?: AbortSignal
   ): Promise<UtxoTotals> {
-    if (!hasBitcoinAddress(account)) return emptyUtxos;
+    if (!account.bitcoin) return emptyUtxos;
 
     if (account.bitcoin.type === 'fixedAddress') {
       return this.getAddressUtxos(account.bitcoin.address, account.id.fingerprint, signal);
@@ -76,7 +87,22 @@ export class UtxosService {
       dust: [...nativeSegwitUtxos.dust, ...taprootUtxos.dust],
       unspendable: [...nativeSegwitUtxos.unspendable, ...taprootUtxos.unspendable],
       available: [...nativeSegwitUtxos.available, ...taprootUtxos.available],
+      locked: [],
     };
+  }
+
+  private async getAccountLockedUtxos(
+    { account, exclusions }: AccountRequest,
+    signal?: AbortSignal
+  ): Promise<Utxo[]> {
+    const address = getBondStakerAddress(account, exclusions);
+    if (!address) return [];
+    try {
+      const bonds = await this.leatherApiClient.fetchStakingBonds(address, { signal });
+      return createLockedUtxosFromBonds(bonds);
+    } catch {
+      return [];
+    }
   }
 
   /**
@@ -103,8 +129,8 @@ export class UtxosService {
     fingerprint: string,
     signal?: AbortSignal
   ): Promise<OwnedUtxo[]> {
-    const networkMode = selectBitcoinNetworkMode(this.settings.getSettings());
-    if (networkMode === 'regtest') {
+    const mempoolUrl = getMempoolUrlFromUserSettings(this.settings.getSettings());
+    if (mempoolUrl) {
       const mempoolApiUtxos = await this.mempoolApiClient.fetchDescriptorUtxos(descriptor, {
         signal,
       });
@@ -131,9 +157,9 @@ export class UtxosService {
     fingerprint: string,
     signal?: AbortSignal
   ): Promise<OwnedUtxo[]> {
-    const networkMode = selectBitcoinNetworkMode(this.settings.getSettings());
-    if (networkMode === 'regtest') {
-      const mempoolApiUtxos = await this.mempoolApiClient.fetchAddressUtxos(address, undefined, {
+    const mempoolUrl = getMempoolUrlFromUserSettings(this.settings.getSettings());
+    if (mempoolUrl) {
+      const mempoolApiUtxos = await this.mempoolApiClient.fetchAddressUtxos(address, mempoolUrl, {
         signal,
       });
       return mempoolApiUtxos.map(utxo =>

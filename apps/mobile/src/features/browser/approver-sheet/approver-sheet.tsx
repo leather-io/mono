@@ -4,13 +4,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { FullHeightSheet } from '@/components/sheets/full-height-sheet/full-height-sheet';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
-import { useTheme } from '@shopify/restyle';
 
-import { RpcErrorCode, RpcResponses, createRpcErrorResponse } from '@leather.io/rpc';
-import { Box, type SheetInstance } from '@leather.io/ui/native';
+import { RpcErrorCode, type RpcResponses, createRpcErrorResponse } from '@leather.io/rpc';
+import { Box, type SheetInstance, useTheme } from '@leather.io/ui/native';
 
 import { BrowserApprover } from './browser-approver';
-import { BrowserMessage, RpcErrorMessage } from './utils';
+import { type BrowserMessage, RpcErrorMessage } from './utils';
 
 interface ApproverSheetProps {
   sendResult(result: RpcResponses): void;

@@ -38,7 +38,7 @@ const allAssets: FungibleCryptoAsset[] = [btcAsset, stxAsset, sip10Asset];
 function createTestItem(
   overrides: Partial<AssetListItem> & { id: SerializedCryptoAssetId }
 ): AssetListItem {
-  return overrides as AssetListItem;
+  return { asset: btcAsset, ...overrides };
 }
 
 describe(filterAssetsByProtocol.name, () => {

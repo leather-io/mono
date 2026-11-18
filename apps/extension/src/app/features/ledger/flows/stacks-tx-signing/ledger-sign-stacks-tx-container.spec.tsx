@@ -1,0 +1,298 @@
+// @vitest-environment jsdom
+import type * as StacksTransactions from '@stacks/transactions';
+import { act, render } from '@testing-library/react';
+import { LedgerError } from '@zondax/ledger-stacks';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+
+import type * as LeatherUtils from '@leather.io/utils';
+
+import { makeFakeDmk } from '@app/features/ledger/dmk/ledger-dmk.mocks';
+import type { LedgerSigningOutcome } from '@app/features/ledger/flow/ledger-flow.types';
+import type { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
+import type * as GenericLedgerUtils from '@app/features/ledger/utils/generic-ledger-utils';
+import {
+  fakeLedgerSessionId,
+  makeFakeLedgerStacksApp,
+} from '@app/features/ledger/utils/ledger-app.mocks';
+import type * as StacksLedgerUtils from '@app/features/ledger/utils/stacks-ledger-utils';
+
+import { LedgerSignStacksTxContainer } from './ledger-sign-stacks-tx-container';
+
+const mocks = vi.hoisted(() => ({
+  toCheckingAppVersion: vi.fn(),
+  toConnectionSuccessStep: vi.fn(),
+  toAwaitingDeviceOperation: vi.fn(),
+  toDevicePayloadInvalid: vi.fn(),
+  toOperationRejectedStep: vi.fn(),
+  toErrorStep: vi.fn(),
+  settleLedgerAction: vi.fn(),
+  transactionSignedOnLedgerSuccessfully: vi.fn(),
+  transactionSignedOnLedgerRejected: vi.fn(),
+  connectApp: vi.fn(),
+  getStacksAppVersion: vi.fn(),
+  signTransaction: vi.fn(),
+  signWithSignature: vi.fn(),
+  versionGate: vi.fn(),
+  migrateFingerprint: vi.fn(),
+  disconnect: vi.fn(),
+  captureContext: vi.fn<(value: LedgerTxSigningContext) => void>(),
+}));
+
+vi.mock('@stacks/transactions', async importOriginal => {
+  const actual = await importOriginal<typeof StacksTransactions>();
+  return { ...actual, deserializeTransaction: () => null };
+});
+
+vi.mock('@app/features/ledger/dmk/ledger-dmk.context', () => ({
+  useLedgerDmk: () => makeFakeDmk({ disconnect: mocks.disconnect }),
+}));
+
+vi.mock('@app/features/ledger/flow/ledger-flow.context', () => ({
+  useLedgerFlowState: () => null,
+  useLedgerSteps: () => ({
+    toCheckingAppVersion: mocks.toCheckingAppVersion,
+    toConnectionSuccessStep: mocks.toConnectionSuccessStep,
+    toAwaitingDeviceOperation: mocks.toAwaitingDeviceOperation,
+    toDevicePayloadInvalid: mocks.toDevicePayloadInvalid,
+    toOperationRejectedStep: mocks.toOperationRejectedStep,
+    toErrorStep: mocks.toErrorStep,
+    settleLedgerAction: mocks.settleLedgerAction,
+  }),
+}));
+
+vi.mock('@app/features/ledger/hooks/use-ledger-analytics.hook', () => ({
+  useLedgerAnalytics: () => ({
+    transactionSignedOnLedgerSuccessfully: mocks.transactionSignedOnLedgerSuccessfully,
+    transactionSignedOnLedgerRejected: mocks.transactionSignedOnLedgerRejected,
+  }),
+}));
+
+vi.mock('@app/features/ledger/hooks/use-ledger-fingerprint-migration', () => ({
+  useLedgerFingerprintMigration: () => mocks.migrateFingerprint,
+}));
+
+vi.mock('@app/features/ledger/generic-flows/tx-signing/tx-signing-flow', () => ({
+  TxSigningFlow(props: { context: LedgerTxSigningContext }) {
+    mocks.captureContext(props.context);
+    return null;
+  },
+}));
+
+vi.mock('./steps/approve-sign-stacks-ledger-tx', () => ({
+  ApproveSignLedgerStacksTx: () => null,
+}));
+
+vi.mock('@app/common/hooks/use-scroll-lock', () => ({
+  useScrollLock: vi.fn(),
+}));
+
+vi.mock('@app/store/accounts/blockchain/stacks/stacks-account.hooks', () => ({
+  useCurrentStacksAccount: () => ({
+    derivationPath: "m/44'/5757'/0'/0/0",
+    stxPublicKey: '029f9d43e161b2ecb86d78262d47d2cd10d20ab7b4c303cd4f0e26744c72e340fc',
+  }),
+}));
+
+vi.mock('@app/features/ledger/utils/stacks-ledger-utils', async importOriginal => {
+  const actual = await importOriginal<typeof StacksLedgerUtils>();
+  return {
+    ...actual,
+    connectLedgerStacksApp: mocks.connectApp,
+    getStacksAppVersion: mocks.getStacksAppVersion,
+    signLedgerStacksTransaction: mocks.signTransaction,
+    signStacksTransactionWithSignature: mocks.signWithSignature,
+  };
+});
+
+vi.mock('@app/features/ledger/utils/stacks-version-gate', () => ({
+  stacksVersionGate: () => mocks.versionGate,
+}));
+
+vi.mock('@app/features/ledger/utils/generic-ledger-utils', async importOriginal => {
+  const actual = await importOriginal<typeof GenericLedgerUtils>();
+  return { ...actual, useCancelLedgerAction: () => false };
+});
+
+vi.mock('@leather.io/utils', async importOriginal => {
+  const actual = await importOriginal<typeof LeatherUtils>();
+  return { ...actual, delay: () => Promise.resolve() };
+});
+
+vi.mock('@shared/logger', () => ({
+  logger: { error: vi.fn(), warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
+}));
+
+const stacksAppVersion = {
+  name: 'Stacks',
+  chain: 'stacks',
+  returnCode: LedgerError.NoErrors,
+  errorMessage: 'No errors',
+  testMode: false,
+  deviceLocked: false,
+  targetId: '',
+  major: 0,
+  minor: 26,
+  patch: 17,
+};
+
+const unsignedTx =
+  '000000000104008e3c2222876b4b723fdbf79ac3e60564c3639bad0000000000000000000000000000006400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000302000000000005163b11c6abb50beb04bb884dfefd2ae9993121331d00000000000001f400000000000000000000000000000000000000000000000000000000000000000000';
+
+const requestId = 1;
+
+function expectSettledOnceWith(outcome: LedgerSigningOutcome<unknown>) {
+  expect(mocks.settleLedgerAction).toHaveBeenCalledOnce();
+  expect(mocks.settleLedgerAction).toHaveBeenCalledWith(
+    expect.objectContaining({ id: requestId }),
+    outcome
+  );
+}
+
+function renderSignTxContext(settleOnRejection: boolean): LedgerTxSigningContext {
+  render(
+    <LedgerSignStacksTxContainer
+      request={{
+        kind: 'sign-stacks-tx',
+        id: requestId,
+        resolve: vi.fn(),
+        tx: unsignedTx,
+        settleOnRejection,
+      }}
+    />
+  );
+  const call = mocks.captureContext.mock.calls.at(-1);
+  if (!call) throw new Error('Tx signing context was not rendered');
+  return call[0];
+}
+
+const transportFailureReturnCode = 0xffff;
+
+interface SetupSignTransactionParams {
+  returnCode: number;
+  errorMessage: string;
+  settleOnRejection?: boolean;
+  signatureVRS?: Buffer;
+}
+
+function setupSignTransaction({
+  returnCode,
+  errorMessage,
+  settleOnRejection,
+  signatureVRS,
+}: SetupSignTransactionParams) {
+  mocks.connectApp.mockResolvedValue(makeFakeLedgerStacksApp());
+  mocks.disconnect.mockResolvedValue(undefined);
+  mocks.getStacksAppVersion.mockResolvedValue(stacksAppVersion);
+  mocks.versionGate.mockResolvedValue(true);
+  mocks.migrateFingerprint.mockResolvedValue(undefined);
+  mocks.signTransaction.mockReturnValue(() =>
+    Promise.resolve({ returnCode, errorMessage, signatureVRS })
+  );
+  return { context: renderSignTxContext(settleOnRejection ?? false) };
+}
+
+describe('LedgerSignStacksTxContainer', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test('settles the flow with the signed transaction', async () => {
+    const signedTx = { signed: true };
+    mocks.signWithSignature.mockReturnValue(signedTx);
+    const { context } = setupSignTransaction({
+      returnCode: LedgerError.NoErrors,
+      errorMessage: 'No errors',
+      signatureVRS: Buffer.alloc(65),
+    });
+
+    await act(async () => {
+      await context.signTransaction();
+    });
+
+    expect(mocks.transactionSignedOnLedgerSuccessfully).toHaveBeenCalledOnce();
+    expectSettledOnceWith({ status: 'signed', value: signedTx });
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+  });
+
+  test('settles a device denial as a cancellation when the swap opted in', async () => {
+    const { context } = setupSignTransaction({
+      returnCode: LedgerError.TransactionRejected,
+      errorMessage: 'Transaction rejected',
+      settleOnRejection: true,
+    });
+
+    await act(async () => {
+      await context.signTransaction();
+    });
+
+    expectSettledOnceWith({ status: 'cancelled' });
+    expect(mocks.toOperationRejectedStep).not.toHaveBeenCalled();
+    expect(mocks.transactionSignedOnLedgerRejected).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
+  });
+
+  test('forwards an invalid payload error to the swap when it opted in', async () => {
+    const { context } = setupSignTransaction({
+      returnCode: LedgerError.DataIsInvalid,
+      errorMessage: 'Data is invalid : bad tx',
+      settleOnRejection: true,
+    });
+
+    await act(async () => {
+      await context.signTransaction();
+    });
+
+    expectSettledOnceWith({ status: 'failed', error: 'Data is invalid : bad tx' });
+    expect(mocks.toDevicePayloadInvalid).not.toHaveBeenCalled();
+    expect(mocks.toErrorStep).not.toHaveBeenCalled();
+  });
+
+  test('forwards a transport failure to the swap when it opted in', async () => {
+    const { context } = setupSignTransaction({
+      returnCode: transportFailureReturnCode,
+      errorMessage: 'DisconnectedDeviceDuringOperation: device disconnected',
+      settleOnRejection: true,
+    });
+
+    await act(async () => {
+      await context.signTransaction();
+    });
+
+    expectSettledOnceWith({
+      status: 'failed',
+      error: 'DisconnectedDeviceDuringOperation: device disconnected',
+    });
+    expect(mocks.toErrorStep).not.toHaveBeenCalled();
+  });
+
+  test('keeps the rejected step and leaves the promise pending for other flows', async () => {
+    const { context } = setupSignTransaction({
+      returnCode: LedgerError.TransactionRejected,
+      errorMessage: 'Transaction rejected',
+    });
+
+    await act(async () => {
+      await context.signTransaction();
+    });
+
+    expect(mocks.toOperationRejectedStep).toHaveBeenCalledOnce();
+    expect(mocks.settleLedgerAction).not.toHaveBeenCalled();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
+  });
+
+  test('shows the invalid payload step for other flows', async () => {
+    const { context } = setupSignTransaction({
+      returnCode: LedgerError.DataIsInvalid,
+      errorMessage: 'Data is invalid : bad tx',
+    });
+
+    await act(async () => {
+      await context.signTransaction();
+    });
+
+    expect(mocks.toDevicePayloadInvalid).toHaveBeenCalledOnce();
+    expect(mocks.settleLedgerAction).not.toHaveBeenCalled();
+  });
+});

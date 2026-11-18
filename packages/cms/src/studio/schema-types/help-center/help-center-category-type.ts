@@ -45,7 +45,7 @@ export const helpCenterCategoryType = defineType({
       title: 'name',
       order: 'order',
     },
-    prepare(selection) {
+    prepare(selection: { title: string | undefined; order: number | undefined }) {
       const { title, order } = selection;
       return {
         title: title || 'Untitled',

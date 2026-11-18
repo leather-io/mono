@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { type Page } from '@playwright/test';
 import {
   type ClarityValue,
   bufferCVFromString,
@@ -6,6 +6,7 @@ import {
   serializeCV,
   standardPrincipalCV,
 } from '@stacks/transactions';
+import type { TestRpcResponse } from '@tests/leather-provider';
 import { TEST_ACCOUNT_1_STX_ADDRESS } from '@tests/mocks/constants';
 import { mockFundedStacksAddress } from '@tests/mocks/mock-multisig';
 import {
@@ -47,8 +48,8 @@ function makeCallContractParams(recipient: string) {
 function openStxCallContract(page: Page, recipient: string) {
   return page.evaluate(
     ({ params }) =>
-      void (window as any).LeatherProvider?.request('stx_callContract', params).catch(
-        (e: unknown) => e
+      void window.LeatherProvider?.request('stx_callContract', params).catch(
+        (e: TestRpcResponse) => e
       ),
     { params: makeCallContractParams(recipient) }
   );
@@ -63,7 +64,7 @@ test.describe('DEBUG ledger propose', () => {
       ...getConnectedTestAppPermissionsState({ policyId: stacksPolicy.id }),
       ...policyStateOverrides({ policies: [stacksPolicy] }),
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('debug cancel', async ({ page, context }) => {
@@ -73,7 +74,6 @@ test.describe('DEBUG ledger propose', () => {
       context.waitForEvent('page'),
       openStxCallContract(page, TEST_ACCOUNT_1_STX_ADDRESS),
     ]);
-    await popup.waitForTimeout(1500);
 
     const proposeButton = popup.getByRole('button', { name: 'Propose transaction' });
     await test.expect(proposeButton).toBeEnabled({ timeout: 20_000 });
@@ -84,12 +84,16 @@ test.describe('DEBUG ledger propose', () => {
       .toBeVisible({ timeout: 20_000 });
 
     await popup.keyboard.press('Escape');
-    await popup.waitForTimeout(3000);
 
     // Try clicking the header close icon if sheet still open
-    const stillConnect = await popup.getByText('Connect & unlock your Ledger').isVisible();
-    if (stillConnect) {
-      await popup.getByRole('button', { name: 'Close' }).first().click();
-    }
+    const connectSheetTitle = popup.getByText('Connect & unlock your Ledger');
+    await test
+      .expect(async () => {
+        if (await connectSheetTitle.isVisible()) {
+          await popup.getByRole('button', { name: 'Close' }).first().click();
+        }
+        await test.expect(connectSheetTitle).toBeHidden({ timeout: 1000 });
+      })
+      .toPass();
   });
 });

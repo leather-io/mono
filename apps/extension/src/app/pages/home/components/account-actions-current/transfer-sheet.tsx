@@ -24,7 +24,7 @@ export function TransferSheet({ onSend, onReceive, onClose, isShowing }: Transfe
         icon={<InboxIcon />}
         onClick={onReceive}
         title="Receive"
-        caption="Receive tokens or NTFs from others"
+        caption="Receive tokens or NFTs from others"
       />
     </ActionDrawer>
   );

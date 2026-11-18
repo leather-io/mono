@@ -1,6 +1,7 @@
 import { styled } from 'leather-styles/jsx';
 import type { ColorToken } from 'leather-styles/tokens';
 import { BasicHoverCard } from '~/components/basic-hover-card';
+import { LearnMoreLink } from '~/layouts/page/page';
 
 import { InfoCircleIcon } from '@leather.io/ui';
 
@@ -8,6 +9,7 @@ interface InfoTooltipIconProps {
   title: string;
   explanation: string;
   ariaLabel: string;
+  learnMoreUrl?: string;
   size?: number;
   color?: ColorToken;
 }
@@ -19,11 +21,21 @@ export function InfoTooltipIcon({
   title,
   explanation,
   ariaLabel,
+  learnMoreUrl,
   size = 16,
   color = 'ink.text-subdued',
 }: InfoTooltipIconProps) {
+  const content = learnMoreUrl ? (
+    <>
+      {explanation}
+      <LearnMoreLink destination={learnMoreUrl} />
+    </>
+  ) : (
+    explanation
+  );
+
   return (
-    <BasicHoverCard title={title} content={explanation}>
+    <BasicHoverCard title={title} content={content}>
       <styled.span
         display="inline-flex"
         alignItems="center"

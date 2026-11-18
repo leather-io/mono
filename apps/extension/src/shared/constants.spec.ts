@@ -7,10 +7,12 @@ describe(isWhitelistedOrigin.name, () => {
     expect(isWhitelistedOrigin('https://app.leather.io')).toBe(true);
   });
 
-  test('accepts the multisig onboarding origin', () => {
-    expect(
-      isWhitelistedOrigin('https://dev-leather-web.wallet-6d1.workers.dev/multisig/onboarding')
-    ).toBe(true);
+  test('accepts the staging origin', () => {
+    expect(isWhitelistedOrigin('https://staging.app.leather.io/multisig/onboarding')).toBe(true);
+  });
+
+  test('rejects the legacy workers.dev staging origin', () => {
+    expect(isWhitelistedOrigin('https://dev-leather-web.wallet-6d1.workers.dev')).toBe(false);
   });
 
   test('rejects a localhost origin when not in development', () => {
@@ -74,5 +76,33 @@ describe(`${isWhitelistedOrigin.name} in development`, () => {
     const isWhitelisted = await loadInDevMode();
     expect(isWhitelisted('https://evil.com')).toBe(false);
     expect(isWhitelisted('https://localhost.evil.com')).toBe(false);
+  });
+});
+
+describe(`${isWhitelistedOrigin.name} in production`, () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  });
+
+  async function loadInProductionMode() {
+    vi.stubEnv('WALLET_ENVIRONMENT', 'production');
+    vi.resetModules();
+    return (await import('./constants')).isWhitelistedOrigin;
+  }
+
+  test('accepts the staging origin', async () => {
+    const isWhitelisted = await loadInProductionMode();
+    expect(isWhitelisted('https://staging.app.leather.io')).toBe(true);
+  });
+
+  test('rejects localhost origins', async () => {
+    const isWhitelisted = await loadInProductionMode();
+    expect(isWhitelisted('http://localhost:3000')).toBe(false);
+  });
+
+  test('still accepts the production origin', async () => {
+    const isWhitelisted = await loadInProductionMode();
+    expect(isWhitelisted('https://app.leather.io')).toBe(true);
   });
 });

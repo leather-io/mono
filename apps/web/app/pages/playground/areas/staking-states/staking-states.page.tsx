@@ -21,8 +21,10 @@ import {
   listedSignerManagerContractId,
   mockBtcPayoutPreference,
   mockCurrentCycleId,
+  mockOperatorPayoutPreference,
   mockTrackedTx,
   pendingStakeSeed,
+  planbetterSignerManagerContractId,
   stackingDaoSignerManagerContractId,
 } from './staking-mock-data';
 import { Board, Section, StakingPlaygroundShell, StakingSurface } from './staking-surface';
@@ -39,6 +41,11 @@ const unlistedPosition = createStakerInfo({
 const stackingDaoPosition = createStakerInfo({
   signerManagerContractId: stackingDaoSignerManagerContractId,
   amountMicroStx: 3_200_000_000n,
+});
+
+const planbetterPosition = createStakerInfo({
+  signerManagerContractId: planbetterSignerManagerContractId,
+  amountMicroStx: 2_400_000_000n,
 });
 
 const earnedRewards = createEarnedRewards(claimableCycles);
@@ -216,6 +223,18 @@ export function StakingStatesPage() {
           </Board>
 
           <Board
+            label="Pool that pays native BTC off chain"
+            note="PlanBetter collects the pool's sBTC and pays members in BTC itself, so the payout section is a single mandatory address prefilled from the wallet, with no sBTC option and no fee inputs. The 1,000 STX floor is a contract constant, so the amount field enforces it up front. Type 500 to see the error."
+            route={routes.pool}
+          >
+            <StakingSurface>
+              <StakingPage title="Stake with a pool" backTo={stakingPaths.index}>
+                <StartStaking poolSlug="planbetter" />
+              </StakingPage>
+            </StakingSurface>
+          </Board>
+
+          <Board
             label="A stake is already in the mempool"
             note="The form would let someone stake twice, so it stands down until the first transaction settles."
             route={routes.pool}
@@ -377,6 +396,24 @@ export function StakingStatesPage() {
               </StakingPage>
             </StakingSurface>
           </Board>
+
+          <Board
+            label="Position paid in native BTC by the operator"
+            note="No claim button and no claimable balance: the contract never zeroes a member's accrual, so showing it would be wrong for anyone already paid. The card names the registered payout address and points to the operator for payment status."
+            route={routes.active}
+          >
+            <StakingSurface
+              seed={{
+                stakerInfo: planbetterPosition,
+                payoutPreference: mockOperatorPayoutPreference,
+                lockedMicroStx: planbetterPosition.amountMicroStx,
+              }}
+            >
+              <StakingPage title="Your staking" backTo={stakingPaths.index}>
+                <StakingActiveInfo poolSlug="planbetter" />
+              </StakingPage>
+            </StakingSurface>
+          </Board>
         </Stack>
       </Section>
 
@@ -398,6 +435,24 @@ export function StakingStatesPage() {
             >
               <StakingPage title="Update staking" backTo={stakingPaths.active('fast-pool')}>
                 <UpdateStaking poolSlug="fast-pool" />
+              </StakingPage>
+            </StakingSurface>
+          </Board>
+
+          <Board
+            label="Operator-paid position: the registered address is carried in"
+            note="stake-update reruns the address validation and overwrites the stored address, so the form opens with the one on record. Edit it to see the warning that every future payout moves."
+            route={routes.update}
+          >
+            <StakingSurface
+              seed={{
+                stakerInfo: planbetterPosition,
+                payoutPreference: mockOperatorPayoutPreference,
+                lockedMicroStx: planbetterPosition.amountMicroStx,
+              }}
+            >
+              <StakingPage title="Update staking" backTo={stakingPaths.active('planbetter')}>
+                <UpdateStaking poolSlug="planbetter" />
               </StakingPage>
             </StakingSurface>
           </Board>

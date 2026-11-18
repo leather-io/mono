@@ -26,7 +26,7 @@ export async function setupFeatureFlags() {
     // TODO: handle this error properly
     throw new Error('No device id detected');
   }
-  featureFlagClient.identify({ kind: 'user', key: deviceId }).catch((e: any) => {
+  featureFlagClient.identify({ kind: 'user', key: deviceId }).catch((e: unknown) => {
     // TODO: analytics?
     // eslint-disable-next-line no-console
     console.log(e);
@@ -59,10 +59,6 @@ export function useBtcConversionUnitFlag() {
 
 export function useInternationalizationFlag() {
   return useBoolVariation('internationalization', false);
-}
-
-export function useTokenManagementFlag() {
-  return useBoolVariation('release_token_management', false);
 }
 
 export function useSwapFlag() {

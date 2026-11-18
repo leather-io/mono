@@ -53,10 +53,10 @@ export type LiveSwapEstimate =
     };
 
 interface UseLiveSwapEstimateProps {
-  quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
-  networkFeeQuery: UseQueryResult<NetworkFee, Error>;
-  baseMarketDataQuery: UseQueryResult<MarketData, Error>;
-  nativeAssetMarketDataQuery: UseQueryResult<MarketData, Error>;
+  quoteQuery: UseQueryResult<SwapQuoteSelectionResult>;
+  networkFeeQuery: UseQueryResult<NetworkFee>;
+  baseMarketDataQuery: UseQueryResult<MarketData>;
+  nativeAssetMarketDataQuery: UseQueryResult<MarketData>;
 }
 
 export function useLiveSwapEstimate({
@@ -160,7 +160,7 @@ type NetworkFeeReadiness =
   | { status: 'ready'; data: NetworkFee; isRefetching: boolean };
 
 function useNetworkFeeReadiness(
-  networkFeeQuery: UseQueryResult<NetworkFee, Error>,
+  networkFeeQuery: UseQueryResult<NetworkFee>,
   isEnabled: boolean
 ): NetworkFeeReadiness {
   const hasResolved = useRef(false);

@@ -4,7 +4,7 @@ import { css } from 'leather-styles/css';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Buffer } from 'safe-buffer';
 
-import { HasChildren } from '@leather.io/ui';
+import { type HasChildren } from '@leather.io/ui';
 import leatherUiStyles from '@leather.io/ui/styles?url';
 
 import type { Route } from './+types/root';
@@ -69,7 +69,12 @@ export function Layout({ children }: HasChildren) {
                 minHeight="100vh"
                 px={['space.04', null, 'space.07']}
               >
-                <styled.main flex={1} bg="ink.background-primary" className={maxWidthCss}>
+                <styled.main
+                  flex={1}
+                  position="relative"
+                  bg="ink.background-primary"
+                  className={maxWidthCss}
+                >
                   <NetworkGate>{children}</NetworkGate>
                 </styled.main>
                 <Box className={maxWidthCss}>

@@ -28,5 +28,5 @@ export function createSip10ActivityByAssetIdQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getActivityService().getSip10ActivityByAssetId(account, assetId, signal),
     ...activityQueryOptions,
-  } satisfies UseQueryOptions<Activity[], Error>;
+  } satisfies UseQueryOptions<Activity[]>;
 }

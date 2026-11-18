@@ -33,4 +33,10 @@ export const validationMessages = {
   minClaimTooLow(minSats: string) {
     return `Minimum claim must be at least ${minSats} sats (enough to clear the max fee plus the 546 sats dust limit)`;
   },
+  stakeBelowPoolMinimum(poolName: string, minStx: string) {
+    return `${poolName} requires a stake of at least ${minStx} STX`;
+  },
+  totalStakeBelowPoolMinimum(poolName: string, minStx: string) {
+    return `${poolName} requires a total stake of at least ${minStx} STX; add more STX to switch`;
+  },
 } as const;

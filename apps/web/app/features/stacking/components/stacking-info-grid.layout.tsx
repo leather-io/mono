@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { GridProps, VStack } from 'leather-styles/jsx';
+import { type GridProps, VStack } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 
 interface StackingInfoGridLayoutProps extends GridProps {

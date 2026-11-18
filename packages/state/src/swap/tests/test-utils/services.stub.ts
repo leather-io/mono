@@ -1,45 +1,64 @@
-import { BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
+import BigNumber from 'bignumber.js';
+
+import { type BitcoinNativeSegwitPayer, createBitcoinAddress } from '@leather.io/bitcoin';
 import {
-  CryptoAssetId,
-  MarketData,
-  NetworkConfiguration,
-  SwapQuote,
-  TransactionFees,
+  type BitcoinTransactionFees,
+  type MarketData,
+  type NetworkConfiguration,
+  type StacksTransactionFees,
+  type SwapQuote,
 } from '@leather.io/models';
-import {
-  AccountSwapAsset,
-  BitcoinCoinSelectionService,
-  BitcoinTransactionFeesService,
-  MarketDataService,
-  StacksTransactionFeesService,
-  SwapService,
-} from '@leather.io/services';
-import { StacksSigner } from '@leather.io/stacks';
+import { type AccountSwapAsset } from '@leather.io/services';
+import { type StacksSigner } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
-import { defaultBaseSwapAssets, defaultSwapQuotes, getDefaultTargetSwapAssets } from './fixtures';
+import {
+  type BitcoinCoinSelectionServiceClient,
+  type BitcoinTransactionFeesServiceClient,
+  type MarketDataServiceClient,
+  type StacksTransactionFeesServiceClient,
+  type SwapServiceClient,
+} from '../../swap-state.types';
+import {
+  createSwapQuote,
+  defaultBaseSwapAssets,
+  defaultSwapQuotes,
+  defaultTargetSwapAssets,
+} from './fixtures';
+
+const stubPayerAddress = 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4';
+const stubSignersPublicKey = '79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798';
 
 interface StubSwapServiceConfig {
   baseSwapAssets?: AccountSwapAsset[];
   targetSwapAssets?: AccountSwapAsset[];
   swapQuotes?: SwapQuote[];
+  getSwapQuotes?(): Promise<SwapQuote[]>;
+  getBaseSwapAssets?(): Promise<AccountSwapAsset[]>;
+  getTargetSwapAssets?(): Promise<AccountSwapAsset[]>;
 }
 
 export function createStubSwapService({
   baseSwapAssets,
   targetSwapAssets,
   swapQuotes,
-}: StubSwapServiceConfig = {}) {
+  getSwapQuotes,
+  getBaseSwapAssets,
+  getTargetSwapAssets,
+}: StubSwapServiceConfig = {}): SwapServiceClient {
   return {
     async getAccountBaseSwapAssets(): Promise<AccountSwapAsset[]> {
+      if (getBaseSwapAssets) return getBaseSwapAssets();
       return Promise.resolve(baseSwapAssets ?? defaultBaseSwapAssets);
     },
 
-    async getAccountTargetSwapAssets(baseId: CryptoAssetId): Promise<AccountSwapAsset[]> {
-      return Promise.resolve(targetSwapAssets ?? getDefaultTargetSwapAssets(baseId));
+    async getAccountTargetSwapAssets(): Promise<AccountSwapAsset[]> {
+      if (getTargetSwapAssets) return getTargetSwapAssets();
+      return Promise.resolve(targetSwapAssets ?? defaultTargetSwapAssets);
     },
 
     async getSwapQuotes(): Promise<SwapQuote[]> {
+      if (getSwapQuotes) return getSwapQuotes();
       return Promise.resolve(swapQuotes ?? defaultSwapQuotes);
     },
 
@@ -52,16 +71,27 @@ export function createStubSwapService({
         functionName: 'swap',
         functionArgs: [],
         postConditions: [],
+        quote: createSwapQuote(),
       });
     },
-  } as unknown as SwapService;
+
+    async getSbtcSignersPublicKey() {
+      return Promise.resolve(stubSignersPublicKey);
+    },
+
+    async notifySbtcDeposit() {
+      return Promise.resolve({ status: 'notified' });
+    },
+  };
 }
 
 interface StubMarketDataServiceConfig {
   marketData?: MarketData;
 }
 
-export function createStubMarketDataService({ marketData }: StubMarketDataServiceConfig = {}) {
+export function createStubMarketDataService({
+  marketData,
+}: StubMarketDataServiceConfig = {}): MarketDataServiceClient {
   return {
     async getMarketData(): Promise<MarketData> {
       if (marketData) {
@@ -69,7 +99,7 @@ export function createStubMarketDataService({ marketData }: StubMarketDataServic
       }
       throw new Error('Market data not configured in stub');
     },
-  } as unknown as MarketDataService;
+  };
 }
 
 export function createStubStacksSigner(): StacksSigner {
@@ -89,9 +119,9 @@ export function createStubStacksSigner(): StacksSigner {
 
 export function createStubBitcoinPayer(): BitcoinNativeSegwitPayer {
   return {
-    address: 'bc1qtest' as any,
+    address: createBitcoinAddress(stubPayerAddress),
     publicKey: new Uint8Array(33),
-    payment: {} as any,
+    payment: { type: 'wpkh', script: new Uint8Array() },
     paymentType: 'p2wpkh',
     network: 'mainnet',
     keyOrigin: 'test-origin',
@@ -120,14 +150,16 @@ export function createStubNetwork(): NetworkConfiguration {
 }
 
 interface StubStacksTransactionFeesServiceConfig {
-  transactionFees?: TransactionFees;
+  transactionFees?: StacksTransactionFees;
 }
 
 export function createStubStacksTransactionFeesService({
   transactionFees,
-}: StubStacksTransactionFeesServiceConfig = {}) {
-  const defaultFees: TransactionFees = {
+}: StubStacksTransactionFeesServiceConfig = {}): StacksTransactionFeesServiceClient {
+  const defaultFees: StacksTransactionFees = {
     chain: 'stacks',
+    minimumFee: createMoney(1000, 'STX'),
+    highFeeThreshold: createMoney(3000, 'STX'),
     options: {
       low: {
         type: 'stacksFeeRate',
@@ -157,20 +189,20 @@ export function createStubStacksTransactionFeesService({
   };
 
   return {
-    async getStacksTransactionFees(): Promise<TransactionFees> {
+    async getStacksTransactionFees(): Promise<StacksTransactionFees> {
       return Promise.resolve(transactionFees ?? defaultFees);
     },
-  } as unknown as StacksTransactionFeesService;
+  };
 }
 
 interface StubBitcoinTransactionFeesServiceConfig {
-  transactionFees?: TransactionFees;
+  transactionFees?: BitcoinTransactionFees;
 }
 
 export function createStubBitcoinTransactionFeesService({
   transactionFees,
-}: StubBitcoinTransactionFeesServiceConfig = {}) {
-  const defaultFees: TransactionFees = {
+}: StubBitcoinTransactionFeesServiceConfig = {}): BitcoinTransactionFeesServiceClient {
+  const defaultFees: BitcoinTransactionFees = {
     chain: 'bitcoin',
     options: {
       low: {
@@ -201,10 +233,10 @@ export function createStubBitcoinTransactionFeesService({
   };
 
   return {
-    async getBitcoinTransactionFees(): Promise<TransactionFees> {
+    async getBitcoinTransactionFees(): Promise<BitcoinTransactionFees> {
       return Promise.resolve(transactionFees ?? defaultFees);
     },
-  } as unknown as BitcoinTransactionFeesService;
+  };
 }
 
 interface StubBitcoinCoinSelectionServiceConfig {
@@ -213,7 +245,7 @@ interface StubBitcoinCoinSelectionServiceConfig {
 
 export function createStubBitcoinCoinSelectionService({
   maxSpendAmount = 200_000_000,
-}: StubBitcoinCoinSelectionServiceConfig = {}) {
+}: StubBitcoinCoinSelectionServiceConfig = {}): BitcoinCoinSelectionServiceClient {
   return {
     performCoinSelection() {
       return Promise.resolve({
@@ -235,9 +267,9 @@ export function createStubBitcoinCoinSelectionService({
     calculateMaxSpend() {
       return Promise.resolve({
         amount: createMoney(maxSpendAmount, 'BTC'),
-        fee: createMoney(1000, 'BTC'),
-        estimatedTxSize: 100,
+        spendAllFee: 1000,
+        spendableBitcoin: BigNumber(maxSpendAmount),
       });
     },
-  } as unknown as BitcoinCoinSelectionService;
+  };
 }

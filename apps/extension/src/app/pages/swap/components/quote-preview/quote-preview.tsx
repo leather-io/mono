@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 
-import { LiveSwapEstimate, SwapState } from '@leather.io/state/swap';
+import { type LiveSwapEstimate, type SwapState } from '@leather.io/state/swap';
 import { assertExistence, assertUnreachable } from '@leather.io/utils';
 
 import { QuotePreviewConstrained } from './quote-preview-constrained';
@@ -34,7 +34,10 @@ function renderContent(state: SwapState, liveEstimate: LiveSwapEstimate) {
     case 'error':
       return (
         <motion.div key="error" {...contentTransition}>
-          <QuotePreviewError error={liveEstimate.error} onRetry={liveEstimate.refetch} />
+          <QuotePreviewError
+            error={liveEstimate.error}
+            onRetry={() => void liveEstimate.refetch()}
+          />
         </motion.div>
       );
     case 'empty':

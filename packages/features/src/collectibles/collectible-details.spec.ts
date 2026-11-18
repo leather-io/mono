@@ -94,11 +94,11 @@ describe('truncateDescription', () => {
 
 describe('getSip9Info', () => {
   it('extracts SIP-9 info correctly', () => {
-    const asset = {
+    const asset: Sip9Asset = {
       chain: 'stacks',
       protocol: 'sip9',
       assetId: 'SP123.test::nft',
-      category: 'image',
+      category: 'nft',
       name: 'Test NFT',
       description: 'A test NFT',
       tokenId: 1,
@@ -115,7 +115,7 @@ describe('getSip9Info', () => {
         contentType: 'image/png',
       },
       attributes: [{ traitType: 'Color', value: 'Red' }],
-    } as unknown as Sip9Asset;
+    };
 
     const info = getSip9Info(asset);
     expect(info.name).toBe('Test NFT');
