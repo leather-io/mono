@@ -10,12 +10,14 @@ const legacyPathRedirects = new Map<string, LegacyPathTarget>([
   ['/posts', { docs: 'blog' }],
   ['/news', { docs: 'blog' }],
   ['/blog', { docs: 'blog' }],
+  ['/learn', { docs: 'blog' }],
   ['/terms-of-service', { to: '/terms' }],
   ['/security', { slug: 'security' }],
   // The wallet download pages were not rebuilt: installing lives on the home page now.
   // /wallet/mobile is still linked from shipped extension builds (promo banner).
   ['/wallet', { to: '/' }],
   ['/wallet/mobile', { to: '/' }],
+  ['/mobile', { to: '/' }],
   ['/wallet/extension', { to: '/' }],
   ['/download', { to: '/' }],
   ['/install', { to: '/' }],

@@ -26,6 +26,7 @@ const singleHopRedirects = [
   { from: '/posts', to: LEATHER_DOCS.blog },
   { from: '/news', to: LEATHER_DOCS.blog },
   { from: '/blog', to: LEATHER_DOCS.blog },
+  { from: '/learn', to: LEATHER_DOCS.blog },
   { from: '/posts/earn-rewards-sbtc', to: `${LEATHER_DOCS.blog}/earn-rewards-sbtc` },
   { from: '/posts/how-roo-has-built-a-community-on-bitcoin', to: LEATHER_DOCS.blog },
   { from: '/posts/tokens-btc', to: LEATHER_DOCS.blog },
@@ -39,6 +40,7 @@ const onSiteRedirects = [
   { from: '/posts/privacy-policy', to: '/privacy-policy' },
   { from: '/posts/terms-of-service', to: '/terms' },
   { from: '/terms-of-service', to: '/terms' },
+  { from: '/mobile', to: '/' },
 ];
 
 test.describe('Help center and developers redirects', () => {

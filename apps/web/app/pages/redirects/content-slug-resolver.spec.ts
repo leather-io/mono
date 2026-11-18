@@ -286,6 +286,8 @@ describe('legacy Framer short paths', () => {
     ['/old-page/terms', '/terms'],
     ['/old-page/privacy-policy', '/privacy-policy'],
     ['/wallet/mobile', '/'],
+    ['/mobile', '/'],
+    ['/mobile/', '/'],
     ['/contact/', docsGuides],
     ['/guides?ref=nav', `${docsGuides}?ref=nav`],
     ['/support', docsGuides],
@@ -299,6 +301,8 @@ describe('legacy Framer short paths', () => {
     ['/blog?ref=x', `${docsBlog}?ref=x`],
     ['/old-page/blog', docsBlog],
     ['/old-page/learn', docsBlog],
+    ['/learn', docsBlog],
+    ['/learn/', docsBlog],
   ])('%s redirects to %s', async (path, location) => {
     const response = await legacyPathRedirectLoader(request(path), createFetchers());
     expect(response.status).toBe(301);
