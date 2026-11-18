@@ -1,6 +1,6 @@
+import { NetworkBadge } from '@/components/network-badge';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { AccountBalance } from '@/features/balances/total-balance';
-import { NetworkBadge } from '@/features/settings/network-badge';
 import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/core/macro';

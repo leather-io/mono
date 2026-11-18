@@ -2,8 +2,8 @@ import { type ReactNode, createContext, useCallback, useContext, useEffect, useS
 import { useAnimatedRef } from 'react-native-reanimated';
 
 import { type ScreenScrollRef } from '@/components/screen/screen-scroll-ref';
+import { TabLayoutContext } from '@/components/screen/tab-layout-context';
 import { useScreenScroll } from '@/components/screen/use-screen-scroll';
-import { TabLayoutContext } from '@/features/navigation/tab-layout-context';
 import { useIsFocused } from '@react-navigation/native';
 import { usePathname } from 'expo-router';
 

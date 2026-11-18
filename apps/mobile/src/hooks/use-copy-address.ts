@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useToastContext } from '@/components/toast/toast-context';
+import { useToastContext } from '@/core/toast/toast-context';
 import { t } from '@lingui/core/macro';
 import * as Clipboard from 'expo-clipboard';
 

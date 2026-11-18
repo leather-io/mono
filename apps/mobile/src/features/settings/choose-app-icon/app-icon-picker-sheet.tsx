@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import { useToastContext } from '@/components/toast/toast-context';
+import { useToastContext } from '@/core/toast/toast-context';
 import { SettingsSheetLayout } from '@/features/settings/settings-sheet.layout';
 import { useSettings } from '@/store/settings/settings';
 import { analytics } from '@/utils/analytics';

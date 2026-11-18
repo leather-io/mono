@@ -1,8 +1,8 @@
+import { NetworkBadge } from '@/components/network-badge';
 import { Screen } from '@/components/screen/screen';
 import { HeaderActions } from '@/components/screen/screen-header/components/header-actions';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { CreateWalletCard } from '@/features/account/components/create-wallet-card';
-import { NetworkBadge } from '@/features/settings/network-badge';
 
 import { Box, LeatherLogomarkIcon } from '@leather.io/ui/native';
 

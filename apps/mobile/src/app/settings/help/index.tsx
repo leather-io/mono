@@ -1,7 +1,7 @@
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
-import { useOpenUrl } from '@/features/browser/browser/use-open-url';
 import SettingsLayout from '@/features/settings/settings-layout';
+import { useOpenUrl } from '@/hooks/use-open-url';
 import { t } from '@lingui/core/macro';
 
 import { LEATHER_GUIDES_URL, LEATHER_LEARN_URL, LEATHER_SUPPORT_URL } from '@leather.io/constants';

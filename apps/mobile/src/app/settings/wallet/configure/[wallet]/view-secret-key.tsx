@@ -1,7 +1,7 @@
 import { Screen } from '@/components/screen/screen';
 import SettingsLayout from '@/features/settings/settings-layout';
 import { MnemonicDisplay } from '@/features/wallet-manager/create-new-wallet/mnemonic-display';
-import { useMnemonic } from '@/store/storage-persistors';
+import { useMnemonic } from '@/store/secure-store/use-mnemonic';
 import { t } from '@lingui/core/macro';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 

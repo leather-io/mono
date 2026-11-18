@@ -7,7 +7,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import addWalletImage from '@/assets/stickers/add-wallet.png';
-import { useWaitlistFlag } from '@/features/feature-flags';
+import { useWaitlistFlag } from '@/shared/feature-flags';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';

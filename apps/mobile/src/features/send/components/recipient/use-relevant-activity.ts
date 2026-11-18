@@ -1,5 +1,5 @@
-import { type FetchState, toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
+import { type FetchState, toFetchState } from '@/queries/fetch-state';
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
 import { filter, isDefined, isShallowEqual, pipe } from 'remeda';

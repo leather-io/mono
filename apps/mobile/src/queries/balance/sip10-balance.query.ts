@@ -1,5 +1,5 @@
-import { toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
+import { toFetchState } from '@/queries/fetch-state';
 import { useSettings } from '@/store/settings/settings';
 import { type QueryFunctionContext, keepPreviousData, useQuery } from '@tanstack/react-query';
 

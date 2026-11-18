@@ -1,11 +1,10 @@
-import { selectAnalyticsPreference } from '@/store/settings/settings.read';
-import { store } from '@/store/store';
+import { getMixpanelToken } from '@/shared/environment';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Application from 'expo-application';
 import { Mixpanel } from 'mixpanel-react-native';
 
 import { configureAnalyticsClient } from '@leather.io/analytics';
-import type { NetworkConfiguration } from '@leather.io/models';
+import type { AnalyticsPreference, NetworkConfiguration } from '@leather.io/models';
 import { noop } from '@leather.io/utils';
 
 import { getDeviceId } from './get-device-id';
@@ -36,9 +35,8 @@ function getMockedMixpanel() {
   };
 }
 
-const mixpanelClient = process.env.EXPO_PUBLIC_MIXPANEL_TOKEN
-  ? new Mixpanel(process.env.EXPO_PUBLIC_MIXPANEL_TOKEN, false)
-  : getMockedMixpanel();
+const mixpanelToken = getMixpanelToken();
+const mixpanelClient = mixpanelToken ? new Mixpanel(mixpanelToken, false) : getMockedMixpanel();
 
 async function initMixpanelClient() {
   await mixpanelClient.init();
@@ -71,21 +69,15 @@ const analyticsClient = configureAnalyticsClient({
   },
 });
 
-let analyticsEnabled = selectAnalyticsPreference(store.getState()) === 'consent-given';
+let analyticsEnabled = false;
 
-function setupPreferenceSubscription() {
-  return store.subscribe(() => {
-    const analyticsPreference = selectAnalyticsPreference(store.getState());
+export function applyAnalyticsPreference(analyticsPreference: AnalyticsPreference) {
+  if (analyticsPreference === 'rejects-tracking') {
+    analytics.track('user_setting_updated', { analytics: 'rejects-tracking' });
+  }
 
-    if (analyticsPreference === 'rejects-tracking') {
-      analytics.track('user_setting_updated', { analytics: 'rejects-tracking' });
-    }
-
-    analyticsEnabled = analyticsPreference === 'consent-given';
-  });
+  analyticsEnabled = analyticsPreference === 'consent-given';
 }
-
-setupPreferenceSubscription();
 
 export const analytics = new Proxy(analyticsClient, {
   get(target, prop, receiver) {
