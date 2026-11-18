@@ -71,14 +71,22 @@ interface PageHeaderProps {
   title?: React.ReactNode;
   backTo?: string;
   onBack?(): void;
+  notice?: ReactNode;
   children?: React.ReactElement | React.ReactElement[];
 }
-function PageHeader({ title, backTo, onBack, children }: PageHeaderProps) {
+function PageHeader({ title, backTo, onBack, notice, children }: PageHeaderProps) {
   const signInSlot = useSignInSlot();
   const navigate = useNavigate();
   const handleBack = onBack ?? (backTo ? () => void navigate(backTo) : undefined);
   return (
-    <styled.header display="flex" justifyContent="space-between" h="60px" alignItems="center">
+    <styled.header
+      display="flex"
+      justifyContent="space-between"
+      h={notice ? undefined : '60px'}
+      minH={notice ? '60px' : undefined}
+      py={notice ? 'space.02' : undefined}
+      alignItems="center"
+    >
       <Flex alignItems="center" justifyContent="space-between" flex={1}>
         <Flex alignItems="center" gap="space.02" minWidth={0}>
           {handleBack && (
@@ -99,8 +107,14 @@ function PageHeader({ title, backTo, onBack, children }: PageHeaderProps) {
         <MockModeToggle />
         {children}
       </Flex>
+      {notice && (
+        // Leads the header so it lines up with the page content's left edge
+        <Box minW={0} maxW="440px" order={-1} mr="space.03">
+          {notice}
+        </Box>
+      )}
       <WhenClient>
-        <Flex maxW="fit-content" height="100%">
+        <Flex maxW="fit-content" height="100%" flexShrink={notice ? 0 : undefined}>
           {signInSlot ?? <SignInButton />}
         </Flex>
       </WhenClient>
