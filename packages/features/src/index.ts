@@ -8,6 +8,7 @@ export {
 } from './activity/activity-balance';
 export type { GetMempoolExplorerLinkArgs } from './activity/activity-links';
 export {
+  getStacksExplorerApiUrl,
   getStacksExplorerLink,
   getBitcoinExplorerLink,
   makeActivityLink,
@@ -25,8 +26,19 @@ export {
 } from './activity/activity-status';
 export type { ActivityStatusIndicatorId, ActivityAvatar, ActivityView } from './activity/types';
 export { formatActivityCaption } from './activity/activity-timestamp';
+export type { ActivityGroup, GroupActivityByDateOptions } from './activity/activity-grouping';
+export { formatActivityDateLabel, groupActivityByDate } from './activity/activity-grouping';
 export { createActivityView } from './activity/activity-view';
 export { createBlockchainActivityView } from './activity/blockchain-activity-view';
+export type {
+  BlockchainActivityItem,
+  BlockchainActivityViewDeps,
+} from './activity/blockchain-activity-selectors';
+export {
+  createBlockchainActivityItem,
+  createBlockchainActivityItems,
+  createBlockchainActivityViews,
+} from './activity/blockchain-activity-selectors';
 export {
   buildBlockchainActivityActionTitle,
   interpolateActivityTemplate,

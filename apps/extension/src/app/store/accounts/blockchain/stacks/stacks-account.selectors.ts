@@ -1,12 +1,11 @@
 import { bytesToHex } from '@noble/hashes/utils';
 import { createSelector } from '@reduxjs/toolkit';
-import { HARDENED_OFFSET, HDKey } from '@scure/bip32';
+import { HARDENED_OFFSET, type HDKey } from '@scure/bip32';
 import {
   createStacksPublicKey,
   privateKeyToPublic,
   publicKeyToAddressSingleSig,
 } from '@stacks/transactions';
-import { deriveStxPrivateKey } from '@stacks/wallet-sdk';
 import { mapValues } from 'remeda';
 
 import { bitcoinNetworkModeToCoreNetworkMode } from '@leather.io/bitcoin';
@@ -14,17 +13,23 @@ import {
   extractFingerprintFromKeyOriginPath,
   extractKeyFromDescriptor,
   extractKeyOriginPathFromDescriptor,
+  keyOriginToDerivationPath,
+  makeAccountIdentifer,
   softwareAccountCountFromHighestIndex,
 } from '@leather.io/crypto';
 import type { AccountId, NetworkModes } from '@leather.io/models';
-import { extractStacksDerivationPathAccountIndex, makeStxKeyOrigin } from '@leather.io/stacks';
+import {
+  deriveStxPrivateKey,
+  extractStacksDerivationPathAccountIndex,
+  makeStxDerivationPath,
+} from '@leather.io/stacks';
 import { createNullArrayOfLength } from '@leather.io/utils';
 
 import { DATA_DERIVATION_PATH, deriveStacksSalt } from '@shared/crypto/stacks/stacks-address-gen';
+import { logger } from '@shared/logger';
 import { assumedZeroFingerprint } from '@shared/utils';
 
 import type { StacksAppKeysResponseItem } from '@app/features/ledger/utils/stacks-ledger-utils';
-import type { RootState } from '@app/store';
 import { selectStacksChain } from '@app/store/chains/stx-chain.selectors';
 import { selectRootKeychainsAtVersion } from '@app/store/in-memory-key/in-memory-key.selectors';
 import {
@@ -33,8 +38,13 @@ import {
 } from '@app/store/in-memory-key/keychain-selector-cache';
 import { selectStacksKeychains } from '@app/store/keychains/keychain.selectors';
 import { selectCurrentNetwork } from '@app/store/networks/networks.selectors';
+import type { RootState } from '@app/store/store';
 
 import type { HardwareStacksAccount, SoftwareStacksAccount } from './stacks-account.models';
+
+function publicKeyToHex(publicKey: string | Uint8Array) {
+  return typeof publicKey === 'string' ? publicKey : bytesToHex(publicKey);
+}
 
 function initalizeSoftwareStacksAccount(
   rootKeychain: HDKey,
@@ -43,7 +53,7 @@ function initalizeSoftwareStacksAccount(
 ): SoftwareStacksAccount {
   const stxPrivateKey = deriveStxPrivateKey({
     // Type assertion needed: @stacks/wallet-sdk uses @scure/bip32@1.1.3 while we use 1.6.2
-    rootNode: rootKeychain as any,
+    keychain: rootKeychain,
     index: accountId.accountIndex,
   });
 
@@ -55,8 +65,8 @@ function initalizeSoftwareStacksAccount(
   const appsKey = identityKeychain.deriveChild(0 + HARDENED_OFFSET).privateExtendedKey;
   const salt = deriveStacksSalt(identitiesKeychain);
 
-  const stxPublicKey = privateKeyToPublic(stxPrivateKey) as string;
-  const dataPublicKey = privateKeyToPublic(dataPrivateKey) as string;
+  const stxPublicKey = publicKeyToHex(privateKeyToPublic(stxPrivateKey));
+  const dataPublicKey = publicKeyToHex(privateKeyToPublic(dataPrivateKey));
   const address = publicKeyToAddressSingleSig(stxPublicKey, network);
 
   return {
@@ -70,11 +80,16 @@ function initalizeSoftwareStacksAccount(
     dataPrivateKey,
     stxPrivateKey,
     salt,
+    derivationPath: makeStxDerivationPath(accountId.accountIndex),
   };
 }
 
 function initalizeHardwareStacksAccount(
-  ledgerKeychain: StacksAppKeysResponseItem & { id: string; fingerprint: string },
+  ledgerKeychain: StacksAppKeysResponseItem & {
+    id: string;
+    fingerprint: string;
+    derivationPath: string;
+  },
   accountId: AccountId,
   network: NetworkModes
 ): HardwareStacksAccount {
@@ -117,33 +132,69 @@ const selectSoftwareAccounts = registerKeychainSelectorCache(
   )
 );
 
-const selectLedgerAccounts = createSelector(
-  selectCurrentNetwork,
-  selectStacksKeychains,
-  (currentNetwork, stacksKeychains) => {
-    const network = bitcoinNetworkModeToCoreNetworkMode(currentNetwork.chain.bitcoin.mode);
+interface LedgerStacksKeychainEntry {
+  accountIndex: number;
+  keychain: StacksAppKeysResponseItem & {
+    id: string;
+    fingerprint: string;
+    derivationPath: string;
+  };
+}
 
-    return stacksKeychains.map(keychain => {
+const selectDedupedLedgerStacksKeychains = createSelector(
+  selectStacksKeychains,
+  stacksKeychains => {
+    const keychainsByAccountId = new Map<string, LedgerStacksKeychainEntry>();
+
+    stacksKeychains.forEach(keychain => {
       const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
       const fingerprint = extractFingerprintFromKeyOriginPath(keyOrigin) || assumedZeroFingerprint;
       const stxPublicKey = extractKeyFromDescriptor(keychain.descriptor);
+      const accountIndex = extractStacksDerivationPathAccountIndex(keyOrigin);
+
+      const accountIdentifier = makeAccountIdentifer(fingerprint, accountIndex);
+      const existingEntry = keychainsByAccountId.get(accountIdentifier);
+      if (existingEntry) {
+        logger.warn('Colliding Stacks keychain lookup keys, keychain excluded', {
+          accountIdentifier,
+          keptKeyOrigin: existingEntry.keychain.id,
+          excludedKeyOrigin: keyOrigin,
+        });
+        return;
+      }
 
       // Stacks ledger accounts also store dataPublicKey, but we don't have it in the keychain
       // For now, we'll use the stxPublicKey as a fallback
-      const ledgerKeychain: StacksAppKeysResponseItem & { id: string; fingerprint: string } = {
-        id: keyOrigin,
-        path: keyOrigin,
-        stxPublicKey,
-        dataPublicKey: stxPublicKey,
-        fingerprint,
-      };
-
-      return initalizeHardwareStacksAccount(
-        ledgerKeychain,
-        { fingerprint, accountIndex: extractStacksDerivationPathAccountIndex(keyOrigin) },
-        network
-      );
+      keychainsByAccountId.set(accountIdentifier, {
+        accountIndex,
+        keychain: {
+          id: keyOrigin,
+          path: keyOrigin,
+          derivationPath: keyOriginToDerivationPath(keyOrigin),
+          stxPublicKey,
+          dataPublicKey: stxPublicKey,
+          fingerprint,
+        },
+      });
     });
+
+    return keychainsByAccountId;
+  }
+);
+
+const selectLedgerAccounts = createSelector(
+  selectCurrentNetwork,
+  selectDedupedLedgerStacksKeychains,
+  (currentNetwork, dedupedKeychains) => {
+    const network = bitcoinNetworkModeToCoreNetworkMode(currentNetwork.chain.bitcoin.mode);
+
+    return Array.from(dedupedKeychains.values()).map(({ accountIndex, keychain }) =>
+      initalizeHardwareStacksAccount(
+        keychain,
+        { fingerprint: keychain.fingerprint, accountIndex },
+        network
+      )
+    );
   }
 );
 
@@ -191,42 +242,38 @@ const selectSoftwareStacksAccountGenerators = registerKeychainSelectorCache(
 );
 
 function generateLedgerStacksAccount(
-  ledgerKeys: Record<string, StacksAppKeysResponseItem & { id: string; fingerprint: string }>,
+  ledgerKeys: Record<
+    string,
+    StacksAppKeysResponseItem & { id: string; fingerprint: string; derivationPath: string }
+  >,
   accountId: AccountId,
   network: NetworkModes
 ): HardwareStacksAccount | undefined {
-  const keyOrigin = makeStxKeyOrigin(accountId.fingerprint, accountId.accountIndex);
-  const ledgerKeychain = ledgerKeys[keyOrigin];
+  const ledgerKeychain =
+    ledgerKeys[makeAccountIdentifer(accountId.fingerprint, accountId.accountIndex)];
   if (!ledgerKeychain) return undefined;
   return initalizeHardwareStacksAccount(ledgerKeychain, accountId, network);
 }
 
-const selectLedgerStacksAccountLookup = createSelector(selectStacksKeychains, stacksKeychains => {
-  // Convert keychains to a Record format for lookup
-  const ledgerKeys: Record<
-    string,
-    StacksAppKeysResponseItem & { id: string; fingerprint: string }
-  > = {};
+const selectLedgerStacksAccountLookup = createSelector(
+  selectDedupedLedgerStacksKeychains,
+  dedupedKeychains => {
+    // Convert keychains to a Record format for lookup
+    const ledgerKeys: Record<
+      string,
+      StacksAppKeysResponseItem & { id: string; fingerprint: string; derivationPath: string }
+    > = {};
 
-  stacksKeychains.forEach(keychain => {
-    const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
-    const fingerprint = extractFingerprintFromKeyOriginPath(keyOrigin) || assumedZeroFingerprint;
-    const stxPublicKey = extractKeyFromDescriptor(keychain.descriptor);
+    dedupedKeychains.forEach((entry, accountIdentifier) => {
+      ledgerKeys[accountIdentifier] = entry.keychain;
+    });
 
-    ledgerKeys[keyOrigin] = {
-      id: keyOrigin,
-      path: keyOrigin,
-      stxPublicKey,
-      dataPublicKey: stxPublicKey,
-      fingerprint,
-    };
-  });
-
-  function generateAccount(accountId: AccountId, network: NetworkModes) {
-    return generateLedgerStacksAccount(ledgerKeys, accountId, network);
+    function generateAccount(accountId: AccountId, network: NetworkModes) {
+      return generateLedgerStacksAccount(ledgerKeys, accountId, network);
+    }
+    return memoizeAccountGenerator(generateAccount);
   }
-  return memoizeAccountGenerator(generateAccount);
-});
+);
 
 const selectStacksAccountLookup = registerKeychainSelectorCache(
   createKeychainSelector(

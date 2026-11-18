@@ -5,7 +5,7 @@ import { useFormikContext } from 'formik';
 
 import type { AccountId } from '@leather.io/models';
 
-import { BitcoinSendFormValues, StacksSendFormValues } from '@shared/models/form.model';
+import { type BitcoinSendFormValues, type StacksSendFormValues } from '@shared/models/form.model';
 
 import { useAccountDisplayName } from '@app/common/hooks/account/use-account-names';
 import { AccountTotalBalance } from '@app/components/account-total-balance';
@@ -15,7 +15,7 @@ import { AccountNameLayout } from '@app/components/account/account-name';
 import { getLedgerAccountIndicator } from '@app/components/account/ledger-account-indicator';
 import { useNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
-import { WalletType } from '@app/store/common/wallet-type.selectors';
+import { type WalletType } from '@app/store/common/wallet-type.selectors';
 import { AccountAvatarItem } from '@app/ui/components/account/account-avatar/account-avatar-item';
 
 interface AccountListItemProps {

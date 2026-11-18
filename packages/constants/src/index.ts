@@ -10,8 +10,6 @@ import type {
   StxAsset,
 } from '@leather.io/models';
 
-export const gaiaUrl = 'https://hub.blockstack.org';
-
 export const ZERO_INDEX = 0;
 
 export const HIRO_EXPLORER_URL = 'https://explorer.hiro.so';
@@ -21,7 +19,8 @@ export const GAMMA_URL = 'https://gamma.io';
 export const GAMMA_API_URL: string = `${GAMMA_URL}/api`;
 export const BNS_REGISTRATION_URL = 'https://bns.one/';
 export const LEATHER_IPFS_GATEWAY_URL = 'https://leather.quicknode-ipfs.com/ipfs/';
-export const SBTC_RECLAIM_URL = 'https://app.stacks.co/reclaim?depositTxId=';
+export const SBTC_RECLAIM_URL = 'https://sbtc.stacks.co/activity';
+export const STACKS_BRIDGE_URL = 'https://bridge.stacks.co/';
 
 export const HIGH_FEE_AMOUNT_STX = 5;
 export const HIGH_FEE_WARNING_LEARN_MORE_URL_BTC = 'https://bitcoinfees.earn.com/';
@@ -81,12 +80,17 @@ export const TOKEN_NAME_LENGTH = 4;
 
 export const ACCOUNT_MAX_NAME_LENGTH = 35;
 
+export const VAULT_MAX_NAME_LENGTH = 35;
+
+export const MEMBER_MAX_NAME_LENGTH = 32;
+
 export const LEATHER_SUPPORT_URL = 'https://leather.io/contact';
 
 export const LEATHER_APP_URL = 'https://app.leather.io';
 export const LEATHER_GUIDES_URL: string = `${LEATHER_APP_URL}/support`;
+export const LEATHER_PORTFOLIO_URL: string = `${LEATHER_APP_URL}/portfolio`;
 export const LEATHER_SBTC_URL: string = `${LEATHER_APP_URL}/sbtc`;
-export const LEATHER_STACKING_URL: string = `${LEATHER_APP_URL}/stacking`;
+export const LEATHER_STACKING_URL: string = `${LEATHER_APP_URL}/staking`;
 
 export const BTC_US_URL = 'https://btc.us/';
 
@@ -94,13 +98,13 @@ export const LEATHER_LEARN_URL = 'https://leather.io/learn';
 
 export const LEATHER_GITBOOK_DEVS = 'https://leather.gitbook.io/developers';
 
-export const LEATHER_EARN_URL = 'https://earn.leather.io';
-
 export const LEATHER_EXTENSION_CHROME_STORE_URL =
   'https://chromewebstore.google.com/detail/leather/ldinpeekobnhjjdofggfgjlcehhmanlj?hl=en';
 
 export const LEATHER_API_URL_STAGING = 'https://staging.api.leather.io';
 export const LEATHER_API_URL_PRODUCTION = 'https://api.leather.io';
+
+export const SIGN_IN_MESSAGE_FIRST_LINE = 'Sign in to Leather';
 
 export const bitcoinUnitsKeyedByName: Record<BitcoinUnit, BitcoinUnitInfo> = {
   bitcoin: {
@@ -115,12 +119,14 @@ export const bitcoinUnitsKeyedByName: Record<BitcoinUnit, BitcoinUnitInfo> = {
   },
 };
 
-export enum AccountDisplayPreferenceType {
-  NativeSegwit = 'native-segwit',
-  Taproot = 'taproot',
-  Bns = 'bns',
-  Stacks = 'stacks',
-}
+export const AccountDisplayPreferenceType = {
+  NativeSegwit: 'native-segwit',
+  Taproot: 'taproot',
+  Bns: 'bns',
+  Stacks: 'stacks',
+} as const;
+export type AccountDisplayPreferenceType =
+  (typeof AccountDisplayPreferenceType)[keyof typeof AccountDisplayPreferenceType];
 
 export const accountDisplayPreferencesKeyedByType: Record<
   AccountDisplayPreference,
@@ -191,10 +197,13 @@ export const USDCX_ASSET_ID_MAINNET =
 export const USDCX_ASSET_ID_TESTNET =
   'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usdcx::usdcx-token';
 
+export const USDCX_SYMBOL = 'USDCx';
+
 export const SBTC_ASSET_ID_MAINNET =
   'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token';
 
-export const SBTC_ASSET_ID_TESTNET = 'ST1F7QA2MDF17S807EPA36TSS8AMEFY4KA9TVGWXT.sbtc-token';
+export const SBTC_ASSET_ID_TESTNET =
+  'SNGWPN3XDAQE673MXYXF81016M50NHF5X5PWWM70.sbtc-token::sbtc-token';
 
 export const AEUSDC_ASSET_PRINCIPAL = 'SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc';
 

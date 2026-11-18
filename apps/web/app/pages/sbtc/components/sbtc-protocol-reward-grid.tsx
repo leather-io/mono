@@ -1,15 +1,15 @@
-import { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 import { useLoaderData } from 'react-router';
 
-import { Box, Flex, GridProps, styled } from 'leather-styles/jsx';
+import { Box, Flex, type GridProps, styled } from 'leather-styles/jsx';
 import { BasicPageHoverCard } from '~/components/basic-page/basic-page-hover-card';
 import { SbtcLogo } from '~/components/icons/sbtc-logo';
 import { ValueDisplayer } from '~/components/value-displayer/default-value-displayer';
 import { urlFor } from '~/constants/cms-client';
 import { LearnMoreLink } from '~/layouts/page/page';
-import { loader } from '~/pages/sbtc/sbtc.route';
+import { type loader } from '~/pages/sbtc/sbtc.route';
 
-import { SbtcPool } from '@leather.io/cms';
+import { type SbtcPool } from '@leather.io/cms';
 import { Flag } from '@leather.io/ui';
 import { ensureArray } from '@leather.io/utils';
 
@@ -28,7 +28,6 @@ function RewardProtocolEnrollCell({
    * but should eventually be removed in favor of Sanity based
    */
   const legacyPostSlug: Record<string, string> = {
-    basic: 'sbtc-rewards-basic',
     alex: 'alex-sbtc-pools',
     bitflow: 'bitflow-sbtc-pools',
     velar: 'velar-sbtc-pools',

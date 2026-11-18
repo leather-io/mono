@@ -1,8 +1,8 @@
 import { base64 } from '@scure/base';
-import * as btc from '@scure/btc-signer';
+import type * as btc from '@scure/btc-signer';
 import * as bitcoin from 'bitcoinjs-lib';
 
-import { BitcoinAddress, BitcoinNetworkModes } from '@leather.io/models';
+import { type BitcoinAddress, type BitcoinNetworkModes } from '@leather.io/models';
 
 import { getBitcoinJsLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import {
@@ -40,13 +40,13 @@ export function createToSpendTx(
   const virtualToSpend = new bitcoin.Transaction();
   virtualToSpend.version = 0;
   virtualToSpend.addInput(Buffer.from(prevoutHash), prevoutIndex, sequence, scriptSig);
-  virtualToSpend.addOutput(script, 0);
+  virtualToSpend.addOutput(script, 0n);
   return { virtualToSpend, script };
 }
 
 function createToSignTx(
   toSpendTx: bitcoin.Transaction,
-  script: Buffer,
+  script: Uint8Array,
   network: BitcoinNetworkModes
 ) {
   const virtualToSign = new bitcoin.Psbt({ network: getBitcoinJsLibNetworkConfigByMode(network) });
@@ -58,11 +58,11 @@ function createToSignTx(
     hash: toSpendTx.getHash(),
     index: prevOutIndex,
     sequence: 0,
-    witnessUtxo: { script, value: 0 },
+    witnessUtxo: { script, value: 0n },
     nonWitnessUtxo: toSpendTx.toBuffer(),
   });
 
-  virtualToSign.addOutput({ script: toSignScriptSig, value: 0 });
+  virtualToSign.addOutput({ script: toSignScriptSig, value: 0n });
   return virtualToSign;
 }
 

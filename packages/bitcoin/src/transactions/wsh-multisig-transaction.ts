@@ -2,7 +2,7 @@ import { base64, hex } from '@scure/base';
 import * as btc from '@scure/btc-signer';
 
 import { compileWshDescriptor } from '../descriptors/wsh-descriptor';
-import { BtcSignerNetwork } from '../utils/bitcoin.network';
+import { type BtcSignerNetwork } from '../utils/bitcoin.network';
 
 export interface WshMultisigPsbtInput {
   txid: string;
@@ -83,6 +83,10 @@ export function buildUnsignedMultisigBtcPsbt({
 
 export function psbtBase64ToHex(psbtBase64: string): string {
   return hex.encode(base64.decode(psbtBase64));
+}
+
+export function psbtHexToBase64(psbtHex: string): string {
+  return base64.encode(hex.decode(psbtHex));
 }
 
 export interface WshMultisigSignature {

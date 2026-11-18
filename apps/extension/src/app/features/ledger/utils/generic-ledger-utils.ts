@@ -1,22 +1,12 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router';
 
-import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
-import BitcoinApp from 'ledger-bitcoin';
+import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
 
 import { delay } from '@leather.io/utils';
 
-import { RouteUrls } from '@shared/route-urls';
-
-import { safeAwait } from '@app/common/utils/safe-await';
-
-import { getStacksAppVersion } from './stacks-ledger-utils';
-
-export enum LedgerConnectionErrors {
-  AppNotOpen = 'AppNotOpen',
-  MasterkeyFingerprintNotSupported = 'MasterkeyFingerprintNotSupported',
-  DeviceLocked = 'DeviceLocked',
-}
+import type { LedgerDeviceLockState } from '../dmk/ledger-dmk-errors';
+import { useLedgerFlowState } from '../flow/ledger-flow.context';
+import type { LedgerStepName } from '../flow/ledger-flow.types';
 
 export const LEDGER_APPS_MAP = {
   STACKS: 'Stacks',
@@ -27,7 +17,7 @@ export const LEDGER_APPS_MAP = {
 
 export const LEDGER_LIVE_MANAGER_URL = 'ledgerlive://manager';
 
-export type LatestDeviceResponse = null | Awaited<ReturnType<typeof getStacksAppVersion>>;
+export type LatestDeviceResponse = null | LedgerDeviceLockState;
 
 export interface BaseLedgerOperationContext {
   latestDeviceResponse: LatestDeviceResponse;
@@ -44,89 +34,68 @@ export function versionObjectToVersionString(version: SemVerObject) {
   return [version.major, version.minor, version.patch].join('.');
 }
 
-export interface PrepareLedgerDeviceConnectionArgs {
+interface PrepareLedgerDeviceConnectionArgs {
   setLoadingState(loadingState: boolean): void;
-  onError(error?: Error): void;
+  onError(error: unknown): void;
 }
-export function prepareLedgerDeviceForAppFn<T extends () => Promise<unknown>>(connectAppFn: T) {
+export function prepareLedgerDeviceForAppFn<App>(connectAppFn: () => Promise<App>) {
   return async (args: PrepareLedgerDeviceConnectionArgs) => {
     const { setLoadingState, onError } = args;
-    setLoadingState(true);
-    const [error, app] = await safeAwait(connectAppFn());
-    await delay(1000);
-    setLoadingState(false);
+    async function stopLoading() {
+      await delay(1000);
+      setLoadingState(false);
+    }
 
-    if (error || !app) {
+    setLoadingState(true);
+    try {
+      const app = await connectAppFn();
+      await stopLoading();
+      return app;
+    } catch (error) {
+      await stopLoading();
       onError(error);
       throw new Error('Unable to initiate Ledger app');
     }
-
-    return app;
   };
 }
 
-type TransportInstance = Awaited<ReturnType<typeof TransportWebUSB.create>>;
-
-// Reference: https://github.com/LedgerHQ/ledger-live/blob/v22.0.1/src/hw/quitApp.ts
-async function quitApp(transport: TransportInstance): Promise<void> {
-  await transport.send(0xb0, 0xa7, 0x00, 0x00);
-}
-
-// Reference: https://github.com/LedgerHQ/ledger-live/blob/v22.0.1/src/hw/openApp.ts
-async function openApp(transport: TransportInstance, name: string): Promise<void> {
-  await transport.send(0xe0, 0xd8, 0x00, 0x00, Buffer.from(name, 'ascii'));
-}
-
-async function getAppAndVersion() {
-  const tmpTransport = await TransportWebUSB.create();
-  const tmpBitcoinApp = new BitcoinApp(tmpTransport);
-  const appAndVersion = await tmpBitcoinApp.getAppAndVersion();
-  return appAndVersion;
-}
-
-async function quitAppOnDevice() {
-  const tmpTransport = await TransportWebUSB.create();
-  await quitApp(tmpTransport);
-  // for some reason sending quit app buffer to ledger will close the connection afterwards.
-  // we need to add a delay for this transport to properly finish for another one to open.
-  await delay(500);
-}
-
-export async function promptOpenAppOnDevice(appName: string) {
-  const appAndVersion = await getAppAndVersion();
-  if (appAndVersion.name !== appName && appAndVersion.name !== LEDGER_APPS_MAP.MAIN_MENU) {
-    await quitAppOnDevice();
-  }
-
-  const tmpTransport = await TransportWebUSB.create();
-
-  if (appAndVersion.name !== appName) {
-    await openApp(tmpTransport, appName);
-  }
-  // for some reason sending open app buffer to ledger will close the connection afterwards.
-  // we need to add a delay for this transport to properly finish for another one to open.
-  await delay(500);
-}
-
-export function checkLockedDeviceError(e: Error) {
-  return !!(
-    e?.name === 'LockedDeviceError' ||
-    e?.message?.includes('LockedDeviceError') ||
-    e?.message === LedgerConnectionErrors.DeviceLocked
-  );
-}
+const cancellableLedgerSteps: readonly LedgerStepName[] = [
+  'connect',
+  'connection-error',
+  'pair-device',
+  'awaiting-device-operation',
+  'choose-address-standard',
+];
 
 function useIsLedgerActionCancellable(): boolean {
-  const { pathname } = useLocation();
-  return (
-    pathname.includes(RouteUrls.ConnectLedger) ||
-    pathname.includes(RouteUrls.ConnectLedgerError) ||
-    pathname.includes(RouteUrls.AwaitingDeviceUserAction)
-  );
+  const state = useLedgerFlowState();
+  return state !== null && cancellableLedgerSteps.includes(state.step.name);
 }
 
-export function useCancelLedgerAction(awaitingDeviceConnection: boolean): boolean {
+const cancellableConnectionInteractions: readonly string[] = [
+  UserInteractionRequired.UnlockDevice,
+  UserInteractionRequired.ConfirmOpenApp,
+];
+
+export function isCancellableConnectionInteraction(interaction: string): boolean {
+  return cancellableConnectionInteractions.includes(interaction);
+}
+
+const unlockDeviceInteraction: string = UserInteractionRequired.UnlockDevice;
+
+export function isUnlockDeviceInteraction(interaction: string): boolean {
+  return interaction === unlockDeviceInteraction;
+}
+
+interface UseCancelLedgerActionArgs {
+  awaitingDeviceConnection: boolean;
+  isConnectionCancellable: boolean;
+}
+export function useCancelLedgerAction({
+  awaitingDeviceConnection,
+  isConnectionCancellable,
+}: UseCancelLedgerActionArgs): boolean {
   const canUserCancelAction = useIsLedgerActionCancellable();
 
-  return !awaitingDeviceConnection && canUserCancelAction;
+  return (!awaitingDeviceConnection || isConnectionCancellable) && canUserCancelAction;
 }

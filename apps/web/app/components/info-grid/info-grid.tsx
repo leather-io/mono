@@ -1,4 +1,4 @@
-import { Flex, FlexProps, Grid, GridProps } from 'leather-styles/jsx';
+import { Flex, type FlexProps, Grid, type GridProps } from 'leather-styles/jsx';
 
 // This component is intended to share styles only. No layout based assumptions
 // should be made.
@@ -7,7 +7,7 @@ export function InfoGrid(props: GridProps) {
     <Grid
       border="default"
       borderWidth="1px"
-      borderRadius="sm"
+      borderRadius="md"
       overflow="hidden"
       gap="1px"
       bg="ink.border-default"

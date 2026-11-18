@@ -1,17 +1,35 @@
-import type { AuthIdentity, AuthNetworkId } from '@leather.io/models';
+import { z } from 'zod';
+
+import { SIGN_IN_MESSAGE_FIRST_LINE } from '@leather.io/constants';
+import type { AuthApplication, AuthIdentity, AuthNetworkId } from '@leather.io/models';
 
 export interface SignInMessage {
   message: string;
   timestamp: number;
 }
 
-export function buildSignInMessage(
-  network: AuthNetworkId,
-  timestamp: number = Math.floor(Date.now() / 1000)
-): SignInMessage {
+export interface BuildSignInMessageParams {
+  network: AuthNetworkId;
+  domain: string;
+  application: AuthApplication[];
+  timestamp?: number;
+}
+
+export function buildSignInMessage({
+  network,
+  domain,
+  application,
+  timestamp = Math.floor(Date.now() / 1000),
+}: BuildSignInMessageParams): SignInMessage {
   const networkMode = network.split(':')[1];
   return {
-    message: ['Sign in to Leather', `Network: ${networkMode}`, `Issued: ${timestamp}`].join('\n'),
+    message: [
+      SIGN_IN_MESSAGE_FIRST_LINE,
+      `Domain: ${domain}`,
+      `Application: ${application.slice().sort().join(',')}`,
+      `Network: ${networkMode}`,
+      `Issued: ${timestamp}`,
+    ].join('\n'),
     timestamp,
   };
 }
@@ -22,22 +40,21 @@ function base64UrlDecode(value: string): string {
   return atob(base64 + '='.repeat(padding));
 }
 
-function hasAuthIdentity(value: unknown): value is { identity: AuthIdentity } {
-  if (typeof value !== 'object' || value === null || !('identity' in value)) {
-    return false;
-  }
-  const { identity } = value;
-  return (
-    typeof identity === 'object' &&
-    identity !== null &&
-    'network' in identity &&
-    typeof identity.network === 'string' &&
-    'publicKey' in identity &&
-    typeof identity.publicKey === 'string' &&
-    'address' in identity &&
-    typeof identity.address === 'string'
-  );
-}
+const authNetworkIdSchema = z.enum([
+  'stx:mainnet',
+  'stx:testnet',
+  'btc:mainnet',
+  'btc:testnet',
+  'btc:regtest',
+]) satisfies z.ZodType<AuthNetworkId>;
+
+const authIdentityPayloadSchema = z.looseObject({
+  identity: z.looseObject({
+    network: authNetworkIdSchema,
+    publicKey: z.string(),
+    address: z.string(),
+  }) satisfies z.ZodType<AuthIdentity>,
+});
 
 export function decodeAuthIdentity(accessToken: string): AuthIdentity {
   const parts = accessToken.split('.');
@@ -45,11 +62,11 @@ export function decodeAuthIdentity(accessToken: string): AuthIdentity {
   if (parts.length !== 3 || !payloadSegment) {
     throw new Error('Malformed JWT');
   }
-  const payload: unknown = JSON.parse(base64UrlDecode(payloadSegment));
-  if (!hasAuthIdentity(payload)) {
+  const payload = authIdentityPayloadSchema.safeParse(JSON.parse(base64UrlDecode(payloadSegment)));
+  if (!payload.success) {
     throw new Error('JWT payload missing a valid identity claim');
   }
-  return payload.identity;
+  return payload.data.identity;
 }
 
 export function getJwtExpiry(token: string): number | null {

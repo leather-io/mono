@@ -10,7 +10,6 @@ import { sumMoney, truncateMiddle } from '@leather.io/utils';
 
 import type { FormatMoney } from './activity-balance';
 import {
-  buildBlockchainActivityActionTitle,
   buildBlockchainActivityDeployTitle,
   buildBlockchainActivitySubtitle,
   interpolateActivityTemplate,
@@ -32,8 +31,7 @@ interface RowShape {
     | { kind: 'icon'; icon: 'contract-call' | 'contract-deploy' };
   indicator: 'sent' | 'received' | 'swap' | 'function';
   title:
-    | { kind: 'transfer'; from: 'sent' | 'received'; verb: string }
-    | { kind: 'action-label' }
+    | { kind: 'symbol'; from: AssetSlot }
     | { kind: 'two-leg' }
     | { kind: 'symbol-pair'; from: 'sent' | 'received' }
     | { kind: 'function-name' }
@@ -48,13 +46,13 @@ const baseRowShapes: Record<StacksProtocolAction, RowShape> = {
   send: {
     avatar: { kind: 'single', from: 'sent' },
     indicator: 'sent',
-    title: { kind: 'transfer', from: 'sent', verb: 'Send' },
+    title: { kind: 'symbol', from: 'sent' },
     amount: { kind: 'single', from: 'sent' },
   },
   receive: {
     avatar: { kind: 'single', from: 'received' },
     indicator: 'received',
-    title: { kind: 'transfer', from: 'received', verb: 'Receive' },
+    title: { kind: 'symbol', from: 'received' },
     amount: { kind: 'single', from: 'received' },
   },
   'contract-execution': {
@@ -84,61 +82,61 @@ const baseRowShapes: Record<StacksProtocolAction, RowShape> = {
   deposit: {
     avatar: { kind: 'single', from: 'sent' },
     indicator: 'sent',
-    title: { kind: 'action-label' },
+    title: { kind: 'symbol', from: 'sent' },
     amount: { kind: 'single', from: 'sent' },
   },
   withdraw: {
     avatar: { kind: 'single', from: 'received' },
     indicator: 'received',
-    title: { kind: 'action-label' },
+    title: { kind: 'symbol', from: 'received' },
     amount: { kind: 'single', from: 'received' },
   },
   'claim-rewards': {
     avatar: { kind: 'single', from: 'received' },
     indicator: 'received',
-    title: { kind: 'action-label' },
+    title: { kind: 'symbol', from: 'received' },
     amount: { kind: 'single', from: 'received' },
   },
   'add-liquidity': {
     avatar: { kind: 'single', from: 'sent' },
     indicator: 'function',
-    title: { kind: 'action-label' },
+    title: { kind: 'symbol', from: 'sent' },
     amount: { kind: 'single', from: 'sent' },
   },
   'remove-liquidity': {
     avatar: { kind: 'single', from: 'received' },
     indicator: 'function',
-    title: { kind: 'action-label' },
+    title: { kind: 'symbol', from: 'received' },
     amount: { kind: 'single', from: 'received' },
   },
   'stake-lp': {
     avatar: { kind: 'single', from: 'sent' },
     indicator: 'sent',
-    title: { kind: 'action-label' },
+    title: { kind: 'symbol', from: 'sent' },
     amount: { kind: 'none' },
   },
   'unstake-lp': {
     avatar: { kind: 'single', from: 'received' },
     indicator: 'received',
-    title: { kind: 'action-label' },
+    title: { kind: 'symbol', from: 'received' },
     amount: { kind: 'none' },
   },
   stack: {
     avatar: { kind: 'single', from: 'stx' },
     indicator: 'sent',
-    title: { kind: 'action-label' },
+    title: { kind: 'symbol', from: 'stx' },
     amount: { kind: 'single', from: 'sent' },
   },
   'initiate-unstack': {
     avatar: { kind: 'single', from: 'stx' },
     indicator: 'function',
-    title: { kind: 'action-label' },
+    title: { kind: 'symbol', from: 'stx' },
     amount: { kind: 'none' },
   },
   'complete-unstack': {
     avatar: { kind: 'single', from: 'stx' },
     indicator: 'function',
-    title: { kind: 'action-label' },
+    title: { kind: 'symbol', from: 'stx' },
     amount: { kind: 'single', from: 'received' },
   },
   'liquid-stack': {
@@ -156,13 +154,13 @@ const baseRowShapes: Record<StacksProtocolAction, RowShape> = {
   borrow: {
     avatar: { kind: 'single', from: 'received' },
     indicator: 'received',
-    title: { kind: 'action-label' },
+    title: { kind: 'symbol', from: 'received' },
     amount: { kind: 'single', from: 'received' },
   },
   repay: {
     avatar: { kind: 'single', from: 'sent' },
     indicator: 'sent',
-    title: { kind: 'action-label' },
+    title: { kind: 'symbol', from: 'sent' },
     amount: { kind: 'single', from: 'sent' },
   },
 };
@@ -181,7 +179,25 @@ const twoTokenRemoveLiquidity: RowShape = {
   amount: { kind: 'combined-quote', from: 'received' },
 };
 
+const oneLeggedSwapSent: RowShape = {
+  avatar: { kind: 'single', from: 'sent' },
+  indicator: 'swap',
+  title: { kind: 'symbol', from: 'sent' },
+  amount: { kind: 'single', from: 'sent' },
+};
+
+const oneLeggedSwapReceived: RowShape = {
+  avatar: { kind: 'single', from: 'received' },
+  indicator: 'swap',
+  title: { kind: 'symbol', from: 'received' },
+  amount: { kind: 'single', from: 'received' },
+};
+
 const degradedAvatar: BlockchainActivityAvatar = { kind: 'icon', icon: 'contract-call' };
+
+function isTwoLeggedAction(action: StacksProtocolAction) {
+  return action === 'swap' || action === 'bridge';
+}
 
 function getRowShape(
   action: StacksProtocolAction,
@@ -190,11 +206,16 @@ function getRowShape(
 ): RowShape {
   if (action === 'add-liquidity' && sent.length >= 2) return twoTokenAddLiquidity;
   if (action === 'remove-liquidity' && received.length >= 2) return twoTokenRemoveLiquidity;
+  if (isTwoLeggedAction(action)) {
+    const hasSent = sent.length > 0;
+    const hasReceived = received.length > 0;
+    if (hasSent !== hasReceived) return hasReceived ? oneLeggedSwapReceived : oneLeggedSwapSent;
+  }
   return baseRowShapes[action];
 }
 
-function assetSymbol(asset: CryptoAsset): string {
-  return asset.category === 'fungible' ? asset.symbol : '';
+function assetSymbol(asset: CryptoAsset): string | undefined {
+  return asset.category === 'fungible' ? asset.symbol : undefined;
 }
 
 function pickAsset(
@@ -254,8 +275,8 @@ function buildAvatar(
   }
 }
 
-function degradedTitle(activity: BlockchainActivity): string {
-  return activity.contract?.type === 'call' ? activity.contract.functionName : '';
+function degradedTitle(activity: BlockchainActivity): string | undefined {
+  return activity.contract?.type === 'call' ? activity.contract.functionName : undefined;
 }
 
 function buildTitle(
@@ -265,18 +286,16 @@ function buildTitle(
   received: BlockchainActivityBalanceChange[],
   formatMoney: FormatMoney,
   t: BlockchainActivityTranslate
-): string {
+): string | undefined {
   switch (shape.title.kind) {
-    case 'action-label':
-      return buildBlockchainActivityActionTitle(activity.action, t) || degradedTitle(activity);
-    case 'transfer': {
+    case 'symbol': {
       const asset = pickAsset(shape.title.from, sent, received);
-      return asset ? `${shape.title.verb} ${assetSymbol(asset)}` : degradedTitle(activity);
+      return asset ? assetSymbol(asset) : degradedTitle(activity);
     }
     case 'two-leg': {
       if (sent.length >= 1 && received.length >= 1) {
-        const from = `${formatMoney(sent[0].amount.crypto)} ${assetSymbol(sent[0].asset)}`;
-        const to = `${formatMoney(received[0].amount.crypto)} ${assetSymbol(received[0].asset)}`;
+        const from = `${formatMoney(sent[0].amount.crypto)} ${assetSymbol(sent[0].asset) ?? ''}`;
+        const to = `${formatMoney(received[0].amount.crypto)} ${assetSymbol(received[0].asset) ?? ''}`;
         return `${from} → ${to}`;
       }
       return degradedTitle(activity);
@@ -284,7 +303,7 @@ function buildTitle(
     case 'symbol-pair': {
       const changes = shape.title.from === 'sent' ? sent : received;
       return changes.length >= 2
-        ? `${assetSymbol(changes[0].asset)} · ${assetSymbol(changes[1].asset)}`
+        ? `${assetSymbol(changes[0].asset) ?? ''} · ${assetSymbol(changes[1].asset) ?? ''}`
         : degradedTitle(activity);
     }
     case 'function-name':
@@ -336,14 +355,19 @@ function getContractName(activity: BlockchainActivity): string | undefined {
   return activity.contract ? activity.contract.contractId.split('.')[1] : undefined;
 }
 
-function truncateCounterparty(counterparty: string): string {
-  const truncated = truncateMiddle(counterparty);
+function truncateCounterparty(counterparty: string, offset?: number): string {
+  const truncated = truncateMiddle(counterparty, offset);
   return truncated.length < counterparty.length ? truncated : counterparty;
 }
 
 export function createBlockchainActivityView(
   activity: BlockchainActivity,
-  deps: { formatMoney: FormatMoney; translate?: BlockchainActivityTranslate }
+  deps: {
+    formatMoney: FormatMoney;
+    translate?: BlockchainActivityTranslate;
+    // Defaults to truncateMiddle's own offset; callers can compact it further.
+    counterpartyTruncateOffset?: number;
+  }
 ): BlockchainActivityView {
   const t = deps.translate ?? interpolateActivityTemplate;
   const { formatMoney } = deps;
@@ -363,20 +387,21 @@ export function createBlockchainActivityView(
     status: activity.status,
     avatar: buildAvatar(shape, sent, received),
     indicator: resolveIndicator(activity.status, shape.indicator),
-    title: buildTitle(shape, activity, sent, received, formatMoney, t),
-    subtitle: buildBlockchainActivitySubtitle(
-      {
-        action: activity.action,
-        status: activity.status,
-        protocolName: activity.protocolName,
-        counterparty: activity.counterparty
-          ? truncateCounterparty(activity.counterparty)
-          : undefined,
-        contractName: getContractName(activity),
-        actionInTitle: shape.title.kind === 'action-label',
-      },
-      t
-    ),
+    title: buildTitle(shape, activity, sent, received, formatMoney, t) ?? '',
+    subtitle:
+      buildBlockchainActivitySubtitle(
+        {
+          action: activity.action,
+          status: activity.status,
+          protocolName: activity.protocolName,
+          counterparty: activity.counterparty
+            ? truncateCounterparty(activity.counterparty, deps.counterpartyTruncateOffset)
+            : undefined,
+          contractName: getContractName(activity),
+        },
+        t
+      ) ?? '',
+    ...(activity.protocolName ? { protocolName: activity.protocolName } : {}),
     ...(amount ? { amount } : {}),
   };
 }

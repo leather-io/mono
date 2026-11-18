@@ -1,6 +1,6 @@
 import { useToastContext } from '@/components/toast/toast-context';
 import { userRemovesApp } from '@/store/apps/apps.write';
-import { App } from '@/store/apps/utils';
+import { type App } from '@/store/apps/utils';
 import { useAppDispatch } from '@/store/utils';
 import { t } from '@lingui/core/macro';
 

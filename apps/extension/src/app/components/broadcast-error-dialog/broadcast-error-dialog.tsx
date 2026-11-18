@@ -1,23 +1,32 @@
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import GenericError from '@assets/images/generic-error.png';
 import { Flex, styled } from 'leather-styles/jsx';
-import get from 'lodash.get';
+import { z } from 'zod';
 
 import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
+import { useRouteState } from '@app/common/hooks/use-route-state';
+
+const broadcastErrorSheetRouteStateSchema = z
+  .object({
+    message: z.string().optional(),
+    proposeMode: z.boolean().optional(),
+  })
+  .catch({});
+
 export function BroadcastErrorSheet() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const message = get(location.state, 'message', '');
+  const { message, proposeMode } = useRouteState(broadcastErrorSheetRouteStateSchema);
+  const action = proposeMode ? 'propose' : 'broadcast';
 
   return (
     <Sheet
       isShowing
       header={<SheetHeader />}
-      onClose={() => navigate('..')}
+      onClose={() => void navigate('..')}
       footer={
-        <Button fullWidth onClick={() => navigate('..')} mt="space.05">
+        <Button fullWidth onClick={() => void navigate('..')} mt="space.05">
           Close
         </Button>
       }
@@ -33,10 +42,10 @@ export function BroadcastErrorSheet() {
       >
         <styled.img src={GenericError} width="106px" height="72px" m="0 auto" />
         <styled.h1 mt="space.05" textStyle="heading.05">
-          Unable to broadcast transaction
+          Unable to {action} transaction
         </styled.h1>
         <styled.span mt="space.03" px="space.04" textStyle="body.01">
-          Your transaction failed to broadcast{' '}
+          Your transaction failed to {action}{' '}
           {message && <>because of the error: {message.toLowerCase()}</>}
         </styled.span>
       </Flex>

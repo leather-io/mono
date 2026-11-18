@@ -21,6 +21,7 @@ export function useGetAccountUtxosQuery(request: AccountRequest) {
       network.id,
       request.account.id.fingerprint,
       request.account.id.accountIndex,
+      request.account.bitcoin,
       request.exclusions,
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>

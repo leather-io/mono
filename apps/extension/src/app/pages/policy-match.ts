@@ -11,8 +11,11 @@ export type PolicyMatchStatus = 'match' | 'mismatch' | 'no-active-account';
 // without registering anything (`verify`, every other origin).
 export type PolicyApprovalMode = 'add' | 'verify';
 
-export function getPolicyApprovalMode(origin: string | null | undefined): PolicyApprovalMode {
-  return isWhitelistedOrigin(origin) ? 'add' : 'verify';
+export function getPolicyApprovalMode(
+  origin: string | null | undefined,
+  topOrigin: string | null | undefined
+): PolicyApprovalMode {
+  return isWhitelistedOrigin(origin) && isWhitelistedOrigin(topOrigin) ? 'add' : 'verify';
 }
 
 // Shown in verify mode so the user understands the requesting site cannot add an

@@ -2,16 +2,27 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
-import { formatCurrency } from '~/utils/currency-formatter';
+import { formatCryptoPrecise, formatCurrency } from '~/utils/currency-formatter';
 
-import type { BlockchainActivityBalanceChange, Money } from '@leather.io/models';
+import type { BlockchainActivityBalanceChange, MarketData, Money } from '@leather.io/models';
+import { baseCurrencyAmountInQuote } from '@leather.io/utils';
 
 import { Badge, type BadgeVariant } from './badge';
 
 export const pendingValue = '—';
 
+export function toFiat(
+  money: Money | undefined,
+  marketData: MarketData | undefined
+): Money | undefined {
+  if (!money || !marketData || money.symbol !== marketData.pair.base) return undefined;
+  return baseCurrencyAmountInQuote(money, marketData);
+}
+
 export function moneyWithFiat(money: Money, fiat: Money | undefined): string {
-  return fiat ? `${formatCurrency(money)} ≈ ${formatCurrency(fiat)}` : formatCurrency(money);
+  return fiat
+    ? `${formatCryptoPrecise(money)} ≈ ${formatCurrency(fiat)}`
+    : formatCryptoPrecise(money);
 }
 
 export function balanceChangeValue(change: BlockchainActivityBalanceChange): string {
@@ -68,7 +79,7 @@ function DetailLink({ to, children }: { to: string; children: ReactNode }) {
     <StyledLink
       to={to}
       borderBottom="1px solid"
-      borderColor="ink.text-non-interactive"
+      borderColor="ink.border-default"
       _hover={{ borderColor: 'ink.action-primary-hover' }}
       _focus={{ borderColor: 'ink.action-primary-hover' }}
       outline={0}
@@ -109,7 +120,7 @@ export function DetailRow({ label, children }: { label: string; children: ReactN
       py="space.03"
       borderTopWidth="1px"
       borderTopStyle="solid"
-      borderTopColor="ink.border-default"
+      borderTopColor="ink.border-transparent"
     >
       <styled.span textStyle="caption.01" color="ink.text-subdued" flexShrink={0}>
         {label}
@@ -118,24 +129,5 @@ export function DetailRow({ label, children }: { label: string; children: ReactN
         {children}
       </Box>
     </Flex>
-  );
-}
-
-export function DetailAddressRow({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <Box
-      px="space.04"
-      py="space.03"
-      borderTopWidth="1px"
-      borderTopStyle="solid"
-      borderTopColor="ink.border-default"
-    >
-      <styled.span textStyle="caption.01" color="ink.text-subdued">
-        {label}
-      </styled.span>
-      <Box mt="space.01" textStyle="label.02">
-        {children}
-      </Box>
-    </Box>
   );
 }

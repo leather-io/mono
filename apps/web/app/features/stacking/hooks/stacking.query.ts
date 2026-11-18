@@ -1,20 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useStackingClient } from '~/features/stacking/providers/stacking-client-provider';
-import { createGetAllowanceContractCallersQueryOptions } from '~/queries/create-get-allowance-contract-callers-query-options';
-
-import {
-  createGetAccountExtendedBalancesQueryOptions,
-  createGetCoreInfoQueryOptions,
-  createGetPoxInfoQueryOptions,
-  createGetSecondsUntilNextCycleQueryOptions,
-  createGetStatusQueryOptions,
-} from '@leather.io/query';
-
-export function useGetAllowanceContractCallersQuery(
-  ...params: Parameters<typeof createGetAllowanceContractCallersQueryOptions>
-) {
-  return useQuery(createGetAllowanceContractCallersQueryOptions(...params));
-}
+import { createGetLockedStxQueryOptions } from '~/features/stacking/queries/create-get-locked-stx-query-options';
+import { createGetStatusQueryOptions } from '~/features/stacking/queries/create-stacking-client-query-options';
+import { createStacksApiClient } from '~/utils/stacks-api-client';
 
 export function useGetStatusQuery() {
   const { client } = useStackingClient();
@@ -22,26 +10,14 @@ export function useGetStatusQuery() {
   return useQuery(createGetStatusQueryOptions({ client }));
 }
 
-export function useGetCoreInfoQuery() {
+export function useGetLockedStxQuery() {
   const { client } = useStackingClient();
   if (!client) throw new Error('Expected client to be defined.');
-  return useQuery(createGetCoreInfoQueryOptions({ client }));
-}
-
-export function useGetSecondsUntilNextCycleQuery() {
-  const { client } = useStackingClient();
-  if (!client) throw new Error('Expected client to be defined.');
-  return useQuery(createGetSecondsUntilNextCycleQueryOptions({ client }));
-}
-
-export function useGetPoxInfoQuery() {
-  const { client } = useStackingClient();
-  if (!client) throw new Error('Expected client to be defined.');
-  return useQuery(createGetPoxInfoQueryOptions({ client }));
-}
-
-export function useGetAccountExtendedBalancesQuery() {
-  const { client } = useStackingClient();
-  if (!client) throw new Error('Expected client to be defined.');
-  return useQuery(createGetAccountExtendedBalancesQueryOptions({ client }));
+  return useQuery(
+    createGetLockedStxQueryOptions({
+      address: client.address,
+      apiUrl: client.baseUrl,
+      client: createStacksApiClient(client.baseUrl),
+    })
+  );
 }

@@ -1,6 +1,7 @@
+import { ACCOUNT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { type NetworkConfiguration } from '@leather.io/models';
-import { type RpcParams, stxAddAccount } from '@leather.io/rpc';
+import { type RpcParams, type stxAddAccount } from '@leather.io/rpc';
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
 
 import { makePolicyId } from '@app/store/policy/policy-store.utils';
@@ -51,7 +52,7 @@ export function createStxPolicyRegistration({
         threshold: params.threshold,
         role,
       },
-      name: params.name,
+      name: params.name.substring(0, ACCOUNT_MAX_NAME_LENGTH),
     },
     result: {
       address,

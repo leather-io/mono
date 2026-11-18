@@ -1,20 +1,20 @@
 import { type BtcFormSchema } from '@/features/send/forms/btc/btc-form-schema';
 import { type StxFormSchema } from '@/features/send/forms/stx/stx-form-schema';
-import { PayerLookupFn } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import { type PayerLookupFn } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { analytics } from '@/utils/analytics';
 import { bytesToHex } from '@noble/hashes/utils';
 import { type PublicKey } from '@stacks/common';
-import { StacksNetwork } from '@stacks/network';
+import { type StacksNetwork } from '@stacks/network';
 import BigNumber from 'bignumber.js';
 import memoize from 'p-memoize';
 
+import type { ComplianceScreeningPoint } from '@leather.io/analytics';
 import {
   createBitcoinAddress,
   generateBitcoinUnsignedTransaction,
   getBtcSignerLibNetworkConfigByMode,
 } from '@leather.io/bitcoin';
-import { type BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
-import { defaultStacksFees } from '@leather.io/query';
+import { type BitcoinNetworkModes, type OwnedUtxo } from '@leather.io/models';
 import { getComplianceService } from '@leather.io/services';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import {
@@ -24,10 +24,10 @@ import {
   isError,
 } from '@leather.io/utils';
 
+const defaultStacksFeeMicroStx = 3000;
+
 export function calculateDefaultStacksFee() {
-  const defaultFeeFallback = 2500;
-  const defaultFeeFallbackAsMoney = createMoney(defaultFeeFallback, 'STX');
-  return convertAmountToBaseUnit(defaultStacksFees.estimates[1]?.fee ?? defaultFeeFallbackAsMoney);
+  return convertAmountToBaseUnit(createMoney(defaultStacksFeeMicroStx, 'STX'));
 }
 
 export function isUserInputEffectivelyZero(input: string) {
@@ -99,21 +99,31 @@ export async function stxFormValuesToSerializedTransaction(
 interface addressComplianceValidatorParams {
   address: string;
   shouldCheckCompliance: boolean;
+  screeningPoint: ComplianceScreeningPoint;
 }
 
 async function rawAddressComplianceValidator({
   address,
   shouldCheckCompliance,
+  screeningPoint,
 }: addressComplianceValidatorParams) {
   if (!shouldCheckCompliance) return true;
 
   const result = await getComplianceService().checkAddressCompliance(address);
   if (result.status === 'non_compliant') {
-    analytics.track('non_compliant_entity_detected', { address });
+    analytics.track('non_compliant_entity_detected', {
+      address,
+      reason: result.reason,
+      screeningPoint,
+    });
     return false;
   }
   if (result.status === 'unavailable') {
-    analytics.track('compliance_check_unavailable', { address, reason: result.reason });
+    analytics.track('compliance_check_unavailable', {
+      address,
+      reason: result.reason,
+      screeningPoint,
+    });
   }
   return true;
 }

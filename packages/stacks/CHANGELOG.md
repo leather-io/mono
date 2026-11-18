@@ -577,6 +577,125 @@
     * @leather.io/models bumped to 0.44.1
     * @leather.io/utils bumped to 0.46.4
 
+## [1.22.9](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.22.8...@leather.io/stacks-v1.22.9) (2026-10-27)
+
+
+### Bug Fixes
+
+* body-parser and undici audit ([#2912](https://github.com/leather-io/mono/issues/2912)) ([2bee4e7](https://github.com/leather-io/mono/commit/2bee4e772dd95fff8406822a62225854fb708fbd))
+* **mobile:** return sponsored contract calls to the app without error ([#2811](https://github.com/leather-io/mono/issues/2811)) ([0012105](https://github.com/leather-io/mono/commit/00121054e400c7de2302e205fbc30f14965cbce7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.13.11
+    * @leather.io/models bumped to 0.63.1
+    * @leather.io/utils bumped to 0.55.0
+
+## [1.22.8](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.22.7...@leather.io/stacks-v1.22.8) (2026-09-29)
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.13.10
+    * @leather.io/models bumped to 0.63.0
+    * @leather.io/utils bumped to 0.54.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/test-config bumped to 0.1.4
+
+## [1.22.7](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.22.6...@leather.io/stacks-v1.22.7) (2026-09-14)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.13.9
+    * @leather.io/utils bumped to 0.53.1
+
+## [1.22.6](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.22.5...@leather.io/stacks-v1.22.6) (2026-09-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.13.8
+    * @leather.io/models bumped to 0.62.0
+    * @leather.io/utils bumped to 0.53.0
+
+## [1.22.5](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.22.4...@leather.io/stacks-v1.22.5) (2026-08-27)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.13.7
+    * @leather.io/models bumped to 0.61.1
+    * @leather.io/utils bumped to 0.52.7
+
+## [1.22.4](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.22.3...@leather.io/stacks-v1.22.4) (2026-08-18)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.13.6
+    * @leather.io/models bumped to 0.61.0
+    * @leather.io/utils bumped to 0.52.6
+
+## [1.22.3](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.22.2...@leather.io/stacks-v1.22.3) (2026-08-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.13.5
+    * @leather.io/utils bumped to 0.52.5
+
+## [1.22.2](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.22.1...@leather.io/stacks-v1.22.2) (2026-08-05)
+
+
+### Bug Fixes
+
+* add ledger derivation paths ([#2592](https://github.com/leather-io/mono/issues/2592)) ([94806ea](https://github.com/leather-io/mono/commit/94806eaffddabc4a2e1d6c29fa405979e8170c95))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.13.4
+    * @leather.io/utils bumped to 0.52.4
+
+## [1.22.1](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.22.0...@leather.io/stacks-v1.22.1) (2026-07-23)
+
+
+### Bug Fixes
+
+* clarity 6 contract deployment ([#2545](https://github.com/leather-io/mono/issues/2545)) ([2c04085](https://github.com/leather-io/mono/commit/2c0408553bdad021dad7430beb81d22cf565c95d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.13.3
+    * @leather.io/utils bumped to 0.52.3
+
 ## [1.22.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.21.1...@leather.io/stacks-v1.22.0) (2026-07-15)
 
 

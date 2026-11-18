@@ -36,7 +36,7 @@ export interface UpdateVaultRequest {
 
 export interface ListVaultsFilters {
   status?: VaultStatus;
-  membershipStatus?: VaultMembershipStatus;
+  membershipStatus?: Exclude<VaultMembershipStatus, 'declined'>;
 }
 
 export interface CreateVaultAccountRequest {

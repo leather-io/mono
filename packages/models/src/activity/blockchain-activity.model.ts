@@ -1,7 +1,10 @@
-import { CryptoAsset, CryptoAssetChain } from '../assets/asset.model';
-import { Money } from '../money.model';
-import { StacksProtocolAction, StacksProtocolId } from '../protocols/stacks-protocol.model';
-import { OnChainActivityStatus } from './activity-status.model';
+import { type CryptoAsset, type CryptoAssetChain } from '../assets/asset.model';
+import { type Money } from '../money.model';
+import {
+  type StacksProtocolAction,
+  type StacksProtocolId,
+} from '../protocols/stacks-protocol.model';
+import { type OnChainActivityStatus } from './activity-status.model';
 
 export interface BlockchainActivityContractCall {
   readonly type: 'call';
@@ -29,6 +32,7 @@ export interface BlockchainActivity {
   readonly timestamp: number;
   readonly txid: string;
   readonly blockHeight?: number;
+  readonly nonce?: number;
   readonly fee?: Money;
   readonly status: OnChainActivityStatus;
   readonly chain: CryptoAssetChain;

@@ -1,5 +1,5 @@
 import { customNetworkConfig } from '~/constants/custom-network-config';
-import { leather } from '~/utils/leather-sdk';
+import { multisigLeather } from '~/features/multisig/extension/multisig-leather-client';
 import { isLeatherInstalled } from '~/utils/utils';
 
 import { extractXpubFromDescriptor, getP2wpkhAddressFromPublicKey } from '@leather.io/bitcoin';
@@ -16,8 +16,10 @@ interface WalletSignInParams {
   timestamp: number;
 }
 
-async function fetchWalletAddresses(network: string) {
-  const result = await leather.getAddresses({ network });
+type GetAddressesParams = NonNullable<Parameters<typeof multisigLeather.getAddresses>[0]>;
+
+async function fetchWalletAddresses(network: string, chains: GetAddressesParams['chains']) {
+  const result = await multisigLeather.getAddresses({ network, chains });
   return result.addresses;
 }
 
@@ -52,14 +54,14 @@ function assertWalletMatchesNetwork(address: string, network: AuthNetworkId) {
 
 async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayload> {
   const rpcNetwork = resolveWalletRpcNetwork(params.network);
-  const addresses = await fetchWalletAddresses(rpcNetwork);
+  const addresses = await fetchWalletAddresses(rpcNetwork, ['bitcoin']);
   const account = addresses.find(address => address.symbol === 'BTC' && address.type === 'p2wpkh');
   if (!account) {
     throw new Error('No Bitcoin account available in the connected wallet');
   }
   assertWalletMatchesNetwork(account.address, params.network);
 
-  const signed = await leather.signMessage({
+  const signed = await multisigLeather.signMessage({
     message: params.message,
     paymentType: 'p2wpkh',
     network: rpcNetwork,
@@ -88,14 +90,20 @@ async function btcSignIn(params: WalletSignInParams): Promise<WalletSignInPayloa
 
 async function stxSignIn(params: WalletSignInParams): Promise<WalletSignInPayload> {
   const rpcNetwork = resolveWalletRpcNetwork(params.network);
-  const addresses = await fetchWalletAddresses(rpcNetwork);
-  const account = addresses.find(address => address.symbol === 'STX');
+  const addresses = await fetchWalletAddresses(rpcNetwork, ['stacks']);
+  const account = addresses.find(
+    address => address.symbol === 'STX' && address.kind === 'single-sig'
+  );
   if (!account) {
     throw new Error('No Stacks account available in the connected wallet');
   }
   assertWalletMatchesNetwork(account.address, params.network);
 
-  const signed = await leather.stxSignMessage({ message: params.message, network: rpcNetwork });
+  const signed = await multisigLeather.stxSignMessage({
+    messageType: 'utf8',
+    message: params.message,
+    network: rpcNetwork,
+  });
 
   if (signed.publicKey !== account.publicKey) {
     throw new Error('Active wallet account changed during sign-in. Please try again.');

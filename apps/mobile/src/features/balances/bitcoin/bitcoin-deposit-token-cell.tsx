@@ -4,7 +4,7 @@ import { useBtcAccountBalance } from '@/queries/balance/btc-balance.query';
 import { t } from '@lingui/core/macro';
 
 import { btcAsset } from '@leather.io/constants';
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import { BitcoinFilledCircleIcon, BtcAvatarIcon } from '@leather.io/ui/native';
 
 export function BitcoinDepositTokenCell({ accountIndex, fingerprint }: AccountId) {

@@ -1,7 +1,7 @@
 import { createMoney, truncateMiddle } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { PsbtInput } from '@app/features/psbt-signer/hooks/use-parsed-inputs';
+import { type PsbtInput } from '@app/features/psbt-signer/hooks/use-parsed-inputs';
 import { BadgeWithTooltip } from '@app/ui/components/badge/badge-with-tooltip';
 
 import { PsbtInputOutputItemLayout } from '../../psbt-input-output-item.layout';

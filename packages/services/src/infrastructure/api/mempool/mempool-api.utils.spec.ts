@@ -1,6 +1,6 @@
-import { NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
+import { type NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
 
-import { UserSettings } from '../../settings/settings.service';
+import { type UserSettings } from '../../settings/settings.service';
 import { getMempoolUrlFromUserSettings } from './mempool-api.utils';
 
 const customNetwork: NetworkConfiguration = {
@@ -49,6 +49,18 @@ describe(getMempoolUrlFromUserSettings.name, () => {
     expect(
       getMempoolUrlFromUserSettings(makeUserSettings(defaultNetworksKeyedById.sbtcDevenv))
     ).toEqual(defaultNetworksKeyedById.sbtcDevenv.chain.bitcoin.bitcoinUrl);
+  });
+
+  it('returns the configured bitcoin url for the private-1 network', () => {
+    expect(
+      getMempoolUrlFromUserSettings(makeUserSettings(defaultNetworksKeyedById['private-1']))
+    ).toEqual(defaultNetworksKeyedById['private-1'].chain.bitcoin.bitcoinUrl);
+  });
+
+  it('returns the configured bitcoin url for the staking testnet network', () => {
+    expect(
+      getMempoolUrlFromUserSettings(makeUserSettings(defaultNetworksKeyedById.stakingTestnet))
+    ).toEqual(defaultNetworksKeyedById.stakingTestnet.chain.bitcoin.bitcoinUrl);
   });
 
   it('returns the configured bitcoin url for user-added custom networks', () => {

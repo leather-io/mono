@@ -8,10 +8,8 @@ import {
   PoxConditionCode,
   type PoxPostConditionWire,
   addressToString,
-  parsePrincipalString,
 } from '@stacks/transactions';
 
-import { getPostCondition } from '@leather.io/stacks';
 import { assertUnreachable } from '@leather.io/utils';
 
 import { stacksValue } from '@app/common/stacks-utils';
@@ -44,7 +42,7 @@ export function getAmountFromPostCondition(pc: NonPoxPostConditionWire) {
   if (pc.conditionType === PostConditionType.Fungible) return pc.amount.toString();
   if (pc.conditionType === PostConditionType.STX || pc.conditionType === PostConditionType.Staking)
     return stacksValue({ value: pc.amount.toString(), withTicker: false });
-  return '';
+  return undefined;
 }
 
 export function getSymbolFromPostCondition(pc: NonPoxPostConditionWire) {
@@ -104,44 +102,6 @@ export function getPoxConditionCodeMessage(code: PoxConditionCode, isSender: boo
   }
 }
 
-/**
- * This method updates a post conditions principal
- * value to the current address principal if and only if
- * the `stxAddress` value from the original tx payload
- * matches the address in the original post condition
- *
- * This is used when a user might switch accounts during
- * the signing process. One can assume that if the post
- * condition has the principal set to the same value as the
- * `stxAddress` value, it should be updated when they switch
- * accounts.
- */
-export function handlePostConditions(
-  postConditions: PostConditionWire[],
-  payloadAddress: string,
-  currentAddress: string
-): PostConditionWire[] {
-  const payloadPrincipal = parsePrincipalString(payloadAddress);
-  const currentAddressPrincipal = parsePrincipalString(currentAddress);
-
-  return postConditions.map(postCondition => {
-    const formattedPostCondition = getPostCondition(postCondition);
-    if (
-      'contractName' in formattedPostCondition.principal ||
-      !('address' in formattedPostCondition.principal)
-    )
-      return formattedPostCondition;
-    const { principal, ...payload } = formattedPostCondition;
-    const sameType = payloadPrincipal.address.type === principal.address.type;
-    const sameHash = payloadPrincipal.address.hash160 === principal.address.hash160;
-    const isOriginatorAddress = sameHash && sameType;
-    return {
-      ...payload,
-      principal: isOriginatorAddress ? currentAddressPrincipal : principal,
-    };
-  });
-}
-
 function getTitleFromConditionCode(
   code: FungibleConditionCode | NonFungibleConditionCode,
   context: PostConditionVerb = 'transfer'
@@ -165,7 +125,7 @@ function getTitleFromConditionCode(
     case NonFungibleConditionCode.MaybeSent:
       return 'may transfer';
     default:
-      return '';
+      return undefined;
   }
 }
 
@@ -173,7 +133,7 @@ export function getPostConditionTitle(
   pc: NonPoxPostConditionWire,
   context: PostConditionVerb = 'transfer'
 ) {
-  return getTitleFromConditionCode(pc.conditionCode, context) || '';
+  return getTitleFromConditionCode(pc.conditionCode, context);
 }
 
 export function getPoxConditionTitle(code: PoxConditionCode) {
@@ -185,6 +145,6 @@ export function getPoxConditionTitle(code: PoxConditionCode) {
     case PoxConditionCode.WillPerform:
       return 'must perform a PoX action';
     default:
-      return '';
+      return undefined;
   }
 }

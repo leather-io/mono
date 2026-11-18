@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { GridProps, VStack } from 'leather-styles/jsx';
+import { type GridProps, VStack } from 'leather-styles/jsx';
 import { InfoGrid } from '~/components/info-grid/info-grid';
 
 interface StackingInfoGridLayoutProps extends GridProps {
@@ -13,9 +13,9 @@ interface StackingInfoGridLayoutProps extends GridProps {
     totalValueLocked: ReactNode;
     daysUntilNextCycle: ReactNode;
     rewardsToken: ReactNode;
-    minimumCommitment: ReactNode;
     poolAddress: ReactNode;
     rewardAddress: ReactNode;
+    tvl?: ReactNode;
   };
 }
 export function StackingInfoGridLayout({ cells, ...props }: StackingInfoGridLayoutProps) {
@@ -39,9 +39,9 @@ export function StackingInfoGridLayout({ cells, ...props }: StackingInfoGridLayo
 
       <InfoGrid
         width="100%"
-        borderTopRadius={['sm', 'sm', cells.actionButtons ? '0' : 'sm']}
+        borderTopRadius={['md', 'md', cells.actionButtons ? '0' : 'md']}
         borderTop={['default', 'default', cells.actionButtons ? 'none' : 'default']}
-        borderBottomRadius={['sm', 'sm', '0']}
+        borderBottomRadius={['md', 'md', '0']}
         gridTemplateColumns={[
           'repeat(2, minmax(0, 1fr))',
           'repeat(3, minmax(0, 1fr))',
@@ -76,12 +76,8 @@ export function StackingInfoGridLayout({ cells, ...props }: StackingInfoGridLayo
           {cells.daysUntilNextCycle}
         </InfoGrid.Cell>
 
-        <InfoGrid.Cell gridColumn={[1, 2, 4]} gridRow={[4, 3, 1]}>
+        <InfoGrid.Cell gridColumn={['1 / span 2', '1 / span 3', 4]} gridRow={[4, 3, '1 / span 2']}>
           {cells.rewardsToken}
-        </InfoGrid.Cell>
-
-        <InfoGrid.Cell gridColumn={[2, 1, 4]} gridRow={[4, 3, 2]}>
-          {cells.minimumCommitment}
         </InfoGrid.Cell>
       </InfoGrid>
 
@@ -96,13 +92,14 @@ export function StackingInfoGridLayout({ cells, ...props }: StackingInfoGridLayo
           'minmax(0, 1fr)',
           'minmax(0, 1fr)',
           'minmax(0, 1fr)',
-          'repeat(2, minmax(0, 1fr))',
+          cells.tvl ? 'repeat(3, minmax(0, 1fr))' : 'repeat(2, minmax(0, 1fr))',
         ]}
         gridTemplateRows="auto"
         height="fit-content"
       >
         <InfoGrid.Cell>{cells.rewardAddress}</InfoGrid.Cell>
         <InfoGrid.Cell>{cells.poolAddress}</InfoGrid.Cell>
+        {cells.tvl && <InfoGrid.Cell>{cells.tvl}</InfoGrid.Cell>}
       </InfoGrid>
     </VStack>
   );

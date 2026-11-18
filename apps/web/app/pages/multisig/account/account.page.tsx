@@ -1,31 +1,26 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { Box, Flex } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
 import { useVaultAccountAssets } from '~/features/multisig/assets/use-vault-account-assets';
 import type { VaultAssetItem } from '~/features/multisig/assets/vault-asset-items';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
-import { resolveWalletRpcNetwork } from '~/features/multisig/network/resolve-wallet-rpc-network';
-import { getMultisigDescriptor } from '~/features/multisig/transactions/btc-multisig-descriptor';
-import { getOrderedSigningPubkeys } from '~/features/multisig/transactions/derive-multisig-address';
+import { useAddAccountToWallet } from '~/features/multisig/vaults/use-add-account-to-wallet';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useVaultAccountBalance } from '~/features/multisig/vaults/use-vault-account-balance';
 import { useUpdateVaultAccount } from '~/features/multisig/vaults/use-vault-account-mutations';
 import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
-import { formatCurrency } from '~/utils/currency-formatter';
-import { leather } from '~/utils/leather-sdk';
-import { isLeatherInstalled } from '~/utils/utils';
+import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
 
 import type { AuthNetworkId, MultisigTransaction } from '@leather.io/models';
-import { PlusIcon } from '@leather.io/ui';
+import { getErrorDetail } from '@leather.io/services';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
-import { EditableName } from '../components/editable-name';
 import { InlineTabs } from '../components/inline-tabs';
 import { MultisigErrorState } from '../components/multisig-error-state';
 import { MultisigHero } from '../components/multisig-hero';
@@ -38,8 +33,10 @@ import { AccountAssets } from './components/account-assets';
 import { AccountDetailsCard } from './components/account-details-card';
 import { AccountTransactions } from './components/account-transactions';
 import { AssetDetailModal } from './components/asset-detail-modal';
+import { EditAccountModal } from './components/edit-account-modal';
 import { ProposeTransactionModal } from './components/propose-transaction-modal';
 import { ReceiveModal } from './components/receive-modal';
+import { SendTransactionButton } from './components/send-transaction-button';
 
 export function AccountDetailPage() {
   const { vaultId, accountId } = useParams();
@@ -47,10 +44,10 @@ export function AccountDetailPage() {
   const [hydrated, setHydrated] = useState(false);
   const [isProposing, setIsProposing] = useState(false);
   const [isReceiving, setIsReceiving] = useState(false);
+  const [isEditingAccount, setIsEditingAccount] = useState(false);
   const [proposeAssetId, setProposeAssetId] = useState<SerializedCryptoAssetId>();
-  const [isAddingToWallet, setIsAddingToWallet] = useState(false);
   const [assetDetail, setAssetDetail] = useState<VaultAssetItem | null>(null);
-  const { success, error } = useToast();
+  const { error } = useToast();
   useEffect(() => setHydrated(true), []);
 
   function onProposed(transaction: MultisigTransaction) {
@@ -73,7 +70,11 @@ export function AccountDetailPage() {
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
   const accountBalance = useVaultAccountBalance(account.data);
   const accountAssets = useVaultAccountAssets(account.data);
-  const updateAccount = useUpdateVaultAccount(network, vaultId ?? '');
+  const updateAccount = useUpdateVaultAccount(network, vaultId);
+  const { addAccountToWallet, isAddingToWallet, isAddedToWallet } = useAddAccountToWallet(
+    vault.data,
+    account.data
+  );
 
   const btcSession = useSession(btcNetwork);
   const stxSession = useSession(stxNetwork);
@@ -110,54 +111,11 @@ export function AccountDetailPage() {
   }
 
   const theme = vaultThemeFromName(vault.data.theme);
-  const chainLabel = account.data.network.startsWith('btc') ? 'BTC' : 'STX';
-
-  async function onAddToWallet() {
-    if (!vault.data || !account.data) return;
-    if (!isLeatherInstalled()) {
-      error('Leather wallet not detected. Install the Leather extension to add this account.');
-      return;
-    }
-
-    const accountData = account.data;
-    const network = resolveWalletRpcNetwork(vault.data.network);
-
-    setIsAddingToWallet(true);
-    try {
-      if (chainFromNetwork(accountData.network) === 'btc') {
-        await leather.btcAddAccount({
-          descriptor: getMultisigDescriptor(accountData),
-          name: accountData.name,
-          network,
-        });
-      } else {
-        await leather.stxAddAccount({
-          publicKeys: getOrderedSigningPubkeys(accountData),
-          threshold: accountData.threshold,
-          name: accountData.name,
-          network,
-        });
-      }
-      success(`Added "${accountData.name}" to your wallet`);
-    } catch (err) {
-      error(err instanceof Error ? err.message : 'Failed to add account to wallet');
-    } finally {
-      setIsAddingToWallet(false);
-    }
-  }
+  const chain = chainFromNetwork(account.data.network);
+  const isCreator = vault.data.createdBy === me.data?.id;
 
   return (
-    <MultisigPage
-      title={
-        <EditableName
-          value={account.data.name}
-          onSave={name => updateAccount.mutate({ accountId: account.data.id, update: { name } })}
-          title="Rename account"
-          label="account name"
-        />
-      }
-      backTo={multisigPaths.vault(vault.data.id)}
-    >
+    <MultisigPage title={account.data.name} backTo={multisigPaths.vault(vault.data.id)}>
       <Flex
         direction={['column', 'column', 'row']}
         gap={['space.06', 'space.06', 'space.08', 'space.10']}
@@ -167,65 +125,36 @@ export function AccountDetailPage() {
           <MultisigHero
             variant="balance"
             themeId={theme.id}
-            primary={<Balance balance={accountBalance.crypto} formatCurrency={formatCurrency} />}
+            primary={
+              <Balance balance={accountBalance.crypto} formatCurrency={formatCryptoGlanceable} />
+            }
             secondary={<Balance balance={accountBalance.fiat} formatCurrency={formatCurrency} />}
           />
-          <styled.button
-            type="button"
-            onClick={() => {
-              setProposeAssetId(undefined);
-              setIsProposing(true);
-            }}
-            width="100%"
-            display="flex"
-            alignItems="center"
-            gap="space.03"
-            p="space.04"
-            mt="space.05"
-            mb="space.03"
-            borderRadius="md"
-            borderWidth="1px"
-            borderStyle="solid"
-            borderColor="ink.border-default"
-            bg="transparent"
-            cursor="pointer"
-            textAlign="left"
-            _hover={{ bg: 'ink.component-background-hover' }}
-          >
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              width="40px"
-              height="40px"
-              borderRadius="round"
-              bg="ink.text-primary"
-              flexShrink={0}
-            >
-              <PlusIcon variant="small" color="ink.background-primary" />
-            </Flex>
-            <Box>
-              <styled.div textStyle="label.02">Create transaction</styled.div>
-              <styled.div textStyle="caption.01" color="ink.text-subdued">
-                Propose a new {chainLabel} transfer for this account
-              </styled.div>
-            </Box>
-          </styled.button>
-          <InlineTabs.Root defaultValue="transactions">
-            <InlineTabs.List>
-              <InlineTabs.Trigger value="transactions">Transactions</InlineTabs.Trigger>
-              <InlineTabs.Trigger value="assets">Assets</InlineTabs.Trigger>
-            </InlineTabs.List>
-            <InlineTabs.Content value="transactions">
-              <Box mt="space.04">
-                <AccountTransactions account={account.data} />
-              </Box>
-            </InlineTabs.Content>
-            <InlineTabs.Content value="assets">
-              <Box mt="space.04">
-                <AccountAssets assets={accountAssets} onSelectAsset={setAssetDetail} />
-              </Box>
-            </InlineTabs.Content>
-          </InlineTabs.Root>
+          <Box mt="space.05">
+            <InlineTabs.Root defaultValue="transactions">
+              <InlineTabs.List>
+                <InlineTabs.Trigger value="transactions">Transactions</InlineTabs.Trigger>
+                <InlineTabs.Trigger value="assets">Assets</InlineTabs.Trigger>
+              </InlineTabs.List>
+              <InlineTabs.Content value="transactions">
+                <Box mt="space.04">
+                  <SendTransactionButton
+                    chain={chain}
+                    onClick={() => {
+                      setProposeAssetId(undefined);
+                      setIsProposing(true);
+                    }}
+                  />
+                  <AccountTransactions account={account.data} />
+                </Box>
+              </InlineTabs.Content>
+              <InlineTabs.Content value="assets">
+                <Box mt="space.04">
+                  <AccountAssets assets={accountAssets} onSelectAsset={setAssetDetail} />
+                </Box>
+              </InlineTabs.Content>
+            </InlineTabs.Root>
+          </Box>
         </Box>
         <Box flex={['1', '1', '1']} width="100%">
           <SectionLabel noGutter>Account details</SectionLabel>
@@ -233,8 +162,10 @@ export function AccountDetailPage() {
             vault={vault.data}
             account={account.data}
             currentUserAddress={me.data?.address}
-            onAddToWallet={onAddToWallet}
+            onAddToWallet={() => void addAccountToWallet()}
             isAddingToWallet={isAddingToWallet}
+            isAddedToWallet={isAddedToWallet}
+            onEdit={isCreator ? () => setIsEditingAccount(true) : undefined}
           />
         </Box>
       </Flex>
@@ -266,6 +197,22 @@ export function AccountDetailPage() {
       {isReceiving ? (
         <ReceiveModal account={account.data} onClose={() => setIsReceiving(false)} />
       ) : null}
+      <EditAccountModal
+        vault={vault.data}
+        account={account.data}
+        isShowing={isEditingAccount}
+        isSaving={updateAccount.isPending}
+        onClose={() => setIsEditingAccount(false)}
+        onSave={({ name, icon }) =>
+          updateAccount.mutate(
+            { accountId: account.data.id, update: { name, icon } },
+            {
+              onSuccess: () => setIsEditingAccount(false),
+              onError: err => error(getErrorDetail(err) ?? 'Unknown error'),
+            }
+          )
+        }
+      />
     </MultisigPage>
   );
 }

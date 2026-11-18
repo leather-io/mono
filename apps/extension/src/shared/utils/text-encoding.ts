@@ -13,8 +13,7 @@ export function encodeText(text: string) {
  * Decode `hex` previously encoded with [encodeText]{@link encodeText} to the original text.
  * @param hex string to decode
  */
-export function decodeText(hex?: string) {
-  if (!hex) return '';
+export function decodeText(hex: string) {
   const bytes = new Uint8Array((hex.match(/.{1,2}/g) ?? []).map(byte => parseInt(byte, 16)));
   return decodeURIComponent(atob(new TextDecoder().decode(bytes)));
 }

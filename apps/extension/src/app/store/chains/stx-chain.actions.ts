@@ -4,7 +4,7 @@ import { userAddsAccount } from '@leather.io/state/keychains';
 
 import { logger } from '@shared/logger';
 
-import { AppThunk } from '@app/store';
+import { type AppThunk } from '@app/store/store';
 
 import { userSwitchesAccount } from '../active/active.slice';
 import * as inMemoryStore from '../in-memory-key/in-memory-storage';

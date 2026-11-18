@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Box, BoxProps, Flex } from 'leather-styles/jsx';
+import { Box, type BoxProps, Flex } from 'leather-styles/jsx';
 
 interface LedgerWrapperProps extends BoxProps {
   image?: React.ReactNode;

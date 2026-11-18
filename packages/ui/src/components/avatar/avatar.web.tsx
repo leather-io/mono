@@ -1,7 +1,7 @@
 import {
-  ComponentPropsWithoutRef,
-  ComponentRef,
-  ReactElement,
+  type ComponentPropsWithoutRef,
+  type ComponentRef,
+  type ReactElement,
   cloneElement,
   forwardRef,
 } from 'react';
@@ -11,8 +11,13 @@ import { Avatar as RadixAvatar } from 'radix-ui';
 
 import { isDefined } from '@leather.io/utils';
 
-import { IconProps } from '../../icons/icon/create-icon.web';
-import { AvatarSize, AvatarVariant, defaultFallbackDelay, iconSizeMap } from './avatar.shared';
+import { type IconProps } from '../../icons/icon/create-icon.web';
+import {
+  type AvatarSize,
+  type AvatarVariant,
+  defaultFallbackDelay,
+  iconSizeMap,
+} from './avatar.shared';
 
 type AvatarElement = ComponentRef<typeof AvatarRoot>;
 
@@ -89,6 +94,7 @@ const AvatarRoot = styled(RadixAvatar.Root, {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
     bg: 'ink.background-secondary',
     userSelect: 'none',
     outlineWidth: 1,
@@ -107,7 +113,7 @@ const AvatarRoot = styled(RadixAvatar.Root, {
     },
     variant: {
       circle: { borderRadius: 'round' },
-      square: { borderRadius: '10px' },
+      square: { borderRadius: 'md' },
     },
     size: {
       xs: { width: 16, height: 16 },
@@ -118,13 +124,11 @@ const AvatarRoot = styled(RadixAvatar.Root, {
     },
   },
   compoundVariants: [
-    {
-      size: 'xs',
-      variant: 'square',
-      css: {
-        borderRadius: 'xs',
-      },
-    },
+    { size: 'xs', variant: 'square', css: { borderRadius: '3px' } },
+    { size: 'sm', variant: 'square', css: { borderRadius: '5px' } },
+    { size: 'md', variant: 'square', css: { borderRadius: '6px' } },
+    { size: 'lg', variant: 'square', css: { borderRadius: '8px' } },
+    { size: 'xl', variant: 'square', css: { borderRadius: '10px' } },
   ],
   defaultVariants: {
     size: 'xl',
@@ -139,6 +143,7 @@ interface AvatarIconProps {
 
 function AvatarIcon({ icon, avatarSize }: AvatarIconProps) {
   if (icon) {
+    if (icon.props.width !== undefined || icon.props.height !== undefined) return icon;
     const iconProps = icon.props.variant
       ? { variant: icon.props.variant }
       : iconSizeMap[avatarSize];

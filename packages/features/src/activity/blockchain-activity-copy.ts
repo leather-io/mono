@@ -6,7 +6,7 @@ export function interpolateActivityTemplate(
   template: string,
   values: Record<string, string> = {}
 ): string {
-  return template.replace(/{(\w+)}/g, (_match, key) => values[key] ?? '');
+  return template.replace(/{(\w+)}/g, (_match, key: string) => values[key] ?? '');
 }
 
 type StatusTemplates = Record<OnChainActivityStatus, string>;
@@ -18,9 +18,9 @@ const protocolActionSubtitles: Partial<Record<StacksProtocolAction, StatusTempla
     failed: 'Swap failed via {protocol}',
   },
   bridge: {
-    pending: 'Swapping via {protocol}',
-    success: 'Swapped via {protocol}',
-    failed: 'Swap failed via {protocol}',
+    pending: 'Bridging via {protocol}',
+    success: 'Bridged via {protocol}',
+    failed: 'Bridge failed via {protocol}',
   },
   deposit: {
     pending: 'Depositing via {protocol}',
@@ -150,9 +150,9 @@ const protocolActionTitles: Partial<Record<StacksProtocolAction, string>> = {
 export function buildBlockchainActivityActionTitle(
   action: StacksProtocolAction,
   t: BlockchainActivityTranslate
-): string {
+): string | undefined {
   const title = protocolActionTitles[action];
-  return title ? t(title) : '';
+  return title ? t(title) : undefined;
 }
 
 interface SubtitleParams {
@@ -161,14 +161,13 @@ interface SubtitleParams {
   protocolName?: string;
   counterparty?: string;
   contractName?: string;
-  actionInTitle?: boolean;
 }
 
 export function buildBlockchainActivitySubtitle(
   params: SubtitleParams,
   t: BlockchainActivityTranslate
-): string {
-  const { action, status, protocolName, counterparty, contractName, actionInTitle } = params;
+): string | undefined {
+  const { action, status, protocolName, counterparty, contractName } = params;
 
   switch (action) {
     case 'send':
@@ -187,10 +186,7 @@ export function buildBlockchainActivitySubtitle(
       return t('{contract}', { contract: contractName ?? '' });
     default: {
       const entry = protocolActionSubtitles[action];
-      if (!entry) return '';
-      if (actionInTitle) {
-        return protocolName ? t('via {protocol}', { protocol: protocolName }) : '';
-      }
+      if (!entry) return undefined;
       const template = protocolName ? entry[status] : entry[status].replace(viaProtocolSuffix, '');
       return t(template, protocolName ? { protocol: protocolName } : {});
     }

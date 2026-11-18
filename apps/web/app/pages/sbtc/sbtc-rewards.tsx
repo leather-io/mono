@@ -1,14 +1,13 @@
-import { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 import { useLoaderData } from 'react-router';
 
 import { styled } from 'leather-styles/jsx';
 import { ApyRewardHeroCard } from '~/components/apy-hero-card';
 import { BasicPageSectionHeading } from '~/components/basic-page/basic-page-section-heading';
 import { RotatedArrow } from '~/components/icons/rotated-icon';
-import { SbtcEnrollButton } from '~/features/sbtc-enroll/sbtc-enroll-button';
 import { Page } from '~/layouts/page/page';
 import { SbtcRewardsPageHeading } from '~/pages/sbtc/components/sbtc-rewards-page-heading';
-import { loader } from '~/pages/sbtc/sbtc.route';
+import { type loader } from '~/pages/sbtc/sbtc.route';
 import { useLeatherConnect } from '~/store/addresses';
 import { analytics } from '~/utils/analytics/analytics';
 import { openExternalLink } from '~/utils/external-links';
@@ -19,10 +18,11 @@ import { Button, Hr } from '@leather.io/ui';
 import { GetSbtcGrid } from './components/get-sbtc-grid';
 import { SbtcProtocolRewardGrid } from './components/sbtc-protocol-reward-grid';
 import { SbtcRewardsFaq } from './components/sbtc-rewards-faq';
+import { SbtcRewardsSunsetCallout } from './components/sbtc-rewards-sunset-callout';
 import { SbtcRewardContext } from './sbtc-rewards-context';
 
 export function SbtcRewards(): ReactElement {
-  const { sbtcPools, sbtcEnroll } = useLoaderData<typeof loader>();
+  const { sbtcPools } = useLoaderData<typeof loader>();
   const { status, whenExtensionState } = useLeatherConnect();
 
   async function bridgeSbtc() {
@@ -40,8 +40,12 @@ export function SbtcRewards(): ReactElement {
       value={{
         whenExtensionState,
         extensionStatus: status,
-        onBridgeSbtc: bridgeSbtc,
-        onSwapStxSbtc: swapStxSbtc,
+        onBridgeSbtc() {
+          void bridgeSbtc();
+        },
+        onSwapStxSbtc() {
+          void swapStxSbtc();
+        },
       }}
     >
       <Page>
@@ -78,13 +82,7 @@ export function SbtcRewards(): ReactElement {
             disclaimer="sBTC rewards providers are independent third-party protocols. Leather does not control their reward logic or smart contracts. Users should review platform-specific documentation before committing sBTC."
           />
 
-          {sbtcEnroll && (
-            <SbtcProtocolRewardGrid
-              enrollAction={<SbtcEnrollButton />}
-              mt="space.05"
-              pool={sbtcEnroll}
-            />
-          )}
+          <SbtcRewardsSunsetCallout mt="space.05" />
 
           {sbtcPools.map(pool => (
             <SbtcProtocolRewardGrid

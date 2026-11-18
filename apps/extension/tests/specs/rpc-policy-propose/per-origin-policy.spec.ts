@@ -1,4 +1,4 @@
-import { BrowserContext, Page, expect } from '@playwright/test';
+import { type BrowserContext, type Page, expect } from '@playwright/test';
 import {
   type ClarityValue,
   bufferCVFromString,
@@ -6,8 +6,8 @@ import {
   serializeCV,
   standardPrincipalCV,
 } from '@stacks/transactions';
+import { type TestRpcResponse, getResponseAddresses } from '@tests/leather-provider';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
-import { overrideLaunchDarklyFlags } from '@tests/mocks/mock-launchdarkly';
 import {
   exampleMultisigTransactionId,
   mockFundedStacksAddress,
@@ -19,10 +19,20 @@ import {
   policyStateOverrides,
 } from '@tests/mocks/mock-policies';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
+import { z } from 'zod';
 
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
+import { assertExistence } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
+
+const proposeRequestBodySchema = z.object({ multisigAddress: z.string(), rawPayload: z.string() });
+
+interface PersistedRootState {
+  appPermissions?: {
+    entities?: Record<string, { policyId?: string; accountIndex?: number } | undefined>;
+  };
+}
 
 const mainnetChainId = 1;
 const testnetChainId = 2147483648;
@@ -59,7 +69,7 @@ function makeCallContractParams(recipient: string) {
 function requestStxCallContract(page: Page, recipient: string) {
   return page.evaluate(
     ({ params }) =>
-      (window as any).LeatherProvider?.request('stx_callContract', params).catch((e: unknown) => e),
+      window.LeatherProvider?.request('stx_callContract', params).catch((e: TestRpcResponse) => e),
     { params: makeCallContractParams(recipient) }
   );
 }
@@ -67,18 +77,15 @@ function requestStxCallContract(page: Page, recipient: string) {
 function openStxCallContract(page: Page, recipient: string) {
   return page.evaluate(
     ({ params }) =>
-      void (window as any).LeatherProvider?.request('stx_callContract', params).catch(
-        (e: unknown) => e
+      void window.LeatherProvider?.request('stx_callContract', params).catch(
+        (e: TestRpcResponse) => e
       ),
     { params: makeCallContractParams(recipient) }
   );
 }
 
 function initiateGetAddresses(page: Page, params: unknown) {
-  return page.evaluate(
-    params => (window as any).LeatherProvider?.request('getAddresses', params),
-    params
-  );
+  return page.evaluate(params => window.LeatherProvider?.request('getAddresses', params), params);
 }
 
 async function approveGetAddresses(context: BrowserContext) {
@@ -90,18 +97,20 @@ async function approveGetAddresses(context: BrowserContext) {
 
 async function clickPropose(context: BrowserContext) {
   const popup = await context.waitForEvent('page');
-  await popup.waitForTimeout(1500);
-  await popup.locator('text="Propose transaction"').click({ timeout: 20_000 });
+  await popup.getByText('Propose transaction', { exact: true }).click({ timeout: 20_000 });
 }
 
 function readPersistedPermission(page: Page, extensionId: string) {
   return async function readPermission() {
     await page.goto(`chrome-extension://${extensionId}/index.html`);
-    return page.evaluate(async () =>
-      chrome.storage.local
-        .get(['persist:root'])
-        .then(state => state['persist:root'].appPermissions.entities['localhost:3000'])
-    );
+    const permission = await page.evaluate(async () => {
+      const state = await chrome.storage.local.get<{ 'persist:root': PersistedRootState }>([
+        'persist:root',
+      ]);
+      return state['persist:root'].appPermissions?.entities?.['localhost:3000'];
+    });
+    if (!permission) throw new Error('Expected persisted permission');
+    return permission;
   };
 }
 
@@ -122,18 +131,17 @@ test.describe('RPC: per-origin policy binding', () => {
       ...getConnectedTestAppPermissionsState(),
       ...policyStateOverrides({ policies: [stacksPolicy], activePolicyId: stacksPolicy.id }),
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
 
     const [popup] = await Promise.all([
       context.waitForEvent('page'),
       openStxCallContract(page, TEST_ACCOUNT_2_STX_ADDRESS),
     ]);
-    await popup.waitForTimeout(1500);
 
     await test
       .expect(popup.getByRole('button', { name: 'Approve' }))
       .toBeVisible({ timeout: 20_000 });
-    await test.expect(popup.locator('text="Propose transaction"')).toHaveCount(0);
+    await test.expect(popup.getByText('Propose transaction', { exact: true })).toHaveCount(0);
   });
 
   test('connecting with a policy persists the binding and later requests propose', async ({
@@ -144,22 +152,18 @@ test.describe('RPC: per-origin policy binding', () => {
   }) => {
     test.slow();
 
-    await overrideLaunchDarklyFlags(context, {
-      releaseAddAccount: true,
-      enableAllowPolicyAccounts: true,
-    });
     await mockProposeMultisigTransaction(context);
     await mockFundedStacksAddress(context, stacksPolicy.address);
     await onboardingPage.signInWithTestAccount(
       extensionId,
       policyStateOverrides({ policies: [stacksPolicy], activePolicyId: stacksPolicy.id })
     );
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
 
     const requestPromise = initiateGetAddresses(page, { allowPolicyAccounts: true });
     await approveGetAddresses(context);
     const connectResult = await requestPromise;
-    test.expect(connectResult.result.addresses).toEqual([
+    test.expect(getResponseAddresses(connectResult)).toEqual([
       {
         symbol: 'STX',
         kind: 'multisig',
@@ -172,12 +176,13 @@ test.describe('RPC: per-origin policy binding', () => {
     const permission = await readPersistedPermission(page, extensionId)();
     test.expect(permission.policyId).toBe(stacksPolicy.id);
 
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
     const [result] = await Promise.all([
       requestStxCallContract(page, TEST_ACCOUNT_2_STX_ADDRESS),
       clickPropose(context),
     ]);
 
+    assertExistence(result, 'Expected result');
     delete result.id;
 
     test.expect(result.result).toMatchObject({
@@ -194,30 +199,26 @@ test.describe('RPC: per-origin policy binding', () => {
   }) => {
     test.slow();
 
-    await overrideLaunchDarklyFlags(context, {
-      releaseAddAccount: true,
-      enableAllowPolicyAccounts: true,
-    });
     await mockProposeMultisigTransaction(context);
     await mockFundedStacksAddress(context, testnetStacksPolicy.address);
     await onboardingPage.signInWithTestAccount(extensionId, {
       ...getConnectedTestAppPermissionsState({ policyId: testnetStacksPolicy.id }),
       ...policyStateOverrides({ policies: [testnetStacksPolicy] }),
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
 
     const resultPromise = requestStxCallContract(page, TEST_ACCOUNT_2_STX_ADDRESS);
     const popup = await context.waitForEvent('page');
     const proposeRequestPromise = popup.waitForRequest('**/v1/multisig-ext/propose');
-    await popup.waitForTimeout(1500);
-    await popup.locator('text="Propose transaction"').click({ timeout: 20_000 });
+    await popup.getByText('Propose transaction', { exact: true }).click({ timeout: 20_000 });
 
     const proposeRequest = await proposeRequestPromise;
-    const proposeBody = proposeRequest.postDataJSON();
+    const proposeBody = proposeRequestBodySchema.parse(proposeRequest.postDataJSON());
     test.expect(proposeBody.multisigAddress).toBe(testnetStacksPolicy.address);
     test.expect(proposeBody.rawPayload.startsWith('80')).toBe(true);
 
     const result = await resultPromise;
+    assertExistence(result, 'Expected result');
     test.expect(result.result).toMatchObject({
       proposalId: exampleMultisigTransactionId,
       status: 'proposed',
@@ -232,20 +233,16 @@ test.describe('RPC: per-origin policy binding', () => {
   }) => {
     test.slow();
 
-    await overrideLaunchDarklyFlags(context, {
-      releaseAddAccount: true,
-      enableAllowPolicyAccounts: true,
-    });
     await onboardingPage.signInWithTestAccount(extensionId, {
       ...getConnectedTestAppPermissionsState({ policyId: stacksPolicy.id }),
       ...policyStateOverrides({ policies: [stacksPolicy] }),
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
 
     const requestPromise = initiateGetAddresses(page, { allowPolicyAccounts: true });
     await approveGetAddresses(context);
     const connectResult = await requestPromise;
-    test.expect(connectResult.result.addresses).toEqual([
+    test.expect(getResponseAddresses(connectResult)).toEqual([
       {
         symbol: 'STX',
         kind: 'multisig',
@@ -267,15 +264,11 @@ test.describe('RPC: per-origin policy binding', () => {
   }) => {
     test.slow();
 
-    await overrideLaunchDarklyFlags(context, {
-      releaseAddAccount: true,
-      enableAllowPolicyAccounts: true,
-    });
     await onboardingPage.signInWithTestAccount(extensionId, {
       ...getConnectedTestAppPermissionsState({ policyId: stacksPolicy.id }),
       ...policyStateOverrides({ policies: [stacksPolicy] }),
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
 
     const requestPromise = initiateGetAddresses(page, { allowPolicyAccounts: true });
     const popup = await context.waitForEvent('page');
@@ -291,11 +284,7 @@ test.describe('RPC: per-origin policy binding', () => {
 
     const connectResult = await requestPromise;
     test
-      .expect(
-        connectResult.result.addresses.some(
-          (address: { kind?: string }) => address.kind === 'single-sig'
-        )
-      )
+      .expect(getResponseAddresses(connectResult).some(address => address.kind === 'single-sig'))
       .toBe(true);
 
     const permission = await readPersistedPermission(page, extensionId)();

@@ -15,7 +15,11 @@ export function UnlockHeader() {
     <Header>
       <HeaderGrid
         leftCol={
-          <LogoBox onClick={() => navigate(RouteUrls.Home)} hideBelow={undefined} hideFrom="sm" />
+          <LogoBox
+            onClick={() => void navigate(RouteUrls.Home)}
+            hideBelow={undefined}
+            hideFrom="sm"
+          />
         }
         rightCol={
           <HeaderGridRightCol>

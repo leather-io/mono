@@ -1,7 +1,7 @@
 import type { BlockchainActivityView } from '@leather.io/features';
 import type { MarketData, MultisigTransactionSummary } from '@leather.io/models';
 
-import type { ProposalPayloadContext } from '../transactions/decode-proposal-summary';
+import type { ProposalPayloadContext } from '../transactions/decode-proposal-payload';
 import {
   type MultisigActivityClassification,
   type ProposalTokenInfo,

@@ -5,8 +5,8 @@ import {
   ChainId,
   STACKS_MAINNET,
   STACKS_TESTNET,
-  StacksNetwork,
-  StacksNetworkName,
+  type StacksNetwork,
+  type StacksNetworkName,
   TransactionVersion,
 } from '@stacks/network';
 
@@ -15,13 +15,13 @@ import {
   bitcoinUnitsKeyedByName,
 } from '@leather.io/constants';
 import {
-  NetworkConfiguration,
+  type NetworkConfiguration,
   WalletDefaultNetworkConfigurationIds,
   defaultNetworksKeyedById,
 } from '@leather.io/models';
 import { whenStacksChainId } from '@leather.io/stacks';
 
-import type { RootState } from '..';
+import type { RootState } from '../store';
 
 function selectSettings(state: RootState) {
   return state.settings;
@@ -93,6 +93,8 @@ export const selectLanguagePreferenceSource = createSelector(
 
 export const selectAssetVisibility = createSelector(selectSettings, state => state.assetVisibility);
 
+export const selectTokenPreset = createSelector(selectSettings, state => state.tokenPreset);
+
 export const selectCurrentAccount = createSelector(selectSettings, state => state.currentAccount);
 
 export const selectAppIconPreference = createSelector(
@@ -105,8 +107,10 @@ export function usePrivacyMode() {
   return privacyMode === 'hidden';
 }
 
+const stacksMainnetChainId: number = ChainId.Mainnet;
+
 function getNetworkFromChainId(chainId: number) {
-  if (chainId === ChainId.Mainnet) return STACKS_MAINNET;
+  if (chainId === stacksMainnetChainId) return STACKS_MAINNET;
   return STACKS_TESTNET;
 }
 

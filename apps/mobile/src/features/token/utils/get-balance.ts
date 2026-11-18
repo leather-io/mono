@@ -1,7 +1,7 @@
-import { FetchState } from '@/components/loading';
+import { type FetchState } from '@/components/loading';
 
 import {
-  TokenBalance,
+  type TokenBalance,
   isAccountQuotedBtcBalance,
   isAddressQuotedStxBalance,
   isSip10Balance,

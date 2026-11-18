@@ -1,18 +1,20 @@
 import { useCallback } from 'react';
 
-import * as yup from 'yup';
+import { AuthType } from '@stacks/transactions';
+import { z } from 'zod';
 
-import { TransactionTypes, getStacksBurnAddress } from '@leather.io/stacks';
-import { stxToMicroStx } from '@leather.io/utils';
+import {
+  TransactionTypes,
+  generateStacksUnsignedTransaction,
+  getStacksBurnAddress,
+} from '@leather.io/stacks';
+import { createMoney, stxToMicroStx } from '@leather.io/utils';
 
 import { useRefreshAllAccountData } from '@app/common/hooks/account/use-refresh-all-account-data';
-import {
-  type GenerateUnsignedTransactionOptions,
-  generateUnsignedTransaction,
-} from '@app/common/transactions/stacks/generate-unsigned-txs';
 import { StacksTransactionActionType } from '@app/common/transactions/stacks/transaction.utils';
+import { useStacksBroadcastTransaction } from '@app/common/transactions/stacks/use-stacks-broadcast-transaction';
 import { stxFeeValidator } from '@app/common/validation/forms/fee-validators';
-import { useStacksBroadcastTransaction } from '@app/features/stacks-transaction-request/hooks/use-legacy-stacks-broadcast-transaction';
+import { useToast } from '@app/features/toasts/use-toast';
 import { useStxAddressAvailableUnlockedBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { useStacksRawTransaction } from '@app/query/stacks/transactions/raw-transaction-by-id.hooks';
 import { useGetTransactionByIdQuery } from '@app/query/stacks/transactions/transactions-by-id.query';
@@ -29,6 +31,7 @@ interface UseStacksTransactionActionArgs {
 
 export function useStacksTransactionAction({ actionType, txid }: UseStacksTransactionActionArgs) {
   const refreshAccountData = useRefreshAllAccountData();
+  const toast = useToast();
   const { stacksBroadcastTransaction, isBroadcasting } = useStacksBroadcastTransaction({
     token: 'STX',
     actionType,
@@ -37,7 +40,7 @@ export function useStacksTransactionAction({ actionType, txid }: UseStacksTransa
 
   const stacksAddress = useCurrentStacksAccountAddress();
   const availableUnlockedBalance = useStxAddressAvailableUnlockedBalance(stacksAddress);
-  const validationSchema = yup.object({ fee: stxFeeValidator(availableUnlockedBalance) });
+  const validationSchema = z.object({ fee: stxFeeValidator(availableUnlockedBalance) });
 
   const { data: tx, isLoading: isLoadingTx } = useGetTransactionByIdQuery(txid);
   const { isLoadingRawTx, rawTx } = useStacksRawTransaction(txid);
@@ -48,19 +51,16 @@ export function useStacksTransactionAction({ actionType, txid }: UseStacksTransa
   const onSubmitCancelTx = useCallback(
     async (fee: number) => {
       if (!tx || !rawTx || !account) return;
-      const options: GenerateUnsignedTransactionOptions = {
+      const newTx = await generateStacksUnsignedTransaction({
+        txType: TransactionTypes.StxTokenTransfer,
         publicKey: account.stxPublicKey,
-        nonce: tx.nonce,
-        fee: stxToMicroStx(fee).toNumber(),
-        txData: {
-          txType: TransactionTypes.StxTokenTransfer,
-          recipient: getStacksBurnAddress(network.chainId),
-          amount: 1,
-          memo: '_cancel transaction',
-          network: network,
-        } as any,
-      };
-      const newTx = await generateUnsignedTransaction(options);
+        nonce: tx.sender.nonce,
+        fee: createMoney(stxToMicroStx(fee), 'STX'),
+        recipient: getStacksBurnAddress(network.chainId),
+        amount: createMoney(1, 'STX'),
+        memo: '_cancel transaction',
+        network,
+      });
       await refreshAccountData();
       await stacksBroadcastTransaction(newTx);
     },
@@ -70,11 +70,17 @@ export function useStacksTransactionAction({ actionType, txid }: UseStacksTransa
   const onSubmitIncreaseFeeTx = useCallback(
     async (fee: number) => {
       if (!tx || !rawTx) return;
+      if (rawTx.auth.authType === AuthType.Sponsored) {
+        toast.error(
+          'The fee of a sponsored transaction is paid by its sponsor and cannot be increased'
+        );
+        return;
+      }
       rawTx.setFee(stxToMicroStx(fee).toString());
       await refreshAccountData();
       await stacksBroadcastTransaction(rawTx);
     },
-    [tx, refreshAccountData, stacksBroadcastTransaction, rawTx]
+    [tx, toast, refreshAccountData, stacksBroadcastTransaction, rawTx]
   );
 
   function onSubmit(values: { fee?: number | undefined }) {

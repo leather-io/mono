@@ -18,7 +18,7 @@ import {
 
 import { isValidBitcoinNetworkAddress } from '@leather.io/bitcoin';
 import type { BitcoinNetworkModes } from '@leather.io/models';
-import { LeatherApiError } from '@leather.io/services';
+import { LeatherApiError, getErrorDetail } from '@leather.io/services';
 import { isValidStacksAddress } from '@leather.io/stacks';
 import { Button, InfoCircleIcon, useDebouncedValue } from '@leather.io/ui';
 
@@ -308,7 +308,7 @@ export function CreateVaultPage() {
     if (LeatherApiError.isLeatherApiError(error) && error.status === 409) {
       return 'A vault with this exact set of members already exists on this network. Add or remove a member to create a separate vault.';
     }
-    return error.message;
+    return getErrorDetail(error) ?? error.message;
   }
 
   const error = attempted ? (validationError() ?? backendError()) : null;
@@ -366,7 +366,7 @@ export function CreateVaultPage() {
                   chainLabel={chainLabel}
                   isPending={signIn.isPending}
                   onConnect={() => signIn.mutate()}
-                  error={signIn.error?.message}
+                  error={getErrorDetail(signIn.error)}
                 />
               </Box>
             )}

@@ -59,11 +59,38 @@ export function vaultThemeFromName(name: string | null | undefined): VaultTheme 
   return vaultThemes.find(theme => theme.name === name) ?? vaultThemes[fallbackVaultThemeId];
 }
 
-// Squircle radius for AvatarSq tiles — the prototype uses a soft-rounded
-// square; no token radius matches (tokens stop at lg = 12px / round).
-export const avatarSquircleRadius = '14px';
+export const accountIcons = [
+  'piggybank',
+  'sparkles',
+  'orange',
+  'saturn',
+  'car',
+  'alien',
+  'space',
+  'bank',
+  'rocket',
+  'folder',
+  'smile',
+  'code',
+  'zap',
+  'gift',
+  'palette',
+  'home',
+  'person',
+  'inbox',
+  'heart',
+  'flag',
+  'pizza',
+];
+
+export const defaultAccountIcon = 'piggybank';
+
+export const defaultVaultIcon = 'vault';
+
+export const vaultIcons = [defaultVaultIcon, ...accountIcons];
 
 // Account-icon glyph asset path (mask-image source, recolorable per theme).
 export function accountIconUrl(icon: string): string {
-  return `/multisig/icons/account/${icon}.svg`;
+  const knownIcon = vaultIcons.includes(icon) ? icon : defaultAccountIcon;
+  return `/multisig/icons/account/${knownIcon}.svg`;
 }

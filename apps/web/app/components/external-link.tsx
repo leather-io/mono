@@ -12,7 +12,7 @@ export function ExternalLink({ href, withIcon, children, ...props }: ExternalLin
     <styled.a
       textStyle="label.02"
       borderBottom="1px solid"
-      borderColor="ink.text-non-interactive"
+      borderColor="ink.border-default"
       href={href}
       target="_blank"
       rel="noopener noreferrer"

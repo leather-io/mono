@@ -3,11 +3,12 @@ import { RouterProvider } from 'react-router/dom';
 
 import * as Sentry from '@sentry/react';
 
+import { LoadingSpinner } from '@leather.io/ui';
+
 import { RouteUrls } from '@shared/route-urls';
 
 import { Content } from '@app/components/layout/layouts/content.layout';
 import { SwitchAccountLayout } from '@app/components/layout/layouts/switch-account.layout';
-import { LoadingSpinner } from '@app/components/loading-spinner';
 import { Container } from '@app/features/container/container';
 import { HomeHeader } from '@app/features/container/headers/home.header';
 import { CancelStacksTransactionSheet } from '@app/features/dialogs/transaction-action-dialog/cancel-stacks-transaction-sheet';
@@ -15,18 +16,14 @@ import { IncreaseBtcFeeSheet } from '@app/features/dialogs/transaction-action-di
 import { IncreaseStacksTransactionFeeSheet } from '@app/features/dialogs/transaction-action-dialog/increase-stacks-fee-sheet';
 import { RouterErrorBoundary } from '@app/features/errors/app-error-boundary';
 import { useFlags } from '@app/features/feature-flags';
-import { ledgerBitcoinTxSigningRoutes } from '@app/features/ledger/flows/bitcoin-tx-signing/ledger-bitcoin-sign-tx-container';
-import { ledgerJwtSigningRoutes } from '@app/features/ledger/flows/jwt-signing/ledger-sign-jwt.routes';
-import { requestBitcoinKeysRoutes } from '@app/features/ledger/flows/request-bitcoin-keys/ledger-request-bitcoin-keys';
-import { requestStacksKeysRoutes } from '@app/features/ledger/flows/request-stacks-keys/ledger-request-stacks-keys';
-import { ledgerStacksTxSigningRoutes } from '@app/features/ledger/flows/stacks-tx-signing/ledger-sign-stacks-tx-container';
-import { UnsupportedBrowserLayout } from '@app/features/ledger/generic-steps';
-import { ConnectLedgerStart } from '@app/features/ledger/generic-steps/connect-device/connect-ledger-start';
+import { LedgerFlowProvider } from '@app/features/ledger/flow/ledger-flow.context';
 import { TokenDetails } from '@app/features/token/token-details';
 import { AddWallet } from '@app/pages/add-wallet/add-wallet';
+import { AllBalancesPage } from '@app/pages/all-balances/all-balances';
+import { AllBalancesDetail } from '@app/pages/all-balances/all-balances-detail';
+import { BondHistoryPage } from '@app/pages/all-balances/bond-history';
 import { FundPage } from '@app/pages/fund/fund';
 import { Home } from '@app/pages/home/home';
-import { LegacyAccountAuth } from '@app/pages/legacy-account-auth/legacy-account-auth';
 import { ManageTokensPage } from '@app/pages/manage-tokens/manage-tokens';
 import { AddNetwork as CurrentAddNetwork } from '@app/pages/network/add-network';
 import { EditNetwork as CurrentEditNetwork } from '@app/pages/network/edit-network';
@@ -40,17 +37,11 @@ import { SellPage } from '@app/pages/sell/sell';
 import { BroadcastError } from '@app/pages/send/broadcast-error/broadcast-error';
 import { sendCryptoAssetFormRoutes } from '@app/pages/send/send-crypto-asset-form/send-crypto-asset-form.routes';
 import { SettingsPage } from '@app/pages/settings/settings';
-import {
-  bitcoinSwapLegacyRoutes,
-  stacksSwapLegacyRoutes,
-} from '@app/pages/swap-legacy/swap.routes';
 import { swapRoutes } from '@app/pages/swap/swap.routes';
 import { SelectTheme } from '@app/pages/theme/select-theme';
-import { UnauthorizedRequest } from '@app/pages/unauthorized-request/unauthorized-request';
 import { Unlock } from '@app/pages/unlock';
 import { ViewSecretKey } from '@app/pages/view-secret-key/view-secret-key';
 import { AccountGate } from '@app/routes/account-gate';
-import { legacyRequestRoutes } from '@app/routes/request-routes';
 import { rpcRequestRoutes } from '@app/routes/rpc-routes';
 
 import { OnboardingGate } from './onboarding-gate';
@@ -66,23 +57,18 @@ export function AppRoutes() {
 
 const sentryCreateBrowserRouter = Sentry.wrapCreateBrowserRouterV7(createHashRouter);
 
-export const homePageModalRoutes = (
-  <>
-    {ledgerStacksTxSigningRoutes}
-    {ledgerBitcoinTxSigningRoutes}
-    {requestBitcoinKeysRoutes}
-    {requestStacksKeysRoutes}
-    <Route path={RouteUrls.ConnectLedgerStart} element={<ConnectLedgerStart initialRoute="" />} />
-    <Route path={RouteUrls.LedgerUnsupportedBrowser} element={<UnsupportedBrowserLayout />} />
-  </>
-);
-
 function useAppRoutes() {
-  const { releaseOnramperBuy, releaseOnramperSell, swapRevamp } = useFlags();
+  const { releaseOnramperBuy, releaseOnramperSell } = useFlags();
 
   return sentryCreateBrowserRouter(
     createRoutesFromElements(
-      <Route element={<Container />}>
+      <Route
+        element={
+          <LedgerFlowProvider>
+            <Container />
+          </LedgerFlowProvider>
+        }
+      >
         <Route key="error" errorElement={<RouterErrorBoundary />}>
           <Route
             element={
@@ -101,31 +87,21 @@ function useAppRoutes() {
                   <Home />
                 </AccountGate>
               }
-            >
-              {homePageModalRoutes}
-            </Route>
+            />
 
             <Route
               path={RouteUrls.IncreaseStacksFee}
               element={<IncreaseStacksTransactionFeeSheet />}
-            >
-              {ledgerStacksTxSigningRoutes}
-            </Route>
+            />
             <Route
               path={RouteUrls.CancelStacksTransaction}
               element={<CancelStacksTransactionSheet />}
-            >
-              {ledgerStacksTxSigningRoutes}
-            </Route>
+            />
             <Route
               path={`${RouteUrls.IncreaseStacksFee}/${RouteUrls.BroadcastError}`}
               element={<BroadcastError />}
             />
-            <Route path={RouteUrls.IncreaseBtcFee} element={<IncreaseBtcFeeSheet />}>
-              {ledgerBitcoinTxSigningRoutes}
-            </Route>
-
-            {ledgerStacksTxSigningRoutes}
+            <Route path={RouteUrls.IncreaseBtcFee} element={<IncreaseBtcFeeSheet />} />
           </Route>
           {/* Page Routes */}
 
@@ -133,11 +109,6 @@ function useAppRoutes() {
             path={`${RouteUrls.IncreaseStacksFee}/${RouteUrls.BroadcastError}`}
             element={<BroadcastError />}
           />
-          <Route path={RouteUrls.IncreaseBtcFee} element={<IncreaseBtcFeeSheet />}>
-            {ledgerBitcoinTxSigningRoutes}
-          </Route>
-
-          {ledgerStacksTxSigningRoutes}
 
           <Route
             path={RouteUrls.AddNetwork}
@@ -191,7 +162,6 @@ function useAppRoutes() {
           />
 
           <Route path={RouteUrls.Unlock} element={<Unlock />} />
-          <Route path={RouteUrls.UnauthorizedRequest} element={<UnauthorizedRequest />} />
           <Route
             path={RouteUrls.RequestError}
             element={
@@ -201,8 +171,7 @@ function useAppRoutes() {
             }
           />
 
-          {swapRevamp ? swapRoutes : bitcoinSwapLegacyRoutes}
-          {swapRevamp ? swapRoutes : stacksSwapLegacyRoutes}
+          {swapRoutes}
 
           {/* OnBoarding Routes */}
           <Route
@@ -212,16 +181,7 @@ function useAppRoutes() {
                 <WelcomePage />
               </OnboardingGate>
             }
-          >
-            <Route path={RouteUrls.ConnectLedgerStart} element={<ConnectLedgerStart />} />
-            <Route
-              path={RouteUrls.LedgerUnsupportedBrowser}
-              element={<UnsupportedBrowserLayout />}
-            />
-
-            {requestBitcoinKeysRoutes}
-            {requestStacksKeysRoutes}
-          </Route>
+          />
 
           <Route
             path={RouteUrls.BackUpSecretKey}
@@ -300,19 +260,32 @@ function useAppRoutes() {
             }
           />
 
-          {/* Popup Routes */}
-          {/* ChooseAccount is a popup as shown only in popup when decodedAuthRequest in set-password  */}
           <Route
-            path={RouteUrls.ChooseAccount}
+            path={RouteUrls.AllBalances}
             element={
               <AccountGate>
-                <LegacyAccountAuth />
+                <AllBalancesPage />
               </AccountGate>
             }
-          >
-            {ledgerJwtSigningRoutes}
-          </Route>
-          {legacyRequestRoutes}
+          />
+          <Route
+            path={RouteUrls.AllBalancesDetail}
+            element={
+              <AccountGate>
+                <AllBalancesDetail />
+              </AccountGate>
+            }
+          />
+          <Route
+            path={RouteUrls.AllBalancesBondHistory}
+            element={
+              <AccountGate>
+                <BondHistoryPage />
+              </AccountGate>
+            }
+          />
+
+          {/* Popup Routes */}
           {rpcRequestRoutes}
         </Route>
 

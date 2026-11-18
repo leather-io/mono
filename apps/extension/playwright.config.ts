@@ -11,10 +11,10 @@ export default defineConfig({
   // Extensions live cross-worker meaning `chrome.storage` is shared. Disabling
   // `fullyParallel` means fewer tests run at the same time, but ensures a
   // truely new context is used each time
-  fullyParallel: false,
+  fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 3 : undefined,
   reporter: [
     [process.env.CI ? 'github' : 'list'],
     [process.env.CI ? 'blob' : 'html', { open: 'never' }],
@@ -23,6 +23,7 @@ export default defineConfig({
     // Traces are heavy so we want to use them sparingly, but having full trace
     // to reference of the latest dev build is useful to inspect.
     trace: process.env.BRANCH_NAME === 'dev' ? 'on' : 'on-first-retry',
+    timezoneId: 'UTC',
   },
   projects: [
     {
@@ -34,5 +35,6 @@ export default defineConfig({
     command: 'pnpm dev:test-app',
     port: 3000,
     timeout: 15000,
+    reuseExistingServer: !process.env.CI,
   },
 });

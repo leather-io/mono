@@ -1,15 +1,20 @@
 import React from 'react';
 
+import * as btc from '@scure/btc-signer';
 import { STACKS_MAINNET } from '@stacks/network';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 import { vi } from 'vitest';
 
-import { MarketData, SwapQuote } from '@leather.io/models';
-import { AccountSwapAsset } from '@leather.io/services';
+import { type MarketData, type NetworkConfiguration, type SwapQuote } from '@leather.io/models';
+import { type AccountSwapAsset } from '@leather.io/services';
 
-import { DisabledPairRule, SwapDependencies } from '../../swap-state.types';
-import { UseSwapStateProps, useSwapState } from '../../use-swap-state';
+import {
+  type DisabledPairRule,
+  type SwapDependencies,
+  type TrackEvent,
+} from '../../swap-state.types';
+import { type UseSwapStateProps, useSwapState } from '../../use-swap-state';
 import { createAccountRequest } from './fixtures';
 import {
   createStubBitcoinCoinSelectionService,
@@ -36,11 +41,16 @@ vi.mock('@leather.io/utils', async () => {
 interface RenderUseSwapStateParams extends Omit<UseSwapStateProps, 'dependencies' | 'trackEvent'> {
   baseSwapAssets?: AccountSwapAsset[];
   targetSwapAssets?: AccountSwapAsset[];
+  network?: NetworkConfiguration;
   swapQuotes?: SwapQuote[];
+  getSwapQuotes?(): Promise<SwapQuote[]>;
+  getBaseSwapAssets?(): Promise<AccountSwapAsset[]>;
+  getTargetSwapAssets?(): Promise<AccountSwapAsset[]>;
   marketData: MarketData;
   maxSpendAmount?: number;
   dependencies?: Partial<SwapDependencies>;
   disabledPairs?: DisabledPairRule[];
+  trackEvent?: TrackEvent;
 }
 
 export function renderUseSwapState({
@@ -48,21 +58,33 @@ export function renderUseSwapState({
   baseSwapAssets,
   targetSwapAssets,
   swapQuotes,
+  getSwapQuotes,
+  getBaseSwapAssets,
+  getTargetSwapAssets,
   marketData,
   maxSpendAmount,
+  network,
   dependencies,
   disabledPairs,
+  trackEvent,
   ...rest
 }: Partial<RenderUseSwapStateParams> = {}) {
   const { result } = renderHookWithProviders(() =>
     useSwapState({
       quoteCurrencyPreference,
       disabledPairs,
-      trackEvent: () => Promise.resolve(),
+      trackEvent: trackEvent ?? (() => Promise.resolve()),
       dependencies: {
         accountRequest: createAccountRequest(),
         services: {
-          swapService: createStubSwapService({ baseSwapAssets, targetSwapAssets, swapQuotes }),
+          swapService: createStubSwapService({
+            baseSwapAssets,
+            targetSwapAssets,
+            swapQuotes,
+            getSwapQuotes,
+            getBaseSwapAssets,
+            getTargetSwapAssets,
+          }),
           marketDataService: createStubMarketDataService({ marketData }),
           bitcoinTransactionFeesService: createStubBitcoinTransactionFeesService(),
           bitcoinCoinSelectionService: createStubBitcoinCoinSelectionService({ maxSpendAmount }),
@@ -71,15 +93,14 @@ export function renderUseSwapState({
         stacks: {
           stacksSigner: createStubStacksSigner(),
           stacksNetwork: STACKS_MAINNET,
-          broadcast: () => Promise.resolve({ ok: true, txid: 'test-txid' }) as any,
+          broadcast: () => Promise.resolve({ ok: true, txid: 'test-txid' }),
           nextNonce: undefined,
         },
         bitcoin: {
           bitcoinPayer: createStubBitcoinPayer(),
-          network: createStubNetwork(),
-          sbtcClient: {} as any,
-          signBitcoinPsbt: () => ({}) as any,
-          broadcast: () => Promise.resolve('test-txid'),
+          network: network ?? createStubNetwork(),
+          signBitcoinPsbt: psbt => Promise.resolve(btc.Transaction.fromPSBT(psbt)),
+          broadcast: () => Promise.resolve({ status: 'accepted' as const }),
         },
         ...dependencies,
       },

@@ -1,32 +1,33 @@
 import type { BrowserContext, Page } from '@playwright/test';
+import { getResponseAddresses } from '@tests/leather-provider';
 import { TEST_PASSWORD } from '@tests/mocks/constants';
 import {
+  type OnboardingPage,
   getConnectedTestAppPermissionsState,
   makeLedgerTestAccountWalletState,
   testFingerprint,
 } from '@tests/page-object-models/onboarding.page';
 
 import type { SupportedBlockchains } from '@leather.io/models';
+import { assertExistence } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
+
+interface PersistedRootState {
+  appPermissions?: { entities?: Record<string, { accountIndex?: number } | undefined> };
+}
 
 const getAddressesMethods = ['getAddresses', 'stx_getAddresses'] as const;
 type GetAddressesMethods = (typeof getAddressesMethods)[number];
 
-function softwareBeforeEach() {
-  return () =>
-    test.beforeEach(
-      async ({ extensionId, onboardingPage }) =>
-        await onboardingPage.signInWithTestAccount(extensionId)
-    );
+function softwareSignIn() {
+  return (onboardingPage: OnboardingPage, extensionId: string) =>
+    onboardingPage.signInWithTestAccount(extensionId);
 }
 
-function ledgerBeforeEach(state: object) {
-  return () =>
-    test.beforeEach(
-      async ({ extensionId, onboardingPage }) =>
-        await onboardingPage.signInWithLedgerAccount(extensionId, state)
-    );
+function ledgerSignIn(state: object) {
+  return (onboardingPage: OnboardingPage, extensionId: string) =>
+    onboardingPage.signInWithLedgerAccount(extensionId, state);
 }
 
 function getExpectedResponseForKeys(keys: SupportedBlockchains[]) {
@@ -77,9 +78,9 @@ async function interceptRequestPopup(context: BrowserContext) {
   return context.waitForEvent('page');
 }
 
-async function initiateGetAddresses(page: Page, eventName: GetAddressesMethods, params?: any) {
+async function initiateGetAddresses(page: Page, eventName: GetAddressesMethods, params?: unknown) {
   return page.evaluate(
-    ({ eventName, params }) => (window as any).LeatherProvider?.request(eventName, params),
+    ({ eventName, params }) => window.LeatherProvider?.request(eventName, params),
     { eventName, params }
   );
 }
@@ -98,26 +99,28 @@ getAddressesMethods.forEach(method => {
 
     const specs = {
       softwareWallet: {
-        beforeEach: softwareBeforeEach(),
+        signIn: softwareSignIn(),
         expectedResult: getExpectedResponseForKeys(['bitcoin', 'stacks']),
       },
       ledgerWithBitcoinAndStacksKey: {
-        beforeEach: ledgerBeforeEach(makeLedgerTestAccountWalletState(['bitcoin', 'stacks'])),
+        signIn: ledgerSignIn(makeLedgerTestAccountWalletState(['bitcoin', 'stacks'])),
         expectedResult: getExpectedResponseForKeys(['bitcoin', 'stacks']),
       },
       ledgerWithStacksKeysOnly: {
-        beforeEach: ledgerBeforeEach(makeLedgerTestAccountWalletState(['stacks'])),
+        signIn: ledgerSignIn(makeLedgerTestAccountWalletState(['stacks'])),
         expectedResult: getExpectedResponseForKeys(['stacks']),
       },
       ledgerWithBitcoinKeysOnly: {
-        beforeEach: ledgerBeforeEach(makeLedgerTestAccountWalletState(['bitcoin'])),
+        signIn: ledgerSignIn(makeLedgerTestAccountWalletState(['bitcoin'])),
         expectedResult: getExpectedResponseForKeys(['bitcoin']),
       },
     } as const;
 
-    Object.entries(specs).forEach(([walletPreset, { beforeEach, expectedResult }]) => {
+    Object.entries(specs).forEach(([walletPreset, { signIn, expectedResult }]) => {
       test.describe(`${walletPreset} `, () => {
-        beforeEach();
+        test.beforeEach(async ({ extensionId, onboardingPage }) => {
+          await signIn(onboardingPage, extensionId);
+        });
 
         test('the promise resolves with addresses successfully', async ({ page, context }) => {
           await page.goto('localhost:3000');
@@ -127,7 +130,7 @@ getAddressesMethods.forEach(method => {
           await clickConnectLeatherButton(popup);
 
           const result = await getAddressesPromise;
-          if (!result) throw new Error('Expected result');
+          assertExistence(result, 'Expected result');
 
           test.expect(result).toEqual(expectedResult);
         });
@@ -170,7 +173,7 @@ getAddressesMethods.forEach(method => {
 
             const result = await getAddressesPromise;
             test
-              .expect(result.result.addresses[0].address)
+              .expect(getResponseAddresses(result)[0].address)
               .toEqual('tb1q4qgnjewwun2llgken94zqjrx5kpqqycaz5522d');
           });
 
@@ -191,7 +194,7 @@ getAddressesMethods.forEach(method => {
             await clickConnectLeatherButton(popup);
             const result = await getAddressesPromise;
             test
-              .expect(result.result.addresses[0].address)
+              .expect(getResponseAddresses(result)[0].address)
               .toEqual('bc1qr9wmz342txkcmxxq5ysmfqrd5rvmxtu6nldjgp');
           });
         }
@@ -221,7 +224,7 @@ test.describe('Rpc: getAddresses defaults', () => {
 
     const result = await getAddressesPromise;
     test
-      .expect(result.result.addresses[0].address)
+      .expect(getResponseAddresses(result)[0].address)
       .toEqual('bc1q530dz4h80kwlzywlhx2qn0k6vdtftd93c499yq');
   });
 
@@ -242,15 +245,17 @@ test.describe('Rpc: getAddresses defaults', () => {
 
     const result = await getAddressesPromise;
     test
-      .expect(result.result.addresses[0].address)
+      .expect(getResponseAddresses(result)[0].address)
       .toEqual('bc1qr9wmz342txkcmxxq5ysmfqrd5rvmxtu6nldjgp');
 
     await page.goto(`chrome-extension://${extensionId}/index.html`);
-    const permission = await page.evaluate(async () =>
-      chrome.storage.local
-        .get(['persist:root'])
-        .then(state => state['persist:root'].appPermissions.entities['localhost:3000'])
-    );
+    const permission = await page.evaluate(async () => {
+      const state = await chrome.storage.local.get<{ 'persist:root': PersistedRootState }>([
+        'persist:root',
+      ]);
+      return state['persist:root'].appPermissions?.entities?.['localhost:3000'];
+    });
+    assertExistence(permission, 'Expected persisted permission');
     test.expect(permission.accountIndex).toBe(1);
   });
 });

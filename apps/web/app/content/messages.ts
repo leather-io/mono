@@ -18,22 +18,25 @@ export const errorMessages = {
 export const validationMessages = {
   enterAmount: 'Enter an amount of STX',
   invalidAmount: 'STX amount must be a number',
+  amountTooPrecise: 'STX amounts support at most 6 decimal places',
   mustStackAmount: 'You must stack an amount',
   availableBalance: 'Available balance is',
-  mustStackAtLeast: 'You must stack at least',
   mustDelegateMore: "You must delegate more than you've already stacked",
   mustDelegateAtLeast: 'You must delegate at least',
   addressNotValid: 'Address is not valid',
   addressIncorrectNetwork: 'Address is for incorrect network',
-} as const;
-
-export const statusMessages = {
-  waitingForTxConfirmation: 'Waiting for transaction confirmation',
-  waitingForCycleToStart: 'Waiting for the cycle to start',
-  stackingReady:
-    'Your STX are ready for stacking. Once the next cycle starts the network will determine if and how many slots are claimed.',
-  stackingSubmitted:
-    'A Stacking request was successfully submitted to the blockchain. Once confirmed, an additional amount will be stacking.',
-  errorLoadingData: 'Error while loading data, try reloading the page.',
-  youAreStacking: "You're stacking",
+  cannotStackMoreThanBalance: 'You cannot stake more than your available balance',
+  chooseStakingCycles: 'Choose between 1 and 96 cycles',
+  enterMaxWithdrawalFee: 'Enter a max withdrawal fee in sats',
+  maxWithdrawalFeeTooLow: 'Max withdrawal fee must be at least 1,000 sats',
+  minClaimNotNumeric: 'Minimum claim must be a number of sats',
+  minClaimTooLow(minSats: string) {
+    return `Minimum claim must be at least ${minSats} sats (enough to clear the max fee plus the 546 sats dust limit)`;
+  },
+  stakeBelowPoolMinimum(poolName: string, minStx: string) {
+    return `${poolName} requires a stake of at least ${minStx} STX`;
+  },
+  totalStakeBelowPoolMinimum(poolName: string, minStx: string) {
+    return `${poolName} requires a total stake of at least ${minStx} STX; add more STX to switch`;
+  },
 } as const;

@@ -46,23 +46,67 @@ describe('decodeAuthIdentity', () => {
 });
 
 describe('buildSignInMessage', () => {
-  it('builds the structured sign-in message bound to the network mode', () => {
-    expect(buildSignInMessage('stx:mainnet', 1780651887)).toEqual({
-      message: 'Sign in to Leather\nNetwork: mainnet\nIssued: 1780651887',
+  it('builds the sign-in message bound to domain, application, and network mode', () => {
+    expect(
+      buildSignInMessage({
+        network: 'stx:mainnet',
+        domain: 'https://app.leather.io',
+        application: ['multisig'],
+        timestamp: 1780651887,
+      })
+    ).toEqual({
+      message:
+        'Sign in to Leather\nDomain: https://app.leather.io\nApplication: multisig\nNetwork: mainnet\nIssued: 1780651887',
       timestamp: 1780651887,
     });
   });
 
   it('reflects the testnet network mode', () => {
-    expect(buildSignInMessage('btc:testnet', 1780651887).message).toBe(
-      'Sign in to Leather\nNetwork: testnet\nIssued: 1780651887'
+    expect(
+      buildSignInMessage({
+        network: 'btc:testnet',
+        domain: 'https://app.leather.io',
+        application: ['multisig'],
+        timestamp: 1780651887,
+      }).message
+    ).toBe(
+      'Sign in to Leather\nDomain: https://app.leather.io\nApplication: multisig\nNetwork: testnet\nIssued: 1780651887'
     );
   });
 
   it('reflects the regtest network mode', () => {
-    expect(buildSignInMessage('btc:regtest', 1780651887).message).toBe(
-      'Sign in to Leather\nNetwork: regtest\nIssued: 1780651887'
+    expect(
+      buildSignInMessage({
+        network: 'btc:regtest',
+        domain: 'https://app.leather.io',
+        application: ['multisig'],
+        timestamp: 1780651887,
+      }).message
+    ).toBe(
+      'Sign in to Leather\nDomain: https://app.leather.io\nApplication: multisig\nNetwork: regtest\nIssued: 1780651887'
     );
+  });
+
+  it('keeps the port in a localhost domain', () => {
+    expect(
+      buildSignInMessage({
+        network: 'btc:regtest',
+        domain: 'http://localhost:4000',
+        application: ['multisig'],
+        timestamp: 1780651887,
+      }).message
+    ).toContain('Domain: http://localhost:4000');
+  });
+
+  it('emits an empty application list as an empty value', () => {
+    expect(
+      buildSignInMessage({
+        network: 'stx:mainnet',
+        domain: 'https://app.leather.io',
+        application: [],
+        timestamp: 1780651887,
+      }).message
+    ).toContain('Application: \nNetwork: mainnet');
   });
 });
 

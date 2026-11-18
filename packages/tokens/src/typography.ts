@@ -145,6 +145,13 @@ function getTextVariants({ platform }: { platform: Platform }) {
     lineHeight: transformSize(20),
     ...webFontLigatures,
   };
+  const caption02 = {
+    ...commonDiatypeStyles,
+    fontSize: transformSize(12),
+    fontWeight: transformWeight(400),
+    lineHeight: transformSize(16),
+    ...webFontLigatures,
+  };
 
   const code = {
     ...commonFiracodeStyles,
@@ -174,6 +181,7 @@ function getTextVariants({ platform }: { platform: Platform }) {
     body01,
     body02,
     caption01,
+    caption02,
     code,
     address,
     defaults: body01,
@@ -241,6 +249,10 @@ export function getWebTextVariants() {
     'caption.01': {
       description: 'caption.01',
       value: textVariants.caption01,
+    },
+    'caption.02': {
+      description: 'caption.02',
+      value: textVariants.caption02,
     },
 
     code: {

@@ -1,10 +1,14 @@
 import { TEST_ACCOUNT_1_STX_ADDRESS, TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import { mockMainnetTestAccountStacksConfirmedTxsRequests } from '@tests/mocks/mock-stacks-txs';
 import type { HomePage } from '@tests/page-object-models/home.page';
-import { makeLedgerTestAccountWalletState } from '@tests/page-object-models/onboarding.page';
+import {
+  makeLedgerLiveLedgerWalletState,
+  makeLedgerTestAccountWalletState,
+} from '@tests/page-object-models/onboarding.page';
 import { ActivitySelectors } from '@tests/selectors/activity.selectors';
 import { CoreAssetSelectors } from '@tests/selectors/mocked-tokens.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
+import { expectToSettleAt } from '@tests/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -12,13 +16,17 @@ const specs = {
   withBitcoinAndStacksKey: makeLedgerTestAccountWalletState(['bitcoin', 'stacks']),
   withStacksKeysOnly: makeLedgerTestAccountWalletState(['stacks']),
   withBitcoinKeysOnly: makeLedgerTestAccountWalletState(['bitcoin']),
+  withLedgerLiveStacksKeys: makeLedgerLiveLedgerWalletState(),
 };
 
-async function interceptBitcoinRequests(homePage: HomePage) {
-  const requestPromise = homePage.page.waitForRequest(/bestinslot|mempool\.space/, {
-    timeout: 1000,
+const bitcoinApiUrl = /bestinslot|mempool\.space/;
+
+function trackBitcoinRequests(homePage: HomePage) {
+  const bitcoinRequestUrls: string[] = [];
+  homePage.page.on('request', request => {
+    if (bitcoinApiUrl.test(request.url())) bitcoinRequestUrls.push(request.url());
   });
-  return requestPromise;
+  return bitcoinRequestUrls;
 }
 
 test.describe('App with Ledger', () => {
@@ -26,14 +34,16 @@ test.describe('App with Ledger', () => {
     test.describe(testName, () => {
       test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
         await globalPage.setupAndUseApiCalls(extensionId);
-        await onboardingPage.signInWithLedgerAccount(extensionId, state);
         await mockMainnetTestAccountStacksConfirmedTxsRequests(globalPage.page);
+        await onboardingPage.signInWithLedgerAccount(extensionId, state);
       });
 
       test('that homepage renders correctly', async ({ homePage }) => {
-        await test.expect(homePage.page.locator('text="Send"').first()).toBeVisible();
-        await test.expect(homePage.page.locator('text="Receive"').first()).toBeVisible();
-        await test.expect(homePage.page.locator('text="Swap"').first()).toBeVisible();
+        await test.expect(homePage.page.getByText('Send', { exact: true }).first()).toBeVisible();
+        await test
+          .expect(homePage.page.getByText('Receive', { exact: true }).first())
+          .toBeVisible();
+        await test.expect(homePage.page.getByText('Swap', { exact: true }).first()).toBeVisible();
       });
 
       test('receive modal opens', async ({ homePage }) => {
@@ -66,20 +76,41 @@ test.describe('App with Ledger', () => {
           await test.expect(connectBitcoin).toBeVisible();
         });
 
+        test('connecting bitcoin opens the ledger flow without changing the url', async ({
+          homePage,
+        }) => {
+          const urlBeforeConnect = homePage.page.url();
+
+          await homePage.assetList
+            .getByTestId(CoreAssetSelectors.ConnectLedgerBitcoin)
+            .getByRole('button', { name: 'Connect Bitcoin' })
+            .click();
+          await test.expect(homePage.page.getByText('Connect & unlock your Ledger')).toBeVisible();
+          test.expect(homePage.page.url()).toEqual(urlBeforeConnect);
+
+          await homePage.page.keyboard.press('Escape');
+          await test.expect(homePage.page.getByText('Connect & unlock your Ledger')).toBeHidden();
+          await test
+            .expect(homePage.assetList.getByTestId(CoreAssetSelectors.ConnectLedgerBitcoin))
+            .toBeVisible();
+          test.expect(homePage.page.url()).toEqual(urlBeforeConnect);
+        });
+
         test('stacks address is shown by default', async ({ homePage }) => {
           const stacksAddress = await homePage.getReceiveStxAddress();
           test.expect(stacksAddress).toEqual(TEST_ACCOUNT_1_STX_ADDRESS);
         });
 
         test('there are no bitcoin requests', async ({ homePage }) => {
-          const requestPromise = interceptBitcoinRequests(homePage);
+          const bitcoinRequestUrls = trackBitcoinRequests(homePage);
 
           await homePage.page.getByTestId(SettingsSelectors.CurrentAccountDisplayName).click();
-
           await test
-            .expect(async () => await test.expect(requestPromise).rejects.toThrowError())
-            .toPass()
-            .catch();
+            .expect(homePage.page.getByRole('heading', { name: 'Select account' }))
+            .toBeVisible();
+          await expectToSettleAt(() => Promise.resolve(bitcoinRequestUrls.length), 0);
+
+          test.expect(bitcoinRequestUrls).toEqual([]);
         });
 
         test('that you can switch accounts', async ({ homePage }) => {
@@ -109,10 +140,25 @@ test.describe('App with Ledger', () => {
           const activityList = homePage.page.getByTestId(ActivitySelectors.ActivityList);
           const noActivityText = homePage.page.getByText('No activity yet');
 
-          await test.expect(activityList.or(noActivityText)).toBeVisible();
+          await test.expect(activityList.or(noActivityText).first()).toBeVisible();
 
           test.expect(errors).toHaveLength(0);
           test.expect(consoleErrors).toHaveLength(0);
+        });
+      }
+
+      if (testName === 'withLedgerLiveStacksKeys') {
+        test('stacks address resolves from ledger live derivation paths', async ({ homePage }) => {
+          const stacksAddress = await homePage.getReceiveStxAddress();
+          test.expect(stacksAddress).toEqual(TEST_ACCOUNT_1_STX_ADDRESS);
+        });
+
+        test('that you can switch accounts with ledger live derivation paths', async ({
+          homePage,
+        }) => {
+          await homePage.switchAccount(1);
+          const stacksAddress = await homePage.getReceiveStxAddress();
+          test.expect(stacksAddress).toEqual(TEST_ACCOUNT_2_STX_ADDRESS);
         });
       }
 
@@ -138,7 +184,7 @@ test.describe('App with Ledger', () => {
         await homePage.clickActivityTab();
         const noActivityText = homePage.page.getByText('No activity yet');
         // Account has activity to make sure we don't see label
-        await test.expect(noActivityText).not.toBeVisible();
+        await test.expect(noActivityText).toBeHidden();
         test.expect(homePage.page.url()).toContain('/activity');
       });
     });

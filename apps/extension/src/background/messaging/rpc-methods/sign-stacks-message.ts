@@ -3,7 +3,6 @@ import { serializeCV } from '@stacks/transactions';
 import {
   RpcErrorCode,
   type RpcRequest,
-  type StxSignMessageRequestParamsStructured,
   createRpcErrorResponse,
   stxSignMessage,
   stxSignStructuredMessage,
@@ -16,12 +15,14 @@ import {
   getRpcSignStacksMessageParamErrors,
   validateRpcSignStacksMessageParams,
 } from '@shared/rpc/methods/sign-stacks-message';
+import { shouldRefuseSignInMessageSigning } from '@shared/rpc/sign-in-message-veto';
 
+import { defineRpcRequestHandler } from '../define-rpc-request-handler';
 import { trackRpcRequestError, trackRpcRequestSuccess } from '../rpc-helpers';
-import { defineRpcRequestHandler } from '../rpc-message-handler';
 import {
-  RequestParams,
+  type RequestParams,
   createConnectingAppSearchParamsWithLastKnownAccount,
+  getOriginFromPort,
   getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
@@ -80,6 +81,26 @@ async function handleRpcSignStacksMessage(
 export const stxSignMessageHandler = defineRpcRequestHandler(
   stxSignMessage.method,
   async (request, port) => {
+    if (
+      isString(request.params?.message) &&
+      (request.params.messageType ?? 'utf8') === 'utf8' &&
+      shouldRefuseSignInMessageSigning(request.params.message, getOriginFromPort(port))
+    ) {
+      void trackRpcRequestError({ endpoint: request.method, error: 'Sign-in domain mismatch' });
+      void sendMessageToOriginatingFrame(
+        getOriginatingFrameFromPort(port),
+        createRpcErrorResponse(request.method, {
+          id: request.id,
+          error: {
+            code: RpcErrorCode.PERMISSION_DENIED,
+            message:
+              'This is a Leather sign-in message and its Domain line does not match the requesting origin.',
+          },
+        })
+      );
+      return;
+    }
+
     return handleRpcSignStacksMessage(request.method, request, port, () => {
       const requestParams: RequestParams = [
         ['message', request.params.message],
@@ -88,10 +109,7 @@ export const stxSignMessageHandler = defineRpcRequestHandler(
       ];
 
       if ('domain' in request.params) {
-        requestParams.push([
-          'domain',
-          (request.params as StxSignMessageRequestParamsStructured).domain.toString(),
-        ]);
+        requestParams.push(['domain', request.params.domain.toString()]);
       }
 
       return { requestParams, network: request.params.network };

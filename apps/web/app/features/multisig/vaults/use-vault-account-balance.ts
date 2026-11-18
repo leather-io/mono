@@ -9,6 +9,7 @@ import {
 import { isDefined, sumMoney } from '@leather.io/utils';
 
 import { getMultisigAccountAddresses } from './multisig-account-addresses';
+import { accountAssetsRefetchInterval } from './use-vaults';
 
 interface VaultAccountBalance {
   crypto?: Money;
@@ -25,10 +26,12 @@ export function useVaultAccountBalance(
   const btcQuery = useQuery({
     ...createBtcBalanceQueryConfig(request, settings),
     enabled: isBitcoin,
+    refetchInterval: accountAssetsRefetchInterval,
   });
   const stxQuery = useQuery({
     ...createStxAccountBalanceQueryConfig(request, settings),
     enabled: !!account && !isBitcoin,
+    refetchInterval: accountAssetsRefetchInterval,
   });
 
   const data = isBitcoin ? btcQuery.data : stxQuery.data;

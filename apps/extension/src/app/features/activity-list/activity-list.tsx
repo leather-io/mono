@@ -1,50 +1,98 @@
-import { useCallback } from 'react';
-import { Outlet } from 'react-router';
-import { Virtuoso } from 'react-virtuoso';
+import { useCallback, useMemo } from 'react';
+import { GroupedVirtuoso } from 'react-virtuoso';
 
-import { type ActivityView } from '@leather.io/features';
+import { groupActivityByDate } from '@leather.io/features';
 
-import { formatCurrency } from '@app/common/currency-formatter';
-import { useActivity } from '@app/query/activity/activity.query';
+import { useBlockchainActivityFeed } from '@app/query/activity/blockchain-activity.query';
 import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 
-import { ActivityItem } from './components/activity-item';
+import { mergeSbtcDepositItems } from './activity-list.utils';
+import { ActivityGroupHeader } from './components/activity-group-header';
 import { ActivityListLayout } from './components/activity-list.layout';
-
-/*
- * Infinite scroll support is built into this component via the onLoadMore prop,
- * but it's currently not being used because the activity service API doesn't
- * support pagination. All activity is fetched at once. To enable infinite scroll:
- * 1. Update the activity service to support pagination parameters (offset/limit or cursor)
- * 2. Update the activity query config to use useInfiniteQuery instead of useQuery
- * 3. Pass the onLoadMore handler from the parent component
- */
+import { ActivityLoadMoreError } from './components/activity-load-more-error';
+import { ActivityLoadingMore } from './components/activity-loading-more';
+import { ActivityRow } from './components/activity-row';
+import { useSbtcDepositActivity } from './use-sbtc-deposit-activity';
 
 export function ActivityList() {
   const accountAddresses = useCurrentAccountAddresses();
-  const activityQuery = useActivity(accountAddresses);
+  const {
+    items,
+    isLoading,
+    isError,
+    isRefetchError,
+    isFetchNextPageError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    refetch,
+  } = useBlockchainActivityFeed(accountAddresses);
 
-  const activity = activityQuery.data ?? [];
-  const isLoading = activityQuery.isLoading;
+  const feedTxids = useMemo(() => new Set(items.map(item => item.view.txid)), [items]);
+  const { overlays: sbtcOverlays, standaloneItems: sbtcItems } = useSbtcDepositActivity(feedTxids);
 
-  const itemContent = useCallback(
-    (_: number, item: ActivityView) => <ActivityItem item={item} formatCurrency={formatCurrency} />,
-    []
+  const activityItems = useMemo(() => mergeSbtcDepositItems(items, sbtcItems), [items, sbtcItems]);
+
+  const groups = useMemo(
+    () =>
+      groupActivityByDate(activityItems, {
+        getTimestamp: item => item.view.timestamp,
+        isPending: item => item.view.status === 'pending',
+      }),
+    [activityItems]
   );
 
-  const computeItemKey = useCallback((_: number, item: ActivityView) => item.key, []);
+  const groupCounts = useMemo(() => groups.map(group => group.items.length), [groups]);
+  const flatItems = useMemo(() => groups.flatMap(group => group.items), [groups]);
+
+  const groupContent = useCallback(
+    (index: number) => (
+      <ActivityGroupHeader label={groups[index].label} isFirstGroup={index === 0} />
+    ),
+    [groups]
+  );
+
+  const itemContent = useCallback(
+    (index: number) => {
+      const item = flatItems[index];
+      return <ActivityRow item={item} sbtcOverlay={sbtcOverlays.get(item.view.txid)} />;
+    },
+    [flatItems, sbtcOverlays]
+  );
+
+  const endReached = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const components = useMemo(
+    () => ({
+      Footer() {
+        if (isFetchingNextPage) return <ActivityLoadingMore />;
+        if (isFetchNextPageError) return <ActivityLoadMoreError onRetry={fetchNextPage} />;
+        return null;
+      },
+    }),
+    [isFetchingNextPage, isFetchNextPageError, fetchNextPage]
+  );
 
   return (
-    <ActivityListLayout isLoading={isLoading} hasActivity={activity.length > 0}>
-      <Virtuoso
+    <ActivityListLayout
+      isLoading={isLoading}
+      isError={isError}
+      isRefetchError={isRefetchError}
+      hasActivity={activityItems.length > 0}
+      onRetry={refetch}
+    >
+      <GroupedVirtuoso
         style={{ height: '100%' }}
-        data={activity}
+        groupCounts={groupCounts}
+        groupContent={groupContent}
         itemContent={itemContent}
-        computeItemKey={computeItemKey}
+        components={components}
+        endReached={endReached}
         overscan={200}
         useWindowScroll
       />
-      <Outlet />
     </ActivityListLayout>
   );
 }

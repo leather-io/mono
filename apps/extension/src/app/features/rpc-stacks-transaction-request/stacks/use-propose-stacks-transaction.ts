@@ -2,11 +2,9 @@ import { useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 import { type StacksTransactionWire } from '@stacks/transactions';
-import { useMutation } from '@tanstack/react-query';
 
-import { LEATHER_API_URL_STAGING } from '@leather.io/constants';
-import { createProposeMultisigTransactionMutationConfig } from '@leather.io/queries';
 import { type RpcMethodNames, createRpcSuccessResponse } from '@leather.io/rpc';
+import { getErrorDetail } from '@leather.io/services';
 import { deriveStxMultisigAddress } from '@leather.io/stacks';
 import { delay, isString } from '@leather.io/utils';
 
@@ -16,7 +14,7 @@ import { closeWindow } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
 
 import { getPolicyAuthNetworkId } from '@app/features/multisig/multisig-network';
-import { useSignProposalCommitment } from '@app/features/multisig/use-sign-proposal-commitment';
+import { useProposeMultisigTransaction } from '@app/features/multisig/use-propose-multisig-transaction';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
@@ -43,13 +41,7 @@ export function useProposeStacksTransaction(method: RpcMethodNames) {
   const network = useCurrentNetwork();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const signProposalCommitment = useSignProposalCommitment();
-  const { mutateAsync: proposeMultisigTransaction } = useMutation(
-    createProposeMultisigTransactionMutationConfig({
-      baseUrl: LEATHER_API_URL_STAGING,
-      signProposalCommitment,
-    })
-  );
+  const { proposeMultisigTransaction } = useProposeMultisigTransaction();
 
   return useCallback(
     async (unsignedTx: StacksTransactionWire) => {
@@ -77,6 +69,10 @@ export function useProposeStacksTransaction(method: RpcMethodNames) {
           multisigAddress: policy.address,
           rawPayload,
         });
+        if (!proposal) {
+          onSetTransactionStatus('idle');
+          return;
+        }
 
         analytics.track('propose_multisig_transaction', { symbol: 'stx' });
         onSetTransactionStatus('submitted');
@@ -101,7 +97,7 @@ export function useProposeStacksTransaction(method: RpcMethodNames) {
         // signing route when this rejects, so a relative navigation would
         // resolve against the wrong parent.
         return navigate(`${pathname}/${RouteUrls.BroadcastError}`, {
-          state: { message: getErrorMessage(error) },
+          state: { message: getErrorDetail(error) ?? getErrorMessage(error), proposeMode: true },
         });
       }
     },

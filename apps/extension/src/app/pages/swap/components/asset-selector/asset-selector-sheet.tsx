@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { css } from 'leather-styles/css';
@@ -49,10 +49,11 @@ export function AssetSelectorSheet({
               'hsl(206 22% 7% / 35%) 0 10px 38px -10px, hsl(206 22% 7% / 20%) 0 10px 20px -15px',
             position: 'fixed',
             top: { base: 0, md: '10vh' },
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: { base: '100vw', md: '90vw' },
-            maxWidth: { base: '100vw', md: 'pageWidth' },
+            left: { base: 0, md: '50%' },
+            right: { base: 0, md: 'auto' },
+            transform: { base: 'none', md: 'translateX(-50%)' },
+            width: { base: 'auto', md: '90vw' },
+            maxWidth: { base: 'none', md: 'pageWidth' },
             height: { base: '100vh', md: '80vh' },
             zIndex: '100',
             '&[data-state=open]': {
@@ -60,7 +61,7 @@ export function AssetSelectorSheet({
             },
           })}
         >
-          <SheetHeader title={getSheetTitle(type)} variant="large" onClose={onClose} />
+          <SheetHeader title={getSheetTitle(type)} onClose={onClose} />
           <Box overflowY="auto" flex={1}>
             {children}
           </Box>
@@ -72,15 +73,7 @@ export function AssetSelectorSheet({
 
 function getSheetTitle(type: 'base' | 'target') {
   return {
-    base: (
-      <>
-        Choose asset <br /> to swap
-      </>
-    ),
-    target: (
-      <>
-        Choose asset <br /> to receive
-      </>
-    ),
+    base: 'Choose asset to swap',
+    target: 'Choose asset to receive',
   }[type];
 }

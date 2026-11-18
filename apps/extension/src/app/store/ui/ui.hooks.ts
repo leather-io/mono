@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { uiActions } from './ui.actions';
 import { selectHasSwitched, selectLoadingState } from './ui.selectors';
 
-export enum LoadingKeys {
-  SUBMIT_STACKS_TRANSACTION = 'loading/SUBMIT_STACKS_TRANSACTION',
-  SUBMIT_SWAP_TRANSACTION = 'loading/SUBMIT_SWAP_TRANSACTION',
-}
+export const LoadingKeys = {
+  SUBMIT_STACKS_TRANSACTION: 'loading/SUBMIT_STACKS_TRANSACTION',
+} as const;
+export type LoadingKeys = (typeof LoadingKeys)[keyof typeof LoadingKeys];
 
 export function useLoading(key: string) {
   const loadingState = useSelector(selectLoadingState);
@@ -22,8 +22,8 @@ export function useLoading(key: string) {
   };
 }
 
-// This is only used when there is a pending transaction request and
-// the user switches accounts during the signing process
+// Tracks that the user switched accounts within an open popup. When set, the
+// policy and software-key selectors ignore the account pinned by URL search params
 export function useHasSwitchedAccounts() {
   const hasSwitched = useSelector(selectHasSwitched);
   const dispatch = useDispatch();

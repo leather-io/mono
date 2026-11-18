@@ -1,6 +1,6 @@
 import type { To } from 'react-router';
 
-import { z } from 'zod';
+import { type z } from 'zod';
 
 import { WalletDefaultNetworkConfigurationIds } from '@leather.io/models';
 import {
@@ -21,7 +21,7 @@ import {
   getPermissionsByOrigin,
   isConnectedToExistingWallet,
 } from '@shared/permissions/permission.helpers';
-import { RouteUrls } from '@shared/route-urls';
+import { type RouteUrls } from '@shared/route-urls';
 import {
   RpcErrorMessage,
   getRpcParamErrorsFormatted,
@@ -52,6 +52,16 @@ export function getOriginFromPort(port: chrome.runtime.Port) {
   return port.sender?.origin;
 }
 
+function getTopOriginFromPort(port: chrome.runtime.Port) {
+  const tabUrl = port.sender?.tab?.url;
+  if (!tabUrl) return undefined;
+  try {
+    return new URL(tabUrl).origin;
+  } catch {
+    return undefined;
+  }
+}
+
 function getHostnameFromPort(port: chrome.runtime.Port) {
   const origin = getOriginFromPort(port);
   if (!origin) throw new Error('No URL found in port sender');
@@ -63,7 +73,7 @@ function getHostnameFromPort(port: chrome.runtime.Port) {
 // https://github.com/microsoft/playwright/issues/5593
 async function openRequestInFullPage(path: string | To, urlParams: URLSearchParams) {
   return chrome.tabs.create({
-    url: chrome.runtime.getURL(`index.html#${path}?${urlParams.toString()}`),
+    url: chrome.runtime.getURL(`index.html#${String(path)}?${urlParams.toString()}`),
   });
 }
 
@@ -73,7 +83,7 @@ interface ListenForPopupCloseArgs {
   // TabID from requesting tab, to which request should be returned
   tabId?: number;
   frameId: number;
-  response: any;
+  response: unknown;
 }
 export function listenForPopupClose({ frameId, id, tabId, response }: ListenForPopupCloseArgs) {
   chrome.windows.onRemoved.addListener(winId => {
@@ -86,7 +96,7 @@ export function listenForPopupClose({ frameId, id, tabId, response }: ListenForP
 interface SendErrorResponseOnUserPopupCloseArgs {
   tabId?: number;
   frameId: number;
-  id: number;
+  id?: number;
   request: RpcRequests;
   message?: string;
 }
@@ -142,7 +152,9 @@ function createConnectingAppMetadataSearchParams(
   const origin = getOriginFromPort(port);
   const tabId = getTabIdFromPort(port);
   const frameId = getFrameIdFromPort(port);
-  urlParams.set('origin', origin ?? '');
+  const topOrigin = getTopOriginFromPort(port);
+  if (origin) urlParams.set('origin', origin);
+  if (topOrigin) urlParams.set('topOrigin', topOrigin);
   urlParams.set('frameId', frameId.toString());
   urlParams.set('tabId', tabId.toString());
   otherParams.forEach(([key, value]) => urlParams.append(key, value));
@@ -195,7 +207,7 @@ export async function triggerRequestPopupWindowOpen(path: RouteUrls, urlParams: 
 
 export async function triggerSwapWindowOpen(path: To, urlParams: URLSearchParams) {
   if (IS_TEST_ENV) return openRequestInFullPage(path, urlParams);
-  return popup({ url: `/popup.html#${path}?${urlParams.toString()}` });
+  return popup({ url: `/popup.html#${String(path)}?${urlParams.toString()}` });
 }
 
 type ValidationResult = 'success' | 'failure';
@@ -285,7 +297,7 @@ export async function validateRequestNetwork({
   return { status: 'failure' };
 }
 
-export const walletNoLongerAvailableMessage =
+const walletNoLongerAvailableMessage =
   'Wallet no longer available. Reconnect the app to an available wallet.';
 
 type MaybePreMultiWalletRootState = Omit<RootState, 'wallets'> & {
@@ -298,12 +310,12 @@ type ConnectedWalletCheckResult =
   | { status: 'success'; frameId: number; tabId: number }
   | { status: 'failure'; reason: ConnectedWalletFailureReason; frameId: number; tabId: number };
 
-export async function checkConnectedWalletExists(
+async function checkConnectedWalletExists(
   port: chrome.runtime.Port
 ): Promise<ConnectedWalletCheckResult> {
   const tabId = getTabIdFromPort(port);
   const frameId = getFrameIdFromPort(port);
-  const state = (await getRootState()) as MaybePreMultiWalletRootState | null;
+  const state: MaybePreMultiWalletRootState | null = await getRootState();
   if (!state) return { status: 'failure', reason: 'missing-state', frameId, tabId };
 
   const walletEntities = state.wallets?.entities;

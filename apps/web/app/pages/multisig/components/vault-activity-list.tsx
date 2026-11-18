@@ -1,27 +1,35 @@
 import { useNavigate } from 'react-router';
 
-import { Box, styled } from 'leather-styles/jsx';
+import { Box, Flex, styled } from 'leather-styles/jsx';
 import type { VaultActivityItem } from '~/features/multisig/activity/harmonize-vault-activity';
 
+import type { ActivityGroup } from '@leather.io/features';
 import { ListContainer } from '@leather.io/ui';
 
 import { multisigPaths } from '../multisig.constants';
+import { GroupLabel } from './transaction-list';
 import { type TransactionRowScale } from './transaction-row';
 import { type ActivityRowLocation, VaultActivityRow } from './vault-activity-row';
 
 interface VaultActivityListProps {
   items: VaultActivityItem[];
   scale?: TransactionRowScale;
+  // 'plain' renders bare rows without the bordered list container — for
+  // read-only embeds (e.g. the asset detail sheet) where rows aren't clickable
+  // and the surrounding section already provides the frame.
+  variant?: 'contained' | 'plain';
   limit?: number;
   vaultNamesById?: ReadonlyMap<string, string>;
   accountNamesById?: ReadonlyMap<string, string>;
+  accountThresholdsById?: ReadonlyMap<string, string>;
   onSelect(vaultId: string, txId: string): void;
 }
 
 function resolveLocation(
   item: VaultActivityItem,
   vaultNamesById?: ReadonlyMap<string, string>,
-  accountNamesById?: ReadonlyMap<string, string>
+  accountNamesById?: ReadonlyMap<string, string>,
+  accountThresholdsById?: ReadonlyMap<string, string>
 ): ActivityRowLocation | undefined {
   const vault =
     vaultNamesById && item.vaultId
@@ -30,7 +38,11 @@ function resolveLocation(
   const account =
     accountNamesById && item.vaultAccountId ? accountNamesById.get(item.vaultAccountId) : undefined;
   if (!vault && !account) return undefined;
-  return { vault, account };
+  const threshold =
+    accountThresholdsById && item.vaultAccountId
+      ? accountThresholdsById.get(item.vaultAccountId)
+      : undefined;
+  return { vault, account, threshold };
 }
 
 // Proposal rows open the multisig transaction; proposal-less rows open the on-chain detail.
@@ -51,62 +63,111 @@ function resolveRowLink(
   return { href, onClick: () => void navigate(href) };
 }
 
+function needsAttention(item: VaultActivityItem) {
+  return Boolean(
+    item.multisig && item.view.status === 'pending' && !item.multisig.transaction.signedByMe
+  );
+}
+
+type VaultActivityTier = 'action' | 'inFlight' | 'history';
+
+function tierOf(item: VaultActivityItem): VaultActivityTier {
+  if (needsAttention(item)) return 'action';
+  if (item.view.status === 'pending') return 'inFlight';
+  return 'history';
+}
+
+const vaultActivityTiers: { key: VaultActivityTier; label: string }[] = [
+  { key: 'action', label: 'Needs signatures' },
+  { key: 'inFlight', label: 'In progress' },
+  { key: 'history', label: 'History' },
+];
+
+function groupVaultActivityByTier(items: VaultActivityItem[]): ActivityGroup<VaultActivityItem>[] {
+  return vaultActivityTiers
+    .map(tier => ({
+      key: tier.key,
+      label: tier.label,
+      items: items.filter(item => tierOf(item) === tier.key),
+    }))
+    .filter(group => group.items.length > 0);
+}
+
+// One flat container, no divider lines between rows: the feed is grouped into
+// three tiers instead — transactions waiting on signatures (highlighted, they
+// want action), other in-flight work, then processed history.
 export function VaultActivityList({
   items,
   scale,
+  variant = 'contained',
   limit,
   vaultNamesById,
   accountNamesById,
+  accountThresholdsById,
   onSelect,
 }: VaultActivityListProps) {
   const navigate = useNavigate();
   const visibleItems = limit === undefined ? items : items.slice(0, limit);
-  return (
-    <ListContainer p="space.00" overflow="hidden">
-      <Box
-        display="flex"
-        flexDirection="column"
-        css={{
-          '& > * + *': {
-            borderTopWidth: '1px',
-            borderTopStyle: 'solid',
-            borderColor: 'ink.border-default',
-          },
-        }}
+
+  function renderRow(item: VaultActivityItem) {
+    const link = resolveRowLink(item, onSelect, navigate);
+    const location = resolveLocation(item, vaultNamesById, accountNamesById, accountThresholdsById);
+    return (
+      <VaultActivityRow
+        key={`${item.view.key}:${item.vaultAccountId ?? ''}`}
+        item={item}
+        scale={scale}
+        variant={variant === 'plain' ? 'plain' : 'boxed'}
+        needsAttention={needsAttention(item)}
+        location={location}
+        href={link?.href}
+        onClick={link?.onClick}
+      />
+    );
+  }
+
+  const tiers = groupVaultActivityByTier(visibleItems);
+
+  // Labels only earn their place when they separate more than one tier; a feed
+  // with a single tier (e.g. history only) renders as a plain list.
+  const showLabels = tiers.length > 1;
+
+  const overflowNote =
+    limit !== undefined && items.length > limit ? (
+      <styled.p
+        textStyle="caption.01"
+        color="ink.text-subdued"
+        textAlign="center"
+        px="space.04"
+        py="space.03"
       >
-        {visibleItems.map(item => {
-          const needsAttention = Boolean(
-            item.multisig && item.view.status === 'pending' && !item.multisig.transaction.signedByMe
-          );
-          const link = resolveRowLink(item, onSelect, navigate);
-          const location = resolveLocation(item, vaultNamesById, accountNamesById);
-          return (
-            <VaultActivityRow
-              key={`${item.view.key}:${item.vaultAccountId ?? ''}`}
-              item={item}
-              scale={scale}
-              needsAttention={needsAttention}
-              location={location}
-              href={link?.href}
-              onClick={link?.onClick}
-            />
-          );
-        })}
-      </Box>
-      {limit !== undefined && items.length > limit ? (
-        <styled.p
-          textStyle="caption.01"
-          color="ink.text-subdued"
-          textAlign="center"
-          px="space.04"
-          py="space.03"
-          borderTopWidth="1px"
-          borderTopStyle="solid"
-          borderColor="ink.border-default"
-        >
-          Open an account to view its full history
-        </styled.p>
-      ) : null}
+        Open an account to view its full history
+      </styled.p>
+    ) : null;
+
+  if (variant === 'plain') {
+    return (
+      <Flex direction="column" gap="space.02">
+        {tiers.map(tier => (
+          <Flex key={tier.key} direction="column" gap="space.03">
+            {showLabels ? <GroupLabel>{tier.label}</GroupLabel> : null}
+            {tier.items.map(renderRow)}
+          </Flex>
+        ))}
+        {overflowNote}
+      </Flex>
+    );
+  }
+
+  return (
+    <ListContainer p="space.02">
+      {tiers.map(tier => (
+        <Box key={tier.key}>
+          {showLabels ? <GroupLabel>{tier.label}</GroupLabel> : null}
+          {tier.items.map(renderRow)}
+        </Box>
+      ))}
+      {overflowNote}
     </ListContainer>
   );
 }

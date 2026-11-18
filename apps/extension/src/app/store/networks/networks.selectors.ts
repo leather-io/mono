@@ -10,14 +10,10 @@ import {
 } from '@leather.io/models';
 
 import { initialSearchParams } from '@app/common/initial-search-params';
-import { RootState } from '@app/store';
+import { type RootState } from '@app/store/store';
 
-import { useAppRequestedNetworkId } from './networks.hooks';
 import { networksAdapter } from './networks.slice';
-import {
-  findMatchingNetworkKey,
-  transformNetworkStateToMultichainStucture,
-} from './networks.utils';
+import { transformNetworkStateToMultichainStucture } from './networks.utils';
 
 function selectNetworksSlice(state: RootState) {
   return state.networks;
@@ -27,25 +23,21 @@ const networksSelectors = networksAdapter.getSelectors<RootState>(selectNetworks
 
 const selectNetworks = createSelector(
   networksSelectors.selectEntities,
-  state =>
-    ({
-      ...defaultNetworksKeyedById,
-      ...transformNetworkStateToMultichainStucture(state),
-    }) as Record<string, NetworkConfiguration>
+  (state): Record<string, NetworkConfiguration> => ({
+    ...defaultNetworksKeyedById,
+    ...transformNetworkStateToMultichainStucture(state),
+  })
 );
 
 const selectCurrentNetworkId = createSelector(selectNetworksSlice, state => state.currentNetworkId);
 
-export const selectAppRequestedNetworkId = createSelector(selectNetworks, networks => {
-  // CoreAPI URL and networkChainId are from legacy Stacks transactions
-  const coreApiUrl = initialSearchParams.get('coreApiUrl');
-  const networkChainId = initialSearchParams.get('networkChainId');
+const selectAppRequestedNetworkId = createSelector(selectNetworks, networks => {
   // `network` param is a more generic network selector that doesn't deal with
   // custom networks
   const network = initialSearchParams.get('network');
   if (network) return networks[network]?.id ?? WalletDefaultNetworkConfigurationIds.mainnet;
 
-  return findMatchingNetworkKey({ coreApiUrl, networkChainId, networks });
+  return undefined;
 });
 
 export const selectCurrentNetwork = createSelector(
@@ -55,6 +47,10 @@ export const selectCurrentNetwork = createSelector(
   (networks, currentNetworkId, appRequestedNetworkId) =>
     networks[appRequestedNetworkId || currentNetworkId] ?? defaultCurrentNetwork
 );
+
+function useAppRequestedNetworkId() {
+  return useSelector(selectAppRequestedNetworkId);
+}
 
 export function useNetworks(): Record<string, NetworkConfiguration> {
   return useSelector(selectNetworks);

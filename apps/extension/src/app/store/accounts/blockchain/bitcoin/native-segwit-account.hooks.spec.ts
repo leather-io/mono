@@ -1,10 +1,12 @@
+import type * as ReactModule from 'react';
+
 import { HDKey } from '@scure/bip32';
 import { Psbt } from 'bitcoinjs-lib';
 
 import { useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero } from './native-segwit-account.hooks';
 
 vi.mock('react', async importOriginal => {
-  const actual = await importOriginal<typeof import('react')>();
+  const actual = await importOriginal<typeof ReactModule>();
   return {
     ...actual,
     useMemo<T>(factory: () => T) {
@@ -22,10 +24,6 @@ vi.mock('react-redux', () => ({
 
 vi.mock('@shared/utils/analytics', () => ({
   analytics: { track: vi.fn() },
-}));
-
-vi.mock('@app/query/bitcoin/clients/bitcoin-client', () => ({
-  useBitcoinClient: () => ({ transactionsApi: { getBitcoinTransactionHex: vi.fn() } }),
 }));
 
 vi.mock('@app/store/networks/networks.selectors', () => ({
@@ -89,8 +87,8 @@ describe(useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero.
 
     const entries = requireDefined(psbt.data.inputs[0].bip32Derivation);
     expect(entries).toHaveLength(1);
-    expect(entries[0].pubkey.equals(accountPubkey)).toBe(true);
-    expect(entries[0].masterFingerprint.toString('hex')).toBe(masterFingerprintHex);
+    expect(accountPubkey.equals(entries[0].pubkey)).toBe(true);
+    expect(Buffer.from(entries[0].masterFingerprint).toString('hex')).toBe(masterFingerprintHex);
     expect(entries[0].path).toBe(derivationPath);
   });
 
@@ -112,7 +110,7 @@ describe(useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero.
 
     const entries = requireDefined(psbt.data.inputs[0].bip32Derivation);
     expect(entries).toHaveLength(1);
-    expect(entries[0].masterFingerprint.toString('hex')).toBe('11223344');
+    expect(Buffer.from(entries[0].masterFingerprint).toString('hex')).toBe('11223344');
   });
 
   test('adds the account derivation alongside a co-signer derivation', () => {
@@ -133,7 +131,7 @@ describe(useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero.
 
     const entries = requireDefined(psbt.data.inputs[0].bip32Derivation);
     expect(entries).toHaveLength(2);
-    expect(entries.some(entry => entry.pubkey.equals(cosignerPubkey))).toBe(true);
-    expect(entries.some(entry => entry.pubkey.equals(accountPubkey))).toBe(true);
+    expect(entries.some(entry => cosignerPubkey.equals(entry.pubkey))).toBe(true);
+    expect(entries.some(entry => accountPubkey.equals(entry.pubkey))).toBe(true);
   });
 });

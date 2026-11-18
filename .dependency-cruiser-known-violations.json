@@ -1,0 +1,146 @@
+[
+  {
+    "type": "dependency",
+    "from": "packages/constants/src/index.ts",
+    "to": "packages/models/dist/index.d.ts",
+    "rule": {
+      "severity": "error",
+      "name": "clean-foundation-not-to-higher-layers"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "packages/utils/src/accounts/account-addresses.ts",
+    "to": "packages/models/dist/index.d.ts",
+    "rule": {
+      "severity": "error",
+      "name": "clean-foundation-not-to-higher-layers"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "packages/utils/src/assets/asset-display-name.ts",
+    "to": "packages/models/dist/index.d.ts",
+    "rule": {
+      "severity": "error",
+      "name": "clean-foundation-not-to-higher-layers"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "packages/utils/src/assets/asset-id.ts",
+    "to": "packages/models/dist/index.d.ts",
+    "rule": {
+      "severity": "error",
+      "name": "clean-foundation-not-to-higher-layers"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "packages/utils/src/assets/balance-helpers.ts",
+    "to": "packages/models/dist/index.d.ts",
+    "rule": {
+      "severity": "error",
+      "name": "clean-foundation-not-to-higher-layers"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "packages/utils/src/assets/sort-assets.ts",
+    "to": "packages/models/dist/index.d.ts",
+    "rule": {
+      "severity": "error",
+      "name": "clean-foundation-not-to-higher-layers"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "packages/utils/src/index.ts",
+    "to": "packages/models/dist/index.d.ts",
+    "rule": {
+      "severity": "error",
+      "name": "clean-foundation-not-to-higher-layers"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "packages/utils/src/market-data.spec.ts",
+    "to": "packages/models/dist/index.d.ts",
+    "rule": {
+      "severity": "error",
+      "name": "clean-foundation-not-to-higher-layers"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "packages/utils/src/market-data.ts",
+    "to": "packages/models/dist/index.d.ts",
+    "rule": {
+      "severity": "error",
+      "name": "clean-foundation-not-to-higher-layers"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "packages/utils/src/money/calculate-money.spec.ts",
+    "to": "packages/models/dist/index.d.ts",
+    "rule": {
+      "severity": "error",
+      "name": "clean-foundation-not-to-higher-layers"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "packages/utils/src/money/calculate-money.ts",
+    "to": "packages/models/dist/index.d.ts",
+    "rule": {
+      "severity": "error",
+      "name": "clean-foundation-not-to-higher-layers"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "packages/utils/src/money/create-money.ts",
+    "to": "packages/models/dist/index.d.ts",
+    "rule": {
+      "severity": "error",
+      "name": "clean-foundation-not-to-higher-layers"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "packages/utils/src/money/is-money.ts",
+    "to": "packages/models/dist/index.d.ts",
+    "rule": {
+      "severity": "error",
+      "name": "clean-foundation-not-to-higher-layers"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "packages/utils/src/money/unit-conversion.ts",
+    "to": "packages/models/dist/index.d.ts",
+    "rule": {
+      "severity": "error",
+      "name": "clean-foundation-not-to-higher-layers"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "packages/state/src/swap/hooks/use-live-swap-estimate.ts",
+    "to": "packages/ui/dist-web/exports.web.js",
+    "rule": {
+      "severity": "error",
+      "name": "clean-state-not-to-presentation"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "packages/state/src/swap/swap.queries.ts",
+    "to": "packages/ui/dist-web/exports.web.js",
+    "rule": {
+      "severity": "error",
+      "name": "clean-state-not-to-presentation"
+    }
+  }
+]

@@ -1,9 +1,46 @@
+auditConfig:
+  ignoreGhsas:
+    # React Router RSC mode CSRF bypass. Only affects apps using the unstable RSC
+    # APIs, which we don't use. Patched only in react-router 8.3.0, and
+    # @sentry/react-router peer-requires react-router 7.x. Remove this entry once
+    # we update react-router to 8.3.0+ with a compatible Sentry release.
+    - GHSA-qwww-vcr4-c8h2
+    # image-size ICNS parser infinite-loop DoS. Build-time only: image-size
+    # runs inside metro's asset pipeline on our own image assets and ships in
+    # no app artifact. The advisory's patched version (2.0.3) is not published
+    # on npm, and metro pins image-size ^1.0.2 and passes file paths, which the
+    # buffer-only 2.x API throws on. Remove this entry once image-size 2.0.3+
+    # is published and metro depends on ^2.
+    - GHSA-w3rx-r6r6-pgpr
+    # image-size JXL and HEIF parsers infinite-loop DoS. Same package, same
+    # exposure, and same fix constraints as the ICNS advisory above.
+    - GHSA-5p2g-fcmc-qvqq
+    # node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested
+    # DigestAlgorithm elements. Build-time only: node-forge is reached solely
+    # through @expo/cli (dev-server manifest signing, `expo login`, and iOS
+    # code-signing in `expo run:ios`) and webpack-dev-server's selfsigned dev
+    # certificate, and ships in no app artifact. The advisory's patched version
+    # (1.4.1) is not published on npm. Remove this entry once node-forge 1.4.1+
+    # is published and @expo/cli picks it up.
+    - GHSA-86w9-cpqp-85rv
+    # braces stack-exhaustion DoS through deeply nested brace patterns.
+    # Build-time only: braces is reached solely through the glob matching of
+    # build and dev tooling, via micromatch (metro-file-map, jest, fast-glob)
+    # and chokidar 3.x (sanity CLI, @sentry/vite-plugin, webpack-dev-server),
+    # and ships in no app artifact. The patterns it expands are our own config
+    # and watch globs, never untrusted input, and metro-file-map only calls
+    # micromatch.some, which does not invoke braces. The advisory's patched
+    # version (3.0.4) is not published on npm. Remove this entry once braces
+    # 3.0.4+ is published and micromatch and chokidar pick it up.
+    - GHSA-vfj7-8cjw-p6xm
+    - GHSA-fc5q-39xc-vjpf
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - axios
   - "@stacks/transactions"
   - "@stacks/common"
   - "@stacks/network"
+  - "@stacks/blockchain-api-client"
 packages:
   - 'apps/*'
   - 'packages/*'

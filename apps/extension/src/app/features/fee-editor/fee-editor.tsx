@@ -1,8 +1,6 @@
 import { Center, Stack, styled } from 'leather-styles/jsx';
 
-import { Approver, Button } from '@leather.io/ui';
-
-import { useOnMount } from '@app/common/hooks/use-on-mount';
+import { Approver, Button, useOnMount } from '@leather.io/ui';
 
 import { CustomFeeItem } from './components/custom-fee-item';
 import { DefaultFeesList } from './components/default-fees-list';
@@ -27,13 +25,16 @@ function FeeEditor({ children }: FeeEditorProps) {
     onSetSelectedFee,
   } = useFeeEditorContext();
 
+  const customFeeValue = Number(customFee);
+  const isCustomFeeValid = selectedFee.priority !== 'custom' || customFeeValue > 0;
+
   useOnMount(() => {
     onSetLoadedFee(selectedFee);
   });
 
   function onCancel() {
     // Reset if user cancels
-    onSetCustomFee(selectedFee?.feeRate?.toString() || '');
+    onSetCustomFee(selectedFee?.feeRate?.toString());
     onSetSelectedFee(loadedFee);
     onGoBack();
   }
@@ -41,9 +42,9 @@ function FeeEditor({ children }: FeeEditorProps) {
   function onSave() {
     // Need to handle custom fee input change on save
     const isCustomFee = selectedFee?.priority === 'custom';
-    if (isCustomFee) onSetSelectedFee(getCustomFee(Number(customFee)));
+    if (isCustomFee) onSetSelectedFee(getCustomFee(customFeeValue));
     if (!isCustomFee) {
-      onSetCustomFee(selectedFee?.feeRate?.toString() || '');
+      onSetCustomFee(selectedFee?.feeRate?.toString());
     }
     onGoBack();
   }
@@ -65,7 +66,7 @@ function FeeEditor({ children }: FeeEditorProps) {
           <Button key="cancel" onClick={onCancel} fullWidth variant="outline">
             Cancel
           </Button>,
-          <Button key="save" onClick={onSave} fullWidth>
+          <Button key="save" onClick={onSave} disabled={!isCustomFeeValid} fullWidth>
             Save
           </Button>,
         ]}

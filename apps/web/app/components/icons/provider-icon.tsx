@@ -1,4 +1,4 @@
-import { ProviderId, providerIdSchema } from '~/data/data';
+import { type ProviderId, providerIdSchema } from '~/data/data';
 
 import { ImgFillLoader } from '../img-loader';
 
@@ -8,14 +8,23 @@ interface ProviderIconConfig {
 }
 
 const stackingProviderIconConfig: Record<ProviderId, ProviderIconConfig> = {
-  fastPool: { src: '/icons/fastpool.webp', fill: 'black' },
-  fastPoolV2: { src: '/icons/fastpool.webp', fill: 'black' },
+  fastPool: { src: '/icons/fastpool.svg', fill: '#7A6FB0' },
+  esbeeDao: { src: '/icons/esbee.svg', fill: '#F7CEB2' },
+  fastPoolV2: { src: '/icons/fastpool.svg', fill: '#7A6FB0' },
   planbetter: { src: '/icons/planbetter.webp', fill: 'black' },
+  asymmetricResearch: { src: '/icons/asymmetric.svg', fill: '#F4F4F0' },
   restake: { src: '/icons/restake.webp', fill: '#124044' },
   xversePool: { src: '/icons/xverse.webp', fill: 'black' },
   stackingDao: { src: '/icons/stacking-dao.webp', fill: '#1C3830' },
+  senseiNode: { src: '/icons/senseinode.svg', fill: '#3F3FF9' },
   lisa: { src: '/icons/lisa.webp', fill: '#FB9DF1' },
 };
+
+export function getProviderIconSrc(providerId: string): string | undefined {
+  const provider = providerIdSchema.safeParse(providerId);
+  if (!provider.success) return undefined;
+  return stackingProviderIconConfig[provider.data].src;
+}
 
 interface ProviderIconProps {
   providerId: string;

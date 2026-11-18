@@ -1,16 +1,18 @@
-import { HDKey } from '@scure/bip32';
+import { type HDKey } from '@scure/bip32';
 import { ChainId } from '@stacks/network';
 import {
-  AssetString,
-  ContractIdString,
+  type AssetString,
+  type ContractIdString,
   compressPrivateKey,
   privateKeyToPublic,
+  publicKeyToHex,
 } from '@stacks/transactions';
 
 import {
   DerivationPathDepth,
   createDescriptor,
   createKeyOriginPath,
+  extractAccountIndexFromPath,
   extractAddressIndexFromPath,
   fingerprintAsNumberToHex,
 } from '@leather.io/crypto';
@@ -19,13 +21,39 @@ import { assertIsTruthy, isString, toHexString } from '@leather.io/utils';
 
 export const stxDerivationWithAccount = `m/44'/5757'/0'/0/{account}`;
 
+export const stxLedgerLiveDerivationWithAccount = `m/44'/5757'/{account}'/0/0`;
+
+export type StacksDerivationPathType = 'stacks' | 'ledgerLive';
+
+export function isStacksDerivationPathType(value: unknown) {
+  return value === 'stacks' || value === 'ledgerLive';
+}
+
 export function makeAccountIndexDerivationPathFactory(derivationPath: string) {
   return (account: number) => derivationPath.replace('{account}', account.toString());
 }
 
 export function extractStacksDerivationPathAccountIndex(path: string) {
   if (!path.includes('5757')) throw new Error('Not a valid Stacks derivation path: ' + path);
+  if (stacksDerivationPathTypeFromPath(path) === 'ledgerLive')
+    return extractAccountIndexFromPath(path);
   return extractAddressIndexFromPath(path);
+}
+
+export function stacksDerivationPathTypeFromPath(path: string): StacksDerivationPathType | null {
+  if (!path.includes('5757')) throw new Error('Not a valid Stacks derivation path: ' + path);
+  if (extractAddressIndexFromPath(path) > 0) return 'stacks';
+  if (extractAccountIndexFromPath(path) > 0) return 'ledgerLive';
+  return null;
+}
+
+export function inferStacksDerivationPathType(
+  descriptors: string[]
+): StacksDerivationPathType | null {
+  const types = descriptors.map(stacksDerivationPathTypeFromPath);
+  if (types.includes('stacks')) return 'stacks';
+  if (types.includes('ledgerLive')) return 'ledgerLive';
+  return null;
 }
 
 /**
@@ -34,8 +62,14 @@ export function extractStacksDerivationPathAccountIndex(path: string) {
 export const makeStxDerivationPath =
   makeAccountIndexDerivationPathFactory(stxDerivationWithAccount);
 
-export function makeStxKeyOrigin(fingerprint: string, accountIndex: number) {
-  return createKeyOriginPath(fingerprint, makeStxDerivationPath(accountIndex));
+export const makeLedgerLiveStxDerivationPath = makeAccountIndexDerivationPathFactory(
+  stxLedgerLiveDerivationWithAccount
+);
+
+export function makeStxDerivationPathForType(type: StacksDerivationPathType, accountIndex: number) {
+  return type === 'ledgerLive'
+    ? makeLedgerLiveStxDerivationPath(accountIndex)
+    : makeStxDerivationPath(accountIndex);
 }
 
 export function stacksChainIdToCoreNetworkMode(chainId: number): NetworkModes {
@@ -49,9 +83,10 @@ interface WhenStacksChainIdMap<T> {
   [ChainId.Mainnet]: T;
   [ChainId.Testnet]: T;
 }
+const mainnetChainId: number = ChainId.Mainnet;
 export function whenStacksChainId(chainId: number) {
   return <T>(chainIdMap: WhenStacksChainIdMap<T>): T =>
-    chainId === ChainId.Mainnet ? chainIdMap[ChainId.Mainnet] : chainIdMap[ChainId.Testnet];
+    chainId === mainnetChainId ? chainIdMap[ChainId.Mainnet] : chainIdMap[ChainId.Testnet];
 }
 
 // From `@stacks/wallet-sdk` package we are trying not to use
@@ -69,7 +104,7 @@ export function deriveStxPublicKey({
   keychain: HDKey;
   index: number;
 }): string {
-  return privateKeyToPublic(deriveStxPrivateKey({ keychain, index })) as string;
+  return publicKeyToHex(privateKeyToPublic(deriveStxPrivateKey({ keychain, index })));
 }
 
 /**

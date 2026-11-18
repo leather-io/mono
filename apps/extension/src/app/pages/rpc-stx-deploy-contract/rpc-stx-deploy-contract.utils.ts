@@ -1,5 +1,4 @@
 import type { StacksNetwork } from '@stacks/network';
-import { ClarityVersion } from '@stacks/transactions';
 
 import type { Money } from '@leather.io/models';
 import { createRequestEncoder, stxDeployContract } from '@leather.io/rpc';
@@ -27,7 +26,7 @@ function getTransactionOptionsFromRpcRequest() {
   return {
     contractName: decodedRpcRequest.params.name,
     codeBody: decodedRpcRequest.params.clarityCode,
-    clarityVersion: decodedRpcRequest.params.clarityVersion ?? ClarityVersion.Clarity3,
+    clarityVersion: decodedRpcRequest.params.clarityVersion,
     sponsored: decodedRpcRequest.params.sponsored,
     fee: decodedRpcRequest.params.fee
       ? createMoney(decodedRpcRequest.params.fee, 'STX')

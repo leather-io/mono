@@ -3,7 +3,7 @@ function truncateHex(hex: string, offset = 5): string {
 }
 
 export function truncateMiddle(input: string, offset = 5): string {
-  if (!input) return '';
+  if (!input) return input;
   // Hex
   if (input.startsWith('0x')) {
     return truncateHex(input, offset);

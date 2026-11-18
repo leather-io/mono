@@ -7,7 +7,7 @@ import {
   truncateMiddle,
 } from '@leather.io/utils';
 
-import { useActivityByAsset } from '@app/query/activity/activity.query';
+import { useBlockchainActivityByAssetId } from '@app/query/activity/blockchain-activity.query';
 import { useSip10BalanceByAssetIdByAddresses } from '@app/query/stacks/sip10/sip10-balance.hooks';
 
 import { useTokenMarketInfo } from './hooks/use-token-market-info';
@@ -28,7 +28,7 @@ interface Sip10TokenDetailsContentProps {
 function Sip10TokenDetailsContent({ account, balance }: Sip10TokenDetailsContentProps) {
   const { asset, crypto, quote } = balance;
   const marketInfo = useTokenMarketInfo(asset);
-  const activityQuery = useActivityByAsset(account, asset);
+  const activityQuery = useBlockchainActivityByAssetId(account, asset);
 
   return (
     <Sip10TokenDetailsLayout
@@ -39,16 +39,16 @@ function Sip10TokenDetailsContent({ account, balance }: Sip10TokenDetailsContent
           name={asset.name}
         />
       }
+      asset={asset}
       name={asset.name}
       symbol={asset.symbol}
       availableBalance={crypto.availableBalance}
       fiatBalance={quote.availableBalance}
       price={marketInfo.price}
-      changePercent={marketInfo.changePercent}
-      priceChangeDelta={marketInfo.priceChangeDelta}
       descriptionText={marketInfo.descriptionText}
       contractDetails={truncateMiddle(asset.assetId, 4)}
       activity={activityQuery.data ?? []}
+      isActivityLoading={activityQuery.isLoading}
     />
   );
 }

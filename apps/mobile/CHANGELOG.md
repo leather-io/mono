@@ -23,6 +23,292 @@
 * axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
 * **mobile:** help header ([764af25](https://github.com/leather-io/mono/commit/764af257655ecb585d6805c5350c3d5fffe7a56a))
 
+## [2.116.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.115.2...@leather.io/mobile-v2.116.0) (2026-10-27)
+
+
+### Features
+
+* **mobile:** bring token management on par with the extension ([#2826](https://github.com/leather-io/mono/issues/2826)) ([3d7cffc](https://github.com/leather-io/mono/commit/3d7cffce70e4f3f2489e758ae9192a9d1c9de11c))
+* pin sBTC and USDCx after BTC and STX in token lists ([#2858](https://github.com/leather-io/mono/issues/2858)) ([12d4c39](https://github.com/leather-io/mono/commit/12d4c398445f690c714d16e4198b8a4ec47f9566))
+* **tokens:** add ink.text-secondary and use it for decision-critical copy ([#2853](https://github.com/leather-io/mono/issues/2853)) ([9b5ff8f](https://github.com/leather-io/mono/commit/9b5ff8fafad7c678cca5d7e25ef15115ea186fac))
+
+
+### Bug Fixes
+
+* body-parser and undici audit ([#2912](https://github.com/leather-io/mono/issues/2912)) ([2bee4e7](https://github.com/leather-io/mono/commit/2bee4e772dd95fff8406822a62225854fb708fbd))
+* **mobile:** return sponsored contract calls to the app without error ([#2811](https://github.com/leather-io/mono/issues/2811)) ([0012105](https://github.com/leather-io/mono/commit/00121054e400c7de2302e205fbc30f14965cbce7))
+* **mobile:** show ft post conditions without metadata ([#2847](https://github.com/leather-io/mono/issues/2847)) ([4af9c00](https://github.com/leather-io/mono/commit/4af9c00a217fa89c8ac9f43fdbd6f123c43f598b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.26.1
+    * @leather.io/bitcoin bumped to 0.42.1
+    * @leather.io/cms bumped to 1.6.4
+    * @leather.io/constants bumped to 0.41.0
+    * @leather.io/crypto bumped to 1.13.11
+    * @leather.io/features bumped to 1.8.6
+    * @leather.io/models bumped to 0.63.1
+    * @leather.io/provider bumped to 1.7.6
+    * @leather.io/queries bumped to 0.17.3
+    * @leather.io/query bumped to 2.52.2
+    * @leather.io/rpc bumped to 2.25.4
+    * @leather.io/services bumped to 1.66.3
+    * @leather.io/stacks bumped to 1.22.9
+    * @leather.io/ui bumped to 1.119.4
+    * @leather.io/utils bumped to 0.55.0
+
+## [2.115.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.115.1...@leather.io/mobile-v2.115.2) (2026-10-06)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.42.0
+    * @leather.io/features bumped to 1.8.5
+    * @leather.io/queries bumped to 0.17.2
+    * @leather.io/services bumped to 1.66.2
+    * @leather.io/ui bumped to 1.119.3
+
+## [2.115.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.115.0...@leather.io/mobile-v2.115.1) (2026-10-01)
+
+
+### Bug Fixes
+
+* axios audit ([#2815](https://github.com/leather-io/mono/issues/2815)) ([480ceda](https://github.com/leather-io/mono/commit/480ceda66cf6537701f7c3571a1fb6c08fc5f127))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/features bumped to 1.8.4
+    * @leather.io/queries bumped to 0.17.1
+    * @leather.io/query bumped to 2.52.1
+    * @leather.io/services bumped to 1.66.1
+    * @leather.io/ui bumped to 1.119.2
+
+## [2.115.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.114.2...@leather.io/mobile-v2.115.0) (2026-09-29)
+
+
+### Features
+
+* **extension:** new swaps flow with sBTC bridging ([#2554](https://github.com/leather-io/mono/issues/2554)) ([65c8518](https://github.com/leather-io/mono/commit/65c85186c847b2e99fd062d00997c81932268bc5))
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+* update supportedMethods docs urls and add stx methods ([#2795](https://github.com/leather-io/mono/issues/2795)) ([ae34f69](https://github.com/leather-io/mono/commit/ae34f694fe0d373fcf96fc0e9c157e5ff93a9417))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.26.0
+    * @leather.io/bitcoin bumped to 0.41.0
+    * @leather.io/cms bumped to 1.6.3
+    * @leather.io/constants bumped to 0.40.0
+    * @leather.io/crypto bumped to 1.13.10
+    * @leather.io/features bumped to 1.8.3
+    * @leather.io/models bumped to 0.63.0
+    * @leather.io/provider bumped to 1.7.5
+    * @leather.io/queries bumped to 0.17.0
+    * @leather.io/query bumped to 2.52.0
+    * @leather.io/rpc bumped to 2.25.3
+    * @leather.io/services bumped to 1.66.0
+    * @leather.io/stacks bumped to 1.22.8
+    * @leather.io/ui bumped to 1.119.1
+    * @leather.io/utils bumped to 0.54.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/test-config bumped to 0.1.4
+
+## [2.114.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.114.1...@leather.io/mobile-v2.114.2) (2026-09-14)
+
+
+### Bug Fixes
+
+* **web:** unblock footer links under the connect overlay and retire Advanced Earn ([#2731](https://github.com/leather-io/mono/issues/2731)) ([7c4ac69](https://github.com/leather-io/mono/commit/7c4ac6979a7f9f656bc7caf709fd61c521f504b8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.40.2
+    * @leather.io/constants bumped to 0.39.4
+    * @leather.io/crypto bumped to 1.13.9
+    * @leather.io/features bumped to 1.8.2
+    * @leather.io/provider bumped to 1.7.4
+    * @leather.io/queries bumped to 0.16.1
+    * @leather.io/query bumped to 2.51.9
+    * @leather.io/rpc bumped to 2.25.2
+    * @leather.io/services bumped to 1.65.1
+    * @leather.io/stacks bumped to 1.22.7
+    * @leather.io/ui bumped to 1.119.0
+    * @leather.io/utils bumped to 0.53.1
+
+## [2.114.1](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.114.0...@leather.io/mobile-v2.114.1) (2026-09-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.25.1
+    * @leather.io/bitcoin bumped to 0.40.1
+    * @leather.io/cms bumped to 1.6.2
+    * @leather.io/constants bumped to 0.39.3
+    * @leather.io/crypto bumped to 1.13.8
+    * @leather.io/features bumped to 1.8.1
+    * @leather.io/models bumped to 0.62.0
+    * @leather.io/provider bumped to 1.7.3
+    * @leather.io/queries bumped to 0.16.0
+    * @leather.io/query bumped to 2.51.8
+    * @leather.io/rpc bumped to 2.25.1
+    * @leather.io/services bumped to 1.65.0
+    * @leather.io/stacks bumped to 1.22.6
+    * @leather.io/ui bumped to 1.118.0
+    * @leather.io/utils bumped to 0.53.0
+
+## [2.114.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.113.0...@leather.io/mobile-v2.114.0) (2026-08-27)
+
+
+### Features
+
+* update sendTransfer params ([#2634](https://github.com/leather-io/mono/issues/2634)) ([344da46](https://github.com/leather-io/mono/commit/344da46f4608c9e431522e99e5326af916deb499))
+
+
+### Bug Fixes
+
+* route bitflow readonly calls through hiro ([#2683](https://github.com/leather-io/mono/issues/2683)) ([9659a2f](https://github.com/leather-io/mono/commit/9659a2f1469e7e6d27428959e2d84264a23d7372))
+* update ledger dependencies ([#2661](https://github.com/leather-io/mono/issues/2661)) ([7ef2061](https://github.com/leather-io/mono/commit/7ef20613d3a4858da6f6102bb586bbb370201e4b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.25.0
+    * @leather.io/bitcoin bumped to 0.40.0
+    * @leather.io/constants bumped to 0.39.2
+    * @leather.io/crypto bumped to 1.13.7
+    * @leather.io/features bumped to 1.8.0
+    * @leather.io/models bumped to 0.61.1
+    * @leather.io/provider bumped to 1.7.2
+    * @leather.io/queries bumped to 0.15.4
+    * @leather.io/query bumped to 2.51.7
+    * @leather.io/rpc bumped to 2.25.0
+    * @leather.io/services bumped to 1.64.1
+    * @leather.io/stacks bumped to 1.22.5
+    * @leather.io/ui bumped to 1.117.0
+    * @leather.io/utils bumped to 0.52.7
+
+## [2.113.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.112.5...@leather.io/mobile-v2.113.0) (2026-08-18)
+
+
+### Features
+
+* **services:** replace chainalysis with leather api compliance endpoint ([#2606](https://github.com/leather-io/mono/issues/2606)) ([ac3a931](https://github.com/leather-io/mono/commit/ac3a931ed2dec18d52dd3832450fb59f4dc5282d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.24.0
+    * @leather.io/bitcoin bumped to 0.39.6
+    * @leather.io/constants bumped to 0.39.1
+    * @leather.io/crypto bumped to 1.13.6
+    * @leather.io/features bumped to 1.7.2
+    * @leather.io/models bumped to 0.61.0
+    * @leather.io/provider bumped to 1.7.1
+    * @leather.io/queries bumped to 0.15.3
+    * @leather.io/query bumped to 2.51.6
+    * @leather.io/rpc bumped to 2.24.5
+    * @leather.io/services bumped to 1.64.0
+    * @leather.io/stacks bumped to 1.22.4
+    * @leather.io/ui bumped to 1.116.2
+    * @leather.io/utils bumped to 0.52.6
+
+## [2.112.5](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.112.4...@leather.io/mobile-v2.112.5) (2026-08-10)
+
+
+### Bug Fixes
+
+* mobile-stale-passphrase ([#2614](https://github.com/leather-io/mono/issues/2614)) ([5d42c21](https://github.com/leather-io/mono/commit/5d42c210335038b3d99567282b2ac403d9d5fd1d))
+* origin-principal-post-condition ([#2617](https://github.com/leather-io/mono/issues/2617)) ([c339004](https://github.com/leather-io/mono/commit/c339004db150a797ae4411ac3d4c85d17c303e95))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.23.0
+    * @leather.io/bitcoin bumped to 0.39.5
+    * @leather.io/constants bumped to 0.39.0
+    * @leather.io/crypto bumped to 1.13.5
+    * @leather.io/features bumped to 1.7.1
+    * @leather.io/provider bumped to 1.7.0
+    * @leather.io/queries bumped to 0.15.2
+    * @leather.io/query bumped to 2.51.5
+    * @leather.io/rpc bumped to 2.24.4
+    * @leather.io/services bumped to 1.63.1
+    * @leather.io/stacks bumped to 1.22.3
+    * @leather.io/ui bumped to 1.116.1
+    * @leather.io/utils bumped to 0.52.5
+
+## [2.112.4](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.112.3...@leather.io/mobile-v2.112.4) (2026-08-05)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.22.0
+    * @leather.io/bitcoin bumped to 0.39.4
+    * @leather.io/constants bumped to 0.38.0
+    * @leather.io/crypto bumped to 1.13.4
+    * @leather.io/features bumped to 1.7.0
+    * @leather.io/provider bumped to 1.6.33
+    * @leather.io/queries bumped to 0.15.1
+    * @leather.io/query bumped to 2.51.4
+    * @leather.io/rpc bumped to 2.24.3
+    * @leather.io/services bumped to 1.63.0
+    * @leather.io/stacks bumped to 1.22.2
+    * @leather.io/ui bumped to 1.116.0
+    * @leather.io/utils bumped to 0.52.4
+
+## [2.112.3](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.112.2...@leather.io/mobile-v2.112.3) (2026-07-23)
+
+
+### Bug Fixes
+
+* audit issues ([#2536](https://github.com/leather-io/mono/issues/2536)) ([812123e](https://github.com/leather-io/mono/commit/812123ef33b712cb3ef380e21525c8fb67cf1928))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.39.3
+    * @leather.io/constants bumped to 0.37.2
+    * @leather.io/crypto bumped to 1.13.3
+    * @leather.io/features bumped to 1.6.0
+    * @leather.io/provider bumped to 1.6.32
+    * @leather.io/queries bumped to 0.15.0
+    * @leather.io/query bumped to 2.51.3
+    * @leather.io/rpc bumped to 2.24.2
+    * @leather.io/services bumped to 1.62.0
+    * @leather.io/stacks bumped to 1.22.1
+    * @leather.io/ui bumped to 1.115.0
+    * @leather.io/utils bumped to 0.52.3
+
 ## [2.112.2](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.112.1...@leather.io/mobile-v2.112.2) (2026-07-20)
 
 

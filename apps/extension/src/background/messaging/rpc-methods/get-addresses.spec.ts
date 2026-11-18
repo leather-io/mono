@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
+import { createMockPort } from '../create-mock-port';
 import { getAddressesHandler, stxGetAddressesHandler } from './get-addresses';
 
 type GetAddressesRequest = Parameters<(typeof getAddressesHandler)[1]>[0];
@@ -13,7 +14,7 @@ const mocks = vi.hoisted(() => ({
   validateRequestNetwork: vi.fn(),
 }));
 
-vi.mock('../rpc-message-handler', () => ({
+vi.mock('../define-rpc-request-handler', () => ({
   defineRpcRequestHandler: (method: string, handler: unknown) => [method, handler],
 }));
 
@@ -33,13 +34,15 @@ const frameId = 42;
 const tabId = 7;
 
 function buildPort() {
-  return {
-    sender: { frameId, url: 'https://app.example.com', tab: { id: tabId } },
-  } as unknown as chrome.runtime.Port;
+  return createMockPort({ frameId, url: 'https://app.example.com', tab: { id: tabId } });
 }
 
-function buildRequest(method: string, params?: Record<string, unknown>) {
-  return { jsonrpc: '2.0', id: 'req-1', method, ...(params ? { params } : {}) };
+function buildGetAddressesRequest(params?: GetAddressesRequest['params']): GetAddressesRequest {
+  return { jsonrpc: '2.0', id: 'req-1', method: 'getAddresses', ...(params ? { params } : {}) };
+}
+
+function buildStxGetAddressesRequest(): StxGetAddressesRequest {
+  return { jsonrpc: '2.0', id: 'req-1', method: 'stx_getAddresses' };
 }
 
 describe('sharedGetAddressesHandler', () => {
@@ -59,7 +62,7 @@ describe('sharedGetAddressesHandler', () => {
 
   test('pins the last known account from the origin permission', async () => {
     const [, handler] = getAddressesHandler;
-    await handler(buildRequest('getAddresses') as unknown as GetAddressesRequest, buildPort());
+    await handler(buildGetAddressesRequest(), buildPort());
 
     expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledTimes(1);
     expect(mocks.triggerRequestPopupWindowOpen).toHaveBeenCalledTimes(1);
@@ -68,7 +71,7 @@ describe('sharedGetAddressesHandler', () => {
 
   test('passes an undefined network when the request omits network', async () => {
     const [, handler] = getAddressesHandler;
-    await handler(buildRequest('getAddresses') as unknown as GetAddressesRequest, buildPort());
+    await handler(buildGetAddressesRequest(), buildPort());
 
     expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledWith(
       expect.anything(),
@@ -79,10 +82,7 @@ describe('sharedGetAddressesHandler', () => {
 
   test('passes through the requested network param', async () => {
     const [, handler] = getAddressesHandler;
-    await handler(
-      buildRequest('getAddresses', { network: 'testnet' }) as unknown as GetAddressesRequest,
-      buildPort()
-    );
+    await handler(buildGetAddressesRequest({ network: 'testnet' }), buildPort());
 
     expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledWith(
       expect.anything(),
@@ -95,10 +95,7 @@ describe('sharedGetAddressesHandler', () => {
     mocks.validateRequestNetwork.mockResolvedValue({ status: 'failure' });
 
     const [, handler] = getAddressesHandler;
-    await handler(
-      buildRequest('getAddresses', { network: 'mocknet' }) as unknown as GetAddressesRequest,
-      buildPort()
-    );
+    await handler(buildGetAddressesRequest({ network: 'mocknet' }), buildPort());
 
     expect(mocks.validateRequestNetwork).toHaveBeenCalledWith(
       expect.objectContaining({ network: 'mocknet' })
@@ -109,10 +106,7 @@ describe('sharedGetAddressesHandler', () => {
 
   test('handles stx_getAddresses identically', async () => {
     const [, handler] = stxGetAddressesHandler;
-    await handler(
-      buildRequest('stx_getAddresses') as unknown as StxGetAddressesRequest,
-      buildPort()
-    );
+    await handler(buildStxGetAddressesRequest(), buildPort());
 
     expect(mocks.createConnectingAppSearchParamsWithLastKnownAccount).toHaveBeenCalledWith(
       expect.anything(),

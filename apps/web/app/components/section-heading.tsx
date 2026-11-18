@@ -1,8 +1,8 @@
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { Box, Flex, type FlexProps, styled } from 'leather-styles/jsx';
 import { LearnMoreLink } from '~/layouts/page/page';
 import { sanitizeContent } from '~/utils/sanitize-content';
 
-interface SectionHeadingProps {
+interface SectionHeadingProps extends FlexProps {
   title: string;
   sentence?: string;
   disclaimer?: string;
@@ -16,6 +16,7 @@ export function SectionHeading({
   disclaimer,
   learnMoreSlug,
   prefix,
+  ...flexProps
 }: SectionHeadingProps) {
   return (
     <Flex
@@ -25,6 +26,7 @@ export function SectionHeading({
       gap={['space.04', 'space.04', 'space.07']}
       mb="space.07"
       mt="space.07"
+      {...flexProps}
     >
       <Box flex={1}>
         <styled.h2 textStyle="heading.03" id={title} maxW="400px" m={0} mr="space.03">

@@ -1,13 +1,13 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
+import { CopyAddress } from '~/components/copy-address';
 import { useVaultAccountBalance } from '~/features/multisig/vaults/use-vault-account-balance';
-import { formatCurrency } from '~/utils/currency-formatter';
+import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
 
 import type { Vault, VaultAccountSummary } from '@leather.io/models';
 import { Button, ListItemBox } from '@leather.io/ui';
 
 import { AvatarSq } from '../../components/avatar-sq';
-import { CopyAddress } from '../../components/copy-address';
 import { vaultThemeFromName } from '../../multisig-tokens';
 import { chainFromNetwork } from '../../multisig.utils';
 
@@ -70,8 +70,8 @@ function AccountCard({
           }
           title={<styled.span textStyle="heading.05">{account.name}</styled.span>}
           caption={
-            <styled.span display="inline-flex" pointerEvents="auto">
-              <CopyAddress addr={account.multisigAddress} full />
+            <styled.span display="flex" width="100%" minWidth={0} pointerEvents="auto">
+              <CopyAddress addr={account.multisigAddress} wide />
             </styled.span>
           }
           trailing={
@@ -80,7 +80,7 @@ function AccountCard({
           trailingCaption={
             <Balance
               balance={crypto}
-              formatCurrency={formatCurrency}
+              formatCurrency={formatCryptoGlanceable}
               textStyle="caption.01"
               color="ink.text-subdued"
             />
@@ -120,19 +120,19 @@ function CreateAccountTile({ onClick }: { onClick(): void }) {
   );
 }
 
-function CreateAccountDisabled({ reason }: { reason?: string }) {
+function CreateAccountDisabled({ reason }: { reason: string }) {
   return (
     <Box
       width="100%"
       p="space.05"
       borderRadius="md"
       borderWidth="1px"
-      borderStyle="dashed"
+      borderStyle="solid"
       borderColor="ink.border-default"
       textAlign="center"
     >
       <styled.span textStyle="caption.01" color="ink.text-subdued">
-        {reason ?? "New accounts can't be created for this vault."}
+        {reason}
       </styled.span>
     </Box>
   );
@@ -203,9 +203,8 @@ export function AccountsSection({
           </Button>
         </Flex>
       )}
-      {canCreate ? (
-        <CreateAccountTile onClick={onCreateAccount} />
-      ) : (
+      {canCreate && <CreateAccountTile onClick={onCreateAccount} />}
+      {!canCreate && disabledReason !== undefined && (
         <CreateAccountDisabled reason={disabledReason} />
       )}
     </Flex>

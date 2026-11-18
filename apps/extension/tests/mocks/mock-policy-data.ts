@@ -13,18 +13,20 @@ const exampleNftAssetIdentifier =
 const exampleNftTokenIdHex = '0x0100000000000000000000000000000001';
 
 export async function mockPolicyStacksNftHoldings(page: Page | BrowserContext, address: string) {
-  await page.route(`**/api.hiro.so/extended/v1/tokens/nft/holdings?principal=${address}*`, route =>
+  await page.route(`**/api.hiro.so/extended/v3/principals/${address}/balances/nft**`, route =>
     route.fulfill({
       json: {
         limit: 200,
-        offset: 0,
         total: 1,
+        cursor: {
+          next: null,
+          previous: null,
+          current: `${exampleNftAssetIdentifier}:${exampleNftTokenIdHex}`,
+        },
         results: [
           {
             asset_identifier: exampleNftAssetIdentifier,
             value: { hex: exampleNftTokenIdHex, repr: 'u1' },
-            block_height: 150000,
-            tx_id: '0x6a1c0c3b5dfb9c92024cf48922ff30726e1ad2016615f1a06e195a2a51b998ae',
           },
         ],
       },
@@ -42,6 +44,44 @@ export async function mockPolicyStacksReceiveActivity(
   page: Page | BrowserContext,
   address: string
 ) {
+  await page.route(`**/api.hiro.so/extended/v3/principals/${address}/transactions**`, route =>
+    route.fulfill({
+      json: {
+        total: 1,
+        limit: 50,
+        cursor: { next: null, previous: null, current: null },
+        results: [
+          {
+            transaction: {
+              tx_id: '0x9b709768122e6c62a37b087106cc9c23280ed6242b565484b6cc4e6a43ae1155',
+              type: 'token_transfer',
+              sender: { address: 'SPWECF3XYVRBRCN23CJJCX9XKSF8RFWQPAQMWXT', nonce: 5 },
+              sponsor: null,
+              fee_rate: '300',
+              block: {
+                height: 150000,
+                hash: '0x420f7e5227a366554d1c8032c0c7d8de730a45a8e662038d6eff43db6beaa0cc',
+                index_hash: '0x420f7e5227a366554d1c8032c0c7d8de730a45a8e662038d6eff43db6beaa0cc',
+                time: 1714836180,
+                tx_index: 1,
+              },
+              bitcoin_block: { height: 842073, time: 1714836115 },
+              status: 'success',
+              token_transfer: {
+                recipient: address,
+                amount: '5000000',
+                memo: null,
+              },
+            },
+            involvement: 'affected',
+            balance_changes: { stx: { sent: '0', received: '5000000', net: '5000000' } },
+            affected_balances: { stx: true, ft: false, nft: false },
+          },
+        ],
+      },
+    })
+  );
+
   await page.route(`**/api.hiro.so/extended/v2/addresses/${address}/transactions*`, route =>
     route.fulfill({
       json: {

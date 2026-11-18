@@ -1,5 +1,5 @@
 import { type BrowserContext, type Page, expect } from '@playwright/test';
-import { overrideLaunchDarklyFlags } from '@tests/mocks/mock-launchdarkly';
+import { getResponseAddresses } from '@tests/leather-provider';
 import {
   makeBitcoinPolicy,
   makeStacksPolicy,
@@ -17,10 +17,7 @@ interface AddressResponse {
 }
 
 async function initiateGetAddresses(page: Page, params: unknown) {
-  return page.evaluate(
-    params => (window as any).LeatherProvider?.request('getAddresses', params),
-    params
-  );
+  return page.evaluate(params => window.LeatherProvider?.request('getAddresses', params), params);
 }
 
 async function approve(context: BrowserContext) {
@@ -53,14 +50,7 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
     await globalPage.setupAndUseApiCalls(extensionId);
   });
 
-  test.describe('when the enableAllowPolicyAccounts flag is on (param is enforced)', () => {
-    test.beforeEach(async ({ context }) => {
-      await overrideLaunchDarklyFlags(context, {
-        releaseAddAccount: true,
-        enableAllowPolicyAccounts: true,
-      });
-    });
-
+  test.describe('allowPolicyAccounts param', () => {
     test('returns only the active bitcoin policy when connecting with that policy account', async ({
       page,
       context,
@@ -79,7 +69,7 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
       await approve(context);
 
       const result = await requestPromise;
-      expect(result.result.addresses).toEqual([
+      expect(getResponseAddresses(result)).toEqual([
         {
           symbol: 'BTC',
           type: 'p2wsh',
@@ -107,7 +97,7 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
       await approve(context);
 
       const result = await requestPromise;
-      expect(result.result.addresses).toEqual([
+      expect(getResponseAddresses(result)).toEqual([
         {
           symbol: 'STX',
           kind: 'multisig',
@@ -133,8 +123,8 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
       await approve(context);
 
       const result = await requestPromise;
-      expect(hasPolicyAddress(result.result.addresses)).toBe(false);
-      expect(hasSinglesigAddress(result.result.addresses)).toBe(true);
+      expect(hasPolicyAddress(getResponseAddresses(result))).toBe(false);
+      expect(hasSinglesigAddress(getResponseAddresses(result))).toBe(true);
     });
 
     test('shows policy accounts as selectable in the switcher', async ({
@@ -157,7 +147,7 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
       await expect(requestPromise).rejects.toThrow();
     });
 
-    test('omits policy accounts and returns singlesig when the param is not set', async ({
+    test('omits policy accounts and returns singlesig when the param is false', async ({
       page,
       context,
       extensionId,
@@ -168,15 +158,15 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
         policyStateOverrides({ policies: [bitcoinPolicy, stacksPolicy] })
       );
       await page.goto('localhost:3000');
-      const requestPromise = initiateGetAddresses(page, {});
+      const requestPromise = initiateGetAddresses(page, { allowPolicyAccounts: false });
       await approve(context);
 
       const result = await requestPromise;
-      expect(hasPolicyAddress(result.result.addresses)).toBe(false);
-      expect(hasSinglesigAddress(result.result.addresses)).toBe(true);
+      expect(hasPolicyAddress(getResponseAddresses(result))).toBe(false);
+      expect(hasSinglesigAddress(getResponseAddresses(result))).toBe(true);
     });
 
-    test('defaults to the singlesig parent when a policy is active but the param is not set', async ({
+    test('defaults to the singlesig parent when a policy is active but the param is false', async ({
       page,
       context,
       extensionId,
@@ -190,15 +180,15 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
         })
       );
       await page.goto('localhost:3000');
-      const requestPromise = initiateGetAddresses(page, {});
+      const requestPromise = initiateGetAddresses(page, { allowPolicyAccounts: false });
       await approve(context);
 
       const result = await requestPromise;
-      expect(hasPolicyAddress(result.result.addresses)).toBe(false);
-      expect(hasSinglesigAddress(result.result.addresses)).toBe(true);
+      expect(hasPolicyAddress(getResponseAddresses(result))).toBe(false);
+      expect(hasSinglesigAddress(getResponseAddresses(result))).toBe(true);
     });
 
-    test('does not allow selecting a policy account in the switcher when the param is not set', async ({
+    test('does not allow selecting a policy account in the switcher when the param is false', async ({
       page,
       context,
       extensionId,
@@ -209,7 +199,7 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
         policyStateOverrides({ policies: [bitcoinPolicy, stacksPolicy] })
       );
       await page.goto('localhost:3000');
-      const requestPromise = initiateGetAddresses(page, {});
+      const requestPromise = initiateGetAddresses(page, { allowPolicyAccounts: false });
 
       const popup = await openSwitcher(context);
       await expect(popup.getByTestId(`switch-account-policy-${bitcoinPolicy.id}`)).toHaveCount(0);
@@ -217,17 +207,8 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
       await popup.close();
       await expect(requestPromise).rejects.toThrow();
     });
-  });
 
-  test.describe('when the enableAllowPolicyAccounts flag is off (param is ignored)', () => {
-    test.beforeEach(async ({ context }) => {
-      await overrideLaunchDarklyFlags(context, {
-        releaseAddAccount: true,
-        enableAllowPolicyAccounts: false,
-      });
-    });
-
-    test('returns the active policy even when the param is not set', async ({
+    test('returns the active policy when the param is not set', async ({
       page,
       context,
       extensionId,
@@ -245,7 +226,7 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
       await approve(context);
 
       const result = await requestPromise;
-      expect(result.result.addresses).toEqual([
+      expect(getResponseAddresses(result)).toEqual([
         {
           symbol: 'BTC',
           type: 'p2wsh',
@@ -255,7 +236,7 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
       ]);
     });
 
-    test('shows policy accounts in the switcher even when the param is not set', async ({
+    test('shows policy accounts in the switcher when the param is not set', async ({
       page,
       context,
       extensionId,

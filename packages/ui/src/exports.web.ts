@@ -18,6 +18,10 @@ export {
 } from './components/address-displayer/address-displayer.web';
 export { Avatar, type AvatarProps } from './components/avatar/avatar.web';
 export { Badge, type BadgeProps } from './components/badge/badge.web';
+export {
+  BlockchainActivityIndicatorIcon,
+  PendingIndicatorIcon,
+} from './components/activity/blockchain-activity-indicator-icon.web';
 export { BulletSeparator } from './components/bullet-separator/bullet-separator.web';
 export { Button, type ButtonProps } from './components/button/button.web';
 export { Callout, type CalloutProps } from './components/callout/callout.web';
@@ -28,6 +32,7 @@ export { Highlighter, type HighlighterProps } from './components/highlighting/hi
 export { HoverCard } from './components/hover-card/hover-card.web';
 export { Hr, DashedHr, type HrProps } from './components/hr.web';
 export { IconButton } from './components/icon-button/icon-button.web';
+export { InlineIcon, type InlineIconProps } from './components/inline-icon/inline-icon.web';
 export { Input } from './components/input/input.web';
 export { ItemLayout } from './components/item-layout/item-layout.web';
 export { ItemLayoutWithButtons } from './components/item-layout/item-layout-with-buttons.web';

@@ -34,7 +34,7 @@ export function createActivityQueryConfig(account: AccountAddresses, settings: U
     queryFn: ({ signal }: QueryFunctionContext) =>
       getActivityService().getActivity(account, signal),
     ...activityQueryOptions,
-  } satisfies UseQueryOptions<Activity[], Error>;
+  } satisfies UseQueryOptions<Activity[]>;
 }
 
 export function createActivityByAssetQueryKey(
@@ -59,5 +59,5 @@ export function createActivityByAssetQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getActivityService().getActivityByAsset(account, asset, signal),
     ...activityQueryOptions,
-  } satisfies UseQueryOptions<Activity[], Error>;
+  } satisfies UseQueryOptions<Activity[]>;
 }

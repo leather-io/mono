@@ -1,8 +1,4 @@
-import * as btc from '@scure/btc-signer';
-
-import { getPsbtTxInputs, getPsbtTxOutputs } from '@leather.io/bitcoin';
-
-import { getBitcoinInputValue } from '@shared/crypto/bitcoin/bitcoin.utils';
+import { getBitcoinInputValue, getPsbtTxInputs, getPsbtTxOutputs } from '@leather.io/bitcoin';
 
 import { useLedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
 import { ApproveLedgerOperationLayout } from '@app/features/ledger/generic-steps/approve-ledger-operation/approve-ledger-operation.layout';
@@ -13,22 +9,23 @@ export function ApproveSignLedgerBitcoinTx() {
 
   const context = useLedgerTxSigningContext();
 
-  if (context.chain !== 'bitcoin') return null;
+  if (context.chain !== 'bitcoin' || !context.transaction) return null;
+
+  const details: [string, string][] = [
+    ...getPsbtTxInputs(context.transaction).map((input, i): [string, string] => [
+      `Input ${i + 1}`,
+      `${getBitcoinInputValue(input)} sats`,
+    ]),
+    ...getPsbtTxOutputs(context.transaction).map((output, i): [string, string] => [
+      `Output ${i + 1}`,
+      output.amount?.toString() + ' sats',
+    ]),
+  ];
 
   return (
     <ApproveLedgerOperationLayout
       description="Verify the transaction details on your Ledger"
-      details={
-        [
-          ...getPsbtTxInputs(context.transaction as unknown as btc.Transaction).map((input, i) => [
-            `Input ${i + 1}`,
-            `${getBitcoinInputValue(input)} sats`,
-          ]),
-          ...getPsbtTxOutputs(context.transaction as unknown as btc.Transaction).map(
-            (output, i) => [`Output ${i + 1}`, output.amount?.toString() + ' sats']
-          ),
-        ] as [string, string][]
-      }
+      details={details}
       status={hasApprovedOperation ? 'approved' : 'awaiting-approval'}
     />
   );

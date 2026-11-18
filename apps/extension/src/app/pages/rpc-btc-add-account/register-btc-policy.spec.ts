@@ -85,6 +85,17 @@ describe(createBtcPolicyRegistration.name, () => {
     expect(registration.result.accountId).toBe(registration.result.address);
   });
 
+  test('truncates the stored name to the account name cap', () => {
+    const registration = createBtcPolicyRegistration({
+      params: { ...baseParams, name: 'a'.repeat(50) },
+      fingerprint: 'deadbeef',
+      accountIndex: 0,
+      network: defaultNetworksKeyedById.mainnet,
+    });
+
+    expect(registration.addPolicyPayload.name).toBe('a'.repeat(35));
+  });
+
   test('rejects a descriptor whose network disagrees with the resolved network', () => {
     expect(() =>
       createBtcPolicyRegistration({

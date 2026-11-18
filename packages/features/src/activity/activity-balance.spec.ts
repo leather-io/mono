@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
 import type {
+  ConnectAppActivity,
   Money,
   ReceiveAssetActivity,
   SendAssetActivity,
@@ -57,13 +58,13 @@ describe('activity-balance', () => {
     });
 
     it('returns undefined for other activity types', () => {
-      const activity = {
+      const activity: ConnectAppActivity = {
         ...baseActivity,
         type: 'connectApp',
         appName: 'Test App',
         appUrl: 'https://test.com',
       };
-      expect(getBalanceOperator(activity as any)).toBeUndefined();
+      expect(getBalanceOperator(activity)).toBeUndefined();
     });
   });
 
@@ -105,13 +106,13 @@ describe('activity-balance', () => {
     });
 
     it('returns default color for activity without status', () => {
-      const activity = {
+      const activity: ConnectAppActivity = {
         ...baseActivity,
         type: 'connectApp',
         appName: 'Test App',
         appUrl: 'https://test.com',
       };
-      expect(getBalanceColor(activity as any)).toBe('ink.text-primary');
+      expect(getBalanceColor(activity)).toBe('ink.text-primary');
     });
   });
 
@@ -175,14 +176,14 @@ describe('activity-balance', () => {
     });
 
     it('returns empty strings for activity without value', () => {
-      const activity = {
+      const activity: ConnectAppActivity = {
         ...baseActivity,
         type: 'connectApp',
         appName: 'Test App',
         appUrl: 'https://test.com',
       };
 
-      const result = getBalancesText(activity as any, mockFormatMoney);
+      const result = getBalancesText(activity, mockFormatMoney);
       expect(result.formattedBalanceCrypto).toBe('');
       expect(result.formattedBalanceQuote).toBe('');
     });
@@ -275,14 +276,14 @@ describe('activity-balance', () => {
     });
 
     it('returns empty object for activity without value', () => {
-      const activity = {
+      const activity: ConnectAppActivity = {
         ...baseActivity,
         type: 'connectApp',
         appName: 'Test App',
         appUrl: 'https://test.com',
       };
 
-      const result = getActivityBalances(activity as any);
+      const result = getActivityBalances(activity);
       expect(result).toEqual({});
     });
   });

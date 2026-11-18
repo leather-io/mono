@@ -1,10 +1,10 @@
-import { isFiatCurrencyCode } from '../money';
+import { isFiatCurrencyCode } from '../money/is-fiat-currency-code';
 import { currencyFormatterPresets } from './currency-formatter-presets';
 import {
-  CurrencyFormatterPreset,
-  FormatAmountCustomOptions,
-  FormatAmountInput,
-  FormatAmountOptions,
+  type CurrencyFormatterPreset,
+  type FormatAmountCustomOptions,
+  type FormatAmountInput,
+  type FormatAmountOptions,
 } from './currency-formatter.types';
 
 interface CreateCurrencyFormatterParams {

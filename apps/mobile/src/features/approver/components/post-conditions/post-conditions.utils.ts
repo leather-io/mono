@@ -2,6 +2,7 @@ import { t } from '@lingui/core/macro';
 import {
   FungibleConditionCode,
   NonFungibleConditionCode,
+  PostConditionPrincipalId,
   type PostConditionWire,
   PoxConditionCode,
   type PoxPostConditionWire,
@@ -99,7 +100,8 @@ export function formatPostConditionMessage({
   context = 'transfer',
 }: FormatPostConditionMessageArgs) {
   const address = 'address' in pc.principal ? addressToString(pc.principal.address) : null;
-  const userIsSending = address === stacksAddress;
+  const isOriginPrincipal = pc.principal.prefix === PostConditionPrincipalId.Origin;
+  const userIsSending = isOriginPrincipal || address === stacksAddress;
   const verb = context === 'stake' ? 'stake' : 'transfer';
   function getTitle() {
     if (isContractPrincipal) {
@@ -129,7 +131,8 @@ export function formatPoxPostConditionMessage({
   postCondition: pc,
 }: FormatPoxPostConditionMessageArgs) {
   const address = 'address' in pc.principal ? addressToString(pc.principal.address) : null;
-  const userIsSending = address === stacksAddress;
+  const isOriginPrincipal = pc.principal.prefix === PostConditionPrincipalId.Origin;
+  const userIsSending = isOriginPrincipal || address === stacksAddress;
   const sender = getPoxSender(isContractPrincipal, userIsSending, address);
   if (!sender) return null;
   return getPoxTitle(pc.conditionCode, sender);

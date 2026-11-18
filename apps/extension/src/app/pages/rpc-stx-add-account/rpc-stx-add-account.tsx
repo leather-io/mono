@@ -1,13 +1,14 @@
 import { useRef } from 'react';
 
+import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
 import { VStack, styled } from 'leather-styles/jsx';
 
 import { AddressDisplayer, Approver, Button, Callout } from '@leather.io/ui';
 
 import { closeWindow } from '@shared/utils';
 
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
+import { CrossOriginFrameCallout } from '@app/components/cross-origin-frame-callout';
 import { CurrentAccountDisplayer } from '@app/features/current-account/current-account-displayer';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
 
@@ -24,8 +25,6 @@ export function RpcStxAddAccount() {
     matchStatus,
     mode,
     canApprove,
-    isFeatureEnabled,
-    rejectAsUnsupported,
     focusInitiatingTab,
     finalize,
   } = useStxAddAccount();
@@ -35,12 +34,6 @@ export function RpcStxAddAccount() {
   useOnOriginTabClose(() => closeWindow());
 
   const { toggleSwitchAccount } = useSwitchAccountSheet();
-
-  useOnMount(() => {
-    if (!isFeatureEnabled) rejectAsUnsupported();
-  });
-
-  if (!isFeatureEnabled) return null;
 
   if (origin === null) {
     closeWindow();
@@ -59,6 +52,7 @@ export function RpcStxAddAccount() {
 
   return (
     <Approver requester={origin} width="100%">
+      <CrossOriginFrameCallout mb="space.03" width="100%" />
       <Approver.Header
         title={isVerifyMode ? 'Verify multisig address' : 'Add multisig account'}
         onPressRequestedByLink={focusInitiatingTab}
@@ -120,7 +114,7 @@ export function RpcStxAddAccount() {
             key="confirm"
             disabled={!canApprove}
             onClick={() => void onApprove()}
-            data-testid="stx-add-account-approve-button"
+            data-testid={ConnectAccountSelectors.StxAddAccountApproveBtn}
           >
             {isVerifyMode ? 'Verify' : 'Confirm'}
           </Button>,

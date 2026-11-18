@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router';
 
-import { Box, Flex, styled } from 'leather-styles/jsx';
+import { Box, Flex } from 'leather-styles/jsx';
 import { useVaultAccountActivityFeed } from '~/features/multisig/activity/use-vault-account-activity-feed';
 
 import type { VaultAccount } from '@leather.io/models';
 import { Button } from '@leather.io/ui';
 
+import { ActivityEmptyState } from '../../components/activity-empty-state';
 import { VaultActivityList } from '../../components/vault-activity-list';
 import { multisigPaths } from '../../multisig.constants';
 
@@ -35,20 +36,7 @@ export function AccountTransactions({ account }: AccountTransactionsProps) {
   }
 
   if (items.length === 0) {
-    return (
-      <Box
-        borderRadius="md"
-        borderWidth="1px"
-        borderStyle="dashed"
-        borderColor="ink.border-default"
-        p="space.05"
-        textAlign="center"
-      >
-        <styled.span textStyle="caption.01" color="ink.text-subdued">
-          No transactions yet.
-        </styled.span>
-      </Box>
-    );
+    return <ActivityEmptyState description="Transactions for this account will appear here." />;
   }
 
   return (

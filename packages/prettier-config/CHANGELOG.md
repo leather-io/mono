@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.1](https://github.com/leather-io/mono/compare/@leather.io/prettier-config-v0.9.0...@leather.io/prettier-config-v0.9.1) (2026-09-29)
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+
 ## [0.9.0](https://github.com/leather-io/mono/compare/@leather.io/prettier-config-v0.8.1...@leather.io/prettier-config-v0.9.0) (2025-10-13)
 
 

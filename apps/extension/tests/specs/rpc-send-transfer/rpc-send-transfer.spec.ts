@@ -1,4 +1,7 @@
-import { BrowserContext, Page } from '@playwright/test';
+import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
+import { type BrowserContext, type Page } from '@playwright/test';
+import * as btc from '@scure/btc-signer';
+import type { TestRpcResponse } from '@tests/leather-provider';
 import {
   TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS,
   TEST_ACCOUNT_2_TAPROOT_ADDRESS,
@@ -6,15 +9,23 @@ import {
 } from '@tests/mocks/constants';
 import { mockTestAccountBtcBroadcastTransaction } from '@tests/mocks/mock-bitcoin-tx';
 import { mockLeatherApiRequests } from '@tests/mocks/mock-leather-api';
+import {
+  mockMixedUtxosForSend,
+  mockNativeSegwitOnlyUtxosForSend,
+  mockNativeSegwitUtxo,
+  mockTaprootUtxo,
+} from '@tests/mocks/mock-mixed-utxos';
 import { makeBitcoinPolicy, policyStateOverrides } from '@tests/mocks/mock-policies';
 import { mockFundedBitcoinAddressUtxos } from '@tests/mocks/mock-utxos';
 import {
   getConnectedTestAppPermissionsState,
   testFingerprint,
 } from '@tests/page-object-models/onboarding.page';
+import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 
+import { BITCOIN_API_BASE_URL_TESTNET4 } from '@leather.io/models';
 import { type RpcParams, type sendTransfer } from '@leather.io/rpc';
-import { truncateMiddle } from '@leather.io/utils';
+import { assertExistence, truncateMiddle } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -33,20 +44,26 @@ const baseParams = {
 };
 
 function clickActionButton(context: BrowserContext) {
-  return async (buttonToPress: 'Cancel' | 'Approve') => {
+  return async (buttonToPress: 'Cancel' | 'Approve' | 'Sign transaction') => {
     const popup = await context.waitForEvent('page');
-    await popup.waitForTimeout(1000);
-    const btn = popup.locator(`text="${buttonToPress}"`);
+    const btn = popup.getByRole('button', { name: buttonToPress });
     await btn.click();
   };
 }
 
-async function approveAndAcceptTaprootWarning(context: BrowserContext) {
-  const popup = await context.waitForEvent('page');
-  await popup.waitForTimeout(1000);
-  await popup.locator('text="Approve"').click();
-  const continueBtn = popup.locator('text="I understand, continue"');
-  await continueBtn.click({ timeout: 10000 });
+const noBroadcastWarningTitle = "Leather won't broadcast this transaction";
+
+function approveAndAcceptTaprootWarning(context: BrowserContext) {
+  return async (
+    buttonToPress: 'Approve' | 'Sign transaction',
+    beforeApprove?: (popup: Page) => Promise<void>
+  ) => {
+    const popup = await context.waitForEvent('page');
+    await beforeApprove?.(popup);
+    await popup.getByRole('button', { name: buttonToPress }).click();
+    const continueBtn = popup.getByText('I understand, continue', { exact: true });
+    await continueBtn.click({ timeout: 10000 });
+  };
 }
 
 async function mockPopupRequests(context: BrowserContext) {
@@ -55,13 +72,25 @@ async function mockPopupRequests(context: BrowserContext) {
   await mockTestAccountBtcBroadcastTransaction(popup);
 }
 
+async function mockPopupRequestsRecordingBroadcast(
+  context: BrowserContext,
+  broadcastCalls: string[]
+) {
+  const popup = await context.waitForEvent('page');
+  await mockLeatherApiRequests(popup);
+  await popup.route(`${BITCOIN_API_BASE_URL_TESTNET4}/tx`, route => {
+    broadcastCalls.push(route.request().url());
+    return route.fulfill({ body: 'mock-txid' });
+  });
+}
+
 function openSendTransfer(page: Page) {
   return async (params: RpcParams<typeof sendTransfer>) =>
     page.evaluate(
       params =>
-        (window as any).LeatherProvider?.request('sendTransfer', {
+        window.LeatherProvider?.request('sendTransfer', {
           ...params,
-        }).catch((e: unknown) => e),
+        }).catch((e: TestRpcResponse) => e),
       { ...params }
     );
 }
@@ -70,7 +99,7 @@ test.describe('RPC: sendTransfer', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('that the request can be broadcast', async ({ page, context }) => {
@@ -78,15 +107,77 @@ test.describe('RPC: sendTransfer', () => {
 
     const [result] = await Promise.all([
       openSendTransfer(page)(baseParams),
-      approveAndAcceptTaprootWarning(context),
+      approveAndAcceptTaprootWarning(context)('Approve', async popup => {
+        await test.expect(popup.getByText(noBroadcastWarningTitle)).toHaveCount(0);
+      }),
     ]);
 
+    assertExistence(result, 'Expected result');
     delete result.id;
 
     test.expect(result).toEqual({
       jsonrpc: '2.0',
-      result: { txid: '58d44000884f0ba4cdcbeb1ac082e6c802d300c16b0d3251738e8cf6a57397ce' },
+      result: {
+        txid: '58d44000884f0ba4cdcbeb1ac082e6c802d300c16b0d3251738e8cf6a57397ce',
+        transaction: test.expect.stringMatching(/^[0-9a-f]+$/),
+      },
     });
+  });
+
+  test('that the signed transaction is returned without broadcasting when broadcast is false', async ({
+    page,
+    context,
+  }) => {
+    const broadcastCalls: string[] = [];
+    void mockPopupRequestsRecordingBroadcast(context, broadcastCalls);
+
+    const [result] = await Promise.all([
+      openSendTransfer(page)({ ...baseParams, broadcast: false }),
+      approveAndAcceptTaprootWarning(context)('Sign transaction', async popup => {
+        await test.expect(popup.getByText(noBroadcastWarningTitle)).toBeVisible();
+      }),
+    ]);
+
+    assertExistence(result, 'Expected result');
+    delete result.id;
+
+    test.expect(result).toEqual({
+      jsonrpc: '2.0',
+      result: { transaction: test.expect.stringMatching(/^[0-9a-f]+$/) },
+    });
+    test.expect(broadcastCalls).toHaveLength(0);
+  });
+
+  test('that the taproot warning gates signing when broadcast is false', async ({
+    page,
+    context,
+  }) => {
+    const broadcastCalls: string[] = [];
+    void mockPopupRequestsRecordingBroadcast(context, broadcastCalls);
+
+    const resultPromise = openSendTransfer(page)({ ...baseParams, broadcast: false });
+    const popup = await context.waitForEvent('page');
+    await popup.getByRole('button', { name: 'Sign transaction' }).click();
+
+    const warningDialog = popup.getByTestId(SendCryptoAssetSelectors.TaprootUtxoWarningDialog);
+    await test.expect(warningDialog).toBeVisible({ timeout: 10000 });
+    await popup.getByRole('dialog').getByRole('button', { name: 'Cancel' }).click();
+    await test.expect(warningDialog).toHaveCount(0);
+
+    await popup.close();
+    const result = await resultPromise;
+
+    assertExistence(result, 'Expected result');
+    delete result.id;
+
+    test.expect(result).toEqual({
+      jsonrpc: '2.0',
+      error: {
+        code: 4001,
+        message: 'User rejected request',
+      },
+    });
+    test.expect(broadcastCalls).toHaveLength(0);
   });
 
   test('that the request can be cancelled', async ({ page, context }) => {
@@ -97,6 +188,7 @@ test.describe('RPC: sendTransfer', () => {
       clickActionButton(context)('Cancel'),
     ]);
 
+    assertExistence(result, 'Expected result');
     delete result.id;
 
     test.expect(result).toEqual({
@@ -106,6 +198,216 @@ test.describe('RPC: sendTransfer', () => {
         message: 'User rejected request',
       },
     });
+  });
+});
+
+const spendSourcesRecipient = 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4';
+
+const satsPerBtc = 100_000_000;
+
+const mockUtxoValuesByTxid: Record<string, number> = {
+  [mockNativeSegwitUtxo.txid]: Number(mockNativeSegwitUtxo.value),
+  [mockTaprootUtxo.txid]: Number(mockTaprootUtxo.value),
+};
+
+async function readSpendSourceRowSats(popup: Page, testId: string) {
+  const text = await popup.getByTestId(testId).innerText();
+  const btcAmount = text.match(/\d+\.\d+/)?.[0];
+  if (!btcAmount) throw new Error(`No BTC amount in spend source row: ${text}`);
+  return Math.round(Number(btcAmount) * satsPerBtc);
+}
+
+async function readSpendSourceRows(popup: Page) {
+  await test
+    .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesNativeSegwitRow))
+    .toBeVisible({ timeout: 15_000 });
+  return {
+    nativeSegwit: await readSpendSourceRowSats(
+      popup,
+      SendCryptoAssetSelectors.SpendSourcesNativeSegwitRow
+    ),
+    taproot: await readSpendSourceRowSats(popup, SendCryptoAssetSelectors.SpendSourcesTaprootRow),
+  };
+}
+
+function readSignedTransactionHex(response: TestRpcResponse | undefined) {
+  const transaction = response?.result?.transaction;
+  if (typeof transaction !== 'string') {
+    throw new Error('Expected signed transaction hex in RPC response');
+  }
+  return transaction;
+}
+
+function summarizeSignedTx(hex: string) {
+  const tx = btc.Transaction.fromRaw(hexToBytes(hex));
+  const inputs = Array.from({ length: tx.inputsLength }, (_, index) => {
+    const txid = tx.getInput(index).txid;
+    if (!txid) throw new Error(`Signed tx input ${index} has no txid`);
+    const value = mockUtxoValuesByTxid[bytesToHex(txid)];
+    if (value === undefined)
+      throw new Error(`Signed tx spends an unknown utxo ${bytesToHex(txid)}`);
+    return { txid: bytesToHex(txid), value };
+  });
+  const outputsTotal = Array.from({ length: tx.outputsLength }, (_, index) => {
+    const { amount } = tx.getOutput(index);
+    if (amount === undefined) throw new Error(`Signed tx output ${index} has no amount`);
+    return Number(amount);
+  }).reduce((sum, amount) => sum + amount, 0);
+  const inputsTotal = inputs.reduce((sum, input) => sum + input.value, 0);
+
+  return {
+    fee: inputsTotal - outputsTotal,
+    taprootInputTotal: inputs
+      .filter(input => input.txid === mockTaprootUtxo.txid)
+      .reduce((sum, input) => sum + input.value, 0),
+  };
+}
+
+test.describe('RPC: sendTransfer spend sources with mixed utxos', () => {
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page, context }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await mockLeatherApiRequests(context);
+    await mockMixedUtxosForSend(context);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
+    await page.goto('localhost:3000');
+  });
+
+  test('that the approval shows the taproot callout and per-type rows', async ({
+    page,
+    context,
+  }) => {
+    const resultPromise = openSendTransfer(page)({
+      recipients: [{ address: spendSourcesRecipient, amount: '400000' }],
+      network: 'mainnet',
+    });
+    const popup = await context.waitForEvent('page');
+
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesTaprootCallout))
+      .toBeVisible({ timeout: 15_000 });
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesNativeSegwitRow))
+      .toContainText('0.001');
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesTaprootRow))
+      .toContainText('0.003');
+    await test.expect(popup.getByText('Native SegWit + Taproot', { exact: false })).toBeVisible();
+
+    await popup.close();
+    await test.expect(resultPromise).resolves.toBeDefined();
+  });
+
+  test('that approving still shows the taproot utxo warning dialog', async ({ page, context }) => {
+    const resultPromise = openSendTransfer(page)({
+      recipients: [{ address: spendSourcesRecipient, amount: '400000' }],
+      network: 'mainnet',
+    });
+    const popup = await context.waitForEvent('page');
+
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesTaprootCallout))
+      .toBeVisible({ timeout: 15_000 });
+    await popup.getByRole('button', { name: 'Approve' }).click();
+
+    const warningDialog = popup.getByTestId(SendCryptoAssetSelectors.TaprootUtxoWarningDialog);
+    await test.expect(warningDialog).toBeVisible({ timeout: 10000 });
+    await popup.getByRole('dialog').getByRole('button', { name: 'Cancel' }).click();
+    await test.expect(warningDialog).toHaveCount(0);
+
+    await popup.close();
+    await test.expect(resultPromise).resolves.toBeDefined();
+  });
+});
+
+test.describe('RPC: sendTransfer spend sources match the signed transaction', () => {
+  const amount = 400_000;
+
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page, context }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await mockLeatherApiRequests(context);
+    await mockMixedUtxosForSend(context);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
+    await page.goto('localhost:3000');
+  });
+
+  test('that the displayed source totals equal the amount plus the signed fee', async ({
+    page,
+    context,
+  }) => {
+    const resultPromise = openSendTransfer(page)({
+      recipients: [{ address: spendSourcesRecipient, amount: String(amount) }],
+      network: 'mainnet',
+      broadcast: false,
+    });
+    const popup = await context.waitForEvent('page');
+
+    const rows = await readSpendSourceRows(popup);
+
+    await popup.getByRole('button', { name: 'Sign transaction' }).click();
+    await popup.getByText('I understand, continue', { exact: true }).click({ timeout: 10000 });
+
+    const result = await resultPromise;
+    const signed = summarizeSignedTx(readSignedTransactionHex(result));
+
+    test.expect(signed.fee).toBeGreaterThan(0);
+    test.expect(rows.nativeSegwit + rows.taproot).toEqual(amount + signed.fee);
+    test.expect(rows.taproot).toEqual(signed.taprootInputTotal);
+  });
+});
+
+test.describe('RPC: sendTransfer spend sources with native segwit utxos only', () => {
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page, context }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await mockLeatherApiRequests(context);
+    await mockNativeSegwitOnlyUtxosForSend(context);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
+    await page.goto('localhost:3000');
+  });
+
+  test('that the approval shows no callout and a zero taproot row', async ({ page, context }) => {
+    const resultPromise = openSendTransfer(page)({
+      recipients: [{ address: spendSourcesRecipient, amount: '100000' }],
+      network: 'mainnet',
+    });
+    const popup = await context.waitForEvent('page');
+
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesNativeSegwitRow))
+      .toContainText('0.001', { timeout: 15_000 });
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesTaprootRow))
+      .toContainText('0.00000000');
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesTaprootCallout))
+      .toHaveCount(0);
+
+    await popup.close();
+    await test.expect(resultPromise).resolves.toBeDefined();
+  });
+
+  test('that the native segwit total equals the amount plus the signed fee', async ({
+    page,
+    context,
+  }) => {
+    const amount = 100_000;
+    const resultPromise = openSendTransfer(page)({
+      recipients: [{ address: spendSourcesRecipient, amount: String(amount) }],
+      network: 'mainnet',
+      broadcast: false,
+    });
+    const popup = await context.waitForEvent('page');
+
+    const rows = await readSpendSourceRows(popup);
+
+    await popup.getByRole('button', { name: 'Sign transaction' }).click();
+
+    const result = await resultPromise;
+    const signed = summarizeSignedTx(readSignedTransactionHex(result));
+
+    test.expect(signed.fee).toBeGreaterThan(0);
+    test.expect(signed.taprootInputTotal).toEqual(0);
+    test.expect(rows.taproot).toEqual(0);
+    test.expect(rows.nativeSegwit).toEqual(amount + signed.fee);
   });
 });
 
@@ -126,7 +428,7 @@ test.describe('RPC: sendTransfer with an active Bitcoin multisig policy account'
       }),
       ...getConnectedTestAppPermissionsState({ policyId: bitcoinPolicy.id }),
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('shows both the multisig and the signer on the propose screen', async ({
@@ -153,10 +455,14 @@ test.describe('RPC: sendTransfer with an active Bitcoin multisig policy account'
     await test
       .expect(popup.getByText(truncateMiddle(TEST_ACCOUNT_1_NATIVE_SEGWIT_ADDRESS, 4)))
       .toBeVisible();
+    await test
+      .expect(popup.getByTestId(SendCryptoAssetSelectors.SpendSourcesTaprootRow))
+      .toHaveCount(0);
+    await test.expect(popup.getByText('Native SegWit + Taproot', { exact: false })).toHaveCount(0);
 
     // Close the popup so the pending request resolves before teardown
     await popup.close();
-    await resultPromise;
+    await test.expect(resultPromise).resolves.toBeDefined();
   });
 });
 
@@ -179,7 +485,7 @@ test.describe('RPC: sendTransfer with a software wallet alongside a Ledger walle
         },
       },
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('that it opens the send flow without prompting to connect Ledger', async ({
@@ -200,6 +506,6 @@ test.describe('RPC: sendTransfer with a software wallet alongside a Ledger walle
 
     // Close the popup so the pending request resolves before teardown
     await sendPopup.close();
-    await resultPromise;
+    await test.expect(resultPromise).resolves.toBeDefined();
   });
 });

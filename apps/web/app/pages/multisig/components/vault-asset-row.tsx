@@ -1,6 +1,6 @@
 import { styled } from 'leather-styles/jsx';
 import type { VaultAssetItem } from '~/features/multisig/assets/vault-asset-items';
-import { formatCurrency } from '~/utils/currency-formatter';
+import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
 
 import { AssetAvatarIcon, ListItemBox } from '@leather.io/ui';
 
@@ -36,7 +36,7 @@ export function VaultAssetRow({ item, onClick }: VaultAssetRowProps) {
       }
       trailingCaption={
         <styled.span textStyle="caption.01" color="ink.text-subdued" whiteSpace="nowrap">
-          {formatCurrency(item.crypto)}
+          {formatCryptoGlanceable(item.crypto)}
         </styled.span>
       }
     />

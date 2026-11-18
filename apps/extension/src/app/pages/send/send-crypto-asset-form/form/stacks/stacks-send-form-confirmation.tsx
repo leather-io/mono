@@ -1,42 +1,41 @@
-import { Outlet, useParams } from 'react-router';
+import { useParams } from 'react-router';
 
 import { deserializeTransaction, isTokenTransferPayload } from '@stacks/transactions';
 import { Box, Stack } from 'leather-styles/jsx';
 
-import { InfoCircleIcon } from '@leather.io/ui';
-import { baseCurrencyAmountInQuote, sumMoney } from '@leather.io/utils';
+import { BasicTooltip, InfoCircleIcon } from '@leather.io/ui';
+import { baseCurrencyAmountInQuote, convertAmountToBaseUnit, sumMoney } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
+import { useRouteState } from '@app/common/hooks/use-route-state';
 import {
   getNonceFromStacksTransaction,
   getRecipientFromStacksTransaction,
   getSip10MemoDisplayText,
   getSip10TransferAmount,
+  getSip10TransferPayload,
   getStacksTransactionFee,
   getTokenTransferAmount,
   getTokenTransferMemoDisplayText,
-  isSip10TransferContactCall,
+  isNonSequentialMultisigTransaction,
 } from '@app/common/transactions/stacks/transaction.utils';
+import { useStacksBroadcastTransaction } from '@app/common/transactions/stacks/use-stacks-broadcast-transaction';
 import { Content, Page } from '@app/components/layout';
 import { PageHeader } from '@app/features/container/headers/page.header';
-import { useStacksBroadcastTransaction } from '@app/features/stacks-transaction-request/hooks/use-legacy-stacks-broadcast-transaction';
-import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
+import { useCryptoCurrencyMarketData } from '@app/query/common/market-data/market-data.hooks';
 
+import type { ProposalSentSummaryState } from '../../../sent-summary/proposal-sent-summary';
+import { stacksConfirmationRouteStateSchema } from '../../hooks/use-send-form-navigate';
 import { SendFormConfirmationLayout } from '../send-form-confirmation.layout';
-
-function useStacksSendFormConfirmationState() {
-  return {
-    tx: useLocationStateWithCache('tx') as string,
-    decimals: useLocationStateWithCache('decimals') as number,
-    showFeeChangeWarning: useLocationStateWithCache('showFeeChangeWarning') as boolean,
-  };
-}
+import { useProposeStacksSendTransaction } from './use-propose-stacks-send-transaction';
 
 export function StacksSendFormConfirmation() {
-  const { tx: txHex, decimals, showFeeChangeWarning } = useStacksSendFormConfirmationState();
-  const tokenMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
+  const {
+    tx: txHex,
+    decimals,
+    showFeeChangeWarning = false,
+  } = useRouteState(stacksConfirmationRouteStateSchema);
+  const tokenMarketData = useCryptoCurrencyMarketData('STX');
 
   const { symbol = 'STX' } = useParams();
 
@@ -44,8 +43,11 @@ export function StacksSendFormConfirmation() {
     token: symbol.toUpperCase(),
     redirectToSuccessPage: true,
   });
+  const { proposeSendTransaction, isProposing } = useProposeStacksSendTransaction();
 
   const tx = deserializeTransaction(txHex);
+  const sip10Payload = getSip10TransferPayload(tx);
+  const isMultisigProposal = isNonSequentialMultisigTransaction(tx);
 
   const feeWarningTooltip = showFeeChangeWarning ? (
     <BasicTooltip
@@ -60,14 +62,53 @@ export function StacksSendFormConfirmation() {
     </BasicTooltip>
   ) : null;
 
+  function getProposalSummary(): ProposalSentSummaryState | null {
+    const base = {
+      symbol: symbol.toUpperCase(),
+      recipient: getRecipientFromStacksTransaction(tx) ?? '',
+      feeRowValue: formatCurrency(getStacksTransactionFee(tx)),
+    };
+    if (isTokenTransferPayload(tx.payload)) {
+      const amount = getTokenTransferAmount(tx.payload);
+      return {
+        ...base,
+        txValue: convertAmountToBaseUnit(amount).toString(),
+        txFiatValue: formatCurrency(baseCurrencyAmountInQuote(amount, tokenMarketData)),
+        txFiatValueSymbol: tokenMarketData.price.symbol,
+        memoDisplayText: getTokenTransferMemoDisplayText(tx.payload) || 'No memo',
+      };
+    }
+    if (sip10Payload) {
+      const amount = getSip10TransferAmount(sip10Payload, symbol, decimals);
+      return {
+        ...base,
+        txValue: convertAmountToBaseUnit(amount).toString(),
+        memoDisplayText: getSip10MemoDisplayText(sip10Payload) ?? 'No memo',
+      };
+    }
+    return null;
+  }
+
+  const proposalSummary = getProposalSummary();
+
+  function onConfirmTransaction() {
+    if (isMultisigProposal) {
+      if (!proposalSummary)
+        throw new Error('Unsupported payload for a multisig transaction proposal');
+      return proposeSendTransaction(tx, proposalSummary);
+    }
+    return stacksBroadcastTransaction(tx);
+  }
+
   const sharedProps = {
     symbol: symbol.toUpperCase(),
-    onBroadcastTransaction: () => stacksBroadcastTransaction(tx),
+    onBroadcastTransaction: onConfirmTransaction,
     recipient: getRecipientFromStacksTransaction(tx),
     fee: getStacksTransactionFee(tx),
-    nonce: getNonceFromStacksTransaction(tx).toString(),
-    isLoading: isBroadcasting,
-    feeWarningTooltip: feeWarningTooltip,
+    nonce: isMultisigProposal ? undefined : getNonceFromStacksTransaction(tx).toString(),
+    isLoading: isBroadcasting || isProposing,
+    feeWarningTooltip,
+    confirmButtonLabel: isMultisigProposal ? 'Propose transaction' : undefined,
   } as const;
 
   return (
@@ -75,7 +116,6 @@ export function StacksSendFormConfirmation() {
       <PageHeader title="Review" />
       <Content>
         <Page>
-          <Outlet />
           {isTokenTransferPayload(tx.payload) && (
             <SendFormConfirmationLayout
               txValue={getTokenTransferAmount(tx.payload)}
@@ -91,15 +131,15 @@ export function StacksSendFormConfirmation() {
               {...sharedProps}
             />
           )}
-          {isSip10TransferContactCall(tx) && (
+          {sip10Payload && (
             <SendFormConfirmationLayout
-              txValue={getSip10TransferAmount(tx.payload, symbol, decimals)}
+              txValue={getSip10TransferAmount(sip10Payload, symbol, decimals)}
               totalSpend={[
-                formatCurrency(getSip10TransferAmount(tx.payload, symbol, decimals)),
+                formatCurrency(getSip10TransferAmount(sip10Payload, symbol, decimals)),
                 formatCurrency(sharedProps.fee),
               ].join(' + ')}
-              sendingValue={formatCurrency(getSip10TransferAmount(tx.payload, symbol, decimals))}
-              memoDisplayText={getSip10MemoDisplayText(tx.payload) ?? 'No memo'}
+              sendingValue={formatCurrency(getSip10TransferAmount(sip10Payload, symbol, decimals))}
+              memoDisplayText={getSip10MemoDisplayText(sip10Payload) ?? 'No memo'}
               {...sharedProps}
             />
           )}

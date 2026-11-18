@@ -1,6 +1,7 @@
 import { logger } from '@shared/logger';
 
-import { AppThunk } from '..';
+import { type AppThunk } from '@app/store/store';
+
 import { selectPolicyNetworkIds } from '../policy/policy-network.selectors';
 import { type PersistedNetworkConfiguration, networksSlice } from './networks.slice';
 

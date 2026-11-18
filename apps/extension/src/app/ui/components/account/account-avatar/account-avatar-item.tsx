@@ -1,4 +1,4 @@
-import { ReactElement, memo } from 'react';
+import { type ReactElement, memo } from 'react';
 
 import { AccountAvatar } from '@app/ui/components/account/account-avatar/account-avatar';
 

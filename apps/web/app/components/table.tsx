@@ -2,7 +2,7 @@
 import { forwardRef } from 'react';
 
 import { css } from 'leather-styles/css';
-import { Flex, FlexProps, HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { Flex, type FlexProps, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
 export const theadBorderBottom = css({
   _after: {
@@ -23,8 +23,16 @@ export const rowPadding = css({
   '& th:last-child': { pr: 'space.05' },
 });
 
+export const hoverableRow = css({
+  cursor: 'pointer',
+  '& td': { transition: 'background 0.1s ease' },
+  '&:hover td': { bg: 'ink.component-background-hover' },
+});
+
+// Containerised by default, matching the portfolio table which already set
+// these explicitly. Callers can still override either value.
 const TableRoot = forwardRef<HTMLDivElement, HTMLStyledProps<'div'>>((props, ref) => (
-  <styled.div ref={ref} {...props} />
+  <styled.div ref={ref} border="default" borderRadius="md" overflow="hidden" {...props} />
 ));
 
 const StyledTable = forwardRef<HTMLTableElement, HTMLStyledProps<'table'>>((props, ref) => (

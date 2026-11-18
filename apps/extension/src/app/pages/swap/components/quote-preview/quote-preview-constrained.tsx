@@ -1,6 +1,6 @@
 import { styled } from 'leather-styles/jsx';
 
-import { ExecutionConstraint, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type ExecutionConstraint, type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
@@ -53,6 +53,11 @@ function getConstraintCopy(
       return {
         title: 'Amount too large',
         description: `${operation} ${baseAsset.symbol} to ${targetAsset.symbol} is limited to ${threshold}`,
+      };
+    case 'supply-cap-exceeded':
+      return {
+        title: 'Deposit cap reached',
+        description: `Only ${formatCurrency(constraint.threshold, { showCurrency: false })} more ${baseAsset.symbol} can be deposited into ${targetAsset.symbol} right now`,
       };
     default:
       assertUnreachable(constraint.reason);

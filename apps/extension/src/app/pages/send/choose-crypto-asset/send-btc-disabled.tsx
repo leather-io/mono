@@ -30,7 +30,7 @@ export function SendBtcDisabled() {
       <GenericError
         body={body}
         helpTextList={helpTextList}
-        onClose={() => navigate(RouteUrls.SendCryptoAsset)}
+        onClose={() => void navigate(RouteUrls.SendCryptoAsset)}
         title={title}
       />
     </Box>

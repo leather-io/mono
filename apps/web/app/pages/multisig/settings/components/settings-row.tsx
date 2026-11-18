@@ -22,7 +22,7 @@ export function SettingsRow({ title, sub, defaultOn = false, trailing }: Setting
       p="space.04"
       borderTopWidth="1px"
       borderTopStyle="solid"
-      borderTopColor="ink.border-default"
+      borderTopColor="ink.border-transparent"
     >
       <Box minWidth={0}>
         <styled.div textStyle="label.02">{title}</styled.div>

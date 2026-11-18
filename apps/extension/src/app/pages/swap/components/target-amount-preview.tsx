@@ -3,8 +3,8 @@ import { useLayoutEffect, useRef } from 'react';
 import { type MotionStyle, animate, motion, useMotionValue } from 'framer-motion';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { MarketData, Money } from '@leather.io/models';
-import { LiveSwapEstimate } from '@leather.io/state/swap';
+import { type MarketData, type Money } from '@leather.io/models';
+import { type LiveSwapEstimate } from '@leather.io/state/swap';
 import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';

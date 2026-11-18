@@ -12,9 +12,13 @@ interface WalletProvider {
   methods?: string[];
 }
 
+interface WindowWithBtcProviders extends Window {
+  btc_providers?: WalletProvider[];
+}
+
 // https://wbips.netlify.app/wbips/WBIP004
 export function addLeatherToProviders() {
-  const win = window as unknown as Window & { btc_providers?: WalletProvider[] };
+  const win: WindowWithBtcProviders = window;
 
   if (!win.btc_providers) win.btc_providers = [];
 

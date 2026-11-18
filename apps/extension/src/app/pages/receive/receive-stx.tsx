@@ -1,9 +1,12 @@
 import { analytics } from '@shared/utils/analytics';
 
 import { useCurrentAccountDisplayName } from '@app/common/hooks/account/use-account-names';
+import { useWalletType } from '@app/common/use-wallet-type';
 import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
+import { useVerifyAddressOnLedger } from '@app/features/ledger/flows/verify-address/use-verify-address-on-ledger';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import { useHasLedgerStacksKeys } from '@app/store/ledger/ledger.selectors';
 import { useCurrentPolicy, usePolicyDisplayName } from '@app/store/policy/policy.selectors';
 
 import { ReceiveTokensLayout } from './components/receive-tokens.layout';
@@ -14,14 +17,25 @@ interface ReceiveStxModalProps {
 
 export function ReceiveStxModal({ onClose }: ReceiveStxModalProps) {
   const toast = useToast();
+
+  async function copyAddress(address: string) {
+    await copyToClipboard(address);
+    toast.success('Copied to clipboard!');
+  }
   const currentAccount = useCurrentStacksAccount();
   const policy = useCurrentPolicy();
+  const { walletType } = useWalletType();
+  const hasLedgerStacksKeys = useHasLedgerStacksKeys();
+  const verifyAddressOnLedger = useVerifyAddressOnLedger();
 
   const { data: accountName = 'Account' } = useCurrentAccountDisplayName();
   const policyName = usePolicyDisplayName(policy);
 
   const singleSigAddress = policy ? undefined : currentAccount?.address;
   const address = policy?.chain === 'stacks' ? policy.address : singleSigAddress;
+
+  const canVerifyOnLedger = walletType === 'ledger' && hasLedgerStacksKeys && !policy;
+
   if (!address) return null;
 
   return (
@@ -29,11 +43,11 @@ export function ReceiveStxModal({ onClose }: ReceiveStxModalProps) {
       address={address}
       accountName={policyName ?? accountName}
       onClose={onClose}
-      onCopyAddressToClipboard={async () => {
+      onCopyAddressToClipboard={() => {
         analytics.track('copy_stx_address_to_clipboard');
-        await copyToClipboard(address);
-        toast.success('Copied to clipboard!');
+        void copyAddress(address);
       }}
+      onVerifyAddress={canVerifyOnLedger ? () => verifyAddressOnLedger('stx') : undefined}
       title="STX"
     />
   );

@@ -2,8 +2,8 @@ import { renderToString } from 'react-dom/server';
 
 import { LedgerBitcoinGate } from './ledger-bitcoin-gate';
 
-const activeWalletTypeMock = vi.fn();
-const hasLedgerBitcoinKeysMock = vi.fn();
+const activeWalletTypeMock = vi.fn<() => unknown>();
+const hasLedgerBitcoinKeysMock = vi.fn<() => unknown>();
 
 vi.mock('@app/store/common/wallet-type.selectors', () => ({
   useActiveWalletType: () => activeWalletTypeMock(),

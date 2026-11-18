@@ -1,4 +1,4 @@
-import { SettingsService } from '@leather.io/services';
+import { type SettingsService } from '@leather.io/services';
 import { serializeAssetId } from '@leather.io/utils';
 
 import { store } from '@app/store';

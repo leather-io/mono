@@ -1,13 +1,13 @@
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { CopyAddress } from '~/components/copy-address';
 
 import { Button, ListItemBox } from '@leather.io/ui';
 
 import { AvatarCircle } from '../../components/avatar-circle';
 import { AvatarSq } from '../../components/avatar-sq';
 import { ChainAvatar } from '../../components/chain-avatar';
-import { CopyAddress } from '../../components/copy-address';
 import type { Chain } from '../../data/multisig-types';
-import { vaultTheme } from '../../multisig-tokens';
+import { defaultVaultIcon, vaultTheme } from '../../multisig-tokens';
 import type { MemberDraft } from './member-rows';
 
 interface VaultPreviewCardProps {
@@ -27,7 +27,7 @@ function PreviewSection({ label, children }: { label: string; children: React.Re
       p="space.04"
       borderTopWidth="1px"
       borderTopStyle="solid"
-      borderTopColor="ink.border-default"
+      borderTopColor="ink.border-transparent"
     >
       <styled.div textStyle="label.03" color="ink.text-subdued" mb="space.02">
         {label}
@@ -69,7 +69,7 @@ export function VaultPreviewCard({
         color={theme.dark ? 'white' : 'ink.text-primary'}
         style={{ background: theme.background }}
       >
-        <AvatarSq chain={chain} icon="vault" themeId={themeId} size="lg" />
+        <AvatarSq chain={chain} icon={defaultVaultIcon} themeId={themeId} size="lg" />
         <styled.div textStyle="heading.05">{name || 'Vault name'}</styled.div>
       </Flex>
 
@@ -117,13 +117,20 @@ export function VaultPreviewCard({
         )}
       </PreviewSection>
 
+      <PreviewSection label="Good to know">
+        <styled.p textStyle="body.02" color="ink.text-primary">
+          No threshold to pick yet. You&rsquo;ll set one later, for each account you create in this
+          vault.
+        </styled.p>
+      </PreviewSection>
+
       {disabled && (
         <Box
           px="space.04"
           py="space.03"
           borderTopWidth="1px"
           borderTopStyle="solid"
-          borderTopColor="ink.border-default"
+          borderTopColor="ink.border-transparent"
           bg="ink.background-secondary"
         >
           <styled.span textStyle="caption.01" color="ink.text-subdued">
@@ -136,7 +143,7 @@ export function VaultPreviewCard({
         p="space.04"
         borderTopWidth="1px"
         borderTopStyle="solid"
-        borderTopColor="ink.border-default"
+        borderTopColor="ink.border-transparent"
       >
         {error && (
           <styled.div textStyle="caption.01" color="red.action-primary-default" mb="space.03">

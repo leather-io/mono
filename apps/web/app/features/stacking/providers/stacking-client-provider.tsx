@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useMemo } from 'react';
+import { type ReactNode, createContext, useContext, useMemo } from 'react';
 
 import { StackingClient } from '@stacks/stacking';
 import { validateStacksAddress as isValidStacksAddress } from '@stacks/transactions';
@@ -38,12 +38,4 @@ export function StackingClientProvider({ children }: StackingClientProviderProps
 
 export function useStackingClient() {
   return useContext(StackingClientContext);
-}
-
-export function useStackingClientRequired() {
-  const { client, ...hook } = useStackingClient();
-
-  if (!client) throw new Error('Expected to have a StackingClient available in the context.');
-
-  return { ...hook, client };
 }

@@ -1,4 +1,4 @@
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 import { ArrowTriangleTopIcon, SkeletonLoader, Text } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
 

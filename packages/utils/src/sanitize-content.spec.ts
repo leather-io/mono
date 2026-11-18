@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 
 import { sanitizeContent } from './sanitize-content';
 
-vi.mock('dompurify');
+vi.mock('dompurify', () => ({ default: { sanitize: vi.fn() } }));
 
 describe('sanitizeContent', () => {
   afterEach(() => {
@@ -16,8 +16,7 @@ describe('sanitizeContent', () => {
   it('calls DOMPurify.sanitize in browser and returns its result', () => {
     // @ts-ignore
     global.window = {};
-    const mockSanitize = vi.fn(() => 'sanitized-html');
-    (DOMPurify.sanitize as any) = mockSanitize;
+    const mockSanitize = vi.spyOn(DOMPurify, 'sanitize').mockImplementation(() => 'sanitized-html');
     const dirty = '<div>Hello<script>alert(1)</script>World</div>';
     expect(sanitizeContent(dirty)).toBe('sanitized-html');
     expect(mockSanitize).toHaveBeenCalledWith(dirty, { USE_PROFILES: { html: true } });
@@ -35,8 +34,9 @@ describe('sanitizeContent', () => {
   it('returns safe HTML unchanged in browser if DOMPurify returns it', () => {
     // @ts-ignore
     global.window = {};
-    const mockSanitize = vi.fn((dirty: string) => dirty);
-    (DOMPurify.sanitize as any) = mockSanitize;
+    const mockSanitize = vi
+      .spyOn(DOMPurify, 'sanitize')
+      .mockImplementation(dirty => (typeof dirty === 'string' ? dirty : ''));
     const clean = '<b>Safe</b> content';
     expect(sanitizeContent(clean)).toBe('<b>Safe</b> content');
     expect(mockSanitize).toHaveBeenCalledWith(clean, { USE_PROFILES: { html: true } });

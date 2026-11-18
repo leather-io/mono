@@ -1,5 +1,7 @@
 import { hexToBytes } from '@noble/hashes/utils';
 import {
+  ClarityVersion,
+  createSmartContractPayload,
   deserializeCV,
   makeUnsignedContractCall,
   makeUnsignedContractDeploy,
@@ -12,10 +14,10 @@ import { assertUnreachable } from '@leather.io/utils';
 import { cleanHex } from '../stacks.utils';
 import { ensurePostConditionWireFormat, getPostConditions } from './post-condition.utils';
 import {
-  StacksUnsignedContractCallOptions,
-  StacksUnsignedContractDeployOptions,
-  StacksUnsignedStxTokenTransferOptions,
-  StacksUnsignedTransactionOptions,
+  type StacksUnsignedContractCallOptions,
+  type StacksUnsignedContractDeployOptions,
+  type StacksUnsignedStxTokenTransferOptions,
+  type StacksUnsignedTransactionOptions,
   TransactionTypes,
   isTransactionTypeSupported,
 } from './transaction.types';
@@ -49,6 +51,21 @@ export function getUnsignedContractDeployParsedOptions(
   };
 }
 
+function shouldUseNodeDefaultClarityVersion(clarityVersion?: ClarityVersion) {
+  return clarityVersion === undefined || clarityVersion === ClarityVersion.Clarity6;
+}
+
+async function generateUnsignedContractDeployTransaction(
+  options: StacksUnsignedContractDeployOptions
+) {
+  const transaction = await makeUnsignedContractDeploy(
+    getUnsignedContractDeployParsedOptions(options)
+  );
+  if (shouldUseNodeDefaultClarityVersion(options.clarityVersion))
+    transaction.payload = createSmartContractPayload(options.contractName, options.codeBody);
+  return transaction;
+}
+
 export function getUnsignedStxTokenTransferParsedOptions(
   options: StacksUnsignedStxTokenTransferOptions
 ): Parameters<typeof makeUnsignedSTXTokenTransfer>[0] {
@@ -65,7 +82,7 @@ export function generateStacksUnsignedTransaction(options: StacksUnsignedTransac
 
   const isValid = isTransactionTypeSupported(txType);
 
-  if (!isValid) throw new Error(`Invalid Transaction Type: ${txType}`);
+  if (!isValid) throw new Error(`Invalid Transaction Type: ${String(txType)}`);
 
   switch (txType) {
     case TransactionTypes.StxTokenTransfer:
@@ -73,7 +90,7 @@ export function generateStacksUnsignedTransaction(options: StacksUnsignedTransac
     case TransactionTypes.ContractCall:
       return makeUnsignedContractCall(getUnsignedContractCallParsedOptions(options));
     case TransactionTypes.ContractDeploy:
-      return makeUnsignedContractDeploy(getUnsignedContractDeployParsedOptions(options));
+      return generateUnsignedContractDeployTransaction(options);
     default:
       assertUnreachable(txType);
   }

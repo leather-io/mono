@@ -5,7 +5,7 @@ const monthDays = 30;
 
 // Compact relative time for proposal/broadcast timestamps ("just now", "12 min
 // ago", "3 hr ago", "2 days ago"); falls back to a locale date past a month.
-export function formatRelativeTime(date: Date): string {
+function relativeWithinMonth(date: Date): string | undefined {
   const diff = Date.now() - date.getTime();
   if (diff < minuteMs) return 'just now';
   if (diff < hourMs) {
@@ -18,7 +18,15 @@ export function formatRelativeTime(date: Date): string {
   }
   const days = Math.floor(diff / dayMs);
   if (days < monthDays) return `${days} ${days === 1 ? 'day' : 'days'} ago`;
-  return date.toLocaleDateString();
+  return undefined;
+}
+
+export function formatRelativeTime(date: Date): string {
+  return relativeWithinMonth(date) ?? date.toLocaleDateString();
+}
+
+export function formatRelativeDateTime(date: Date): string {
+  return relativeWithinMonth(date) ?? formatDateTime(date);
 }
 
 export function formatDateTime(date: Date): string {

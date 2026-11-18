@@ -6,7 +6,6 @@ import type { AccountId } from '@leather.io/models';
 import {
   useCurrentStacksAccount,
   useStacksAccounts,
-  useTransactionRequestAccountId,
 } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { selectActivePolicyId } from '@app/store/active/active.selectors';
 import { type PolicyStore, parsePolicyParent } from '@app/store/policy/policy-store.utils';
@@ -18,9 +17,8 @@ import { useKeyActions } from '../use-key-actions';
 export function useSwitchAccount(callback?: () => void) {
   const { switchAccount, switchAccountToPolicy } = useKeyActions();
   const currentAccount = useCurrentStacksAccount();
-  const txAccountId = useTransactionRequestAccountId();
   const activePolicyId = useSelector(selectActivePolicyId);
-  const { hasSwitched, setHasSwitched } = useHasSwitchedAccounts();
+  const { setHasSwitched } = useHasSwitchedAccounts();
   const stacksAccounts = useStacksAccounts();
 
   const handleSwitchAccount = useCallback(
@@ -51,18 +49,12 @@ export function useSwitchAccount(callback?: () => void) {
   const getIsActive = useCallback(
     (accountId: AccountId) => {
       if (activePolicyId) return false;
-      if (txAccountId && !hasSwitched) {
-        return (
-          accountId.accountIndex === txAccountId.accountIndex &&
-          accountId.fingerprint === txAccountId.fingerprint
-        );
-      }
       return (
         accountId.accountIndex === currentAccount?.accountIndex &&
         accountId.fingerprint === currentAccount?.fingerprint
       );
     },
-    [activePolicyId, txAccountId, hasSwitched, currentAccount]
+    [activePolicyId, currentAccount]
   );
 
   const getIsPolicyActive = useCallback(

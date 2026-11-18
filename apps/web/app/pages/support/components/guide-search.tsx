@@ -50,7 +50,10 @@ export function GuideSearch() {
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !(e.target instanceof Node && containerRef.current.contains(e.target))
+      ) {
         setIsOpen(false);
       }
     }
@@ -139,6 +142,21 @@ export function GuideSearch() {
                     color="ink.action-primary-default"
                   >
                     <styled.span display="flex" alignItems="center" gap="space.02">
+                      {result.kind === 'deprecation' && (
+                        <styled.span
+                          display="inline-flex"
+                          alignItems="center"
+                          px="space.02"
+                          py="space.01"
+                          borderRadius="xs"
+                          bg="ink.background-secondary"
+                          color="ink.text-subdued"
+                          textStyle="caption.01"
+                          flexShrink={0}
+                        >
+                          Notice
+                        </styled.span>
+                      )}
                       {result.title}
                     </styled.span>
                     <ChevronRightIcon variant="small" />

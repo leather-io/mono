@@ -38,6 +38,9 @@ export function useDashboardActivity(vaults: VaultSummary[]) {
   const accounts = accountResults.flatMap(result => result.data ?? []);
   const vaultNamesById = new Map(activeVaults.map(vault => [vault.id, vault.name]));
   const accountNamesById = new Map(accounts.map(account => [account.id, account.name]));
+  const accountThresholdsById = new Map(
+    accounts.map(account => [account.id, `${account.threshold} of ${account.signerCount}`])
+  );
 
   const { items, isLoading: isLoadingActivity } = useVaultActivity(accounts, vaultNamesById);
 
@@ -45,5 +48,5 @@ export function useDashboardActivity(vaults: VaultSummary[]) {
     (activeVaults.length > 0 && accountResults.some(result => result.isLoading)) ||
     isLoadingActivity;
 
-  return { items, isLoading, vaultNamesById, accountNamesById };
+  return { items, isLoading, vaultNamesById, accountNamesById, accountThresholdsById };
 }

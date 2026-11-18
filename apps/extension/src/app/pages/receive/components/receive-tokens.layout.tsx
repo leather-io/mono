@@ -1,21 +1,33 @@
 import QRCode from 'react-qr-code';
 
+import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { token } from 'leather-styles/tokens';
 
-import { AddressDisplayer, Button, Sheet, SheetHeader } from '@leather.io/ui';
+import { AddressDisplayer, Button, Sheet, SheetHeader, ShieldIcon } from '@leather.io/ui';
+
+import { ButtonRow } from '@app/components/layout';
 
 interface ReceiveTokensLayoutProps {
   address: string;
   accountName?: string;
   onClose(): void;
   onCopyAddressToClipboard(address: string): void;
+  onVerifyAddress?(): void;
   title: string;
   warning?: React.JSX.Element;
 }
 export function ReceiveTokensLayout(props: ReceiveTokensLayoutProps) {
-  const { address, accountName, onClose, onCopyAddressToClipboard, title, warning } = props;
+  const {
+    address,
+    accountName,
+    onClose,
+    onCopyAddressToClipboard,
+    onVerifyAddress,
+    title,
+    warning,
+  } = props;
 
   return (
     <Sheet
@@ -33,9 +45,26 @@ export function ReceiveTokensLayout(props: ReceiveTokensLayoutProps) {
       isShowing
       onClose={onClose}
       footer={
-        <Button fullWidth onClick={() => onCopyAddressToClipboard(address)}>
-          Copy address
-        </Button>
+        onVerifyAddress ? (
+          <ButtonRow flexDirection="row">
+            <Button
+              data-testid={HomePageSelectors.ReceiveSheetVerifyAddressBtn}
+              flexGrow={1}
+              iconStart={ShieldIcon}
+              onClick={onVerifyAddress}
+              variant="outline"
+            >
+              Verify
+            </Button>
+            <Button flexGrow={1} onClick={() => onCopyAddressToClipboard(address)}>
+              Copy address
+            </Button>
+          </ButtonRow>
+        ) : (
+          <Button fullWidth onClick={() => onCopyAddressToClipboard(address)}>
+            Copy address
+          </Button>
+        )
       }
     >
       {warning && warning}

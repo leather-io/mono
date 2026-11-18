@@ -1,18 +1,15 @@
-import { Metadata } from '@hirosystems/token-metadata-api-client';
+import { type FtMetadataResponse, type Metadata } from '@hirosystems/token-metadata-api-client';
 import {
-  AddressAssetsListResponse,
-  AddressBalanceResponse,
-  AddressTransactionWithTransfers,
-  AddressTransactionsWithTransfersListResponse,
-  MempoolTransaction,
-  MempoolTransactionListResponse,
-  NonFungibleTokenHolding,
-  ServerStatusResponse,
-  Transaction,
-  TransactionEvent,
-  TransactionFeeEstimateResponse,
+  type AddressAssetsListResponse,
+  type AddressTransactionWithTransfers,
+  type AddressTransactionsWithTransfersListResponse,
+  type MempoolTransaction,
+  type ServerStatusResponse,
+  type Transaction,
+  type TransactionEvent,
+  type TransactionFeeEstimateResponse,
 } from '@stacks/stacks-blockchain-api-types';
-import { ClarityValue } from '@stacks/transactions';
+import { type ClarityValue } from '@stacks/transactions';
 
 export interface HiroPageRequest {
   limit: number;
@@ -124,6 +121,63 @@ export interface HiroPrincipalTransactionsResponse {
   readonly results: HiroPrincipalTransactionsResultItem[];
 }
 
+type HiroMempoolTxStatus =
+  | 'pending'
+  | 'dropped_replace_by_fee'
+  | 'dropped_replace_across_fork'
+  | 'dropped_too_expensive'
+  | 'dropped_stale_garbage_collect'
+  | 'dropped_problematic';
+
+interface HiroPrincipalMempoolTxBase {
+  readonly tx_id: string;
+  readonly sender: HiroPrincipalTxParty;
+  readonly sponsor: HiroPrincipalTxParty | null;
+  readonly fee_rate: string;
+  readonly receipt_time: number;
+  readonly receipt_time_iso: string;
+  readonly receipt_block_height: number;
+  readonly status: HiroMempoolTxStatus;
+}
+
+interface HiroPrincipalMempoolTokenTransferTx extends HiroPrincipalMempoolTxBase {
+  readonly type: 'token_transfer';
+  readonly token_transfer: {
+    readonly recipient: string;
+    readonly amount: string;
+    readonly memo: { readonly hex: string; readonly repr: string } | null;
+  };
+}
+
+interface HiroPrincipalMempoolContractCallTx extends HiroPrincipalMempoolTxBase {
+  readonly type: 'contract_call';
+  readonly contract_call: {
+    readonly contract_id: string;
+    readonly function_name: string;
+  };
+}
+
+interface HiroPrincipalMempoolSmartContractTx extends HiroPrincipalMempoolTxBase {
+  readonly type: 'smart_contract';
+  readonly smart_contract: {
+    readonly contract_id: string;
+    readonly clarity_version: number | null;
+  };
+}
+
+interface HiroPrincipalMempoolOtherTx extends HiroPrincipalMempoolTxBase {
+  readonly type: 'coinbase' | 'tenure_change' | 'poison_microblock';
+}
+
+export type HiroPrincipalMempoolTransaction =
+  | HiroPrincipalMempoolTokenTransferTx
+  | HiroPrincipalMempoolContractCallTx
+  | HiroPrincipalMempoolSmartContractTx
+  | HiroPrincipalMempoolOtherTx;
+
+export type HiroPrincipalMempoolTransactionsResponse =
+  HiroCursorPageResponse<HiroPrincipalMempoolTransaction>;
+
 export interface HiroBalanceChangeResultItem {
   readonly tx_id: string;
   readonly asset:
@@ -147,14 +201,17 @@ export interface HiroBalanceChangesResponse {
   };
   readonly results: HiroBalanceChangeResultItem[];
 }
-export type HiroAddressBalanceResponse = AddressBalanceResponse;
-export type HiroMempoolTransactionListResponse = MempoolTransactionListResponse;
+export type HiroTransactionIncludeField =
+  | 'function_args'
+  | 'source_code'
+  | 'post_conditions'
+  | 'result';
 export type HiroMetadata = Metadata;
+export type HiroFtMetadata = FtMetadataResponse;
 export type HiroTransactionEvent = TransactionEvent;
 export type HiroTransactionEventsResponse = AddressAssetsListResponse;
 export type HiroStacksTransaction = Transaction;
 export type HiroStacksMempoolTransaction = MempoolTransaction;
-export type HiroNftHolding = NonFungibleTokenHolding;
 export type HiroReadOnlyFunctionResponse =
   | { okay: true; result: string }
   | { okay: false; cause: string };
@@ -185,4 +242,69 @@ export interface CallReadOnlyFunctionArgs {
   functionArgs: ClarityValue[];
   senderAddress?: string;
   tip?: string;
+}
+
+export interface HiroCursorPageResponse<T> {
+  total: number;
+  limit: number;
+  cursor: { next: string | null; previous: string | null; current: string | null };
+  results: T[];
+}
+
+export interface HiroPrincipalNftBalance {
+  readonly asset_identifier: string;
+  readonly value: { readonly hex: string; readonly repr: string };
+}
+
+export type HiroPrincipalNftBalancesResponse = HiroCursorPageResponse<HiroPrincipalNftBalance>;
+
+type HiroStakingBondStatus = 'upcoming' | 'active' | 'unlocked';
+
+interface HiroStakingBondSchedulePoint {
+  bitcoin_height: number;
+  pox_cycle: number;
+}
+
+export interface HiroStakingBond {
+  index: number;
+  pox_version: string;
+  status: HiroStakingBondStatus;
+  parameters: {
+    target_rate_bps: number;
+    stx_value_ratio: number;
+    minimum_stx_ratio: number;
+    btc_capacity: string;
+  };
+  registrations: { allowed_count: number; registered_count: number };
+  schedule: { activation: HiroStakingBondSchedulePoint; unlock: HiroStakingBondSchedulePoint };
+  balances: { locked: { btc: string; stx: string }; paid_out: { btc: string } };
+}
+
+export interface HiroStakingBondDetail extends HiroStakingBond {
+  transaction: {
+    tx_id: string;
+    block: { height: number; hash: string; index_hash: string; time: number; tx_index: number };
+    bitcoin_block: { height: number; time: number };
+  };
+}
+
+export type HiroStakingBondsResponse = HiroCursorPageResponse<HiroStakingBond>;
+
+export interface HiroPrincipalStakingBond {
+  bond_index: number;
+  status: string;
+  active: boolean;
+  enrollment: { tx_id: string; btc_lockup: { amount: string } };
+  locked: { btc: string; stx: string };
+  rewards: { btc: { accrued: string; claimed: string; claimable: string } };
+}
+
+export type HiroPrincipalStakingBondsResponse = HiroCursorPageResponse<HiroPrincipalStakingBond>;
+
+export interface HiroPoxInfoResponse {
+  contract_id: string;
+  first_burnchain_block_height: number;
+  current_burnchain_block_height: number;
+  prepare_phase_block_length: number;
+  reward_phase_block_length: number;
 }

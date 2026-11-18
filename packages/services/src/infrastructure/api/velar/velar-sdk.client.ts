@@ -2,6 +2,8 @@ import { VelarSDK, getTokensMeta } from '@velarprotocol/velar-sdk';
 import { AmountOutResponse, SwapResponse, Token } from '@velarprotocol/velar-sdk/dist/types/Swap';
 import { inject, injectable } from 'inversify';
 
+import { generateRandomStacksAddress } from '@leather.io/stacks';
+
 import { Types } from '../../../inversify.types';
 import { HttpCacheService } from '../../cache/http-cache.service';
 
@@ -12,6 +14,7 @@ type VelarSdkSwapResponse = SwapResponse;
 @injectable()
 export class VelarSdkClient {
   private readonly velarSdk: VelarSDK;
+  private readonly randomStacksAddress = generateRandomStacksAddress();
 
   constructor(@inject(Types.CacheService) private readonly cacheService: HttpCacheService) {
     this.velarSdk = new VelarSDK();
@@ -33,7 +36,7 @@ export class VelarSdkClient {
     amount: number
   ): Promise<VelarSdkAmountOutResponse> {
     const swapInstance = await this.velarSdk.getSwapInstance({
-      account: '',
+      account: this.randomStacksAddress,
       inToken,
       outToken,
     });

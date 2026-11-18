@@ -350,6 +350,100 @@
     * @leather.io/rpc bumped to 2.20.16
     * @leather.io/utils bumped to 0.46.3
 
+## [1.7.6](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.7.5...@leather.io/provider-v1.7.6) (2026-10-27)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.25.4
+
+## [1.7.5](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.7.4...@leather.io/provider-v1.7.5) (2026-09-29)
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.25.3
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/test-config bumped to 0.1.4
+
+## [1.7.4](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.7.3...@leather.io/provider-v1.7.4) (2026-09-14)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.25.2
+
+## [1.7.3](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.7.2...@leather.io/provider-v1.7.3) (2026-09-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.25.1
+
+## [1.7.2](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.7.1...@leather.io/provider-v1.7.2) (2026-08-27)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.25.0
+
+## [1.7.1](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.7.0...@leather.io/provider-v1.7.1) (2026-08-18)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.24.5
+
+## [1.7.0](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.6.33...@leather.io/provider-v1.7.0) (2026-08-10)
+
+
+### Features
+
+* delete legacy requests ([#2612](https://github.com/leather-io/mono/issues/2612)) ([c17d65f](https://github.com/leather-io/mono/commit/c17d65fc12fd799ff045d6fb725b57b50462fd84))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.24.4
+
+## [1.6.33](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.6.32...@leather.io/provider-v1.6.33) (2026-08-05)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.24.3
+
+## [1.6.32](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.6.31...@leather.io/provider-v1.6.32) (2026-07-23)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.24.2
+
 ## [1.6.31](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.6.30...@leather.io/provider-v1.6.31) (2026-07-15)
 
 

@@ -1,5 +1,5 @@
 import {
-  ClarityValue,
+  type ClarityValue,
   bufferCVFromString,
   createAddress,
   deserializeCV,

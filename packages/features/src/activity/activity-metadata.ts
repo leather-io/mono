@@ -1,11 +1,9 @@
 import { stxAsset } from '@leather.io/constants';
-import type { Activity, CryptoAsset, OnChainActivityStatus } from '@leather.io/models';
+import type { Activity, CryptoAsset } from '@leather.io/models';
 
 import type { ActivityAvatar } from './types';
 
-export function hasTxDetails(
-  activity: Activity
-): activity is Activity & { txid: string; status: OnChainActivityStatus } {
+export function hasTxDetails(activity: Activity) {
   return 'txid' in activity && 'status' in activity;
 }
 

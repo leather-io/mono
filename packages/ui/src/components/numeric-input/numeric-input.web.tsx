@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { type ComponentProps } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 
@@ -83,7 +83,7 @@ function Display({ formatter: customFormatter, ...spanProps }: DisplayProps) {
     <styled.span
       flex={1}
       px="space.05"
-      fontFamily="MarchePro-Super"
+      fontFamily="Marche"
       fontSize="18px"
       lineHeight="24px"
       textAlign="center"

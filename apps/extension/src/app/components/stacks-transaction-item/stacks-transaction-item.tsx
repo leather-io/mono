@@ -1,11 +1,12 @@
-import { useMatch, useNavigate } from 'react-router';
+import { useMatch } from 'react-router';
 
-import { StacksTx } from '@leather.io/models';
+import { type StacksTransaction } from '@leather.io/models';
 
 import { RouteUrls } from '@shared/route-urls';
 import { analytics } from '@shared/utils/analytics';
 
 import { useStacksExplorerLink } from '@app/common/hooks/use-stacks-explorer-link';
+import { useStacksTransactionActionNavigate } from '@app/common/hooks/use-stacks-transaction-action-navigate';
 import {
   StacksTransactionActionType,
   getTxCaption,
@@ -13,9 +14,6 @@ import {
   getTxValue,
   isPendingTx,
 } from '@app/common/transactions/stacks/transaction.utils';
-import { useWalletType } from '@app/common/use-wallet-type';
-import { whenPageMode } from '@app/common/utils';
-import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
 import { TransactionTitle } from '@app/components/transaction/transaction-title';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
@@ -31,7 +29,7 @@ interface StacksTransactionItemProps {
   link?: string;
   title?: string;
   value?: string;
-  transaction?: StacksTx;
+  transaction?: StacksTransaction;
 }
 export function StacksTransactionItem({
   caption,
@@ -45,8 +43,7 @@ export function StacksTransactionItem({
   const currentAccount = useCurrentStacksAccount();
   const isPrivate = useIsPrivateMode();
 
-  const navigate = useNavigate();
-  const { whenWallet } = useWalletType();
+  const navigateToTransactionAction = useStacksTransactionActionNavigate();
 
   const cancelTransactionMatch = useMatch(RouteUrls.CancelStacksTransaction);
   const increaseFeeMatch = useMatch(RouteUrls.IncreaseStacksFee);
@@ -62,7 +59,7 @@ export function StacksTransactionItem({
     });
   }
 
-  const isOriginator = transaction?.sender_address === currentAccount?.address;
+  const isOriginator = transaction?.sender.address === currentAccount?.address;
   const isPending = transaction && isPendingTx(transaction);
 
   const txCaption = transaction ? getTxCaption(transaction) : caption || '';
@@ -72,20 +69,7 @@ export function StacksTransactionItem({
 
   function handleTransactionAction(action: StacksTransactionActionType) {
     if (!transaction) return;
-
-    const routeUrl =
-      action === StacksTransactionActionType.IncreaseFee
-        ? RouteUrls.IncreaseStacksFee.replace(':txid', transaction.tx_id)
-        : RouteUrls.CancelStacksTransaction.replace(':txid', transaction.tx_id);
-
-    return whenWallet({
-      ledger: () =>
-        whenPageMode({
-          full: () => void navigate(routeUrl),
-          popup: () => void openIndexPageInNewTab(routeUrl),
-        })(),
-      software: () => navigate(routeUrl),
-    })();
+    return navigateToTransactionAction(transaction.tx_id, action);
   }
 
   const isTransactionActionRoute = !!cancelTransactionMatch || !!increaseFeeMatch;
@@ -95,8 +79,8 @@ export function StacksTransactionItem({
   const rightElement =
     isOriginator && isPending && !isTransactionActionRoute ? (
       <StacksTransactionActionMenu
-        onIncreaseFee={() => handleTransactionAction(StacksTransactionActionType.IncreaseFee)}
-        onCancelTransaction={() => handleTransactionAction(StacksTransactionActionType.Cancel)}
+        onIncreaseFee={() => void handleTransactionAction(StacksTransactionActionType.IncreaseFee)}
+        onCancelTransaction={() => void handleTransactionAction(StacksTransactionActionType.Cancel)}
       />
     ) : undefined;
 

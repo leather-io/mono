@@ -1,6 +1,6 @@
 import PQueue from 'p-queue';
 
-import { RateLimiterQueueOptions } from './rate-limiter.service';
+import type { RateLimiterQueueOptions } from './rate-limiter.service';
 
 const leatherApiLimiterSettings: RateLimiterQueueOptions = {
   interval: 1000,
@@ -20,6 +20,7 @@ const leatherPriorityLevels = {
 
 export const leatherApiPriorities = {
   utxos: leatherPriorityLevels.MEDIUM,
+  stakingBonds: leatherPriorityLevels.MEDIUM,
   bitcoinTransactions: leatherPriorityLevels.LOW,
   bitcoinFeeRates: leatherPriorityLevels.LOW,
   fiatExchangeRates: leatherPriorityLevels.HIGH,
@@ -50,4 +51,5 @@ export const leatherApiPriorities = {
   protocols: leatherPriorityLevels.MEDIUM,
   protocolContracts: leatherPriorityLevels.LOW,
   proposeMultisigTransaction: leatherPriorityLevels.HIGH,
+  compliance: leatherPriorityLevels.HIGH,
 };

@@ -8,10 +8,12 @@ import { createAssetListQueryConfig } from '@leather.io/queries';
 import type { AssetListRequest } from '@leather.io/services';
 
 import { getMultisigAccountAddresses } from '../vaults/multisig-account-addresses';
+import { accountAssetsRefetchInterval } from '../vaults/use-vaults';
 import { type VaultAssetItem, buildVaultAssetItems } from './vault-asset-items';
 
 const assetListCacheOptions = {
   refetchOnMount: true,
+  refetchInterval: accountAssetsRefetchInterval,
   staleTime: 30_000,
   gcTime: 300_000,
 } as const;

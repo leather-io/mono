@@ -5,7 +5,7 @@ import * as bitcoin from 'bitcoinjs-lib';
 import { ECPairFactory } from 'ecpair';
 import { encode } from 'varuint-bitcoin';
 
-import { PaymentTypes } from '@leather.io/rpc';
+import { type PaymentTypes } from '@leather.io/rpc';
 import { isString } from '@leather.io/utils';
 
 import { toXOnly } from '../utils/bitcoin.utils';
@@ -38,32 +38,39 @@ export const bip322TransactionToSignValues = {
   sequence: 0,
 };
 
-function encodeVarString(b: Buffer) {
-  return Buffer.concat([encode(b.byteLength), b]);
+function encodeVarString(b: Uint8Array) {
+  return Buffer.concat([encode(b.byteLength).buffer, b]);
 }
 
 const supportedMessageSigningPaymentTypes: PaymentTypes[] = ['p2wpkh', 'p2tr'];
 
 export function isSupportedMessageSigningPaymentType(paymentType: string) {
-  return supportedMessageSigningPaymentTypes.includes(paymentType as PaymentTypes);
+  return supportedMessageSigningPaymentTypes.some(type => type === paymentType);
 }
 
 /**
  * Encode witness data for a BIP322 message
  * TODO: Refactor to remove `Buffer` use
  */
-export function encodeMessageWitnessData(witnessArray: Buffer[]) {
+export function encodeMessageWitnessData(witnessArray: Uint8Array[]) {
   const len = encode(witnessArray.length);
-  return Buffer.concat([len, ...witnessArray.map(witness => encodeVarString(witness))]);
+  return Buffer.concat([len.buffer, ...witnessArray.map(witness => encodeVarString(witness))]);
 }
 
-function tapTweakHash(pubKey: Buffer, h: Buffer | undefined): Buffer {
+function tapTweakHash(pubKey: Uint8Array, h: Uint8Array | undefined): Uint8Array {
   return bitcoin.crypto.taggedHash('TapTweak', Buffer.concat(h ? [pubKey, h] : [pubKey]));
 }
 
-export function tweakSigner(signer: bitcoin.Signer, opts: any = {}): bitcoin.Signer {
-  // @ts-expect-error privateKey exists on signer
-  let privateKey: Uint8Array | undefined = signer.privateKey;
+interface TweakSignerOptions {
+  tweakHash?: Uint8Array;
+  network?: bitcoin.Network;
+}
+
+export function tweakSigner(signer: bitcoin.Signer, opts: TweakSignerOptions = {}): bitcoin.Signer {
+  let privateKey =
+    'privateKey' in signer && signer.privateKey instanceof Uint8Array
+      ? signer.privateKey
+      : undefined;
   if (!privateKey) {
     throw new Error('Private key is required for tweaking signer!');
   }

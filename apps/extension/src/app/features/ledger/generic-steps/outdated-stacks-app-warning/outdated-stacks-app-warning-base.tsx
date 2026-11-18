@@ -1,7 +1,4 @@
-import { useLocation, useNavigate } from 'react-router';
-
 import { Box, Flex, HStack, Stack, styled } from 'leather-styles/jsx';
-import { z } from 'zod';
 
 import { Button, ExternalLinkIcon, Flag, InfoCircleIcon, Tooltip } from '@leather.io/ui';
 
@@ -9,28 +6,23 @@ import { useThemeSwitcher } from '@app/common/theme-provider';
 import { whenTheme } from '@app/common/utils/when-theme';
 import { LedgerTitle } from '@app/features/ledger/components/ledger-title';
 import { LedgerWrapper } from '@app/features/ledger/components/ledger-wrapper';
+import { useLedgerStep, useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import { LEDGER_LIVE_MANAGER_URL } from '@app/features/ledger/utils/generic-ledger-utils';
-
-const locationStateSchema = z.object({
-  versionInfo: z
-    .object({
-      currentVersion: z.string(),
-      requiredVersion: z.string(),
-    })
-    .optional(),
-});
 
 interface OutdatedStacksAppWarningBaseProps {
   onTryAgain(): void | Promise<void>;
+  onCancel?(): void;
 }
 
-export function OutdatedStacksAppWarningBase({ onTryAgain }: OutdatedStacksAppWarningBaseProps) {
-  const navigate = useNavigate();
-  const location = useLocation();
+export function OutdatedStacksAppWarningBase({
+  onTryAgain,
+  onCancel,
+}: OutdatedStacksAppWarningBaseProps) {
+  const step = useLedgerStep();
+  const ledgerSteps = useLedgerSteps();
   const { theme } = useThemeSwitcher();
 
-  const parseResult = locationStateSchema.safeParse(location.state);
-  const versionInfo = parseResult.success ? parseResult.data.versionInfo : undefined;
+  const versionInfo = step.name === 'outdated-stacks-app' ? step.versionInfo : undefined;
 
   const ledgerIconStyle = whenTheme(theme)({
     light: { filter: 'invert(1)' },
@@ -43,27 +35,13 @@ export function OutdatedStacksAppWarningBase({ onTryAgain }: OutdatedStacksAppWa
         <img src="assets/images/ledger/outdated-stacks-app.svg" width="292px" alt="Ledger" />
       </Box>
       <Flex alignItems="center" gap="space.02" justifyContent="center" mt="space.06">
-        <LedgerTitle>Update your Ledger Stacks app</LedgerTitle>
+        <LedgerTitle>Ledger Stacks app update required</LedgerTitle>
       </Flex>
       <styled.p mt="space.04" textStyle="body.01" maxW="320px">
-        Leather needs a more recent version of the Ledger Stacks app
+        {versionInfo
+          ? `Your current Stacks app version (${versionInfo.currentVersion}) isn't supported. Update to version ${versionInfo.requiredVersion} or later to continue.`
+          : 'Leather needs a more recent version of the Ledger Stacks app to continue.'}
       </styled.p>
-
-      {versionInfo && (
-        <Stack gap="space.03" mt="space.04" textStyle="caption.01" color="ink.text-subdued">
-          <Flex alignItems="center" justifyContent="space-between">
-            <styled.span>
-              Current version{' '}
-              <styled.span textStyle="code">{versionInfo.currentVersion}</styled.span>
-            </styled.span>
-            <styled.span mx="space.01">∙</styled.span>
-            <styled.span>
-              Required version{' '}
-              <styled.span textStyle="code">{versionInfo.requiredVersion}</styled.span>
-            </styled.span>
-          </Flex>
-        </Stack>
-      )}
 
       <Stack gap="space.04" mt="space.06" width="100%" maxW="360px" textAlign="left">
         <Flag
@@ -156,10 +134,10 @@ export function OutdatedStacksAppWarningBase({ onTryAgain }: OutdatedStacksAppWa
           Open Ledger Wallet <ExternalLinkIcon color="ink.background-primary" />
         </styled.a>
         <HStack gap="space.03" width="100%">
-          <Button flex={1} onClick={onTryAgain} variant="outline">
+          <Button flex={1} onClick={() => void onTryAgain()} variant="outline">
             Try again
           </Button>
-          <Button flex="1" onClick={() => navigate('../../')} variant="outline">
+          <Button flex="1" onClick={onCancel ?? ledgerSteps.cancelLedgerAction} variant="outline">
             Cancel
           </Button>
         </HStack>

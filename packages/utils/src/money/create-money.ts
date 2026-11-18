@@ -3,16 +3,11 @@ import BigNumber from 'bignumber.js';
 import { currencyDecimalsMap } from '@leather.io/constants';
 import type { Currency, Money, NumType } from '@leather.io/models';
 
-import { isBigInt, isUndefined } from '..';
-
-type KnownCurrencyDecimals = keyof typeof currencyDecimalsMap;
-
-function isResolutionOfCurrencyKnown(symbol: Currency): symbol is KnownCurrencyDecimals {
-  return symbol in currencyDecimalsMap;
-}
+import { isBigInt, isUndefined } from '../type-guards';
 
 function getDecimalsOfSymbolIfKnown(symbol: Currency) {
-  if (isResolutionOfCurrencyKnown(symbol)) return currencyDecimalsMap[symbol];
+  if (Object.prototype.hasOwnProperty.call(currencyDecimalsMap, symbol))
+    return currencyDecimalsMap[symbol];
   return null;
 }
 

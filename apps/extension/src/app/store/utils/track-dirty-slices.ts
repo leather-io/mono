@@ -1,4 +1,4 @@
-import { Middleware, isAction } from '@reduxjs/toolkit';
+import { type Middleware, isAction } from '@reduxjs/toolkit';
 import { REHYDRATE } from 'redux-persist';
 
 import type { DirtySliceTracker } from '@shared/storage/dirty-slice-tracker';

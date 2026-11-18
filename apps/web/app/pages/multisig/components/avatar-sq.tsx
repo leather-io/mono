@@ -1,7 +1,9 @@
 import { Box } from 'leather-styles/jsx';
 
+import { squareAvatarRadius } from '@leather.io/ui';
+
 import type { Chain } from '../data/multisig-types';
-import { accountIconUrl, avatarSquircleRadius, vaultTheme } from '../multisig-tokens';
+import { accountIconUrl, vaultTheme } from '../multisig-tokens';
 import { ChainAvatar } from './chain-avatar';
 
 type AvatarSqSize = 'sm' | 'md' | 'lg';
@@ -37,25 +39,29 @@ export function AvatarSq({
   const theme = vaultTheme(themeId);
   const px = tileSize[size];
   const glyphPx = glyphSize[size];
+  const radius = squareAvatarRadius(px);
   const maskUrl = icon ? `url(${accountIconUrl(icon)})` : undefined;
   return (
-    <Box position="relative" width={`${px}px`} height={`${px}px`} flexShrink={0}>
+    <Box
+      position="relative"
+      flexShrink={0}
+      style={{ width: `${px}px`, height: `${px}px`, minWidth: `${px}px`, minHeight: `${px}px` }}
+    >
       <Box
         width="100%"
         height="100%"
-        borderRadius={avatarSquircleRadius}
         display="flex"
         alignItems="center"
         justifyContent="center"
         overflow="hidden"
-        style={{ background: theme.background }}
+        style={{ background: theme.background, borderRadius: radius }}
       >
         {icon && (
           <Box
-            width={`${glyphPx}px`}
-            height={`${glyphPx}px`}
             bg={theme.dark ? 'white' : 'ink.text-primary'}
             style={{
+              width: `${glyphPx}px`,
+              height: `${glyphPx}px`,
               WebkitMaskImage: maskUrl,
               maskImage: maskUrl,
               WebkitMaskRepeat: 'no-repeat',

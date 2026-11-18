@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 
 import { useToastContext } from '@/components/toast/toast-context';
 import {
@@ -18,7 +18,7 @@ import { analytics } from '@/utils/analytics';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/core/macro';
 
-import { AccountId, AverageBitcoinFeeRates, OwnedUtxo } from '@leather.io/models';
+import { type AccountId, type AverageBitcoinFeeRates, type OwnedUtxo } from '@leather.io/models';
 
 interface UseBtcFormProps {
   account: AccountId;
@@ -56,7 +56,26 @@ export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
     feeRate: form.watch('feeRate'),
   });
 
-  const { onSetMax } = useSendMax(maxSpend.spendableBitcoin, form);
+  const isSendingMax = useWatch({ control: form.control, name: 'isSendingMax' });
+  const recipient = useWatch({ control: form.control, name: 'recipient' });
+  const { onSetMax } = useSendMax(maxSpend.spendableBitcoin, {
+    isSendingMax,
+    recipient,
+    setValue: form.setValue,
+  });
+
+  async function reviewTransaction(txHexPromise: Promise<string>) {
+    try {
+      const txHex = await txHexPromise;
+      navigate('approver', { hex: txHex, accountIndex, fingerprint });
+    } catch {
+      displayToast({
+        title: t`Transaction failed due to an unexpected error`,
+        type: 'error',
+      });
+    }
+  }
+
   const handleSubmit = form.handleSubmit(values => {
     if (!nativeSegwit) return;
 
@@ -65,20 +84,15 @@ export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
       amount: Number(values.amount),
     });
 
-    btcFormValuesToPsbtHex({
-      values,
-      utxos,
-      networkMode: networkPreference.chain.bitcoin.mode,
-      payerLookup: payerFromKeyOrigin,
-      changeAddress: nativeSegwit.derivePayer({ change: 0, addressIndex: 0 }).address,
-    })
-      .then((psbtHex: string) => navigate('approver', { hex: psbtHex, accountIndex, fingerprint }))
-      .catch(() =>
-        displayToast({
-          title: t`Transaction failed due to an unexpected error`,
-          type: 'error',
-        })
-      );
+    void reviewTransaction(
+      btcFormValuesToPsbtHex({
+        values,
+        utxos,
+        networkMode: networkPreference.chain.bitcoin.mode,
+        payerLookup: payerFromKeyOrigin,
+        changeAddress: nativeSegwit.derivePayer({ change: 0, addressIndex: 0 }).address,
+      })
+    );
   });
 
   return {

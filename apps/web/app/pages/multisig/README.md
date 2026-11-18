@@ -31,9 +31,9 @@ screens are design-only and untested until production extraction.
 
 ## How to view it
 
-- It is gated behind `multisigEnabled` (`multisig.constants.ts`) — visible on local dev,
-  branch previews, and staging; **hidden in production** (`production: false`). The route
-  `loader` 404s when the flag is off.
+- It is live in every environment, production included. Only the dev-tools panel is gated:
+  `multisig.layout.tsx` mounts it behind `import.meta.env.CLOUDFLARE_ENV !== 'production'`, so
+  it renders on local dev, branch previews, and staging and drops out of the production bundle.
 - Run `pnpm --filter @leather.io/web dev`, then open `/multisig` (a **Multisig** entry
   also appears in the sidebar).
 
@@ -83,7 +83,8 @@ and is documented, not silent.)
   coral mark, not the purple `stacks` token.)
 - The four **vault theme** textures (`themes/{blue,bronze,green,orange}.jpg`) — decorative
   hero backgrounds, not design tokens.
-- `avatarSquircleRadius` (`14px`) — no token radius matches the squircle avatar tile.
+- Squircle avatar corner radius comes from `squareAvatarRadius` in `@leather.io/ui`, so
+  the tile matches the design system's square `Avatar` at every size.
 
 ## Fonts
 

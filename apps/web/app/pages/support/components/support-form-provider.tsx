@@ -4,7 +4,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SupportFormError } from '~/pages/support/components/support-form-error';
 import {
-  FrontSupportMessageData,
+  type FrontSupportMessageData,
   frontSupportMessageSchema,
 } from '~/utils/support/front-app-integration';
 

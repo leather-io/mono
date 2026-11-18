@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 
 import { css } from 'leather-styles/css';
 import { Flex, styled } from 'leather-styles/jsx';

@@ -1,10 +1,10 @@
 import type { InputData } from 'coin-selection/coin-selection.utils';
 
-import { AverageBitcoinFeeRates, Money } from '@leather.io/models';
+import { type AverageBitcoinFeeRates, type Money } from '@leather.io/models';
 
 import {
-  CoinSelectionRecipient,
-  DetermineUtxosForSpendArgs,
+  type CoinSelectionRecipient,
+  type DetermineUtxosForSpendArgs,
   determineUtxosForSpend,
   determineUtxosForSpendAll,
 } from '../coin-selection/coin-selection';

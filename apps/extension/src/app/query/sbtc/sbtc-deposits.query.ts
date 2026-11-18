@@ -3,14 +3,11 @@ import { BytesReader, addressToString, deserializeAddress } from '@stacks/transa
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-import { isDefined } from '@leather.io/utils';
-
-import { useConfigSbtc } from '../common/remote-config/remote-config.query';
-import { type StacksBlock, useGetStacksBlocks } from './get-stacks-block.query';
+import { EMILY_API_BASE_URL_MAINNET } from '@leather.io/models';
 
 export type SbtcStatus = 'pending' | 'accepted' | 'confirmed' | 'failed' | 'rbf';
 
-interface SbtcDepositInfo {
+export interface SbtcDeposit {
   amount: number;
   bitcoinTxOutputIndex: number;
   bitcoinTxid: string;
@@ -23,12 +20,12 @@ interface SbtcDepositInfo {
 }
 
 interface GetSbtcDepositsResponse {
-  deposits: SbtcDepositInfo[];
+  deposits: SbtcDeposit[];
   nextToken?: string;
 }
 
 async function getSbtcDeposits(apiUrl: string, status: string): Promise<GetSbtcDepositsResponse> {
-  const resp = await axios.get(`${apiUrl}/deposit?status=${status}`, {
+  const resp = await axios.get<GetSbtcDepositsResponse>(`${apiUrl}/deposit?status=${status}`, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -37,10 +34,9 @@ async function getSbtcDeposits(apiUrl: string, status: string): Promise<GetSbtcD
 }
 
 function useGetSbtcDeposits(stxAddress: string, status: string) {
-  const { emilyApiUrl } = useConfigSbtc();
   return useQuery({
-    queryKey: ['get-sbtc-deposits', emilyApiUrl, stxAddress, status],
-    queryFn: () => getSbtcDeposits(emilyApiUrl, status),
+    queryKey: ['get-sbtc-deposits', EMILY_API_BASE_URL_MAINNET, stxAddress, status],
+    queryFn: () => getSbtcDeposits(EMILY_API_BASE_URL_MAINNET, status),
     select: resp =>
       resp.deposits.filter(deposit => {
         const recipient = addressToString(
@@ -49,29 +45,6 @@ function useGetSbtcDeposits(stxAddress: string, status: string) {
         return recipient === stxAddress;
       }),
   });
-}
-
-export interface SbtcDeposit extends SbtcDepositInfo {
-  block?: StacksBlock;
-}
-
-function useSbtcDeposits(deposits: SbtcDepositInfo[]) {
-  const blockResults = useGetStacksBlocks(deposits.map(deposit => deposit.lastUpdateHeight));
-  const isLoadingBlocks = blockResults.some(query => query.isLoading);
-
-  return {
-    isLoadingBlocks,
-    deposits: deposits.map(deposit => {
-      const block = blockResults
-        .map(query => query.data)
-        .filter(isDefined)
-        .find(block => block.height === deposit.lastUpdateHeight);
-      return {
-        ...deposit,
-        block,
-      };
-    }),
-  };
 }
 
 export function useSbtcPendingDeposits(stxAddress: string) {
@@ -84,34 +57,14 @@ export function useSbtcPendingDeposits(stxAddress: string) {
     'accepted'
   );
 
-  const { isLoadingBlocks, deposits } = useSbtcDeposits([...pendingDeposits, ...acceptedDeposits]);
-
   return {
-    isLoading: isLoadingStatusPending || isLoadingStatusAccepted || isLoadingBlocks,
-    pendingSbtcDeposits: deposits,
-  };
-}
-
-export function useSbtcConfirmedDeposits(stxAddress: string) {
-  const { data: confirmedSbtcDeposits = [], isLoading: isLoadingStatusConfirmed } =
-    useGetSbtcDeposits(stxAddress, 'confirmed');
-  const { isLoadingBlocks, deposits } = useSbtcDeposits(confirmedSbtcDeposits);
-
-  return {
-    isLoading: isLoadingStatusConfirmed || isLoadingBlocks,
-    confirmedSbtcDeposits: deposits,
+    isLoading: isLoadingStatusPending || isLoadingStatusAccepted,
+    pendingSbtcDeposits: [...pendingDeposits, ...acceptedDeposits],
   };
 }
 
 export function useSbtcFailedDeposits(stxAddress: string) {
-  const { data: failedSbtcDeposits = [], isLoading: isLoadingStatusFailed } = useGetSbtcDeposits(
-    stxAddress,
-    'failed'
-  );
-  const { isLoadingBlocks, deposits } = useSbtcDeposits(failedSbtcDeposits);
+  const { data: failedSbtcDeposits = [], isLoading } = useGetSbtcDeposits(stxAddress, 'failed');
 
-  return {
-    isLoading: isLoadingStatusFailed || isLoadingBlocks,
-    failedSbtcDeposits: deposits,
-  };
+  return { isLoading, failedSbtcDeposits };
 }

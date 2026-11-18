@@ -11,12 +11,11 @@ export const WALLET_ENVIRONMENT = process.env.WALLET_ENVIRONMENT ?? 'unknown';
 
 export const BITFLOW_API_HOST = process.env.BITFLOW_API_HOST ?? '';
 export const BITFLOW_API_KEY = process.env.BITFLOW_API_KEY ?? '';
-export const BITFLOW_READONLY_CALL_API_HOST = process.env.BITFLOW_READONLY_CALL_API_HOST ?? '';
-export const BITFLOW_READONLY_CALL_API_KEY = process.env.BITFLOW_READONLY_CALL_API_KEY ?? '';
 export const BITFLOW_KEEPER_API_KEY = process.env.BITFLOW_KEEPER_API_KEY ?? '';
 export const BITFLOW_KEEPER_API_HOST = process.env.BITFLOW_KEEPER_API_HOST ?? '';
 export const BITFLOW_PROVIDER_ADDRESS = process.env.BITFLOW_PROVIDER_ADDRESS ?? '';
 export const DEBUG_TX_MONITOR = process.env.DEBUG_TX_MONITOR === 'true';
+export const MULTISIG_API_URL = process.env.MULTISIG_API_URL ?? '';
 export const ONRAMPER_API_KEY = process.env.ONRAMPER_API_KEY ?? '';
 export const ONRAMPER_WIDGET_HOST = process.env.ONRAMPER_WIDGET_HOST ?? '';
 export const ONRAMPER_SIGNING_SECRET = process.env.ONRAMPER_SIGNING_SECRET ?? '';

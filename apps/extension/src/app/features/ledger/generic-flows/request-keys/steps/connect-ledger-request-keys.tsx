@@ -4,15 +4,10 @@ import { ConnectLedger } from '@app/features/ledger/generic-steps/connect-device
 import { useWhenReattemptingLedgerConnection } from '@app/features/ledger/hooks/use-when-reattempt-ledger-connection';
 
 export function ConnectLedgerRequestKeys() {
-  const {
-    pullPublicKeysFromDevice,
-    latestDeviceResponse,
-    awaitingDeviceConnection,
-    outdatedAppVersionWarning,
-    chain,
-  } = useLedgerRequestKeysContext();
+  const { pullPublicKeysFromDevice, latestDeviceResponse, awaitingDeviceConnection, chain } =
+    useLedgerRequestKeysContext();
 
-  useWhenReattemptingLedgerConnection(() => pullPublicKeysFromDevice());
+  useWhenReattemptingLedgerConnection(() => void pullPublicKeysFromDevice());
 
   return (
     <ConnectLedger
@@ -22,11 +17,10 @@ export function ConnectLedgerRequestKeys() {
         <CommonLedgerDeviceInlineWarnings
           chain={chain}
           latestDeviceResponse={latestDeviceResponse}
-          outdatedLedgerAppWarning={outdatedAppVersionWarning}
         />
       }
       showInstructions
-      onConnectLedger={pullPublicKeysFromDevice}
+      onConnectLedger={() => void pullPublicKeysFromDevice()}
     />
   );
 }

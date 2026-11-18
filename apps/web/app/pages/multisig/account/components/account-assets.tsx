@@ -33,7 +33,7 @@ export function AccountAssets({ assets, onSelectAsset }: AccountAssetsProps) {
       <Box
         borderRadius="md"
         borderWidth="1px"
-        borderStyle="dashed"
+        borderStyle="solid"
         borderColor="ink.border-default"
         p="space.05"
         textAlign="center"

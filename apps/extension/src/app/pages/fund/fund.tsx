@@ -1,6 +1,6 @@
 import { Outlet, useParams } from 'react-router';
 
-import { LEATHER_EARN_URL } from '@leather.io/constants';
+import { LEATHER_PORTFOLIO_URL } from '@leather.io/constants';
 import { getOnramperIframeParams } from '@leather.io/features';
 
 import {
@@ -32,8 +32,8 @@ export function FundPage() {
     apiKey: ONRAMPER_API_KEY,
     signingSecret: ONRAMPER_SIGNING_SECRET,
     mode: 'buy',
-    successRedirectUrl: LEATHER_EARN_URL,
-    failureRedirectUrl: LEATHER_EARN_URL,
+    successRedirectUrl: LEATHER_PORTFOLIO_URL,
+    failureRedirectUrl: LEATHER_PORTFOLIO_URL,
   });
 
   return (

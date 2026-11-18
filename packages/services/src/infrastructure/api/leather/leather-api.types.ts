@@ -1354,6 +1354,7 @@ export interface paths {
           'application/json': {
             /** @enum {string} */
             network: 'stx:mainnet' | 'stx:testnet' | 'btc:mainnet' | 'btc:testnet' | 'btc:regtest';
+            domain: string;
             signature: string;
             publicKey: string;
             timestamp: number;
@@ -1458,6 +1459,82 @@ export interface paths {
         };
       };
     };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/compliance/addresses/{address}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Screen an address against the OFAC sanctions list and a risk screening provider */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          address: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              address: string;
+              /** @enum {string} */
+              status: 'compliant' | 'non_compliant' | 'unavailable';
+              checks: {
+                /** @enum {string} */
+                type: 'ofac' | 'risk_screening';
+                /** @enum {string} */
+                result: 'pass' | 'fail' | 'error';
+                provider?: string;
+                /** @enum {string} */
+                errorReason?: 'rate_limited' | 'upstream_error' | 'unexpected_response_shape';
+                providerContext?: {
+                  [key: string]: unknown;
+                };
+              }[];
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -3354,6 +3431,90 @@ export interface paths {
         };
       };
     };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/staking/addresses/{address}/bonds': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description List staking bonds for a Bitcoin address */
+    get: {
+      parameters: {
+        query: {
+          chain: 'mainnet' | 'testnet-primary' | 'private-1' | 'staking-testnet';
+          include?: 'spent';
+        };
+        header?: never;
+        path: {
+          address: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              bonds: {
+                bondIndex: number;
+                stxAddress: string;
+                enrollmentTxId: string;
+                registeredAtBurnHeight: number;
+                /** @description Burn height of announce-l1-early-exit; null if never announced */
+                exitAnnouncedAtBurnHeight: number | null;
+                outputs: {
+                  txid: string;
+                  vout: number;
+                  amountSats: string;
+                  /** @description CLTV height of the lock script */
+                  unlockBurnHeight: number;
+                  /** @description P2WSH witness script */
+                  lockScriptHex: string;
+                  spent: boolean;
+                  /** @description Last spent-status check; null = never */
+                  lastCheckedAt: string | null;
+                }[];
+              }[];
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -5263,7 +5424,7 @@ export interface paths {
       parameters: {
         query?: {
           status?: 'pending' | 'active' | 'cancelled';
-          membershipStatus?: 'invited' | 'joined' | 'declined';
+          membershipStatus?: 'invited' | 'joined';
         };
         header?: never;
         path?: never;

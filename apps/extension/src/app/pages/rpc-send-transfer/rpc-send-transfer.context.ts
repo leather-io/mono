@@ -13,6 +13,7 @@ interface RpcTransactionRequestContext {
 
 interface RpcSendTransferContext extends RpcTransactionRequestContext {
   amount: Money;
+  broadcast: boolean;
   isLoadingBalance: boolean;
   recipients: TransferRecipient[];
   recipientAddresses: string[];

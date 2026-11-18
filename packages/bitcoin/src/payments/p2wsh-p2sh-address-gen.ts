@@ -3,7 +3,7 @@ import { sha256 } from '@noble/hashes/sha256';
 import { createBase58check } from '@scure/base';
 
 import { deriveBip39SeedFromMnemonic, deriveRootBip32Keychain } from '@leather.io/crypto';
-import { NetworkModes } from '@leather.io/models';
+import { type NetworkModes } from '@leather.io/models';
 
 /**
  * @deprecated

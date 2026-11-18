@@ -489,6 +489,195 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.119.4](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.119.3...@leather.io/ui-v1.119.4) (2026-10-27)
+
+
+### Bug Fixes
+
+* **extension:** keep update notice readable and add toast countdown ring ([#2861](https://github.com/leather-io/mono/issues/2861)) ([aa8c75a](https://github.com/leather-io/mono/commit/aa8c75a6fa6a0b87a720b3fbb0ed596af0aeef56))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.28.0
+    * @leather.io/utils bumped to 0.55.0
+  * devDependencies
+    * @leather.io/features bumped to 1.8.6
+    * @leather.io/models bumped to 0.63.1
+    * @leather.io/panda-preset bumped to 0.16.6
+
+## [1.119.3](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.119.2...@leather.io/ui-v1.119.3) (2026-10-06)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/features bumped to 1.8.5
+
+## [1.119.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.119.1...@leather.io/ui-v1.119.2) (2026-10-01)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/features bumped to 1.8.4
+
+## [1.119.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.119.0...@leather.io/ui-v1.119.1) (2026-09-29)
+
+
+### Bug Fixes
+
+* bring back ordinal banners and make those dismissable ([#2615](https://github.com/leather-io/mono/issues/2615)) ([c085334](https://github.com/leather-io/mono/commit/c08533430f9b6bfd7c18f8e03b4151e2ec13cd91))
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+* swaps ui improvements ([#2758](https://github.com/leather-io/mono/issues/2758)) ([be4e2cf](https://github.com/leather-io/mono/commit/be4e2cfa261d803c24eb504f675713f5e2235673))
+* **ui:** prevent avatar from shrinking in flex rows ([#2791](https://github.com/leather-io/mono/issues/2791)) ([00a23a3](https://github.com/leather-io/mono/commit/00a23a331e56593ad9394579bb478eda1bfd5537))
+* **ui:** render item layout chevron direction with dedicated icons ([#2792](https://github.com/leather-io/mono/issues/2792)) ([aace9d8](https://github.com/leather-io/mono/commit/aace9d8a2061b9bd8d6fe094351b751c64237929))
+* **ui:** repair default callout contrast and link underline and focus states ([#2800](https://github.com/leather-io/mono/issues/2800)) ([32d87f8](https://github.com/leather-io/mono/commit/32d87f8973cb71e06ebe7fc55c7a47fa94a6557f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.27.2
+    * @leather.io/utils bumped to 0.54.0
+  * devDependencies
+    * @leather.io/features bumped to 1.8.3
+    * @leather.io/models bumped to 0.63.0
+    * @leather.io/panda-preset bumped to 0.16.5
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/test-config bumped to 0.1.4
+    * @leather.io/tsconfig-config bumped to 0.11.2
+
+## [1.119.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.118.0...@leather.io/ui-v1.119.0) (2026-09-14)
+
+
+### Features
+
+* **web:** launch polish for multisig onboarding, nav icon and install button ([#2729](https://github.com/leather-io/mono/issues/2729)) ([bc8e964](https://github.com/leather-io/mono/commit/bc8e9646bec9aa202b988db716e14d0d94f8899c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.53.1
+  * devDependencies
+    * @leather.io/features bumped to 1.8.2
+
+## [1.118.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.117.0...@leather.io/ui-v1.118.0) (2026-09-10)
+
+
+### Features
+
+* **extension:** bitcoin staking balances and positions UI ([#2715](https://github.com/leather-io/mono/issues/2715)) ([0af16a8](https://github.com/leather-io/mono/commit/0af16a8f1ac9509cf94a351f8f667ba5c2b85a83))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.53.0
+  * devDependencies
+    * @leather.io/features bumped to 1.8.1
+    * @leather.io/models bumped to 0.62.0
+
+## [1.117.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.116.2...@leather.io/ui-v1.117.0) (2026-08-27)
+
+
+### Features
+
+* distinguish multisig cancelled activity items ([#2660](https://github.com/leather-io/mono/issues/2660)) ([4dc3931](https://github.com/leather-io/mono/commit/4dc3931374c6529b833d7e98e231e23e0bd78b23))
+
+
+### Bug Fixes
+
+* add all balances settings tab ([#2552](https://github.com/leather-io/mono/issues/2552)) ([1ef1c33](https://github.com/leather-io/mono/commit/1ef1c33ecb393f6e2d87f0829773e88e7a59fcfa))
+* multisig pre-release design QA pass ([#2670](https://github.com/leather-io/mono/issues/2670)) ([c14d933](https://github.com/leather-io/mono/commit/c14d933f0c29778e8583fc64fd9273e10c27f764))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.27.1
+    * @leather.io/utils bumped to 0.52.7
+  * devDependencies
+    * @leather.io/features bumped to 1.8.0
+    * @leather.io/models bumped to 0.61.1
+    * @leather.io/panda-preset bumped to 0.16.4
+
+## [1.116.2](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.116.1...@leather.io/ui-v1.116.2) (2026-08-18)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.52.6
+  * devDependencies
+    * @leather.io/features bumped to 1.7.2
+    * @leather.io/models bumped to 0.61.0
+
+## [1.116.1](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.116.0...@leather.io/ui-v1.116.1) (2026-08-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.52.5
+  * devDependencies
+    * @leather.io/features bumped to 1.7.1
+
+## [1.116.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.115.0...@leather.io/ui-v1.116.0) (2026-08-05)
+
+
+### Features
+
+* add new activity list ([#2555](https://github.com/leather-io/mono/issues/2555)) ([7d5f88a](https://github.com/leather-io/mono/commit/7d5f88a8f5af565d381c231a401842462263c322))
+* address verification ([#2549](https://github.com/leather-io/mono/issues/2549)) ([4965f2d](https://github.com/leather-io/mono/commit/4965f2d8e71b93a286f7cd1ab6f04493dbe7cfa8))
+* **web:** staking UI pass — position rows, provider table, shared address chips ([#2568](https://github.com/leather-io/mono/issues/2568)) ([d98bd9a](https://github.com/leather-io/mono/commit/d98bd9a61b2f066041082b85256da9a96519d7b6))
+
+
+### Bug Fixes
+
+* **web:** rework staking payout selection, hover cards and form radii ([#2558](https://github.com/leather-io/mono/issues/2558)) ([612c860](https://github.com/leather-io/mono/commit/612c860fa18934819ddac0c14f25c01d31fee58d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.52.4
+  * devDependencies
+    * @leather.io/features bumped to 1.7.0
+
+## [1.115.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.114.3...@leather.io/ui-v1.115.0) (2026-07-23)
+
+
+### Features
+
+* **web:** playground design surface + multisig content refinements ([#2527](https://github.com/leather-io/mono/issues/2527)) ([#2532](https://github.com/leather-io/mono/issues/2532)) ([6580b89](https://github.com/leather-io/mono/commit/6580b892a307bca0f66db2b159ea656d3998af19))
+
+
+### Bug Fixes
+
+* clipboard in multisig vault invites ([#2530](https://github.com/leather-io/mono/issues/2530)) ([8e04bfb](https://github.com/leather-io/mono/commit/8e04bfbead39ff2d437385bb26667158103aff9d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.52.3
+  * devDependencies
+    * @leather.io/features bumped to 1.6.0
+
 ## [1.114.3](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.114.2...@leather.io/ui-v1.114.3) (2026-07-20)
 
 

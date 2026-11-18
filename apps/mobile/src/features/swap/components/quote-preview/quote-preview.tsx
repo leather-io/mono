@@ -1,6 +1,6 @@
 import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
 
-import { LiveSwapEstimate, SwapState } from '@leather.io/state/swap';
+import { type LiveSwapEstimate, type SwapState } from '@leather.io/state/swap';
 import { assertExistence, assertUnreachable } from '@leather.io/utils';
 
 import { QuotePreviewConstrained } from './quote-preview-constrained';
@@ -27,7 +27,10 @@ export function QuotePreview({ state, liveEstimate }: QuotePreviewProps) {
     case 'error':
       return (
         <Animated.View key="error" entering={Entering} exiting={Exiting}>
-          <QuotePreviewError error={liveEstimate.error} onRetry={liveEstimate.refetch} />
+          <QuotePreviewError
+            error={liveEstimate.error}
+            onRetry={() => void liveEstimate.refetch()}
+          />
         </Animated.View>
       );
     case 'empty':

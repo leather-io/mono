@@ -3,34 +3,29 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AccountAddresses, Sip9Asset } from '@leather.io/models';
 
 import type { BnsService } from '../bns/bns.service';
+import { createTestSip9Asset } from '../test/assets-sip9';
+import { createMock } from '../test/create-mock';
 import { CollectiblesService } from './collectibles.service';
 import type { Sip9sService } from './sip9s.service';
 
 describe(CollectiblesService.name, () => {
   const mockSip9s: Sip9Asset[] = [
-    {
-      chain: 'stacks',
-      category: 'nft',
-      protocol: 'sip9',
+    createTestSip9Asset({
       assetId: 'SP000.nft-2',
       name: 'NFT 2',
-    } as Sip9Asset,
-    {
-      chain: 'stacks',
-      category: 'nft',
-      protocol: 'sip9',
+    }),
+    createTestSip9Asset({
       assetId: 'SP000.nft-1',
       name: 'NFT 1',
-    } as Sip9Asset,
+    }),
   ];
 
-  const mockSip9sService = {
-    getAccountSip9s: vi.fn().mockResolvedValue(mockSip9s),
-  } as unknown as Sip9sService;
+  const getAccountSip9s = vi.fn().mockResolvedValue(mockSip9s);
+  const mockSip9sService = createMock<Sip9sService>({ getAccountSip9s });
 
-  const mockBnsService = {
+  const mockBnsService = createMock<BnsService>({
     getAccountBnsNames: vi.fn().mockResolvedValue([]),
-  } as unknown as BnsService;
+  });
 
   const collectiblesService = new CollectiblesService(mockSip9sService, mockBnsService);
 
@@ -81,13 +76,10 @@ describe(CollectiblesService.name, () => {
     });
 
     it('filters out SIP-9 NFTs whose names match owned BNS names', async () => {
-      const bnsMatchingSip9: Sip9Asset = {
-        chain: 'stacks',
-        category: 'nft',
-        protocol: 'sip9',
+      const bnsMatchingSip9 = createTestSip9Asset({
         assetId: 'SP2QEZ.BNS-V2.bns::names',
         name: 'alice.btc',
-      } as Sip9Asset;
+      });
 
       vi.spyOn(mockSip9sService, 'getAccountSip9s').mockResolvedValueOnce([
         ...mockSip9s,

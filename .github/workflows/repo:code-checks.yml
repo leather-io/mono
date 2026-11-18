@@ -19,10 +19,10 @@ jobs:
     name: lint-prettier
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
       - name: lint-prettier
         run: pnpm format:check
 
@@ -30,10 +30,10 @@ jobs:
     name: lint-syncpack
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
       - name: lint-packages-with-syncpack
         run: pnpm syncpack:lint
 
@@ -41,10 +41,10 @@ jobs:
     name: lint-eslint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
       - name: lint-eslint
         run: pnpm build && pnpm lint
 
@@ -52,10 +52,10 @@ jobs:
     name: typecheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
       - name: run-typecheck-recursively-in-each-package
         run: pnpm build && pnpm typecheck
 
@@ -63,12 +63,12 @@ jobs:
     name: lint-commit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - name: lint-commit-message
         run: pnpm exec commitlint --from origin/dev --to HEAD --verbose
@@ -77,10 +77,10 @@ jobs:
     name: lint-deps
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - name: lint-dependency-rules
         run: pnpm build && pnpm lint:deps
@@ -89,22 +89,34 @@ jobs:
     name: lint-filenames
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - name: lint-dependency-rules
         run: pnpm lint:filenames
+
+  feature-map:
+    name: feature-map
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: $/.github/actions/provision
+
+      - name: check-feature-map
+        run: pnpm --filter @leather.io/tools build && pnpm lt feature-map check
 
   knip:
     name: knip
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - run: pnpm build
 
@@ -115,10 +127,10 @@ jobs:
     name: test-unit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - run: pnpm build
 
@@ -129,12 +141,12 @@ jobs:
     name: test-coverage
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - run: pnpm build
 
@@ -142,7 +154,7 @@ jobs:
         run: pnpm test:coverage
 
       - name: upload-results-to-codecov
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           token: ${{secrets.CODECOV_TOKEN}}
           files: ./app/mobile/coverage/.tmp/coverage-0.json
@@ -151,10 +163,10 @@ jobs:
     name: audit-dependencies
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/provision
+      - uses: $/.github/actions/provision
 
       - name: audit
         run: pnpm dlx pnpm@11.0.0-rc.1 audit --prod --audit-level high --config.manage-package-manager-versions=false

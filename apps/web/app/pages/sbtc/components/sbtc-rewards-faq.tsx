@@ -1,7 +1,7 @@
 import { useLoaderData } from 'react-router';
 
 import { styled } from 'leather-styles/jsx';
-import { loader } from '~/pages/sbtc/sbtc.route';
+import { type loader } from '~/pages/sbtc/sbtc.route';
 import { getPostHref } from '~/utils/post-link';
 import { sanitizeContent } from '~/utils/sanitize-content';
 
@@ -36,7 +36,7 @@ export function SbtcRewardsFaq() {
                 <br />
                 <Link
                   href={getPostHref(post.legacyPost?.slug.current)}
-                  style={{ fontSize: 'inherit' }}
+                  style={{ fontSize: 'inherit', whiteSpace: 'nowrap' }}
                 >
                   Learn more
                 </Link>

@@ -20,6 +20,7 @@ interface EditableNameProps {
   canEdit?: boolean;
   display?: ReactNode;
   placeholder?: string;
+  maxLength?: number;
 }
 
 export function EditableName({
@@ -30,6 +31,7 @@ export function EditableName({
   canEdit = true,
   display,
   placeholder,
+  maxLength,
 }: EditableNameProps) {
   const [isShowing, setIsShowing] = useState(false);
   const [draft, setDraft] = useState(value);
@@ -104,12 +106,13 @@ export function EditableName({
           </Flex>
         }
       >
-        <Flex direction="column" gap="space.04" p="space.05">
-          <Input.Root>
+        <Flex direction="column" gap="space.04" px="space.05" pt="space.05" pb="space.02">
+          <Input.Root style={{ minHeight: '48px' }}>
             <Input.Field
               autoFocus
               value={draft}
               placeholder={placeholder}
+              maxLength={maxLength}
               onChange={(event: ChangeEvent<HTMLInputElement>) => setDraft(event.target.value)}
               onKeyDown={onKeyDown}
               aria-label={`Rename ${label}`}

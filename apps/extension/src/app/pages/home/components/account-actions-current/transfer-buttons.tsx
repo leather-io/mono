@@ -33,7 +33,7 @@ export function TransferButtons() {
           full: () => void navigate(RouteUrls.SendCryptoAsset),
           popup: () => void openIndexPageInNewTab(RouteUrls.SendCryptoAsset),
         })(),
-      software: () => navigate(RouteUrls.SendCryptoAsset),
+      software: () => void navigate(RouteUrls.SendCryptoAsset),
     })();
   }
 
@@ -41,18 +41,6 @@ export function TransferButtons() {
     if (policy) showReceive(policy.chain === 'bitcoin' ? 'btc' : 'stx');
     else showReceive(hasBitcoinKeys ? 'full' : 'stx');
     setIsDrawerOpen(false);
-  }
-
-  if (policy) {
-    return (
-      <ActionButton
-        data-testid={HomePageSelectors.ReceiveCryptoAssetBtn}
-        onClick={onReceive}
-        variant="outline"
-      >
-        Receive
-      </ActionButton>
-    );
   }
 
   if (isAtLeastMd) {

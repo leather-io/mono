@@ -144,4 +144,26 @@ describe('getAddresses', () => {
     const result = getAddresses.params.safeParse({});
     expect(result.success).toEqual(true);
   });
+
+  describe('chains param', () => {
+    test('accepts a single chain', () => {
+      const result = getAddresses.params.safeParse({ chains: ['stacks'] });
+      expect(result.success).toEqual(true);
+    });
+
+    test('accepts both chains', () => {
+      const result = getAddresses.params.safeParse({ chains: ['bitcoin', 'stacks'] });
+      expect(result.success).toEqual(true);
+    });
+
+    test('rejects an empty array', () => {
+      const result = getAddresses.params.safeParse({ chains: [] });
+      expect(result.success).toEqual(false);
+    });
+
+    test('rejects unknown chain values', () => {
+      const result = getAddresses.params.safeParse({ chains: ['solana'] });
+      expect(result.success).toEqual(false);
+    });
+  });
 });

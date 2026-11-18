@@ -10,6 +10,7 @@ export interface SoftwareStacksAccount extends AccountId {
   dataPrivateKey: string;
   appsKey: string;
   salt: string;
+  derivationPath: string;
 }
 
 export interface HardwareStacksAccount extends AccountId {
@@ -18,6 +19,7 @@ export interface HardwareStacksAccount extends AccountId {
   stxPublicKey: string;
   dataPublicKey: string;
   index: number;
+  derivationPath: string;
 }
 
 export type StacksAccount = SoftwareStacksAccount | HardwareStacksAccount;

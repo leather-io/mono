@@ -1,6 +1,6 @@
 import {
-  RpcRequest,
-  RpcRequests,
+  type RpcRequest,
+  type RpcRequests,
   getInfo,
   parseEndpointRequest,
   supportedMethods,

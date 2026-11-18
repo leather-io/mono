@@ -1,7 +1,18 @@
 import type { BrowserContext, Page } from '@playwright/test';
+import {
+  PayloadType,
+  type StacksTransactionWire,
+  type TokenTransferPayloadWire,
+  deserializeTransaction,
+} from '@stacks/transactions';
+import { requestLeatherProvider } from '@tests/leather-provider';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
+import { mockEmptyStacksBalancesRequest } from '@tests/mocks/mock-stacks-balances';
+import { mockEmptyStacksBalancesV2Request } from '@tests/mocks/mock-stacks-balances-v2';
+import { mockStacksBroadcastTransaction } from '@tests/mocks/mock-stacks-txs';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
+import { z } from 'zod';
 
 import { RpcErrorCode, type RpcParams, type stxTransferStx } from '@leather.io/rpc';
 
@@ -9,29 +20,43 @@ import { RpcErrorMessage } from '@shared/rpc/methods/validation.utils';
 
 import { test } from '../../fixtures/fixtures';
 
+const broadcastRequestBodySchema = z.object({ tx: z.string() });
+
+const transferStxResultSchema = z.object({ txid: z.string(), transaction: z.string().optional() });
+
+function getTokenTransferPayload(tx: StacksTransactionWire): TokenTransferPayloadWire {
+  if (tx.payload.payloadType !== PayloadType.TokenTransfer) {
+    throw new Error('Expected a token transfer payload');
+  }
+  return tx.payload;
+}
+
+// Mocked fee estimations resolve to these three tiers (see mockStacksFeeRequests)
+const slowFee = { displayed: '0.0002 STX', microStx: 200 };
+const standardFee = { displayed: '0.0004 STX', microStx: 400 };
+
 test.describe('RPC: stx_transferStx', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   function checkVisibleContent(context: BrowserContext, expectedMemo: string) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
 
-      await popup.waitForSelector('text="Account 1"');
-      await popup.waitForSelector('text="0.0001 STX"');
+      await test.expect(popup.getByText('Account 1', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText('0.0001 STX', { exact: true })).toBeVisible();
       await test.expect(popup.getByText('Memo', { exact: true })).toBeVisible();
       await test.expect(popup.getByText(expectedMemo, { exact: true })).toBeVisible();
-      const displayerAddress = await popup
+      const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-        .innerText()
-        .then((value: string) => value.replaceAll('\n', ''));
+        .innerText();
+      const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB');
 
-      await popup.waitForTimeout(500);
-      const btn = popup.locator('text="Confirm"');
+      const btn = popup.getByText('Confirm', { exact: true });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();
@@ -43,13 +68,7 @@ test.describe('RPC: stx_transferStx', () => {
 
   function initiateSip30RpcTransferStx(page: Page) {
     return async (params: RpcParams<typeof stxTransferStx>) =>
-      page.evaluate(
-        params =>
-          (window as any).LeatherProvider.request('stx_transferStx', {
-            ...params,
-          }).catch((e: unknown) => e),
-        { ...params }
-      );
+      page.evaluate(requestLeatherProvider, { method: 'stx_transferStx', params: { ...params } });
   }
 
   test('shows memo on SIP-30 STX transfer approval', async ({ page, context }) => {
@@ -73,6 +92,111 @@ test.describe('RPC: stx_transferStx', () => {
     });
   });
 
+  function approveAndCaptureBroadcastedTx(
+    context: BrowserContext,
+    { editFeeToSlow }: { editFeeToSlow: boolean }
+  ) {
+    return async () => {
+      const popup = await context.waitForEvent('page');
+
+      await test.expect(popup.getByText('0.0001 STX', { exact: true })).toBeVisible();
+      await test.expect(popup.getByText(standardFee.displayed, { exact: true })).toBeVisible();
+
+      if (editFeeToSlow) {
+        await popup.getByText('Standard', { exact: true }).click();
+        await test.expect(popup.getByText('Edit fee', { exact: true })).toBeVisible();
+        await popup.getByText('Slow', { exact: true }).click();
+        await popup.getByText('Save', { exact: true }).click();
+        await test.expect(popup.getByText(slowFee.displayed, { exact: true })).toBeVisible();
+      }
+
+      const broadcastRequestPromise = popup.waitForRequest('**/v2/transactions');
+      await popup.getByText('Approve', { exact: true }).click();
+      const broadcastRequest = await broadcastRequestPromise;
+
+      const requestBody = broadcastRequest.postData();
+      if (!requestBody) throw new Error('Broadcast request has no body');
+      return deserializeTransaction(broadcastRequestBodySchema.parse(JSON.parse(requestBody)).tx);
+    };
+  }
+
+  test('approves a SIP-30 STX transfer broadcasting the displayed fee', async ({
+    page,
+    context,
+  }) => {
+    const mockedTxid = await mockStacksBroadcastTransaction(context);
+
+    const [result, broadcastedTx] = await Promise.all([
+      initiateSip30RpcTransferStx(page)({
+        amount: 100,
+        recipient: TEST_ACCOUNT_2_STX_ADDRESS,
+      }),
+      approveAndCaptureBroadcastedTx(context, { editFeeToSlow: false })(),
+    ]);
+
+    const payload = getTokenTransferPayload(broadcastedTx);
+    test.expect(Number(payload.amount)).toEqual(100);
+    test.expect(Number(broadcastedTx.auth.spendingCondition.fee)).toEqual(standardFee.microStx);
+
+    const transferResult = transferStxResultSchema.parse(result.result);
+    test.expect(transferResult.txid).toEqual(mockedTxid);
+    test.expect(transferResult.transaction).toEqual(broadcastedTx.serialize());
+  });
+
+  test('broadcasts the fee chosen in the fee editor', async ({ page, context }) => {
+    const mockedTxid = await mockStacksBroadcastTransaction(context);
+
+    const [result, broadcastedTx] = await Promise.all([
+      initiateSip30RpcTransferStx(page)({
+        amount: 100,
+        recipient: TEST_ACCOUNT_2_STX_ADDRESS,
+      }),
+      approveAndCaptureBroadcastedTx(context, { editFeeToSlow: true })(),
+    ]);
+
+    const payload = getTokenTransferPayload(broadcastedTx);
+    test.expect(Number(payload.amount)).toEqual(100);
+    test.expect(Number(broadcastedTx.auth.spendingCondition.fee)).toEqual(slowFee.microStx);
+
+    const transferResult = transferStxResultSchema.parse(result.result);
+    test.expect(transferResult.txid).toEqual(mockedTxid);
+  });
+
+  test('shows insufficient balance error and no approve action when balance is empty', async ({
+    page,
+    context,
+  }) => {
+    await mockEmptyStacksBalancesRequest(context);
+    await mockEmptyStacksBalancesV2Request(context);
+
+    async function expectInsufficientBalanceAndClose() {
+      const popup = await context.waitForEvent('page');
+      await test
+        .expect(popup.getByText('Available balance insufficient', { exact: true }))
+        .toBeVisible();
+      await test.expect(popup.getByText('Approve', { exact: true })).toHaveCount(0);
+      await popup.close();
+    }
+
+    const [result] = await Promise.all([
+      initiateSip30RpcTransferStx(page)({
+        amount: 100,
+        recipient: TEST_ACCOUNT_2_STX_ADDRESS,
+      }),
+      expectInsufficientBalanceAndClose(),
+    ]);
+
+    delete result.id;
+
+    test.expect(result).toEqual({
+      jsonrpc: '2.0',
+      error: {
+        code: 4001,
+        message: RpcErrorMessage.UserRejectedOperation,
+      },
+    });
+  });
+
   test('rejects a request with an unknown network before opening a popup', async ({
     page,
     context,
@@ -82,11 +206,10 @@ test.describe('RPC: stx_transferStx', () => {
       popupOpened = true;
     });
 
-    const result = await page.evaluate(
-      params =>
-        (window as any).LeatherProvider.request('stx_transferStx', params).catch((e: unknown) => e),
-      { amount: 100, recipient: TEST_ACCOUNT_2_STX_ADDRESS, network: 'mocknet' }
-    );
+    const result = await page.evaluate(requestLeatherProvider, {
+      method: 'stx_transferStx',
+      params: { amount: 100, recipient: TEST_ACCOUNT_2_STX_ADDRESS, network: 'mocknet' },
+    });
 
     delete result.id;
 
@@ -128,7 +251,7 @@ test.describe('RPC: stx_transferStx network defaulting', () => {
       ...getConnectedTestAppPermissionsState(),
       networks: { ids: [], entities: {}, currentNetworkId: 'testnet' },
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('defaults to mainnet when the wallet is set to testnet and the request omits network', async ({
@@ -139,15 +262,12 @@ test.describe('RPC: stx_transferStx network defaulting', () => {
       context.waitForEvent('page'),
       page.evaluate(
         params =>
-          void (window as any).LeatherProvider.request('stx_transferStx', params).catch(
-            (e: unknown) => e
-          ),
+          void window.LeatherProvider?.request('stx_transferStx', params).catch((e: unknown) => e),
         { amount: 100, recipient: TEST_ACCOUNT_2_STX_ADDRESS }
       ),
     ]);
 
-    await popup.waitForSelector('text="Account 1"');
+    await test.expect(popup.getByText('Account 1', { exact: true })).toBeVisible();
     await test.expect(popup.getByText('SPS8…WSFE')).toBeVisible();
-    await popup.close();
   });
 });

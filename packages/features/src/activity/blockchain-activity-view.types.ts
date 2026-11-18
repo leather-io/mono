@@ -11,6 +11,7 @@ export type BlockchainActivityDirection = 'sent' | 'received';
 export type BlockchainActivityIndicator =
   | 'pending'
   | 'failed'
+  | 'cancelled'
   | 'sent'
   | 'received'
   | 'swap'
@@ -42,6 +43,7 @@ export interface BlockchainActivityView {
   indicator: BlockchainActivityIndicator;
   title: string;
   subtitle: string;
+  protocolName?: string;
   amount?: BlockchainActivityAmount;
 }
 

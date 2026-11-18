@@ -1,3 +1,4 @@
+import { sha256 } from '@noble/hashes/sha256';
 import { HDKey } from '@scure/bip32';
 import { mnemonicToSeedSync } from '@scure/bip39';
 import * as btc from '@scure/btc-signer';
@@ -13,21 +14,27 @@ import { makeNumberRange } from '@leather.io/utils';
 
 import { getAssumedZeroIndexSigningConfig } from './signer-config';
 
+function getPublicKey(keychain: HDKey) {
+  if (!keychain.publicKey) throw new Error('Keychain is missing a public key');
+  return keychain.publicKey;
+}
+
 describe(getAssumedZeroIndexSigningConfig.name, () => {
   const seed = mnemonicToSeedSync(STANDARD_BIP_FAKE_MNEMONIC);
   const keychain = HDKey.fromMasterSeed(seed);
 
   const mockTxid = '7fc33a83ba9627b8eeb0eebef90552f73518f27a45dbdc41bd6bd4342d098bf3';
 
-  test('for a given transaction with p2wpkh', () => {
-    const nativeSegwitAccountKeychain = keychain.derive(
-      makeNativeSegwitAccountDerivationPath('mainnet', 0)
-    );
-    const nativeSegwitKeychain = deriveAddressIndexKeychainFromAccount(nativeSegwitAccountKeychain)(
-      { changeIndex: 0, addressIndex: 0 }
-    );
-    const nativeSegwitPayment = btc.p2wpkh(nativeSegwitKeychain.publicKey!);
+  const nativeSegwitAccountKeychain = keychain.derive(
+    makeNativeSegwitAccountDerivationPath('mainnet', 0)
+  );
+  const nativeSegwitKeychain = deriveAddressIndexKeychainFromAccount(nativeSegwitAccountKeychain)({
+    changeIndex: 0,
+    addressIndex: 0,
+  });
+  const nativeSegwitPayment = btc.p2wpkh(getPublicKey(nativeSegwitKeychain));
 
+  test('for a given transaction with p2wpkh', () => {
     const testTx = new btc.Transaction();
     testTx.addInput({
       index: 5,
@@ -50,7 +57,7 @@ describe(getAssumedZeroIndexSigningConfig.name, () => {
     changeIndex: 0,
     addressIndex: 0,
   });
-  const taprootPayment = btc.p2tr(ecdsaPublicKeyToSchnorr(taprootKeychain.publicKey!));
+  const taprootPayment = btc.p2tr(ecdsaPublicKeyToSchnorr(getPublicKey(taprootKeychain)));
 
   test('for a given transaction with p2tr', () => {
     const testTx = new btc.Transaction();
@@ -89,5 +96,59 @@ describe(getAssumedZeroIndexSigningConfig.name, () => {
       { derivationPath: "m/86'/0'/99'/0/0", index: 2 },
       { derivationPath: "m/86'/0'/99'/0/0", index: 4 },
     ]);
+  });
+
+  const forgedWitnessScript = btc.p2pkh(getPublicKey(nativeSegwitKeychain)).script;
+  const forgedP2wshScript = btc.OutScript.encode({
+    type: 'wsh',
+    hash: sha256(forgedWitnessScript),
+  });
+
+  test('omits p2wsh inputs and keeps p2wpkh and p2tr inputs', () => {
+    const testTx = new btc.Transaction();
+    testTx.addInput({
+      index: 0,
+      txid: mockTxid,
+      witnessUtxo: { amount: 1000n, script: nativeSegwitPayment.script },
+    });
+    testTx.addInput({
+      index: 1,
+      txid: mockTxid,
+      witnessUtxo: { amount: 1000n, script: forgedP2wshScript },
+      witnessScript: forgedWitnessScript,
+    });
+    testTx.addInput({
+      index: 2,
+      txid: mockTxid,
+      witnessUtxo: { amount: 1000n, script: taprootPayment.script },
+    });
+
+    const result = getAssumedZeroIndexSigningConfig({
+      psbt: testTx.toPSBT(),
+      network: 'mainnet',
+    }).forAccountIndex(0);
+
+    expect(result).toEqual([
+      { derivationPath: "m/84'/0'/0'/0/0", index: 0 },
+      { derivationPath: "m/86'/0'/0'/0/0", index: 2 },
+    ]);
+  });
+
+  test('omits a p2wsh input even when it is explicitly requested', () => {
+    const testTx = new btc.Transaction();
+    testTx.addInput({
+      index: 0,
+      txid: mockTxid,
+      witnessUtxo: { amount: 1000n, script: forgedP2wshScript },
+      witnessScript: forgedWitnessScript,
+    });
+
+    const result = getAssumedZeroIndexSigningConfig({
+      psbt: testTx.toPSBT(),
+      network: 'mainnet',
+      indexesToSign: [0],
+    }).forAccountIndex(0);
+
+    expect(result).toEqual([]);
   });
 });

@@ -1,4 +1,5 @@
 import { privateKeyToPublic, publicKeyToHex } from '@stacks/transactions';
+import { activityCounterpartyOffset } from '~/queries/activity/blockchain-activity.query';
 
 import type { BlockchainActivityView } from '@leather.io/features';
 import type { MultisigTransactionSummary } from '@leather.io/models';
@@ -76,6 +77,7 @@ function makeTransaction(
     createdAt: '2026-06-27T00:00:00Z',
     updatedAt: '2026-06-27T00:00:00Z',
     approvalCount: 1,
+    signedByMe: false,
     ...overrides,
   };
 }
@@ -143,7 +145,9 @@ describe(harmonizeVaultActivity.name, () => {
     });
 
     expect(items[0].view.action).toBe('send');
-    expect(items[0].view.subtitle).toBe(`Sending to ${truncateMiddle(recipient)}`);
+    expect(items[0].view.subtitle).toBe(
+      `Sending to ${truncateMiddle(recipient, activityCounterpartyOffset)}`
+    );
   });
 
   test('on-chain rows without a multisig transaction pass through', () => {

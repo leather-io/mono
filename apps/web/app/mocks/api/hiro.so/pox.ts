@@ -186,6 +186,11 @@ const respMainnet = {
       activation_burnchain_block_height: 840361,
       first_reward_cycle_id: 84,
     },
+    {
+      contract_id: 'SP000000000000000000002Q6VF78.pox-5',
+      activation_burnchain_block_height: 903000,
+      first_reward_cycle_id: 113,
+    },
   ],
 };
 

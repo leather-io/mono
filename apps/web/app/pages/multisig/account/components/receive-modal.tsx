@@ -2,11 +2,10 @@ import QRCode from 'react-qr-code';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { token } from 'leather-styles/tokens';
+import { CopyAddress } from '~/components/copy-address';
 
 import type { VaultAccount } from '@leather.io/models';
 import { CloseIcon, IconButton, Sheet } from '@leather.io/ui';
-
-import { CopyAddress } from '../../components/copy-address';
 
 interface ReceiveModalProps {
   account: VaultAccount;

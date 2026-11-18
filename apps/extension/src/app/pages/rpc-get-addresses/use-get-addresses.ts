@@ -5,6 +5,7 @@ import { ecdsaPublicKeyToSchnorr, encodeExtendedPublicKeyForNetwork } from '@lea
 import { keyOriginToDerivationPath } from '@leather.io/crypto';
 import {
   type BtcAddress,
+  type GetAddressesChain,
   type StxAddress,
   createRequestEncoder,
   createRpcSuccessResponse,
@@ -19,7 +20,6 @@ import { analytics } from '@shared/utils/analytics';
 import { focusTabAndWindow } from '@app/common/focus-tab';
 import { useRpcRequestParams } from '@app/common/hooks/use-rpc-request-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
-import { useFlags } from '@app/features/feature-flags';
 import { persistor } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import {
@@ -72,11 +72,21 @@ export function useGetAddresses() {
   const currentAccount = useCurrentAccountId();
   const stacksAccount = useCurrentStacksAccount();
   const { nativeSegwitDescriptor, taprootDescriptor } = useGetDescriptors();
-  const { releaseAddAccount, enableAllowPolicyAccounts } = useFlags();
   const currentPolicy = useCurrentPolicy();
-  const allowPolicyAccounts =
-    releaseAddAccount &&
-    (enableAllowPolicyAccounts ? Boolean(request.params?.allowPolicyAccounts) : true);
+  const allowPolicyAccounts = request.params?.allowPolicyAccounts !== false;
+
+  const requestedChains: GetAddressesChain[] =
+    request.method === 'getAddresses' && request.params?.chains
+      ? request.params.chains
+      : ['bitcoin', 'stacks'];
+
+  const chainAvailability: Record<GetAddressesChain, boolean> = {
+    bitcoin: Boolean(createNativeSegwitPayer) || Boolean(createTaprootPayer),
+    stacks: Boolean(stacksAccount),
+  };
+  const missingChains = requestedChains.filter(chain => !chainAvailability[chain]);
+  const missingChain = missingChains[0] ?? null;
+  const hasAvailableRequestedChain = missingChains.length < requestedChains.length;
 
   function focusInitiatingTab() {
     analytics.track('user_clicked_requested_by_link', { endpoint: request.method });
@@ -86,6 +96,8 @@ export function useGetAddresses() {
   return {
     origin,
     allowPolicyAccounts,
+    missingChain,
+    hasAvailableRequestedChain,
     focusInitiatingTab,
     async onUserApproveGetAddresses() {
       if (!tabId || !origin) {
@@ -121,7 +133,7 @@ export function useGetAddresses() {
           keysToIncludeInResponse.push(multisigStacksAddressResponse);
         }
       } else {
-        if (createNativeSegwitPayer) {
+        if (requestedChains.includes('bitcoin') && createNativeSegwitPayer) {
           const nativeSegwitSigner = createNativeSegwitPayer({
             changeIndex: 0,
             addressIndex: 0,
@@ -140,7 +152,7 @@ export function useGetAddresses() {
           keysToIncludeInResponse.push(nativeSegwitAddressResponse);
         }
 
-        if (createTaprootPayer) {
+        if (requestedChains.includes('bitcoin') && createTaprootPayer) {
           const taprootPayer = createTaprootPayer({ changeIndex: 0, addressIndex: 0 });
           const taprootAddressResponse: BtcAddress = {
             symbol: 'BTC',
@@ -155,7 +167,7 @@ export function useGetAddresses() {
           keysToIncludeInResponse.push(taprootAddressResponse);
         }
 
-        if (stacksAccount) {
+        if (requestedChains.includes('stacks') && stacksAccount) {
           const stacksAddressResponse = {
             symbol: 'STX',
             kind: 'single-sig',

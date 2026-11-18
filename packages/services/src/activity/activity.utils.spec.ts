@@ -1,14 +1,18 @@
 import { stxAsset } from '@leather.io/constants';
-import { Activity, BlockchainActivity } from '@leather.io/models';
 
+import {
+  createActivityBalanceChange,
+  createActivityBlockchain,
+  createActivityGeneral,
+} from '../test/activity-fixtures';
 import { activityTouchesAsset, sortActivityByTimestampDesc } from './activity.utils';
 
 describe(sortActivityByTimestampDesc.name, () => {
   it('sorts activity by timestamp in descending order', () => {
-    const activity1 = { timestamp: 1741170001 } as Activity;
-    const activity2 = { timestamp: 1741170002 } as Activity;
-    const activity3 = { timestamp: 1741170003 } as Activity;
-    const activity4 = { timestamp: 1741170004 } as Activity;
+    const activity1 = createActivityGeneral({ timestamp: 1741170001 });
+    const activity2 = createActivityGeneral({ timestamp: 1741170002 });
+    const activity3 = createActivityGeneral({ timestamp: 1741170003 });
+    const activity4 = createActivityGeneral({ timestamp: 1741170004 });
 
     const activityList = [activity2, activity4, activity1, activity3];
     const activitySorted = activityList.sort(sortActivityByTimestampDesc);
@@ -21,11 +25,11 @@ describe(sortActivityByTimestampDesc.name, () => {
 });
 
 describe(activityTouchesAsset.name, () => {
-  const stxChange = { direction: 'received', asset: stxAsset } as unknown;
-  const activityWithStx = {
+  const stxChange = createActivityBalanceChange({ direction: 'received', asset: stxAsset });
+  const activityWithStx = createActivityBlockchain({
     balanceChanges: [stxChange],
-  } as unknown as BlockchainActivity;
-  const activityWithout = { balanceChanges: [] } as unknown as BlockchainActivity;
+  });
+  const activityWithout = createActivityBlockchain({ balanceChanges: [] });
 
   it('matches when any balance change carries the asset', () => {
     expect(activityTouchesAsset(activityWithStx, { protocol: 'nativeStx', id: 'STX' })).toBe(true);

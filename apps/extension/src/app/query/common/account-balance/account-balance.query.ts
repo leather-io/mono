@@ -2,8 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 
 import type { AccountAddresses, AccountId } from '@leather.io/models';
 import {
-  createAccountAvailableBalanceQueryConfig,
+  createAccountLockedBalanceQueryConfig,
   createAccountTotalBalanceQueryConfig,
+  createAccountUnlockedBalanceQueryConfig,
 } from '@leather.io/queries';
 import type { AccountRequest } from '@leather.io/services';
 
@@ -16,9 +17,14 @@ import { toFetchState } from '@app/services/fetch-state';
 
 import { balanceQueryOptions } from '../balance-query-options';
 
-export function useCurrentAccountAvailableBalance() {
+export function useCurrentAccountUnlockedBalance() {
   const account = useCurrentAccountAddresses();
-  return toFetchState(useGetAccountAvailableBalanceQuery({ account }));
+  return toFetchState(useGetAccountUnlockedBalanceQuery({ account }));
+}
+
+export function useCurrentAccountLockedBalance() {
+  const account = useCurrentAccountAddresses();
+  return toFetchState(useGetAccountLockedBalanceQuery({ account }));
 }
 
 export function useCurrentAccountTotalBalance() {
@@ -40,10 +46,18 @@ export function useAccountTotalBalanceByAddressesQuery(account: AccountAddresses
   return useGetAccountTotalBalanceQuery({ account });
 }
 
-function useGetAccountAvailableBalanceQuery(request: AccountRequest) {
+function useGetAccountUnlockedBalanceQuery(request: AccountRequest) {
   const settings = useUserSettings();
   return useQuery({
-    ...createAccountAvailableBalanceQueryConfig(request, settings),
+    ...createAccountUnlockedBalanceQueryConfig(request, settings),
+    ...balanceQueryOptions,
+  });
+}
+
+function useGetAccountLockedBalanceQuery(request: AccountRequest) {
+  const settings = useUserSettings();
+  return useQuery({
+    ...createAccountLockedBalanceQueryConfig(request, settings),
     ...balanceQueryOptions,
   });
 }

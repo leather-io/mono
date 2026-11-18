@@ -15,7 +15,7 @@ import { StacksRpcTransactionRequestProvider } from '@app/features/rpc-stacks-tr
 import { useUnsignedStacksTransactionForFeeEstimation } from '@app/features/rpc-stacks-transaction-request/stacks/use-unsigned-transaction-for-fee-estimation';
 import { useRpcTransactionRequest } from '@app/features/rpc-stacks-transaction-request/use-rpc-transaction-request';
 import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
-import { useCryptoCurrencyMarketDataMeanAverage } from '@app/query/common/market-data/market-data.hooks';
+import { useCryptoCurrencyMarketData } from '@app/query/common/market-data/market-data.hooks';
 import type { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 
@@ -30,7 +30,7 @@ interface RpcStxTransferSip10FtContainerProps {
 export function RpcStxTransferSip10FtContainer({ account }: RpcStxTransferSip10FtContainerProps) {
   const request = useRpcTransactionRequest();
   const network = useCurrentStacksNetworkState();
-  const stxMarketData = useCryptoCurrencyMarketDataMeanAverage('STX');
+  const stxMarketData = useCryptoCurrencyMarketData('STX');
   const navigate = useNavigate();
 
   const rpcRequest = useMemo(() => getDecodedRpcStxTransferSip10FtRequest(), []);
@@ -54,7 +54,10 @@ export function RpcStxTransferSip10FtContainer({ account }: RpcStxTransferSip10F
     ? getTxSenderAddress(unsignedTxForFeeEstimation)
     : account.address;
 
-  useBreakOnNonCompliantEntity([txSenderAddress, rpcRequest.params.recipient].filter(isDefined));
+  useBreakOnNonCompliantEntity(
+    'rpc_stx_transfer_sip10_ft',
+    [txSenderAddress, rpcRequest.params.recipient].filter(isDefined)
+  );
 
   if (!unsignedTxForFeeEstimation) return null;
 
@@ -66,12 +69,12 @@ export function RpcStxTransferSip10FtContainer({ account }: RpcStxTransferSip10F
             <StacksFeeEditorProvider
               availableBalance={balance.availableBalance}
               marketData={stxMarketData}
-              onGoBack={() => navigate(RouteUrls.RpcStxTransferSip10Ft)}
+              onGoBack={() => void navigate(RouteUrls.RpcStxTransferSip10Ft)}
               unsignedTx={unsignedTxForFeeEstimation}
             >
               <NonceEditorProvider
                 nonce={nonceCalc.nonce}
-                onGoBack={() => navigate(RouteUrls.RpcStxTransferSip10Ft)}
+                onGoBack={() => void navigate(RouteUrls.RpcStxTransferSip10Ft)}
               >
                 <StacksRpcTransactionRequestProvider
                   value={{

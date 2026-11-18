@@ -21,6 +21,7 @@ export const TEST_TESTNET_ACCOUNT_1_STX_ADDRESS = 'STS8CKF63P16J28AYF7PXW9E5AACH
 export const TEST_ACCOUNT_2_STX_ADDRESS = 'SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB';
 export const TEST_TESTNET_ACCOUNT_2_STX_ADDRESS = 'STXH3HNBPM5YP15VH16ZXZ9AX6CK289K3NVR9T1P';
 export const TEST_MULTISIG_ACCOUNTS_3_1_STX_ADDRESS = 'SM2TBKGDZ6BKYM21NJ91F2JAA0MMCT41N8KSJB8E4';
+export const TEST_ACCOUNT_1_STX_ADDRESS_HEX = '0x1632864de61d8269090af3cf6ef12e2a94c882bfae';
 
 // Account public keys
 export const TEST_ACCOUNT_1_PUBKEY =
@@ -34,26 +35,3 @@ export const TEST_PASSWORD = 'my_s3cret_p@ssw0r4';
 
 export const SBTC_EMILY_API_URL = 'https://sbtc-emily.com';
 export const SBTC_SPONSORSHIP_API_URL = 'https://sponsor.leather.io';
-
-const mockSbtcConfig = {
-  enabled: true,
-  emilyApiUrl: SBTC_EMILY_API_URL,
-  sponsorshipApiUrl: {
-    mainnet: SBTC_SPONSORSHIP_API_URL,
-    testnet: SBTC_SPONSORSHIP_API_URL,
-  },
-  swapsEnabled: true,
-  sponsorshipsEnabled: true,
-  contracts: {
-    mainnet: {
-      address: '',
-    },
-    testnet: {
-      address: '',
-    },
-  },
-};
-
-export const MOCK_REMOTE_CONFIG = {
-  sbtc: mockSbtcConfig,
-};

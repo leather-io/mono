@@ -1,9 +1,21 @@
 import { describe, expect, it } from 'vitest';
 
 import { HIRO_EXPLORER_URL, MEMPOOL_BASE_URL } from '@leather.io/constants';
-import { HIRO_API_BASE_URL_NAKAMOTO_TESTNET, defaultCurrentNetwork } from '@leather.io/models';
+import {
+  HIRO_API_BASE_URL_NAKAMOTO_TESTNET,
+  HIRO_API_BASE_URL_STAKING_TESTNET,
+  HIRO_API_BASE_URL_TESTNET,
+  defaultCurrentNetwork,
+  defaultNetworksKeyedById,
+} from '@leather.io/models';
 
-import { getBitcoinExplorerLink, getStacksExplorerLink, makeActivityLink } from './activity-links';
+import {
+  type GetMempoolExplorerLinkArgs,
+  getBitcoinExplorerLink,
+  getStacksExplorerApiUrl,
+  getStacksExplorerLink,
+  makeActivityLink,
+} from './activity-links';
 
 describe('activity-links', () => {
   describe('makeActivityLink', () => {
@@ -41,6 +53,44 @@ describe('activity-links', () => {
       });
 
       expect(result).toBe(`${HIRO_EXPLORER_URL}/txid/def456?chain=mainnet`);
+    });
+
+    it('returns the staking testnet mempool link for a Bitcoin asset', () => {
+      const result = makeActivityLink({
+        txid: 'abc123',
+        networkPreference: defaultNetworksKeyedById.stakingTestnet,
+        asset: {
+          chain: 'bitcoin',
+          category: 'fungible',
+          protocol: 'nativeBtc',
+          name: 'Bitcoin',
+          symbol: 'BTC',
+          decimals: 8,
+          hasMemo: false,
+        },
+      });
+
+      expect(result).toBe('https://mempool.bitcoin.staking-testnet.hiro.so/tx/abc123');
+    });
+
+    it('returns a testnet explorer link pinned to the staking testnet api for a Stacks asset', () => {
+      const result = makeActivityLink({
+        txid: 'def456',
+        networkPreference: defaultNetworksKeyedById.stakingTestnet,
+        asset: {
+          chain: 'stacks',
+          category: 'fungible',
+          protocol: 'nativeStx',
+          name: 'Stacks',
+          symbol: 'STX',
+          decimals: 6,
+          hasMemo: false,
+        },
+      });
+
+      expect(result).toBe(
+        `${HIRO_EXPLORER_URL}/txid/def456?chain=testnet&api=${encodeURIComponent(HIRO_API_BASE_URL_STAKING_TESTNET)}`
+      );
     });
 
     it('returns null when asset is missing', () => {
@@ -112,6 +162,93 @@ describe('activity-links', () => {
       expect(result).toBe(`${MEMPOOL_BASE_URL}/signet/tx/txabc`);
     });
 
+    it('returns the public signet link for the public signet mempool url', () => {
+      const result = getBitcoinExplorerLink({
+        id: 'txabc',
+        type: 'tx',
+        networkPreference: 'signet',
+        bitcoinUrl: defaultNetworksKeyedById.signet.chain.bitcoin.bitcoinUrl,
+      });
+
+      expect(result).toBe(`${MEMPOOL_BASE_URL}/signet/tx/txabc`);
+    });
+
+    it('returns the custom mempool instance link for a custom signet network', () => {
+      const result = getBitcoinExplorerLink({
+        id: 'txabc',
+        type: 'tx',
+        networkPreference: 'signet',
+        bitcoinUrl: 'https://mempool.bitcoin.staking-testnet.hiro.so/api',
+      });
+
+      expect(result).toBe('https://mempool.bitcoin.staking-testnet.hiro.so/tx/txabc');
+    });
+
+    it('returns the custom mempool instance link for a testnet network with its own mempool', () => {
+      const result = getBitcoinExplorerLink({
+        id: 'txabc',
+        type: 'tx',
+        networkPreference: 'testnet3',
+        bitcoinUrl: 'https://mempool.bitcoin.staking-testnet.hiro.so/api',
+      });
+
+      expect(result).toBe('https://mempool.bitcoin.staking-testnet.hiro.so/tx/txabc');
+    });
+
+    it('returns the public testnet link for the public testnet mempool url', () => {
+      const result = getBitcoinExplorerLink({
+        id: 'txabc',
+        type: 'tx',
+        networkPreference: 'testnet3',
+        bitcoinUrl: defaultNetworksKeyedById.testnet.chain.bitcoin.bitcoinUrl,
+      });
+
+      expect(result).toBe(`${MEMPOOL_BASE_URL}/testnet/tx/txabc`);
+    });
+
+    it('returns the custom mempool instance link for a regtest network', () => {
+      const result = getBitcoinExplorerLink({
+        id: 'txdef',
+        type: 'tx',
+        networkPreference: 'regtest',
+        bitcoinUrl: 'https://mempool.bitcoin.private-1.hiro.so/api',
+      });
+
+      expect(result).toBe('https://mempool.bitcoin.private-1.hiro.so/tx/txdef');
+    });
+
+    it('strips a proxied api path from a regtest bitcoin url', () => {
+      const result = getBitcoinExplorerLink({
+        id: 'txghi',
+        type: 'tx',
+        networkPreference: 'regtest',
+        bitcoinUrl: 'https://beta.sbtc-mempool.tech/api/proxy',
+      });
+
+      expect(result).toBe('https://beta.sbtc-mempool.tech/tx/txghi');
+    });
+
+    it('returns null for a regtest bitcoind rpc url with no api path', () => {
+      const result = getBitcoinExplorerLink({
+        id: 'txjkl',
+        type: 'tx',
+        networkPreference: 'regtest',
+        bitcoinUrl: 'http://localhost:18443',
+      });
+
+      expect(result).toBeNull();
+    });
+
+    it('returns null for a regtest network with no bitcoin url', () => {
+      const result = getBitcoinExplorerLink({
+        id: 'txmno',
+        type: 'tx',
+        networkPreference: 'regtest',
+      });
+
+      expect(result).toBeNull();
+    });
+
     it('handles block type instead of tx', () => {
       const result = getBitcoinExplorerLink({
         id: 'block123',
@@ -123,11 +260,12 @@ describe('activity-links', () => {
     });
 
     it('returns null for unknown network', () => {
-      const result = getBitcoinExplorerLink({
+      const args: GetMempoolExplorerLinkArgs = {
         id: 'tx123',
         type: 'tx',
-        networkPreference: 'unknown' as any,
-      });
+        networkPreference: 'mainnet',
+      };
+      const result = getBitcoinExplorerLink(Object.assign(args, { networkPreference: 'unknown' }));
 
       expect(result).toBeNull();
     });
@@ -191,6 +329,29 @@ describe('activity-links', () => {
       expect(result).toBe(`${HIRO_EXPLORER_URL}/txid/txabc?custom=value&chain=mainnet`);
     });
 
+    it('maps signet to the testnet explorer chain', () => {
+      const result = getStacksExplorerLink({
+        mode: 'signet',
+        type: 'txid',
+        value: 'tx123',
+      });
+
+      expect(result).toBe(`${HIRO_EXPLORER_URL}/txid/tx123?chain=testnet`);
+    });
+
+    it('appends a custom api param when apiUrl is provided', () => {
+      const result = getStacksExplorerLink({
+        mode: 'testnet',
+        type: 'txid',
+        value: 'tx123',
+        apiUrl: HIRO_API_BASE_URL_STAKING_TESTNET,
+      });
+
+      expect(result).toBe(
+        `${HIRO_EXPLORER_URL}/txid/tx123?chain=testnet&api=${encodeURIComponent(HIRO_API_BASE_URL_STAKING_TESTNET)}`
+      );
+    });
+
     it('returns localhost link for regtest with txid', () => {
       const result = getStacksExplorerLink({
         mode: 'regtest',
@@ -209,6 +370,18 @@ describe('activity-links', () => {
       });
 
       expect(result).toBe(`${HIRO_EXPLORER_URL}/address/ST123ABC?chain=regtest`);
+    });
+  });
+
+  describe('getStacksExplorerApiUrl', () => {
+    it('returns undefined for the public Hiro testnet api', () => {
+      expect(getStacksExplorerApiUrl(HIRO_API_BASE_URL_TESTNET)).toBeUndefined();
+    });
+
+    it('returns the url for a non-public stacks api', () => {
+      expect(getStacksExplorerApiUrl(HIRO_API_BASE_URL_STAKING_TESTNET)).toBe(
+        HIRO_API_BASE_URL_STAKING_TESTNET
+      );
     });
   });
 });

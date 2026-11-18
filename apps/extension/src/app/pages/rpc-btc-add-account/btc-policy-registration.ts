@@ -4,9 +4,10 @@ import {
   getBtcSignerLibNetworkConfigByMode,
   getWshDescriptorNetwork,
 } from '@leather.io/bitcoin';
+import { ACCOUNT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { type NetworkConfiguration } from '@leather.io/models';
-import { type RpcParams, btcAddAccount } from '@leather.io/rpc';
+import { type RpcParams, type btcAddAccount } from '@leather.io/rpc';
 
 import { makePolicyId } from '@app/store/policy/policy-store.utils';
 
@@ -65,7 +66,7 @@ export function createBtcPolicyRegistration({
         descriptor: params.descriptor,
         role,
       },
-      name: params.name,
+      name: params.name.substring(0, ACCOUNT_MAX_NAME_LENGTH),
     },
     result: { address, descriptor: params.descriptor, accountId: address, role, added: true },
   };

@@ -65,35 +65,96 @@ const mockedStacksConfirmedTransactions = [
 
 const mockedStacksPendingTransaction = {
   tx_id: '0x2fd347fd2f775db6bec23e566a1d1d4914f10502f6a0d44692e93aa80cf047e4',
-  nonce: 14,
+  sender: { address: TEST_ACCOUNT_1_STX_ADDRESS, nonce: 14 },
+  sponsor: null,
   fee_rate: '3000',
-  sender_address: TEST_ACCOUNT_1_STX_ADDRESS,
-  sponsored: false,
-  post_condition_mode: 'deny',
-  post_conditions: [],
-  anchor_mode: 'any',
-  tx_status: 'pending',
   receipt_time: 1729168336,
   receipt_time_iso: '2024-10-17T12:32:16.000Z',
-  tx_type: 'token_transfer',
+  receipt_block_height: 1000,
+  status: 'pending',
+  type: 'token_transfer',
   token_transfer: {
-    recipient_address: 'ST3WSKSKGNFCDGJN9EXF6AC9NFF69XNNFXN2DQA7E',
+    recipient: 'ST3WSKSKGNFCDGJN9EXF6AC9NFF69XNNFXN2DQA7E',
     amount: '1000000',
-    memo: '0x00000000000000000000000000000000000000000000000000000000000000000000',
+    memo: null,
+  },
+};
+
+const mockedStacksPendingTransactionV3 = {
+  tx_id: mockedStacksPendingTransaction.tx_id,
+  sender: { address: TEST_ACCOUNT_1_STX_ADDRESS, nonce: 14 },
+  sponsor: null,
+  fee_rate: '3000',
+  receipt_time: 1729168336,
+  receipt_block_height: 1000,
+  status: 'pending',
+  replaced_by_tx_id: null,
+  type: 'token_transfer',
+  token_transfer: {
+    recipient: 'ST3WSKSKGNFCDGJN9EXF6AC9NFF69XNNFXN2DQA7E',
+    amount: '1000000',
+    memo: null,
   },
 };
 
 const mockedStacksTxsRequestWithPendingTx = {
   limit: 50,
-  offset: 0,
   total: 1,
+  cursor: {
+    next: null,
+    previous: null,
+    current: `${mockedStacksPendingTransaction.receipt_time}:${mockedStacksPendingTransaction.tx_id}`,
+  },
   results: [mockedStacksPendingTransaction],
 };
 
 const emptyTxsResponse = { limit: 50, offset: 0, total: 0, results: [] };
 
-const transactionWithTransfersUrl = `**/api.hiro.so/extended/v1/address/${TEST_ACCOUNT_1_STX_ADDRESS}/transactions_with_transfers?limit=50`;
-const mempoolUrl = `**/api.hiro.so/extended/v1/tx/mempool?address=${TEST_ACCOUNT_1_STX_ADDRESS}&limit=50`;
+// Hiro v3 is cursor-paginated rather than limit/offset, and the paginator reads
+// `cursor.next` unconditionally, so it needs its own empty shape.
+const emptyPrincipalTxsResponse = { results: [], cursor: { current: null, next: null } };
+const emptyNoncesResponse = {
+  next_nonce: 0,
+  last_confirmed_nonce: null,
+  mempool: { last_nonce: null, pending_nonces: [], missing_nonces: [] },
+};
+
+const mockedPrincipalReceiveTxResultItem = {
+  transaction: {
+    tx_id: '0xae98b9512a5a196ea0f1566101d21a6e7230ff822489fc42920c9cfb5d3b0c1c',
+    type: 'token_transfer',
+    sender: { address: 'SPWECF3XYVRBRCN23CJJCX9XKSF8RFWQPAQMWXT', nonce: 15 },
+    sponsor: null,
+    fee_rate: '300',
+    block: {
+      height: 148809,
+      hash: '0x420f7e5227a366554d1c8032c0c7d8de730a45a8e662038d6eff43db6beaa0cc',
+      index_hash: '0x420f7e5227a366554d1c8032c0c7d8de730a45a8e662038d6eff43db6beaa0cc',
+      time: 1714836180,
+      tx_index: 50,
+    },
+    bitcoin_block: { height: 842073, time: 1714836115 },
+    status: 'success',
+    token_transfer: {
+      recipient: TEST_ACCOUNT_1_STX_ADDRESS,
+      amount: '5000000',
+      memo: null,
+    },
+  },
+  involvement: 'affected',
+  balance_changes: { stx: { sent: '0', received: '5000000', net: '5000000' } },
+  affected_balances: { stx: true, ft: false, nft: false },
+};
+
+const mockedPrincipalTxsResponseWithReceiveTx = {
+  total: 1,
+  limit: 50,
+  cursor: { next: null, previous: null, current: null },
+  results: [mockedPrincipalReceiveTxResultItem],
+};
+
+const transactionWithTransfersUrl = `**/api.hiro.so/extended/v2/addresses/${TEST_ACCOUNT_1_STX_ADDRESS}/transactions?limit=50&offset=0&exclude_function_args=true`;
+const mempoolUrl = `**/api.hiro.so/extended/v3/principals/${TEST_ACCOUNT_1_STX_ADDRESS}/mempool/transactions**`;
 
 export async function mockMainnetTestAccountStacksTxsRequests(page: Page | BrowserContext) {
   await Promise.all([
@@ -105,7 +166,7 @@ export async function mockMainnetTestAccountStacksTxsRequests(page: Page | Brows
 
     page.route(mempoolUrl, route =>
       route.fulfill({
-        json: emptyTxsResponse,
+        json: emptyPrincipalTxsResponse,
       })
     ),
   ]);
@@ -113,17 +174,23 @@ export async function mockMainnetTestAccountStacksTxsRequests(page: Page | Brows
 
 export async function mockWildcardStacksTxsRequests(page: Page | BrowserContext) {
   await Promise.all([
-    page.route('**/api.hiro.so/extended/v1/address/*/transactions_with_transfers?limit=50', route =>
+    page.route('**hiro.so/extended/v2/addresses/*/transactions**', route =>
       route.fulfill({ json: emptyTxsResponse })
     ),
-    page.route('**/api.hiro.so/extended/v2/addresses/*/transactions**', route =>
-      route.fulfill({ json: emptyTxsResponse })
+    page.route('**hiro.so/extended/v3/principals/*/mempool/transactions**', route =>
+      route.fulfill({ json: emptyPrincipalTxsResponse })
     ),
-    page.route('**/api.hiro.so/extended/v1/tx/mempool?address=*', route =>
-      route.fulfill({ json: emptyTxsResponse })
-    ),
-    page.route('**/api.hiro.so/extended/v1/address/*/assets**', route =>
+    page.route('**hiro.so/extended/v1/address/*/assets**', route =>
       route.fulfill({ json: { limit: 100, offset: 0, total: 0, results: [] } })
+    ),
+    page.route('**hiro.so/extended/v3/principals/*/transactions**', route =>
+      route.fulfill({ json: emptyPrincipalTxsResponse })
+    ),
+    page.route('**hiro.so/extended/v3/principals/*/balance-changes**', route =>
+      route.fulfill({ json: emptyPrincipalTxsResponse })
+    ),
+    page.route('**hiro.so/extended/v3/principals/*/nonces', route =>
+      route.fulfill({ json: emptyNoncesResponse })
     ),
   ]);
 }
@@ -131,16 +198,22 @@ export async function mockWildcardStacksTxsRequests(page: Page | BrowserContext)
 export async function mockMainnetTestAccountStacksConfirmedTxsRequests(
   page: Page | BrowserContext
 ) {
-  await page.route(transactionWithTransfersUrl, route =>
-    route.fulfill({
-      json: {
-        limit: 50,
-        offset: 0,
-        total: 0,
-        results: mockedStacksConfirmedTransactions,
-      },
-    })
-  );
+  await Promise.all([
+    page.route(transactionWithTransfersUrl, route =>
+      route.fulfill({
+        json: {
+          limit: 50,
+          offset: 0,
+          total: 0,
+          results: mockedStacksConfirmedTransactions,
+        },
+      })
+    ),
+    page.route(
+      `**/api.hiro.so/extended/v3/principals/${TEST_ACCOUNT_1_STX_ADDRESS}/transactions**`,
+      route => route.fulfill({ json: mockedPrincipalTxsResponseWithReceiveTx })
+    ),
+  ]);
 }
 
 export async function mockTestAccountStacksTxsRequestsWithPendingTx(page: Page | BrowserContext) {
@@ -152,13 +225,12 @@ export async function mockTestAccountStacksTxsRequestsWithPendingTx(page: Page |
 }
 
 const mockedPendingRawTx = {
-  raw_tx:
-    '0x80800000000400fff493c4bfd46883c20368a72abd4f381ded75e1000000000000000e0000000000000bb800016179b365db452be698ef57cd8702b2ddecf3914342d70f960a80fd1221b72df1338b3f1b089843c99f2cb36e8562712901590a06c2f2aa22c5ca3be9e1de80cf03020000000000051af999e670abd8d84aa9775e6531357bcc9ed6afed00000000000f424000000000000000000000000000000000000000000000000000000000000000000000',
+  raw: '0x80800000000400fff493c4bfd46883c20368a72abd4f381ded75e1000000000000000e0000000000000bb800016179b365db452be698ef57cd8702b2ddecf3914342d70f960a80fd1221b72df1338b3f1b089843c99f2cb36e8562712901590a06c2f2aa22c5ca3be9e1de80cf03020000000000051af999e670abd8d84aa9775e6531357bcc9ed6afed00000000000f424000000000000000000000000000000000000000000000000000000000000000000000',
 };
 
 export async function mockStacksRawTx(page: Page | BrowserContext) {
   await page.route(
-    `**/api.hiro.so/extended/v1/tx/0x2fd347fd2f775db6bec23e566a1d1d4914f10502f6a0d44692e93aa80cf047e4/raw`,
+    `**/api.hiro.so/extended/v3/transactions/0x2fd347fd2f775db6bec23e566a1d1d4914f10502f6a0d44692e93aa80cf047e4/raw`,
     route =>
       route.fulfill({
         json: mockedPendingRawTx,
@@ -168,10 +240,10 @@ export async function mockStacksRawTx(page: Page | BrowserContext) {
 
 export async function mockStacksPendingTransaction(page: Page | BrowserContext) {
   await page.route(
-    `**/api.hiro.so/extended/v1/tx/0x2fd347fd2f775db6bec23e566a1d1d4914f10502f6a0d44692e93aa80cf047e4`,
+    `**/api.hiro.so/extended/v3/transactions/0x2fd347fd2f775db6bec23e566a1d1d4914f10502f6a0d44692e93aa80cf047e4`,
     route =>
       route.fulfill({
-        json: mockedStacksPendingTransaction,
+        json: mockedStacksPendingTransactionV3,
       })
   );
 }
@@ -185,30 +257,27 @@ export async function mockStacksBroadcastTransaction(page: Page | BrowserContext
     })
   );
 
-  await page.route(`**/api.hiro.so/extended/v1/tx/${txid}`, route =>
+  await page.route(`**/api.hiro.so/extended/v3/transactions/${txid}`, route =>
     route.fulfill({
       json: {
         tx_id: txid,
-        nonce: 0,
+        sender: { address: TEST_ACCOUNT_1_STX_ADDRESS, nonce: 0 },
+        sponsor: null,
         fee_rate: '1000',
-        sender_address: TEST_ACCOUNT_1_STX_ADDRESS,
-        sponsored: false,
-        post_condition_mode: 'allow',
-        post_conditions: [],
-        anchor_mode: 'any',
-        tx_status: 'pending',
-        receipt_time: Date.now() / 1000,
-        receipt_time_iso: new Date().toISOString(),
-        tx_type: 'contract_call',
+        receipt_time: Math.floor(Date.now() / 1000),
+        receipt_block_height: 1000,
+        status: 'pending',
+        replaced_by_tx_id: null,
+        type: 'contract_call',
         contract_call: {
           contract_id: 'SP000000000000000000002Q6VF78.leather-integration-tests',
           function_name: 'transfer',
-          function_signature: '',
-          function_args: [],
         },
       },
     })
   );
+
+  return txid;
 }
 
 export async function mockSip10LeatherTestTokenBalance(page: Page | BrowserContext) {

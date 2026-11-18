@@ -1,7 +1,7 @@
 import { Balance } from '@/components/balance/balance';
 import { t } from '@lingui/core/macro';
 
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 import { Avatar, Cell, LockIcon, UnlockIcon } from '@leather.io/ui/native';
 import { truncateMiddle } from '@leather.io/utils';
 

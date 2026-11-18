@@ -1,7 +1,7 @@
 import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
 
-import { ExecutionConstraint, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type ExecutionConstraint, type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { Box, Text } from '@leather.io/ui/native';
 import { assertUnreachable } from '@leather.io/utils';
 
@@ -48,6 +48,11 @@ function getConstraintCopy(
       return {
         title: t`Amount too large`,
         description: t`${operation} ${baseAssetSymbol} to ${targetAssetSymbol} is limited to ${threshold}`,
+      };
+    case 'supply-cap-exceeded':
+      return {
+        title: t`Deposit cap reached`,
+        description: t`Only ${threshold} more ${baseAssetSymbol} can be deposited into ${targetAssetSymbol} right now`,
       };
     default:
       assertUnreachable(constraint.reason);

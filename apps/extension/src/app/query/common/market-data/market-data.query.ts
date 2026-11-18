@@ -13,6 +13,6 @@ export function useMarketDataByAssetId(assetId: FungibleAssetId) {
 }
 
 export function useMarketData(asset: FungibleCryptoAsset) {
-  const assetId = getAssetId(asset) as FungibleAssetId;
+  const assetId: FungibleAssetId = { protocol: asset.protocol, id: getAssetId(asset).id };
   return useMarketDataByAssetId(assetId);
 }
