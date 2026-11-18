@@ -5,8 +5,13 @@ import { learnArticles } from '~/content/learn-content';
 
 interface ApyRewardHeroCardProps extends HTMLStyledProps<'div'> {
   apyRange: string;
+  label?: string;
 }
-export function ApyRewardHeroCard({ apyRange, ...props }: ApyRewardHeroCardProps) {
+export function ApyRewardHeroCard({
+  apyRange,
+  label = learnArticles.historicalYield.title,
+  ...props
+}: ApyRewardHeroCardProps) {
   const article = learnArticles.historicalYield;
 
   return (
@@ -20,7 +25,7 @@ export function ApyRewardHeroCard({ apyRange, ...props }: ApyRewardHeroCardProps
       {...props}
     >
       <Flex flexDir="column" pos="absolute" bottom={0} p={['space.04', 'space.05', 'space.07']}>
-        <ValueHoverCard label={article.title} value={apyRange} article={article} />
+        <ValueHoverCard label={label} value={apyRange} article={article} />
       </Flex>
     </Box>
   );
