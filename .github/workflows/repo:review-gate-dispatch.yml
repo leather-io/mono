@@ -30,4 +30,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           PR: ${{ github.event.pull_request.number }}
-        run: gh workflow run repo:review-gate.yml --ref dev -f pr="$PR"
+        run: |
+          if output="$(gh workflow run repo:review-gate.yml --ref dev -f pr="$PR" 2>&1)"; then
+            echo "$output"
+          elif [[ "$output" == *"Workflow does not have 'workflow_dispatch' trigger"* ]]; then
+            echo "::notice::repo:review-gate is not on dev yet, so there is no gate to start."
+          else
+            echo "$output"
+            exit 1
+          fi
