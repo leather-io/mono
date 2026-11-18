@@ -64,6 +64,20 @@ describe('createGitHubClient', () => {
     expect(sent[0]?.url).toBe('https://api.github.com/graphql');
     expect(sent[0]?.init.body).toBe('{"query":"query { viewer { login } }","variables":{}}');
   });
+
+  test('returns the GraphQL data', async () => {
+    stubFetch([{ status: 200, body: '{"data":{"viewer":{"login":"me"}}}' }]);
+    await expect(
+      createGitHubClient({ token: 'secret' }).graphql('query { viewer { login } }', {})
+    ).resolves.toEqual({ viewer: { login: 'me' } });
+  });
+
+  test('rejects GraphQL errors that come back with a 200', async () => {
+    stubFetch([{ status: 200, body: '{"data":null,"errors":[{"message":"not allowed"}]}' }]);
+    await expect(
+      createGitHubClient({ token: 'secret' }).graphql('mutation { x }', {})
+    ).rejects.toThrow('GitHub GraphQL failed: [{"message":"not allowed"}]');
+  });
 });
 
 describe('paginate', () => {
@@ -120,6 +134,17 @@ describe('createGhCliClient', () => {
     expect(gh.calls).toEqual([
       { args: ['api', '--method', 'POST', 'graphql', '--input', '-'], input: '{"query":"q"}' },
     ]);
+  });
+
+  test('returns the GraphQL data and rejects GraphQL errors', async () => {
+    const answered = fakeGh({ status: 0, stdout: '{"data":{"ok":true}}', stderr: '' });
+    await expect(createGhCliClient('/repo', answered.run).graphql('q', {})).resolves.toEqual({
+      ok: true,
+    });
+    const refused = fakeGh({ status: 0, stdout: '{"errors":[{"message":"no"}]}', stderr: '' });
+    await expect(createGhCliClient('/repo', refused.run).graphql('q', {})).rejects.toThrow(
+      'GitHub GraphQL failed'
+    );
   });
 
   test('rejects with gh standard error when the call fails', async () => {

@@ -1,13 +1,13 @@
 import { constants, createHash, generateKeyPairSync, privateEncrypt, verify } from 'node:crypto';
 import { describe, expect, test } from 'vitest';
 
+import { fakeGitHub } from '../fix-issue/test/fake-github.js';
 import {
   appJwt,
   createInstallationToken,
   kmsSigner,
   revokeInstallationToken,
 } from './app-token.js';
-import { fakeGitHub } from './test/fake-github.js';
 
 const now = Date.UTC(2026, 10, 11, 12, 0, 0);
 
@@ -108,7 +108,7 @@ describe('kmsSigner', () => {
 });
 
 describe('createInstallationToken', () => {
-  test('asks for a token limited to the repository and the three write scopes', async () => {
+  test('asks for a token limited to the repository and the given permissions', async () => {
     const github = fakeGitHub((method, path) => {
       if (method === 'GET' && path === 'repos/leather-io/mono/installation') return { id: 42 };
       if (method === 'POST' && path === 'app/installations/42/access_tokens') {
@@ -131,6 +131,7 @@ describe('createInstallationToken', () => {
           return github;
         },
         repo: 'leather-io/mono',
+        permissions: { contents: 'write', pull_requests: 'write', issues: 'write' },
       })
     ).resolves.toBe('ghs_token');
     expect(github.calls[1]?.body).toEqual({
@@ -157,6 +158,7 @@ describe('createInstallationToken', () => {
           return revoker;
         },
         repo: 'leather-io/mono',
+        permissions: { contents: 'write' },
       })
     ).rejects.toThrow('permissions it was not asked for: workflows; it was revoked');
     expect(tokens).toEqual(['ghs_token']);
@@ -173,6 +175,7 @@ describe('createInstallationToken', () => {
           return fakeGitHub();
         },
         repo: 'mono',
+        permissions: { contents: 'write' },
       })
     ).rejects.toThrow("'mono' is not an owner/name repository");
   });
