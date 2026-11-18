@@ -19,6 +19,7 @@
   "packages/tsconfig-config": "0.11.2",
   "packages/ui": "1.119.4",
   "packages/features": "1.8.6",
+  "packages/ledger": "0.1.0",
   "packages/utils": "0.55.0",
   "packages/cms": "1.6.4",
   "packages/test-config": "0.1.4"

@@ -1,22 +1,17 @@
-import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
+import {
+  getBitcoinSigner,
+  isLedgerOnDeviceAddressConfirmed,
+  toLedgerDisplayedAddress,
+} from '@leather.io/ledger';
+
 import { useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import type { ConfirmBtcPolicyAddressLedgerFlowRequest } from '@app/features/ledger/flow/ledger-flow.types';
 import { type LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
 import { useRequestLedgerKeys } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
+import { withInteractionHandler } from '@app/features/ledger/hardware-wallet/operation-context.utils';
 import { useDisplayLedgerDescriptorAddress } from '@app/features/ledger/hooks/use-display-ledger-descriptor-address';
-import {
-  connectLedgerBitcoinApp,
-  getBitcoinAppVersion,
-  isBitcoinAppOpen,
-} from '@app/features/ledger/utils/bitcoin-ledger-utils';
-import { useSignerActionController } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import { useCancelLedgerAction } from '@app/features/ledger/utils/generic-ledger-utils';
-import type { LedgerBitcoinApp } from '@app/features/ledger/utils/ledger-app';
-import {
-  isLedgerOnDeviceAddressConfirmed,
-  toLedgerDisplayedAddress,
-} from '@app/features/ledger/utils/ledger-descriptor-address';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
 // Drives the on-device confirmation for btc_addAccount on a Ledger wallet. It
@@ -30,8 +25,6 @@ interface LedgerConfirmBtcPolicyAddressProps {
   request: ConfirmBtcPolicyAddressLedgerFlowRequest;
 }
 export function LedgerConfirmBtcPolicyAddress({ request }: LedgerConfirmBtcPolicyAddressProps) {
-  const dmk = useLedgerDmk();
-  const signerActions = useSignerActionController();
   const ledgerNavigate = useLedgerSteps();
   const network = useCurrentNetwork();
   const { descriptor, address, onConfirmed } = request;
@@ -44,30 +37,37 @@ export function LedgerConfirmBtcPolicyAddress({ request }: LedgerConfirmBtcPolic
     );
   }
 
-  const { requestKeys, latestDeviceResponse, awaitingDeviceConnection, isConnectionCancellable } =
-    useRequestLedgerKeys<LedgerBitcoinApp>({
-      chain: 'bitcoin',
-      connectApp: connectLedgerBitcoinApp(dmk, network.chain.bitcoin.mode, signerActions.run),
-      getAppVersion: getBitcoinAppVersion(dmk),
-      isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
-      onSuccess() {
-        void onConfirmed();
-      },
-      async pullKeysFromDevice(app) {
-        toConfirmAddressStep();
-        const onDeviceAddress = await displayLedgerDescriptorAddress(app, descriptor, {
-          onWalletRegistered: toConfirmAddressStep,
-        });
-        if (!isLedgerOnDeviceAddressConfirmed(onDeviceAddress, address)) {
-          ledgerNavigate.toErrorStep(
-            'bitcoin',
-            'The address shown on your Ledger does not match the one in Leather.'
-          );
-          return { status: 'failure' };
-        }
-        return { status: 'success' };
-      },
-    });
+  const {
+    requestKeys,
+    cancel,
+    latestDeviceResponse,
+    awaitingDeviceConnection,
+    isConnectionCancellable,
+  } = useRequestLedgerKeys({
+    connectRequest: { chain: 'bitcoin', network: network.chain.bitcoin.mode },
+    onSuccess() {
+      void onConfirmed();
+    },
+    async pullKeysFromDevice(wallet, ctx) {
+      const signer = getBitcoinSigner(wallet);
+      toConfirmAddressStep();
+      const onDeviceAddress = await displayLedgerDescriptorAddress(
+        signer,
+        descriptor,
+        withInteractionHandler(ctx, interaction => {
+          if (interaction.type === 'verify-address') toConfirmAddressStep();
+        })
+      );
+      if (!isLedgerOnDeviceAddressConfirmed(onDeviceAddress, address)) {
+        ledgerNavigate.toErrorStep(
+          'bitcoin',
+          'The address shown on your Ledger does not match the one in Leather.'
+        );
+        return { status: 'failure' };
+      }
+      return { status: 'success' };
+    },
+  });
 
   const ledgerContextValue: LedgerRequestKeysContext = {
     chain: 'bitcoin',
@@ -84,7 +84,7 @@ export function LedgerConfirmBtcPolicyAddress({ request }: LedgerConfirmBtcPolic
     <RequestKeysFlow
       context={ledgerContextValue}
       isActionCancellableByUser={canCancelLedgerAction}
-      onCancelAction={signerActions.cancelActive}
+      onCancelAction={cancel}
     />
   );
 }
