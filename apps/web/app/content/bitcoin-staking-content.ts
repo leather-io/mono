@@ -16,10 +16,10 @@ export const bitcoinStakingContent = {
   heroYieldLabel: `Variable yield, paid in sBTC`,
   providerDescription: `Providers are external parties that operate PoX-5 staking pools through their own signer-manager contracts. Leather is not liable for the conduct of third parties.`,
   chooseDuration: {
-    inputLabel: `Cycles before renewal (1–96)`,
-    renewalPrefix: `Renews ~`,
-    exitTitle: `Exit any time`,
-    exitDescription: `This isn’t a lock. Unstake whenever you want and your STX unlocks when the current cycle ends. A cycle is about two weeks.`,
+    inputLabel: `Staking duration (1–96 cycles)`,
+    renewalPrefix: `Scheduled end ~`,
+    exitTitle: `Unstake early`,
+    exitDescription: `You can request to unstake before the scheduled end, except during the cycle's closing window. Once confirmed, your STX unlocks at the end of that cycle. A cycle is about two weeks.`,
   },
   learnMore: {
     label: `Read more about Bitcoin Staking on stacks.co`,
@@ -86,7 +86,7 @@ export const bitcoinStakingContent = {
   },
   poolOverviewInfo: {
     rewardsToken: `Rewards accrue as sBTC on Stacks each cycle and are claimed through the pool's signer-manager contract. Yield is variable: it depends on network-wide staking participation and the protocol reward waterfall.`,
-    fee: `The share of your rewards this pool keeps. Each pool sets its own fee in its signer-manager contract, so check the pool's terms before staking.`,
+    fee: `The share of your rewards this pool keeps. Each pool sets its own fee in its signer-manager contract, so review the pool's fee before staking.`,
     totalStaked: `The STX delegated to this pool for the current cycle, summed across all of the pool's signer-manager contracts. Pools need at least 50,000 STX staked to earn rewards for a cycle.`,
     nextCycle: `Your stake starts earning when the next cycle begins. A cycle lasts about two weeks.`,
   },
@@ -172,9 +172,30 @@ export const bitcoinStakingContent = {
     updateHelper: `This setting applies to every future claim.`,
     loadError: `We couldn't load your current payout preference, which is needed before your stake can be updated.`,
   },
+  acknowledgment: {
+    lockTitle: `When STX unlocks`,
+    lockDescription: `Your STX stays locked until the scheduled end unless you unstake earlier. You can request to unstake outside the cycle's closing window. Once confirmed, your STX unlocks at the end of that cycle.`,
+    payoutTitle: `How rewards reach you`,
+    contractPayout(poolName: string) {
+      return `Rewards are claimed through ${poolName}'s contract, using your selected payout settings. Leather does not operate the pool. You agree Leather is not liable for the performance of the pool.`;
+    },
+    selfClaimPayout(poolName: string) {
+      return `You must claim your sBTC rewards through ${poolName}'s contract. The pool does not claim them for you. You agree Leather is not liable for the performance of the pool.`;
+    },
+    operatorPayout(poolName: string, cadence: string) {
+      return `${poolName} collects the sBTC rewards and pays you BTC ${cadence}. You rely on the operator to make these payments off chain. You agree Leather is not liable for the performance of the pool.`;
+    },
+    customPayout: `This is a custom signer-manager contract. Rewards and payouts depend on its policies. Verify who operates it before staking. You agree Leather is not liable for the performance of the pool.`,
+    label: `I understand the lock and payout details above. Rewards aren't guaranteed, and Leather doesn't hold my funds or pay my rewards.`,
+    termsLabel: `Leather terms`,
+    termsAccessibleLabel: `Leather terms (opens in a new tab)`,
+    requiredMessage: `Check the box above to continue.`,
+    scheduledEnd: `Scheduled end`,
+    confirmStake: `Confirm and start staking`,
+  },
   switchSignerManager: {
     sectionLabel: `Signer manager`,
-    helper: `Picking a different pool moves your whole position at the start of the next cycle. You'll accept the new pool's terms before confirming.`,
+    helper: `Picking a different pool moves your whole position at the start of the next cycle. Review and acknowledge the staking details before confirming.`,
     customOptionName: `Custom signer manager`,
     customOptionNameWhenCurrentCustom: `Different custom contract`,
     customOptionMeta: `Enter a contract address`,
@@ -182,10 +203,6 @@ export const bitcoinStakingContent = {
     validateLabel: `Validate contract`,
     validatingLabel: `Validating…`,
     contractValidLabel: `Contract valid`,
-    poolTerms(poolName: string) {
-      return `I have read and accepted ${poolName}'s terms and conditions`;
-    },
-    customAcknowledgment: `I understand this is a custom signer-manager contract and rewards depend on its policies`,
     confirmSwitch: `Confirm switch`,
     confirmUpdate: `Confirm update`,
     validateFirst: `Validate contract first`,
@@ -197,7 +214,7 @@ export const bitcoinStakingContent = {
       rewardsToken: `Rewards token`,
       amountStaked: `Amount staked`,
       movesInFullSuffix: `, moves in full`,
-      lockedUntil: `Locked until`,
+      lockedUntil: `Scheduled end`,
       effective: `Effective`,
       effectiveCaption: `One transaction, no unstaking needed`,
       customRewardsValue: `Set by the custom contract`,

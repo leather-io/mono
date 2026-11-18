@@ -1,8 +1,7 @@
-import * as yup from 'yup';
-
 import type { NetworkConfiguration } from '@leather.io/models';
 
 import { FormErrorMessages } from '@shared/error-messages';
+import { stringField } from '@shared/forms/field-schemas';
 
 import {
   notCurrentAddressValidator,
@@ -15,13 +14,10 @@ export function stxRecipientValidator(
   currentAddress: string,
   currentNetwork: NetworkConfiguration
 ) {
-  return yup
-    .string()
-    .defined(FormErrorMessages.AddressRequired)
-    .concat(stxAddressValidator(FormErrorMessages.InvalidAddress))
-    .concat(stxAddressNetworkValidator(currentNetwork))
-    .concat(notCurrentAddressValidator(currentAddress))
-    .concat(
-      complianceValidator(stxAddressValidator(FormErrorMessages.InvalidAddress), 'send_form_stx')
-    );
+  return stringField().check(
+    stxAddressValidator(FormErrorMessages.InvalidAddress),
+    stxAddressNetworkValidator(currentNetwork),
+    notCurrentAddressValidator(currentAddress),
+    complianceValidator(stxAddressValidator(FormErrorMessages.InvalidAddress), 'send_form_stx')
+  );
 }

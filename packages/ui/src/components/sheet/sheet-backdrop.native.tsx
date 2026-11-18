@@ -1,8 +1,8 @@
-import { ComponentProps } from 'react';
+import { type ComponentProps } from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import Animated, {
   Extrapolation,
-  SharedValue,
+  type SharedValue,
   interpolate,
   useAnimatedProps,
   useAnimatedStyle,

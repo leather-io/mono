@@ -8,6 +8,8 @@ import {
   useBaseAmountField,
 } from './use-base-amount-field.shared';
 
+const initialChange: ChangeResult = { accepted: false, displayValue: '', cursorPosition: 0 };
+
 describe('useAmountField', () => {
   describe('display formatting', () => {
     it('returns 0 for empty value', () => {
@@ -58,7 +60,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('5', 1);
       });
@@ -70,7 +72,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '12', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('123', 3);
       });
@@ -81,7 +83,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '12', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('12a', 3);
       });
@@ -92,7 +94,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '12', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('12@', 3);
       });
@@ -103,7 +105,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '12', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('12 ', 3);
       });
@@ -114,7 +116,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '12', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('1,2', 2);
       });
@@ -124,7 +126,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '1234', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('1,2345', 6);
       });
@@ -138,7 +140,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '12', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('12.', 3);
       });
@@ -150,7 +152,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('.', 1);
       });
@@ -162,7 +164,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '1.2', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('1.2.', 4);
       });
@@ -172,7 +174,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '1.23', onChange: doNothing, maxDecimals: 2 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('1.234', 5);
       });
@@ -183,7 +185,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '5', onChange: doNothing, maxDecimals: 0 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('5.', 2);
       });
@@ -197,7 +199,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('0', 1);
       });
@@ -209,7 +211,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '0', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('00', 2);
       });
@@ -220,7 +222,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '0', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('0.', 2);
       });
@@ -232,7 +234,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '0', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('05', 2);
       });
@@ -244,7 +246,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '0', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('007', 3);
       });
@@ -259,7 +261,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '123', onChange, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('', 0);
       });
@@ -272,7 +274,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '123', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('', 0);
       });
@@ -362,7 +364,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '1234', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('1,234a', 6);
       });
@@ -404,7 +406,7 @@ describe('useAmountField', () => {
           enableGrouping: false,
         })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('123', 3);
       });
@@ -414,7 +416,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '1234', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('1,2345', 6);
       });
@@ -424,7 +426,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '999', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('9999', 4);
       });
@@ -436,7 +438,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '1000', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('1,00', 4);
       });
@@ -448,7 +450,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('.', 1);
       });
@@ -459,7 +461,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '13', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('123', 2);
       });
@@ -470,7 +472,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '123', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('1a23', 2);
       });
@@ -484,7 +486,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '1', onChange: doNothing, maxDecimals: 8, locale: 'en' })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('1.', 2);
       });
@@ -495,7 +497,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '1', onChange: doNothing, maxDecimals: 8, locale: 'de' })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('1,', 2);
       });
@@ -512,7 +514,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '1', onChange: doNothing, maxDecimals: 8, locale: 'de' })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('1.', 2);
       });
@@ -522,7 +524,7 @@ describe('useAmountField', () => {
       const { result } = renderHook(() =>
         useBaseAmountField({ value: '1', onChange: doNothing, maxDecimals: 8 })
       );
-      let change = {} as ChangeResult;
+      let change = initialChange;
       act(() => {
         change = result.current.handleChange('1.', 2);
       });

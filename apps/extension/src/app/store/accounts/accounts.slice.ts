@@ -8,7 +8,7 @@ import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leathe
 import { assumedZeroFingerprint } from '@shared/utils';
 
 import { userAddsPolicy, userRemovesPolicy } from '../policy/policy.slice';
-import { AccountStatus, AccountStore } from './account-store.utils';
+import { type AccountStatus, type AccountStore } from './account-store.utils';
 
 export const accountsAdapter = createEntityAdapter<AccountStore, string>({
   selectId: account => account.id,

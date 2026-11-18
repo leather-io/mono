@@ -1,6 +1,6 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { UserSelectedTheme } from '@app/common/theme-provider';
+import { type UserSelectedTheme } from '@app/common/theme-provider';
 
 export type TokenDetailsTab = 'activity' | 'balances' | 'info';
 

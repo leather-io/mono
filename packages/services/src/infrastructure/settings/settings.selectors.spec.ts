@@ -1,5 +1,5 @@
 import {
-  BitcoinNetwork,
+  type BitcoinNetwork,
   HIRO_API_BASE_URL_MAINNET,
   defaultNetworksKeyedById,
 } from '@leather.io/models';
@@ -12,7 +12,7 @@ import {
   selectStacksNetworkMode,
   selectStakingChainId,
 } from './settings.selectors';
-import { UserSettings } from './settings.service';
+import { type UserSettings } from './settings.service';
 
 const userSettings: UserSettings = {
   quoteCurrency: 'USD',
@@ -60,6 +60,11 @@ describe(selectStakingChainId.name, () => {
   it('maps the BTC Staking Testnet to private-1', () => {
     const settings = { ...userSettings, network: defaultNetworksKeyedById['private-1'] };
     expect(selectStakingChainId(settings)).toEqual('private-1');
+  });
+
+  it('maps the staking testnet network to the staking-testnet chain', () => {
+    const settings = { ...userSettings, network: defaultNetworksKeyedById.stakingTestnet };
+    expect(selectStakingChainId(settings)).toEqual('staking-testnet');
   });
 
   it('returns null for networks the staking index does not cover', () => {

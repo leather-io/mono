@@ -1,4 +1,4 @@
-import { Box, HasChildren, Text } from '@leather.io/ui/native';
+import { Box, type HasChildren, Text } from '@leather.io/ui/native';
 
 interface TokenDetailsCardProps extends HasChildren {
   title?: React.ReactNode;

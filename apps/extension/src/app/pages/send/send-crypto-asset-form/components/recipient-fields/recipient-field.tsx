@@ -20,7 +20,9 @@ export function RecipientField({ bnsLookupFn }: RecipientFieldProps) {
   const recipientDropdown = (
     <RecipientIdentifierTypeDropdown
       activeRecipientIdentifierType={selectedRecipientFieldName}
-      onSelectRecipientIdentifierType={recipientType => onSelectRecipientFieldType(recipientType)}
+      onSelectRecipientIdentifierType={recipientType =>
+        void onSelectRecipientFieldType(recipientType)
+      }
     />
   );
 

@@ -6,11 +6,11 @@ import {
   validateStxAmountPrecision,
 } from '~/utils/validators/stx-amount-validator';
 
-import { BitcoinNetworkModes } from '@leather.io/models';
-import { stxToMicroStx } from '@leather.io/utils';
+import { type BitcoinNetworkModes } from '@leather.io/models';
+import { type stxToMicroStx } from '@leather.io/utils';
 
 import {
-  PoolMinStake,
+  type PoolMinStake,
   buildPayoutPreference,
   formatMinStakeStx,
   meetsPoolMinStake,
@@ -19,8 +19,8 @@ import {
   validateRewardAddress,
   wantsBtcPayout,
 } from '../start-staking/utils/staking-form-schema';
-import { Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
-import { PoolPayoutMode, isBtcPayoutRequired } from '../utils/pool-payout';
+import { type Pox5PayoutPreference } from '../transactions/pox5-signer-calldata';
+import { type PoolPayoutMode, isBtcPayoutRequired } from '../utils/pool-payout';
 
 export const updateStakingMessages = {
   nothingToUpdate:

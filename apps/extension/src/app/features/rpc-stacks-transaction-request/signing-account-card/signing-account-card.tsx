@@ -52,6 +52,7 @@ function AccountApproverSection({
 interface SigningAccountCardProps {
   address: React.ReactNode;
   availableBalance: Money;
+  balanceCaption?: string;
   fiatBalance: Money;
   isLoadingBalance: boolean;
   showPolicyAccount?: boolean;
@@ -59,6 +60,7 @@ interface SigningAccountCardProps {
 export function SigningAccountCard({
   address,
   availableBalance,
+  balanceCaption,
   fiatBalance,
   isLoadingBalance,
   showPolicyAccount = false,
@@ -97,7 +99,10 @@ export function SigningAccountCard({
 
   const balanceCaptionRight = (
     <SkeletonLoader isLoading={isLoadingBalance} width="48px">
-      <Caption>{formatCurrency(fiatBalance)}</Caption>
+      <Caption>
+        {balanceCaption ? `${balanceCaption} · ` : ''}
+        {formatCurrency(fiatBalance)}
+      </Caption>
     </SkeletonLoader>
   );
 

@@ -1,5 +1,8 @@
-import { Page } from '@playwright/test';
+import { type Page } from '@playwright/test';
 import { setupMockApis } from '@tests/mocks/mock-apis';
+import { mockUnhandledRequests } from '@tests/mocks/mock-unhandled-requests';
+import { HomePageSelectors } from '@tests/selectors/home.selectors';
+import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
 
 export class GlobalPage {
   readonly page: Page;
@@ -14,10 +17,14 @@ export class GlobalPage {
 
   async setupAndUseApiCalls(extensionId: string) {
     const context = this.page.context();
-    await context.route(/.*/, route => route.continue());
+    await mockUnhandledRequests(context);
     await setupMockApis(context);
-    await this.page.waitForTimeout(1500);
     await this.gotoNakedRoot(extensionId);
+    await this.page
+      .getByTestId(OnboardingSelectors.SignUpBtn)
+      .or(this.page.getByTestId(HomePageSelectors.HomePageContainer))
+      .first()
+      .waitFor();
   }
 
   async setupAndUseMockedApiCalls(extensionId: string) {

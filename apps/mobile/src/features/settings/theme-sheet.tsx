@@ -2,10 +2,10 @@ import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
 import { useToastContext } from '@/components/toast/toast-context';
 import { useSettings } from '@/store/settings/settings';
-import { ThemePreference, defaultThemePreferences } from '@/store/settings/utils';
+import { type ThemePreference, defaultThemePreferences } from '@/store/settings/utils';
 import { select, t } from '@lingui/core/macro';
 
-import { SheetRef } from '@leather.io/ui/native';
+import { type SheetRef } from '@leather.io/ui/native';
 
 import { SettingsSheetLayout } from './settings-sheet.layout';
 

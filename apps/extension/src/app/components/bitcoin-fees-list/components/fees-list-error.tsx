@@ -14,7 +14,11 @@ export function FeesListError() {
 
   return (
     <Box textAlign="center" px={['unset', 'space.05']} py="space.04" width="100%">
-      <GenericError body={body} onClose={() => navigate(RouteUrls.SendCryptoAsset)} title={title} />
+      <GenericError
+        body={body}
+        onClose={() => void navigate(RouteUrls.SendCryptoAsset)}
+        title={title}
+      />
     </Box>
   );
 }

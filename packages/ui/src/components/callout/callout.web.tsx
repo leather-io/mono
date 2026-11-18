@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { type RecipeVariantProps, cva } from 'leather-styles/css';
 import { Box, type BoxProps, Flex, Stack, styled } from 'leather-styles/jsx';
-import { SystemProperties } from 'leather-styles/types';
+import { type SystemProperties } from 'leather-styles/types';
 
 import { CheckmarkCircleIcon } from '../../icons/checkmark-circle-icon.web';
 import { ErrorTriangleIcon } from '../../icons/error-triangle-icon.web';
@@ -15,7 +15,7 @@ const calloutRecipe = cva({
   variants: {
     variant: {
       default: {
-        bg: 'ink.text-non-interactive',
+        bg: 'ink.component-background-default',
       },
       error: {
         bg: 'red.background-secondary',

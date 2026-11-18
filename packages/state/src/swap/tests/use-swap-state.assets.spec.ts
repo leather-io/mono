@@ -1,8 +1,9 @@
 import { act, waitFor } from '@testing-library/react';
 import { assert, describe, expect, it } from 'vitest';
 
+import { SBTC_ASSET_ID_MAINNET } from '@leather.io/constants';
 import { defaultNetworksKeyedById } from '@leather.io/models';
-import { AccountSwapAsset } from '@leather.io/services';
+import { type AccountSwapAsset } from '@leather.io/services';
 
 import {
   createAccountSwapAsset,
@@ -931,7 +932,10 @@ describe('disabled pairs', () => {
         baseAsset: defaultBtcAsset,
         targetSwapAssets,
         disabledPairs: [
-          { base: { protocol: 'nativeStx', id: 'STX' }, target: { protocol: 'sip10', id: 'sBTC' } },
+          {
+            base: { protocol: 'nativeStx', id: 'STX' },
+            target: { protocol: 'sip10', id: SBTC_ASSET_ID_MAINNET },
+          },
         ],
       });
 
@@ -958,7 +962,10 @@ describe('disabled pairs', () => {
             base: { protocol: 'nativeBtc', id: 'BTC' },
             target: { protocol: 'nativeStx', id: 'STX' },
           },
-          { base: { protocol: 'nativeBtc', id: 'BTC' }, target: { protocol: 'sip10', id: 'sBTC' } },
+          {
+            base: { protocol: 'nativeBtc', id: 'BTC' },
+            target: { protocol: 'sip10', id: SBTC_ASSET_ID_MAINNET },
+          },
         ],
       });
 

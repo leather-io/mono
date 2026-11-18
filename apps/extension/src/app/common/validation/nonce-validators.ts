@@ -1,7 +1,12 @@
-import * as yup from 'yup';
+import { z } from 'zod';
 
-export const nonceValidator = yup
-  .number()
-  .integer()
-  .min(0, 'Nonce must be zero or more')
-  .typeError('Nonce must be a positive integer or 0');
+import { numberField } from '@shared/forms/field-schemas';
+
+export const nonceValidator = numberField('Nonce must be a positive integer or 0').check(
+  z.refine<number | undefined>(value => value === undefined || Number.isInteger(value), {
+    error: 'nonce must be an integer',
+  }),
+  z.refine<number | undefined>(value => value === undefined || value >= 0, {
+    error: 'Nonce must be zero or more',
+  })
+);

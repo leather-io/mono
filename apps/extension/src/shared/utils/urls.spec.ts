@@ -1,6 +1,8 @@
 // @ts-ignore
 import bigListOfNaughtyStrings from 'blns';
 
+import { isString } from '@leather.io/utils';
+
 import { getHostnameFromUrl, isValidUrl } from './urls';
 
 describe('isValidUrl', () => {
@@ -18,9 +20,10 @@ describe('isValidUrl', () => {
 
   test('rejects non http(s) schemas', () => {
     // one of the strings is a actual url
-    const naughtyStrings = (bigListOfNaughtyStrings as string[]).filter(
-      str => !str.startsWith('http')
-    );
+    const allNaughtyStrings: unknown = bigListOfNaughtyStrings;
+    const naughtyStrings = (Array.isArray(allNaughtyStrings) ? allNaughtyStrings : [])
+      .filter(isString)
+      .filter(str => !str.startsWith('http'));
     const bad = [
       ...naughtyStrings,
       'javascript:alert("hello")//',

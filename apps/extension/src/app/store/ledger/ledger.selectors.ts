@@ -41,7 +41,7 @@ const selectHasLedgerBitcoinKeys = createSelector(
           const keyOrigin = extractKeyOriginPathFromDescriptor(keychain.descriptor);
           return extractAccountIndexFromPath(keyOrigin);
         })
-        .filter((index): index is number => index !== null)
+        .filter(index => index !== null)
     );
 
     return uniqueBitcoinAccountIndices.includes(currentAccount.accountIndex);

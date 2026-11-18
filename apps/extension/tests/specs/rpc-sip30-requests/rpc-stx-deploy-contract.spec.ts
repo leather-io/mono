@@ -1,5 +1,6 @@
-import { BrowserContext, Page } from '@playwright/test';
+import { type BrowserContext, type Page } from '@playwright/test';
 import { ClarityVersion } from '@stacks/transactions';
+import { requestLeatherProvider } from '@tests/leather-provider';
 import { mockStacksTokenContract } from '@tests/mocks/mock-stacks-contract';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
@@ -14,25 +15,29 @@ test.describe('RPC: stx_deployContract', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   function checkVisibleContent(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm') => {
       const popup = await context.waitForEvent('page');
-      await popup.waitForSelector('text="mock-contract-name"');
-      await popup.waitForSelector(
-        'text="Only fees will be transferred from your account or the transaction will abort."'
-      );
+      await test.expect(popup.getByText('mock-contract-name', { exact: true })).toBeVisible();
+      await test
+        .expect(
+          popup.getByText(
+            'Only fees will be transferred from your account or the transaction will abort.',
+            { exact: true }
+          )
+        )
+        .toBeVisible();
 
-      const displayerAddress = await popup
+      const displayerText = await popup
         .getByTestId(SharedComponentsSelectors.AddressDisplayer)
-        .innerText()
-        .then((value: string) => value.replaceAll('\n', ''));
+        .innerText();
+      const displayerAddress = displayerText.replaceAll('\n', '');
       test.expect(displayerAddress).toEqual('SPS8CKF63P16J28AYF7PXW9E5AACH0NZNTEFWSFE');
 
-      await popup.waitForTimeout(500);
-      const btn = popup.locator('text="Confirm"');
+      const btn = popup.getByText('Confirm', { exact: true });
 
       if (buttonToPress === 'Confirm') {
         await btn.click();
@@ -44,13 +49,10 @@ test.describe('RPC: stx_deployContract', () => {
 
   function initiateSip30RpcDeployContract(page: Page) {
     return async (params: RpcParams<typeof stxDeployContract>) =>
-      page.evaluate(
-        params =>
-          (window as any).LeatherProvider.request('stx_deployContract', {
-            ...params,
-          }).catch((e: unknown) => e),
-        { ...params }
-      );
+      page.evaluate(requestLeatherProvider, {
+        method: 'stx_deployContract',
+        params: { ...params },
+      });
   }
 
   test('SIP-30 deploy contract', async ({ page, context }) => {

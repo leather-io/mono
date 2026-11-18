@@ -11,12 +11,16 @@ import {
 import StacksApp, {
   DMKTransport,
   LedgerError,
-  ResponseAddress,
-  ResponseSign,
+  type ResponseAddress,
+  type ResponseBase,
+  type ResponseSign,
 } from '@zondax/ledger-stacks';
 import { compare } from 'compare-versions';
+import { z } from 'zod';
 
 import { whenStacksChainId } from '@leather.io/stacks';
+
+import { isPopupMode } from '@app/common/utils';
 
 import {
   type ConnectLedgerDeviceOptions,
@@ -25,7 +29,7 @@ import {
 import { makeLedgerAppResponseError } from '../dmk/ledger-dmk-errors';
 import {
   LEDGER_APPS_MAP,
-  SemVerObject,
+  type SemVerObject,
   prepareLedgerDeviceForAppFn,
   versionObjectToVersionString,
 } from './generic-ledger-utils';
@@ -53,12 +57,31 @@ export function stacksChainIdToSingleSigAddressVersion(chainId: number): Address
   });
 }
 
+export function hasLedgerReturnCode(response: ResponseBase, code: LedgerError) {
+  const expectedReturnCode: number = code;
+  return response.returnCode === expectedReturnCode;
+}
+
 export function isStxAddressResponseRejected(response: ResponseAddress) {
-  return response.returnCode === LedgerError.TransactionRejected;
+  return hasLedgerReturnCode(response, LedgerError.TransactionRejected);
 }
 
 export function isStxAddressResponseSuccess(response: ResponseAddress) {
-  return response.returnCode === LedgerError.NoErrors;
+  return hasLedgerReturnCode(response, LedgerError.NoErrors);
+}
+
+const ledgerSignResponseSchema = z.custom<ResponseSign>(
+  response =>
+    typeof response === 'object' &&
+    response !== null &&
+    'returnCode' in response &&
+    'errorMessage' in response
+);
+
+function toLedgerSignResponse(response: unknown): ResponseSign {
+  const parsedResponse = ledgerSignResponseSchema.safeParse(response);
+  if (!parsedResponse.success) throw new Error('Unexpected Ledger Stacks sign response');
+  return parsedResponse.data;
 }
 
 export interface StacksAppKeysResponseItem {
@@ -71,7 +94,10 @@ export async function connectLedgerStacksApp(
   dmk: DeviceManagementKit,
   options?: ConnectLedgerDeviceOptions
 ): Promise<LedgerStacksApp> {
-  const sessionId = await connectLedgerDeviceToApp(dmk, LEDGER_APPS_MAP.STACKS, options);
+  const sessionId = await connectLedgerDeviceToApp(dmk, LEDGER_APPS_MAP.STACKS, {
+    canPromptForDevice: !isPopupMode(),
+    ...options,
+  });
   return { chain: 'stacks', app: new StacksApp(new DMKTransport(dmk, sessionId)), sessionId };
 }
 
@@ -96,17 +122,18 @@ export function prepareLedgerDeviceStacksAppConnection(
 }
 
 export function signLedgerStacksTransaction({ app }: LedgerStacksApp) {
-  return async (payload: Buffer, derivationPath: string) => app.sign(derivationPath, payload);
+  return async (payload: Buffer, derivationPath: string): Promise<ResponseSign> =>
+    toLedgerSignResponse(await app.sign(derivationPath, payload));
 }
 
 export function signLedgerStacksUtf8Message({ app }: LedgerStacksApp) {
   return async (payload: string, derivationPath: string): Promise<ResponseSign> =>
-    app.sign_msg(derivationPath, payload);
+    toLedgerSignResponse(await app.sign_msg(derivationPath, payload));
 }
 
 export function signLedgerStacksStructuredMessage({ app }: LedgerStacksApp) {
   return async (domain: string, payload: string, derivationPath: string): Promise<ResponseSign> =>
-    app.sign_structured_msg(derivationPath, domain, payload);
+    toLedgerSignResponse(await app.sign_structured_msg(derivationPath, domain, payload));
 }
 
 export function signStacksTransactionWithSignature(transaction: string, signatureVRS: Buffer) {

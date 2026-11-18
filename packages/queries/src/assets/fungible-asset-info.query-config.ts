@@ -34,5 +34,5 @@ export function createFungibleAssetDescriptionQueryConfig(
     retryOnMount: false,
     staleTime: 60000,
     gcTime: 60000,
-  } satisfies UseQueryOptions<AssetDescription, Error>;
+  } satisfies UseQueryOptions<AssetDescription>;
 }

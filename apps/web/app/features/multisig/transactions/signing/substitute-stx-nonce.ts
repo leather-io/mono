@@ -1,6 +1,9 @@
 import { bytesToHex, hexToBytes } from '@stacks/common';
 import { AddressHashMode, AuthType } from '@stacks/transactions';
 
+const standardAuthType: number = AuthType.Standard;
+const p2shNonSequentialHashMode: number = AddressHashMode.P2SHNonSequential;
+
 // Leather multisig STX transfers are always StandardAuth, P2SHNonSequential
 // multisig, which fixes the serialized spending-condition prefix:
 // version(1) | chain_id(4) | auth_type(1) | hash_mode(1) | signer_hash(20) |
@@ -23,9 +26,9 @@ export function substituteStxNonce({
 }): string {
   const bytes = hexToBytes(rawPayload);
 
-  if (bytes[authTypeOffset] !== AuthType.Standard)
+  if (bytes[authTypeOffset] !== standardAuthType)
     throw new Error('Unexpected auth type; expected a StandardAuth multisig transaction');
-  if (bytes[hashModeOffset] !== AddressHashMode.P2SHNonSequential)
+  if (bytes[hashModeOffset] !== p2shNonSequentialHashMode)
     throw new Error('Unexpected hash mode; expected a P2SHNonSequential multisig transaction');
   if (nonceOffset + nonceByteLength > bytes.length)
     throw new Error('Payload too short to contain a nonce at the computed offset');

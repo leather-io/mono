@@ -5,7 +5,7 @@ declare module '*?worker&url' {
   export default workerUrl;
 }
 declare module '*.svg' {
-  import React from 'react';
+  import type React from 'react';
   const content: React.FC<React.SVGProps<SVGSVGElement>>;
   export default content;
 }

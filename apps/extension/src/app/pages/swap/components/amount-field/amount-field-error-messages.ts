@@ -1,4 +1,4 @@
-import { BaseAmountIssue } from '@leather.io/state/swap';
+import { type BaseAmountIssue } from '@leather.io/state/swap';
 import { assertUnreachable } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';

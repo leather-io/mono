@@ -20,5 +20,5 @@ export function createAssetListQueryConfig(request: AssetListRequest, settings: 
     queryFn: ({ signal }: QueryFunctionContext) =>
       getAssetListService().getAssetList(request, signal),
     ...marketDataQueryOptions,
-  } satisfies UseQueryOptions<AssetListResponse, Error>;
+  } satisfies UseQueryOptions<AssetListResponse>;
 }

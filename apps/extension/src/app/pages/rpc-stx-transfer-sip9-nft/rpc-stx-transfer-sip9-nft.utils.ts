@@ -11,6 +11,7 @@ import {
 
 import type { Money } from '@leather.io/models';
 import { createRequestEncoder, stxTransferSip9Nft } from '@leather.io/rpc';
+import { getAddressFromAssetIdentifier } from '@leather.io/services';
 import {
   type StacksUnsignedContractCallOptions,
   TransactionTypes,
@@ -18,7 +19,6 @@ import {
 } from '@leather.io/stacks';
 import { createMoney } from '@leather.io/utils';
 
-import { getAddressFromAssetString } from '@shared/utils';
 import { makeNftPostCondition } from '@shared/utils/post-conditions';
 
 import { initialSearchParams } from '@app/common/initial-search-params';
@@ -52,7 +52,7 @@ function getTransactionOptionsFromRpcRequest(address: string) {
   };
 
   return {
-    contractAddress: getAddressFromAssetString(decodedRpcRequest.params.asset),
+    contractAddress: getAddressFromAssetIdentifier(decodedRpcRequest.params.asset),
     contractName,
     functionArgs: fnArgs.map(arg => serializeCV(arg)),
     fee: decodedRpcRequest.params.fee

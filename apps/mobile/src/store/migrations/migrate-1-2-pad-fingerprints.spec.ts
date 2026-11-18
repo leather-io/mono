@@ -426,10 +426,14 @@ describe(migratePadFingerprints.name, () => {
     expect(migratePadFingerprints(v1State)).toEqual(v2State);
   });
   test('function migrates the whole v1state to v2state correctly (no currentAccount set, very old migration)', () => {
-    const v1Clone = structuredClone(v1State);
-    const v2Clone = structuredClone(v2State);
-    v1Clone.settings.currentAccount = undefined as any;
-    v2Clone.settings.currentAccount = undefined as any;
+    const v1Clone = {
+      ...structuredClone(v1State),
+      settings: { ...structuredClone(v1State.settings), currentAccount: undefined },
+    };
+    const v2Clone = {
+      ...structuredClone(v2State),
+      settings: { ...structuredClone(v2State.settings), currentAccount: undefined },
+    };
     expect(migratePadFingerprints(v1Clone)).toEqual(v2Clone);
   });
 });

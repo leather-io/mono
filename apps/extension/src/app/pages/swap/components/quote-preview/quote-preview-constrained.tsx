@@ -1,6 +1,6 @@
 import { styled } from 'leather-styles/jsx';
 
-import { ExecutionConstraint, SwappableFungibleCryptoAsset } from '@leather.io/models';
+import { type ExecutionConstraint, type SwappableFungibleCryptoAsset } from '@leather.io/models';
 import { assertUnreachable } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';

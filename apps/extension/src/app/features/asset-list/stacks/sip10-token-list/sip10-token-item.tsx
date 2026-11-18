@@ -31,7 +31,7 @@ export function Sip10TokenItem({
     <Sip10AvatarIcon
       indicator="stacksIcon"
       contractId={contractId}
-      imageCanonicalUri={safeImageCanonicalUri}
+      imageCanonicalUri={safeImageCanonicalUri ?? ''}
       name={name}
       size="xl"
     />

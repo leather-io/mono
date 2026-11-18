@@ -1,5 +1,5 @@
-import { HDKey } from '@scure/bip32';
-import { AddressVersion, privateKeyToPublic, publicKeyToAddress } from '@stacks/transactions';
+import { type HDKey } from '@scure/bip32';
+import { type AddressVersion, privateKeyToPublic, publicKeyToAddress } from '@stacks/transactions';
 
 import { deriveStxPrivateKey } from '@leather.io/stacks';
 

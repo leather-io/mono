@@ -1,17 +1,18 @@
-import zxcvbn, { ZXCVBNResult, ZXCVBNScore } from 'zxcvbn';
+import zxcvbn, { type ZXCVBNResult, type ZXCVBNScore } from 'zxcvbn';
 
 function truncateCpuDemandingPassword(input: string) {
   return input.slice(0, 100);
 }
 
-export enum PasswordStrength {
-  NoScore,
-  PoorScore,
-  WeakScore,
-  AverageScore,
-  StrongScore,
-  MeetsAllRequirements,
-}
+export const PasswordStrength = {
+  NoScore: 0,
+  PoorScore: 1,
+  WeakScore: 2,
+  AverageScore: 3,
+  StrongScore: 4,
+  MeetsAllRequirements: 5,
+} as const;
+export type PasswordStrength = (typeof PasswordStrength)[keyof typeof PasswordStrength];
 
 const requiredStrengthScore: ZXCVBNScore = PasswordStrength.StrongScore;
 

@@ -97,6 +97,18 @@ jobs:
       - name: lint-dependency-rules
         run: pnpm lint:filenames
 
+  feature-map:
+    name: feature-map
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: $/.github/actions/provision
+
+      - name: check-feature-map
+        run: pnpm --filter @leather.io/tools build && pnpm lt feature-map check
+
   knip:
     name: knip
     runs-on: ubuntu-24.04

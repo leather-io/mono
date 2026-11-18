@@ -2,11 +2,13 @@ import { renderToString } from 'react-dom/server';
 
 import { createMoney } from '@leather.io/utils';
 
+import type * as WalletSelectors from '@app/store/wallets/wallet.selectors';
+
 import { SigningAccountCard } from './signing-account-card';
 
-const walletEntitiesMock = vi.fn();
-const currentPolicyMock = vi.fn();
-const policyDisplayNameMock = vi.fn();
+const walletEntitiesMock = vi.fn<() => unknown>();
+const currentPolicyMock = vi.fn<() => unknown>();
+const policyDisplayNameMock = vi.fn<() => unknown>();
 
 vi.mock('@app/store/accounts/blockchain/stacks/stacks-account.hooks', () => ({
   useCurrentStacksAccount: () => ({
@@ -31,7 +33,7 @@ vi.mock('@app/store/policy/policy-store.utils', () => ({
 }));
 
 vi.mock('@app/store/wallets/wallet.selectors', async importOriginal => ({
-  ...(await importOriginal<typeof import('@app/store/wallets/wallet.selectors')>()),
+  ...(await importOriginal<typeof WalletSelectors>()),
   useWalletEntities: () => walletEntitiesMock(),
 }));
 

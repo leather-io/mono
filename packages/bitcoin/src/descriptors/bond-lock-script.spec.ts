@@ -5,6 +5,7 @@ import { Script } from '@scure/btc-signer';
 import { describe, expect, it } from 'vitest';
 
 import { makeNativeSegwitAccountXpub, makeNativeSegwitAddressPubkeyHex } from '../mocks/key-mocks';
+import { expectDefined } from '../test-utils/expect-defined';
 import { parseBondLockScript } from './bond-lock-script';
 import { getBondVaultKeys, instantiateBondDescriptor } from './bond-template';
 import { compileWshDescriptor } from './wsh-descriptor';
@@ -32,19 +33,19 @@ describe(parseBondLockScript.name, () => {
   it('parses the SDK-built 2-of-2 lock script exactly', () => {
     const parsed = parseBondLockScript(hex.decode(lock2of2Height1000));
     expect(parsed).not.toBeNull();
-    expect(parsed!.unlockHeight).toBe(1000);
-    expect(parsed!.hashHex).toBe(lockedHash);
-    expect(parsed!.covenantPubkey).toBe(pub1);
-    expect(parsed!.threshold).toBe(2);
-    expect(parsed!.stakerPubkeys).toEqual([pub1, pub2]);
+    expect(expectDefined(parsed).unlockHeight).toBe(1000);
+    expect(expectDefined(parsed).hashHex).toBe(lockedHash);
+    expect(expectDefined(parsed).covenantPubkey).toBe(pub1);
+    expect(expectDefined(parsed).threshold).toBe(2);
+    expect(expectDefined(parsed).stakerPubkeys).toEqual([pub1, pub2]);
   });
 
   it('parses a 2-of-3 lock at a realistic burn height', () => {
     const parsed = parseBondLockScript(hex.decode(lock2of3Height850000));
     expect(parsed).not.toBeNull();
-    expect(parsed!.unlockHeight).toBe(850_000);
-    expect(parsed!.threshold).toBe(2);
-    expect(parsed!.stakerPubkeys).toEqual([pub1, pub2, pub3]);
+    expect(expectDefined(parsed).unlockHeight).toBe(850_000);
+    expect(expectDefined(parsed).threshold).toBe(2);
+    expect(expectDefined(parsed).stakerPubkeys).toEqual([pub1, pub2, pub3]);
   });
 
   it('round-trips the witness script compiled from an instantiated bond descriptor', () => {
@@ -64,11 +65,11 @@ describe(parseBondLockScript.name, () => {
     const { witnessScript } = compileWshDescriptor(bondDescriptor);
     const parsed = parseBondLockScript(witnessScript);
     expect(parsed).not.toBeNull();
-    expect(parsed!.unlockHeight).toBe(1000);
-    expect(parsed!.hashHex).toBe(hash);
-    expect(parsed!.covenantPubkey).toBe(makeNativeSegwitAddressPubkeyHex(9));
-    expect(parsed!.threshold).toBe(2);
-    expect([...parsed!.stakerPubkeys].sort()).toEqual(
+    expect(expectDefined(parsed).unlockHeight).toBe(1000);
+    expect(expectDefined(parsed).hashHex).toBe(hash);
+    expect(expectDefined(parsed).covenantPubkey).toBe(makeNativeSegwitAddressPubkeyHex(9));
+    expect(expectDefined(parsed).threshold).toBe(2);
+    expect([...expectDefined(parsed).stakerPubkeys].sort()).toEqual(
       stakerSeedBytes.map(seedByte => makeNativeSegwitAddressPubkeyHex(seedByte)).sort()
     );
   });

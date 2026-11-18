@@ -1,11 +1,11 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { ResponsiveValue } from '@shopify/restyle';
+import { type ResponsiveValue } from '@shopify/restyle';
 
 import { CheckmarkCircleIcon } from '../../icons/checkmark-circle-icon.native';
 import { ErrorTriangleIcon } from '../../icons/error-triangle-icon.native';
 import { InfoCircleIcon } from '../../icons/info-circle-icon.native';
-import { Theme } from '../../theme-native';
+import { type Theme } from '../../theme-native';
 import { Box, type BoxProps } from '../box/box.native';
 import { Text } from '../text/text.native';
 
@@ -17,7 +17,7 @@ interface VariantStyle {
 
 const calloutVariants: Record<CalloutVariant, VariantStyle> = {
   default: {
-    bg: 'ink.text-non-interactive',
+    bg: 'ink.component-background-default',
   },
   error: {
     bg: 'red.background-secondary',

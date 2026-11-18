@@ -9,7 +9,7 @@ import { delay } from '@leather.io/utils';
 import { defaultNumberOfKeysToPullFromLedgerDevice } from '../../generic-flows/request-keys/use-request-ledger-keys';
 import {
   type BitcoinLedgerAccountDetails,
-  WalletPolicyDetails,
+  type WalletPolicyDetails,
   createNativeSegwitWalletPolicyKey,
   createTaprootWalletPolicyKey,
 } from '../../utils/bitcoin-ledger-utils';

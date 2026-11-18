@@ -492,6 +492,34 @@
   * dependencies
     * @leather.io/utils bumped to 0.46.4
 
+## [1.13.11](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.13.10...@leather.io/crypto-v1.13.11) (2026-10-27)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.41.0
+    * @leather.io/utils bumped to 0.55.0
+
+## [1.13.10](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.13.9...@leather.io/crypto-v1.13.10) (2026-09-29)
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.40.0
+    * @leather.io/utils bumped to 0.54.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/test-config bumped to 0.1.4
+
 ## [1.13.9](https://github.com/leather-io/mono/compare/@leather.io/crypto-v1.13.8...@leather.io/crypto-v1.13.9) (2026-09-14)
 
 

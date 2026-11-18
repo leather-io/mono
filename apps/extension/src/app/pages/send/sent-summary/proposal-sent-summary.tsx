@@ -1,12 +1,14 @@
-import { Navigate, useLocation, useNavigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 
 import { Stack } from 'leather-styles/jsx';
+import { z } from 'zod';
 
 import { Button } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 
+import { useRouteState } from '@app/common/hooks/use-route-state';
 import { FormAddressDisplayer } from '@app/components/address-displayer/form-address-displayer';
 import {
   InfoCardAssetValue,
@@ -18,19 +20,21 @@ import { PageHeader } from '@app/features/container/headers/page.header';
 
 import { TxDone } from '../send-crypto-asset-form/components/tx-done';
 
-export interface ProposalSentSummaryState {
-  symbol: string;
-  txValue: string;
-  txFiatValue?: string;
-  txFiatValueSymbol?: string;
-  recipient: string;
-  feeRowValue?: string;
-  memoDisplayText?: string;
-  proposalId?: string;
-}
+const proposalSentSummaryStateSchema = z.object({
+  symbol: z.string(),
+  txValue: z.string(),
+  txFiatValue: z.string().optional(),
+  txFiatValueSymbol: z.string().optional(),
+  recipient: z.string(),
+  feeRowValue: z.string().optional(),
+  memoDisplayText: z.string().optional(),
+  proposalId: z.string().optional(),
+});
+
+export type ProposalSentSummaryState = z.infer<typeof proposalSentSummaryStateSchema>;
 
 export function ProposalSentSummary() {
-  const { state } = useLocation();
+  const state = useRouteState(proposalSentSummaryStateSchema.nullish());
   const navigate = useNavigate();
 
   if (!state) return <Navigate to={RouteUrls.Home} replace />;
@@ -56,7 +60,7 @@ export function ProposalSentSummary() {
               p: 'space.00',
             }}
             footer={
-              <Button width="100%" onClick={() => navigate(RouteUrls.Home)}>
+              <Button width="100%" onClick={() => void navigate(RouteUrls.Home)}>
                 Done
               </Button>
             }

@@ -1,6 +1,7 @@
+import { QueryClient } from '@tanstack/react-query';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { AccountAddresses, NetworkConfiguration, QuoteCurrency } from '@leather.io/models';
+import { type AccountAddresses, defaultCurrentNetwork } from '@leather.io/models';
 import type { AccountRequest, UserSettings } from '@leather.io/services';
 
 import {
@@ -16,17 +17,13 @@ vi.mock('@leather.io/services', () => ({
   }),
 }));
 
-const network = {
-  id: 'mainnet',
-} as NetworkConfiguration;
-
 const settings: UserSettings = {
-  network,
-  quoteCurrency: 'USD' as QuoteCurrency,
+  network: defaultCurrentNetwork,
+  quoteCurrency: 'USD',
   assetVisibility: {},
 };
 
-const account = {
+const account: AccountAddresses = {
   id: { fingerprint: 'fp', accountIndex: 1 },
   bitcoin: {
     type: 'hd',
@@ -38,7 +35,7 @@ const account = {
   stacks: {
     stxAddress: 'SP123',
   },
-} as AccountAddresses;
+};
 
 const request: AccountRequest = { account };
 
@@ -61,7 +58,13 @@ describe(createAccountCollectiblesQueryConfig.name, () => {
     const config = createAccountCollectiblesQueryConfig(request, settings);
     expect(config.queryFn).toBeDefined();
 
-    await config.queryFn({ signal: undefined } as any);
-    expect(mockGetAccountCollectibles).toHaveBeenCalledWith(request, undefined);
+    const { signal } = new AbortController();
+    await config.queryFn({
+      client: new QueryClient(),
+      queryKey: config.queryKey,
+      signal,
+      meta: undefined,
+    });
+    expect(mockGetAccountCollectibles).toHaveBeenCalledWith(request, signal);
   });
 });

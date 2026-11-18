@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { BoxProps, Stack } from '@leather.io/ui/native';
+import { type BoxProps, Stack } from '@leather.io/ui/native';
 
 import { HeaderSubtitle, HeaderTitle } from './header-title';
 

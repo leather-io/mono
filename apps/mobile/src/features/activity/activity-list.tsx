@@ -1,6 +1,6 @@
-import { ReactNode, useCallback } from 'react';
+import { type ReactNode, useCallback } from 'react';
 
-import { FetchState } from '@/components/loading/fetch-state';
+import { type FetchState } from '@/components/loading/fetch-state';
 import { Screen } from '@/components/screen/screen';
 import { RefreshControl } from '@/features/refresh-control/refresh-control';
 

@@ -1,6 +1,6 @@
-import { Stack, StackProps } from 'leather-styles/jsx';
+import { Stack, type StackProps } from 'leather-styles/jsx';
 
-import { HasChildren } from '@app/common/has-children';
+import { type HasChildren } from '@app/common/has-children';
 
 export function PsbtRequestDetailsSectionLayout({ children, ...props }: HasChildren & StackProps) {
   return (

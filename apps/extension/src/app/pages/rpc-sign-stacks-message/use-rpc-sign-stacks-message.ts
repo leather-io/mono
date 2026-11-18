@@ -3,11 +3,16 @@ import { useMemo } from 'react';
 import { networkFromName } from '@stacks/network';
 import { deserializeCV } from '@stacks/transactions';
 
-import { RpcErrorCode, createRpcErrorResponse, createRpcSuccessResponse } from '@leather.io/rpc';
+import {
+  RpcErrorCode,
+  createRpcErrorResponse,
+  createRpcSuccessResponse,
+  stxSignMessageTypeSchema,
+} from '@leather.io/rpc';
 
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import {
-  isSignableMessageType,
+  type SignedMessageType,
   isStructuredMessageType,
   isUtf8MessageType,
 } from '@shared/signature/signature-types';
@@ -17,8 +22,8 @@ import { analytics } from '@shared/utils/analytics';
 import { useDefaultRequestParams } from '@app/common/hooks/use-default-request-search-params';
 import { initialSearchParams } from '@app/common/initial-search-params';
 import {
-  StructuredPayload,
-  Utf8Payload,
+  type StructuredPayload,
+  type Utf8Payload,
 } from '@app/features/stacks-message-signer/stacks-message-signing';
 import { useSignStacksMessage } from '@app/features/stacks-message-signer/use-sign-stacks-message';
 
@@ -69,8 +74,11 @@ export function useRpcSignStacksMessageParams() {
   const messageType = initialSearchParams.get('messageType');
   const domain = initialSearchParams.get('domain');
 
-  if (!requestId || !message || !origin || !isSignableMessageType(messageType))
+  const parsedMessageType = stxSignMessageTypeSchema.safeParse(messageType);
+
+  if (!requestId || !message || !origin || !parsedMessageType.success)
     throw new Error('Missing required parameters for Stacks signing message request');
+  const signableMessageType: SignedMessageType = parsedMessageType.data;
 
   return useMemo(
     () => ({
@@ -80,11 +88,11 @@ export function useRpcSignStacksMessageParams() {
       requestId,
       network,
       message,
-      messageType,
+      messageType: signableMessageType,
       appName,
       domain,
     }),
-    [origin, frameId, requestId, network, message, messageType, tabId, appName, domain]
+    [origin, frameId, requestId, network, message, signableMessageType, tabId, appName, domain]
   );
 }
 

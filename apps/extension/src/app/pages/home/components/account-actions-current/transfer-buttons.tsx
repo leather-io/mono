@@ -33,7 +33,7 @@ export function TransferButtons() {
           full: () => void navigate(RouteUrls.SendCryptoAsset),
           popup: () => void openIndexPageInNewTab(RouteUrls.SendCryptoAsset),
         })(),
-      software: () => navigate(RouteUrls.SendCryptoAsset),
+      software: () => void navigate(RouteUrls.SendCryptoAsset),
     })();
   }
 

@@ -1,0 +1,32 @@
+{
+  "src/builders/psbt.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/guards.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/session.ts": {
+    "no-restricted-syntax": {
+      "count": 4
+    }
+  },
+  "src/types.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/ui/tag-runner.tsx": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  },
+  "src/wallet.ts": {
+    "no-restricted-syntax": {
+      "count": 1
+    }
+  }
+}

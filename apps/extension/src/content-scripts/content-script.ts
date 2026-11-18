@@ -4,14 +4,23 @@
  the browser. Content scripts read and modify the DOM of web pages the browser visits.
  https://developer.chrome.com/docs/extensions/mv3/architecture-overview/#contentScripts
  */
-import type { RpcRequests, RpcResponses } from '@leather.io/rpc';
+import { z } from 'zod/mini';
+
+import type { RpcResponses } from '@leather.io/rpc';
 
 import { DomEventName } from '@shared/inpage-types';
 import { CONTENT_SCRIPT_PORT } from '@shared/message-types';
 
 const inpageScriptUrl = 'inpage.js';
 
-let backgroundPort: any;
+const rpcRequestEnvelopeSchema = z.looseObject({
+  jsonrpc: z.literal('2.0'),
+  id: z.string(),
+  method: z.string(),
+});
+type RpcRequestEnvelope = z.infer<typeof rpcRequestEnvelopeSchema>;
+
+let backgroundPort: chrome.runtime.Port;
 
 // Connection to background script - fires onConnect event in background script
 // and establishes two-way communication
@@ -23,7 +32,7 @@ function connect() {
 connect();
 
 // Sends message to background script that an event has fired
-function sendMessageToBackground(message: RpcRequests) {
+function sendMessageToBackground(message: RpcRequestEnvelope) {
   backgroundPort.postMessage(message);
 }
 
@@ -34,23 +43,11 @@ chrome.runtime.onMessage.addListener((message: RpcResponses) => {
   }
 });
 
-function isRpcRequestEnvelope(value: unknown): value is RpcRequests {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'jsonrpc' in value &&
-    value.jsonrpc === '2.0' &&
-    'id' in value &&
-    typeof value.id === 'string' &&
-    'method' in value &&
-    typeof value.method === 'string'
-  );
-}
-
-document.addEventListener(DomEventName.request, (event: any) => {
-  const request: unknown = event.detail;
-  if (!isRpcRequestEnvelope(request)) return;
-  sendMessageToBackground(request);
+document.addEventListener(DomEventName.request, (event: Event) => {
+  const request: unknown = 'detail' in event ? event.detail : undefined;
+  const parsedRequest = rpcRequestEnvelopeSchema.safeParse(request);
+  if (!parsedRequest.success) return;
+  sendMessageToBackground(parsedRequest.data);
 });
 
 function addLeatherToPage() {

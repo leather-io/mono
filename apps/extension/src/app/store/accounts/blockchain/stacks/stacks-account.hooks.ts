@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 
 import type { AccountId } from '@leather.io/models';
 
-import { RootState } from '@app/store';
 import { useInMemoryKeys } from '@app/store/in-memory-key/use-in-memory-keys';
+import { type RootState } from '@app/store/store';
 
 import { useCurrentAccountId } from '../../account';
 import { selectStacksAccountById, selectStacksAccountState } from './stacks-account.selectors';

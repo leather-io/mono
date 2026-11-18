@@ -1,6 +1,6 @@
 import { usePox5CoreInfoQuery, usePox5PoxInfoQuery } from '../queries/pox5-node.query';
 import {
-  CycleClockInfo,
+  type CycleClockInfo,
   estimateDateFromBurnBlocks,
   getCycleClockInfo,
   getUnlockBurnHeight,

@@ -13,6 +13,7 @@ import {
   getBitcoinCoinSelectionService,
   getBitcoinTransactionFeesService,
   getMarketDataService,
+  getMempoolApiClient,
   getStacksTransactionFeesService,
   getSwapService,
 } from '@leather.io/services';
@@ -25,14 +26,16 @@ import {
 import { assertExistence } from '@leather.io/utils';
 
 import { useRefreshAllAccountData } from '@app/common/hooks/account/use-refresh-all-account-data';
-import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
 import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { hiroFetchWrapper } from '@app/query/stacks/stacks-client';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitIndexZeroPayerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import {
+  useCurrentStacksAccount,
+  useCurrentStacksAccountAddress,
+} from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
@@ -76,11 +79,11 @@ export function useSwapDependencies(): SwapDependencies {
   const stacksAccount = useCurrentStacksAccount();
   const stacksNetwork = useCurrentStacksNetworkState();
   const network = useCurrentNetwork();
-  const signStacksTx = useSignStacksTransaction();
-  const { data: nextNonce } = useNextNonce(stacksAccount?.address ?? '');
+  const signStacksTx = useSignStacksTransaction({ settleOnRejection: true });
+  const stxAddress = useCurrentStacksAccountAddress();
+  const { data: nextNonce } = useNextNonce(stxAddress);
   const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayerNullable();
-  const signBitcoinTx = useSignBitcoinTx();
-  const bitcoinClient = useBitcoinClient();
+  const signBitcoinTx = useSignBitcoinTx({ settleOnRejection: true });
   const refreshAllAccountData = useRefreshAllAccountData();
 
   const bitcoinNetworkMode = bitcoinNetworkToNetworkMode(network.chain.bitcoin.bitcoinNetwork);
@@ -148,11 +151,12 @@ export function useSwapDependencies(): SwapDependencies {
       ? {
           network,
           bitcoinPayer,
-          signBitcoinPsbt: async (psbt: Uint8Array) => {
-            const result = signBitcoinTx(psbt);
-            return Promise.resolve(result);
+          async signBitcoinPsbt(psbt: Uint8Array) {
+            const signed = await Promise.resolve(signBitcoinTx(psbt));
+            if (!signed) throw new SwapSigningCancelledError();
+            return signed;
           },
-          broadcast: (txHex: string) => broadcastBitcoinTransaction(bitcoinClient, txHex),
+          broadcast: (txHex: string) => broadcastBitcoinTransaction(getMempoolApiClient(), txHex),
         }
       : undefined,
     onSwapSubmitted() {

@@ -15,12 +15,14 @@ export interface CountWalletAccountsArgs {
   keychains?: CountWalletAccountsKeychain[];
 }
 
-export function isValidAccountIndex(index?: number): index is number {
+export function isValidAccountIndex(index?: number) {
   return typeof index === 'number' && Number.isInteger(index) && index >= 0;
 }
 
 export function softwareAccountCountFromHighestIndex(highestAccountIndex?: number): number {
-  return isValidAccountIndex(highestAccountIndex) ? highestAccountIndex + 1 : 1;
+  return highestAccountIndex !== undefined && isValidAccountIndex(highestAccountIndex)
+    ? highestAccountIndex + 1
+    : 1;
 }
 
 // Single source of truth for how many accounts a wallet exposes, shared by the

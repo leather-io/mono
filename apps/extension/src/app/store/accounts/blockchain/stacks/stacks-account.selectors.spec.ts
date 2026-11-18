@@ -8,11 +8,11 @@ import type { StacksKeychain } from '@leather.io/state/keychains';
 
 import { assumedZeroFingerprint } from '@shared/utils';
 
-import { store } from '@app/store';
 import { stxChainSlice } from '@app/store/chains/stx-chain.slice';
 import * as inMemoryStore from '@app/store/in-memory-key/in-memory-storage';
 import { clearKeychainSelectorCaches } from '@app/store/in-memory-key/keychain-selector-cache';
 import { keySlice } from '@app/store/software-keys/software-key.slice';
+import { store } from '@app/store/store';
 
 import { selectStacksAccountById, selectStacksAccountState } from './stacks-account.selectors';
 

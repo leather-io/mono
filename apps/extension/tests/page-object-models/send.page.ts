@@ -1,13 +1,15 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { type Locator, type Page, expect } from '@playwright/test';
 import {
   CoreAssetSelectors,
   MockedTokensSelectors,
 } from '@tests/selectors/mocked-tokens.selectors';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
-import { createTestSelector } from '@tests/utils';
 
 import { RouteUrls } from '@shared/route-urls';
+
+const loadedAvailableBalance = /[1-9]/;
+const loadedFeeEstimate = /\d/;
 
 export class SendPage {
   readonly page: Page;
@@ -48,7 +50,6 @@ export class SendPage {
     this.recipientChooseAccountButton = page.getByTestId(
       SendCryptoAssetSelectors.RecipientChooseAccountButton
     );
-    this.page.getByTestId(SendCryptoAssetSelectors.RecipientSelectFieldAddress);
     this.recipientSelectRecipientTypeDropdown = this.page.getByTestId(
       SendCryptoAssetSelectors.RecipientSelectRecipientTypeDropdown
     );
@@ -72,7 +73,7 @@ export class SendPage {
     this.broadcastErrorTitle = page.getByTestId(SharedComponentsSelectors.BroadcastErrorTitle);
   }
 
-  async selectBtcAndGoToSendForm() {
+  async selectBtcAndGoToSendForm(expectedAvailableBalance = loadedAvailableBalance) {
     await this.page.waitForURL('**' + RouteUrls.SendCryptoAsset);
     await expect(
       this.page.getByTestId(SendCryptoAssetSelectors.ChooseAssetToSendPage)
@@ -81,6 +82,12 @@ export class SendPage {
     await this.page.waitForURL('**' + `${RouteUrls.SendCryptoAsset}/btc`);
 
     await this.page.getByTestId(SendCryptoAssetSelectors.SendForm).waitFor();
+    await this.waitForAvailableBalance(expectedAvailableBalance);
+    await this.waitForSpendableUtxos();
+  }
+
+  private async waitForSpendableUtxos() {
+    await expect(this.sendMaxButton).toBeVisible();
   }
 
   async selectStxAndGoToSendForm() {
@@ -90,23 +97,25 @@ export class SendPage {
     ).toBeVisible();
     await this.page.getByTestId(CoreAssetSelectors.StxAsset).click();
     await this.page.waitForURL('**' + `${RouteUrls.SendCryptoAsset}/stx`);
+    await this.waitForFeeEstimate();
     await this.page.getByTestId(SendCryptoAssetSelectors.SendForm).waitFor();
   }
 
-  async selectSIP10AndGoToSendForm() {
+  async selectSip10AndGoToSendForm(tokenTestId: string = MockedTokensSelectors.Sip10TokenTestId) {
     await this.page.waitForURL('**' + RouteUrls.SendCryptoAsset);
-    await this.page.getByTestId(MockedTokensSelectors.Sip10TokenTestId).click();
+    await this.page.getByTestId(tokenTestId).click();
     await this.page.getByTestId(SendCryptoAssetSelectors.SendForm).waitFor();
+    await this.waitForFeeEstimate();
   }
 
   async waitForSendPageReady() {
-    await this.page.waitForSelector(createTestSelector(SendCryptoAssetSelectors.SendPageReady), {
-      state: 'attached',
-    });
+    await this.page
+      .getByTestId(SendCryptoAssetSelectors.SendPageReady)
+      .waitFor({ state: 'attached' });
   }
 
   async goBack() {
-    await this.page.getByTestId(SharedComponentsSelectors.HeaderBackBtn).click({ force: true });
+    await this.page.getByTestId(SharedComponentsSelectors.HeaderBackBtn).click();
   }
 
   async goBackSelectStx() {
@@ -118,8 +127,23 @@ export class SendPage {
     await this.infoCardButton.click();
   }
 
+  private async waitForAvailableBalance(expectedBalance: RegExp) {
+    await expect(this.page.getByTestId(SharedComponentsSelectors.CardAvailableBalance)).toHaveText(
+      expectedBalance
+    );
+  }
+
+  private async waitForFeeEstimate() {
+    await expect(this.feeToBePaid).toHaveText(loadedFeeEstimate);
+  }
+
   async waitForFeeRow() {
     await this.page.getByTestId(SharedComponentsSelectors.FeeRow).waitFor({ state: 'attached' });
+  }
+
+  async previewBitcoinTransaction() {
+    await this.previewSendTxButton.click();
+    await expect(this.feesListItem.first()).toBeVisible();
   }
 
   async confirmSendTransaction() {

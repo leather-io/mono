@@ -1,5 +1,5 @@
 import { ClarityType } from '@stacks/transactions';
-import { Box, BoxProps, Flex, FlexProps } from 'leather-styles/jsx';
+import { Box, type BoxProps, Flex, type FlexProps } from 'leather-styles/jsx';
 
 interface TupleDisplayerProps extends BoxProps {
   isRoot: boolean;

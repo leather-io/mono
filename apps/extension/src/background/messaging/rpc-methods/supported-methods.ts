@@ -3,7 +3,7 @@ import { createRpcSuccessResponse, supportedMethods } from '@leather.io/rpc';
 
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 
-import { defineRpcRequestHandler } from '../rpc-message-handler';
+import { defineRpcRequestHandler } from '../define-rpc-request-handler';
 import { createConnectingAppSearchParamsWithLastKnownAccount } from '../rpc-request-utils';
 
 export const supportedMethodsHandler = defineRpcRequestHandler(

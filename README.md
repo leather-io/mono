@@ -30,24 +30,6 @@ The current packages are listed below
 - [Prettier](packages/prettier-config/README.md)
 - [TSconfig](packages/tsconfig-config/README.md)
 
-## Running code quality checks with git hooks
-
-Configure code checks to run during pre-commit and/or pre-push hooks. Each check maps directly to a script in the root package.json.
-
-1. Copy `.env.example` to `.env`.
-2. Enable specific checks for each hook::
-
-```
-PRE_COMMIT=format,lint
-PRE_PUSH=syncpack:lint,typecheck,lint:filenames
-```
-
-In most cases, setting PRE_COMMIT is sufficient, as errors from remaining checks are
-uncommon, and typechecking is handled by editors.
-
-Local checks are optional and configurable to suit developer preferences. On GitHub, these
-checks run automatically on every push through [Code checks](.github/workflows/code-checks.yml), as part of the CI workflow.
-
 ### Updating pnpm version
 
 To update pnpm, use the helper script which updates all required locations:

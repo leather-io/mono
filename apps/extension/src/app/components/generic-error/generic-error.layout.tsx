@@ -1,7 +1,8 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import GenericError from '@assets/images/generic-error.png';
-import { Flex, FlexProps, HStack, styled } from 'leather-styles/jsx';
+import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
+import { Flex, type FlexProps, HStack, styled } from 'leather-styles/jsx';
 
 import { ExternalLinkIcon, Link } from '@leather.io/ui';
 
@@ -22,7 +23,11 @@ export function GenericErrorLayout(props: GenericErrorProps) {
   return (
     <Flex alignItems="center" flexDirection="column" px="space.05" width="100%" {...rest}>
       <styled.img src={GenericError} width="106px" height="72px" alt="Error" mt="space.06" />
-      <styled.h1 mt="space.05" textStyle="heading.04">
+      <styled.h1
+        mt="space.05"
+        textStyle="heading.04"
+        data-testid={SharedComponentsSelectors.GenericErrorTitle}
+      >
         {title}
       </styled.h1>
       <styled.h2

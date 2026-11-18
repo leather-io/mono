@@ -1,22 +1,18 @@
-import { MEMO_MAX_LENGTH_BYTES } from '@stacks/transactions';
-import * as yup from 'yup';
+import { z } from 'zod';
 
+import { isValidStacksMemo } from '@leather.io/stacks';
 import { isString } from '@leather.io/utils';
 
-function exceedsMaxLengthBytes(string: string, maxLengthBytes: number): boolean {
-  return string ? Buffer.from(string).length > maxLengthBytes : false;
-}
-
-function isTxMemoValid(memo: string) {
-  return !exceedsMaxLengthBytes(memo, MEMO_MAX_LENGTH_BYTES);
-}
+import { stringField } from '@shared/forms/field-schemas';
 
 export function stxMemoValidator(errorMsg: string) {
-  return yup.string().test({
-    message: errorMsg,
-    test(value: unknown) {
-      if (!isString(value)) return true;
-      return isTxMemoValid(value);
-    },
-  });
+  return stringField().check(
+    z.refine<string | undefined>(
+      value => {
+        if (!isString(value)) return true;
+        return isValidStacksMemo(value);
+      },
+      { error: errorMsg }
+    )
+  );
 }

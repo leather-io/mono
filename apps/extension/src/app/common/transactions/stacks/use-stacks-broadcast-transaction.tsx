@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { StacksTransactionWire } from '@stacks/transactions';
+import { type StacksTransactionWire } from '@stacks/transactions';
 
 import type { CryptoCurrency } from '@leather.io/models';
 import { isError, isString } from '@leather.io/utils';
@@ -14,7 +14,7 @@ import {
   StacksTransactionActionType,
   stacksTransactionToHex,
 } from '@app/common/transactions/stacks/transaction.utils';
-import { useToast } from '@app/features/toasts/use-toast';
+import { toastDurations, useToast } from '@app/features/toasts/use-toast';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
 import { LoadingKeys } from '@app/store/ui/ui.hooks';
 
@@ -70,13 +70,19 @@ export function useStacksBroadcastTransaction({
         return await broadcastTransactionFn({
           onError(e: Error | string) {
             const message = isString(e) ? e : e.message;
-            return navigate(RouteUrls.BroadcastError, { state: { message } });
+            void navigate(RouteUrls.BroadcastError, { state: { message } });
           },
           onSuccess(txId) {
             if (showSummaryPage) return handlePreviewSuccess(signedTx, txId);
             void navigate(RouteUrls.Activity);
-            if (isCancelTransaction) return toast.success('Transaction cancelled successfully');
-            if (isIncreaseFeeTransaction) return toast.success('Fee increased successfully');
+            if (isCancelTransaction)
+              return toast.success('Transaction cancelled successfully', {
+                duration: toastDurations.standard,
+              });
+            if (isIncreaseFeeTransaction)
+              return toast.success('Fee increased successfully', {
+                duration: toastDurations.standard,
+              });
             return;
           },
           replaceByFee: false,

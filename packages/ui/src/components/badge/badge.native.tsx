@@ -1,7 +1,7 @@
-import { ResponsiveValue } from '@shopify/restyle';
+import { type ResponsiveValue } from '@shopify/restyle';
 
-import { Theme } from '../../theme-native';
-import { Box, BoxProps } from '../box/box.native';
+import { type Theme } from '../../theme-native';
+import { Box, type BoxProps } from '../box/box.native';
 import { Text } from '../text/text.native';
 
 type BadgeVariant = 'default' | 'info' | 'success' | 'warning' | 'error';

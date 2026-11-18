@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import BigNumber from 'bignumber.js';
+import type BigNumber from 'bignumber.js';
 import { isDefined, isNonNullish } from 'remeda';
 
 import {
@@ -8,15 +8,16 @@ import {
   type SwapAsset,
   type SwappableFungibleCryptoAsset,
 } from '@leather.io/models';
-import {
-  type AccountRequest,
-  type MarketDataService,
-  type SwapService,
-} from '@leather.io/services';
+import { type AccountRequest } from '@leather.io/services';
 import { useDebouncedValue } from '@leather.io/ui';
 import { delay, getAssetId, serializeAssetId } from '@leather.io/utils';
 
-import { type DisabledPairRule, type SwapQuotePolicy } from './swap-state.types';
+import {
+  type DisabledPairRule,
+  type MarketDataServiceClient,
+  type SwapQuotePolicy,
+  type SwapServiceClient,
+} from './swap-state.types';
 import { createSwapAssetsSelector } from './utils/asset-selection';
 import { swapQuoteSelector } from './utils/swap-quote-selection';
 
@@ -29,7 +30,7 @@ const globalRefetchOptions = {
 } as const;
 
 interface UseAccountBaseSwapAssetsQueryParams {
-  swapService: SwapService;
+  swapService: SwapServiceClient;
   accountRequest: AccountRequest;
   disabledPairs?: DisabledPairRule[];
   enabled?: boolean;
@@ -52,7 +53,7 @@ export function useAccountBaseSwapAssetsQuery({
 }
 
 interface UseAccountTargetSwapAssetsQueryParams {
-  swapService: SwapService;
+  swapService: SwapServiceClient;
   accountRequest: AccountRequest;
   baseId?: CryptoAssetId;
   disabledPairs?: DisabledPairRule[];
@@ -68,7 +69,7 @@ export function useAccountTargetSwapAssetsQuery({
 }: UseAccountTargetSwapAssetsQueryParams) {
   return useQuery({
     queryKey: ['account-target-swap-assets', { baseId, request: accountRequest }],
-    queryFn: ({ signal }) => {
+    queryFn({ signal }) {
       if (!baseId) return [];
       return swapService.getAccountTargetSwapAssets(accountRequest, baseId, signal);
     },
@@ -80,7 +81,7 @@ export function useAccountTargetSwapAssetsQuery({
 }
 
 interface UseSwapQuotesQueryParams {
-  swapService: SwapService;
+  swapService: SwapServiceClient;
   baseSwapAsset?: SwapAsset | null;
   targetSwapAsset?: SwapAsset | null;
   baseAmount?: Money | null;
@@ -109,7 +110,7 @@ export function useSwapQuotesQuery({
       targetSwapAsset ? serializeAssetId(getAssetId(targetSwapAsset.asset)) : undefined,
       debouncedBaseAmount?.amount.toString(),
     ],
-    queryFn: async ({ signal }) => {
+    async queryFn({ signal }) {
       if (!baseSwapAsset || !targetSwapAsset || !debouncedBaseAmount) return [];
 
       const [quotes] = await Promise.all([
@@ -134,7 +135,7 @@ export function useSwapQuotesQuery({
 }
 
 interface UseAssetMarketDataQueryParams {
-  marketDataService: MarketDataService;
+  marketDataService: MarketDataServiceClient;
   asset?: SwappableFungibleCryptoAsset;
 }
 
@@ -144,7 +145,7 @@ export function useAssetMarketDataQuery({
 }: UseAssetMarketDataQueryParams) {
   return useQuery({
     queryKey: ['asset-market-data', { asset }],
-    queryFn: ({ signal }) => {
+    queryFn({ signal }) {
       if (!asset) throw new Error('Asset is required');
       return marketDataService.getMarketData(asset, signal);
     },

@@ -11,7 +11,7 @@ import { copyToClipboard } from '@app/common/utils/copy-to-clipboard';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useAlexSwappableAssets } from '@app/query/common/alex-sdk/alex-sdk.hooks';
 
-import { receiveTabStyle } from '../receive-dialog';
+import { receiveTabStyle } from '../receive-tab-style';
 import { ReceiveItem } from './receive-item';
 
 interface ReceiveTokensProps {
@@ -37,6 +37,11 @@ export function ReceiveTokens({
   onClickVerifyStx,
 }: ReceiveTokensProps) {
   const toast = useToast();
+
+  async function copyAddress(address: string) {
+    await copyToClipboard(address);
+    toast.success('Copied to clipboard!');
+  }
   const { data: swapAssets = [] } = useAlexSwappableAssets(stxAddress);
 
   const receivableAssets = useMemo(
@@ -56,9 +61,8 @@ export function ReceiveTokens({
         address={btcAddressNativeSegwit}
         icon={<BtcAvatarIcon size="xl" />}
         dataTestId={HomePageSelectors.ReceiveBtcNativeSegwitQrCodeBtn}
-        onCopyAddress={async () => {
-          await copyToClipboard(btcAddressNativeSegwit);
-          toast.success('Copied to clipboard!');
+        onCopyAddress={() => {
+          void copyAddress(btcAddressNativeSegwit);
         }}
         onClickQrCode={onClickQrBtc}
         onClickVerifyAddress={onClickVerifyBtc}
@@ -69,9 +73,8 @@ export function ReceiveTokens({
         address={btcAddressTaproot}
         icon={<BtcAvatarIcon size="xl" />}
         dataTestId={HomePageSelectors.ReceiveBtcTaprootQrCodeBtn}
-        onCopyAddress={async () => {
-          await copyToClipboard(btcAddressTaproot);
-          toast.success('Copied to clipboard!');
+        onCopyAddress={() => {
+          void copyAddress(btcAddressTaproot);
         }}
         onClickQrCode={onClickQrBtcTaproot}
         onClickVerifyAddress={onClickVerifyBtcTaproot}
@@ -82,9 +85,8 @@ export function ReceiveTokens({
         address={stxAddress}
         icon={<StxAvatarIcon size="xl" />}
         dataTestId={HomePageSelectors.ReceiveStxQrCodeBtn}
-        onCopyAddress={async () => {
-          await copyToClipboard(stxAddress);
-          toast.success('Copied to clipboard!');
+        onCopyAddress={() => {
+          void copyAddress(stxAddress);
         }}
         onClickQrCode={onClickQrStx}
         onClickVerifyAddress={onClickVerifyStx}
@@ -103,9 +105,8 @@ export function ReceiveTokens({
               asset.icon
             )
           }
-          onCopyAddress={async () => {
-            await copyToClipboard(asset.address);
-            toast.success('Copied to clipboard!');
+          onCopyAddress={() => {
+            void copyAddress(asset.address);
           }}
           title={asset.name}
         />

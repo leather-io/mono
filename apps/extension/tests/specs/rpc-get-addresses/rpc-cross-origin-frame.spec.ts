@@ -1,4 +1,7 @@
 import type { BrowserContext, Page } from '@playwright/test';
+import { getResponseAddresses } from '@tests/leather-provider';
+
+import { assertExistence } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -15,17 +18,21 @@ async function injectIframe(page: Page, src: string) {
       new Promise((resolve, reject) => {
         const iframe = document.createElement('iframe');
         iframe.src = iframeSrc;
+        iframe.style.position = 'fixed';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
         iframe.onload = () => resolve(undefined);
         iframe.onerror = () => reject(new Error('Failed to load iframe'));
-        document.body.appendChild(iframe);
+        document.body.prepend(iframe);
       }),
     src
   );
 }
 
-function getIframe(page: Page, url: string) {
+async function getIframe(page: Page, url: string) {
   const frame = page.frames().find(candidate => candidate.url().startsWith(url));
   if (!frame) throw new Error(`No frame found for ${url}`);
+  await frame.waitForFunction(() => Boolean(window.LeatherProvider));
   return frame;
 }
 
@@ -41,10 +48,10 @@ test.describe('Rpc: cross-origin iframe requests', () => {
   }) => {
     await page.goto(topLevelUrl);
     await injectIframe(page, iframeUrl);
-    const frame = getIframe(page, iframeUrl);
+    const frame = await getIframe(page, iframeUrl);
 
     const getAddressesPromise = frame.evaluate(() =>
-      (window as any).LeatherProvider?.request('getAddresses')
+      window.LeatherProvider?.request('getAddresses')
     );
 
     const popup = await interceptRequestPopup(context);
@@ -61,15 +68,15 @@ test.describe('Rpc: cross-origin iframe requests', () => {
     await approveButton.click();
 
     const result = await getAddressesPromise;
-    if (!result) throw new Error('Expected result');
-    test.expect(result.result.addresses.length).toBeGreaterThan(0);
+    assertExistence(result, 'Expected result');
+    test.expect(getResponseAddresses(result).length).toBeGreaterThan(0);
   });
 
   test('a top-level request shows no embedded app warning', async ({ page, context }) => {
     await page.goto(topLevelUrl);
 
     const getAddressesPromise = page.evaluate(() =>
-      (window as any).LeatherProvider?.request('getAddresses')
+      window.LeatherProvider?.request('getAddresses')
     );
 
     const popup = await interceptRequestPopup(context);
@@ -80,7 +87,7 @@ test.describe('Rpc: cross-origin iframe requests', () => {
 
     await approveButton.click();
     const result = await getAddressesPromise;
-    if (!result) throw new Error('Expected result');
-    test.expect(result.result.addresses.length).toBeGreaterThan(0);
+    assertExistence(result, 'Expected result');
+    test.expect(getResponseAddresses(result).length).toBeGreaterThan(0);
   });
 });

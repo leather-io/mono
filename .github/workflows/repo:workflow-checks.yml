@@ -4,12 +4,14 @@ on:
   pull_request:
     paths:
       - '.github/workflows/**'
+      - '.github/scripts/**'
   push:
     branches:
       - main
       - dev
     paths:
       - '.github/workflows/**'
+      - '.github/scripts/**'
 
 # GITHUB_TOKEN only needs to read the repository for checkout.
 permissions:
@@ -81,7 +83,24 @@ jobs:
         run: |
           # actionlint does not yet understand GitHub's `$/` self-repository `uses:` syntax.
           # Drop the -ignore flag once https://github.com/rhysd/actionlint/pull/732 is merged and released.
-          "$ACTIONLINT" -color -ignore 'specifying action "\$/[^"]*" in invalid format because ref is missing'
+          "$ACTIONLINT" -color \
+            -ignore 'specifying action "\$/[^"]*" in invalid format because ref is missing' \
+            -ignore 'unexpected key "cache-mode" for "(workflow|job)" section'
+
+  test-scripts:
+    name: test-scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: test-workflow-scripts
+        run: node --test '.github/scripts/*.spec.mjs'
 
   audit-workflow-security:
     name: audit-workflow-security
@@ -94,7 +113,7 @@ jobs:
         with:
           persist-credentials: false
       - name: zizmor-audit
-        uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
+        uses: zizmorcore/zizmor-action@85b2b9fb8e3325e7a23d7d0a9d7ba5ae0f999e3e # v0.7.1
         with:
           persona: auditor
           min-severity: informational

@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { InteractionManager, Keyboard } from 'react-native';
-import WebView, { WebViewNavigation } from 'react-native-webview';
+import type { default as WebView, WebViewNavigation } from 'react-native-webview';
 
 import { useToastContext } from '@/components/toast/toast-context';
-import { BrowserLoadingMethods } from '@/features/account/components/browser-loading';
+import { type BrowserLoadingMethods } from '@/features/account/components/browser-loading';
 import { Browser } from '@/features/browser/browser/browser';
 import { SearchBar } from '@/features/browser/browser/search-bar/search-bar';
 import { useBrowserSearchState } from '@/features/browser/browser/use-browser-search-state';

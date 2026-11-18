@@ -1,6 +1,6 @@
 import PQueue from 'p-queue';
 
-import { RateLimiterQueueOptions } from './rate-limiter.service';
+import type { RateLimiterQueueOptions } from './rate-limiter.service';
 
 const leatherApiLimiterSettings: RateLimiterQueueOptions = {
   interval: 1000,

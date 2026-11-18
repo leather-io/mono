@@ -40,8 +40,8 @@ start, so restart `pnpm dev` after editing it.
 
 #### Optional: run test app
 
-We bundle a test app to use along with the extension. It gives easy access to the various functions that the extension
-can do.
+The RPC test app lives in [`apps/test-app`](../test-app) and gives easy access to the various requests the extension
+handles. Start it from here with `pnpm dev:test-app`, or from the repo root with `pnpm --filter @leather.io/test-app dev`.
 
 In a separate terminal, run:
 

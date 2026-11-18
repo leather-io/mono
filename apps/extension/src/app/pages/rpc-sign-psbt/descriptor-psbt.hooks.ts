@@ -1,5 +1,3 @@
-import { useLocation } from 'react-router';
-
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils';
 import * as btc from '@scure/btc-signer';
 
@@ -12,8 +10,8 @@ import {
 } from '@leather.io/bitcoin';
 
 import { useWalletType } from '@app/common/use-wallet-type';
-import { listenForBitcoinTxLedgerSigning } from '@app/features/ledger/flows/bitcoin-tx-signing/bitcoin-tx-signing-event-listeners';
-import { useLedgerNavigate } from '@app/features/ledger/hooks/use-ledger-navigate';
+import { useLedgerFlow } from '@app/features/ledger/flow/ledger-flow.context';
+import { unwrapLedgerSigningOutcome } from '@app/features/ledger/flow/unwrap-ledger-signing-outcome';
 import { usePsbtSigner } from '@app/features/psbt-signer/hooks/use-psbt-signer';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
@@ -67,8 +65,7 @@ export function useSignDescriptorPsbt() {
   const getDescriptorSigningPlan = useGetDescriptorSigningPlan();
   const { signPsbt } = usePsbtSigner();
   const { whenWallet } = useWalletType();
-  const ledgerNavigate = useLedgerNavigate();
-  const location = useLocation();
+  const ledgerFlow = useLedgerFlow();
 
   return async (psbtHex: string, descriptor: string) => {
     const { tx, signingConfig, inputIndexes, accountKey } = getDescriptorSigningPlan(
@@ -78,7 +75,7 @@ export function useSignDescriptorPsbt() {
 
     const signedTx = await whenWallet({
       software: () => signPsbt({ tx, signingConfig }),
-      ledger() {
+      async ledger() {
         const ledgerDescriptor = resolveLedgerSignableDescriptor({
           descriptor,
           psbt: tx.toPSBT(),
@@ -90,23 +87,27 @@ export function useSignDescriptorPsbt() {
             'Ledger cannot sign this descriptor: a co-signer raw public key could not be resolved to an xpub from PSBT_GLOBAL_XPUB and PSBT_IN_BIP32_DERIVATION.'
           );
 
-        void ledgerNavigate.toConnectAndSignBitcoinTransactionStep(
-          tx.toPSBT(),
-          signingConfig,
-          location,
-          ledgerDescriptor
-        );
-        return listenForBitcoinTxLedgerSigning(bytesToHex(tx.toPSBT()));
+        const outcome = await ledgerFlow.sign({
+          kind: 'sign-bitcoin-tx',
+          psbt: tx.toPSBT(),
+          inputsToSign: signingConfig,
+          descriptor: ledgerDescriptor,
+          settleOnRejection: false,
+        });
+        return unwrapLedgerSigningOutcome(outcome);
       },
     })();
+    if (!signedTx) return null;
 
     const accountPubkeyHex = bytesToHex(accountKey.pubkey);
-    function isInputMissingUserSig(index: number) {
-      return !signedTx
-        .getInput(index)
-        .partialSig?.some(([pubkey]) => bytesToHex(pubkey) === accountPubkeyHex);
-    }
-    if (inputIndexes.some(isInputMissingUserSig))
+    if (
+      inputIndexes.some(
+        index =>
+          !signedTx
+            .getInput(index)
+            .partialSig?.some(([pubkey]) => bytesToHex(pubkey) === accountPubkeyHex)
+      )
+    )
       throw new Error('Failed to add signature to descriptor input');
 
     return signedTx;

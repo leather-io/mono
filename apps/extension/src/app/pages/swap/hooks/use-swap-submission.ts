@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { matchPath, useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 import { captureException } from '@sentry/react';
 
@@ -14,20 +14,15 @@ import {
 } from '@leather.io/state/swap';
 import { ensureAsyncFunctionMinimumDuration } from '@leather.io/utils';
 
-import { RouteUrls, toRoutePattern } from '@shared/route-urls';
-
-const swapReviewRoutePattern = toRoutePattern(RouteUrls.SwapReview);
+import { RouteUrls } from '@shared/route-urls';
 
 export function useSwapSubmission() {
   const { submit } = useSwapContext();
   const navigate = useNavigate();
-  const location = useLocation();
   const [submission, setSubmission] = useState<SwapSubmissionState>({ status: 'idle' });
   const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const mountedAtRef = useRef(Date.now());
   const isMountedRef = useRef(true);
-  const locationRef = useRef(location);
-  locationRef.current = location;
 
   useEffect(() => {
     return () => {
@@ -35,13 +30,6 @@ export function useSwapSubmission() {
       if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
     };
   }, []);
-
-  function returnToReviewRoute() {
-    const { pathname } = locationRef.current;
-    const reviewMatch = matchPath({ path: swapReviewRoutePattern, end: false }, pathname);
-    if (!reviewMatch || reviewMatch.pathnameBase === pathname) return;
-    void navigate(reviewMatch.pathnameBase, { replace: true });
-  }
 
   function confirm(quote: SwapSubmissionQuoteSnapshot) {
     if (Date.now() - mountedAtRef.current < SWAP_ACCIDENTAL_TAP_SUPPRESSION_MS) return;
@@ -52,10 +40,11 @@ export function useSwapSubmission() {
       submit,
       SWAP_SUBMISSION_DISPLAY_DURATION_MS
     );
-    submitWithMinimumDuration()
-      .then(result => {
+
+    async function settleSubmission() {
+      try {
+        const result = await submitWithMinimumDuration();
         if (!isMountedRef.current) return;
-        returnToReviewRoute();
         if (result.status !== 'submitted') {
           const exception =
             result.status === 'sbtc-notification-failed'
@@ -77,16 +66,17 @@ export function useSwapSubmission() {
         exitTimerRef.current = setTimeout(() => {
           void navigate(RouteUrls.Activity);
         }, SWAP_SUCCESS_EXIT_TIMEOUT_MS);
-      })
-      .catch((error: unknown) => {
+      } catch (error: unknown) {
         if (!isMountedRef.current) return;
-        returnToReviewRoute();
         if (isSwapSigningCancelledError(error)) {
           setSubmission({ status: 'idle' });
           return;
         }
         setSubmission({ status: 'failure', quote });
-      });
+      }
+    }
+
+    void settleSubmission();
   }
 
   function reset() {

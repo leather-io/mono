@@ -1,4 +1,4 @@
-import * as yup from 'yup';
+import { z } from 'zod';
 
 import { BTC_DECIMALS, STX_DECIMALS } from '@leather.io/constants';
 import { countDecimals, isNumber } from '@leather.io/utils';
@@ -6,24 +6,19 @@ import { countDecimals, isNumber } from '@leather.io/utils';
 import { FormErrorMessages } from '@shared/error-messages';
 
 export function currencyAmountValidator() {
-  return yup
-    .number()
-    .positive(FormErrorMessages.MustBePositive)
-    .typeError('Currency must be a number');
+  return z.refine<number | undefined>(value => value === undefined || value > 0, {
+    error: FormErrorMessages.MustBePositive,
+  });
 }
 
 function currencyPrecisionValidatorFactory(precision: number, errorMessage: string) {
-  return yup
-    .number()
-    .required(FormErrorMessages.AmountRequired)
-    .typeError(FormErrorMessages.MustBeNumber)
-    .test({
-      message: errorMessage,
-      test(value: unknown) {
-        if (!isNumber(value)) return false;
-        return countDecimals(value) <= precision;
-      },
-    });
+  return z.refine<number | undefined>(
+    value => {
+      if (!isNumber(value)) return false;
+      return countDecimals(value) <= precision;
+    },
+    { error: errorMessage }
+  );
 }
 
 export function btcAmountPrecisionValidator(errorMsg: string) {

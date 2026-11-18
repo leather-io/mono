@@ -1,4 +1,4 @@
-import { ClarityType, ClarityValue } from '@stacks/transactions';
+import { ClarityType, type ClarityValue } from '@stacks/transactions';
 
 const maxFeeBips = 10_000;
 

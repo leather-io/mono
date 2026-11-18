@@ -1,6 +1,6 @@
-import { InputState } from '@/components/text-input';
+import { type InputState } from '@/components/text-input';
 
-import { Action } from './actions';
+import { type Action } from './actions';
 
 interface State {
   recoveryMnemonic: string;

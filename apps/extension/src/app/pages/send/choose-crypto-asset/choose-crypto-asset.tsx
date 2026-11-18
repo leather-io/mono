@@ -27,7 +27,7 @@ export function ChooseCryptoAsset() {
           >
             <Box pb="space.04" px="space.05">
               <TokenList
-                onSelectAsset={navigateToSendForm}
+                onSelectAsset={assetId => void navigateToSendForm(assetId)}
                 variant="interactive"
                 filter="enabled"
               />

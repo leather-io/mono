@@ -23,8 +23,8 @@ const tokenDetailsTabItems: TokenDetailsTabItem[] = [
   { label: 'Info', value: 'info' },
 ];
 
-function isTokenDetailsTab(value: string): value is TokenDetailsTab {
-  return tokenDetailsTabItems.some(item => item.value === value);
+function findTokenDetailsTab(value: string) {
+  return tokenDetailsTabItems.find(item => item.value === value)?.value;
 }
 
 export function resolveVisibleTokenDetailsTab(
@@ -63,7 +63,8 @@ export function TokenDetailsTabs({
   );
 
   function handleTabChange(value: string) {
-    if (isTokenDetailsTab(value)) onSelectTab(value);
+    const tab = findTokenDetailsTab(value);
+    if (tab) onSelectTab(tab);
   }
 
   function renderActivity() {

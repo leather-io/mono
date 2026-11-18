@@ -1,9 +1,9 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-import { RootState } from '..';
+import { type RootState } from '../store';
 import { useAppSelector } from '../utils';
 import { appsAdapter } from './apps.write';
-import { App, AppStatus } from './utils';
+import { type App, type AppStatus } from './utils';
 
 const selectors = appsAdapter.getSelectors((state: RootState) => state.apps);
 

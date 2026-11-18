@@ -1,4 +1,4 @@
-import { PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
 import { resetWallet } from '@leather.io/state';
 import { fingerprintMigration, userRemovesWallet } from '@leather.io/state/wallet';

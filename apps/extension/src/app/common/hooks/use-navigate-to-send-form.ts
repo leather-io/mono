@@ -6,11 +6,18 @@ import { type SerializedCryptoAssetId, deserializeAssetId } from '@leather.io/ut
 
 import { RouteUrls } from '@shared/route-urls';
 
-import { useConfigBitcoinSendEnabled } from '@app/query/common/remote-config/remote-config.query';
+import { useWalletType } from '@app/common/use-wallet-type';
+import { useHasCurrentBitcoinAccount } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
+
+function useIsBitcoinSendEnabled() {
+  const { whenWallet } = useWalletType();
+  const hasBitcoinAccount = useHasCurrentBitcoinAccount();
+  return whenWallet({ ledger: hasBitcoinAccount, software: true });
+}
 
 export function useNavigateToSendForm() {
   const navigate = useNavigate();
-  const isBitcoinSendEnabled = useConfigBitcoinSendEnabled();
+  const isBitcoinSendEnabled = useIsBitcoinSendEnabled();
 
   return function navigateToSendForm(assetId: SerializedCryptoAssetId) {
     const { protocol } = deserializeAssetId(assetId);

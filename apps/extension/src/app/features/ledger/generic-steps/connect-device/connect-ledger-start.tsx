@@ -1,56 +1,33 @@
-import { useNavigate } from 'react-router';
-
+import type { SupportedBlockchains } from '@leather.io/models';
 import { Sheet, SheetHeader } from '@leather.io/ui';
 
-import { RouteUrls } from '@shared/route-urls';
-import { closeWindow } from '@shared/utils';
-
 import { doesBrowserSupportWebHidApi, whenPageMode } from '@app/common/utils';
-import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
+import { handOffLedgerFlowToFullPage } from '@app/features/ledger/flow/ledger-flow-handoff';
+import { useLedgerFlow } from '@app/features/ledger/flow/ledger-flow.context';
+import type { LedgerFlowHandoffRequest } from '@app/features/ledger/flow/ledger-flow.types';
 
-import { immediatelyAttemptLedgerConnection } from '../../hooks/use-when-reattempt-ledger-connection';
 import { ConnectLedger } from './connect-ledger';
 
-export function ConnectLedgerStart({
-  initialRoute = RouteUrls.Onboarding,
-}: {
-  initialRoute?: RouteUrls | '';
-}) {
-  const navigate = useNavigate();
+export function ConnectLedgerStart() {
+  const { open, close } = useLedgerFlow();
 
-  function pageModeRoutingAction(url: string) {
+  function connectChain(chain: SupportedBlockchains) {
+    const request: LedgerFlowHandoffRequest = doesBrowserSupportWebHidApi()
+      ? { kind: 'request-keys', chain, autoConnect: true }
+      : { kind: 'unsupported-browser' };
+
     return whenPageMode({
       full() {
-        void navigate(url, {
-          replace: true,
-          state: {
-            [immediatelyAttemptLedgerConnection]: true,
-            fromLocation: { pathname: initialRoute || RouteUrls.Home },
-          },
-        });
+        open(request);
       },
       popup() {
-        void openIndexPageInNewTab(url);
-        closeWindow();
+        void handOffLedgerFlowToFullPage(request, { closeCurrentWindow: true });
       },
-    });
-  }
-
-  function connectChain(chain: string) {
-    const firstStepRoute =
-      chain === 'stacks' ? RouteUrls.LedgerStacksAddressStandard : RouteUrls.ConnectLedger;
-    const supportsWebHidAction = pageModeRoutingAction(
-      initialRoute + `/${chain}/` + firstStepRoute
-    );
-    const doesNotSupportWebHidAction = pageModeRoutingAction(
-      initialRoute + '/' + RouteUrls.LedgerUnsupportedBrowser
-    );
-
-    return doesBrowserSupportWebHidApi() ? supportsWebHidAction() : doesNotSupportWebHidAction();
+    })();
   }
 
   return (
-    <Sheet isShowing header={<SheetHeader />} onClose={() => navigate('../')}>
+    <Sheet isShowing header={<SheetHeader />} onClose={close}>
       <ConnectLedger
         connectBitcoin={() => connectChain('bitcoin')}
         connectStacks={() => connectChain('stacks')}

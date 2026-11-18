@@ -1,13 +1,21 @@
 import argon2, { ArgonType } from 'argon2-browser/dist/argon2-bundled.min.js';
 
-const context = self as unknown as Worker;
-
 interface GenerateEncryptionKeyArgs {
   password: string;
   salt: string;
 }
 
 export type DecryptionWorkerResponse = { hex: string } | { error: string };
+
+interface DecryptionWorkerContext {
+  postMessage(message: DecryptionWorkerResponse): void;
+  addEventListener(
+    type: 'message',
+    listener: (event: MessageEvent<GenerateEncryptionKeyArgs>) => void
+  ): void;
+}
+
+const context: DecryptionWorkerContext = self;
 
 async function generateEncryptionKey({ password, salt }: GenerateEncryptionKeyArgs) {
   const x = performance.now();
@@ -40,4 +48,4 @@ async function stretchKeyPostMessageHandler(e: MessageEvent<GenerateEncryptionKe
   }
 }
 
-context.addEventListener('message', stretchKeyPostMessageHandler);
+context.addEventListener('message', event => void stretchKeyPostMessageHandler(event));

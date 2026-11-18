@@ -1,10 +1,9 @@
 import { Stack, styled } from 'leather-styles/jsx';
 
-import { Flag } from '@leather.io/ui';
+import { Favicon, Flag } from '@leather.io/ui';
 
-import { addPortSuffix, getUrlHostname } from '@app/common/utils';
+import { getUrlHost, getUrlHostname } from '@app/common/utils';
 import { CrossOriginFrameCallout } from '@app/components/cross-origin-frame-callout';
-import { Favicon } from '@app/components/favicon';
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 
 interface MessageSigningHeaderProps {
@@ -20,9 +19,7 @@ export function MessageSigningHeader({
   const { chain, isTestnet } = useCurrentNetworkState();
 
   const originAddition = origin ? ` (${getUrlHostname(origin)})` : '';
-  const testnetAddition = isTestnet
-    ? ` using ${getUrlHostname(chain.stacks.url)}${addPortSuffix(chain.stacks.url)}`
-    : '';
+  const testnetAddition = isTestnet ? ` using ${getUrlHost(chain.stacks.url)}` : '';
 
   const displayName = name ?? origin;
 

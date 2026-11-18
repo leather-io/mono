@@ -24,7 +24,7 @@ const descriptor = `wsh(sortedmulti(2,${makeNativeSegwitAccountXpub(
 const testnetDescriptor = `wsh(sortedmulti(2,${makeNativeSegwitAccountTpub(
   1
 )}/0/0,${makeNativeSegwitAccountTpub(2)}/0/0))`;
-const networks = defaultNetworksKeyedById as Record<string, NetworkConfiguration>;
+const networks: Record<string, NetworkConfiguration> = defaultNetworksKeyedById;
 
 const baseParams = {
   descriptor,

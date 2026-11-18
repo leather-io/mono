@@ -1,9 +1,8 @@
 import { Box, HStack, styled } from 'leather-styles/jsx';
 
-import { BtcAvatarIcon, CopyIcon, Flag, Link } from '@leather.io/ui';
+import { BasicTooltip, BtcAvatarIcon, CopyIcon, Flag, Link } from '@leather.io/ui';
 
 import { useClipboard } from '@app/common/hooks/use-copy-to-clipboard';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 interface PsbtAddressTotalItemProps {
   hoverLabel?: string;
@@ -23,7 +22,7 @@ export function PsbtAddressTotalItem({
   value,
   valueAction,
 }: PsbtAddressTotalItemProps) {
-  const { onCopy, hasCopied } = useClipboard(hoverLabel ?? '');
+  const { onCopy, hasCopied } = useClipboard(hoverLabel);
 
   return (
     <Flag img={image ? image : <BtcAvatarIcon />} mt="space.05" spacing="space.04" width="100%">
