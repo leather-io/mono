@@ -35,6 +35,7 @@ const principalMempoolTransactionsSchema = z.object({
   results: z.array(
     z.object({
       tx_id: z.string(),
+      status: z.string(),
       contract_call: z.object({ contract_id: z.string(), function_name: z.string() }).optional(),
     })
   ),

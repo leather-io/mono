@@ -7,17 +7,25 @@ type FetchedTransaction = Awaited<
 const address = 'SP32YZPY7SEF52D2R4AD103SCDP4E7ATVBF1CTEST';
 const targetContractId = 'SP000000000000000000002Q6VF78.pox-5';
 
-const tokenTransferSummary = { tx_id: '0xtransfer' };
+const tokenTransferSummary = { tx_id: '0xtransfer', status: 'pending' };
 const otherCallSummary = {
   tx_id: '0xother',
+  status: 'pending',
   contract_call: { contract_id: 'SP000000000000000000002Q6VF78.pox-4', function_name: 'stack-stx' },
+};
+const droppedTargetCallSummary = {
+  tx_id: '0xdropped',
+  status: 'dropped_replace_by_fee',
+  contract_call: { contract_id: targetContractId, function_name: 'stake' },
 };
 const newestTargetCallSummary = {
   tx_id: '0xnewest',
+  status: 'pending',
   contract_call: { contract_id: targetContractId, function_name: 'stake' },
 };
 const olderTargetCallSummary = {
   tx_id: '0xolder',
+  status: 'pending',
   contract_call: { contract_id: targetContractId, function_name: 'unstake' },
 };
 
@@ -32,7 +40,11 @@ const newestTargetCallTx: FetchedTransaction = {
 };
 
 function createStacksClient(
-  results: { tx_id: string; contract_call?: { contract_id: string; function_name: string } }[]
+  results: {
+    tx_id: string;
+    status: string;
+    contract_call?: { contract_id: string; function_name: string };
+  }[]
 ) {
   return {
     getPrincipalMempoolTransactions: vi.fn().mockResolvedValue({ results }),
@@ -91,6 +103,39 @@ describe(getHasPendingTransaction.name, () => {
       ['function_args']
     );
     expect(transactionConverter).toHaveBeenCalledWith(newestTargetCallTx);
+  });
+
+  test('returns null without fetching transaction details when the only match was dropped', async () => {
+    const stacksClient = createStacksClient([droppedTargetCallSummary]);
+
+    const result = await getHasPendingTransaction({
+      stacksClient,
+      address,
+      transactionPredicate: isTargetCall,
+      transactionConverter: readTxId,
+    });
+
+    expect(result).toBeNull();
+    expect(stacksClient.getTransactionById).not.toHaveBeenCalled();
+  });
+
+  test('skips a dropped matching call and fetches the next pending one', async () => {
+    const stacksClient = createStacksClient([droppedTargetCallSummary, newestTargetCallSummary]);
+
+    const result = await getHasPendingTransaction({
+      stacksClient,
+      address,
+      transactionPredicate: isTargetCall,
+      transactionConverter: readTxId,
+    });
+
+    expect(result).toBe('0xnewest');
+    expect(stacksClient.getTransactionById).toHaveBeenCalledTimes(1);
+    expect(stacksClient.getTransactionById).toHaveBeenCalledWith(
+      '0xnewest',
+      expect.any(AbortSignal),
+      ['function_args']
+    );
   });
 
   test('returns null when the fetched transaction is not a contract call', async () => {

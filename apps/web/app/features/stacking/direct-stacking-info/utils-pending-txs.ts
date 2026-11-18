@@ -3,6 +3,8 @@ import { ClarityType, type ClarityValue } from '@stacks/transactions';
 import type { StacksTransaction } from '@leather.io/models';
 import { isDefined } from '@leather.io/utils';
 
+const pendingMempoolStatus = 'pending';
+
 interface ContractCallMetadata {
   contract_call: {
     contract_id: string;
@@ -29,7 +31,11 @@ interface PendingTransactionsClient {
     principal: string,
     signal: AbortSignal
   ): Promise<{
-    results: { tx_id: string; contract_call?: ContractCallMetadata['contract_call'] }[];
+    results: {
+      tx_id: string;
+      status: string;
+      contract_call?: ContractCallMetadata['contract_call'];
+    }[];
   }>;
   getTransactionById(
     txid: string,
@@ -61,7 +67,10 @@ export async function getHasPendingTransaction<T>({
   const mempoolTransactions = await stacksClient.getPrincipalMempoolTransactions(address, signal);
 
   const pendingContractCall = mempoolTransactions.results.find(
-    ({ contract_call }) => isDefined(contract_call) && transactionPredicate({ contract_call })
+    ({ status, contract_call }) =>
+      status === pendingMempoolStatus &&
+      isDefined(contract_call) &&
+      transactionPredicate({ contract_call })
   );
   if (!pendingContractCall) return null;
 
