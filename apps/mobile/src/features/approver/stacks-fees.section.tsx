@@ -66,7 +66,7 @@ export function StacksFeesSection({ txHex, onChangeFee, disabled }: StacksFeesSe
           onPress={() => {
             feeSheetRef.current?.present();
           }}
-          disabled={disabled}
+          disabled={disabled || !stxFees}
         />
       </Approver.Section>
       <StacksFeesSheet

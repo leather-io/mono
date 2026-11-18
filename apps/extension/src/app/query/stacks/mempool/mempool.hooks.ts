@@ -11,9 +11,7 @@ const droppedCache = new Map();
 export function useStacksPendingTransactions(address: string) {
   const query = useGetAddressMempoolTransactionsQuery(address);
   const mempoolTxs = query.data ? query.data.results : [];
-  const results = mempoolTxs.filter(
-    tx => tx.tx_status === 'pending' && !droppedCache.has(tx.tx_id)
-  );
+  const results = mempoolTxs.filter(tx => tx.status === 'pending' && !droppedCache.has(tx.tx_id));
   const txs = useGetTransactionByIdListQuery(results.map(tx => tx.tx_id));
   return useMemo(() => {
     return {

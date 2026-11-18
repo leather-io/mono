@@ -10,13 +10,13 @@ import {
   type StacksProtocolAction,
   type StacksProtocolId,
   type StacksTransaction,
-  type StacksTx,
   isStacksMempoolTransaction,
 } from '@leather.io/models';
 import { assertUnreachable, createMoney, initBigNumber } from '@leather.io/utils';
 
 import type {
   HiroBalanceChangeResultItem,
+  HiroPrincipalMempoolTransaction,
   HiroPrincipalTransaction,
   HiroPrincipalTransactionsResultItem,
   HiroPrincipalTxStatus,
@@ -190,23 +190,23 @@ export function groupFtChangesByTxId(
 }
 
 export function buildPendingStacksActivity(
-  tx: StacksTx,
+  tx: HiroPrincipalMempoolTransaction,
   stxAddress: string,
   classified?: ClassifiedContractCall
 ): BlockchainActivity | null {
-  const initiatedByUser = tx.sender_address === stxAddress;
+  const initiatedByUser = tx.sender.address === stxAddress;
   // A sponsored tx's fee is paid by the sponsor, not the sender — attach no fee then.
-  const paidFee = initiatedByUser && !tx.sponsored;
+  const paidFee = initiatedByUser && tx.sponsor === null;
   const common = {
-    timestamp: 'receipt_time' in tx ? tx.receipt_time : 0,
+    timestamp: tx.receipt_time,
     txid: tx.tx_id,
     status: 'pending' as const,
     initiatedByUser,
-    nonce: tx.nonce,
+    nonce: tx.sender.nonce,
     ...(paidFee ? { fee: createMoney(initBigNumber(tx.fee_rate), 'STX') } : {}),
   };
 
-  switch (tx.tx_type) {
+  switch (tx.type) {
     case 'token_transfer': {
       const stxChange = buildStxBalanceChange(
         initiatedByUser ? `-${tx.token_transfer.amount}` : tx.token_transfer.amount
@@ -215,8 +215,8 @@ export function buildPendingStacksActivity(
         common,
         core: {
           kind: 'token_transfer',
-          recipient: tx.token_transfer.recipient_address,
-          sender: tx.sender_address,
+          recipient: tx.token_transfer.recipient,
+          sender: tx.sender.address,
         },
         action: initiatedByUser ? 'send' : 'receive',
         balanceChanges: stxChange === null ? [] : [stxChange],
