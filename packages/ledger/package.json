@@ -41,7 +41,7 @@
     "@stacks/network": "7.0.2",
     "@stacks/transactions": "7.5.0",
     "@zondax/ledger-stacks": "2.0.0",
-    "bitcoinjs-lib": "7.0.1",
+    "bitcoinjs-lib": "7.0.5",
     "compare-versions": "6.1.0",
     "remeda": "2.21.2",
     "rxjs": "7.8.2",
