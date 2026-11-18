@@ -10,5 +10,9 @@ export function filterOutConfirmedTransactions(confirmedTxs: HiroPrincipalTransa
 
 export function filterOutStaleTransactions(confirmedTxs: HiroPrincipalTransaction[]) {
   return (mempoolTx: HiroPrincipalMempoolTransaction) =>
-    !confirmedTxs.some(confirmedTx => confirmedTx.sender.nonce === mempoolTx.sender.nonce);
+    !confirmedTxs.some(
+      confirmedTx =>
+        confirmedTx.sender.address === mempoolTx.sender.address &&
+        confirmedTx.sender.nonce === mempoolTx.sender.nonce
+    );
 }

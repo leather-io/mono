@@ -60,6 +60,21 @@ describe('filterOutStaleTransactions', () => {
     expect(pendingTxs[0].sender.nonce).toBe(3);
   });
 
+  it('keeps a pending transaction whose nonce matches a confirmed transaction from another sender', () => {
+    const confirmedTxs: HiroPrincipalTransaction[] = [
+      createTestPrincipalTokenTransferTx({
+        sender: { address: 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE', nonce: 7 },
+      }),
+    ];
+    const mempoolTxs: HiroPrincipalMempoolTransaction[] = [
+      createTestPrincipalMempoolTokenTransferTx({
+        sender: { address: 'SP000000000000000000002Q6VF78', nonce: 7 },
+      }),
+    ];
+    const pendingTxs = mempoolTxs.filter(filterOutStaleTransactions(confirmedTxs));
+    expect(pendingTxs).toEqual(mempoolTxs);
+  });
+
   it('can handle empty confirmed transaction lists', () => {
     const confirmedTxs: HiroPrincipalTransaction[] = [];
     const mempoolTxs: HiroPrincipalMempoolTransaction[] = [
