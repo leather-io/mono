@@ -1,13 +1,31 @@
 import { createContext, useContext } from 'react';
+import ReactMarkdown, { type Components } from 'react-markdown';
 import { Link } from 'react-router';
 
 import { Box, type BoxProps, type HTMLStyledProps, styled } from 'leather-styles/jsx';
-import PortableTextContent from '~/components/content/portable-text-content';
-import { urlFor } from '~/constants/cms-client';
+import remarkGfm from 'remark-gfm';
+import { contentComponents } from '~/components/content/content-components';
 
-import type { ChangelogEntryBySlugQueryResult } from '@leather.io/cms';
+import { type ChangelogEntry as ChangelogEntryData } from '../changelog.data';
 
-const ChangelogEntryContext = createContext<ChangelogEntryBySlugQueryResult>(null);
+const ChangelogEntryContext = createContext<ChangelogEntryData | null>(null);
+
+const changelogBodyComponents: Components = {
+  ...contentComponents,
+  // Fenced code renders as a highlighted block on its own, so it needs no <pre> wrapper
+  pre: ({ children }) => <>{children}</>,
+  img: ({ src, alt }) => (
+    <styled.img
+      src={typeof src === 'string' ? src : undefined}
+      maxW="100%"
+      border="1px solid"
+      borderColor="ink.border-transparent"
+      borderRadius="md"
+      alt={alt ?? ''}
+      loading="lazy"
+    />
+  ),
+};
 
 function useChangelogEntry() {
   const context = useContext(ChangelogEntryContext);
@@ -16,7 +34,7 @@ function useChangelogEntry() {
 }
 
 interface ChangelogEntryProps extends HTMLStyledProps<'article'> {
-  entry: ChangelogEntryBySlugQueryResult;
+  entry: ChangelogEntryData;
 }
 export function ChangelogEntry({ entry, ...props }: ChangelogEntryProps) {
   return (
@@ -36,7 +54,7 @@ function Title(props: HTMLStyledProps<'h1'>) {
       mb="space.04"
       {...props}
     >
-      <Link to={`/changelog/${entry.slug.current}`} style={{ color: 'inherit' }}>
+      <Link to={`/changelog/${entry.slug}`} style={{ color: 'inherit' }}>
         {entry.title}
       </Link>
     </styled.h3>
@@ -62,10 +80,10 @@ function PublishDate(props: HTMLStyledProps<'time'>) {
 
 function Image(props: HTMLStyledProps<'img'>) {
   const entry = useChangelogEntry();
-  if (!entry.heroImage?.asset?._ref) return null;
+  if (!entry.cover) return null;
   return (
     <styled.img
-      src={urlFor(entry.heroImage).format('webp').quality(75).url()}
+      src={entry.cover}
       maxW="100%"
       border="1px solid"
       borderColor="ink.border-transparent"
@@ -84,7 +102,9 @@ function Body(props: BoxProps) {
   const entry = useChangelogEntry();
   return (
     <Box {...props}>
-      <PortableTextContent value={entry.body} />
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={changelogBodyComponents}>
+        {entry.body}
+      </ReactMarkdown>
     </Box>
   );
 }
