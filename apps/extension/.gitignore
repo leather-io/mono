@@ -21,6 +21,7 @@ trace*
 /test-results/
 /verify-results/
 /playwright-report/
+/blob-report/
 /playwright/.cache/
 leather-styles
 .netlify

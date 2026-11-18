@@ -15,6 +15,7 @@ import { Sip10AssetService } from '../assets/sip10-asset.service';
 import { getAssetIdentifierFromContract } from '../assets/stacks-asset.utils';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import {
+  HiroPrincipalMempoolTransaction,
   HiroStacksMempoolTransaction,
   HiroStacksTransaction,
   HiroTransactionEvent,
@@ -28,10 +29,12 @@ import {
   StacksAssetTransfer,
   StacksAssetTransferWithInfo,
   getStacksAssetTransfers,
+  mapTransferFromPostCondition,
 } from './stacks-asset-transfer.utils';
 import {
   getEventsByTxId,
   mapContractCallActivity,
+  mapPendingStacksTxActivity,
   mapSmartContractActivity,
   mapTokenTransferActivity,
 } from './stacks-tx-activity.utils';
@@ -169,8 +172,8 @@ export class ActivityService {
       ),
     ]);
     const eventsByTxId = getEventsByTxId(txEvents);
-    const activityList: OnChainActivity[] = [];
-    for (const tx of [...pendingTxs, ...txs.map(tx => tx.tx)]) {
+    const activityList = await this.getPendingStacksActivity(pendingTxs, account, signal);
+    for (const tx of txs.map(tx => tx.tx)) {
       const txActivity = await this.getStacksTxActivity(tx, eventsByTxId.get(tx.tx_id), account);
       if (txActivity) {
         activityList.push(
@@ -206,11 +209,8 @@ export class ActivityService {
     const stxEventsByTxId = getEventsByTxId(
       txEvents.filter(event => event.event_type === 'stx_asset' || event.event_type === 'stx_lock')
     );
-    const activityList: OnChainActivity[] = [];
-    for (const tx of [
-      ...pendingTxs,
-      ...txs.filter(tx => stxEventsByTxId.has(tx.tx.tx_id)).map(tx => tx.tx),
-    ]) {
+    const activityList = await this.getPendingStacksActivity(pendingTxs, account, signal);
+    for (const tx of txs.filter(tx => stxEventsByTxId.has(tx.tx.tx_id)).map(tx => tx.tx)) {
       const txActivity = await this.getStacksTxActivity(tx, stxEventsByTxId.get(tx.tx_id), account);
       if (txActivity) {
         activityList.push(
@@ -256,8 +256,8 @@ export class ActivityService {
           ) === assetId
       )
     );
-    const activityList: OnChainActivity[] = [];
-    for (const tx of [...pendingTxs, ...sip10AssetTxs.map(tx => tx.tx)]) {
+    const activityList = await this.getPendingStacksActivity(pendingTxs, account, signal);
+    for (const tx of sip10AssetTxs.map(tx => tx.tx)) {
       const txActivity = await this.getStacksTxActivity(tx, eventsByTxId.get(tx.tx_id), account);
       if (txActivity) {
         activityList.push(
@@ -266,6 +266,46 @@ export class ActivityService {
       }
     }
     return activityList.sort(sortActivityByTimestampDesc);
+  }
+
+  private async getPendingStacksActivity(
+    pendingTxs: HiroPrincipalMempoolTransaction[],
+    account: AccountAddresses,
+    signal?: AbortSignal
+  ): Promise<OnChainActivity[]> {
+    const activityPerTx = await Promise.all(
+      pendingTxs.map(async tx =>
+        mapPendingStacksTxActivity(
+          tx,
+          account,
+          await this.getPendingStacksAssetTransfersWithInfo(tx, signal)
+        )
+      )
+    );
+    return await Promise.all(
+      activityPerTx.flat().map(activity => this.applyMarketData(activity, signal))
+    );
+  }
+
+  private async getPendingStacksAssetTransfersWithInfo(
+    tx: HiroPrincipalMempoolTransaction,
+    signal?: AbortSignal
+  ): Promise<StacksAssetTransferWithInfo[]> {
+    if (tx.type !== 'contract_call' && tx.type !== 'smart_contract') return [];
+    try {
+      const txWithPostConditions = await this.hiroStacksApiClient.getTransactionById(tx.tx_id, {
+        signal,
+        include: ['post_conditions'],
+      });
+      const transfers = (txWithPostConditions?.post_conditions ?? [])
+        .map(mapTransferFromPostCondition)
+        .filter(isDefined);
+      return (await Promise.all(transfers.map(t => this.addStacksTransferAsset(t, signal)))).filter(
+        isDefined
+      );
+    } catch {
+      return [];
+    }
   }
 
   private async getStacksTxActivity(

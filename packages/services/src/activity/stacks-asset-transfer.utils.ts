@@ -5,6 +5,7 @@ import {
   type CryptoAsset,
   CryptoAssetCategories,
   type CryptoAssetCategory,
+  type StacksTransaction,
 } from '@leather.io/models';
 import { isDefined, sumNumbers, uniqueArray } from '@leather.io/utils';
 
@@ -30,6 +31,8 @@ export interface StacksAssetTransfer {
 export interface StacksAssetTransferWithInfo extends StacksAssetTransfer {
   asset: CryptoAsset;
 }
+
+type StacksPostCondition = NonNullable<StacksTransaction['post_conditions']>[number];
 
 export function sumAssetTransferAmounts(transfers: StacksAssetTransfer[]): BigNumber {
   if (transfers.length === 0) return new BigNumber(0);
@@ -87,7 +90,9 @@ export function mapTransferFromTxEvent(
   return;
 }
 
-export function mapTransferFromPostCondition(pc: PostCondition): StacksAssetTransfer | undefined {
+export function mapTransferFromPostCondition(
+  pc: PostCondition | StacksPostCondition
+): StacksAssetTransfer | undefined {
   if (pc.principal.type_id !== 'principal_origin') {
     if (pc.type === 'stx') {
       return {
