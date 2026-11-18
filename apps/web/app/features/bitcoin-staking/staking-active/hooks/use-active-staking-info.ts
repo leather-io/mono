@@ -27,6 +27,7 @@ export interface ActiveStakingDetails {
   daysUntilNextCycle: number | null;
   claimable: Pox5ClaimableRewards;
   payoutPreference: Pox5PayoutPreference | null;
+  payoutPreferenceStatus: 'pending' | 'error' | 'success';
 }
 
 interface UseActiveStakingInfoResult {
@@ -82,6 +83,7 @@ export function useActiveStakingInfo(): UseActiveStakingInfoResult {
           : null,
       claimable,
       payoutPreference: payoutPreferenceQuery.data?.preference ?? null,
+      payoutPreferenceStatus: canPayoutInBtc(payoutMode) ? payoutPreferenceQuery.status : 'success',
     },
   };
 }
