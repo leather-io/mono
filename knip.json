@@ -127,10 +127,7 @@
       "entry": ["src/index.ts", "src/mobile.ts"]
     },
     "tools": {
-      "entry": [
-        "src/lt.ts",
-        "src/feature-map/feature-entry.ts"
-      ]
+      "entry": ["src/lt.ts", "src/feature-map/feature-entry.ts"]
     },
     "packages/utils": {
       "ignoreDependencies": ["@types/dompurify"]
@@ -155,6 +152,9 @@
         "metro.config.cjs",
         "src/assets-web/splash-screen.js"
       ]
+    },
+    ".": {
+      "entry": ["scripts/design/*.ts", "eslint-rules/design-system/*.spec.js"]
     }
   }
 }
