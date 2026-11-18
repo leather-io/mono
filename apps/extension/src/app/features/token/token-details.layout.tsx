@@ -41,6 +41,7 @@ interface TokenDetailsLayoutProps {
   isActivityLoading: boolean;
   isBuyEnabled?: boolean;
   isSwapEnabled?: boolean;
+  moreActions?: ReactNode;
 }
 
 export function TokenDetailsLayout({
@@ -62,6 +63,7 @@ export function TokenDetailsLayout({
   isActivityLoading,
   isBuyEnabled = true,
   isSwapEnabled = true,
+  moreActions,
 }: TokenDetailsLayoutProps) {
   const activeTab = resolveVisibleTokenDetailsTab(useTokenDetailsTab(), !!balancesContent);
   const selectTab = useSelectTokenDetailsTab();
@@ -107,6 +109,7 @@ export function TokenDetailsLayout({
             swapChain={swapChain}
             isBuyEnabled={isBuyEnabled}
             isSwapEnabled={isSwapEnabled}
+            moreActions={moreActions}
           />
         }
       />

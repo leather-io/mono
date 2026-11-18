@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router';
 
 import { TokenDetailsSelectors } from '@tests/selectors/token-details.selectors';
+import { Stack, styled } from 'leather-styles/jsx';
 
 import { LEATHER_STACKING_URL, stxAsset } from '@leather.io/constants';
 import type { AccountAddresses, Money } from '@leather.io/models';
 import type { StxLockInfo } from '@leather.io/services';
-import { StxAvatarIcon } from '@leather.io/ui';
+import { DropdownMenu, StxAvatarIcon } from '@leather.io/ui';
 import { baseCurrencyAmountInQuote } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -19,6 +20,7 @@ import {
   subtractMoneyFloor,
   sumBondStx,
 } from '@app/features/bonds/bond-position.utils';
+import { useFlags } from '@app/features/feature-flags';
 import { tooltipTextMap } from '@app/pages/all-balances/all-balances.utils';
 import { useBlockchainActivityByAssetId } from '@app/query/activity/blockchain-activity.query';
 import { useCurrentBtcStakingPositions } from '@app/query/bitcoin/staking/bitcoin-staking.hooks';
@@ -49,6 +51,7 @@ export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
   const marketData = useMarketData(stxAsset);
   const activityQuery = useBlockchainActivityByAssetId(account, stxAsset);
   const positions = useCurrentBtcStakingPositions();
+  const { accountShuffle } = useFlags();
 
   const isLoading = balance.state === 'loading' || marketInfo.isLoading;
   const hasError = balance.state === 'error' || marketInfo.hasError;
@@ -138,6 +141,18 @@ export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
       balances={balances}
       activity={activityQuery.data ?? []}
       isActivityLoading={activityQuery.isLoading}
+      moreActions={
+        accountShuffle ? (
+          <DropdownMenu.Item onSelect={() => void navigate(RouteUrls.MoveToFreshAccount)}>
+            <Stack gap="space.01">
+              <styled.span textStyle="label.02">Move to a fresh account</styled.span>
+              <styled.span textStyle="caption.01" color="ink.text-subdued">
+                Moves your Stacks assets to a new address
+              </styled.span>
+            </Stack>
+          </DropdownMenu.Item>
+        ) : null
+      }
     />
   );
 }
