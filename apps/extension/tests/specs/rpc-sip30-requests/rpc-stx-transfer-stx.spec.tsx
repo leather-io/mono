@@ -8,7 +8,7 @@ import {
 import { requestLeatherProvider } from '@tests/leather-provider';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
 import { mockEmptyStacksBalancesRequest } from '@tests/mocks/mock-stacks-balances';
-import { mockEmptyStacksBalancesV2Request } from '@tests/mocks/mock-stacks-balances-v2';
+import { mockEmptyStacksPrincipalBalancesRequest } from '@tests/mocks/mock-stacks-principal-balances';
 import { mockStacksBroadcastTransaction } from '@tests/mocks/mock-stacks-txs';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
@@ -167,7 +167,7 @@ test.describe('RPC: stx_transferStx', () => {
     context,
   }) => {
     await mockEmptyStacksBalancesRequest(context);
-    await mockEmptyStacksBalancesV2Request(context);
+    await mockEmptyStacksPrincipalBalancesRequest(context);
 
     async function expectInsufficientBalanceAndClose() {
       const popup = await context.waitForEvent('page');
