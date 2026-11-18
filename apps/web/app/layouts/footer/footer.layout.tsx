@@ -1,3 +1,5 @@
+import { Link } from 'react-router';
+
 import {
   Box,
   type BoxProps,
@@ -66,14 +68,37 @@ function FooterLegalText({ product, copyright, ...props }: FooterLegalTextProps)
         color="ink.text-subdued"
         mt="space.04"
       >
-        <styled.span>{product}</styled.span>
         <styled.span>{copyright}</styled.span>
+        <styled.span>{product}</styled.span>
       </Flex>
     </Box>
   );
 }
 
+const StyledRouterLink = styled(Link);
+
+interface FooterInternalLinkProps extends Omit<HTMLStyledProps<'a'>, 'href'> {
+  to: string;
+}
+/** Same look as FooterLayout.Link, for in-app routes (client-side navigation, same tab). */
+function FooterInternalLink({ to, ...props }: FooterInternalLinkProps) {
+  return (
+    <StyledRouterLink
+      to={to}
+      prefetch="intent"
+      textStyle="label.02"
+      borderBottom="1px solid"
+      borderColor="ink.border-default"
+      _hover={{ borderColor: 'ink.action-primary-hover' }}
+      _focus={{ borderColor: 'ink.action-primary-hover' }}
+      outline={0}
+      {...props}
+    />
+  );
+}
+
 FooterLayout.Grid = FooterGrid;
+FooterLayout.InternalLink = FooterInternalLink;
 FooterLayout.Column = FooterColumn;
 FooterLayout.Link = ExternalLink;
 FooterLayout.LegalText = FooterLegalText;
