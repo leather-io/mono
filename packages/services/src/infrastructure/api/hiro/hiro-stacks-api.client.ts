@@ -20,7 +20,6 @@ import { HiroMultiPageRequest, fetchHiroCursorPages, fetchHiroPages } from './hi
 import { hiroApiRequestsPriorityLevels } from './hiro-request-priorities';
 import {
   CallReadOnlyFunctionArgs,
-  HiroAddressBalanceResponse,
   HiroAddressFtBalancesResponse,
   HiroAddressStxBalanceResponse,
   HiroAddressTransaction,
@@ -75,39 +74,6 @@ export class HiroStacksApiClient {
       },
       timeout: 30000,
     });
-  }
-
-  public async getAddressBalances(
-    address: string,
-    { signal, skipCache }: ApiRequestOptions = {}
-  ): Promise<HiroAddressBalanceResponse> {
-    const fetchFn = async () => {
-      const res = await this.limiter.add(
-        RateLimiterType.HiroStacks,
-        () =>
-          this._axios.get<HiroAddressBalanceResponse>(
-            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/address/${address}/balances`,
-            {
-              signal,
-            }
-          ),
-        {
-          priority: hiroApiRequestsPriorityLevels.getAccountBalance,
-          signal,
-          throwOnTimeout: true,
-        }
-      );
-      return res.data;
-    };
-    return await this.cache.fetchWithCache(
-      [
-        'hiro-stacks-get-address-balances',
-        address,
-        selectStacksChainId(this.settings.getSettings()),
-      ],
-      fetchFn,
-      { skipCache }
-    );
   }
 
   public async getAddressStxBalance(
