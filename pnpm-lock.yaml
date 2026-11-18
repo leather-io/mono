@@ -9,28 +9,30 @@ overrides:
   glob: 11.1.0
   tar: '>=7.5.19'
   rollup@<4.59.0: '>=4.59.0'
-  vite@>=7.0.0 <=7.3.4: '>=7.3.5 <8'
   esbuild@>=0.17.0 <0.28.1: '>=0.28.1'
   minimatch@9: 9.0.7
   test-exclude@6: 7.0.1
   filelist@1: 2.0.2
   readdir-glob@1: 2.0.3
   svgo@>=3.0.0: '>=4.1.0'
-  '@expo/cli>undici': '>=7.29.1 <8'
-  '@actions/http-client>undici': '>=7.29.1 <8'
   ws@>=8.0.0 <8.21.0: '>=8.21.0'
-  undici@>=7.0.0 <7.29.1: '>=7.29.1 <8'
-  undici@<6.28.1: '>=6.28.1 <7'
-  picomatch@3: 3.0.2
   picomatch@4: 4.0.4
   postcss@<8.5.12: '>=8.5.12 <9'
-  brace-expansion@>=2.0.0 <2.1.4: '>=2.1.4 <3'
-  brace-expansion@>=3.0.0 <5.0.11: '>=5.0.11 <6'
   adm-zip@<0.6.1: '>=0.6.1'
-  valibot@<1.4.2: '>=1.4.2 <2'
   browserslist@<4.28.7: '>=4.28.7 <5'
-  follow-redirects@>=1.0.0 <1.16.1: '>=1.16.1 <2'
   vite@>=7.0.0 <7.3.7: '>=7.3.7 <8'
+  dompurify@>=3.0.0 <3.4.17: '>=3.4.17 <4'
+  undici@<6.29.1: '>=6.29.1 <7'
+  undici@>=7.0.0 <7.30.1: '>=7.30.1 <8'
+  query-string@>=9.0.0 <9.5.1: '>=9.5.1 <10'
+  query-string@7>decode-uri-component: '>=0.5.1 <0.6.0'
+  '@walletconnect/universal-provider@2.21.5': 2.21.10
+  '@walletconnect/types@2.21.5': 2.21.10
+  '@reown/appkit-wallet>zod': 4.6.7
+  '@sanity/codegen>zod': 4.6.7
+  follow-redirects@>=1.0.0 <1.16.2: '>=1.16.2 <2'
+  node-forge@>=1.0.0 <1.4.1: '>=1.4.1 <2'
+  bitcoinjs-lib@>=6.0.0 <6.1.8: '>=6.1.8 <7'
 
 patchedDependencies:
   expo-secure-store@15.0.8:
@@ -92,9 +94,6 @@ importers:
       '@vitest/coverage-v8':
         specifier: 2.1.9
         version: 2.1.9(vitest@2.1.9(@types/node@24.0.8)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.8.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@24.0.8)(typescript@5.9.3))(terser@5.46.0))
-      chalk:
-        specifier: 5.3.0
-        version: 5.3.0
       dependency-cruiser:
         specifier: 16.10.0
         version: 16.10.0
@@ -110,15 +109,9 @@ importers:
       eslint-plugin-playwright:
         specifier: 2.12.1
         version: 2.12.1(eslint@9.34.0(jiti@2.5.1))
-      husky:
-        specifier: 9.1.7
-        version: 9.1.7
       knip:
         specifier: 5.50.5
         version: 5.50.5(@types/node@24.0.8)(typescript@5.9.3)
-      lint-staged:
-        specifier: 15.2.10
-        version: 15.2.10
       prettier:
         specifier: 3.5.1
         version: 3.5.1
@@ -173,9 +166,6 @@ importers:
       '@leather.io/queries':
         specifier: workspace:*
         version: link:../../packages/queries
-      '@leather.io/query':
-        specifier: workspace:*
-        version: link:../../packages/query
       '@leather.io/rpc':
         specifier: workspace:*
         version: link:../../packages/rpc
@@ -202,7 +192,7 @@ importers:
         version: 1.9.0(rxjs@7.8.2)
       '@ledgerhq/device-signer-kit-bitcoin':
         specifier: 1.3.3
-        version: 1.3.3(@ledgerhq/device-management-kit@1.9.0(rxjs@7.8.2))(bitcoinjs-lib@7.0.1(typescript@5.9.3))
+        version: 1.3.3(@ledgerhq/device-management-kit@1.9.0(rxjs@7.8.2))(bitcoinjs-lib@7.0.5(typescript@5.9.3))
       '@ledgerhq/device-transport-kit-web-hid':
         specifier: 1.2.4
         version: 1.2.4(@ledgerhq/device-management-kit@1.9.0(rxjs@7.8.2))(rxjs@7.8.2)
@@ -218,9 +208,6 @@ importers:
       '@radix-ui/react-dialog':
         specifier: 1.0.5
         version: 1.0.5(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@radix-ui/react-tooltip':
-        specifier: 1.0.7
-        version: 1.0.7(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@radix-ui/themes':
         specifier: 2.0.3
         version: 2.0.3(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -294,8 +281,8 @@ importers:
         specifier: 2.2.3
         version: 2.2.3
       bitcoinjs-lib:
-        specifier: 7.0.1
-        version: 7.0.1(typescript@5.9.3)
+        specifier: 7.0.5
+        version: 7.0.5(typescript@5.9.3)
       bn.js:
         specifier: 5.2.1
         version: 5.2.1
@@ -306,8 +293,8 @@ importers:
         specifier: 6.1.0
         version: 6.1.0
       dompurify:
-        specifier: 3.2.4
-        version: 3.2.4
+        specifier: '>=3.4.17 <4'
+        version: 3.4.17
       formik:
         specifier: 2.4.6
         version: 2.4.6(@types/react@19.1.17)(react@19.1.0)
@@ -338,12 +325,6 @@ importers:
       postcss-preset-env:
         specifier: 10.0.5
         version: 10.0.5(postcss@8.5.20)
-      prism-react-renderer:
-        specifier: 2.4.1
-        version: 2.4.1(react@19.1.0)
-      prismjs:
-        specifier: 1.30.0
-        version: 1.30.0
       punycode:
         specifier: 2.3.1
         version: 2.3.1
@@ -414,11 +395,11 @@ importers:
         specifier: 0.12.0
         version: 0.12.0
       zod:
-        specifier: 4.0.17
-        version: 4.0.17
+        specifier: 4.6.7
+        version: 4.6.7
       zod-validation-error:
         specifier: 4.0.1
-        version: 4.0.1(zod@4.0.17)
+        version: 4.0.1(zod@4.6.7)
       zxcvbn:
         specifier: 4.4.2
         version: 4.4.2
@@ -438,6 +419,9 @@ importers:
       '@leather.io/test-app':
         specifier: workspace:*
         version: link:../test-app
+      '@leather.io/tools':
+        specifier: workspace:*
+        version: link:../../tools
       '@pandacss/dev':
         specifier: 1.7.1
         version: 1.7.1(jsdom@26.1.0)(typescript@5.9.3)
@@ -480,9 +464,6 @@ importers:
       '@types/node':
         specifier: 24.0.8
         version: 24.0.8
-      '@types/prismjs':
-        specifier: 1.26.5
-        version: 1.26.5
       '@types/punycode':
         specifier: 2.1.4
         version: 2.1.4
@@ -621,9 +602,6 @@ importers:
       '@leather.io/queries':
         specifier: workspace:*
         version: link:../../packages/queries
-      '@leather.io/query':
-        specifier: workspace:*
-        version: link:../../packages/query
       '@leather.io/rpc':
         specifier: workspace:*
         version: link:../../packages/rpc
@@ -658,11 +636,11 @@ importers:
         specifier: 0.73.1
         version: 0.73.1
       '@react-navigation/native':
-        specifier: 7.1.9
-        version: 7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+        specifier: 7.5.1
+        version: 7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       '@react-navigation/stack':
-        specifier: 7.3.2
-        version: 7.3.2(@react-navigation/native@7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-gesture-handler@2.28.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-screens@4.16.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+        specifier: 7.12.1
+        version: 7.12.1(@react-navigation/native@7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-gesture-handler@2.28.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-screens@4.16.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       '@reduxjs/toolkit':
         specifier: 2.11.2
         version: 2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)
@@ -706,8 +684,8 @@ importers:
         specifier: 9.1.2
         version: 9.1.2
       bitcoinjs-lib:
-        specifier: 7.0.1
-        version: 7.0.1(typescript@5.9.3)
+        specifier: 7.0.5
+        version: 7.0.5(typescript@5.9.3)
       buffer:
         specifier: 6.0.3
         version: 6.0.3
@@ -883,8 +861,8 @@ importers:
         specifier: 10.0.5
         version: 10.0.5(react@19.1.0)
       zod:
-        specifier: 4.0.17
-        version: 4.0.17
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       '@babel/core':
         specifier: 7.27.1
@@ -1064,9 +1042,6 @@ importers:
       '@leather.io/queries':
         specifier: workspace:*
         version: link:../../packages/queries
-      '@leather.io/query':
-        specifier: workspace:*
-        version: link:../../packages/query
       '@leather.io/rpc':
         specifier: workspace:*
         version: link:../../packages/rpc
@@ -1108,7 +1083,7 @@ importers:
         version: 7.0.2
       '@stacks/connect':
         specifier: 8.2.7
-        version: 8.2.7(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)
+        version: 8.2.7(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)
       '@stacks/network':
         specifier: 7.0.2
         version: 7.0.2(encoding@0.1.13)
@@ -1154,6 +1129,9 @@ importers:
       nprogress:
         specifier: 0.2.0
         version: 0.2.0
+      p-queue:
+        specifier: 8.1.1
+        version: 8.1.1
       radix-ui:
         specifier: 1.4.2
         version: 1.4.2(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -1206,8 +1184,8 @@ importers:
         specifier: 0.24.0
         version: 0.24.0(rollup@4.59.0)(vite@7.3.7(@types/node@24.0.8)(jiti@2.5.1)(lightningcss@1.30.2)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))
       zod:
-        specifier: 4.0.17
-        version: 4.0.17
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: 1.28.0
@@ -1317,7 +1295,7 @@ importers:
     dependencies:
       '@bitcoinerlab/descriptors-core':
         specifier: 3.1.7
-        version: 3.1.7(@noble/hashes@1.5.0)(@scure/base@1.2.4)(@scure/bip32@1.6.2)(@scure/btc-signer@1.6.0)(bip32@5.0.1(typescript@5.9.3))(bitcoinjs-lib@7.0.1(typescript@5.9.3))(ecpair@3.0.1(typescript@5.9.3))
+        version: 3.1.7(@noble/hashes@1.5.0)(@scure/base@1.2.4)(@scure/bip32@1.6.2)(@scure/btc-signer@1.6.0)(bip32@5.0.1(typescript@5.9.3))(bitcoinjs-lib@7.0.5(typescript@5.9.3))(ecpair@3.0.1(typescript@5.9.3))
       '@bitcoinerlab/secp256k1':
         specifier: 1.0.2
         version: 1.0.2
@@ -1364,17 +1342,20 @@ importers:
         specifier: 2.2.3
         version: 2.2.3
       bitcoinjs-lib:
-        specifier: 7.0.1
-        version: 7.0.1(typescript@5.9.3)
+        specifier: 7.0.5
+        version: 7.0.5(typescript@5.9.3)
       ecpair:
         specifier: 3.0.1
         version: 3.0.1(typescript@5.9.3)
+      remeda:
+        specifier: 2.21.2
+        version: 2.21.2
       varuint-bitcoin:
         specifier: 2.0.0
         version: 2.0.0
       zod:
-        specifier: 4.0.17
-        version: 4.0.17
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -1411,7 +1392,7 @@ importers:
         version: 7.10.0(debug@4.4.3)
       '@sanity/code-input':
         specifier: 6.0.1
-        version: 6.0.1(@babel/runtime@7.26.0)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.4.0)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react-is@19.2.3)(react@19.1.0)(sanity@4.6.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.1(@types/react@19.1.17)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.17)(debug@4.4.1)))(@types/node@25.0.3)(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(immer@11.1.3)(jiti@2.5.1)(lightningcss@1.30.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(terser@5.46.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
+        version: 6.0.1(@babel/runtime@7.28.4)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.4.0)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react-is@19.2.3)(react@19.1.0)(sanity@4.6.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.1(@types/react@19.1.17)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.17)(debug@4.4.1)))(@types/node@25.0.3)(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(immer@11.1.3)(jiti@2.5.1)(lightningcss@1.30.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(terser@5.46.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       groq:
         specifier: 4.6.0
         version: 4.6.0
@@ -1422,8 +1403,8 @@ importers:
         specifier: 6.0.0
         version: 6.0.0(@emotion/is-prop-valid@1.4.0)(easymde@2.20.0)(react-dom@19.1.0(react@19.1.0))(react-is@19.2.3)(react@19.1.0)(sanity@4.6.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.1(@types/react@19.1.17)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.17)(debug@4.4.1)))(@types/node@25.0.3)(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(immer@11.1.3)(jiti@2.5.1)(lightningcss@1.30.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(terser@5.46.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       zod:
-        specifier: 4.0.17
-        version: 4.0.17
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -1436,7 +1417,7 @@ importers:
         version: 3.7.4(react@19.1.0)
       '@sanity/vision':
         specifier: 4.6.1
-        version: 4.6.1(@babel/runtime@7.26.0)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.4.0)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react-is@19.2.3)(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
+        version: 4.6.1(@babel/runtime@7.28.4)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.4.0)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react-is@19.2.3)(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       '@types/react':
         specifier: 19.1.17
         version: 19.1.17
@@ -1619,8 +1600,8 @@ importers:
   packages/models:
     dependencies:
       '@stacks/blockchain-api-client':
-        specifier: 9.4.0
-        version: 9.4.0
+        specifier: 9.9.0
+        version: 9.9.0
       '@stacks/stacks-blockchain-api-types':
         specifier: 7.14.1
         version: 7.14.1
@@ -1628,8 +1609,8 @@ importers:
         specifier: 9.1.2
         version: 9.1.2
       zod:
-        specifier: 4.0.17
-        version: 4.0.17
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -1652,6 +1633,9 @@ importers:
       '@pandacss/dev':
         specifier: 1.7.1
         version: 1.7.1(jsdom@27.4.0(@noble/hashes@1.8.0))(typescript@5.9.3)
+      remeda:
+        specifier: 2.21.2
+        version: 2.21.2
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -1714,6 +1698,9 @@ importers:
       '@leather.io/utils':
         specifier: workspace:*
         version: link:../utils
+      '@stacks/stacks-blockchain-api-types':
+        specifier: 7.14.1
+        version: 7.14.1
       '@stacks/transactions':
         specifier: 7.5.0
         version: 7.5.0(encoding@0.1.13)
@@ -1737,85 +1724,6 @@ importers:
         specifier: 2.1.9
         version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.8.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
 
-  packages/query:
-    dependencies:
-      '@hirosystems/token-metadata-api-client':
-        specifier: 1.2.0
-        version: 1.2.0(encoding@0.1.13)
-      '@leather.io/constants':
-        specifier: workspace:*
-        version: link:../constants
-      '@leather.io/models':
-        specifier: workspace:*
-        version: link:../models
-      '@leather.io/stacks':
-        specifier: workspace:*
-        version: link:../stacks
-      '@leather.io/utils':
-        specifier: workspace:*
-        version: link:../utils
-      '@stacks/common':
-        specifier: 7.0.2
-        version: 7.0.2
-      '@stacks/network':
-        specifier: 7.0.2
-        version: 7.0.2(encoding@0.1.13)
-      '@stacks/stacking':
-        specifier: 7.0.5
-        version: 7.0.5(encoding@0.1.13)
-      '@stacks/stacks-blockchain-api-types':
-        specifier: 7.14.1
-        version: 7.14.1
-      '@stacks/transactions':
-        specifier: 7.5.0
-        version: 7.5.0(encoding@0.1.13)
-      alex-sdk:
-        specifier: 3.1.0
-        version: 3.1.0(@stacks/common@7.0.2)(@stacks/network@7.0.2(encoding@0.1.13))(@stacks/transactions@7.5.0(encoding@0.1.13))
-      axios:
-        specifier: 1.20.0
-        version: 1.20.0
-      bignumber.js:
-        specifier: 9.1.2
-        version: 9.1.2
-      p-queue:
-        specifier: 8.1.1
-        version: 8.1.1
-      uuid:
-        specifier: 11.1.0
-        version: 11.1.0
-      zod:
-        specifier: 4.0.17
-        version: 4.0.17
-    devDependencies:
-      '@leather.io/prettier-config':
-        specifier: workspace:*
-        version: link:../prettier-config
-      '@leather.io/tsconfig-config':
-        specifier: workspace:*
-        version: link:../tsconfig-config
-      '@tanstack/react-query':
-        specifier: 5.85.5
-        version: 5.85.5(react@19.2.3)
-      '@types/jsdom':
-        specifier: 21.1.3
-        version: 21.1.3
-      jsdom:
-        specifier: 26.1.0
-        version: 26.1.0
-      prettier:
-        specifier: 3.5.1
-        version: 3.5.1
-      tsdown:
-        specifier: 0.16.5
-        version: 0.16.5(@typescript/native-preview@7.0.0-dev.20251121.1)(ms@2.1.3)(synckit@0.11.11)(typescript@5.9.3)
-      typescript:
-        specifier: 5.9.3
-        version: 5.9.3
-      vitest:
-        specifier: 2.1.9
-        version: 2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@26.1.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0)
-
   packages/rpc:
     dependencies:
       '@leather.io/models':
@@ -1834,8 +1742,8 @@ importers:
         specifier: 2.21.2
         version: 2.21.2
       zod:
-        specifier: 4.0.17
-        version: 4.0.17
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -1956,8 +1864,8 @@ importers:
         specifier: 11.1.0
         version: 11.1.0
       zod:
-        specifier: 4.0.17
-        version: 4.0.17
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -2026,8 +1934,8 @@ importers:
         specifier: 2.0.0
         version: 2.0.0
       zod:
-        specifier: 4.0.17
-        version: 4.0.17
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -2062,9 +1970,6 @@ importers:
       '@leather.io/models':
         specifier: workspace:*
         version: link:../models
-      '@leather.io/query':
-        specifier: workspace:*
-        version: link:../query
       '@leather.io/services':
         specifier: workspace:*
         version: link:../services
@@ -2111,8 +2016,8 @@ importers:
         specifier: 0.3.2
         version: 0.3.2(encoding@0.1.13)
       zod:
-        specifier: 4.0.17
-        version: 4.0.17
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -2218,8 +2123,8 @@ importers:
         specifier: 2.4.2
         version: 2.4.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       dompurify:
-        specifier: 3.2.4
-        version: 3.2.4
+        specifier: '>=3.4.17 <4'
+        version: 3.4.17
       expo:
         specifier: 54.0.32
         version: 54.0.32(@babel/core@7.27.1)(@expo/metro-runtime@5.0.5(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)))(expo-router@6.0.22)(graphql@16.12.0)(react-native-webview@13.15.0(patch_hash=76cfeea66548fcf22fc5cb07253527086f0f00d783ef2b50399a871a98e5f25c)(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -2369,8 +2274,8 @@ importers:
         specifier: 9.1.2
         version: 9.1.2
       dompurify:
-        specifier: 3.2.4
-        version: 3.2.4
+        specifier: '>=3.4.17 <4'
+        version: 3.4.17
       remeda:
         specifier: 2.21.2
         version: 2.21.2
@@ -2405,13 +2310,28 @@ importers:
       commander:
         specifier: 12.0.0
         version: 12.0.0
-    devDependencies:
-      '@types/node':
-        specifier: 24.0.8
-        version: 24.0.8
       typescript:
         specifier: 5.9.3
         version: 5.9.3
+      zod:
+        specifier: 4.6.7
+        version: 4.6.7
+    devDependencies:
+      '@leather.io/prettier-config':
+        specifier: workspace:*
+        version: link:../packages/prettier-config
+      '@leather.io/test-config':
+        specifier: workspace:*
+        version: link:../packages/test-config
+      '@types/node':
+        specifier: 24.0.8
+        version: 24.0.8
+      prettier:
+        specifier: 3.5.1
+        version: 3.5.1
+      vitest:
+        specifier: 2.1.9
+        version: 2.1.9(@types/node@24.0.8)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.8.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@24.0.8)(typescript@5.9.3))(terser@5.46.0)
 
 packages:
 
@@ -5118,7 +5038,7 @@ packages:
     resolution: {integrity: sha512-jLdZsq3eQKli7zOYsP4NxETY40FzA3WlMP7aMWsrajOShVNJmj/p8RLoURA77zM8Fxhr88qMz8ziJm3XuzIjkA==}
     peerDependencies:
       '@ledgerhq/device-management-kit': ^1.7.1
-      bitcoinjs-lib: ^6.1.6
+      bitcoinjs-lib: '>=6.1.8 <7'
 
   '@ledgerhq/device-transport-kit-web-hid@1.2.4':
     resolution: {integrity: sha512-VMwkZ6QTUJpj4fS45ihnqdcNrJFDI58kg/KGKCDVhsknSZAe52R0JoH9yRqryemjL0eeo11Yj2KifXM8dNpsDA==}
@@ -5340,6 +5260,10 @@ packages:
 
   '@noble/curves@1.9.2':
     resolution: {integrity: sha512-HxngEd2XUcg9xi20JkwlLCtYwfoFw4JGkuZpT+WlsPD4gB/cxkvTD8fSsoAnphGZhFdZYKeQIPCuFlWPm1uE0g==}
+    engines: {node: ^14.21.3 || >=16}
+
+  '@noble/curves@1.9.7':
+    resolution: {integrity: sha512-gbKGcRUYIjA3/zCCNaWDciTMFI0dCkvou3TL8Zmy5Nc7sJ47a0jtOeZoTaMxkuqRo9cRhjOdZJXegxYE5FN/xw==}
     engines: {node: ^14.21.3 || >=16}
 
   '@noble/hashes@1.1.5':
@@ -6956,16 +6880,16 @@ packages:
       react-native-safe-area-context: '>= 4.0.0'
       react-native-screens: '>= 4.0.0'
 
-  '@react-navigation/core@7.9.2':
-    resolution: {integrity: sha512-lqCyKMWWaSwGK4VV3wRXXEKvl5IKrVH207Kp77TLCnITnd4KQIdgjzzJ/Pr62ugki3VTAErq1vg0yRlcXciCbg==}
+  '@react-navigation/core@7.24.0':
+    resolution: {integrity: sha512-PPMHGSgLB65eqWOBHeD/nGyzGJV3rcZ5sZbsCXlaC37HnLmwTEjB4CaOQn8CBVVv/Sc0Kl/W5dpPLls9Stk2WA==}
     peerDependencies:
       react: '>= 18.2.0'
 
-  '@react-navigation/elements@2.4.2':
-    resolution: {integrity: sha512-cudKLsRtOB+i8iDzfBKypdqiHsDy1ruqCfYAtwKEclDmLsxu3/90YXoBtoPyFNyIpsn3GtsJzZsrYWQh78xSWg==}
+  '@react-navigation/elements@2.9.45':
+    resolution: {integrity: sha512-r64qCgjA6asQo4Zlv2lAl68ARkfPbV+BNRm3n9JlMoFr4Ma2A+92Z+sWT1coJRoSXkAwVNb70+LjpM6fo6/D4A==}
     peerDependencies:
       '@react-native-masked-view/masked-view': '>= 0.2.0'
-      '@react-navigation/native': ^7.1.9
+      '@react-navigation/native': ^7.5.1
       react: '>= 18.2.0'
       react-native: '*'
       react-native-safe-area-context: '>= 4.0.0'
@@ -6994,19 +6918,19 @@ packages:
       react-native-safe-area-context: '>= 4.0.0'
       react-native-screens: '>= 4.0.0'
 
-  '@react-navigation/native@7.1.9':
-    resolution: {integrity: sha512-/A0oBwZIeD23o4jsnB0fEyKmKS+l4LAbJP/ioVvsGEubGp+sc5ouQNranOh7JwR0R1eX0MjcsLKprEwB+nztdw==}
+  '@react-navigation/native@7.5.1':
+    resolution: {integrity: sha512-p9xOvhG8q8rq0FPAoh0JC22ALbyRZt7U2uH8XrHRDjvqOEFrumME7szM6LaWW2WctolAVeZAfOTV+pUKULI/kQ==}
     peerDependencies:
       react: '>= 18.2.0'
       react-native: '*'
 
-  '@react-navigation/routers@7.3.7':
-    resolution: {integrity: sha512-5ffgrefOs2zWqcCVX+OKn+RDx0puopQtxqetegFrTfWQ6pGXdY/5v4kBpPwaOFrNEeE/LPbHt9IJaJuvyhB7RA==}
+  '@react-navigation/routers@7.6.5':
+    resolution: {integrity: sha512-hpvpVFt6wu3U014F/0Qy45VZCErlUvIV8kN1L6HovN5P9OpbXAzFTaRQmG7VW6czg2tSkUL5S3dZA0HIu5QirQ==}
 
-  '@react-navigation/stack@7.3.2':
-    resolution: {integrity: sha512-DAkuLCguUFjeOTmNtklMZSQJPcG3sl5h5M7VVms4xdGHO6RtNJ3ntJGTXYK/yFcDedLURKqBlJl5+4yTLORitQ==}
+  '@react-navigation/stack@7.12.1':
+    resolution: {integrity: sha512-4KEoho3yVy58B1Myj5ZNiSVmA8U8YfVbJrZT23uyA5pUy2dqPANH3REQ/zx/nMw4I62EVvqPHYLLbfGzI9/wTQ==}
     peerDependencies:
-      '@react-navigation/native': ^7.1.9
+      '@react-navigation/native': ^7.5.1
       react: '>= 18.2.0'
       react-native: '*'
       react-native-gesture-handler: '>= 2.0.0'
@@ -8257,8 +8181,8 @@ packages:
   '@stacks/auth@7.2.0':
     resolution: {integrity: sha512-u+Ky4CMQWFTPI6Au3VFcW74nSIA4Zb8YjsbOkcv0q9E6LiALyK4gozpKTxKvfW3/z1ER3z1Ky9uH/s4zY59rvg==}
 
-  '@stacks/blockchain-api-client@9.4.0':
-    resolution: {integrity: sha512-+Z+F/8w3o8OBzfjgMa5Y3mks0sa9j3K3Ry+1wP9MhFWipcXnGMgiQoO4EuVpYwpJME92jFqQg/hk0UMaxLtcdw==}
+  '@stacks/blockchain-api-client@9.9.0':
+    resolution: {integrity: sha512-pzH3kNtKr/AP/egSyIYgjJFR40RKSHIuLa2RHwh/a30XKp6Hnp6ltMmJ40buD7jsAbNJFm+0pYxAFTYP/lPxIA==}
 
   '@stacks/common@6.16.0':
     resolution: {integrity: sha512-PnzvhrdGRMVZvxTulitlYafSK4l02gPCBBoI9QEoTqgSnv62oaOXhYAUUkTMFKxdHW1seVEwZsrahuXiZPIAwg==}
@@ -9279,9 +9203,9 @@ packages:
     resolution: {integrity: sha512-Gt8TnSlDZpAl+RWOOAB/kuvC7RpcdWAlFbHNoi4gsXsfaWa1QCT6LBcfIYTPdOZC9OVZUDwqGuGAcqZejDmHjg==}
     engines: {node: '>=16'}
 
-  '@walletconnect/core@2.21.5':
-    resolution: {integrity: sha512-CxGbio1TdCkou/TYn8X6Ih1mUX3UtFTk+t618/cIrT3VX5IjQW09n9I/pVafr7bQbBtm9/ATr7ugUEMrLu5snA==}
-    engines: {node: '>=18'}
+  '@walletconnect/core@2.21.10':
+    resolution: {integrity: sha512-azWSsDeUZupqK0E8V85w7toNYVm/uzLtxhNv28dvNMtUf8aKlww3DilQxP9T2HZ3z+3n0ocuRzi0nfktjsaHyw==}
+    engines: {node: '>=18.20.8'}
 
   '@walletconnect/environment@1.0.1':
     resolution: {integrity: sha512-T426LLZtHj8e8rYnKfzsw1aG6+M0BT1ZxayMdv/p8yM0MU+eJDISqNY3/bccxRr4LrF9csq02Rhqt08Ibl0VRg==}
@@ -9327,22 +9251,20 @@ packages:
   '@walletconnect/safe-json@1.0.2':
     resolution: {integrity: sha512-Ogb7I27kZ3LPC3ibn8ldyUr5544t3/STow9+lzz7Sfo808YD7SBWk7SAsdBFlYgP2zDRy2hS3sKRcuSRM0OTmA==}
 
-  '@walletconnect/sign-client@2.21.5':
-    resolution: {integrity: sha512-IAs/IqmE1HVL9EsvqkNRU4NeAYe//h9NwqKi7ToKYZv4jhcC3BBemUD1r8iQJSTHMhO41EKn1G9/DiBln3ZiwQ==}
-    deprecated: 'Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases'
+  '@walletconnect/sign-client@2.21.10':
+    resolution: {integrity: sha512-ZXpMhgxWehPXyL9Lfzg61Q+89rSoG4XQgAqA90UEB94BHuG9SSOjnmPCK3TZeil70E66ekwAOvO7kphnhQGd5A==}
 
   '@walletconnect/time@1.0.2':
     resolution: {integrity: sha512-uzdd9woDcJ1AaBZRhqy5rNC9laqWGErfc4dxA9a87mPdKOgWMD85mcFo9dIYIts/Jwocfwn07EC6EzclKubk/g==}
 
-  '@walletconnect/types@2.21.5':
-    resolution: {integrity: sha512-kpTXbenKeMdaz6mgMN/jKaHHbu6mdY3kyyrddzE/mthOd2KLACVrZr7hrTf+Fg2coPVen5d1KKyQjyECEdzOCw==}
+  '@walletconnect/types@2.21.10':
+    resolution: {integrity: sha512-9oSvgxv1hE5aS+j4aHS9YgKeq50BP4iMh49tjubTW5574cBWqmt1bXfQhZddSTbq9OirwLSegl6W36itkzryBQ==}
 
-  '@walletconnect/universal-provider@2.21.5':
-    resolution: {integrity: sha512-SMXGGXyj78c8Ru2f665ZFZU24phn0yZyCP5Ej7goxVQxABwqWKM/odj3j/IxZv+hxA8yU13yxaubgVefnereqw==}
-    deprecated: 'Reliability and performance improvements. See: https://github.com/WalletConnect/walletconnect-monorepo/releases'
+  '@walletconnect/universal-provider@2.21.10':
+    resolution: {integrity: sha512-YKNFSlpoFMvTBnm9jfMNHkgliAUGT7wqW1gb2MF5+VTlxgCHek2bTbfVk/ZLFPJyMMN2PaQ2Gao0ajMfNDyWHA==}
 
-  '@walletconnect/utils@2.21.5':
-    resolution: {integrity: sha512-RSPSxPvGMuvfGhd5au1cf9cmHB/KVVLFotJR9ltisjFABGtH2215U5oaVp+a7W18QX37aemejRkvacqOELVySA==}
+  '@walletconnect/utils@2.21.10':
+    resolution: {integrity: sha512-LC5hmP3uxVoMyw7Ibea1JQdE98FTb7jZie60qiaybmaIsg/ApEUosU5uCLTFRJwEWUip2p3sJTb0n/3pU+yR/Q==}
 
   '@walletconnect/window-getters@1.0.1':
     resolution: {integrity: sha512-vHp+HqzGxORPAN8gY03qnbTMnhqIwjeRJNOMOAzePRg4xVEEE2WvYsI9G2NMjOknA8hnuYbU3/hwLcKbjhc8+Q==}
@@ -9534,10 +9456,6 @@ packages:
   ansi-escapes@4.3.2:
     resolution: {integrity: sha512-gKXj5ALrKWQLsYG9jlTRmR/xKluxHV+Z9QEwNIgCfM1/uwPMCuzVVnh5mwTd+OuBZcwSIMbqssNWRm1lE51QaQ==}
     engines: {node: '>=8'}
-
-  ansi-escapes@7.2.0:
-    resolution: {integrity: sha512-g6LhBsl+GBPRWGWsBtutpzBYuIIdBkLEvad5C/va/74Db018+5TZiyA26cZJAr3Rft5lprVqOIPxf5Vid6tqAw==}
-    engines: {node: '>=18'}
 
   ansi-regex@4.1.1:
     resolution: {integrity: sha512-ILlv4k/3f6vfQ4OoP2AGvirOktlQ98ZEL1k9FaQjxa3L1abBgbuTDAdPOpvbGncC0BTVQrl+OM8xZGK6tWXt7g==}
@@ -9926,8 +9844,8 @@ packages:
     resolution: {integrity: sha512-mdFV5+/v0XyNYXjBS6CQPLo9ekCx4gtKZFnJm5PMto7Fs9hTTDpkkzOB7/FtluRI6JbUUAu+snTYfJRgHLZbZQ==}
     engines: {node: '>=8.0.0'}
 
-  bip174@3.0.0:
-    resolution: {integrity: sha512-N3vz3rqikLEu0d6yQL8GTrSkpYb35NQKWMR7Hlza0lOj6ZOlvQ3Xr7N9Y+JPebaCVoEUHdBeBSuLxcHr71r+Lw==}
+  bip174@3.0.1:
+    resolution: {integrity: sha512-avOnOoLOwdjw1MebWKh3bHqWOH558Q9VpqmRKUv2S63vjw0pnX7Y+yRihxIibgP55twhc7+YfC0IAH43IF5FqQ==}
     engines: {node: '>=18.0.0'}
 
   bip21@3.0.0:
@@ -9953,12 +9871,12 @@ packages:
   bitcoin-address-validation@2.2.3:
     resolution: {integrity: sha512-1uGCGl26Ye8JG5qcExtFLQfuib6qEZWNDo1ZlLlwp/z7ygUFby3IxolgEfgMGaC+LG9csbVASLcH8fRLv7DIOg==}
 
-  bitcoinjs-lib@6.1.7:
-    resolution: {integrity: sha512-tlf/r2DGMbF7ky1MgUqXHzypYHakkEnm0SZP23CJKIqNY/5uNAnMbFhMJdhjrL/7anfb/U8+AlpdjPWjPnAalg==}
+  bitcoinjs-lib@6.1.10:
+    resolution: {integrity: sha512-9KpnS5JKVP0j0yfTsBNFIsNA6+JdBDb7VtL35F20I/pJYobosi3TmZFGtu6qxhJCfb0vubJixr5Zv61/lUYETw==}
     engines: {node: '>=8.0.0'}
 
-  bitcoinjs-lib@7.0.1:
-    resolution: {integrity: sha512-vwEmpL5Tpj0I0RBdNkcDMXePoaYSTeKY6mL6/l5esbnTs+jGdPDuLp4NY1hSh6Zk5wSgePygZ4Wx5JJao30Pww==}
+  bitcoinjs-lib@7.0.5:
+    resolution: {integrity: sha512-xH24P1ile3QtyChzX1ITitcgpfZgDzG986gy1glbGXFsvcSnRX0P6p4m3nuTQfJ+j97va8py0leEK7xG8oxMqQ==}
     engines: {node: '>=18.0.0'}
 
   bitcoinjs-message@2.2.0:
@@ -9993,8 +9911,8 @@ packages:
   bn.js@5.2.3:
     resolution: {integrity: sha512-EAcmnPkxpntVL+DS7bO1zhcZNvCkxqtkd0ZY53h06GNQ3DEkkGZ/gKgmDv6DdZQGj9BgfSPKtJJ7Dp1GPP8f7w==}
 
-  body-parser@1.20.4:
-    resolution: {integrity: sha512-ZTgYYLMOXY9qKU/57FAo8F+HA2dGX7bqGc71txDRC1rS4frdFI5R7NhluHxH6M0YItAP0sHB4uqAOcYKxO6uGA==}
+  body-parser@1.20.9:
+    resolution: {integrity: sha512-FISIQxV5u91Y9gvuFq3q/tA/qTqLJn3AhRcEvyozyhJTh5OBFFtv827AdHU7Rbyct4r+Ba1/99oFa1Y3yuFsdw==}
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
 
   body-parser@2.2.1:
@@ -10356,10 +10274,6 @@ packages:
     resolution: {integrity: sha512-IqLQi4lO0nIB4tcdTpN4LCB9FI3uqrJZK7RC515EnhZ6qBaglkIgICb1wjeAqpdoOabm1+SuQtkXIPdYC93jhQ==}
     engines: {node: '>= 0.2.0'}
 
-  cli-truncate@4.0.0:
-    resolution: {integrity: sha512-nPdaFdQ0h/GEigbPClz11D0v/ZJEwxmeVZGeMo3Z5StPtUTkA9o1lD6QwoirYiSDzbcwn2XcjwmCp68W1IS4TA==}
-    engines: {node: '>=18'}
-
   cli-width@4.1.0:
     resolution: {integrity: sha512-ouuZd4/dm2Sw5Gmqy6bGyNNNe1qt9RpmxveLSO7KcgsTnU7RXfsw+/bukWGo1abgBiMAic068rclZsO4IWmmxQ==}
     engines: {node: '>= 12'}
@@ -10459,9 +10373,6 @@ packages:
 
   colorette@2.0.19:
     resolution: {integrity: sha512-3tlv/dIP7FWvj3BsbHrGLJ6l/oKh1O3TcgBqMn+yyCagOxc23fyzDS6HypQbgxWbkpDnf52p1LuR4eWDQ/K9WQ==}
-
-  colorette@2.0.20:
-    resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
 
   colors@1.0.3:
     resolution: {integrity: sha512-pFGrxThWcWQ2MsAz6RtgeWe4NK2kUE1WfsrvvlctdII745EW9I0yflqhe7++M5LEc7bV2c/9/5zc8sFcpL0Drw==}
@@ -11058,15 +10969,6 @@ packages:
       supports-color:
         optional: true
 
-  debug@4.3.7:
-    resolution: {integrity: sha512-Er2nc/H7RrMXZBFCEim6TCmMk02Z8vLC2Rbi1KEBggpo0fS6l0S1nnapwmIi3yW/+GOJap1Krg4w0Hg80oCqgQ==}
-    engines: {node: '>=6.0'}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-
   debug@4.4.1:
     resolution: {integrity: sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==}
     engines: {node: '>=6.0'}
@@ -11099,12 +11001,8 @@ packages:
   decode-named-character-reference@1.2.0:
     resolution: {integrity: sha512-c6fcElNV6ShtZXmsgNgFFV5tVX2PaV4g+MOAkb8eXHvn6sryJBrZa9r0zV6+dtTyoCKxtDy5tyQ5ZwQuidtd+Q==}
 
-  decode-uri-component@0.2.2:
-    resolution: {integrity: sha512-FqUYQ+8o158GyGTrMFJms9qh3CqTKvAqgqsTnkLI8sKu0028orqBhxNMFkFen0zGyg6epACD32pjVk58ngIErQ==}
-    engines: {node: '>=0.10'}
-
-  decode-uri-component@0.4.1:
-    resolution: {integrity: sha512-+8VxcR21HhTy8nOt6jf20w0c9CADrw1O8d+VZ/YzzCt4bJ3uBjw+D1q2osAB8RnpwwaeYBxy0HyKQxD5JBMuuQ==}
+  decode-uri-component@0.5.1:
+    resolution: {integrity: sha512-vWHQkXgg2cE3BB4rR0c+PYw9BCQzLoNIRMI7AunIkZst74tw/vpPp7VLoYtsR/cy1f55g3XDWUslfeCZjiZJyA==}
     engines: {node: '>=14.16'}
 
   decompress-response@6.0.0:
@@ -11292,11 +11190,8 @@ packages:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
     engines: {node: '>= 4'}
 
-  dompurify@3.2.4:
-    resolution: {integrity: sha512-ysFSFEDVduQpyhzAob/kkuJjf5zWkZD8/A9ywSp1byueyuCfHamrCBa14/Oc2iiB0e51B+NpxSl5gmzn+Ms/mg==}
-
-  dompurify@3.3.3:
-    resolution: {integrity: sha512-Oj6pzI2+RqBfFG+qOaOLbFXLQ90ARpcGG6UePL82bJLtdsa6CYJD7nmiU8MW9nQNOtCHV3lZ/Bzq1X0QYbBZCA==}
+  dompurify@3.4.17:
+    resolution: {integrity: sha512-B/pSlYVHQ58kqISD/yDjuJ1yfzI34m1gF4lAod2bwSRhiN4K5Cl3H8Af7hqB2PmTL911tdEudnnXn5FnhRoz0w==}
 
   domutils@3.2.2:
     resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
@@ -11457,10 +11352,6 @@ packages:
   env-paths@2.2.1:
     resolution: {integrity: sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A==}
     engines: {node: '>=6'}
-
-  environment@1.1.0:
-    resolution: {integrity: sha512-xUtoPkMggbz0MPyPiIWr1Kp4aeWJjDZ6SMvURhimjdZgsRuDplF5/s9hcgGhyXMhs+6vpnuoiZ2kFiu3FMnS8Q==}
-    engines: {node: '>=18'}
 
   err-code@2.0.3:
     resolution: {integrity: sha512-2bmlRpNKBxT/CRmPOlyISQpNj+qSeYvcym/uT0Jx2bMOlKLtSy1ZmLuVxSEKKyor/N5yhvp/ZiG1oE3DEYMSFA==}
@@ -11801,11 +11692,11 @@ packages:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
     engines: {node: '>=6'}
 
-  eventemitter3@4.0.7:
-    resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
-
   eventemitter3@5.0.1:
     resolution: {integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==}
+
+  eventemitter3@5.0.4:
+    resolution: {integrity: sha512-mlsTRyGaPBjPedk6Bvw+aqbsXDtoAyAzm5MO7JgU+yVRyMQ5O8bD4Kcci7BS85f93veegeCPkL8R4GLClnjLFw==}
 
   events@3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
@@ -11832,10 +11723,6 @@ packages:
   execa@2.1.0:
     resolution: {integrity: sha512-Y/URAVapfbYy2Xp/gb6A0E7iR8xeqOCXsuuaoMn7A5PzrXUK84E1gyiEfq0wQd/GHA6GsoHWwhNq8anb0mleIw==}
     engines: {node: ^8.12.0 || >=9.7.0}
-
-  execa@8.0.1:
-    resolution: {integrity: sha512-VyhnebXciFV2DESc+p6B+y0LjSm0krU4OgJN44qFAhBY0TJ+1V61tYD2+wHusZ6F9n5K+vl8k0sTy7PEfV4qpg==}
-    engines: {node: '>=16.17'}
 
   exif-component@1.0.1:
     resolution: {integrity: sha512-FXnmK9yJYTa3V3G7DE9BRjUJ0pwXMICAxfbsAuKPTuSlFzMZhQbcvvwx0I8ofNJHxz3tfjze+whxcGpfklAWOQ==}
@@ -12201,7 +12088,7 @@ packages:
     resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
-      picomatch: 3.0.2
+      picomatch: 4.0.4
     peerDependenciesMeta:
       picomatch:
         optional: true
@@ -12296,8 +12183,8 @@ packages:
     resolution: {integrity: sha512-Ik/6OCk9RQQ0T5Xw+hKNLWrjSMtv51dD4GRmJjbD5a58TIEpI5a5iXagKVl3Z5UuyslMCA8Xwnu76jQob62Yhg==}
     engines: {node: '>=10'}
 
-  follow-redirects@1.16.1:
-    resolution: {integrity: sha512-FNvFGzoMLWmE6Yj9spb/zjd7yiNCHiAW9/Tg9CXrQ8wuu32HtlJOwWO11OJafl5FfY3DxTdQ0vj42zU1kvv5jg==}
+  follow-redirects@1.16.2:
+    resolution: {integrity: sha512-/kVP2U8z596Ia0gwFrwyIeo74ta5aVmSeU1FfAUMAmcEP5EP7zydmag3SLiN64NaRKef3lxsq7i/g7ltJQDGow==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -12429,10 +12316,6 @@ packages:
     resolution: {integrity: sha512-vpeMIQKxczTD/0s2CdEWHcb0eeJe6TFjxb+J5xgX7hScxqrGuyjmv4c1D4A/gelKfyox0gJJwIHF+fLjeaM8kQ==}
     engines: {node: '>=18'}
 
-  get-east-asian-width@1.4.0:
-    resolution: {integrity: sha512-QZjmEOC+IT1uk6Rx0sX22V6uHWVwbdbxf1faPqJ1QhLdGgsRGCZoyaQBm/piRdJy/D2um6hM1UP7ZEeQ4EkP+Q==}
-    engines: {node: '>=18'}
-
   get-east-asian-width@1.6.0:
     resolution: {integrity: sha512-QRbvDIbx6YklUe6RxeTeleMR0yv3cYH6PsPZHcnVn7xv7zO1BHN8r0XETu8n6Ye3Q+ahtSarc3WgtNWmehIBfA==}
     engines: {node: '>=18'}
@@ -12484,10 +12367,6 @@ packages:
   get-stream@5.2.0:
     resolution: {integrity: sha512-nBF+F1rAZVCu/p7rjzgA+Yb4lfYXrpl7a6VmJrU8wF9I1CKvP/QwPNZHnOlwbTkY6dvtFIzFMSyQXbLoTQPRpA==}
     engines: {node: '>=8'}
-
-  get-stream@8.0.1:
-    resolution: {integrity: sha512-VaUJspBffn/LMCJVoMvSAdmscJyS1auj5Zulnn5UoYcY531UWmdwhRWkcGKnGU93m5HSXP9LP2usOryrBtQowA==}
-    engines: {node: '>=16'}
 
   get-symbol-description@1.1.0:
     resolution: {integrity: sha512-w9UMqWwJxHNOvoNzSJ2oPF5wvYcvP7jUvYzhp67yEhTi17ZDBBC1z9pTdGuzjD+EFIqLSYRweZjqfiPzQ06Ebg==}
@@ -12822,20 +12701,11 @@ packages:
     resolution: {integrity: sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==}
     engines: {node: '>= 14'}
 
-  human-signals@5.0.0:
-    resolution: {integrity: sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ==}
-    engines: {node: '>=16.17.0'}
-
   humanize-list@1.0.1:
     resolution: {integrity: sha512-4+p3fCRF21oUqxhK0yZ6yaSP/H5/wZumc7q1fH99RkW7Q13aAxDeP78BKjoR+6y+kaHqKF/JWuQhsNuuI2NKtA==}
 
   humanize-ms@1.2.1:
     resolution: {integrity: sha512-Fl70vYtsAFb/C06PTS9dZBo7ihau+Tu/DNCk/OyHhea07S+aeMWpFFkUaXRa8fI+ScZbEI8dfSxwY7gxZ9SAVQ==}
-
-  husky@9.1.7:
-    resolution: {integrity: sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==}
-    engines: {node: '>=18'}
-    hasBin: true
 
   hyphenate-style-name@1.1.0:
     resolution: {integrity: sha512-WDC/ui2VVRrz3jOVi+XtjqkDjiVjTtFaAGiW37k6b+ohyQ5wYDOGkvCZa8+H0nx3gyvv0+BST9xuOgIyGQ00gw==}
@@ -13082,14 +12952,6 @@ packages:
     resolution: {integrity: sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg==}
     engines: {node: '>=8'}
 
-  is-fullwidth-code-point@4.0.0:
-    resolution: {integrity: sha512-O4L094N2/dZ7xqVdrXhh9r1KODPJpFms8B5sGdJLPy664AgvXsreZUyCQQNItZRDlYug4xStLjNp/sz3HvBowQ==}
-    engines: {node: '>=12'}
-
-  is-fullwidth-code-point@5.1.0:
-    resolution: {integrity: sha512-5XHYaSyiqADb4RnZ1Bdad6cPp8Toise4TzEjcOYDHZkTCbKgiUl7WTUCpNWHuxmDt91wnsZBc9xinNzopv3JMQ==}
-    engines: {node: '>=18'}
-
   is-generator-function@1.1.0:
     resolution: {integrity: sha512-nPUB5km40q9e8UfN/Zc24eLlzdSf9OfKByBw9CIdw4H1giPMeA0OIJvbchsCu4npfI2QcMVBsGEBHKZ7wLTWmQ==}
     engines: {node: '>= 0.4'}
@@ -13217,10 +13079,6 @@ packages:
   is-stream@2.0.1:
     resolution: {integrity: sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==}
     engines: {node: '>=8'}
-
-  is-stream@3.0.0:
-    resolution: {integrity: sha512-LnQR4bZ9IADDRSkvpqMGvt/tEJWclzklNgSw48V5EAaAeDd6qGvN8ei6k5p0tvxSR171VmGyHuTiAOfxAbr8kA==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
   is-string@1.1.1:
     resolution: {integrity: sha512-BtEeSsoaQjlSPBemMQIrY1MY0uM6vnS1g5fmufYOtnxLGUZM2178PKbhsk7Ffv58IX+ZtcvoGwccYsh0PglkAA==}
@@ -13812,15 +13670,6 @@ packages:
   linked-list@2.1.0:
     resolution: {integrity: sha512-0GK/ylO6e5cv1PCOIdTRHxOaCgQ+0jKwHt+cHzkiCAZlx0KM5Id1bBAPad6g2mkvBNp1pNdmG0cohFGfqjkv9A==}
 
-  lint-staged@15.2.10:
-    resolution: {integrity: sha512-5dY5t743e1byO19P9I4b3x8HJwalIznL5E1FWYnU6OWw33KxNBSLAc6Cy7F2PsFEO8FKnLwjwm5hx7aMF0jzZg==}
-    engines: {node: '>=18.12.0'}
-    hasBin: true
-
-  listr2@8.2.5:
-    resolution: {integrity: sha512-iyAZCeyD+c1gPyE9qpFu8af0Y+MRtmKOncdGoA2S5EY8iFq99dmmvkNnHiWo+pj0s7yH7l3KPIgee77tKpXPWQ==}
-    engines: {node: '>=18.0.0'}
-
   lit-element@4.2.2:
     resolution: {integrity: sha512-aFKhNToWxoyhkNDmWZwEva2SlQia+jfG0fjIWV//YeTaWrVnOxD89dPKfigCUspXFmjzOEUQpOkejH5Ly6sG0w==}
 
@@ -13936,10 +13785,6 @@ packages:
 
   log-symbols@6.0.0:
     resolution: {integrity: sha512-i24m8rpwhmPIS4zscNzK6MSEhk0DUWa/8iYQWxhffV8jkI4Phvs3F+quL5xvS0gdQR0FyTCMMH33Y78dDTzzIw==}
-    engines: {node: '>=18'}
-
-  log-update@6.1.0:
-    resolution: {integrity: sha512-9ie8ItPR6tjY5uYJh8K/Zrv/RMZ5VOlOWvtZdEHYSTFKZfIBPQa9tOAEeAWhd+AnIneLJ22w5fjOYtoutpWq5w==}
     engines: {node: '>=18'}
 
   loglevel@1.9.2:
@@ -14610,6 +14455,7 @@ packages:
 
   node-abort-controller@3.1.1:
     resolution: {integrity: sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==}
+    deprecated: This package is no longer needed on supported Node.js versions. Node.js 16+ includes AbortController and AbortSignal as built-in globals. All Node.js versions requiring this polyfill are end-of-life. Use the built-in globals instead.
 
   node-addon-api@5.1.0:
     resolution: {integrity: sha512-eh0GgfEkpnoWDq+VY8OyvYhFEzBk6jIYbRKdIlyTiAXIVJ8PyBaKb0rp7oDtoddbdoHWhq8wwr+XZ81F1rpNdA==}
@@ -14633,8 +14479,8 @@ packages:
       encoding:
         optional: true
 
-  node-forge@1.4.0:
-    resolution: {integrity: sha512-LarFH0+6VfriEhqMMcLX2F7SwSXeWwnEAJEsYm5QKWchiVYVvJyV9v7UDvUv+w5HO23ZpQTXDv/GxdDdMyOuoQ==}
+  node-forge@1.4.2:
+    resolution: {integrity: sha512-rRtAR5XLJ8gCKd9du4qrKAsgCG1ObGP4gLeNJMa4vYSeq4bmBMOJk5IHkrviBV0q7uoAJlVd8HEQYQSVUb4FGQ==}
     engines: {node: '>= 6.13.0'}
 
   node-gyp-build@4.8.4:
@@ -14698,10 +14544,6 @@ packages:
   npm-run-path@3.1.0:
     resolution: {integrity: sha512-Dbl4A/VfiVGLgQv29URL9xshU8XDY1GeLy+fsaZ1AA8JDSfjvr5P5+pzRbWqRSBxk6/DW7MIh8lTM/PaGnP2kg==}
     engines: {node: '>=8'}
-
-  npm-run-path@5.3.0:
-    resolution: {integrity: sha512-ppwTtiJZq0O/ai0z7yfudtBpWIoxM8yE6nHi1X47eFR2EWORqfbu6CnPlNsjeN683eT0qG6H/Pyf9fCcvjnnnQ==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
   npmlog@6.0.2:
     resolution: {integrity: sha512-/vBvz5Jfr9dT/aFWd0FIRf+T/Q2WBsLENygUaFUqstqsycmZAP/t5BvFJTK0viFmSUxiUKTUplWy5vt+rvKIxg==}
@@ -14821,10 +14663,6 @@ packages:
     resolution: {integrity: sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==}
     engines: {node: '>=6'}
 
-  onetime@6.0.0:
-    resolution: {integrity: sha512-1FlR+gjXK7X+AsAHso35MnyN5KqGwJRi/31ft6x0M194ht7S+rWAvd7PHss9xSKMzE0asv1pyIHaJYq+BbacAQ==}
-    engines: {node: '>=12'}
-
   onetime@7.0.0:
     resolution: {integrity: sha512-VXJjc87FScF88uafS3JllDgvAm+c/Slfz06lorj2uAY34rlUu0Nt+v8wreiImcrgAjjIHp1rXpTDlLOGw29WwQ==}
     engines: {node: '>=18'}
@@ -14845,17 +14683,17 @@ packages:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
 
-  openapi-fetch@0.10.6:
-    resolution: {integrity: sha512-6xXfvIEL/POtLGOaFPsp3O+pDe+J3DZYxbD9BrsQHXOTeNK8z/gsWHT6adUy1KcpQOhmkerMzlQrJM6DbN55dQ==}
-
   openapi-fetch@0.13.5:
     resolution: {integrity: sha512-AQK8T9GSKFREFlN1DBXTYsLjs7YV2tZcJ7zUWxbjMoQmj8dDSFRrzhLCbHPZWA1TMV3vACqfCxLEZcwf2wxV6Q==}
 
-  openapi-typescript-helpers@0.0.11:
-    resolution: {integrity: sha512-xofUHlVFq+BMquf3nh9I8N2guHckW6mrDO/F3kaFgrL7MGbjldDnQ9TIT+rkH/+H0LiuO+RuZLnNmsJwsjwUKg==}
+  openapi-fetch@0.17.0:
+    resolution: {integrity: sha512-PsbZR1wAPcG91eEthKhN+Zn92FMHxv+/faECIwjXdxfTODGSGegYv0sc1Olz+HYPvKOuoXfp+0pA2XVt2cI0Ig==}
 
   openapi-typescript-helpers@0.0.15:
     resolution: {integrity: sha512-opyTPaunsklCBpTK8JGef6mfPhLSnyy5a0IN9vKtx3+4aExf+KxEqYwIy3hqkedXIB97u357uLMJsOnm3GVjsw==}
+
+  openapi-typescript-helpers@0.1.0:
+    resolution: {integrity: sha512-OKTGPthhivLw/fHz6c3OPtg72vi86qaMlqbJuVJ23qOvQ+53uw1n7HdmkJFibloF7QEjDrDkzJiOJuockM/ljw==}
 
   openapi-typescript@7.6.1:
     resolution: {integrity: sha512-F7RXEeo/heF3O9lOXo2bNjCOtfp7u+D6W3a3VNEH2xE6v+fxLtn5nq0uvUcA1F5aT+CMhNeC5Uqtg5tlXFX/ag==}
@@ -14904,16 +14742,16 @@ packages:
       typescript:
         optional: true
 
-  ox@0.7.1:
-    resolution: {integrity: sha512-+k9fY9PRNuAMHRFIUbiK9Nt5seYHHzSQs9Bj+iMETcGtlpS7SmBzcGSVUQO3+nqGLEiNK4598pHNFlVRaZbRsg==}
+  ox@0.8.1:
+    resolution: {integrity: sha512-e+z5epnzV+Zuz91YYujecW8cF01mzmrUtWotJ0oEPym/G82uccs7q0WDHTYL3eiONbTUEvcZrptAKLgTBD3u2A==}
     peerDependencies:
       typescript: '>=5.4.0'
     peerDependenciesMeta:
       typescript:
         optional: true
 
-  ox@0.8.1:
-    resolution: {integrity: sha512-e+z5epnzV+Zuz91YYujecW8cF01mzmrUtWotJ0oEPym/G82uccs7q0WDHTYL3eiONbTUEvcZrptAKLgTBD3u2A==}
+  ox@0.9.3:
+    resolution: {integrity: sha512-KzyJP+fPV4uhuuqrTZyok4DC7vFzi7HLUFiUNEmpbyh59htKWkOC98IONC1zgXJPbHAhQgqs6B0Z6StCGhmQvg==}
     peerDependencies:
       typescript: '>=5.4.0'
     peerDependenciesMeta:
@@ -15078,10 +14916,6 @@ packages:
     resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==}
     engines: {node: '>=8'}
 
-  path-key@4.0.0:
-    resolution: {integrity: sha512-haREypq7xkM7ErfgIyA0z+Bj4AGKlMSdlQE2jvJo6huWD1EdkKYV+G/T4nq0YEF2vgTT8kqMFKo1uHn950r4SQ==}
-    engines: {node: '>=12'}
-
   path-parse@1.0.7:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
 
@@ -15163,11 +14997,6 @@ packages:
   picomatch@4.0.4:
     resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}
     engines: {node: '>=12'}
-
-  pidtree@0.6.0:
-    resolution: {integrity: sha512-eG2dWTVw5bzqGRztnHExczNxt5VGsE6OwTeCG3fdUf9KBsZzO3R5OIIIzWR+iZA0NtZ+RDVdaoE2dK1cn6jH4g==}
-    engines: {node: '>=0.10'}
-    hasBin: true
 
   pify@4.0.1:
     resolution: {integrity: sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==}
@@ -15670,6 +15499,10 @@ packages:
     resolution: {integrity: sha512-4EK3+xJl8Ts67nLYNwqw/dsFVnCf+qR7RgXSK9jEEm9unao3njwMDdmsdvoKBKHzxd7tCYz5e5M+SnMjdtXGQQ==}
     engines: {node: '>=0.6'}
 
+  qs@6.16.1:
+    resolution: {integrity: sha512-5Px6J7rfHBAGUhNQ3es4YzcOdBBw0SDcVtThJml4RdnKw4tKs2epA0kPZ+K8X+WiHktT93RHVcQ/3ym5aTCgtg==}
+    engines: {node: '>=0.6'}
+
   quansync@0.2.11:
     resolution: {integrity: sha512-AifT7QEbW9Nri4tAwR5M/uzpBuqfZf+zwaEM/QkzEjj7NBuFD2rBuy0K3dE+8wltbezDV7JMA0WfnCPYRSYbXA==}
 
@@ -15677,8 +15510,8 @@ packages:
     resolution: {integrity: sha512-hh2WYhq4fi8+b+/2Kg9CEge4fDPvHS534aOOvOZeQ3+Vf2mCFsaFBYj0i+iXcAq6I9Vzp5fjMFBlONvayDC1qg==}
     engines: {node: '>=6'}
 
-  query-string@9.1.2:
-    resolution: {integrity: sha512-s3UlTyjxRux4KjwWaJsjh1Mp8zoCkSGKirbD9H89pEM9UOZsfpRZpdfzvsy2/mGlLfC3NnYVpy2gk7jXITHEtA==}
+  query-string@9.5.1:
+    resolution: {integrity: sha512-/zO3RwuRCMTIcEgq6YMv4OrtEE1XzBG7w5N6zc6ydYnkWYOWsnLI/5894hYEzfESfMOT4cHCsRTIdxsSl1KjGg==}
     engines: {node: '>=18'}
 
   querystring-es3@0.2.1:
@@ -16387,9 +16220,6 @@ packages:
     resolution: {integrity: sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==}
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
 
-  rfdc@1.4.1:
-    resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
-
   rimraf@3.0.2:
     resolution: {integrity: sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==}
     deprecated: Rimraf versions prior to v4 are no longer supported
@@ -16748,6 +16578,10 @@ packages:
     resolution: {integrity: sha512-FCLHtRD/gnpCiCHEiJLOwdmFP+wzCmDEkc9y7NsYxeF4u7Btsn1ZuwgwJGxImImHicJArLP4R0yX4c2KCrMrTA==}
     engines: {node: '>= 0.4'}
 
+  side-channel-list@1.0.1:
+    resolution: {integrity: sha512-mjn/0bi/oUURjc5Xl7IaWi/OJJJumuoJFQJfDDyO46+hBWsfaVM65TBHq2eoZBhzl9EchxOijpkbRC8SVBQU0w==}
+    engines: {node: '>= 0.4'}
+
   side-channel-map@1.0.1:
     resolution: {integrity: sha512-VCjCNfgMsby3tTdo02nbjtM/ewra6jPHmpThenkTYh8pG9ucZ/1P8So4u4FGBek/BjpOVsDCMoLA/iuBKIFXRA==}
     engines: {node: '>= 0.4'}
@@ -16758,6 +16592,10 @@ packages:
 
   side-channel@1.1.0:
     resolution: {integrity: sha512-ZX99e6tRweoUXqR+VBrslhda51Nh5MTQwou5tnUDgbtyM0dBgmhEDtWGP/xbKn6hqfPRHujUNwz5fy/wbbhnpw==}
+    engines: {node: '>= 0.4'}
+
+  side-channel@1.1.1:
+    resolution: {integrity: sha512-6x6dK6zJdpTzF4sQeNYxwtvBzf6Eg4GtlesS94HOvTudUeyK2WXAaIfmDgsyslYrRBeFIlsi54AYsFGUuhmvrQ==}
     engines: {node: '>= 0.4'}
 
   siginfo@2.0.0:
@@ -16825,14 +16663,6 @@ packages:
   slice-ansi@4.0.0:
     resolution: {integrity: sha512-qMCMfhY040cVHT43K9BFygqYbUPFZKHOg7K73mtTWJRb8pyP3fzf4Ixd5SzdEJQ6MRUg/WBnOLxghZtKKurENQ==}
     engines: {node: '>=10'}
-
-  slice-ansi@5.0.0:
-    resolution: {integrity: sha512-FC+lgizVPfie0kkhqUScwRu1O/lF6NOgJmlCgK+/LYxDCTk8sGelYaHDhFcDN+Sn3Cv+3VSa4Byeo+IMCzpMgQ==}
-    engines: {node: '>=12'}
-
-  slice-ansi@7.1.0:
-    resolution: {integrity: sha512-bSiSngZ/jWeX93BqeIAbImyTbEihizcwNjFoRUIY/T1wWQsfsm2Vw1agPKylXvQTU7iASGdHhyqRlqQzfz+Htg==}
-    engines: {node: '>=18'}
 
   sliced@1.0.1:
     resolution: {integrity: sha512-VZBmZP8WU3sMOZm1bdgTadsQbcscK0UM8oKxKVBs4XAhUo2Xxzm/OFMGBkPusxw9xL3Uy8LrzEqGqJhclsr0yA==}
@@ -16969,6 +16799,11 @@ packages:
     resolution: {integrity: sha512-WjlahMgHmCJpqzU8bIBy4qtsZdU9lRlcZE3Lvyej6t4tuOuv1vk57OW3MBrj6hXBFx/nNoC9MPMTcr5YA7NQbg==}
     engines: {node: '>=6'}
 
+  standard-navigation@0.0.8:
+    resolution: {integrity: sha512-TyVbo7INUDWtsUWDFn8RR7kwR87U0S4xHfLfbbnyeC581TmmyqQ+eM+nPw8rQTSD8QitRVcYfPaSHr/QJiUy1g==}
+    peerDependencies:
+      react: '*'
+
   statuses@1.5.0:
     resolution: {integrity: sha512-OpZ3zP+jT1PI7I8nemJX4AKmAX070ZkYPVWV/AaKTJl+tXCTGyVdC1a4SL8RUQYEwk/f34ZX8UTykN68FwrqAA==}
     engines: {node: '>= 0.6'}
@@ -17012,10 +16847,6 @@ packages:
   strict-uri-encode@2.0.0:
     resolution: {integrity: sha512-QwiXZgpRcKkhTj2Scnn++4PKtWsH0kpzZ62L2R6c/LUVYv7hVnZqcg2+sMuT6R7Jusu1vviK/MFsu6kNJfWlEQ==}
     engines: {node: '>=4'}
-
-  string-argv@0.3.2:
-    resolution: {integrity: sha512-aqD2Q0144Z+/RqG52NeHEkZauTAUWJO8c6yTftGJKO3Tja5tUgIfmIl6kExvhtxSDP7fXB6DvzkfMpCd/F3G+Q==}
-    engines: {node: '>=0.6.19'}
 
   string-range@1.2.2:
     resolution: {integrity: sha512-tYft6IFi8SjplJpxCUxyqisD3b+R2CSkomrtJYCkvuf1KuCAWgz7YXt4O0jip7efpfCemwHEzTEAO8EuOYgh3w==}
@@ -17094,10 +16925,6 @@ packages:
   strip-final-newline@2.0.0:
     resolution: {integrity: sha512-BrpvfNAE3dcvq7ll3xVumzjKjZQ5tI1sEUIKr3Uoks0XUl45St3FlatVqef9prk4jRDzhW6WZg+3bk93y6pLjA==}
     engines: {node: '>=6'}
-
-  strip-final-newline@3.0.0:
-    resolution: {integrity: sha512-dOESqjYr96iWYylGObzd39EuNTa5VJxyvVAEm5Jnh7KGo75V43Hk1odPQkNDyXNmUR6k+gEiDVXnjB8HJ3crXw==}
-    engines: {node: '>=12'}
 
   strip-indent@3.0.0:
     resolution: {integrity: sha512-laJTa3Jb+VQpaC6DseHhF7dXVqHTfJPCRDaEbid/drOhgitgYku/letMUqOXFoWV0zIIUbjpdH2t+tYj4bQMRQ==}
@@ -17667,6 +17494,10 @@ packages:
   ufo@1.6.4:
     resolution: {integrity: sha512-JFNbkD1Svwe0KvGi8GOeLcP4kAWQ609twvCdcHxq1oSL8svv39ZuSvajcD8B+5D0eL4+s1Is2D/O6KN3qcTeRA==}
 
+  uint8array-tools@0.0.10:
+    resolution: {integrity: sha512-sSbrZqlr04w4p8KKpHw0ME/R4JzQaadum+BWhMlk2M7LrDyXWTfJOco3d1jNMdQNxgk5DDm88R3IWYH0nR+tzQ==}
+    engines: {node: '>=14.0.0'}
+
   uint8array-tools@0.0.8:
     resolution: {integrity: sha512-xS6+s8e0Xbx++5/0L+yyexukU7pz//Yg6IHg3BKhXotg1JcYtgxVcUctQ0HxLByiJzpAkNFawz1Nz5Xadzo82g==}
     engines: {node: '>=14.0.0'}
@@ -17703,12 +17534,12 @@ packages:
   undici-types@7.8.0:
     resolution: {integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==}
 
-  undici@6.29.0:
-    resolution: {integrity: sha512-R+RODBqp6i2pPflGdq+xIOUkl+RNfGgHwoinecKu/JCuf2uO06cOKoDbI2P7Dn6KcswdKwrczbU6IYJ6K8X+wg==}
+  undici@6.29.1:
+    resolution: {integrity: sha512-EvRlUt/QqAEvXdQeRMYUfwOQsfzpDztykrG2owGEE/rBOBoYv9uF39ZzsNDh4lTFHhTr2XOZjKkYgueD12ZmGA==}
     engines: {node: '>=18.17'}
 
-  undici@7.30.0:
-    resolution: {integrity: sha512-dkrQXeHSaoamnItlYbmzG0wFYrM0ZwDxCIg0A7aKjTyyhh9svRzCNFEzV+Vm05/yehjCzjDZ31KXfGEjYSztDQ==}
+  undici@7.30.1:
+    resolution: {integrity: sha512-03KrMbjIFDWQR5RNPrSw3bd1r12JpyFQl9/yxjUbJtqkjmllqC5lFjZh6ujeuJCKr8EOQvRW872Oy/az+nLYxg==}
     engines: {node: '>=20.18.1'}
 
   unenv@2.0.0-rc.24:
@@ -18074,6 +17905,9 @@ packages:
   varuint-bitcoin@2.0.0:
     resolution: {integrity: sha512-6QZbU/rHO2ZQYpWFDALCDSRsXbAs1VOEmXAxtbtjLtKuMJ/FQ8YbhfxlaiKv5nklci0M6lZtlZyxo9Q+qNnyog==}
 
+  varuint-bitcoin@2.0.1:
+    resolution: {integrity: sha512-TTl5qSPJ3FzjuTHo0Ex9WUE3jTxnUsQHR38vIDhHApoVstzJK4gE20WqmTWOT5oo7ilvOSNejXt4CJrfDcqm5A==}
+
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
@@ -18092,14 +17926,6 @@ packages:
 
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
-
-  viem@2.31.0:
-    resolution: {integrity: sha512-U7OMQ6yqK+bRbEIarf2vqxL7unSEQvNxvML/1zG7suAmKuJmipqdVTVJGKBCJiYsm/EremyO2FS4dHIPpGv+eA==}
-    peerDependencies:
-      typescript: '>=5.0.4'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
 
   viem@2.32.0:
     resolution: {integrity: sha512-pHwKXQSyEWX+8ttOQJdU5dSBfYd6L9JxARY/Sx0MBj3uF/Zaiqt6o1SbzjFjQXkNzWSgtxK7H89ZI1SMIA2iLQ==}
@@ -18444,10 +18270,6 @@ packages:
     resolution: {integrity: sha512-si7QWI6zUMq56bESFvagtmzMdGOtoxfR+Sez11Mobfc7tm+VkUckk9bW2UeffTGVUbOksxmSw0AA2gs8g71NCQ==}
     engines: {node: '>=12'}
 
-  wrap-ansi@9.0.0:
-    resolution: {integrity: sha512-G8ura3S+3Z2G+mkgNRq8dqaFZAuxfsxpBB8OCTGRTCtp+l/v9nbFNmCUP1BZMts3G1142MsZfn6eeUKrr4PD1Q==}
-    engines: {node: '>=18'}
-
   wrap-ansi@9.0.2:
     resolution: {integrity: sha512-42AtmgqjV+X1VpdOfyTGOYRi0/zsoLqtXQckTmqTeybT+BDIbM/Guxo7x3pE2vtpr1ok6xRqM9OpBe+Jyoqyww==}
     engines: {node: '>=18'}
@@ -18600,11 +18422,6 @@ packages:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
 
-  yaml@2.5.1:
-    resolution: {integrity: sha512-bLQOjaX/ADgQ20isPJRvF0iRUHIxVhYvr53Of7wGcWlO2jvtUlH5m87DsmulFVxRpNLOnI4tB6p/oh8D7kpn9Q==}
-    engines: {node: '>= 14'}
-    hasBin: true
-
   yaml@2.8.2:
     resolution: {integrity: sha512-mplynKqc1C2hTVYxd0PU2xQAc22TI1vShAYGksCCfxbn/dFwnHTNi1bvYsBTkhdUNtGIf5xNOg938rrSSYvS9A==}
     engines: {node: '>= 14.6'}
@@ -18678,14 +18495,11 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
-  zod@3.22.4:
-    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
-
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
-  zod@4.0.17:
-    resolution: {integrity: sha512-1PHjlYRevNxxdy2JZ8JcNAw7rX8V9P1AKkP+x/xZfxB0K5FYfuV+Ug6P/6NVSR2jHQ+FzDDoDHS04nYUsOIyLQ==}
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
 
   zone-file@2.0.0-beta.3:
     resolution: {integrity: sha512-6tE3PSRcpN5lbTTLlkLez40WkNPc9vw/u1J2j6DBiy0jcVX48nCkWrx2EC+bWHqC2SLp069Xw4AdnYn/qp/W5g==}
@@ -18746,12 +18560,12 @@ snapshots:
       '@octokit/plugin-rest-endpoint-methods': 10.4.1(@octokit/core@5.2.2)
       '@octokit/request': 8.4.1
       '@octokit/request-error': 5.1.1
-      undici: 6.29.0
+      undici: 6.29.1
 
   '@actions/http-client@2.2.3':
     dependencies:
       tunnel: 0.0.6
-      undici: 7.30.0
+      undici: 6.29.1
 
   '@actions/io@1.1.3': {}
 
@@ -21006,7 +20820,7 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@bitcoinerlab/descriptors-core@3.1.7(@noble/hashes@1.5.0)(@scure/base@1.2.4)(@scure/bip32@1.6.2)(@scure/btc-signer@1.6.0)(bip32@5.0.1(typescript@5.9.3))(bitcoinjs-lib@7.0.1(typescript@5.9.3))(ecpair@3.0.1(typescript@5.9.3))':
+  '@bitcoinerlab/descriptors-core@3.1.7(@noble/hashes@1.5.0)(@scure/base@1.2.4)(@scure/bip32@1.6.2)(@scure/btc-signer@1.6.0)(bip32@5.0.1(typescript@5.9.3))(bitcoinjs-lib@7.0.5(typescript@5.9.3))(ecpair@3.0.1(typescript@5.9.3))':
     dependencies:
       '@bitcoinerlab/miniscript': 2.0.0
       lodash.memoize: 4.1.2
@@ -21018,7 +20832,7 @@ snapshots:
       '@scure/bip32': 1.6.2
       '@scure/btc-signer': 1.6.0
       bip32: 5.0.1(typescript@5.9.3)
-      bitcoinjs-lib: 7.0.1(typescript@5.9.3)
+      bitcoinjs-lib: 7.0.5(typescript@5.9.3)
       ecpair: 3.0.1(typescript@5.9.3)
 
   '@bitcoinerlab/miniscript@2.0.0':
@@ -21827,7 +21641,7 @@ snapshots:
 
   '@emotion/sheet@1.4.0': {}
 
-  '@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)':
+  '@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)':
     dependencies:
       '@babel/runtime': 7.26.0
       '@emotion/babel-plugin': 11.13.5
@@ -22037,7 +21851,7 @@ snapshots:
       glob: 11.1.0
       lan-network: 0.1.6
       minimatch: 9.0.7
-      node-forge: 1.4.0
+      node-forge: 1.4.2
       npm-package-arg: 11.0.3
       ora: 3.4.0
       picomatch: 3.0.2
@@ -22059,7 +21873,7 @@ snapshots:
       structured-headers: 0.4.1
       tar: 7.5.22
       terminal-link: 2.1.1
-      undici: 7.30.0
+      undici: 6.29.1
       wrap-ansi: 7.0.0
       ws: 8.21.0
     optionalDependencies:
@@ -22073,7 +21887,7 @@ snapshots:
 
   '@expo/code-signing-certificates@0.0.6':
     dependencies:
-      node-forge: 1.4.0
+      node-forge: 1.4.2
 
   '@expo/config-plugins@54.0.4':
     dependencies:
@@ -22872,12 +22686,12 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@ledgerhq/device-signer-kit-bitcoin@1.3.3(@ledgerhq/device-management-kit@1.9.0(rxjs@7.8.2))(bitcoinjs-lib@7.0.1(typescript@5.9.3))':
+  '@ledgerhq/device-signer-kit-bitcoin@1.3.3(@ledgerhq/device-management-kit@1.9.0(rxjs@7.8.2))(bitcoinjs-lib@7.0.5(typescript@5.9.3))':
     dependencies:
       '@ledgerhq/device-management-kit': 1.9.0(rxjs@7.8.2)
       '@ledgerhq/signer-utils': 1.3.0(@ledgerhq/device-management-kit@1.9.0(rxjs@7.8.2))
       '@types/crypto-js': 4.2.2
-      bitcoinjs-lib: 7.0.1(typescript@5.9.3)
+      bitcoinjs-lib: 7.0.5(typescript@5.9.3)
       crypto-js: 4.2.0
       inversify: 7.5.1(reflect-metadata@0.2.2)
       purify-ts: 2.1.0
@@ -23175,6 +22989,10 @@ snapshots:
       '@noble/hashes': 1.8.0
 
   '@noble/curves@1.9.2':
+    dependencies:
+      '@noble/hashes': 1.8.0
+
+  '@noble/curves@1.9.7':
     dependencies:
       '@noble/hashes': 1.8.0
 
@@ -23852,7 +23670,7 @@ snapshots:
     dependencies:
       '@portabletext/sanity-bridge': 1.1.7(@sanity/schema@4.6.1(@types/react@19.1.17)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.17)(debug@4.4.1))
       '@portabletext/schema': 1.2.0
-      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
+      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.3)
       '@types/react': 19.1.17
       get-random-values-esm: 1.0.2
       lodash: 4.18.1
@@ -23868,7 +23686,7 @@ snapshots:
       '@portabletext/schema': 1.2.0
       '@portabletext/to-html': 3.0.0
       '@sanity/schema': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
-      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
+      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.3)
       '@xstate/react': 6.0.0(@types/react@19.1.17)(react@19.1.0)(xstate@5.21.0)
       debug: 4.4.3(supports-color@9.4.0)
       get-random-values-esm: 1.0.2
@@ -23910,7 +23728,7 @@ snapshots:
     dependencies:
       '@portabletext/schema': 1.2.0
       '@sanity/schema': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
-      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
+      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.3)
       get-random-values-esm: 1.0.2
       lodash.startcase: 4.4.0
 
@@ -25254,10 +25072,10 @@ snapshots:
       '@types/react': 19.1.17
     optional: true
 
-  '@react-navigation/bottom-tabs@7.10.1(@react-navigation/native@7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-screens@4.16.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
+  '@react-navigation/bottom-tabs@7.10.1(@react-navigation/native@7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-screens@4.16.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@react-navigation/elements': 2.9.5(@react-navigation/native@7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      '@react-navigation/native': 7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@react-navigation/elements': 2.9.5(@react-navigation/native@7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@react-navigation/native': 7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       color: 4.2.3
       react: 19.1.0
       react-native: 0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)
@@ -25267,28 +25085,19 @@ snapshots:
     transitivePeerDependencies:
       - '@react-native-masked-view/masked-view'
 
-  '@react-navigation/core@7.9.2(react@19.1.0)':
+  '@react-navigation/core@7.24.0(react@19.1.0)':
     dependencies:
-      '@react-navigation/routers': 7.3.7
+      '@react-navigation/routers': 7.6.5
       escape-string-regexp: 4.0.0
-      nanoid: 3.3.18
-      query-string: 7.1.3
+      fast-deep-equal: 3.1.3
       react: 19.1.0
       react-is: 19.2.3
-      use-latest-callback: 0.2.3(react@19.1.0)
+      use-latest-callback: 0.2.6(react@19.1.0)
       use-sync-external-store: 1.5.0(react@19.1.0)
 
-  '@react-navigation/elements@2.4.2(@react-navigation/native@7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
+  '@react-navigation/elements@2.9.45(@react-navigation/native@7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@react-navigation/native': 7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      color: 4.2.3
-      react: 19.1.0
-      react-native: 0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)
-      react-native-safe-area-context: 5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-
-  '@react-navigation/elements@2.9.5(@react-navigation/native@7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
-    dependencies:
-      '@react-navigation/native': 7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@react-navigation/native': 7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       color: 4.2.3
       react: 19.1.0
       react-native: 0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)
@@ -25296,10 +25105,20 @@ snapshots:
       use-latest-callback: 0.2.6(react@19.1.0)
       use-sync-external-store: 1.5.0(react@19.1.0)
 
-  '@react-navigation/native-stack@7.11.0(@react-navigation/native@7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-screens@4.16.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
+  '@react-navigation/elements@2.9.5(@react-navigation/native@7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@react-navigation/elements': 2.9.5(@react-navigation/native@7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      '@react-navigation/native': 7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@react-navigation/native': 7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      color: 4.2.3
+      react: 19.1.0
+      react-native: 0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)
+      react-native-safe-area-context: 5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      use-latest-callback: 0.2.6(react@19.1.0)
+      use-sync-external-store: 1.5.0(react@19.1.0)
+
+  '@react-navigation/native-stack@7.11.0(@react-navigation/native@7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-screens@4.16.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      '@react-navigation/elements': 2.9.5(@react-navigation/native@7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@react-navigation/native': 7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       color: 4.2.3
       react: 19.1.0
       react-native: 0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)
@@ -25310,30 +25129,32 @@ snapshots:
     transitivePeerDependencies:
       - '@react-native-masked-view/masked-view'
 
-  '@react-navigation/native@7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
+  '@react-navigation/native@7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@react-navigation/core': 7.9.2(react@19.1.0)
+      '@react-navigation/core': 7.24.0(react@19.1.0)
       escape-string-regexp: 4.0.0
       fast-deep-equal: 3.1.3
       nanoid: 3.3.18
       react: 19.1.0
       react-native: 0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)
-      use-latest-callback: 0.2.3(react@19.1.0)
+      standard-navigation: 0.0.8(react@19.1.0)
+      use-latest-callback: 0.2.6(react@19.1.0)
 
-  '@react-navigation/routers@7.3.7':
+  '@react-navigation/routers@7.6.5':
     dependencies:
       nanoid: 3.3.18
 
-  '@react-navigation/stack@7.3.2(@react-navigation/native@7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-gesture-handler@2.28.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-screens@4.16.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
+  '@react-navigation/stack@7.12.1(@react-navigation/native@7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-gesture-handler@2.28.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-screens@4.16.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@react-navigation/elements': 2.4.2(@react-navigation/native@7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      '@react-navigation/native': 7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@react-navigation/elements': 2.9.45(@react-navigation/native@7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@react-navigation/native': 7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       color: 4.2.3
       react: 19.1.0
       react-native: 0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0)
       react-native-gesture-handler: 2.28.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react-native-safe-area-context: 5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       react-native-screens: 4.16.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      use-latest-callback: 0.2.6(react@19.1.0)
     transitivePeerDependencies:
       - '@react-native-masked-view/masked-view'
 
@@ -25441,20 +25262,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@redux-devtools/app-core@2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.2.3)(redux-persist@6.0.0(react@19.1.0)(redux@5.0.1))(redux@5.0.1)':
+  '@redux-devtools/app-core@2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.2.3)(redux-persist@6.0.0(react@19.1.0)(redux@5.0.1))(redux@5.0.1)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)
       '@redux-devtools/chart-monitor': 5.1.1(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react@19.2.3)(redux@5.0.1)
       '@redux-devtools/core': 4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.2.3)(redux@5.0.1)
       '@redux-devtools/inspector-monitor': 6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(redux@5.0.1)
-      '@redux-devtools/inspector-monitor-test-tab': 5.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
-      '@redux-devtools/inspector-monitor-trace-tab': 4.1.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
+      '@redux-devtools/inspector-monitor-test-tab': 5.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
+      '@redux-devtools/inspector-monitor-trace-tab': 4.1.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
       '@redux-devtools/log-monitor': 5.1.1(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react@19.2.3)(redux@5.0.1)
-      '@redux-devtools/rtk-query-monitor': 6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
-      '@redux-devtools/slider-monitor': 6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
-      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@redux-devtools/rtk-query-monitor': 6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
+      '@redux-devtools/slider-monitor': 6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)
+      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)
       '@types/react': 19.1.17
       d3-state-visualizer: 3.0.0
@@ -25471,12 +25292,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@redux-devtools/app@7.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@redux-devtools/app@7.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
-      '@redux-devtools/app-core': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.2.3)(redux-persist@6.0.0(react@19.1.0)(redux@5.0.1))(redux@5.0.1)
-      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)
+      '@redux-devtools/app-core': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.2.3)(redux-persist@6.0.0(react@19.1.0)(redux@5.0.1))(redux@5.0.1)
+      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)
       '@types/react': 19.1.17
       jsan: 3.1.14
@@ -25508,8 +25329,8 @@ snapshots:
       '@apollo/server': 4.13.0(encoding@0.1.13)(graphql@16.12.0)
       '@as-integrations/express5': 1.1.2(@apollo/server@4.13.0(encoding@0.1.13)(graphql@16.12.0))(express@5.2.1)
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
-      '@redux-devtools/app': 7.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)
+      '@redux-devtools/app': 7.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.2.3)
       '@types/react': 19.1.17
       body-parser: 2.2.1
@@ -25562,13 +25383,13 @@ snapshots:
       react-redux: 9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1)
       redux: 5.0.1
 
-  '@redux-devtools/inspector-monitor-test-tab@5.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
+  '@redux-devtools/inspector-monitor-test-tab@5.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)
       '@redux-devtools/inspector-monitor': 6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(redux@5.0.1)
-      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@types/react': 19.1.17
       es6template: 1.0.5
       javascript-stringify: 2.1.0
@@ -25582,7 +25403,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@redux-devtools/inspector-monitor-trace-tab@4.1.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
+  '@redux-devtools/inspector-monitor-trace-tab@4.1.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/inspector-monitor@6.1.2(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
     dependencies:
       '@babel/code-frame': 8.0.0-rc.2
       '@babel/runtime': 7.28.4
@@ -25655,13 +25476,13 @@ snapshots:
       - immutable
       - utf-8-validate
 
-  '@redux-devtools/rtk-query-monitor@6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
+  '@redux-devtools/rtk-query-monitor@6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@reduxjs/toolkit@2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)
       '@redux-devtools/core': 4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1)
-      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)
       '@types/lodash': 4.17.21
       '@types/react': 19.1.17
@@ -25682,13 +25503,13 @@ snapshots:
       immutable: 5.1.5
       jsan: 3.1.14
 
-  '@redux-devtools/slider-monitor@6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
+  '@redux-devtools/slider-monitor@6.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(redux@5.0.1)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)
       '@redux-devtools/core': 4.1.1(react-redux@9.2.0(@types/react@19.1.17)(react@19.1.0)(redux@5.0.1))(react@19.1.0)(redux@5.0.1)
-      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@redux-devtools/ui': 2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@types/react': 19.1.17
       react: 19.2.3
       react-base16-styling: 0.10.0
@@ -25697,11 +25518,11 @@ snapshots:
       - react-dom
       - supports-color
 
-  '@redux-devtools/ui@2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@redux-devtools/ui@2.0.0(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@emotion/react': 11.14.0(@types/react@19.1.17)(react@19.2.3)
-      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.2.3))(@types/react@19.1.17)(react@19.2.3)
+      '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.1.17)(react@19.1.0))(@types/react@19.1.17)(react@19.2.3)
       '@rjsf/core': 5.24.13(@rjsf/utils@5.24.13(react@19.1.0))(react@19.2.3)
       '@rjsf/utils': 5.24.13(react@19.2.3)
       '@rjsf/validator-ajv8': 5.24.13(@rjsf/utils@5.24.13(react@19.1.0))
@@ -25758,35 +25579,24 @@ snapshots:
 
   '@remix-run/node-fetch-server@0.13.3': {}
 
-  '@reown/appkit-common@1.7.17(typescript@5.9.3)(zod@3.22.4)':
+  '@reown/appkit-common@1.7.17(typescript@5.9.3)(zod@4.6.7)':
     dependencies:
       big.js: 6.2.2
       dayjs: 1.11.13
-      viem: 2.55.19(typescript@5.9.3)(zod@3.22.4)
+      viem: 2.55.19(typescript@5.9.3)(zod@4.6.7)
     transitivePeerDependencies:
       - bufferutil
       - typescript
       - utf-8-validate
       - zod
 
-  '@reown/appkit-common@1.7.17(typescript@5.9.3)(zod@4.0.17)':
+  '@reown/appkit-controllers@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)':
     dependencies:
-      big.js: 6.2.2
-      dayjs: 1.11.13
-      viem: 2.55.19(typescript@5.9.3)(zod@4.0.17)
-    transitivePeerDependencies:
-      - bufferutil
-      - typescript
-      - utf-8-validate
-      - zod
-
-  '@reown/appkit-controllers@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)':
-    dependencies:
-      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.0.17)
+      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.6.7)
       '@reown/appkit-wallet': 1.7.17(typescript@5.9.3)
-      '@walletconnect/universal-provider': 2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(encoding@0.1.13)(typescript@5.9.3)(zod@4.0.17)
+      '@walletconnect/universal-provider': 2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(encoding@0.1.13)(typescript@5.9.3)(zod@4.6.7)
       valtio: 2.1.5(@types/react@19.1.17)(react@19.1.0)
-      viem: 2.55.19(typescript@5.9.3)(zod@4.0.17)
+      viem: 2.55.19(typescript@5.9.3)(zod@4.6.7)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -25815,12 +25625,12 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-pay@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)':
+  '@reown/appkit-pay@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)':
     dependencies:
-      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-controllers': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-ui': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-utils': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.0.17)
+      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-controllers': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-ui': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-utils': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.6.7)
       lit: 3.3.0
       valtio: 2.1.5(@types/react@19.1.17)(react@19.1.0)
     transitivePeerDependencies:
@@ -25855,12 +25665,12 @@ snapshots:
     dependencies:
       buffer: 6.0.3
 
-  '@reown/appkit-scaffold-ui@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.0.17)':
+  '@reown/appkit-scaffold-ui@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.6.7)':
     dependencies:
-      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-controllers': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-ui': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-utils': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.0.17)
+      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-controllers': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-ui': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-utils': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.6.7)
       '@reown/appkit-wallet': 1.7.17(typescript@5.9.3)
       lit: 3.3.0
     transitivePeerDependencies:
@@ -25892,18 +25702,18 @@ snapshots:
       - valtio
       - zod
 
-  '@reown/appkit-siwx@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.0.17)':
+  '@reown/appkit-siwx@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.6.7)':
     dependencies:
-      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-controllers': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-scaffold-ui': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.0.17)
-      '@reown/appkit-ui': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-utils': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.0.17)
+      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-controllers': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-scaffold-ui': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.6.7)
+      '@reown/appkit-ui': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-utils': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.6.7)
       bip322-js: 2.0.0
       bs58: 6.0.0
       lit: 3.3.0
       tweetnacl: 1.0.3
-      viem: 2.32.0(typescript@5.9.3)(zod@4.0.17)
+      viem: 2.32.0(typescript@5.9.3)(zod@4.6.7)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -25934,10 +25744,10 @@ snapshots:
       - zod
     optional: true
 
-  '@reown/appkit-ui@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)':
+  '@reown/appkit-ui@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)':
     dependencies:
-      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-controllers': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)
+      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-controllers': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)
       '@reown/appkit-wallet': 1.7.17(typescript@5.9.3)
       lit: 3.3.0
       qrcode: 1.5.3
@@ -25969,12 +25779,12 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-universal-connector@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)':
+  '@reown/appkit-universal-connector@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)':
     dependencies:
-      '@reown/appkit': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.0.17)
-      '@walletconnect/types': 2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))
-      '@walletconnect/universal-provider': 2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(encoding@0.1.13)(typescript@5.9.3)(zod@4.0.17)
+      '@reown/appkit': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.6.7)
+      '@walletconnect/types': 2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))
+      '@walletconnect/universal-provider': 2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(encoding@0.1.13)(typescript@5.9.3)(zod@4.6.7)
       bs58: 6.0.0
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -26005,17 +25815,17 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-utils@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.0.17)':
+  '@reown/appkit-utils@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.6.7)':
     dependencies:
-      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-controllers': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)
+      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-controllers': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)
       '@reown/appkit-polyfills': 1.7.17
       '@reown/appkit-wallet': 1.7.17(typescript@5.9.3)
       '@wallet-standard/wallet': 1.1.0
       '@walletconnect/logger': 2.1.2
-      '@walletconnect/universal-provider': 2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(encoding@0.1.13)(typescript@5.9.3)(zod@4.0.17)
+      '@walletconnect/universal-provider': 2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(encoding@0.1.13)(typescript@5.9.3)(zod@4.6.7)
       valtio: 2.1.5(@types/react@19.1.17)(react@19.1.0)
-      viem: 2.55.19(typescript@5.9.3)(zod@4.0.17)
+      viem: 2.55.19(typescript@5.9.3)(zod@4.6.7)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -26046,33 +25856,33 @@ snapshots:
 
   '@reown/appkit-wallet@1.7.17(typescript@5.9.3)':
     dependencies:
-      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@3.22.4)
+      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.6.7)
       '@reown/appkit-polyfills': 1.7.17
       '@walletconnect/logger': 2.1.2
-      zod: 3.22.4
+      zod: 4.6.7
     transitivePeerDependencies:
       - bufferutil
       - typescript
       - utf-8-validate
 
-  '@reown/appkit@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)':
+  '@reown/appkit@1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)':
     dependencies:
-      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-controllers': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-pay': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)
+      '@reown/appkit-common': 1.7.17(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-controllers': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-pay': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)
       '@reown/appkit-polyfills': 1.7.17
-      '@reown/appkit-scaffold-ui': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.0.17)
-      '@reown/appkit-ui': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-utils': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.0.17)
+      '@reown/appkit-scaffold-ui': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.6.7)
+      '@reown/appkit-ui': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-utils': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.6.7)
       '@reown/appkit-wallet': 1.7.17(typescript@5.9.3)
-      '@walletconnect/universal-provider': 2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(encoding@0.1.13)(typescript@5.9.3)(zod@4.0.17)
+      '@walletconnect/universal-provider': 2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(encoding@0.1.13)(typescript@5.9.3)(zod@4.6.7)
       bs58: 6.0.0
       semver: 7.7.2
       valtio: 2.1.5(@types/react@19.1.17)(react@19.1.0)
-      viem: 2.55.19(typescript@5.9.3)(zod@4.0.17)
+      viem: 2.55.19(typescript@5.9.3)(zod@4.6.7)
     optionalDependencies:
       '@lit/react': 1.0.8(@types/react@19.1.17)
-      '@reown/appkit-siwx': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.0.17)
+      '@reown/appkit-siwx': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(valtio@2.1.5(@types/react@19.1.17)(react@19.1.0))(zod@4.6.7)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -26403,7 +26213,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@sanity/code-input@6.0.1(@babel/runtime@7.26.0)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.4.0)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react-is@19.2.3)(react@19.1.0)(sanity@4.6.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.1(@types/react@19.1.17)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.17)(debug@4.4.1)))(@types/node@25.0.3)(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(immer@11.1.3)(jiti@2.5.1)(lightningcss@1.30.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(terser@5.46.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
+  '@sanity/code-input@6.0.1(@babel/runtime@7.28.4)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.4.0)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react-is@19.2.3)(react@19.1.0)(sanity@4.6.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.1(@types/react@19.1.17)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.17)(debug@4.4.1)))(@types/node@25.0.3)(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(immer@11.1.3)(jiti@2.5.1)(lightningcss@1.30.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(terser@5.46.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
     dependencies:
       '@codemirror/autocomplete': 6.19.0
       '@codemirror/commands': 6.9.0
@@ -26425,7 +26235,7 @@ snapshots:
       '@sanity/incompatible-plugin': 1.0.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@sanity/ui': 3.0.8(@emotion/is-prop-valid@1.4.0)(react-dom@19.1.0(react@19.1.0))(react-is@19.2.3)(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       '@uiw/codemirror-themes': 4.25.2(@codemirror/language@6.11.3)(@codemirror/state@6.5.2)(@codemirror/view@6.38.6)
-      '@uiw/react-codemirror': 4.25.1(@babel/runtime@7.26.0)(@codemirror/autocomplete@6.19.0)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.6)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@uiw/react-codemirror': 4.25.1(@babel/runtime@7.28.4)(@codemirror/autocomplete@6.19.0)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.6)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
       sanity: 4.6.1(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.1.7(@sanity/schema@4.6.1(@types/react@19.1.17)(debug@4.4.1))(@sanity/types@4.6.1(@types/react@19.1.17)(debug@4.4.1)))(@types/node@25.0.3)(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(immer@11.1.3)(jiti@2.5.1)(lightningcss@1.30.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(terser@5.46.0)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
@@ -26454,7 +26264,7 @@ snapshots:
       groq-js: 1.17.3
       json5: 2.2.3
       tsconfig-paths: 4.2.0
-      zod: 3.25.76
+      zod: 4.6.7
     transitivePeerDependencies:
       - supports-color
 
@@ -26576,7 +26386,7 @@ snapshots:
   '@sanity/insert-menu@2.0.1(@emotion/is-prop-valid@1.4.0)(@sanity/types@4.6.1(@types/react@19.1.17)(debug@4.4.1))(react-dom@19.1.0(react@19.1.0))(react-is@19.1.1)(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
     dependencies:
       '@sanity/icons': 3.7.4(react@19.1.0)
-      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
+      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.3)
       '@sanity/ui': 3.0.8(@emotion/is-prop-valid@1.4.0)(react-dom@19.1.0(react@19.1.0))(react-is@19.1.1)(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       lodash: 4.18.1
       react: 19.1.0
@@ -26725,7 +26535,7 @@ snapshots:
     dependencies:
       '@sanity/descriptors': 1.1.1
       '@sanity/generate-help-url': 3.0.0
-      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
+      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.3)
       arrify: 2.0.1
       groq-js: 1.17.3
       humanize-list: 1.0.1
@@ -26791,7 +26601,7 @@ snapshots:
 
   '@sanity/types@4.6.1(@types/react@19.1.17)(debug@4.4.1)':
     dependencies:
-      '@sanity/client': 7.10.0(debug@4.4.3)
+      '@sanity/client': 7.10.0(debug@4.4.1)
       '@sanity/media-library-types': 1.0.0
       '@types/react': 19.1.17
     transitivePeerDependencies:
@@ -26872,7 +26682,7 @@ snapshots:
       '@types/uuid': 8.3.4
       uuid: 8.3.2
 
-  '@sanity/vision@4.6.1(@babel/runtime@7.26.0)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.4.0)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react-is@19.2.3)(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
+  '@sanity/vision@4.6.1(@babel/runtime@7.28.4)(@codemirror/lint@6.8.5)(@codemirror/theme-one-dark@6.1.3)(@emotion/is-prop-valid@1.4.0)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react-is@19.2.3)(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))':
     dependencies:
       '@codemirror/autocomplete': 6.18.7
       '@codemirror/commands': 6.8.1
@@ -26889,7 +26699,7 @@ snapshots:
       '@sanity/icons': 3.7.4(react@19.1.0)
       '@sanity/ui': 3.0.8(@emotion/is-prop-valid@1.4.0)(react-dom@19.1.0(react@19.1.0))(react-is@19.2.3)(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       '@sanity/uuid': 3.0.2
-      '@uiw/react-codemirror': 4.25.1(@babel/runtime@7.26.0)(@codemirror/autocomplete@6.18.7)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.2)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@uiw/react-codemirror': 4.25.1(@babel/runtime@7.28.4)(@codemirror/autocomplete@6.18.7)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.2)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       is-hotkey-esm: 1.0.0
       json-2-csv: 5.5.9
       json5: 2.2.3
@@ -26915,7 +26725,7 @@ snapshots:
     dependencies:
       '@sanity/client': 7.10.0(debug@4.4.3)
     optionalDependencies:
-      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
+      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.3)
 
   '@scure/base@1.1.1': {}
 
@@ -27402,11 +27212,11 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/blockchain-api-client@9.4.0':
+  '@stacks/blockchain-api-client@9.9.0':
     dependencies:
-      eventemitter3: 4.0.7
+      eventemitter3: 5.0.4
       jsonrpc-lite: 2.2.0
-      openapi-fetch: 0.10.6
+      openapi-fetch: 0.17.0
       socket.io-client: 4.8.4
     transitivePeerDependencies:
       - bufferutil
@@ -27444,10 +27254,10 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/connect@8.2.7(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)':
+  '@stacks/connect@8.2.7(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)':
     dependencies:
-      '@reown/appkit': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)
-      '@reown/appkit-universal-connector': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(zod@4.0.17)
+      '@reown/appkit': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)
+      '@reown/appkit-universal-connector': 1.7.17(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(@types/react@19.1.17)(encoding@0.1.13)(lit@3.3.0)(react@19.1.0)(typescript@5.9.3)(zod@4.6.7)
       '@scure/base': 1.2.4
       '@stacks/common': 7.0.2
       '@stacks/connect-ui': 8.1.2
@@ -28617,9 +28427,9 @@ snapshots:
       '@codemirror/state': 6.5.2
       '@codemirror/view': 6.38.6
 
-  '@uiw/react-codemirror@4.25.1(@babel/runtime@7.26.0)(@codemirror/autocomplete@6.18.7)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.2)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@uiw/react-codemirror@4.25.1(@babel/runtime@7.28.4)(@codemirror/autocomplete@6.18.7)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.2)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@babel/runtime': 7.26.0
+      '@babel/runtime': 7.28.4
       '@codemirror/commands': 6.10.1
       '@codemirror/state': 6.5.2
       '@codemirror/theme-one-dark': 6.1.3
@@ -28634,9 +28444,9 @@ snapshots:
       - '@codemirror/lint'
       - '@codemirror/search'
 
-  '@uiw/react-codemirror@4.25.1(@babel/runtime@7.26.0)(@codemirror/autocomplete@6.19.0)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.6)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@uiw/react-codemirror@4.25.1(@babel/runtime@7.28.4)(@codemirror/autocomplete@6.19.0)(@codemirror/language@6.11.3)(@codemirror/lint@6.8.5)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.6)(codemirror@6.0.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@babel/runtime': 7.26.0
+      '@babel/runtime': 7.28.4
       '@codemirror/commands': 6.10.1
       '@codemirror/state': 6.5.2
       '@codemirror/theme-one-dark': 6.1.3
@@ -28814,7 +28624,7 @@ snapshots:
     dependencies:
       '@wallet-standard/base': 1.1.1
 
-  '@walletconnect/core@2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.0.17)':
+  '@walletconnect/core@2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.6.7)':
     dependencies:
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-provider': 1.0.14
@@ -28827,8 +28637,8 @@ snapshots:
       '@walletconnect/relay-auth': 1.1.0
       '@walletconnect/safe-json': 1.0.2
       '@walletconnect/time': 1.0.2
-      '@walletconnect/types': 2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))
-      '@walletconnect/utils': 2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.0.17)
+      '@walletconnect/types': 2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))
+      '@walletconnect/utils': 2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.6.7)
       '@walletconnect/window-getters': 1.0.1
       es-toolkit: 1.39.3
       events: 3.3.0
@@ -28957,16 +28767,16 @@ snapshots:
     dependencies:
       tslib: 1.14.1
 
-  '@walletconnect/sign-client@2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.0.17)':
+  '@walletconnect/sign-client@2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.6.7)':
     dependencies:
-      '@walletconnect/core': 2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.0.17)
+      '@walletconnect/core': 2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.6.7)
       '@walletconnect/events': 1.0.1
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/logger': 2.1.2
       '@walletconnect/time': 1.0.2
-      '@walletconnect/types': 2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))
-      '@walletconnect/utils': 2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.0.17)
+      '@walletconnect/types': 2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))
+      '@walletconnect/utils': 2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.6.7)
       events: 3.3.0
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -28997,7 +28807,7 @@ snapshots:
     dependencies:
       tslib: 1.14.1
 
-  '@walletconnect/types@2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))':
+  '@walletconnect/types@2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))':
     dependencies:
       '@walletconnect/events': 1.0.1
       '@walletconnect/heartbeat': 1.2.2
@@ -29026,7 +28836,7 @@ snapshots:
       - ioredis
       - uploadthing
 
-  '@walletconnect/universal-provider@2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(encoding@0.1.13)(typescript@5.9.3)(zod@4.0.17)':
+  '@walletconnect/universal-provider@2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(encoding@0.1.13)(typescript@5.9.3)(zod@4.6.7)':
     dependencies:
       '@walletconnect/events': 1.0.1
       '@walletconnect/jsonrpc-http-connection': 1.0.8(encoding@0.1.13)
@@ -29035,9 +28845,9 @@ snapshots:
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/keyvaluestorage': 1.1.1(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))
       '@walletconnect/logger': 2.1.2
-      '@walletconnect/sign-client': 2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.0.17)
-      '@walletconnect/types': 2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))
-      '@walletconnect/utils': 2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.0.17)
+      '@walletconnect/sign-client': 2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.6.7)
+      '@walletconnect/types': 2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))
+      '@walletconnect/utils': 2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.6.7)
       es-toolkit: 1.39.3
       events: 3.3.0
     transitivePeerDependencies:
@@ -29066,11 +28876,11 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@walletconnect/utils@2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.0.17)':
+  '@walletconnect/utils@2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))(typescript@5.9.3)(zod@4.6.7)':
     dependencies:
       '@msgpack/msgpack': 3.1.2
       '@noble/ciphers': 1.3.0
-      '@noble/curves': 1.9.2
+      '@noble/curves': 1.9.7
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
       '@walletconnect/jsonrpc-utils': 1.0.8
@@ -29079,15 +28889,14 @@ snapshots:
       '@walletconnect/relay-auth': 1.1.0
       '@walletconnect/safe-json': 1.0.2
       '@walletconnect/time': 1.0.2
-      '@walletconnect/types': 2.21.5(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))
+      '@walletconnect/types': 2.21.10(@react-native-async-storage/async-storage@1.24.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.1.17)(react@19.1.0)))
       '@walletconnect/window-getters': 1.0.1
       '@walletconnect/window-metadata': 1.0.1
       blakejs: 1.2.1
       bs58: 6.0.0
       detect-browser: 5.3.0
-      query-string: 7.1.3
+      ox: 0.9.3(typescript@5.9.3)(zod@4.6.7)
       uint8arrays: 3.1.1
-      viem: 2.31.0(typescript@5.9.3)(zod@4.0.17)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -29105,12 +28914,10 @@ snapshots:
       - '@vercel/functions'
       - '@vercel/kv'
       - aws4fetch
-      - bufferutil
       - db0
       - ioredis
       - typescript
       - uploadthing
-      - utf-8-validate
       - zod
 
   '@walletconnect/window-getters@1.0.1':
@@ -29156,20 +28963,16 @@ snapshots:
   abbrev@1.1.1:
     optional: true
 
-  abitype@1.0.8(typescript@5.9.3)(zod@4.0.17):
+  abitype@1.0.8(typescript@5.9.3)(zod@4.6.7):
     optionalDependencies:
       typescript: 5.9.3
-      zod: 4.0.17
+      zod: 4.6.7
+    optional: true
 
-  abitype@1.2.3(typescript@5.9.3)(zod@3.22.4):
+  abitype@1.2.3(typescript@5.9.3)(zod@4.6.7):
     optionalDependencies:
       typescript: 5.9.3
-      zod: 3.22.4
-
-  abitype@1.2.3(typescript@5.9.3)(zod@4.0.17):
-    optionalDependencies:
-      typescript: 5.9.3
-      zod: 4.0.17
+      zod: 4.6.7
 
   abort-controller@3.0.0:
     dependencies:
@@ -29307,10 +29110,6 @@ snapshots:
   ansi-escapes@4.3.2:
     dependencies:
       type-fest: 0.21.3
-
-  ansi-escapes@7.2.0:
-    dependencies:
-      environment: 1.1.0
 
   ansi-regex@4.1.1: {}
 
@@ -29533,7 +29332,7 @@ snapshots:
 
   axios@1.20.0:
     dependencies:
-      follow-redirects: 1.16.1(debug@4.4.3)
+      follow-redirects: 1.16.2(debug@4.4.3)
       form-data: 4.0.6
       https-proxy-agent: 5.0.1
       proxy-from-env: 2.1.0
@@ -29862,19 +29661,19 @@ snapshots:
   bip174@2.1.1:
     optional: true
 
-  bip174@3.0.0:
+  bip174@3.0.1:
     dependencies:
-      uint8array-tools: 0.0.9
-      varuint-bitcoin: 2.0.0
+      uint8array-tools: 0.0.10
+      varuint-bitcoin: 2.0.1
 
   bip21@3.0.0:
     dependencies:
-      query-string: 9.1.2
+      query-string: 9.5.1
 
   bip322-js@2.0.0:
     dependencies:
       '@bitcoinerlab/secp256k1': 1.2.0
-      bitcoinjs-lib: 6.1.7
+      bitcoinjs-lib: 6.1.10
       bitcoinjs-message: 2.2.0
       ecpair: 2.1.0
       elliptic: 6.6.1
@@ -29907,7 +29706,7 @@ snapshots:
       bech32: 2.0.0
       sha256-uint8array: 0.10.7
 
-  bitcoinjs-lib@6.1.7:
+  bitcoinjs-lib@6.1.10:
     dependencies:
       '@noble/hashes': 1.5.0
       bech32: 2.0.0
@@ -29917,15 +29716,15 @@ snapshots:
       varuint-bitcoin: 1.1.2
     optional: true
 
-  bitcoinjs-lib@7.0.1(typescript@5.9.3):
+  bitcoinjs-lib@7.0.5(typescript@5.9.3):
     dependencies:
       '@noble/hashes': 1.5.0
       bech32: 2.0.0
-      bip174: 3.0.0
+      bip174: 3.0.1
       bs58check: 4.0.0
-      uint8array-tools: 0.0.9
+      uint8array-tools: 0.0.10
       valibot: 1.4.2(typescript@5.9.3)
-      varuint-bitcoin: 2.0.0
+      varuint-bitcoin: 2.0.1
     transitivePeerDependencies:
       - typescript
 
@@ -29966,7 +29765,7 @@ snapshots:
 
   bn.js@5.2.3: {}
 
-  body-parser@1.20.4:
+  body-parser@1.20.9:
     dependencies:
       bytes: 3.1.2
       content-type: 1.0.5
@@ -29976,7 +29775,7 @@ snapshots:
       http-errors: 2.0.1
       iconv-lite: 0.4.24
       on-finished: 2.4.1
-      qs: 6.14.1
+      qs: 6.16.1
       raw-body: 2.5.3
       type-is: 1.6.18
       unpipe: 1.0.0
@@ -30436,11 +30235,6 @@ snapshots:
     dependencies:
       colors: 1.0.3
 
-  cli-truncate@4.0.0:
-    dependencies:
-      slice-ansi: 5.0.0
-      string-width: 7.2.0
-
   cli-width@4.1.0: {}
 
   client-only@0.0.1: {}
@@ -30544,8 +30338,6 @@ snapshots:
   colorette@1.4.0: {}
 
   colorette@2.0.19: {}
-
-  colorette@2.0.20: {}
 
   colors@1.0.3: {}
 
@@ -31195,10 +30987,6 @@ snapshots:
     dependencies:
       ms: 2.1.2
 
-  debug@4.3.7:
-    dependencies:
-      ms: 2.1.3
-
   debug@4.4.1(supports-color@5.5.0):
     dependencies:
       ms: 2.1.3
@@ -31230,9 +31018,7 @@ snapshots:
     dependencies:
       character-entities: 2.0.2
 
-  decode-uri-component@0.2.2: {}
-
-  decode-uri-component@0.4.1: {}
+  decode-uri-component@0.5.1: {}
 
   decompress-response@6.0.0:
     dependencies:
@@ -31404,11 +31190,7 @@ snapshots:
     dependencies:
       domelementtype: 2.3.0
 
-  dompurify@3.2.4:
-    optionalDependencies:
-      '@types/trusted-types': 2.0.7
-
-  dompurify@3.3.3:
+  dompurify@3.4.17:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -31595,8 +31377,6 @@ snapshots:
   env-editor@0.4.2: {}
 
   env-paths@2.2.1: {}
-
-  environment@1.1.0: {}
 
   err-code@2.0.3:
     optional: true
@@ -32017,9 +31797,9 @@ snapshots:
 
   event-target-shim@5.0.1: {}
 
-  eventemitter3@4.0.7: {}
-
   eventemitter3@5.0.1: {}
+
+  eventemitter3@5.0.4: {}
 
   events@3.3.0: {}
 
@@ -32049,18 +31829,6 @@ snapshots:
       p-finally: 2.0.1
       signal-exit: 3.0.7
       strip-final-newline: 2.0.0
-
-  execa@8.0.1:
-    dependencies:
-      cross-spawn: 7.0.6
-      get-stream: 8.0.1
-      human-signals: 5.0.0
-      is-stream: 3.0.0
-      merge-stream: 2.0.0
-      npm-run-path: 5.3.0
-      onetime: 6.0.0
-      signal-exit: 4.1.0
-      strip-final-newline: 3.0.0
 
   exif-component@1.0.1: {}
 
@@ -32248,9 +32016,9 @@ snapshots:
       '@expo/schema-utils': 0.1.8
       '@radix-ui/react-slot': 1.2.0(@types/react@19.1.17)(react@19.1.0)
       '@radix-ui/react-tabs': 1.1.12(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      '@react-navigation/bottom-tabs': 7.10.1(@react-navigation/native@7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-screens@4.16.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      '@react-navigation/native': 7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      '@react-navigation/native-stack': 7.11.0(@react-navigation/native@7.1.9(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-screens@4.16.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@react-navigation/bottom-tabs': 7.10.1(@react-navigation/native@7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-screens@4.16.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@react-navigation/native': 7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
+      '@react-navigation/native-stack': 7.11.0(@react-navigation/native@7.5.1(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native-screens@4.16.0(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.27.1)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       client-only: 0.0.1
       debug: 4.4.3(supports-color@9.4.0)
       escape-string-regexp: 4.0.0
@@ -32375,7 +32143,7 @@ snapshots:
     dependencies:
       accepts: 1.3.8
       array-flatten: 1.1.1
-      body-parser: 1.20.4
+      body-parser: 1.20.9
       content-disposition: 0.5.4
       content-type: 1.0.5
       cookie: 0.7.2
@@ -32639,11 +32407,11 @@ snapshots:
     dependencies:
       tslib: 2.6.2
 
-  follow-redirects@1.16.1(debug@4.4.1):
+  follow-redirects@1.16.2(debug@4.4.1):
     optionalDependencies:
       debug: 4.4.1(supports-color@5.5.0)
 
-  follow-redirects@1.16.1(debug@4.4.3):
+  follow-redirects@1.16.2(debug@4.4.3):
     optionalDependencies:
       debug: 4.4.3(supports-color@9.4.0)
 
@@ -32779,8 +32547,6 @@ snapshots:
 
   get-east-asian-width@1.3.0: {}
 
-  get-east-asian-width@1.4.0: {}
-
   get-east-asian-width@1.6.0: {}
 
   get-folder-size@5.0.0: {}
@@ -32802,7 +32568,7 @@ snapshots:
     dependencies:
       '@types/follow-redirects': 1.14.4
       decompress-response: 7.0.0
-      follow-redirects: 1.16.1(debug@4.4.1)
+      follow-redirects: 1.16.2(debug@4.4.1)
       is-retry-allowed: 2.2.0
       through2: 4.0.2
       tunnel-agent: 0.6.0
@@ -32813,7 +32579,7 @@ snapshots:
     dependencies:
       '@types/follow-redirects': 1.14.4
       decompress-response: 7.0.0
-      follow-redirects: 1.16.1(debug@4.4.3)
+      follow-redirects: 1.16.2(debug@4.4.3)
       is-retry-allowed: 2.2.0
       through2: 4.0.2
       tunnel-agent: 0.6.0
@@ -32846,8 +32612,6 @@ snapshots:
   get-stream@5.2.0:
     dependencies:
       pump: 3.0.3
-
-  get-stream@8.0.1: {}
 
   get-symbol-description@1.1.0:
     dependencies:
@@ -33296,16 +33060,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  human-signals@5.0.0: {}
-
   humanize-list@1.0.1: {}
 
   humanize-ms@1.2.1:
     dependencies:
       ms: 2.1.3
     optional: true
-
-  husky@9.1.7: {}
 
   hyphenate-style-name@1.1.0:
     optional: true
@@ -33526,12 +33286,6 @@ snapshots:
 
   is-fullwidth-code-point@3.0.0: {}
 
-  is-fullwidth-code-point@4.0.0: {}
-
-  is-fullwidth-code-point@5.1.0:
-    dependencies:
-      get-east-asian-width: 1.4.0
-
   is-generator-function@1.1.0:
     dependencies:
       call-bound: 1.0.4
@@ -33628,8 +33382,6 @@ snapshots:
 
   is-stream@2.0.1: {}
 
-  is-stream@3.0.0: {}
-
   is-string@1.1.1:
     dependencies:
       call-bound: 1.0.4
@@ -33700,7 +33452,7 @@ snapshots:
 
   isomorphic-dompurify@2.26.0:
     dependencies:
-      dompurify: 3.3.3
+      dompurify: 3.4.17
       jsdom: 26.1.0
     transitivePeerDependencies:
       - bufferutil
@@ -34335,30 +34087,6 @@ snapshots:
 
   linked-list@2.1.0: {}
 
-  lint-staged@15.2.10:
-    dependencies:
-      chalk: 5.3.0
-      commander: 12.1.0
-      debug: 4.3.7
-      execa: 8.0.1
-      lilconfig: 3.1.3
-      listr2: 8.2.5
-      micromatch: 4.0.8
-      pidtree: 0.6.0
-      string-argv: 0.3.2
-      yaml: 2.5.1
-    transitivePeerDependencies:
-      - supports-color
-
-  listr2@8.2.5:
-    dependencies:
-      cli-truncate: 4.0.0
-      colorette: 2.0.20
-      eventemitter3: 5.0.1
-      log-update: 6.1.0
-      rfdc: 1.4.1
-      wrap-ansi: 9.0.0
-
   lit-element@4.2.2:
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.6.0
@@ -34464,14 +34192,6 @@ snapshots:
     dependencies:
       chalk: 5.3.0
       is-unicode-supported: 1.3.0
-
-  log-update@6.1.0:
-    dependencies:
-      ansi-escapes: 7.2.0
-      cli-cursor: 5.0.0
-      slice-ansi: 7.1.0
-      strip-ansi: 7.1.2
-      wrap-ansi: 9.0.2
 
   loglevel@1.9.2: {}
 
@@ -35253,7 +34973,7 @@ snapshots:
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       sharp: 0.34.5
-      undici: 7.30.0
+      undici: 7.30.1
       workerd: 1.20260312.1
       ws: 8.21.0
       youch: 4.1.0-beta.10
@@ -35508,7 +35228,7 @@ snapshots:
     optionalDependencies:
       encoding: 0.1.13
 
-  node-forge@1.4.0: {}
+  node-forge@1.4.2: {}
 
   node-gyp-build@4.8.4:
     optional: true
@@ -35622,10 +35342,6 @@ snapshots:
   npm-run-path@3.1.0:
     dependencies:
       path-key: 3.1.1
-
-  npm-run-path@5.3.0:
-    dependencies:
-      path-key: 4.0.0
 
   npmlog@6.0.2:
     dependencies:
@@ -35744,10 +35460,6 @@ snapshots:
     dependencies:
       mimic-fn: 2.1.0
 
-  onetime@6.0.0:
-    dependencies:
-      mimic-fn: 4.0.0
-
   onetime@7.0.0:
     dependencies:
       mimic-function: 5.0.1
@@ -35779,17 +35491,17 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  openapi-fetch@0.10.6:
-    dependencies:
-      openapi-typescript-helpers: 0.0.11
-
   openapi-fetch@0.13.5:
     dependencies:
       openapi-typescript-helpers: 0.0.15
 
-  openapi-typescript-helpers@0.0.11: {}
+  openapi-fetch@0.17.0:
+    dependencies:
+      openapi-typescript-helpers: 0.1.0
 
   openapi-typescript-helpers@0.0.15: {}
+
+  openapi-typescript-helpers@0.1.0: {}
 
   openapi-typescript@7.6.1(typescript@5.9.3):
     dependencies:
@@ -35867,7 +35579,7 @@ snapshots:
       object-keys: 1.1.1
       safe-push-apply: 1.0.0
 
-  ox@0.14.34(typescript@5.9.3)(zod@3.22.4):
+  ox@0.14.34(typescript@5.9.3)(zod@4.6.7):
     dependencies:
       '@adraffy/ens-normalize': 1.11.1
       '@noble/ciphers': 1.3.0
@@ -35875,44 +35587,14 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      abitype: 1.2.3(typescript@5.9.3)(zod@3.22.4)
+      abitype: 1.2.3(typescript@5.9.3)(zod@4.6.7)
       eventemitter3: 5.0.1
     optionalDependencies:
       typescript: 5.9.3
     transitivePeerDependencies:
       - zod
 
-  ox@0.14.34(typescript@5.9.3)(zod@4.0.17):
-    dependencies:
-      '@adraffy/ens-normalize': 1.11.1
-      '@noble/ciphers': 1.3.0
-      '@noble/curves': 1.9.1
-      '@noble/hashes': 1.8.0
-      '@scure/bip32': 1.7.0
-      '@scure/bip39': 1.6.0
-      abitype: 1.2.3(typescript@5.9.3)(zod@4.0.17)
-      eventemitter3: 5.0.1
-    optionalDependencies:
-      typescript: 5.9.3
-    transitivePeerDependencies:
-      - zod
-
-  ox@0.7.1(typescript@5.9.3)(zod@4.0.17):
-    dependencies:
-      '@adraffy/ens-normalize': 1.11.1
-      '@noble/ciphers': 1.3.0
-      '@noble/curves': 1.9.2
-      '@noble/hashes': 1.5.0
-      '@scure/bip32': 1.6.2
-      '@scure/bip39': 1.5.4
-      abitype: 1.0.8(typescript@5.9.3)(zod@4.0.17)
-      eventemitter3: 5.0.1
-    optionalDependencies:
-      typescript: 5.9.3
-    transitivePeerDependencies:
-      - zod
-
-  ox@0.8.1(typescript@5.9.3)(zod@4.0.17):
+  ox@0.8.1(typescript@5.9.3)(zod@4.6.7):
     dependencies:
       '@adraffy/ens-normalize': 1.11.1
       '@noble/ciphers': 1.3.0
@@ -35920,13 +35602,28 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      abitype: 1.0.8(typescript@5.9.3)(zod@4.0.17)
+      abitype: 1.0.8(typescript@5.9.3)(zod@4.6.7)
       eventemitter3: 5.0.1
     optionalDependencies:
       typescript: 5.9.3
     transitivePeerDependencies:
       - zod
     optional: true
+
+  ox@0.9.3(typescript@5.9.3)(zod@4.6.7):
+    dependencies:
+      '@adraffy/ens-normalize': 1.11.1
+      '@noble/ciphers': 1.3.0
+      '@noble/curves': 1.9.1
+      '@noble/hashes': 1.8.0
+      '@scure/bip32': 1.7.0
+      '@scure/bip39': 1.6.0
+      abitype: 1.2.3(typescript@5.9.3)(zod@4.6.7)
+      eventemitter3: 5.0.1
+    optionalDependencies:
+      typescript: 5.9.3
+    transitivePeerDependencies:
+      - zod
 
   p-cancelable@2.1.1: {}
 
@@ -36078,8 +35775,6 @@ snapshots:
 
   path-key@3.1.1: {}
 
-  path-key@4.0.0: {}
-
   path-parse@1.0.7: {}
 
   path-scurry@2.0.1:
@@ -36147,8 +35842,6 @@ snapshots:
   picomatch@3.0.2: {}
 
   picomatch@4.0.4: {}
-
-  pidtree@0.6.0: {}
 
   pify@4.0.1: {}
 
@@ -36706,18 +36399,23 @@ snapshots:
     dependencies:
       side-channel: 1.1.0
 
+  qs@6.16.1:
+    dependencies:
+      es-define-property: 1.0.1
+      side-channel: 1.1.1
+
   quansync@0.2.11: {}
 
   query-string@7.1.3:
     dependencies:
-      decode-uri-component: 0.2.2
+      decode-uri-component: 0.5.1
       filter-obj: 1.1.0
       split-on-first: 1.1.0
       strict-uri-encode: 2.0.0
 
-  query-string@9.1.2:
+  query-string@9.5.1:
     dependencies:
-      decode-uri-component: 0.4.1
+      decode-uri-component: 0.5.1
       filter-obj: 5.1.0
       split-on-first: 3.0.0
 
@@ -37667,8 +37365,6 @@ snapshots:
 
   reusify@1.1.0: {}
 
-  rfdc@1.4.1: {}
-
   rimraf@3.0.2:
     dependencies:
       glob: 11.1.0
@@ -37931,7 +37627,7 @@ snapshots:
       '@sanity/schema': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
       '@sanity/sdk': 2.1.2(@types/react@19.1.17)(debug@4.4.1)(immer@11.1.3)(react@19.1.0)(use-sync-external-store@1.5.0(react@19.1.0))
       '@sanity/telemetry': 0.8.1(react@19.1.0)
-      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
+      '@sanity/types': 4.6.1(@types/react@19.1.17)(debug@4.4.3)
       '@sanity/ui': 3.0.8(@emotion/is-prop-valid@1.4.0)(react-dom@19.1.0(react@19.1.0))(react-is@19.1.1)(react@19.1.0)(styled-components@6.1.18(react-dom@19.1.0(react@19.1.0))(react@19.1.0))
       '@sanity/util': 4.6.1(@types/react@19.1.17)(debug@4.4.1)
       '@sanity/uuid': 3.0.2
@@ -38295,6 +37991,11 @@ snapshots:
       es-errors: 1.3.0
       object-inspect: 1.13.4
 
+  side-channel-list@1.0.1:
+    dependencies:
+      es-errors: 1.3.0
+      object-inspect: 1.13.4
+
   side-channel-map@1.0.1:
     dependencies:
       call-bound: 1.0.4
@@ -38315,6 +38016,14 @@ snapshots:
       es-errors: 1.3.0
       object-inspect: 1.13.4
       side-channel-list: 1.0.0
+      side-channel-map: 1.0.1
+      side-channel-weakmap: 1.0.2
+
+  side-channel@1.1.1:
+    dependencies:
+      es-errors: 1.3.0
+      object-inspect: 1.13.4
+      side-channel-list: 1.0.1
       side-channel-map: 1.0.1
       side-channel-weakmap: 1.0.2
 
@@ -38392,16 +38101,6 @@ snapshots:
       ansi-styles: 4.3.0
       astral-regex: 2.0.0
       is-fullwidth-code-point: 3.0.0
-
-  slice-ansi@5.0.0:
-    dependencies:
-      ansi-styles: 6.2.3
-      is-fullwidth-code-point: 4.0.0
-
-  slice-ansi@7.1.0:
-    dependencies:
-      ansi-styles: 6.2.3
-      is-fullwidth-code-point: 5.1.0
 
   sliced@1.0.1: {}
 
@@ -38573,6 +38272,10 @@ snapshots:
     dependencies:
       type-fest: 0.7.1
 
+  standard-navigation@0.0.8(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+
   statuses@1.5.0: {}
 
   statuses@2.0.2: {}
@@ -38617,8 +38320,6 @@ snapshots:
   strict-event-emitter@0.5.1: {}
 
   strict-uri-encode@2.0.0: {}
-
-  string-argv@0.3.2: {}
 
   string-range@1.2.2: {}
 
@@ -38727,8 +38428,6 @@ snapshots:
   strip-bom@4.0.0: {}
 
   strip-final-newline@2.0.0: {}
-
-  strip-final-newline@3.0.0: {}
 
   strip-indent@3.0.0:
     dependencies:
@@ -39327,6 +39026,8 @@ snapshots:
 
   ufo@1.6.4: {}
 
+  uint8array-tools@0.0.10: {}
+
   uint8array-tools@0.0.8: {}
 
   uint8array-tools@0.0.9: {}
@@ -39360,9 +39061,9 @@ snapshots:
 
   undici-types@7.8.0: {}
 
-  undici@6.29.0: {}
+  undici@6.29.1: {}
 
-  undici@7.30.0: {}
+  undici@7.30.1: {}
 
   unenv@2.0.0-rc.24:
     dependencies:
@@ -39652,6 +39353,10 @@ snapshots:
     dependencies:
       uint8array-tools: 0.0.8
 
+  varuint-bitcoin@2.0.1:
+    dependencies:
+      uint8array-tools: 0.0.10
+
   vary@1.1.2: {}
 
   vaul@1.1.2(@types/react-dom@19.1.11(@types/react@19.1.17))(@types/react@19.1.17)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
@@ -39678,32 +39383,15 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  viem@2.31.0(typescript@5.9.3)(zod@4.0.17):
-    dependencies:
-      '@noble/curves': 1.9.1
-      '@noble/hashes': 1.8.0
-      '@scure/bip32': 1.7.0
-      '@scure/bip39': 1.6.0
-      abitype: 1.0.8(typescript@5.9.3)(zod@4.0.17)
-      isows: 1.0.7(ws@8.21.0)
-      ox: 0.7.1(typescript@5.9.3)(zod@4.0.17)
-      ws: 8.21.0
-    optionalDependencies:
-      typescript: 5.9.3
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-      - zod
-
-  viem@2.32.0(typescript@5.9.3)(zod@4.0.17):
+  viem@2.32.0(typescript@5.9.3)(zod@4.6.7):
     dependencies:
       '@noble/curves': 1.9.2
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      abitype: 1.0.8(typescript@5.9.3)(zod@4.0.17)
+      abitype: 1.0.8(typescript@5.9.3)(zod@4.6.7)
       isows: 1.0.7(ws@8.21.0)
-      ox: 0.8.1(typescript@5.9.3)(zod@4.0.17)
+      ox: 0.8.1(typescript@5.9.3)(zod@4.6.7)
       ws: 8.21.0
     optionalDependencies:
       typescript: 5.9.3
@@ -39713,32 +39401,15 @@ snapshots:
       - zod
     optional: true
 
-  viem@2.55.19(typescript@5.9.3)(zod@3.22.4):
+  viem@2.55.19(typescript@5.9.3)(zod@4.6.7):
     dependencies:
       '@noble/curves': 1.9.1
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
-      abitype: 1.2.3(typescript@5.9.3)(zod@3.22.4)
+      abitype: 1.2.3(typescript@5.9.3)(zod@4.6.7)
       isows: 1.0.7(ws@8.21.0)
-      ox: 0.14.34(typescript@5.9.3)(zod@3.22.4)
-      ws: 8.21.0
-    optionalDependencies:
-      typescript: 5.9.3
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-      - zod
-
-  viem@2.55.19(typescript@5.9.3)(zod@4.0.17):
-    dependencies:
-      '@noble/curves': 1.9.1
-      '@noble/hashes': 1.8.0
-      '@scure/bip32': 1.7.0
-      '@scure/bip39': 1.6.0
-      abitype: 1.2.3(typescript@5.9.3)(zod@4.0.17)
-      isows: 1.0.7(ws@8.21.0)
-      ox: 0.14.34(typescript@5.9.3)(zod@4.0.17)
+      ox: 0.14.34(typescript@5.9.3)(zod@4.6.7)
       ws: 8.21.0
     optionalDependencies:
       typescript: 5.9.3
@@ -40062,43 +39733,6 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@26.1.0)(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0):
-    dependencies:
-      '@vitest/expect': 2.1.9
-      '@vitest/mocker': 2.1.9(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(vite@5.4.21(@types/node@25.0.3)(lightningcss@1.30.2)(terser@5.46.0))
-      '@vitest/pretty-format': 2.1.9
-      '@vitest/runner': 2.1.9
-      '@vitest/snapshot': 2.1.9
-      '@vitest/spy': 2.1.9
-      '@vitest/utils': 2.1.9
-      chai: 5.2.0
-      debug: 4.4.3(supports-color@9.4.0)
-      expect-type: 1.2.0
-      magic-string: 0.30.21
-      pathe: 1.1.2
-      std-env: 3.9.0
-      tinybench: 2.9.0
-      tinyexec: 0.3.2
-      tinypool: 1.0.2
-      tinyrainbow: 1.2.0
-      vite: 5.4.21(@types/node@25.0.3)(lightningcss@1.30.2)(terser@5.46.0)
-      vite-node: 2.1.9(@types/node@25.0.3)(lightningcss@1.30.2)(terser@5.46.0)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      '@types/node': 25.0.3
-      happy-dom: 20.0.11
-      jsdom: 26.1.0
-    transitivePeerDependencies:
-      - less
-      - lightningcss
-      - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-
   vitest@2.1.9(@types/node@25.0.3)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.5.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@25.0.3)(typescript@5.9.3))(terser@5.46.0):
     dependencies:
       '@vitest/expect': 2.1.9
@@ -40386,12 +40020,6 @@ snapshots:
       string-width: 5.1.2
       strip-ansi: 7.1.2
 
-  wrap-ansi@9.0.0:
-    dependencies:
-      ansi-styles: 6.2.3
-      string-width: 7.2.0
-      strip-ansi: 7.1.2
-
   wrap-ansi@9.0.2:
     dependencies:
       ansi-styles: 6.2.3
@@ -40496,8 +40124,6 @@ snapshots:
 
   yaml@1.10.2: {}
 
-  yaml@2.5.1: {}
-
   yaml@2.8.2: {}
 
   yargs-parser@18.1.3:
@@ -40580,15 +40206,13 @@ snapshots:
     dependencies:
       zod: 3.25.76
 
-  zod-validation-error@4.0.1(zod@4.0.17):
+  zod-validation-error@4.0.1(zod@4.6.7):
     dependencies:
-      zod: 4.0.17
-
-  zod@3.22.4: {}
+      zod: 4.6.7
 
   zod@3.25.76: {}
 
-  zod@4.0.17: {}
+  zod@4.6.7: {}
 
   zone-file@2.0.0-beta.3: {}
 

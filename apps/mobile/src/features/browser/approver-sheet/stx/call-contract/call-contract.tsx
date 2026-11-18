@@ -6,16 +6,16 @@ import { getTxOptions } from '@/features/approver/utils';
 import { useBroadcastStacksTransaction } from '@/queries/stacks/use-broadcast-stacks-transaction';
 import { useGetStxNetworkFromRequestParams } from '@/shared/utils';
 import { useAccounts } from '@/store/accounts/accounts.read';
-import { App } from '@/store/apps/utils';
+import { type App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { AuthType, deserializeTransaction } from '@stacks/transactions';
 
 import {
-  RpcRequest,
-  RpcResponse,
+  type RpcRequest,
+  type RpcResponse,
   createRpcSuccessResponse,
-  stxCallContract,
+  type stxCallContract,
 } from '@leather.io/rpc';
 
 import { getStxRequestParams } from '../utils';

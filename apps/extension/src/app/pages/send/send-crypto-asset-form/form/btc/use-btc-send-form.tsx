@@ -3,6 +3,8 @@ import { useRef, useState } from 'react';
 import { type FormikHelpers, type FormikProps } from 'formik';
 import { z } from 'zod';
 
+import { useOnMount } from '@leather.io/ui';
+
 import { FormErrorMessages } from '@shared/error-messages';
 import {
   btcAddressNetworkValidator,
@@ -13,7 +15,6 @@ import { numberField, stringField } from '@shared/forms/field-schemas';
 import { type BitcoinSendFormValues } from '@shared/models/form.model';
 
 import { formatPrecisionError } from '@app/common/error-formatters';
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
 import {
   btcInsufficientBalanceValidator,

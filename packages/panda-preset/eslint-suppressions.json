@@ -1,7 +1,0 @@
-{
-  "src/tokens.ts": {
-    "no-restricted-properties": {
-      "count": 2
-    }
-  }
-}

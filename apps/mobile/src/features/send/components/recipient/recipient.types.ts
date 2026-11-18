@@ -1,4 +1,4 @@
-import { Account } from '@/store/accounts/accounts';
+import { type Account } from '@/store/accounts/accounts';
 
 export interface InternalRecipientSuggestionEntry {
   type: 'internal';

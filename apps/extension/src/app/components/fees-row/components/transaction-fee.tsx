@@ -2,9 +2,9 @@ import { SharedComponentsSelectors } from '@tests/selectors/shared-component.sel
 import { styled } from 'leather-styles/jsx';
 
 import type { CryptoCurrency, Money } from '@leather.io/models';
+import { BasicTooltip } from '@leather.io/ui';
 
 import { formatCurrency } from '@app/common/currency-formatter';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 interface TransactionFeeProps {
   fee?: string | number;

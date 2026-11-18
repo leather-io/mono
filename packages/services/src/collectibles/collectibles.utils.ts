@@ -1,7 +1,3 @@
-export function sortByBlockHeight(a: { blockHeight: number }, b: { blockHeight: number }) {
-  return b.blockHeight - a.blockHeight;
-}
-
 const lpTokenPatterns = [
   '::pool-token-id',
   '::lp-token',

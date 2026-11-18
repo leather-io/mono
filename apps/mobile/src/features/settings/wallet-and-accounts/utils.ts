@@ -1,4 +1,4 @@
-import { CurrentAccount } from '@/store/settings/utils';
+import { type CurrentAccount } from '@/store/settings/utils';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
 

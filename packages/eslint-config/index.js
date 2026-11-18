@@ -35,6 +35,12 @@ export const sharedRestrictedSyntax = [
   },
   {
     selector:
+      'LogicalExpression[operator=/^(\\?\\?|\\|\\|)$/][right.type="Identifier"][right.name=/^(NaN|Infinity)$/], LogicalExpression[operator=/^(\\?\\?|\\|\\|)$/][right.type="MemberExpression"][right.object.name="Number"][right.property.name=/^(NaN|POSITIVE_INFINITY|NEGATIVE_INFINITY)$/], LogicalExpression[operator=/^(\\?\\?|\\|\\|)$/][right.type="UnaryExpression"][right.argument.name="Infinity"]',
+    message:
+      'Do not fall back to NaN or Infinity. A missing value is not a number: handle it, or let the callee accept undefined.',
+  },
+  {
+    selector:
       ':matches(FunctionDeclaration, FunctionExpression, ArrowFunctionExpression)[returnType.typeAnnotation.type="TSTypePredicate"][returnType.typeAnnotation.asserts=false]',
     message:
       'Do not declare an explicit type predicate. Let TypeScript infer it, or validate with a schema.',

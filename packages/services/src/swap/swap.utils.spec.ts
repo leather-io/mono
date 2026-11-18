@@ -1,13 +1,18 @@
 import BigNumber from 'bignumber.js';
 import { describe, expect, it } from 'vitest';
 
-import type { StacksContractCallSwapExecutionData } from '@leather.io/models';
+import { stxAsset } from '@leather.io/constants';
+import type {
+  StacksContractCallSwapExecutionData,
+  SwappableFungibleCryptoAsset,
+} from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
+import { createTestSip10Asset } from '../test/swap-fixtures';
 import { hasValidMinReceiveAmountPostCondition } from './swap.utils';
 
 function makeExecutionData(
-  targetAsset: { protocol: string; assetId?: string },
+  targetAsset: SwappableFungibleCryptoAsset,
   targetAmount: { amount: string; symbol: string; decimals: number },
   postConditions: unknown[]
 ): StacksContractCallSwapExecutionData {
@@ -22,8 +27,8 @@ function makeExecutionData(
     quote: {
       providerId: 'bitflow-bff-api',
       executionType: 'stacks-contract-call',
-      providerQuoteData: {},
-      baseAsset: { protocol: 'nativeStx', symbol: 'STX', decimals: 6 },
+      providerQuoteData: { bitflowBffApiQuote: {} },
+      baseAsset: stxAsset,
       targetAsset,
       baseAmount: createMoney(1000000, 'STX', 6),
       targetAmount: createMoney(
@@ -37,15 +42,14 @@ function makeExecutionData(
       executionConstraints: [],
       createdAt: new Date(),
     },
-  } as unknown as StacksContractCallSwapExecutionData;
+  };
 }
 
-const sip10Target = {
-  protocol: 'sip10',
+const sip10Target = createTestSip10Asset({
   assetId: 'SP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx::usdcx-token',
-};
+});
 
-const stxTarget = { protocol: 'nativeStx' };
+const stxTarget = stxAsset;
 
 describe(hasValidMinReceiveAmountPostCondition.name, () => {
   describe('single post condition', () => {

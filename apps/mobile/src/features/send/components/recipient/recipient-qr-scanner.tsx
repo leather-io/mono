@@ -1,8 +1,8 @@
-import { ParserResult, QrScanner } from '@/features/qr-scanner/qr-scanner';
+import { type ParserResult, QrScanner } from '@/features/qr-scanner/qr-scanner';
 import { t } from '@lingui/core/macro';
 
 import { bip21, isValidBitcoinAddress } from '@leather.io/bitcoin';
-import { SupportedBlockchains } from '@leather.io/models';
+import { type SupportedBlockchains } from '@leather.io/models';
 import { isValidStacksAddress } from '@leather.io/stacks';
 
 interface RecipientQrScannerProps {

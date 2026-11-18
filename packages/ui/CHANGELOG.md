@@ -489,6 +489,25 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.119.4](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.119.3...@leather.io/ui-v1.119.4) (2026-10-27)
+
+
+### Bug Fixes
+
+* **extension:** keep update notice readable and add toast countdown ring ([#2861](https://github.com/leather-io/mono/issues/2861)) ([aa8c75a](https://github.com/leather-io/mono/commit/aa8c75a6fa6a0b87a720b3fbb0ed596af0aeef56))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/tokens bumped to 0.28.0
+    * @leather.io/utils bumped to 0.55.0
+  * devDependencies
+    * @leather.io/features bumped to 1.8.6
+    * @leather.io/models bumped to 0.63.1
+    * @leather.io/panda-preset bumped to 0.16.6
+
 ## [1.119.3](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.119.2...@leather.io/ui-v1.119.3) (2026-10-06)
 
 

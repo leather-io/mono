@@ -1,7 +1,12 @@
-import { PostCondition } from '@stacks/stacks-blockchain-api-types';
+import { type PostCondition } from '@stacks/stacks-blockchain-api-types';
 import BigNumber from 'bignumber.js';
 
-import { CryptoAsset, CryptoAssetCategories, CryptoAssetCategory } from '@leather.io/models';
+import {
+  type CryptoAsset,
+  CryptoAssetCategories,
+  type CryptoAssetCategory,
+  type StacksTransaction,
+} from '@leather.io/models';
 import { isDefined, sumNumbers, uniqueArray } from '@leather.io/utils';
 
 import {
@@ -9,11 +14,11 @@ import {
   getContractPrincipalFromAddressAndName,
 } from '../assets/stacks-asset.utils';
 import {
-  HiroStacksMempoolTransaction,
-  HiroStacksTransaction,
-  HiroTransactionEvent,
+  type HiroStacksMempoolTransaction,
+  type HiroStacksTransaction,
+  type HiroTransactionEvent,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
-import { isMempoolTx } from './stacks-mempool-tx.utils';
+import { getStacksTxByStatus } from './stacks-mempool-tx.utils';
 
 export interface StacksAssetTransfer {
   assetCategory: CryptoAssetCategory;
@@ -26,6 +31,8 @@ export interface StacksAssetTransfer {
 export interface StacksAssetTransferWithInfo extends StacksAssetTransfer {
   asset: CryptoAsset;
 }
+
+type StacksPostCondition = NonNullable<StacksTransaction['post_conditions']>[number];
 
 export function sumAssetTransferAmounts(transfers: StacksAssetTransfer[]): BigNumber {
   if (transfers.length === 0) return new BigNumber(0);
@@ -83,7 +90,9 @@ export function mapTransferFromTxEvent(
   return;
 }
 
-export function mapTransferFromPostCondition(pc: PostCondition): StacksAssetTransfer | undefined {
+export function mapTransferFromPostCondition(
+  pc: PostCondition | StacksPostCondition
+): StacksAssetTransfer | undefined {
   if (pc.principal.type_id !== 'principal_origin') {
     if (pc.type === 'stx') {
       return {
@@ -125,9 +134,10 @@ export function getStacksAssetTransfers(
   tx: HiroStacksTransaction | HiroStacksMempoolTransaction,
   txEvents: HiroTransactionEvent[]
 ): StacksAssetTransfer[] {
-  if (isMempoolTx(tx)) {
+  const { mempoolTx } = getStacksTxByStatus(tx);
+  if (mempoolTx) {
     // Get all pending transfers (stx, ft, nft) directly from PC
-    return tx.post_conditions.map(mapTransferFromPostCondition).filter(isDefined);
+    return mempoolTx.post_conditions.map(mapTransferFromPostCondition).filter(isDefined);
   }
   const transfers: StacksAssetTransfer[] = [];
   // If confirmed and has PCs, take transfers only from events where PC amount > 0

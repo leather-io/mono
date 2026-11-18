@@ -1,13 +1,14 @@
-import { ReactNode, createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { AnimatedRef, useAnimatedRef } from 'react-native-reanimated';
+import { type ReactNode, createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { useAnimatedRef } from 'react-native-reanimated';
 
+import { type ScreenScrollRef } from '@/components/screen/screen-scroll-ref';
 import { useScreenScroll } from '@/components/screen/use-screen-scroll';
 import { TabLayoutContext } from '@/features/navigation/tab-layout-context';
 import { useIsFocused } from '@react-navigation/native';
 import { usePathname } from 'expo-router';
 
 type ScreenScrollContextValue = ReturnType<typeof useScreenScroll> & {
-  scrollRef: AnimatedRef<any>;
+  scrollRef: ScreenScrollRef;
   registerScrollTarget(): void;
 };
 
@@ -18,7 +19,7 @@ interface ScreenScrollProviderProps {
 }
 
 export function ScreenScrollProvider({ children }: ScreenScrollProviderProps) {
-  const scrollRef = useAnimatedRef();
+  const scrollRef: ScreenScrollRef = useAnimatedRef();
   const [hasRegisteredTarget, setHasRegisteredTarget] = useState(false);
   const pathname = usePathname();
   const isFocused = useIsFocused();

@@ -13,7 +13,11 @@ import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-lim
 import { selectBitcoinNetwork, selectStakingChainId } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
 import { ApiRequestOptions } from '../types';
-import { LeatherApiError, readLeatherApiErrorData } from './leather-api.error';
+import {
+  LeatherApiError,
+  assertLeatherApiData,
+  readLeatherApiErrorData,
+} from './leather-api.error';
 import { LeatherApiPageRequest, getPageRequestQueryParams } from './leather-api.pagination';
 import { paths } from './leather-api.types';
 
@@ -122,11 +126,13 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-utxos', network, descriptor], fetchFn);
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-utxos', network, descriptor],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchUtxosByAddress(
@@ -147,14 +153,13 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(
-          ['leather-api-utxos-address', network, address],
-          fetchFn
-        );
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-utxos-address', network, address],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchStakingBonds(
@@ -177,14 +182,13 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!.bonds;
+      return assertLeatherApiData(data).bonds;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(
-          ['leather-api-staking-bonds', chain, address, includeSpent],
-          fetchFn
-        );
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-staking-bonds', chain, address, includeSpent],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchBitcoinTransactions(
@@ -214,14 +218,13 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(
-          ['leather-api-bitcoin-descriptor-transactions', descriptor, params.toString()],
-          fetchFn
-        );
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-bitcoin-descriptor-transactions', descriptor, params.toString()],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchBitcoinTransactionsByAddress(
@@ -251,14 +254,13 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(
-          ['leather-api-bitcoin-address-transactions', address, params.toString()],
-          fetchFn
-        );
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-bitcoin-address-transactions', address, params.toString()],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchBitcoinTransactionByTxId(txid: string, { signal, skipCache }: ApiRequestOptions = {}) {
@@ -277,7 +279,7 @@ export class LeatherApiClient {
             signal,
           }
         );
-        return data!;
+        return assertLeatherApiData(data);
       } catch (error) {
         if (
           LeatherApiError.isLeatherApiError(error) &&
@@ -288,12 +290,11 @@ export class LeatherApiClient {
         throw error;
       }
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(
-          ['leather-api-bitcoin-transaction-by-txid', network, txid],
-          fetchFn
-        );
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-bitcoin-transaction-by-txid', network, txid],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchUsdExchangeRates({ signal, skipCache }: ApiRequestOptions = {}) {
@@ -306,11 +307,11 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-usd-exchange-rates'], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-usd-exchange-rates'], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchBitcoinFeeRates({
@@ -328,11 +329,13 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-bitcoin-fee-rates', network], fetchFn);
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-bitcoin-fee-rates', network],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchNativeTokenPriceList({ signal, skipCache }: ApiRequestOptions = {}) {
@@ -350,9 +353,11 @@ export class LeatherApiClient {
       }
       return data?.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-native-token-price-list'], fetchFn);
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-native-token-price-list'],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchNativeTokenPriceMap({ signal, skipCache }: ApiRequestOptions = {}) {
@@ -376,9 +381,9 @@ export class LeatherApiClient {
       }
       return data?.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-native-token-price-map'], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-native-token-price-map'], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchNativeTokenPrice(symbol: string, { signal, skipCache }: ApiRequestOptions = {}) {
@@ -395,11 +400,13 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-native-token-price', symbol], fetchFn);
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-native-token-price', symbol],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchNativeTokenDescription(
@@ -420,14 +427,13 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(
-          ['leather-api-native-token-description', symbol, locale],
-          fetchFn
-        );
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-native-token-description', symbol, locale],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchNativeTokenHistory(
@@ -448,14 +454,13 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(
-          ['leather-api-native-token-history', symbol, period],
-          fetchFn
-        );
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-native-token-history', symbol, period],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchSip10PriceList({ signal, skipCache }: ApiRequestOptions = {}) {
@@ -473,9 +478,9 @@ export class LeatherApiClient {
       }
       return data.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-sip10-price-list'], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-sip10-price-list'], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchSip10PriceMap({ signal, skipCache }: ApiRequestOptions = {}) {
@@ -497,9 +502,9 @@ export class LeatherApiClient {
       }
       return data.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-sip10-price-map'], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-sip10-price-map'], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchSip10Price(principal: string, { signal, skipCache }: ApiRequestOptions = {}) {
@@ -516,11 +521,11 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-sip10-price', principal], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-sip10-price', principal], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchSip10TokenList({ signal, skipCache }: ApiRequestOptions = {}) {
@@ -538,9 +543,9 @@ export class LeatherApiClient {
       }
       return data.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-sip10-token-list'], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-sip10-token-list'], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchSip10TokenMap({ signal, skipCache }: ApiRequestOptions = {}) {
@@ -562,9 +567,9 @@ export class LeatherApiClient {
       }
       return data.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-sip10-token-map'], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-sip10-token-map'], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchSip10Token(principal: string, { signal, skipCache }: ApiRequestOptions = {}) {
@@ -582,7 +587,7 @@ export class LeatherApiClient {
             signal,
           }
         );
-        return data!;
+        return assertLeatherApiData(data);
       } catch (error) {
         if (
           LeatherApiError.isLeatherApiError(error) &&
@@ -593,9 +598,9 @@ export class LeatherApiClient {
         throw error;
       }
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-sip10-token', principal], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-sip10-token', principal], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchSip10TokenDescription(
@@ -616,14 +621,13 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(
-          ['leather-api-sip10-token-description', principal, locale],
-          fetchFn
-        );
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-sip10-token-description', principal, locale],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchSip10TokenHistory(
@@ -638,14 +642,13 @@ export class LeatherApiClient {
           params: { path: { principal }, query: { period } },
         })
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(
-          ['leather-api-sip10-token-history', principal, period],
-          fetchFn
-        );
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-sip10-token-history', principal, period],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async registerAddresses(
@@ -678,14 +681,13 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(
-          ['leather-api-register-notifications', addresses, notificationToken, chain],
-          fetchFn
-        );
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-register-notifications', addresses, notificationToken, chain],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchSwapDexes({ signal, skipCache }: ApiRequestOptions = {}) {
@@ -693,12 +695,12 @@ export class LeatherApiClient {
       const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
         this.client.GET('/v1/swap/dexes', { signal })
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
 
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-swap-dexes'], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-swap-dexes'], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchAppConfig({ signal, skipCache }: ApiRequestOptions = {}) {
@@ -706,12 +708,12 @@ export class LeatherApiClient {
       const { data } = await this.rateLimiter.add(RateLimiterType.Leather, () =>
         this.client.GET('/v1/app-config', { signal })
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
 
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-app-config'], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-app-config'], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchBitflowPoolMap({ signal, skipCache }: ApiRequestOptions = {}) {
@@ -733,9 +735,9 @@ export class LeatherApiClient {
       }
       return data.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-bitflow-pools-map'], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-bitflow-pools-map'], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchZestReserve(
@@ -755,11 +757,13 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-zest-reserve', principal], fetchFn);
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-zest-reserve', principal],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchGraniteMarket(principal: string, { signal, skipCache }: ApiRequestOptions = {}) {
@@ -776,11 +780,13 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-granite-market', principal], fetchFn);
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-granite-market', principal],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchStackingDaoRates({
@@ -796,11 +802,11 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-stacking-dao-rates'], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-stacking-dao-rates'], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchNativeAnalyticsMap({ signal, skipCache }: ApiRequestOptions = {}) {
@@ -822,9 +828,9 @@ export class LeatherApiClient {
       }
       return data.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-native-analytics-map'], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-native-analytics-map'], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchNativeAnalytics(symbol: string, { signal, skipCache }: ApiRequestOptions = {}) {
@@ -842,7 +848,7 @@ export class LeatherApiClient {
             signal,
           }
         );
-        return data!;
+        return assertLeatherApiData(data);
       } catch (error) {
         if (
           LeatherApiError.isLeatherApiError(error) &&
@@ -853,9 +859,11 @@ export class LeatherApiClient {
         throw error;
       }
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-native-analytics', symbol], fetchFn);
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-native-analytics', symbol],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchNativeDistribution(symbol: string, { signal, skipCache }: ApiRequestOptions = {}) {
@@ -873,7 +881,7 @@ export class LeatherApiClient {
             signal,
           }
         );
-        return data!;
+        return assertLeatherApiData(data);
       } catch (error) {
         if (
           LeatherApiError.isLeatherApiError(error) &&
@@ -884,12 +892,11 @@ export class LeatherApiClient {
         throw error;
       }
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(
-          ['leather-api-native-distribution', symbol],
-          fetchFn
-        );
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-native-distribution', symbol],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchSip10AnalyticsMap({ signal, skipCache }: ApiRequestOptions = {}) {
@@ -911,9 +918,9 @@ export class LeatherApiClient {
       }
       return data.data;
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-sip10-analytics-map'], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-sip10-analytics-map'], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchSip10Analytics(principal: string, { signal, skipCache }: ApiRequestOptions = {}) {
@@ -931,7 +938,7 @@ export class LeatherApiClient {
             signal,
           }
         );
-        return data!;
+        return assertLeatherApiData(data);
       } catch (error) {
         if (
           LeatherApiError.isLeatherApiError(error) &&
@@ -942,9 +949,11 @@ export class LeatherApiClient {
         throw error;
       }
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-sip10-analytics', principal], fetchFn);
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-sip10-analytics', principal],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchSip10Distribution(principal: string, { signal, skipCache }: ApiRequestOptions = {}) {
@@ -962,7 +971,7 @@ export class LeatherApiClient {
             signal,
           }
         );
-        return data!;
+        return assertLeatherApiData(data);
       } catch (error) {
         if (
           LeatherApiError.isLeatherApiError(error) &&
@@ -973,12 +982,11 @@ export class LeatherApiClient {
         throw error;
       }
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(
-          ['leather-api-sip10-distribution', principal],
-          fetchFn
-        );
+    return await this.cacheService.fetchWithCache(
+      ['leather-api-sip10-distribution', principal],
+      fetchFn,
+      { skipCache }
+    );
   }
 
   async fetchProtocols({ signal, skipCache }: ApiRequestOptions = {}) {
@@ -991,11 +999,11 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-protocols'], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-protocols'], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchProtocolContracts(id: string, { signal, skipCache }: ApiRequestOptions = {}) {
@@ -1012,11 +1020,11 @@ export class LeatherApiClient {
           signal,
         }
       );
-      return data!;
+      return assertLeatherApiData(data);
     };
-    return skipCache
-      ? await fetchFn()
-      : await this.cacheService.fetchWithCache(['leather-api-protocol-contracts', id], fetchFn);
+    return await this.cacheService.fetchWithCache(['leather-api-protocol-contracts', id], fetchFn, {
+      skipCache,
+    });
   }
 
   async fetchAddressComplianceCheck(
@@ -1035,7 +1043,7 @@ export class LeatherApiClient {
         signal,
       }
     );
-    return data!;
+    return assertLeatherApiData(data);
   }
 
   async proposeMultisigTransaction(
@@ -1056,6 +1064,6 @@ export class LeatherApiClient {
         signal,
       }
     );
-    return data!;
+    return assertLeatherApiData(data);
   }
 }

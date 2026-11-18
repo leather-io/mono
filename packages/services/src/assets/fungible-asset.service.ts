@@ -21,8 +21,18 @@ export class FungibleAssetService {
       case 'sip10':
         return await this.sip10AssetService.getVisibleAsset(assetId.id, signal);
       default:
-        throw new Error(`Asset not found: ${assetId.protocol}`);
+        throw new Error(`Asset not found: ${String(assetId.protocol)}`);
     }
+  }
+
+  public async getSwapAsset(
+    assetId: FungibleAssetId,
+    signal?: AbortSignal
+  ): Promise<FungibleCryptoAsset | null> {
+    if (assetId.protocol === 'sip10') {
+      return await this.sip10AssetService.getSwapAsset(assetId.id, signal);
+    }
+    return await this.getAsset(assetId, signal);
   }
 
   public async getAsset(
@@ -37,7 +47,7 @@ export class FungibleAssetService {
       case 'sip10':
         return await this.sip10AssetService.getAsset(assetId.id, signal);
       default:
-        throw new Error(`Asset not found: ${assetId.protocol}`);
+        throw new Error(`Asset not found: ${String(assetId.protocol)}`);
     }
   }
 }

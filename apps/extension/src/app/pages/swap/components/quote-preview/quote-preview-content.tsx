@@ -21,7 +21,7 @@ type QuotePreviewContentProps =
 export function QuotePreviewContent(props: QuotePreviewContentProps) {
   if (props.isLoading) {
     return (
-      <Flex px="space.04" direction="column">
+      <Flex direction="column">
         <QuotePreviewRow
           label="Rate"
           value={<SkeletonLoader isLoading width="80px" height="16px" borderRadius="xs" />}
@@ -45,7 +45,7 @@ export function QuotePreviewContent(props: QuotePreviewContentProps) {
   const totalFees = sumFeesInQuoteCurrency(fees.network.quote, fees.provider?.quote);
 
   return (
-    <Flex px="space.04" direction="column" opacity={props.liveEstimate.isRefetching ? 0.5 : 1}>
+    <Flex direction="column" opacity={props.liveEstimate.isRefetching ? 0.5 : 1}>
       <QuotePreviewRow
         label="Rate"
         value={

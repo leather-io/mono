@@ -2,7 +2,7 @@ import { Navigate, useLocation } from 'react-router';
 
 import { Flex, VStack } from 'leather-styles/jsx';
 import {
-  StakingPoolSlug,
+  type StakingPoolSlug,
   getStakingPoolFromSlug,
   stakingProviderIdToSlug,
 } from '~/data/bitcoin-staking-data';

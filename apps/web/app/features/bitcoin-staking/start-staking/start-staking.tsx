@@ -3,13 +3,13 @@ import { Form, FormProvider, useForm } from 'react-hook-form';
 import { Navigate, useNavigate } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { StackingClient } from '@stacks/stacking';
+import { type StackingClient } from '@stacks/stacking';
 import { useMutation } from '@tanstack/react-query';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { FormPageLayout } from '~/components/forms/form-page.layout';
 import { learnArticles } from '~/content/learn-content';
 import {
-  StakingPoolSlug,
+  type StakingPoolSlug,
   getPrimarySignerManagerContract,
   getSignerManagerContracts,
   getStakingPoolFromSlug,
@@ -61,8 +61,8 @@ import { ChooseStakingConditions } from './components/choose-staking-conditions'
 import { ChooseStakingDuration } from './components/choose-staking-duration';
 import { StakingConfirmationSteps } from './components/staking-confirmation-steps';
 import {
-  PoolMinStake,
-  StakingFormSchema,
+  type PoolMinStake,
+  type StakingFormSchema,
   buildPayoutPreference,
   createStakingFormSchema,
 } from './utils/staking-form-schema';
@@ -70,6 +70,12 @@ import {
 interface StartStakingProps {
   poolSlug: StakingPoolSlug;
   signerManagerContractId?: string;
+}
+
+function parseEnteredNumber(value: unknown): number | undefined {
+  if (value === undefined || value === null || value === '') return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
 }
 
 export function StartStaking({ poolSlug, signerManagerContractId }: StartStakingProps) {
@@ -181,8 +187,8 @@ function StartStakingLayout({
     })
   );
 
-  const stakeAmount = Number(formMethods.watch('amount') ?? NaN);
-  const watchedCycles = Number(formMethods.watch('cycles') ?? NaN);
+  const stakeAmount = parseEnteredNumber(formMethods.watch('amount'));
+  const watchedCycles = parseEnteredNumber(formMethods.watch('cycles'));
 
   const {
     mutate: submitStake,
@@ -226,7 +232,10 @@ function StartStakingLayout({
   const isInPreparePhase = cycleClock?.clock.isInPreparePhase ?? false;
 
   const estimatedUnlockDate =
-    cycleClock && Number.isInteger(watchedCycles) && watchedCycles > 0
+    cycleClock &&
+    watchedCycles !== undefined &&
+    Number.isInteger(watchedCycles) &&
+    watchedCycles > 0
       ? cycleClock.estimatedUnlockDateForCycles(watchedCycles, new Date())
       : null;
 

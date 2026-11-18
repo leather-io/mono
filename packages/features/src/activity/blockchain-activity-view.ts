@@ -214,8 +214,8 @@ function getRowShape(
   return baseRowShapes[action];
 }
 
-function assetSymbol(asset: CryptoAsset): string {
-  return asset.category === 'fungible' ? asset.symbol : '';
+function assetSymbol(asset: CryptoAsset): string | undefined {
+  return asset.category === 'fungible' ? asset.symbol : undefined;
 }
 
 function pickAsset(
@@ -275,8 +275,8 @@ function buildAvatar(
   }
 }
 
-function degradedTitle(activity: BlockchainActivity): string {
-  return activity.contract?.type === 'call' ? activity.contract.functionName : '';
+function degradedTitle(activity: BlockchainActivity): string | undefined {
+  return activity.contract?.type === 'call' ? activity.contract.functionName : undefined;
 }
 
 function buildTitle(
@@ -286,7 +286,7 @@ function buildTitle(
   received: BlockchainActivityBalanceChange[],
   formatMoney: FormatMoney,
   t: BlockchainActivityTranslate
-): string {
+): string | undefined {
   switch (shape.title.kind) {
     case 'symbol': {
       const asset = pickAsset(shape.title.from, sent, received);
@@ -294,8 +294,8 @@ function buildTitle(
     }
     case 'two-leg': {
       if (sent.length >= 1 && received.length >= 1) {
-        const from = `${formatMoney(sent[0].amount.crypto)} ${assetSymbol(sent[0].asset)}`;
-        const to = `${formatMoney(received[0].amount.crypto)} ${assetSymbol(received[0].asset)}`;
+        const from = `${formatMoney(sent[0].amount.crypto)} ${assetSymbol(sent[0].asset) ?? ''}`;
+        const to = `${formatMoney(received[0].amount.crypto)} ${assetSymbol(received[0].asset) ?? ''}`;
         return `${from} → ${to}`;
       }
       return degradedTitle(activity);
@@ -303,7 +303,7 @@ function buildTitle(
     case 'symbol-pair': {
       const changes = shape.title.from === 'sent' ? sent : received;
       return changes.length >= 2
-        ? `${assetSymbol(changes[0].asset)} · ${assetSymbol(changes[1].asset)}`
+        ? `${assetSymbol(changes[0].asset) ?? ''} · ${assetSymbol(changes[1].asset) ?? ''}`
         : degradedTitle(activity);
     }
     case 'function-name':
@@ -387,19 +387,20 @@ export function createBlockchainActivityView(
     status: activity.status,
     avatar: buildAvatar(shape, sent, received),
     indicator: resolveIndicator(activity.status, shape.indicator),
-    title: buildTitle(shape, activity, sent, received, formatMoney, t),
-    subtitle: buildBlockchainActivitySubtitle(
-      {
-        action: activity.action,
-        status: activity.status,
-        protocolName: activity.protocolName,
-        counterparty: activity.counterparty
-          ? truncateCounterparty(activity.counterparty, deps.counterpartyTruncateOffset)
-          : undefined,
-        contractName: getContractName(activity),
-      },
-      t
-    ),
+    title: buildTitle(shape, activity, sent, received, formatMoney, t) ?? '',
+    subtitle:
+      buildBlockchainActivitySubtitle(
+        {
+          action: activity.action,
+          status: activity.status,
+          protocolName: activity.protocolName,
+          counterparty: activity.counterparty
+            ? truncateCounterparty(activity.counterparty, deps.counterpartyTruncateOffset)
+            : undefined,
+          contractName: getContractName(activity),
+        },
+        t
+      ) ?? '',
     ...(activity.protocolName ? { protocolName: activity.protocolName } : {}),
     ...(amount ? { amount } : {}),
   };

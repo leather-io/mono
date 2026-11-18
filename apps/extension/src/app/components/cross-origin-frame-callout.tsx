@@ -1,3 +1,5 @@
+import { RequestSelectors } from '@tests/selectors/requests.selectors';
+
 import { Callout, type CalloutProps } from '@leather.io/ui';
 
 import { isCrossOriginFrameRequest } from '@shared/utils/cross-origin-frame';
@@ -30,7 +32,7 @@ export function CrossOriginFrameCallout(props: CalloutProps) {
 
   return (
     <Callout
-      data-testid="cross-origin-frame-callout"
+      data-testid={RequestSelectors.CrossOriginFrameCallout}
       variant="warning"
       title="Be careful with this embedded app"
       {...props}

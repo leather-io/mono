@@ -1,22 +1,22 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
 
-import { createGetTransactionByIdQueryOptions } from '@leather.io/query';
+import { createStacksTransactionByIdQueryConfig } from '@leather.io/queries';
 import { uniqueArray } from '@leather.io/utils';
 
-import { useStacksClient } from '../stacks-client';
+import { useUserSettings } from '@app/hooks/use-user-settings';
 
 export function useGetTransactionByIdQuery(txid: string) {
-  const client = useStacksClient();
-  return useQuery(createGetTransactionByIdQueryOptions({ client, txid }));
+  const settings = useUserSettings();
+  return useQuery(createStacksTransactionByIdQueryConfig(txid, settings));
 }
 
 export function useGetTransactionByIdListQuery(txids: string[]) {
-  const client = useStacksClient();
+  const settings = useUserSettings();
   const uniqueTxids = uniqueArray(txids);
 
   return useQueries({
     queries: uniqueTxids.map(txid => ({
-      ...createGetTransactionByIdQueryOptions({ client, txid }),
+      ...createStacksTransactionByIdQueryConfig(txid, settings),
     })),
   });
 }

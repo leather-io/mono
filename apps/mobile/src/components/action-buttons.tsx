@@ -1,7 +1,7 @@
 import { useOnramperBuyFlag, useOnramperSellFlag, useSwapFlag } from '@/features/feature-flags';
 import { t } from '@lingui/core/macro';
 
-import { Button, ButtonProps } from '@leather.io/ui/native';
+import { Button, type ButtonProps } from '@leather.io/ui/native';
 
 interface ActionButtonsProps {
   fullWidth?: boolean;

@@ -2,10 +2,10 @@ import BigNumber from 'bignumber.js';
 
 import { createBitcoinAddress } from '@leather.io/bitcoin';
 import {
-  RpcRequest,
+  type RpcRequest,
   rpcSendTransferLegacyParamSchema,
   rpcSendTransferNewParamsSchema,
-  sendTransfer,
+  type sendTransfer,
 } from '@leather.io/rpc';
 import { createMoney } from '@leather.io/utils';
 

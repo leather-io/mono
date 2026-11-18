@@ -50,9 +50,16 @@ async function readMigratedPersistedState(page: Page) {
   return readPersistedState(page);
 }
 
+async function waitForInitialPersistedState(page: Page) {
+  await test.expect
+    .poll(async () => (await readPersistedState(page))?._persist?.version)
+    .toBe(latestPersistedVersion);
+}
+
 test.describe('Store migrations', () => {
   test.beforeEach(async ({ extensionId, globalPage }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
+    await waitForInitialPersistedState(globalPage.page);
   });
 
   test('Migration 0 --> 3', async ({ extensionId, globalPage }) => {

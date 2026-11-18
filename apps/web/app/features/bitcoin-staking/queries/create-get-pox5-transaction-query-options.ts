@@ -1,4 +1,4 @@
-import { Pox5TxOutcome, getPox5TxOutcome } from '../transactions/pox5-tx-status';
+import { type Pox5TxOutcome, getPox5TxOutcome } from '../transactions/pox5-tx-status';
 
 interface Pox5TransactionReader {
   getTransactionById(txid: string, signal: AbortSignal): Promise<{ status: string }>;

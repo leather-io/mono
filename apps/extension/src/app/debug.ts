@@ -1,7 +1,7 @@
 import * as reduxPersist from 'redux-persist';
 
-import { HIRO_API_BASE_URL_MAINNET } from '@leather.io/models';
-import { getHiroApiRateLimiter } from '@leather.io/query';
+import type { NetworkModes } from '@leather.io/models';
+import { RateLimiterType, getRateLimiterService } from '@leather.io/services';
 
 import { logger } from '@shared/logger';
 import { getLogsFromBrowserStorage } from '@shared/logger-storage';
@@ -22,8 +22,8 @@ const debug = {
   logStore() {
     return store.getState();
   },
-  logHiroLimiter(url = HIRO_API_BASE_URL_MAINNET) {
-    const limiter = getHiroApiRateLimiter(url);
+  logHiroLimiter(mode: NetworkModes = 'mainnet') {
+    const limiter = getRateLimiterService().getLimiter(RateLimiterType.HiroStacks, mode);
 
     return {
       size: limiter.size,

@@ -162,9 +162,9 @@ export class Sip10BalancesService {
     const sip10Balances = (
       await Promise.allSettled(
         ftBalances
-          .filter(ft => Number(ft.balance ?? 0) !== 0)
+          .filter(ft => Number(ft.balance) !== 0)
           .map(ft =>
-            this.createSip10Balance(ft.token, Number(ft.balance ?? 0), includeHiddenAssets, signal)
+            this.createSip10Balance(ft.token, Number(ft.balance), includeHiddenAssets, signal)
           )
       )
     )

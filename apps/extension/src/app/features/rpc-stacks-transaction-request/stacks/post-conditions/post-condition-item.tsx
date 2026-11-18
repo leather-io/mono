@@ -3,6 +3,7 @@ import {
   type STXPostConditionWire,
   type StakingPostConditionWire,
 } from '@stacks/transactions';
+import { PostConditionSelectors } from '@tests/selectors/requests.selectors';
 import { Box, Stack, styled } from 'leather-styles/jsx';
 
 import { AssetAvatarIcon, ItemLayout, StxAvatarIcon } from '@leather.io/ui';
@@ -53,7 +54,7 @@ export function PostConditionItem({
   );
 
   return (
-    <Stack gap="space.03">
+    <Stack data-testid={PostConditionSelectors.PostConditionItem} gap="space.03">
       <styled.span textStyle="label.03">{title}</styled.span>
       <ItemLayout
         img={icon}

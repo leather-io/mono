@@ -6,7 +6,7 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import { stxAsset } from '@leather.io/constants';
 import type { Money } from '@leather.io/models';
-import { BtcAvatarIcon, StxAvatarIcon, isSbtcAsset } from '@leather.io/ui';
+import { BtcAvatarIcon, Hr, StxAvatarIcon, isSbtcAsset } from '@leather.io/ui';
 import { baseCurrencyAmountInQuote, createMoney, sumMoney } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -15,7 +15,6 @@ import { formatCurrency } from '@app/common/currency-formatter';
 import { useViewportMinWidth } from '@app/common/hooks/use-media-query';
 import { emptyAmountPlaceholder } from '@app/components/balance/constants';
 import { Content } from '@app/components/layout';
-import { Divider } from '@app/components/layout/divider';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
 import { HeaderGrid } from '@app/components/layout/headers/header-grid';
@@ -103,7 +102,7 @@ export function AllBalancesPage() {
 
   const endToEndDivider = (
     <Box mx={isMd ? 'space.00' : '-space.05'}>
-      <Divider />
+      <Hr />
     </Box>
   );
 

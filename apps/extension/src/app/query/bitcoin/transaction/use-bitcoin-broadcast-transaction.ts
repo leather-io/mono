@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
 
 import { decodeBitcoinTx } from '@leather.io/bitcoin';
+import { getMempoolApiClient } from '@leather.io/services';
 import { delay } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 
-import { useBitcoinClient } from '../clients/bitcoin-client';
 import { useCheckTaprootUtxos } from './use-check-taproot-utxos';
 
 interface BroadcastCallbackArgs {
@@ -26,7 +26,6 @@ async function runSuccessHandler(onSuccess: BroadcastCallbackArgs['onSuccess'], 
 }
 
 export function useBitcoinBroadcastTransaction() {
-  const client = useBitcoinClient();
   const [isBroadcasting, setIsBroadcasting] = useState(false);
   const { checkIfInputsIncludeTaproot } = useCheckTaprootUtxos();
 
@@ -47,7 +46,7 @@ export function useBitcoinBroadcastTransaction() {
         }
 
         setIsBroadcasting(true);
-        const resp = await client.transactionsApi.broadcastTransaction(tx);
+        const resp = await getMempoolApiClient().broadcastTransaction(tx);
         // simulate slower broadcast time to allow mempool refresh
         await delay(delayTime);
         if (!resp.ok) throw new Error(await resp.text());
@@ -62,7 +61,7 @@ export function useBitcoinBroadcastTransaction() {
         onFinally?.();
       }
     },
-    [checkIfInputsIncludeTaproot, client]
+    [checkIfInputsIncludeTaproot]
   );
 
   return { broadcastTx, isBroadcasting };

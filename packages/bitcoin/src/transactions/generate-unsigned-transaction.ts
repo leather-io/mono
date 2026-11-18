@@ -2,17 +2,17 @@ import * as btc from '@scure/btc-signer';
 import type { InputData } from 'coin-selection/coin-selection.utils';
 
 import {
-  CoinSelectionRecipient,
+  type CoinSelectionRecipient,
   determineUtxosForSpend,
   determineUtxosForSpendAll,
 } from '../coin-selection/coin-selection';
 import {
-  BitcoinNativeSegwitPayer,
-  BitcoinTaprootPayer,
+  type BitcoinNativeSegwitPayer,
+  type BitcoinTaprootPayer,
   payerToBip32Derivation,
   payerToTapBip32Derivation,
 } from '../signer/bitcoin-payer';
-import { BtcSignerNetwork } from '../utils/bitcoin.network';
+import { type BtcSignerNetwork } from '../utils/bitcoin.network';
 import { BitcoinError } from '../validation/bitcoin-error';
 
 export interface GenerateBitcoinUnsignedTransactionArgs<T> {

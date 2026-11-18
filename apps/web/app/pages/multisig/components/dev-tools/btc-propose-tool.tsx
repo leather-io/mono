@@ -112,7 +112,7 @@ export function BtcProposeTool() {
           );
         })}
       </Flex>
-      <Button variant="solid" size="sm" disabled={propose.isPending} onClick={submit}>
+      <Button variant="solid" size="sm" disabled={propose.isPending} onClick={() => void submit()}>
         {propose.isPending ? 'Proposing…' : 'Propose BTC tx'}
       </Button>
       {statusError ? (

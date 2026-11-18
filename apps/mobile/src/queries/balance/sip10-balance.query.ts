@@ -1,14 +1,13 @@
 import { toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses, useTotalAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
-import { QueryFunctionContext, keepPreviousData, useQuery } from '@tanstack/react-query';
+import { type QueryFunctionContext, keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { QuoteCurrency } from '@leather.io/models';
 import { createSip10AccountBalanceQueryConfig } from '@leather.io/queries';
 import {
-  AccountRequest,
-  Sip10Balance,
-  UserSettings,
+  type AccountRequest,
+  type Sip10Balance,
+  type UserSettings,
   getSip10BalancesService,
 } from '@leather.io/services';
 import { getAssetId, isDefined, serializeAssetId } from '@leather.io/utils';
@@ -67,12 +66,14 @@ export function useSip10BalanceByAssetId(
 }
 
 function useSip10AggregateBalanceQuery(requests: AccountRequest[]) {
-  const { fiatCurrencyPreference } = useSettings();
+  const { fiatCurrencyPreference, assetVisibility, defaultAssetVisibility } = useSettings();
   return useQuery({
     queryKey: [
       'sip10-balances-service-get-sip10-aggregate-balance',
       requests,
       fiatCurrencyPreference,
+      assetVisibility,
+      defaultAssetVisibility,
     ],
     queryFn: ({ signal }: QueryFunctionContext) =>
       getSip10BalancesService().getSip10AggregateBalance(requests, signal),
@@ -81,11 +82,14 @@ function useSip10AggregateBalanceQuery(requests: AccountRequest[]) {
 }
 
 function useSip10AccountBalanceQuery(request: AccountRequest, shouldKeepPreviousData: boolean) {
-  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
+  const { fiatCurrencyPreference, networkPreference, assetVisibility, defaultAssetVisibility } =
+    useSettings();
+  const includesHiddenAssets = request.assets?.includeHiddenAssets ?? false;
   const settings: UserSettings = {
     network: networkPreference,
-    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
-    assetVisibility: request.assets?.includeHiddenAssets ? {} : assetVisibility,
+    quoteCurrency: fiatCurrencyPreference,
+    assetVisibility: includesHiddenAssets ? {} : assetVisibility,
+    defaultAssetVisibility: includesHiddenAssets ? undefined : defaultAssetVisibility,
   };
 
   return useQuery({

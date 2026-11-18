@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 
 import { css } from 'leather-styles/css';
-import { Flex, HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
 import { Drawer } from 'vaul';
 import { LeatherLogo } from '~/components/icons/leather-logo';
 import { StackingIcon } from '~/components/icons/stacking-icon';

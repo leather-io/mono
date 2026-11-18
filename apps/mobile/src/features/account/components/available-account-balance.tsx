@@ -3,7 +3,7 @@ import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useAccountUnlockedBalance } from '@/queries/balance/account-balance.query';
 import { t } from '@lingui/core/macro';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import {
   Box,
   Pressable,

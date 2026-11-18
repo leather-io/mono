@@ -1,10 +1,10 @@
-import { MetaDescriptor } from 'react-router';
+import { type MetaDescriptor } from 'react-router';
 
 import { cmsClient } from '~/constants/cms-client';
 
 import { changelogQuery } from '@leather.io/cms';
 
-import { Route } from './+types/changelog.route';
+import { type Route } from './+types/changelog.route';
 import { ChangelogPage } from './changelog.page';
 
 export function meta() {

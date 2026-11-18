@@ -6,10 +6,11 @@ import type * as bitcoin from 'bitcoinjs-lib';
 import { createBitcoinAddress } from '@leather.io/bitcoin';
 import { type BitcoinAddress } from '@leather.io/models';
 import { RpcErrorCode, createRpcErrorResponse, createRpcSuccessResponse } from '@leather.io/rpc';
+import { delay } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
-import { closeWindow, createDelay } from '@shared/utils';
+import { closeWindow } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
 
 import { useDefaultRequestParams } from '@app/common/hooks/use-default-request-search-params';
@@ -35,8 +36,13 @@ function useRpcSignBitcoinMessage() {
   );
 }
 
-const shortPauseBeforeToast = createDelay(250);
-const allowTimeForUserToReadToast = createDelay(1200);
+async function shortPauseBeforeToast() {
+  return delay(250);
+}
+
+async function allowTimeForUserToReadToast() {
+  return delay(1200);
+}
 
 interface Bip322Signer {
   address: BitcoinAddress;

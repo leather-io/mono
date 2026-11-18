@@ -11,6 +11,8 @@ import reactConfig from '@leather.io/eslint-config/react';
 import { noDimensionsScreenRule } from '@leather.io/eslint-config/rules/no-dimensions-screen';
 import { noSamePackageBarrelImportRule } from '@leather.io/eslint-config/rules/no-same-package-barrel-import';
 
+import { toolkitDesignConfig } from './eslint-rules/design-system/config.js';
+
 const useQueryConfigOrKeyRule = {
   meta: {
     type: 'problem',
@@ -151,7 +153,7 @@ const pageObjectOnlySelectors = [
 
 export default defineConfig([
   {
-    files: ['{packages,apps}/**/*.{ts,tsx}'],
+    files: ['{packages,apps,tools}/**/*.{ts,tsx}'],
     extends: [baseConfig],
     plugins: {
       'leather.io': leatherPlugin,
@@ -216,11 +218,6 @@ export default defineConfig([
     rules: {
       '@typescript-eslint/no-inferrable-types': 'off',
     },
-  },
-  {
-    name: 'query',
-    files: ['packages/query/src/**/*.{ts,tsx}'],
-    extends: [reactConfig, pluginQuery.configs['flat/recommended']],
   },
   {
     name: 'queries-package',
@@ -289,6 +286,13 @@ export default defineConfig([
     name: 'test-app',
     files: ['apps/test-app/src/**/*.{ts,tsx}'],
     extends: [reactConfig],
+  },
+  {
+    name: 'tools',
+    files: ['tools/**/*.ts'],
+    rules: {
+      'no-console': 'off',
+    },
   },
   {
     name: 'react-router-apps',
@@ -468,4 +472,5 @@ export default defineConfig([
       'leather/use-query-config-or-key': 'error',
     },
   },
+  toolkitDesignConfig,
 ]);

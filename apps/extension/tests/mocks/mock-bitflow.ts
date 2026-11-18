@@ -207,6 +207,8 @@ const mockedBitflowBffApiQuote = {
       pool_trait: 'SP2C2YFP12AJZB4MABJBAJ55XECVS7E4PMMZ89YZR.arkadiko-swap-pool',
       x_token_trait: stxProviderTokenId,
       y_token_trait: aeUsdcTokenContract,
+      expected_bin_id: 0,
+      function_name: 'swap-x-for-y',
       dex_type: 'ARKADIKO',
     },
   ],

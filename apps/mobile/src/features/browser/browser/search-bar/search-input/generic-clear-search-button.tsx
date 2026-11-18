@@ -1,4 +1,4 @@
-import { CloseIcon, Pressable, PressableProps } from '@leather.io/ui/native';
+import { CloseIcon, Pressable, type PressableProps } from '@leather.io/ui/native';
 
 export function GenericClearSearchButton(props: PressableProps) {
   return (

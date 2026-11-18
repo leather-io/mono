@@ -1,4 +1,4 @@
-import { Sip10AggregateBalance } from '@leather.io/services';
+import { type Sip10AggregateBalance } from '@leather.io/services';
 import { getPinnedAssetPriority } from '@leather.io/utils';
 
 export function sortSip10Balances(

@@ -1,11 +1,12 @@
 import { css } from 'leather-styles/css';
 import { styled } from 'leather-styles/jsx';
 
+import { BasicTooltip } from '@leather.io/ui';
+
 import { BRANCH_NAME, COMMIT_SHA } from '@shared/environment';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { useIsLatestPullRequestBuild } from '@app/query/common/outdated-pr/outdated-pr.query';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 interface AppVersionLabelProps {
   isLatestVersion: boolean;

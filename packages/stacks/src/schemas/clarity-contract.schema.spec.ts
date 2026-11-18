@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { assert, describe, expect, it } from 'vitest';
 import { ZodError } from 'zod';
 
 import { clarityContractSchema } from './clarity-contract.schema';
@@ -41,9 +41,9 @@ describe('clarityContractSchema', () => {
       clarityContractSchema.parse(oversizedContract);
     } catch (error) {
       expect(error).toBeInstanceOf(ZodError);
-      const zodError = error as ZodError<string>;
-      expect(zodError.issues).toHaveLength(1);
-      expect(zodError.issues[0].message).toBe('ContractExceedsMaxLength');
+      assert(error instanceof ZodError);
+      expect(error.issues).toHaveLength(1);
+      expect(error.issues[0].message).toBe('ContractExceedsMaxLength');
     }
   });
 });

@@ -64,7 +64,7 @@ export interface GetMempoolExplorerLinkArgs {
 
 const publicMempoolHosts = ['mempool.space', 'leather.mempool.space'];
 
-function isSelfHostedMempoolUrl(bitcoinUrl: string | undefined): bitcoinUrl is string {
+function isSelfHostedMempoolUrl(bitcoinUrl: string | undefined) {
   if (!bitcoinUrl) return false;
   const host = /^https?:\/\/([^/:?#]+)/.exec(bitcoinUrl)?.[1];
   return host !== undefined && !publicMempoolHosts.includes(host);

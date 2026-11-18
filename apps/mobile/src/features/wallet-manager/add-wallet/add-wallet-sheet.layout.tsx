@@ -6,6 +6,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
+import addWalletImage from '@/assets/stickers/add-wallet.png';
 import { useWaitlistFlag } from '@/features/feature-flags';
 import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/core/macro';
@@ -17,7 +18,7 @@ import {
   EllipsisVIcon,
   PlusIcon,
   Sheet,
-  SheetRef,
+  type SheetRef,
   Text,
 } from '@leather.io/ui/native';
 
@@ -64,11 +65,7 @@ export function AddWalletSheetLayout({
       <Sheet.ScrollView>
         <AnimatedBox style={animatedStyle}>
           <Box width="100%" style={{ height: 184, overflow: 'hidden' }}>
-            <Image
-              style={{ height: '100%' }}
-              contentFit="cover"
-              source={require('@/assets/stickers/add-wallet.png')}
-            />
+            <Image style={{ height: '100%' }} contentFit="cover" source={addWalletImage} />
           </Box>
           <Box>
             <Box px="5" py="4">

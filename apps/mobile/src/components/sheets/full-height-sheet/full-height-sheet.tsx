@@ -1,6 +1,6 @@
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Sheet, SheetProps, SheetRef } from '@leather.io/ui/native';
+import { Sheet, type SheetProps, type SheetRef } from '@leather.io/ui/native';
 
 interface FullHeightSheetProps extends Omit<SheetProps, 'ref'> {
   name?: string;
