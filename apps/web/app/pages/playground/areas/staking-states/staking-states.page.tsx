@@ -224,7 +224,7 @@ export function StakingStatesPage() {
 
           <Board
             label="Pool that pays native BTC off chain"
-            note="PlanBetter collects the pool's sBTC and pays members in BTC itself, so the payout section is a single mandatory address prefilled from the wallet, with no sBTC option and no fee inputs. The 1,000 STX floor is a contract constant, so the amount field enforces it up front. Type 500 to see the error."
+            note="Planbetter collects the pool's sBTC and pays members in BTC itself, so the payout section is a single mandatory address prefilled from the wallet, with no sBTC option and no fee inputs. The 1,000 STX floor is a contract constant, so the amount field enforces it up front. Type 500 to see the error."
             route={routes.pool}
           >
             <StakingSurface>
