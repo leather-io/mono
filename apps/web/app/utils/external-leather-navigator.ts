@@ -15,7 +15,7 @@ function createExternalLeatherNavigator() {
     news: `${externalUrl}/news`,
     support: `${externalUrl}/support`,
     guides: `${externalUrl}/guides`,
-    docs: 'https://leather.gitbook.io',
+    docs: 'https://docs.leather.io/developers',
     wallet: `${externalUrl}/wallet`,
     apps: `${externalUrl}/apps`,
   };

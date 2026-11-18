@@ -221,7 +221,7 @@ function FeeTierSelector({
             type="button"
             onClick={() =>
               window.open(
-                'https://leather.gitbook.io/guides/transactions/fees',
+                'https://docs.leather.io/transactions/configure-transaction-fees',
                 '_blank',
                 'noopener,noreferrer'
               )
