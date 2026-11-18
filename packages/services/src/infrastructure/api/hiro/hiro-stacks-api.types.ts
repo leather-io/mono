@@ -1,7 +1,6 @@
 import { type FtMetadataResponse, type Metadata } from '@hirosystems/token-metadata-api-client';
 import {
   type AddressAssetsListResponse,
-  type AddressBalanceResponse,
   type AddressTransactionWithTransfers,
   type AddressTransactionsWithTransfersListResponse,
   type MempoolTransaction,
@@ -207,7 +206,6 @@ export type HiroTransactionIncludeField =
   | 'source_code'
   | 'post_conditions'
   | 'result';
-export type HiroAddressBalanceResponse = AddressBalanceResponse;
 export type HiroMetadata = Metadata;
 export type HiroFtMetadata = FtMetadataResponse;
 export type HiroTransactionEvent = TransactionEvent;

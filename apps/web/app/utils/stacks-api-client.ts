@@ -28,6 +28,12 @@ const stxAddressBalanceSchema = z.object({
   locked: z.string(),
 });
 
+const principalStxBalanceSchema = z.object({
+  balance: z.string(),
+  available: z.string(),
+  locked: z.object({ amount: z.string() }).nullable(),
+});
+
 const callReadOnlyFunctionResponseSchema = z.object({
   okay: z.boolean(),
   result: z.string().optional(),
@@ -79,6 +85,11 @@ export function createStacksApiClient(apiUrl: string) {
     async getStxAddressBalance(address: string, signal: AbortSignal) {
       return stxAddressBalanceSchema.parse(
         await get(`/extended/v2/addresses/${address}/balances/stx`, signal)
+      );
+    },
+    async getPrincipalStxBalance(principal: string, signal: AbortSignal) {
+      return principalStxBalanceSchema.parse(
+        await get(`/extended/v3/principals/${principal}/balances/stx`, signal)
       );
     },
     async getAccountTransactionsWithTransfers(address: string, signal: AbortSignal) {
