@@ -28,6 +28,7 @@ export * from './infrastructure/cache/http-cache.service';
 export * from './infrastructure/cache/http-cache.utils';
 export * from './infrastructure/api/leather/leather-api.error';
 export * from './infrastructure/api/leather/leather-auth-api.client';
+export * from './infrastructure/api/leather/leather-sponsorship-api.types';
 export * from './infrastructure/environment';
 export * from './infrastructure/rate-limiter/rate-limiter.service';
 export * from './infrastructure/auth/auth-session.service';
