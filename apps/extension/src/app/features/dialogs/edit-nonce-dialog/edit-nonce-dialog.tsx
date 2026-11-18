@@ -16,7 +16,7 @@ import { getNonceInputError } from '@app/common/validation/nonce-validators';
 
 import { EditNonceForm } from './components/edit-nonce-form';
 
-const url = 'https://leather.gitbook.io/guides/transactions/nonces';
+const url = 'https://docs.leather.io/transactions/configure-transaction-nonces';
 
 export function EditNonceSheet() {
   const { clearErrors, getValues, setError, setValue } = useFormContext<

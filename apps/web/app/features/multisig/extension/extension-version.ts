@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const minSupportedExtensionVersion = '6.112.0';
+export const minSupportedExtensionVersion = '6.116.0';
 
 interface ParsedVersion {
   major: number;

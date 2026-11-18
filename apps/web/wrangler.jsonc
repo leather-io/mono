@@ -21,7 +21,7 @@
     },
     "production": {
       "name": "leather-web-production",
-      "routes": ["https://app.leather.io/*"]
+      "routes": ["https://leather.io/*", "https://www.leather.io/*", "https://app.leather.io/*"]
     }
   }
 }

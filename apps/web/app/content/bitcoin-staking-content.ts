@@ -144,8 +144,8 @@ export const bitcoinStakingContent = {
     },
   },
   dualStackingTransition: {
-    title: `Dual Stacking is winding down`,
-    description: `It transitions to Bitcoin Staking on August 24, 2026 and keeps paying out until then. Stake your STX with a pool above to keep earning after that date.`,
+    title: `Looking for Dual Stacking?`,
+    description: `Basic sBTC rewards enrollment ended on August 27, 2026. Explore the STX staking pools above and review their current reward and payout terms.`,
     linkLabel: `Learn about Bitcoin Staking`,
     url: `https://www.stacks.co/bitcoin-staking`,
   },
@@ -232,7 +232,7 @@ export const bitcoinStakingContent = {
   },
   transactionStatus: {
     headerTitle: `Your staking`,
-    pendingDescription: `Keep this page open. Confirmation usually takes a few seconds.`,
+    pendingDescription: `Keep this page open while the network confirms your transaction.`,
     byKind: {
       stake: {
         pendingTitle: `Confirming your stake`,
