@@ -25,7 +25,7 @@ const providers = {
   },
   planbetter: {
     providerId: 'planbetter',
-    name: 'PlanBetter',
+    name: 'Planbetter',
     url: 'https://planbetter.com',
   },
   asymmetricResearch: {
