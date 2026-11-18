@@ -15,7 +15,7 @@ import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 
 import { EditNonceForm } from './components/edit-nonce-form';
 
-const url = 'https://leather.gitbook.io/guides/transactions/nonces';
+const url = 'https://docs.leather.io/transactions/configure-transaction-nonces';
 
 export function EditNonceSheet() {
   const { errors, setFieldError, setFieldValue, validateField, values } = useFormikContext<
