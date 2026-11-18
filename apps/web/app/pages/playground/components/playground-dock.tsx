@@ -162,6 +162,7 @@ export function PlaygroundDock() {
         <Box position="fixed" inset={0} zIndex={1300} onClick={() => setOpen(false)} />
       ) : null}
       <Flex
+        data-playground-dock
         position="fixed"
         bottom="space.05"
         left="50%"
