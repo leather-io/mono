@@ -8,7 +8,7 @@ import { writeStepOutputs } from './outputs.js';
 describe('writeStepOutputs', () => {
   let dir: string;
   beforeEach(() => {
-    dir = mkdtempSync(path.join(tmpdir(), 'fix-issue-outputs-'));
+    dir = mkdtempSync(path.join(tmpdir(), 'ci-outputs-'));
   });
   afterEach(() => rmSync(dir, { recursive: true, force: true }));
 
