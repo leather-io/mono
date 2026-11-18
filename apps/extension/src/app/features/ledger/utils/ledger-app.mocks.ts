@@ -3,8 +3,7 @@ import {
   type ExecuteDeviceActionReturnType,
 } from '@ledgerhq/device-management-kit';
 import type { SignerBtc } from '@ledgerhq/device-signer-kit-bitcoin';
-import type StacksApp from '@zondax/ledger-stacks';
-import type { DMKTransport } from '@zondax/ledger-stacks';
+import StacksApp, { type DMKTransport } from '@zondax/ledger-stacks';
 import { of } from 'rxjs';
 import { vi } from 'vitest';
 
@@ -40,6 +39,7 @@ export function makeFakeLedgerBitcoinApp(signer: Partial<SignerBtc> = {}): Ledge
 export function makeFakeLedgerStacksApp(
   app: Partial<StacksApp<DMKTransport>> = {}
 ): LedgerStacksApp {
-  const stacksApp: StacksApp<DMKTransport> = Object.create(null);
+  const stacksApp: unknown = Object.create(StacksApp.prototype);
+  if (!(stacksApp instanceof StacksApp)) throw new Error('Failed to create fake Stacks app');
   return { chain: 'stacks', app: Object.assign(stacksApp, app), sessionId: fakeLedgerSessionId };
 }

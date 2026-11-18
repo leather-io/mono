@@ -1,9 +1,7 @@
-import { recipientAddress } from '@leather.io/bitcoin';
+import { calculateMaxSpend, recipientAddress } from '@leather.io/bitcoin';
 import { LEDGER_BITCOIN_MAX_INPUTS } from '@leather.io/constants';
 import type { OwnedUtxo } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
-
-import { calculateMaxBitcoinSpend } from '@app/common/transactions/bitcoin/fees/calculate-max-bitcoin-spend';
 
 import {
   assertLedgerBitcoinInputLimit,
@@ -82,7 +80,7 @@ describe(getLedgerBitcoinInputLimit.name, () => {
 
   test('that the send max amount typed without send max still counts every economical utxo', () => {
     const utxos = makeUtxos(150, 10_000);
-    const { amount } = calculateMaxBitcoinSpend({ address: recipientAddress, utxos, feeRate });
+    const { amount } = calculateMaxSpend({ recipient: recipientAddress, utxos, feeRate });
     const result = getLedgerBitcoinInputLimit({
       utxos,
       recipients: [{ address: recipientAddress, amount }],

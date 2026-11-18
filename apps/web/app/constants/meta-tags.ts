@@ -1,4 +1,4 @@
-import { MetaDescriptor } from 'react-router';
+import { type MetaDescriptor } from 'react-router';
 
 export const defaultMetaTags = [
   {

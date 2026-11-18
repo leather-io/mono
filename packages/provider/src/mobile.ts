@@ -1,13 +1,25 @@
-import { initInpageProvider } from '.';
+import { initInpageProvider } from './init-inpage-provider';
+
+interface ReactNativeWebViewBridge {
+  postMessage(message: string): void;
+}
+
+interface ReactNativeWindow extends Window {
+  onMessageFromRN?(str: string): void;
+  ReactNativeWebView?: ReactNativeWebViewBridge;
+}
+
+const win: ReactNativeWindow = window;
 
 // WebView on Android doesn't support window.addEventListener('message') directly
-(window as any).onMessageFromRN = function (str: string) {
+win.onMessageFromRN = function (str: string) {
   window.postMessage(str, window.location.origin);
 };
 
 initInpageProvider({
   onDispatch(rpcRequest) {
-    (window as any).ReactNativeWebView.postMessage(JSON.stringify(rpcRequest));
+    if (!win.ReactNativeWebView) throw new TypeError('ReactNativeWebView is not available');
+    win.ReactNativeWebView.postMessage(JSON.stringify(rpcRequest));
   },
   env: {
     branch: 'replace_branch',

@@ -23,7 +23,7 @@ import { useNetworkBadgeAlwaysOn } from '@app/store/settings/settings.selectors'
 import { NetworkListItem } from './components/network-list-item';
 import { NetworkListSwitch } from './components/network-list-switch';
 
-const defaultNetworkIds = Object.values(WalletDefaultNetworkConfigurationIds) as string[];
+const defaultNetworkIds: string[] = Object.values(WalletDefaultNetworkConfigurationIds);
 
 export function SelectNetwork() {
   const navigate = useNavigate();

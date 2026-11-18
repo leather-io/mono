@@ -31,7 +31,7 @@ export function ConnectLedgerStacks() {
   }
 
   return (
-    <Sheet isShowing header={<SheetHeader />} onClose={() => navigate('../')}>
+    <Sheet isShowing header={<SheetHeader />} onClose={() => void navigate('../')}>
       <ConnectLedger connectStacks={onConnectStacks()} showInstructions />
     </Sheet>
   );

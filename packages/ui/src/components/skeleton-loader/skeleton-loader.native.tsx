@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import { type ReactNode, useLayoutEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
   Easing,
@@ -9,9 +9,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { useTheme } from '@shopify/restyle';
 import { LinearGradient } from 'expo-linear-gradient';
 
+import { useTheme } from '../../hooks/use-theme.native';
 import { Box, type BoxProps } from '../box/box.native';
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
@@ -92,7 +92,7 @@ interface SkeletonLoaderProps extends BoxProps {
   isLoading: boolean;
   animationDelay?: number;
   animationDuration?: number;
-  children?: React.ReactNode;
+  children?: ReactNode;
   reverse?: boolean;
 }
 

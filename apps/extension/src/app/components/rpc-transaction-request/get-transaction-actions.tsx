@@ -58,7 +58,13 @@ export function getTransactionActions({
     <Button key="cancel" onClick={onCancel} fullWidth variant="outline">
       <styled.span textStyle="label.02">Cancel</styled.span>
     </Button>,
-    <Button type="submit" key="approve" onClick={onApprove} fullWidth disabled={isApproveDisabled}>
+    <Button
+      type="submit"
+      key="approve"
+      onClick={() => void onApprove()}
+      fullWidth
+      disabled={isApproveDisabled}
+    >
       <styled.span textStyle="label.02">{approveLabel}</styled.span>
     </Button>,
   ];

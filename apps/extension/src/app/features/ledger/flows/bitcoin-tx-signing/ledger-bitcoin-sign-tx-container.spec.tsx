@@ -3,6 +3,8 @@ import * as btc from '@scure/btc-signer';
 import { act, render } from '@testing-library/react';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
+import type * as LeatherUtils from '@leather.io/utils';
+
 import {
   LedgerConnectionErrors,
   toLedgerTransportError,
@@ -10,6 +12,7 @@ import {
 import { makeFakeDmk } from '@app/features/ledger/dmk/ledger-dmk.mocks';
 import type { LedgerSigningOutcome } from '@app/features/ledger/flow/ledger-flow.types';
 import type { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
+import type * as GenericLedgerUtils from '@app/features/ledger/utils/generic-ledger-utils';
 import { makeFakeLedgerBitcoinApp } from '@app/features/ledger/utils/ledger-app.mocks';
 
 import { LedgerSignBitcoinTxContainer } from './ledger-bitcoin-sign-tx-container';
@@ -98,13 +101,12 @@ vi.mock('@app/features/ledger/utils/bitcoin-ledger-utils', () => ({
 }));
 
 vi.mock('@app/features/ledger/utils/generic-ledger-utils', async importOriginal => {
-  const actual =
-    await importOriginal<typeof import('@app/features/ledger/utils/generic-ledger-utils')>();
+  const actual = await importOriginal<typeof GenericLedgerUtils>();
   return { ...actual, useCancelLedgerAction: () => false };
 });
 
 vi.mock('@leather.io/utils', async importOriginal => {
-  const actual = await importOriginal<typeof import('@leather.io/utils')>();
+  const actual = await importOriginal<typeof LeatherUtils>();
   return { ...actual, delay: () => Promise.resolve() };
 });
 

@@ -36,7 +36,7 @@ export function RpcSignPsbt() {
         indexesToSign={indexesToSign}
         isBroadcasting={isBroadcasting}
         origin={origin}
-        onSignPsbt={onSignPsbt}
+        onSignPsbt={args => void onSignPsbt(args)}
         onCancel={onCancel}
         psbtHex={psbtHex}
         willBroadcast={bondProposal ? false : broadcast}

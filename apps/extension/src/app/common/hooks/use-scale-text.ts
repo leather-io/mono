@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import { useOnMount } from '@app/common/hooks/use-on-mount';
+import { useOnMount } from '@leather.io/ui';
 
 export function useScaleText() {
   const ref = useRef<HTMLHeadingElement>(null);

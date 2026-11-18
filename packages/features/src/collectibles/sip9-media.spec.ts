@@ -2,11 +2,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getSip9MediaInfo } from './sip9-media';
 
-const mockFetch = vi.fn();
+const mockFetch = vi.fn<typeof fetch>();
 
 describe(getSip9MediaInfo.name, () => {
   beforeEach(() => {
-    vi.stubGlobal('fetch', mockFetch as unknown as typeof fetch);
+    vi.stubGlobal('fetch', mockFetch);
   });
 
   afterEach(() => {
@@ -15,11 +15,9 @@ describe(getSip9MediaInfo.name, () => {
   });
 
   it('uses HEAD metadata when available', async () => {
-    mockFetch.mockResolvedValueOnce({
-      headers: {
-        get: (key: string) => (key === 'content-type' ? 'image/png' : null),
-      },
-    } as Response);
+    mockFetch.mockResolvedValueOnce(
+      new Response(null, { headers: { 'content-type': 'image/png' } })
+    );
 
     const media = await getSip9MediaInfo('https://example.com/nft.png');
     expect(media).toEqual({

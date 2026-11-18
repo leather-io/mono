@@ -11,7 +11,7 @@ import { isError } from '@leather.io/utils';
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 
-import { SignPsbtArgs } from '@app/common/psbt/requests';
+import { type SignPsbtArgs } from '@app/common/psbt/requests';
 import { ButtonRow, Card } from '@app/components/layout';
 import { PopupHeader } from '@app/features/container/headers/popup.header';
 import { LedgerInputLimitWarningLabel } from '@app/features/ledger/components/ledger-input-limit-warning-label';
@@ -28,7 +28,7 @@ import type { PsbtBondDetails } from './components/psbt-descriptor-policy';
 import { useDescriptorPsbtDetails } from './hooks/use-descriptor-psbt-details';
 import { usePsbtDetails } from './hooks/use-psbt-details';
 import { usePsbtSigner } from './hooks/use-psbt-signer';
-import { PsbtSignerContext, PsbtSignerProvider } from './psbt-signer.context';
+import { type PsbtSignerContext, PsbtSignerProvider } from './psbt-signer.context';
 
 interface PsbtSignerBondProposal extends PsbtBondDetails {
   policy: PolicyStore;
@@ -98,7 +98,7 @@ export function PsbtSigner(props: PsbtSignerProps) {
     outputs: psbtTxOutputs,
   });
 
-  const descriptorDetails = useDescriptorPsbtDetails(psbtHex, descriptor ?? '');
+  const descriptorDetails = useDescriptorPsbtDetails(psbtHex, descriptor);
 
   useBreakOnNonCompliantEntity(
     'psbt_signer',

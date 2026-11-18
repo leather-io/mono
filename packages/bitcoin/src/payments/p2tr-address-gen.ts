@@ -1,12 +1,14 @@
-import { HDKey } from '@scure/bip32';
+import { type HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 
 import { DerivationPathDepth } from '@leather.io/crypto';
-import { BitcoinNetworkModes } from '@leather.io/models';
+import { type BitcoinNetworkModes } from '@leather.io/models';
 
 import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import {
-  BitcoinAccount,
+  type BitcoinAccount,
+  type GetAddressArgs,
+  deriveAddressIndexKeychainFromAccount,
   deriveAddressIndexZeroFromAccount,
   ecdsaPublicKeyToSchnorr,
   getBitcoinCoinTypeIndexByNetwork,
@@ -77,4 +79,28 @@ export function deriveTaprootReceiveAddressIndexZero({
     keychain: zeroAddressIndex,
     payment: getTaprootPaymentFromAddressIndex(zeroAddressIndex, network),
   };
+}
+
+export function getTaprootAddress({
+  changeIndex,
+  addressIndex,
+  keychain,
+  network,
+}: GetAddressArgs) {
+  if (!keychain) throw new Error('Expected keychain to be provided');
+
+  if (keychain.depth !== DerivationPathDepth.Account)
+    throw new Error('Expects keychain to be on the account index');
+
+  const addresskeychain = deriveAddressIndexKeychainFromAccount(keychain)({
+    changeIndex,
+    addressIndex,
+  });
+
+  if (!addresskeychain.publicKey) throw new Error('Expected publicKey to be defined');
+
+  const payment = getTaprootPayment(addresskeychain.publicKey, network);
+
+  if (!payment.address) throw new Error('Expected address to be defined');
+  return payment.address;
 }

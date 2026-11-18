@@ -24,7 +24,7 @@ export function PairLedgerDevice() {
         then start this request again.
       </styled.span>
       <Stack width="100%" gap="space.03">
-        <Button onClick={openPairingTab}>Open Leather in full screen</Button>
+        <Button onClick={() => void openPairingTab()}>Open Leather in full screen</Button>
         <Button variant="outline" onClick={() => ledgerSteps.toConnectStepAndTryAgain()}>
           Try again
         </Button>

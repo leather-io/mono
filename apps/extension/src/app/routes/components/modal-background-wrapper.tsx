@@ -1,6 +1,6 @@
 import { Outlet, Route, Routes, useLocation } from 'react-router';
 
-import { useLocationState } from '@app/common/hooks/use-location-state';
+import { useBackgroundLocation } from '@app/routes/hooks/use-background-location';
 
 /*
    To overlay modal on nested routes backgroundLocation is used
@@ -11,7 +11,7 @@ interface ModalBackgroundWrapperProps {
 }
 export function ModalBackgroundWrapper({ children }: ModalBackgroundWrapperProps) {
   const location = useLocation();
-  const backgroundLocation = useLocationState<Location>('backgroundLocation');
+  const backgroundLocation = useBackgroundLocation();
 
   return (
     <>

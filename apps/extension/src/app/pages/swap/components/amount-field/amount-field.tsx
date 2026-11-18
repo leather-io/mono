@@ -4,8 +4,12 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Box, Flex } from 'leather-styles/jsx';
 import { isDefined } from 'remeda';
 
-import { Currency, InputCurrencyMode, SwappableFungibleCryptoAsset } from '@leather.io/models';
-import { SecondaryAmount, isUserInputEffectivelyZero } from '@leather.io/state/swap';
+import {
+  type Currency,
+  type InputCurrencyMode,
+  type SwappableFungibleCryptoAsset,
+} from '@leather.io/models';
+import { type SecondaryAmount, isUserInputEffectivelyZero } from '@leather.io/state/swap';
 import { slidePair } from '@leather.io/ui';
 
 import { focusAmountField } from '@app/pages/swap/swap-utils';

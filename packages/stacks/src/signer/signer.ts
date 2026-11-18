@@ -1,20 +1,20 @@
 import {
-  ClarityValue,
-  StacksTransactionWire,
+  type ClarityValue,
+  type StacksTransactionWire,
   TransactionSigner,
   createStacksPublicKey,
   publicKeyToAddressSingleSig,
 } from '@stacks/transactions';
 
 import {
-  Signer,
+  type Signer,
   decomposeDescriptor,
   deriveRootKeychainFromMnemonic,
   extractKeyFromDescriptor,
 } from '@leather.io/crypto';
-import { NetworkModes } from '@leather.io/models';
+import { type NetworkModes } from '@leather.io/models';
 
-import { SignatureData, signMessage, signStructuredDataMessage } from '../message-signing';
+import { type SignatureData, signMessage, signStructuredDataMessage } from '../message-signing';
 import { deriveStxPrivateKey, extractStacksDerivationPathAccountIndex } from '../stacks.utils';
 
 // Warning: mutative. Ideally there would be a tx.clone() method
@@ -99,7 +99,7 @@ export function initalizeStacksSigner(args: InitalizeStacksSignerArgs): StacksSi
     ...decomposeDescriptor(descriptor),
     // here we overwrite the accountIndex with the derivation path account index for stx
     accountIndex: extractStacksDerivationPathAccountIndex(descriptor),
-    publicKey: publicKey,
+    publicKey,
     network,
     address: publicKeyToAddressSingleSig(publicKey, network),
     sign: signFn,

@@ -4,10 +4,9 @@ import { SharedComponentsSelectors } from '@tests/selectors/shared-component.sel
 import { Stack, styled } from 'leather-styles/jsx';
 
 import { formatContractId } from '@leather.io/stacks';
-import { AddressDisplayer, Approver } from '@leather.io/ui';
+import { AddressDisplayer, Approver, LoadingSpinner } from '@leather.io/ui';
 
 import { useStacksExplorerLink } from '@app/common/hooks/use-stacks-explorer-link';
-import { LoadingSpinner } from '@app/components/loading-spinner';
 import { FunctionArgumentList } from '@app/features/rpc-stacks-transaction-request/stacks/contract-call/function-arguments/function-argument-list';
 import { useGetContractInterface } from '@app/query/stacks/contract-interface.query';
 

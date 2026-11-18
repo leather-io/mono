@@ -20,15 +20,16 @@ import {
   useCollectiblesAnalytics,
 } from '@/utils/analytics-hooks';
 
-import { AccountId } from '@leather.io/models';
-import { SheetInstance } from '@leather.io/ui/native';
+import { type AccountId } from '@leather.io/models';
+import { type SheetInstance } from '@leather.io/ui/native';
 
 import { AccountScreenHeader } from './account-screen-header';
 import { AssetTabs } from './components/asset-tabs';
 import { FirstTokenBanner } from './components/first-token-banner';
 import { LearnSection } from './components/learn-section';
+import { ManageTokensFooter } from './components/manage-tokens-footer';
 import { TrendingTokens } from './components/trending-tokens';
-import { ListTab } from './constants';
+import { type ListTab } from './constants';
 
 interface HomeScreenWithAccountProps {
   currentAccount: AccountId;
@@ -42,11 +43,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
   const accountSelectorSheetRef = useRef<SheetInstance>(null);
   const sip10Data = useSip10AccountBalance(fingerprint, accountIndex);
 
-  const allSip10Data = useSip10AccountBalance(fingerprint, accountIndex, {
-    includeHiddenAssets: true,
-  });
-
-  const hasAssets = !!allSip10Data.value?.sip10s.length;
   const activityState = useActivity(fingerprint, accountIndex);
   const hasActivity = !!activityState.value?.length;
   const displayLearningSections = activityState.state === 'success' && !hasActivity;
@@ -75,7 +71,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
 
       {listTab === 'tokens' && (
         <AssetsList
-          account={currentAccount}
           header={
             <>
               {/* TODO: research better way of switching between flashlists */}
@@ -88,7 +83,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
                   onOpenManageTokens={() => {
                     manageTokensSheetRef.current?.present();
                   }}
-                  hasAssets={hasAssets}
                 />
               )}
               <BitcoinDepositTokenCell fingerprint={fingerprint} accountIndex={accountIndex} />
@@ -97,6 +91,12 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
           }
           footer={
             <>
+              <ManageTokensFooter
+                account={currentAccount}
+                onPress={() => {
+                  manageTokensSheetRef.current?.present();
+                }}
+              />
               <TrendingTokens />
               {displayLearningSections ? <LearnSection /> : undefined}
             </>

@@ -59,6 +59,16 @@ Mobile requires an `apps/mobile/.env` file with `EXPO_PUBLIC_LAUNCH_DARKLY` set.
 - Clear bundler cache: `npx expo start --dev-client --clear`.
 - `BUILD_TARGET` env var controls platform builds: `mobile`, `extension`, or `web`. Unset builds everything.
 
+## Design system
+
+- Building or changing UI? Use the `leather-ui` skill and start at `docs/design/i-need-to.md`, which maps each job to one `@leather.io/ui` component.
+- Colours, type and spacing come from `@leather.io/tokens`. Text colour follows the ink ladder in `packages/tokens/README.md`.
+- `docs/design/never.md` lists what new UI code must not do, such as importing `radix-ui` or `@radix-ui/*` outside `packages/ui`. Each item is a rule in `eslint-rules/design-system/` whose message names the fix.
+- Root lint enforces those rules only on the toolkit's recipes, recipe gallery and Receive example. Run `pnpm design:check <path>` on new web or extension UI; older code elsewhere still breaks some of them.
+- Design-rule entries in `eslint-suppressions.json` follow the baseline rule under Code style: they only go away.
+- UI change? Check light and dark in the web Playground (`/playground`) and attach before and after screenshots to the PR.
+- New design rules follow `docs/design/updating-the-system.md`: a type, then a lint, then docs. Prose here comes last and cites the incident.
+
 ## Code style
 
 - Don't use enums.
@@ -67,10 +77,12 @@ Mobile requires an `apps/mobile/.env` file with `EXPO_PUBLIC_LAUNCH_DARKLY` set.
 - Destructure props directly in the function signature.
 - Prefer Remeda (`keys`, `entries`, `pipe`, `filter`, etc.) over `Object.keys`/`Object.entries` for typed utilities and non-trivial transforms. Use native methods for trivial cases.
 - No `as` casts, `!` non-null assertions, or `any`. Use runtime checks, type guards, or `unknown` with narrowing.
+- When a rule removes a type predicate, narrow with an existing guard (`isNumber`, `isDefined`, a zod schema) before reaching for `flatMap(x => cond ? [x] : [])`.
 - Prefer `const` over `let`. Prefer named constants over magic numbers or strings.
 - No nested ternary expressions.
 - Use object method shorthand syntax in objects and interfaces (`{ foo() {} }` not `{ foo: () => {} }`).
 - camelCase for file-level constants; SCREAMING_SNAKE_CASE in the constants package or `constants.ts` files.
+- The per-package `eslint-suppressions.json` files and `.dependency-cruiser-known-violations.json` are a frozen baseline of pre-existing violations. Never run `eslint --suppress-all` or regenerate the known-violations file, and never add entries by hand. Entries only go away by fixing the code (then `eslint --prune-suppressions` in that package).
 
 ## Error handling
 
@@ -131,11 +143,15 @@ pnpm --filter @leather.io/{package} typecheck
 
 - Turborepo + `pnpm`.
 - Vitest for unit/integration tests. Use the `testing-patterns` skill for conventions.
-- Playwright for E2E tests (extension). Avoid `force: true` — it hides accessibility issues. Never nest interactive elements.
+- Playwright for E2E tests (extension and web). Sleeps, `networkidle`, `waitForSelector` and raw locators are lint errors in both suites. For the extension use the `write-extension-e2e` skill: page-object actions own their readiness waits. Avoid `force: true` — it hides accessibility issues. Never nest interactive elements.
 
 ## Common tasks
 
 - **Add a UI component** → `@leather.io/ui`, use the `monorepo-navigation` skill
 - **Add a Redux slice** → Extension: `{feature}.slice.ts`; Mobile: `{feature}.write.ts` + `{feature}.read.ts`
 - **Add a React Query hook** → `packages/queries/` or app-level `src/queries/`
-- **Run a single package's tests** → `pnpm --filter @leather.io/{package} test:unit`
+- **Run a single package's tests** → `pnpm --filter @leather.io/{package} test:unit`; for some specs, append their paths without `--` (`test:unit src/x.spec.ts`), since with `--` vitest ignores them and runs everything
+- **Add or fix an extension E2E test** → `apps/extension/tests`, use the `write-extension-e2e` skill
+- **File an issue** → `/new-issue`
+- **Fix an issue** → `Settled` decisions are binding, ask about every `Open` one before coding, re-check the issue's line links against current `dev`, run every Verify line before ticking Done when
+- **Fix a batch of GitHub issues** → use the `fix-issue` skill: research, interview and briefs locally, then one `repo:fix-issue` workflow run per brief opens the pull request

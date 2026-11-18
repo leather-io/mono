@@ -3,7 +3,7 @@ import { useUserSettings } from '~/hooks/use-user-settings';
 import { useLeatherConnect } from '~/store/addresses';
 
 import { createStxAccountBalanceQueryConfig } from '@leather.io/queries';
-import { AccountRequest } from '@leather.io/services';
+import { type AccountRequest } from '@leather.io/services';
 
 function useGetStxAccountBalanceQuery(request: AccountRequest) {
   const settings = useUserSettings();

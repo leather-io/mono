@@ -1,10 +1,13 @@
+import { z } from 'zod';
+
 import {
-  InternalMethods,
-  Message,
+  type InternalMethods,
+  type Message,
   SIGN_OUT_MESSAGE,
   WALLET_LIST_CHANGED_MESSAGE,
   WALLET_LOCK_MESSAGE,
 } from '@shared/message-types';
+import { isRecord } from '@shared/utils/is-record';
 
 import type { MonitoredAddress } from '@background/monitors/address-monitor';
 
@@ -14,16 +17,16 @@ import type { MonitoredAddress } from '@background/monitors/address-monitor';
 type BackgroundMessage<Msg extends InternalMethods, Payload = undefined> = Message<Msg, Payload>;
 
 type OriginatingTabClosed = BackgroundMessage<
-  InternalMethods.OriginatingTabClosed,
+  typeof InternalMethods.OriginatingTabClosed,
   { tabId: number }
 >;
 
 type AddressMonitorUpdated = BackgroundMessage<
-  InternalMethods.AddressMonitorUpdated,
+  typeof InternalMethods.AddressMonitorUpdated,
   { addresses: MonitoredAddress[] }
 >;
 
-type ApplyPendingUpdate = BackgroundMessage<InternalMethods.ApplyPendingUpdate>;
+type ApplyPendingUpdate = BackgroundMessage<typeof InternalMethods.ApplyPendingUpdate>;
 
 export type BackgroundMessages = OriginatingTabClosed | AddressMonitorUpdated | ApplyPendingUpdate;
 
@@ -31,13 +34,17 @@ export function sendMessage(message: BackgroundMessages) {
   return chrome.runtime.sendMessage(message);
 }
 
+function getMessageMethod(message: unknown) {
+  return isRecord(message) ? message.method : undefined;
+}
+
 export function broadcastWalletLock() {
   return chrome.runtime.sendMessage({ method: WALLET_LOCK_MESSAGE });
 }
 
 export function addWalletLockListener(handler: () => void) {
-  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-    if (message?.method === WALLET_LOCK_MESSAGE) handler();
+  chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) => {
+    if (getMessageMethod(message) === WALLET_LOCK_MESSAGE) handler();
     sendResponse();
   });
 }
@@ -47,23 +54,27 @@ export function broadcastSignOut() {
 }
 
 export function addSignOutListener(handler: () => void) {
-  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-    if (message?.method === SIGN_OUT_MESSAGE) handler();
+  chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) => {
+    if (getMessageMethod(message) === SIGN_OUT_MESSAGE) handler();
     sendResponse();
   });
 }
 
-interface WalletListChangedPayload {
-  removedFingerprint?: string;
-}
+const walletListChangedPayloadSchema = z.object({
+  removedFingerprint: z.string().optional(),
+});
+type WalletListChangedPayload = z.infer<typeof walletListChangedPayloadSchema>;
 
 export function broadcastWalletListChanged(payload: WalletListChangedPayload) {
   return chrome.runtime.sendMessage({ method: WALLET_LIST_CHANGED_MESSAGE, payload });
 }
 
 export function addWalletListChangedListener(handler: (payload: WalletListChangedPayload) => void) {
-  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-    if (message?.method === WALLET_LIST_CHANGED_MESSAGE) handler(message.payload ?? {});
+  chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) => {
+    if (isRecord(message) && message.method === WALLET_LIST_CHANGED_MESSAGE) {
+      const parsedPayload = walletListChangedPayloadSchema.safeParse(message.payload);
+      handler(parsedPayload.success ? parsedPayload.data : {});
+    }
     sendResponse();
   });
 }

@@ -1,21 +1,23 @@
 import { HARDENED_OFFSET } from '@scure/bip32';
 
 import { deriveKeychainFromXpub } from '@leather.io/crypto';
-import { BitcoinNetworkModes } from '@leather.io/models';
+import { type BitcoinNetworkModes } from '@leather.io/models';
 
-import { makeTaprootAddressIndexDerivationPath } from '../payments/p2tr-address-gen';
-import { makeNativeSegwitAddressIndexDerivationPath } from '../payments/p2wpkh-address-gen';
 import {
-  SupportedPaymentType,
-  getNativeSegwitAddress,
   getTaprootAddress,
+  makeTaprootAddressIndexDerivationPath,
+} from '../payments/p2tr-address-gen';
+import {
+  getNativeSegwitAddress,
+  makeNativeSegwitAddressIndexDerivationPath,
+} from '../payments/p2wpkh-address-gen';
+import {
+  type SupportedPaymentType,
   inferPaymentTypeFromPath,
   whenSupportedPaymentType,
 } from './bitcoin.utils';
 
-export function getDescriptorFromKeychain<T extends { keyOrigin: string; xpub: string }>(
-  accountKeychain: T
-) {
+export function getDescriptorFromKeychain(accountKeychain: { keyOrigin: string; xpub: string }) {
   switch (inferPaymentTypeFromPath(accountKeychain.keyOrigin)) {
     case 'p2tr':
       return `tr(${accountKeychain.xpub})`;

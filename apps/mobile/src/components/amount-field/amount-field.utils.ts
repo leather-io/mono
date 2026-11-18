@@ -1,4 +1,4 @@
-import { InputCurrencyMode } from '@/utils/types';
+import { type InputCurrencyMode } from '@/utils/types';
 
 import { currencyDecimalsMap } from '@leather.io/constants';
 import { type Currency, type MarketData } from '@leather.io/models';

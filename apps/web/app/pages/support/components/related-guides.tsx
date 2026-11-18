@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { styled } from 'leather-styles/jsx/factory';
 import { VStack } from 'leather-styles/jsx/vstack';
 
-import { HelpCenterGuideBySlugQueryResult } from '@leather.io/cms';
+import { type HelpCenterGuideBySlugQueryResult } from '@leather.io/cms';
 import { ChevronRightIcon } from '@leather.io/ui';
 
 type RelatedGuide = NonNullable<

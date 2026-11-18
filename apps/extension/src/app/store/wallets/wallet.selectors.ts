@@ -4,7 +4,7 @@ import { type WalletStore, walletAdapter } from '@leather.io/state/wallet';
 
 import { assumedZeroFingerprint } from '@shared/utils';
 
-import type { RootState } from '..';
+import type { RootState } from '@app/store/store';
 
 function selectWalletsState(state: RootState) {
   return state.wallets;

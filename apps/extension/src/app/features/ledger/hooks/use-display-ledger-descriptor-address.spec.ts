@@ -68,14 +68,16 @@ describe(useDisplayLedgerDescriptorAddress.name, () => {
     const address = await displayAddress(makeFakeLedgerApp(), vaultDescriptor);
 
     expect(address).toBe(deviceAddress);
-    const [policy] = mocks.registerWallet.mock.calls[0];
+    const registerWalletCall: unknown[] = mocks.registerWallet.mock.calls[0];
+    const [policy] = registerWalletCall;
     expect(policy).toBeInstanceOf(WalletPolicy);
     expect(policy).toMatchObject({
       name: 'Leather',
       descriptorTemplate: 'wsh(multi(2,@0/**,@1/**))',
       keys: [cosignerXpub, `[${accountKeyOrigin}]${accountKeychain.publicExtendedKey}`],
     });
-    const [wallet, addressIndex, options] = mocks.getWalletAddress.mock.calls[0];
+    const getWalletAddressCall: unknown[] = mocks.getWalletAddress.mock.calls[0];
+    const [wallet, addressIndex, options] = getWalletAddressCall;
     expect(wallet).toBeInstanceOf(RegisteredWallet);
     expect(wallet).toMatchObject({ hmac: registeredPolicyHmac });
     expect(addressIndex).toBe(7);

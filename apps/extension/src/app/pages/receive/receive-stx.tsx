@@ -17,6 +17,11 @@ interface ReceiveStxModalProps {
 
 export function ReceiveStxModal({ onClose }: ReceiveStxModalProps) {
   const toast = useToast();
+
+  async function copyAddress(address: string) {
+    await copyToClipboard(address);
+    toast.success('Copied to clipboard!');
+  }
   const currentAccount = useCurrentStacksAccount();
   const policy = useCurrentPolicy();
   const { walletType } = useWalletType();
@@ -38,10 +43,9 @@ export function ReceiveStxModal({ onClose }: ReceiveStxModalProps) {
       address={address}
       accountName={policyName ?? accountName}
       onClose={onClose}
-      onCopyAddressToClipboard={async () => {
+      onCopyAddressToClipboard={() => {
         analytics.track('copy_stx_address_to_clipboard');
-        await copyToClipboard(address);
-        toast.success('Copied to clipboard!');
+        void copyAddress(address);
       }}
       onVerifyAddress={canVerifyOnLedger ? () => verifyAddressOnLedger('stx') : undefined}
       title="STX"

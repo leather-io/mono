@@ -4,7 +4,7 @@ import { useNavigate, useOutletContext } from 'react-router';
 import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
 import { Box, Divider, Flex } from 'leather-styles/jsx';
 
-import { AccountSwapAsset } from '@leather.io/services';
+import { type AccountSwapAsset } from '@leather.io/services';
 import { useSwapContext } from '@leather.io/state/swap';
 import { Button } from '@leather.io/ui';
 

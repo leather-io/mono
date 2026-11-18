@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 
-import { MarketData, createMarketData, createMarketPair } from '@leather.io/models';
+import { type MarketData, createMarketData, createMarketPair } from '@leather.io/models';
 
 import {
   baseCurrencyAmountInQuote,
@@ -23,10 +23,10 @@ const tenBtc = createMoneyFromDecimal(10, 'BTC');
 const moneyArray = [tenStx, nineStx, eightStx];
 const moneyArrayWithMixedCurrencies = [tenStx, tenBtc];
 
-const mockWrongMarketData = {
-  pair: createMarketPair('BTC' as any, 'USD'),
-  price: createMoneyFromDecimal(1, 'EUR' as any, 2),
-} as MarketData;
+const mockWrongMarketData: MarketData = {
+  pair: createMarketPair('BTC', 'USD'),
+  price: createMoneyFromDecimal(1, 'EUR', 2),
+};
 
 const mockAccurateStxMarketData = createMarketData(
   createMarketPair('STX', 'USD'),

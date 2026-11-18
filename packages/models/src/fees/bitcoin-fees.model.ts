@@ -12,8 +12,9 @@ export const btcTxTimeMap: Record<keyof AverageBitcoinFeeRates, string> = {
   hourFee: '~1 hour+',
 };
 
-export enum BtcFeeType {
-  High = 'High',
-  Standard = 'Standard',
-  Low = 'Low',
-}
+export const BtcFeeType = {
+  High: 'High',
+  Standard: 'Standard',
+  Low: 'Low',
+} as const;
+export type BtcFeeType = (typeof BtcFeeType)[keyof typeof BtcFeeType];

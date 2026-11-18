@@ -1,6 +1,6 @@
 import {
-  BnsV2ApiZoneFilResponse,
-  BnsV2ApiZoneFileAddress,
+  type BnsV2ApiZoneFilResponse,
+  type BnsV2ApiZoneFileAddress,
 } from '../infrastructure/api/bns-v2/bns-v2-api.schema';
 import { mapBnsProfileDataAddresses, mapBnsProfileDataFromZoneFile } from './bns.utils';
 

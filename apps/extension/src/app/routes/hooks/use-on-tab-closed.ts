@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { InternalMethods } from '@shared/message-types';
-import { BackgroundMessages } from '@shared/messages';
+import { type BackgroundMessages } from '@shared/messages';
 import { analytics } from '@shared/utils/analytics';
 
 import { useDefaultRequestParams } from '@app/common/hooks/use-default-request-search-params';

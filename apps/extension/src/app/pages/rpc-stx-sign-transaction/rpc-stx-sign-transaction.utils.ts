@@ -1,6 +1,6 @@
 import {
   AddressHashMode,
-  StacksTransactionWire,
+  type StacksTransactionWire,
   deserializeTransaction,
 } from '@stacks/transactions';
 

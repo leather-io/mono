@@ -577,6 +577,23 @@
     * @leather.io/models bumped to 0.44.1
     * @leather.io/utils bumped to 0.46.4
 
+## [1.22.9](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.22.8...@leather.io/stacks-v1.22.9) (2026-10-27)
+
+
+### Bug Fixes
+
+* body-parser and undici audit ([#2912](https://github.com/leather-io/mono/issues/2912)) ([2bee4e7](https://github.com/leather-io/mono/commit/2bee4e772dd95fff8406822a62225854fb708fbd))
+* **mobile:** return sponsored contract calls to the app without error ([#2811](https://github.com/leather-io/mono/issues/2811)) ([0012105](https://github.com/leather-io/mono/commit/00121054e400c7de2302e205fbc30f14965cbce7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.13.11
+    * @leather.io/models bumped to 0.63.1
+    * @leather.io/utils bumped to 0.55.0
+
 ## [1.22.8](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.22.7...@leather.io/stacks-v1.22.8) (2026-09-29)
 
 

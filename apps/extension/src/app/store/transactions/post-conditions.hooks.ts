@@ -1,4 +1,4 @@
-import { FungiblePostConditionWire, addressToString } from '@stacks/transactions';
+import { type FungiblePostConditionWire, addressToString } from '@stacks/transactions';
 
 import { useGetSip10AssetByPrincipalQuery } from '@app/query/stacks/sip10/sip10-asset.query';
 

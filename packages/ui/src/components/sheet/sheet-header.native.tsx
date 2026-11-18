@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 import { Box } from '../box/box.native';
-import { Text, TextProps } from '../text/text.native';
+import { Text, type TextProps } from '../text/text.native';
 
 interface SheetHeaderProps {
   leftElement?: ReactNode;

@@ -1,8 +1,10 @@
 import { renderToString } from 'react-dom/server';
 
+import type * as WalletSelectors from '@app/store/wallets/wallet.selectors';
+
 import { PopupHeader } from './popup.header';
 
-const walletEntitiesMock = vi.fn();
+const walletEntitiesMock = vi.fn<() => unknown>();
 
 vi.mock('@app/common/switch-account/use-switch-account-sheet-context', () => ({
   useSwitchAccountSheet: () => ({
@@ -16,7 +18,7 @@ vi.mock('@app/store/accounts/account', () => ({
 }));
 
 vi.mock('@app/store/wallets/wallet.selectors', async importOriginal => ({
-  ...(await importOriginal<typeof import('@app/store/wallets/wallet.selectors')>()),
+  ...(await importOriginal<typeof WalletSelectors>()),
   useWalletEntities: () => walletEntitiesMock(),
 }));
 

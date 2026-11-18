@@ -1,6 +1,6 @@
 import type { DeviceManagementKit } from '@ledgerhq/device-management-kit';
 import { DefaultDescriptorTemplate, DefaultWallet } from '@ledgerhq/device-signer-kit-bitcoin';
-import { Psbt } from 'bitcoinjs-lib';
+import { type Psbt } from 'bitcoinjs-lib';
 
 import {
   makeNativeSegwitAccountDerivationPath,

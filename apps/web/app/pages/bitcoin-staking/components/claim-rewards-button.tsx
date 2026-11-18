@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
+import { type BitcoinStakingProviderId } from '~/data/bitcoin-staking-data';
 import { usePox5ClaimableRewards } from '~/features/bitcoin-staking/queries/pox5-stacking.query';
 import { createClaimRewardsMutationOptions } from '~/features/bitcoin-staking/transactions/pox5-mutations';
 import { wallet } from '~/utils/wallet';
@@ -35,7 +35,7 @@ export function ClaimRewardsButton({
       disabled={isPending}
       data-testid="staking-position-claim-rewards"
       onClick={() =>
-        claimRewards({
+        void claimRewards({
           providerId,
           signerManagerContractId,
           stakerAddress,

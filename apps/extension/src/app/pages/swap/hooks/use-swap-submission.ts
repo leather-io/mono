@@ -40,8 +40,10 @@ export function useSwapSubmission() {
       submit,
       SWAP_SUBMISSION_DISPLAY_DURATION_MS
     );
-    submitWithMinimumDuration()
-      .then(result => {
+
+    async function settleSubmission() {
+      try {
+        const result = await submitWithMinimumDuration();
         if (!isMountedRef.current) return;
         if (result.status !== 'submitted') {
           const exception =
@@ -64,15 +66,17 @@ export function useSwapSubmission() {
         exitTimerRef.current = setTimeout(() => {
           void navigate(RouteUrls.Activity);
         }, SWAP_SUCCESS_EXIT_TIMEOUT_MS);
-      })
-      .catch((error: unknown) => {
+      } catch (error: unknown) {
         if (!isMountedRef.current) return;
         if (isSwapSigningCancelledError(error)) {
           setSubmission({ status: 'idle' });
           return;
         }
         setSubmission({ status: 'failure', quote });
-      });
+      }
+    }
+
+    void settleSubmission();
   }
 
   function reset() {

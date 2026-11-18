@@ -10,6 +10,7 @@ interface DepositItemProps {
   titleLeft: string;
   dataTestId?: string;
   buttonDataTestId?: string;
+  buttonLabel?: string;
   onBuy(): void;
   onSelectAsset?(): void;
 }
@@ -19,6 +20,7 @@ export function DepositItem({
   titleLeft,
   dataTestId,
   buttonDataTestId,
+  buttonLabel = 'Buy',
   onBuy,
   onSelectAsset,
 }: DepositItemProps) {
@@ -35,7 +37,7 @@ export function DepositItem({
       onClick={onBuy}
       data-testid={buttonDataTestId}
     >
-      Buy
+      {buttonLabel}
     </Button>
   );
 

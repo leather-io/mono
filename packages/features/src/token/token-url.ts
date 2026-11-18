@@ -1,4 +1,6 @@
-import { type CryptoAssetId, CryptoAssetProtocols } from '@leather.io/models';
+import { keys } from 'remeda';
+
+import { CryptoAssetProtocols } from '@leather.io/models';
 import { type SerializedCryptoAssetId, serializeAssetId } from '@leather.io/utils';
 
 export function urlPathToAssetId(urlPath: string): SerializedCryptoAssetId {
@@ -14,8 +16,12 @@ export function urlPathToAssetId(urlPath: string): SerializedCryptoAssetId {
     throw new Error(`Invalid asset URL path: ${urlPath}`);
   }
 
-  const protocol = urlPath.slice(0, slashIndex);
+  const urlProtocol = urlPath.slice(0, slashIndex);
+  const protocol = keys(CryptoAssetProtocols).find(key => key === urlProtocol);
+  if (!protocol) {
+    throw new Error(`Invalid asset URL path: ${urlPath}`);
+  }
   const id = decodeURIComponent(urlPath.slice(slashIndex + 1));
 
-  return serializeAssetId({ protocol, id } as CryptoAssetId);
+  return serializeAssetId({ protocol, id });
 }

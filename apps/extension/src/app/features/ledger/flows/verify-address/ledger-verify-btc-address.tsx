@@ -7,7 +7,7 @@ import { isLedgerDeviceLockedError } from '@app/features/ledger/dmk/ledger-dmk-e
 import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { useLedgerFlow, useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import type { VerifyAddressVariant } from '@app/features/ledger/flow/ledger-flow.types';
-import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
+import { type LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
 import { useRequestLedgerKeys } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
 import { useDisplayLedgerDescriptorAddress } from '@app/features/ledger/hooks/use-display-ledger-descriptor-address';
@@ -25,7 +25,7 @@ import {
   isLedgerOnDeviceAddressConfirmed,
   toLedgerDisplayedAddress,
 } from '@app/features/ledger/utils/ledger-descriptor-address';
-import { useToast } from '@app/features/toasts/use-toast';
+import { toastDurations, useToast } from '@app/features/toasts/use-toast';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useZeroIndexTaprootAddress } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitAddressIndexZero } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
@@ -85,7 +85,7 @@ export function LedgerVerifyBtcAddress({ variant }: LedgerVerifyBtcAddressProps)
       getAppVersion: getBitcoinAppVersion(dmk),
       isAppOpen: isBitcoinAppOpen({ network: network.chain.bitcoin.mode }),
       onSuccess() {
-        toast.success('Address verified on your Ledger');
+        toast.success('Address verified on your Ledger', { duration: toastDurations.standard });
         close();
         void navigate(RouteUrls.Home, { replace: true });
       },

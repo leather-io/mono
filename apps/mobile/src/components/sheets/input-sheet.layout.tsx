@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Box, Button, Sheet, SheetRef, Text } from '@leather.io/ui/native';
+import { Box, Button, Sheet, type SheetRef, Text } from '@leather.io/ui/native';
 
 import { TextInput } from '../text-input';
 

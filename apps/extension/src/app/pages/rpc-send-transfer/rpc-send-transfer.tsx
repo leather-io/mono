@@ -18,6 +18,8 @@ import { TransactionError } from '@app/components/rpc-transaction-request/transa
 import { TransactionHeader } from '@app/components/rpc-transaction-request/transaction-header';
 import { TransactionRecipientsLayout } from '@app/components/rpc-transaction-request/transaction-recipients.layout';
 import { TransactionWrapper } from '@app/components/rpc-transaction-request/transaction-wrapper';
+import { SpendSourcesApproverRows } from '@app/components/spend-sources/spend-sources-approver-rows';
+import { SpendSourcesTaprootCallout } from '@app/components/spend-sources/spend-sources-taproot-callout';
 import { FeeEditor } from '@app/features/fee-editor/fee-editor';
 import { useFeeEditorContext } from '@app/features/fee-editor/fee-editor.context';
 import { LedgerInputLimitWarningLabel } from '@app/features/ledger/components/ledger-input-limit-warning-label';
@@ -26,8 +28,10 @@ import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-check
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
+import { getRpcSendTransferSpendSources } from './rpc-send-transfer-spend-sources';
 import { useRpcSendTransferContext } from './rpc-send-transfer.context';
 import { useRpcSendTransferActions } from './use-rpc-send-transfer-actions';
+import { useRpcSendTransferTx } from './use-rpc-send-transfer-tx';
 
 export function RpcSendTransfer() {
   const currentAccount = useCurrentAccountId();
@@ -42,15 +46,22 @@ export function RpcSendTransfer() {
   useBreakOnNonCompliantEntity('rpc_send_transfer', recipientAddresses);
 
   const isInsufficientBalance = availableBalance.amount.isLessThan(amount.amount);
-  const { approverActions, isBroadcasting, isSubmitted, ledgerInputLimit } =
-    useRpcSendTransferActions();
-  const showOverlay = isBroadcasting || isSubmitted;
   const isBitcoinPolicy = policy?.chain === 'bitcoin';
   const isSignOnly = !broadcast && !isBitcoinPolicy;
+  const generatedTx = useRpcSendTransferTx();
+  const unsignedTx = generatedTx.tx;
+  const { approverActions, isBroadcasting, isSubmitted, ledgerInputLimit } =
+    useRpcSendTransferActions(generatedTx);
+  const showOverlay = isBroadcasting || isSubmitted;
+
+  const spendSources = useMemo(() => {
+    if (!unsignedTx) return null;
+    return getRpcSendTransferSpendSources(unsignedTx, recipients);
+  }, [unsignedTx, recipients]);
 
   const totalFiatValue = useMemo(() => {
     const fee = selectedFee?.txFee;
-    if (!fee) return '';
+    if (!fee) return undefined;
     return formatCurrency(baseCurrencyAmountInQuote(sumMoney([amount, fee]), marketData));
   }, [amount, marketData, selectedFee?.txFee]);
 
@@ -71,9 +82,11 @@ export function RpcSendTransfer() {
             }}
           />
           {isSignOnly && <NoBroadcastWarningLabel origin={origin} />}
+          {spendSources && <SpendSourcesTaprootCallout summary={spendSources.summary} />}
           <SigningAccountCard
             address={<AccountBitcoinAddress accountId={currentAccount} />}
             availableBalance={availableBalance}
+            balanceCaption={isBitcoinPolicy ? undefined : 'Native SegWit + Taproot'}
             fiatBalance={convertToFiatAmount(availableBalance)}
             isLoadingBalance={isLoadingBalance}
             showPolicyAccount={isBitcoinPolicy}
@@ -102,6 +115,7 @@ export function RpcSendTransfer() {
             />
           )}
           <TransactionActionsTitle amount={totalFiatValue} isLoading={isLoadingBalance} />
+          {spendSources && <SpendSourcesApproverRows breakdown={spendSources.breakdown} />}
           <TransactionError
             isLoading={isLoadingBalance}
             isInsufficientBalance={isInsufficientBalance}

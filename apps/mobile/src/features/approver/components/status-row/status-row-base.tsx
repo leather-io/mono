@@ -3,7 +3,7 @@ import { t } from '@lingui/core/macro';
 import { Box, Text } from '@leather.io/ui/native';
 
 import { StatusBar } from './status-bar';
-import { Status } from './utils';
+import { type Status } from './utils';
 
 export function StatusRowBase({ status, date }: { status: Status; date: string | null }) {
   const bg = (

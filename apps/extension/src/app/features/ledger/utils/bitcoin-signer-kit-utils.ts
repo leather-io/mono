@@ -42,7 +42,7 @@ export type PartialSignature = Extract<
   { pubkey: Uint8Array; signature: Uint8Array }
 >;
 
-function isPartialSignature(signature: PsbtSignature): signature is PartialSignature {
+function isPartialSignature(signature: PsbtSignature) {
   return 'pubkey' in signature && 'signature' in signature;
 }
 

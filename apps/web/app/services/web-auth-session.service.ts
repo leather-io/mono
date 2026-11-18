@@ -1,5 +1,6 @@
 import { getDefaultStore } from 'jotai';
 import { sessionsAtom } from '~/features/multisig/auth/sessions.atom';
+import { typedKeys } from '~/utils/typed-keys';
 
 import type { AuthNetworkId } from '@leather.io/models';
 import type { AuthSessionService } from '@leather.io/services';
@@ -13,7 +14,7 @@ export class WebAuthSessionService implements AuthSessionService {
 
   getActiveNetworks() {
     const sessions = this.store.get(sessionsAtom);
-    return (Object.keys(sessions) as AuthNetworkId[]).filter(network => sessions[network] !== null);
+    return typedKeys(sessions).filter(network => sessions[network] !== null);
   }
 
   onTokenRefreshed(network: AuthNetworkId, accessToken: string) {

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { type Dispatch, type SetStateAction } from 'react';
 
 import { Stack } from 'leather-styles/jsx';
 
@@ -14,6 +14,7 @@ import { BtcAssetItemBalanceLoader } from '@app/components/loaders/btc-balance-l
 import { StxAssetItemBalanceLoader } from '@app/components/loaders/stx-balance-loader';
 import { UsdcxAssetItemBalanceLoader } from '@app/components/loaders/usdcx-balance-loader';
 import { StxCryptoAssetItem } from '@app/features/asset-list/stacks/stx-crypo-asset-item/stx-crypto-asset-item';
+import { UsdcxCryptoAssetItem } from '@app/features/asset-list/stacks/usdcx-crypto-asset-item/usdcx-crypto-asset-item';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useCurrentAccountNativeSegwitPayer } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
@@ -24,7 +25,6 @@ import { useIsPrivateMode } from '@app/store/settings/settings.selectors';
 import { ConnectLedgerAssetItemFallback } from './_components/connect-ledger-asset-item-fallback';
 import { BtcCryptoAssetItem } from './bitcoin/btc-crypto-asset-item/btc-crypto-asset-item';
 import { PolicyTokenList } from './policy-token-list';
-import { Sip10TokenItem } from './stacks/sip10-token-list/sip10-token-item';
 import { Sip10TokenAssetList } from './stacks/sip10-token-list/sip10-token-list';
 
 export type TokenListVariant = 'interactive' | 'read-only';
@@ -121,19 +121,6 @@ export function TokenList({
           )
         ))}
 
-      {showUnmanageableTokens && currentStacksAccount && (
-        <UsdcxAssetItemBalanceLoader accountId={currentAccount}>
-          {balance => (
-            <Sip10TokenItem
-              balance={balance}
-              isEnabled={true}
-              onSelectAsset={onSelectAsset}
-              assetRightElementVariant={assetRightElementVariant}
-            />
-          )}
-        </UsdcxAssetItemBalanceLoader>
-      )}
-
       {currentStacksAccount && (
         <Sip10TokenAssetList
           accountId={currentAccount}
@@ -141,6 +128,20 @@ export function TokenList({
           onSelectAsset={onSelectAsset}
           assetRightElementVariant={assetRightElementVariant}
           setHasManageableTokens={setHasManageableTokens}
+          usdcxItem={
+            showUnmanageableTokens && (
+              <UsdcxAssetItemBalanceLoader accountId={currentAccount}>
+                {balance => (
+                  <UsdcxCryptoAssetItem
+                    balance={balance}
+                    onSelectAsset={onSelectAsset}
+                    assetRightElementVariant={assetRightElementVariant}
+                    showDepositButtons={showDepositButtons}
+                  />
+                )}
+              </UsdcxAssetItemBalanceLoader>
+            )
+          }
         />
       )}
     </Stack>

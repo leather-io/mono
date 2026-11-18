@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -155,7 +155,7 @@ interface CodeProps extends ContentComponentsProps {
 }
 
 function Code({ children, className }: CodeProps) {
-  const match = /language-(\w+)/.exec(className || '');
+  const match = className ? /language-(\w+)/.exec(className) : null;
   const language = match ? match[1] : '';
 
   if (language && typeof children === 'string') {
@@ -330,7 +330,7 @@ interface VideoProps {
   height?: string | number;
 }
 
-function getYouTubeEmbedUrl(url: string): string | null {
+function getYouTubeEmbedUrl(url: string | undefined): string | null {
   if (!url) return null;
 
   const youtubeRegex = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/;
@@ -344,7 +344,7 @@ function getYouTubeEmbedUrl(url: string): string | null {
 }
 
 function Video({ src, poster, controls = true, autoPlay, loop, muted, width, height }: VideoProps) {
-  const youtubeEmbedUrl = getYouTubeEmbedUrl(src || '');
+  const youtubeEmbedUrl = getYouTubeEmbedUrl(src);
 
   if (youtubeEmbedUrl) {
     return (

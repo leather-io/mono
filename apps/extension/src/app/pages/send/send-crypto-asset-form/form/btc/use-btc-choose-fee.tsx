@@ -11,9 +11,10 @@ import { btcToSat, createMoney } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 
+import { useRouteState } from '@app/common/hooks/use-route-state';
 import { formFeeRowValue } from '@app/common/send/utils';
 import { useGenerateUnsignedBitcoinTx } from '@app/common/transactions/bitcoin/use-generate-bitcoin-tx';
-import { OnChooseFeeArgs } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
+import { type OnChooseFeeArgs } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
 import { isLedgerSigningCancelledError } from '@app/features/ledger/flow/unwrap-ledger-signing-outcome';
 import {
   type LedgerBitcoinInputLimit,
@@ -27,8 +28,15 @@ import { createPolicyAddresses } from '@app/store/policy/policy-addresses';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { useCalculateMaxBitcoinSpend } from '../../../../../common/hooks/balance/use-calculate-max-spend';
-import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
-import { useBtcChooseFeeState } from './btc-choose-fee';
+import {
+  btcChooseFeeRouteStateSchema,
+  useSendFormNavigate,
+} from '../../hooks/use-send-form-navigate';
+
+export function useBtcChooseFeeState() {
+  const { isSendingMax, values, utxos } = useRouteState(btcChooseFeeRouteStateSchema);
+  return { isSendingMax, txValues: values, utxos };
+}
 
 export function useBtcChooseFee() {
   const { isSendingMax, txValues, utxos } = useBtcChooseFeeState();
@@ -52,6 +60,9 @@ export function useBtcChooseFee() {
     async previewTransaction({ feeRate, feeValue, time, isCustomFee }: OnChooseFeeArgs) {
       const feeRowValue = formFeeRowValue(feeRate, isCustomFee);
       setLedgerInputLimit(emptyLedgerBitcoinInputLimit);
+
+      if (!Number.isFinite(feeValue))
+        return sendFormNavigate.toErrorPage(new Error('Unable to determine the transaction fee'));
 
       if (policy?.chain === 'bitcoin') {
         const descriptorKey =

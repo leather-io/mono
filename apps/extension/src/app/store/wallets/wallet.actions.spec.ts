@@ -1,3 +1,4 @@
+import { isAction } from '@reduxjs/toolkit';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import {
@@ -19,11 +20,11 @@ import {
 import { broadcastWalletListChanged } from '@shared/messages';
 import { assumedZeroFingerprint } from '@shared/utils';
 
-import { persistor } from '@app/store';
+import { persistor } from '@app/store/store';
 
 import { addOrMigrateLedgerKeychains, migrateLedgerStacksFingerprint } from './wallet.actions';
 
-vi.mock('@app/store', () => ({
+vi.mock('@app/store/store', () => ({
   persistor: { flush: vi.fn(() => Promise.resolve()) },
   store: { getState: vi.fn(), dispatch: vi.fn() },
 }));
@@ -31,6 +32,10 @@ vi.mock('@app/store', () => ({
 vi.mock('@shared/messages', () => ({
   broadcastWalletListChanged: vi.fn(),
 }));
+
+function objectContaining(value: Record<string, unknown>): unknown {
+  return expect.objectContaining(value);
+}
 
 const realFingerprint = 'a1b2c3d4';
 const otherDeviceFingerprint = 'eeee9999';
@@ -129,8 +134,9 @@ describe('addOrMigrateLedgerKeychains', () => {
 
     // Feed the thunk's actual dispatched actions through the real wallet reducer.
     let walletState = walletAdapter.addMany(walletAdapter.getInitialState(), [legacyLedgerWallet]);
-    for (const [action] of dispatch.mock.calls) {
-      walletState = walletSlice.reducer(walletState, action);
+    for (const call of dispatch.mock.calls) {
+      const action: unknown = call[0];
+      if (isAction(action)) walletState = walletSlice.reducer(walletState, action);
     }
 
     expect(walletState.ids).toEqual([realFingerprint]);
@@ -147,8 +153,8 @@ describe('addOrMigrateLedgerKeychains', () => {
     expect(dispatch).toHaveBeenCalledWith(
       expect.objectContaining({
         type: userAddsWallet.type,
-        payload: expect.objectContaining({
-          wallet: expect.objectContaining({ fingerprint: realFingerprint, type: 'ledger' }),
+        payload: objectContaining({
+          wallet: objectContaining({ fingerprint: realFingerprint, type: 'ledger' }),
         }),
       })
     );
@@ -212,8 +218,8 @@ describe('addOrMigrateLedgerKeychains', () => {
     expect(dispatch).toHaveBeenCalledWith(
       expect.objectContaining({
         type: userAddsWallet.type,
-        payload: expect.objectContaining({
-          wallet: expect.objectContaining({ fingerprint: otherDeviceFingerprint }),
+        payload: objectContaining({
+          wallet: objectContaining({ fingerprint: otherDeviceFingerprint }),
         }),
       })
     );
@@ -275,8 +281,9 @@ describe('migrateLedgerStacksFingerprint', () => {
 
     // Feed the thunk's actual dispatched actions through the real keychain reducer.
     let keychainState = keychainAdapter.addMany(keychainSlice.getInitialState(), legacyKeychains);
-    for (const [action] of dispatch.mock.calls) {
-      keychainState = keychainSlice.reducer(keychainState, action);
+    for (const call of dispatch.mock.calls) {
+      const action: unknown = call[0];
+      if (isAction(action)) keychainState = keychainSlice.reducer(keychainState, action);
     }
 
     const remaining = keychainAdapter.getSelectors().selectAll(keychainState);

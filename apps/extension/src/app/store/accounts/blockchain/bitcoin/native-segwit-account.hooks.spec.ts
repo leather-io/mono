@@ -1,10 +1,12 @@
+import type * as ReactModule from 'react';
+
 import { HDKey } from '@scure/bip32';
 import { Psbt } from 'bitcoinjs-lib';
 
 import { useUpdateLedgerSpecificNativeSegwitBip32DerivationForAdddressIndexZero } from './native-segwit-account.hooks';
 
 vi.mock('react', async importOriginal => {
-  const actual = await importOriginal<typeof import('react')>();
+  const actual = await importOriginal<typeof ReactModule>();
   return {
     ...actual,
     useMemo<T>(factory: () => T) {
@@ -22,10 +24,6 @@ vi.mock('react-redux', () => ({
 
 vi.mock('@shared/utils/analytics', () => ({
   analytics: { track: vi.fn() },
-}));
-
-vi.mock('@app/query/bitcoin/clients/bitcoin-client', () => ({
-  useBitcoinClient: () => ({ transactionsApi: { getBitcoinTransactionHex: vi.fn() } }),
 }));
 
 vi.mock('@app/store/networks/networks.selectors', () => ({

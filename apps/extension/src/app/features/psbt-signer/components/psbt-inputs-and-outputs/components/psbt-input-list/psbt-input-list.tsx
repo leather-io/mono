@@ -1,4 +1,4 @@
-import { PsbtInput } from '@app/features/psbt-signer/hooks/use-parsed-inputs';
+import { type PsbtInput } from '@app/features/psbt-signer/hooks/use-parsed-inputs';
 
 import { PsbtInputItem } from './components/psbt-input-item';
 import { PsbtInputListLayout } from './components/psbt-input-list.layout';

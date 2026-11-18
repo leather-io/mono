@@ -1,11 +1,11 @@
-import { ClarityValue, StringAsciiCV, TupleCV, UIntCV } from '@stacks/transactions';
+import {
+  type ClarityValue,
+  type StringAsciiCV,
+  type TupleCV,
+  type UIntCV,
+} from '@stacks/transactions';
 
 export type SignedMessageType = 'utf8' | 'structured';
-
-export interface SignatureData {
-  signature: string;
-  publicKey: string;
-}
 
 export type StructuredMessageDataDomain = TupleCV<{
   name: StringAsciiCV;
@@ -30,18 +30,12 @@ export interface UnsignedMessageStructured extends AbstractUnsignedMessage {
 
 export type UnsignedMessage = UnsignedMessageUtf8 | UnsignedMessageStructured;
 
-export function isStructuredMessageType(
-  messageType: SignedMessageType
-): messageType is 'structured' {
+export function isStructuredMessageType(messageType: SignedMessageType) {
   return messageType === 'structured';
 }
 
-export function isUtf8MessageType(messageType: SignedMessageType): messageType is 'utf8' {
+export function isUtf8MessageType(messageType: SignedMessageType) {
   return messageType === 'utf8';
-}
-
-export function isSignableMessageType(messageType: unknown): messageType is SignedMessageType {
-  return typeof messageType === 'string' && ['utf8', 'structured'].includes(messageType);
 }
 
 interface WhenSignableMessageOfType<T> {

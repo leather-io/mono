@@ -40,7 +40,7 @@ export function FeeEditorProvider({
 
   const [loadedFee, setLoadedFee] = useState<Fee>(defaultFee);
   const [selectedFee, setSelectedFee] = useState<Fee>(defaultFee);
-  const [customFee, setCustomFee] = useState<string>(defaultCustomFee ?? '');
+  const [customFee, setCustomFee] = useState(defaultCustomFee);
   const navigate = useNavigate();
 
   return (
@@ -58,9 +58,9 @@ export function FeeEditorProvider({
         getCustomFee,
         onGoBack,
         onSetLoadedFee: (value: Fee) => setLoadedFee(value),
-        onSetCustomFee: (value: string) => setCustomFee(value),
+        onSetCustomFee: (value: string | undefined) => setCustomFee(value),
         onSetSelectedFee: (value: Fee) => setSelectedFee(value),
-        onUserActivatesFeeEditor: () => navigate(RouteUrls.FeeEditor),
+        onUserActivatesFeeEditor: () => void navigate(RouteUrls.FeeEditor),
       }}
     >
       {children}

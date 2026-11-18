@@ -1,4 +1,4 @@
-import { useOnMount } from '@app/common/hooks/use-on-mount';
+import { useOnMount } from '@leather.io/ui';
 
 import { useLedgerStep } from '../flow/ledger-flow.context';
 

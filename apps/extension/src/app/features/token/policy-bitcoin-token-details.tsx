@@ -71,7 +71,7 @@ export function PolicyBitcoinTokenDetails({ account }: PolicyBitcoinTokenDetails
       icon={<BtcAvatarIcon size="xl" />}
       balance={balance.value.btc.totalBalance}
       fiatBalance={balance.value.quote.totalBalance}
-      price={marketInfo.price!}
+      price={marketInfo.price}
       descriptionText={marketInfo.descriptionText}
       balances={balances}
       addresses={addresses}

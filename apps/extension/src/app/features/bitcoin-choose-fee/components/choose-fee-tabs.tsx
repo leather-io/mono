@@ -1,17 +1,17 @@
 import { Suspense } from 'react';
 
-import { Box, Stack, StackProps } from 'leather-styles/jsx';
+import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
+import { Box, Stack, type StackProps } from 'leather-styles/jsx';
 
-import { Tabs } from '@leather.io/ui';
+import { LoadingSpinner, Tabs } from '@leather.io/ui';
 
 import { analytics } from '@shared/utils/analytics';
 
-import { LoadingSpinner } from '@app/components/loading-spinner';
-
-enum CustomFeeTabs {
-  Recommended = 'recommended',
-  Custom = 'custom',
-}
+const CustomFeeTabs = {
+  Recommended: 'recommended',
+  Custom: 'custom',
+} as const;
+type CustomFeeTabs = (typeof CustomFeeTabs)[keyof typeof CustomFeeTabs];
 
 interface ChooseFeeTabsProps extends StackProps {
   customFee: React.JSX.Element;
@@ -28,10 +28,13 @@ export function ChooseFeeTabs(props: ChooseFeeTabsProps) {
         onValueChange={tab => analytics.page('view', 'custom-fee-tab-' + tab)}
       >
         <Tabs.List>
-          <Tabs.Trigger value={CustomFeeTabs.Recommended} data-testid="tab-recommended">
+          <Tabs.Trigger
+            value={CustomFeeTabs.Recommended}
+            data-testid={SharedComponentsSelectors.FeeTabRecommended}
+          >
             Recommended
           </Tabs.Trigger>
-          <Tabs.Trigger value="custom" data-testid="tab-custom">
+          <Tabs.Trigger value="custom" data-testid={SharedComponentsSelectors.FeeTabCustom}>
             Custom
           </Tabs.Trigger>
         </Tabs.List>

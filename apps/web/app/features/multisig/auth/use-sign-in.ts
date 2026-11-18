@@ -12,9 +12,9 @@ const signInMessageMaxAgeSeconds = 5 * 60;
 export function useSignIn(network: AuthNetworkId, application: AuthApplication[] = ['multisig']) {
   const setSessions = useSetAtom(sessionsAtom);
 
-  return useMutation<AuthSession, Error, void>({
+  return useMutation<AuthSession>({
     mutationKey: ['multisig-auth-sign-in', network, application],
-    mutationFn: async () => {
+    async mutationFn() {
       const domain = window.location.origin;
       const { message, timestamp } = buildSignInMessage({
         network,

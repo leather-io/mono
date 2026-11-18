@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { STACKING_TRACKER_API_URL } from '~/constants/constants';
-import { ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
+import { type ProtocolSlug } from '~/features/stacking/start-liquid-stacking/utils/types-preset-protocols';
 
 async function fetchTokens(): Promise<StackingTrackerTokensResponse> {
   const { data } = await axios.get<StackingTrackerTokensResponse>(
@@ -38,12 +38,12 @@ export function useStackingTrackerProtocol(slug?: ProtocolSlug | null) {
       return { ...protocols, data: null };
     }
 
-    const poolCycles = protocols.data.cycles
-      .map(({ tokens, ...restCycle }) => ({
-        ...restCycle,
-        token: tokens.find(({ name }) => name === currentEntity.name),
-      }))
-      .filter((cycle): cycle is StackingTrackerCycleWithOnePool => !!cycle.token);
+    const poolCycles = protocols.data.cycles.flatMap(
+      ({ tokens, ...restCycle }): StackingTrackerCycleWithOnePool[] => {
+        const token = tokens.find(({ name }) => name === currentEntity.name);
+        return token ? [{ ...restCycle, token }] : [];
+      }
+    );
 
     const lastCycle =
       poolCycles.at(-1)?.cycle_number === protocols.data.cycles.at(-1)?.cycle_number

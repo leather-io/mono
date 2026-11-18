@@ -1,5 +1,5 @@
 import { BITCOIN_MINIMUM_SPEND_IN_SATS } from '@leather.io/constants';
-import { Money } from '@leather.io/models';
+import { type Money } from '@leather.io/models';
 
 interface isBtcBalanceSufficientParams {
   desiredSpend: Money;

@@ -2,8 +2,8 @@ import { createContext, useContext } from 'react';
 
 import type { Money } from '@leather.io/models';
 
-import { PsbtInput } from './hooks/use-parsed-inputs';
-import { PsbtOutput } from './hooks/use-parsed-outputs';
+import { type PsbtInput } from './hooks/use-parsed-inputs';
+import { type PsbtOutput } from './hooks/use-parsed-outputs';
 
 export interface PsbtSignerContext {
   addressNativeSegwit: string;

@@ -8,6 +8,7 @@ import {
 } from '@leather.io/bitcoin';
 import {
   type StacksContractCallSwapExecutionData,
+  type SwapExecutionData,
   type SwapExecutionType,
   type SwapQuote,
   type TransactionFees,
@@ -31,6 +32,16 @@ import {
 } from './execution-type.utils';
 
 const sbtcDepositOutputIndex = 0;
+
+function toStacksContractCallExecutionData(
+  executionData: SwapExecutionData
+): StacksContractCallSwapExecutionData {
+  if (executionData.executionType !== 'stacks-contract-call')
+    throw new Error(
+      `stacks-contract-call strategy received ${executionData.executionType} execution data`
+    );
+  return executionData;
+}
 
 interface ExecutionStrategy {
   enrichQuote(
@@ -61,7 +72,7 @@ const stacksContractCallStrategy: ExecutionStrategy = {
   async getNetworkFee(dependencies: SwapExecutionDependencies, signal?: AbortSignal) {
     const { executionData, stacks, services } = dependencies;
     const unsignedTx = await buildStacksTx(
-      executionData as StacksContractCallSwapExecutionData,
+      toStacksContractCallExecutionData(executionData),
       stacks.stacksNetwork,
       stacks.stacksSigner
     );
@@ -75,7 +86,7 @@ const stacksContractCallStrategy: ExecutionStrategy = {
     const { executionData, stacks, nonce } = dependencies;
 
     const unsignedTx = await buildStacksTx(
-      executionData as StacksContractCallSwapExecutionData,
+      toStacksContractCallExecutionData(executionData),
       stacks.stacksNetwork,
       stacks.stacksSigner,
       fee.calculation.value,
@@ -99,8 +110,9 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
     const { accountRequest, derivedAmounts, isSendingMax, services, bitcoin } = dependencies;
     assertExistence(bitcoin, 'Bitcoin dependencies missing for sbtc-bridge-deposit fee estimation');
     const signersPublicKey = await services.swapService.getSbtcSignersPublicKey(signal);
+    const depositAmount = derivedAmounts.crypto ?? createMoney(0, 'BTC');
     const deposit = buildSbtcBridgeDepositTx(
-      derivedAmounts.crypto?.amount.toNumber() ?? 0,
+      depositAmount.amount.toNumber(),
       bitcoin.network,
       accountRequest.account,
       bitcoin.bitcoinPayer,
@@ -109,7 +121,7 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
     const recipients: CoinSelectionRecipient[] = [
       {
         address: deposit.address,
-        amount: derivedAmounts.crypto ?? createMoney(0, 'BTC'),
+        amount: depositAmount,
       },
     ];
     return services.bitcoinTransactionFeesService.getBitcoinTransactionFees(
@@ -123,8 +135,9 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
     const { accountRequest, derivedAmounts, isSendingMax, bitcoin, services } = dependencies;
     assertExistence(bitcoin, 'Bitcoin dependencies missing for sbtc-bridge-deposit submission');
     const signersPublicKey = await services.swapService.getSbtcSignersPublicKey();
+    const depositAmount = derivedAmounts.crypto ?? createMoney(0, 'BTC');
     const deposit = buildSbtcBridgeDepositTx(
-      derivedAmounts.crypto?.amount.toNumber() ?? 0,
+      depositAmount.amount.toNumber(),
       bitcoin.network,
       accountRequest.account,
       bitcoin.bitcoinPayer,
@@ -140,7 +153,7 @@ const sbtcBridgeDepositStrategy: ExecutionStrategy = {
     const recipients: CoinSelectionRecipient[] = [
       {
         address: deposit.address,
-        amount: derivedAmounts.crypto ?? createMoney(0, 'BTC'),
+        amount: depositAmount,
       },
     ];
 

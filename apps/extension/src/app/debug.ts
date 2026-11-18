@@ -1,7 +1,7 @@
 import * as reduxPersist from 'redux-persist';
 
-import { HIRO_API_BASE_URL_MAINNET } from '@leather.io/models';
-import { getHiroApiRateLimiter } from '@leather.io/query';
+import type { NetworkModes } from '@leather.io/models';
+import { RateLimiterType, getRateLimiterService } from '@leather.io/services';
 
 import { logger } from '@shared/logger';
 import { getLogsFromBrowserStorage } from '@shared/logger-storage';
@@ -14,15 +14,16 @@ import { stxChainSlice } from './store/chains/stx-chain.slice';
 import { settingsSlice } from './store/settings/settings.slice';
 
 const debug = {
-  printDiagnosticInfo() {
+  async printDiagnosticInfo() {
+    const logs = await getLogsFromBrowserStorage();
     // eslint-disable-next-line no-console
-    void getLogsFromBrowserStorage().then(logs => console.log(JSON.stringify(logs)));
+    console.log(JSON.stringify(logs));
   },
   logStore() {
     return store.getState();
   },
-  logHiroLimiter(url = HIRO_API_BASE_URL_MAINNET) {
-    const limiter = getHiroApiRateLimiter(url);
+  logHiroLimiter(mode: NetworkModes = 'mainnet') {
+    const limiter = getRateLimiterService().getLimiter(RateLimiterType.HiroStacks, mode);
 
     return {
       size: limiter.size,
@@ -33,9 +34,10 @@ const debug = {
   getPersistedStore() {
     return reduxPersist.getStoredState(persistConfig);
   },
-  logPersistedStore() {
+  async logPersistedStore() {
+    const state = await reduxPersist.getStoredState(persistConfig);
     // eslint-disable-next-line no-console
-    void reduxPersist.getStoredState(persistConfig).then(state => console.log(state));
+    console.log(state);
   },
   setHighestAccountIndex(accountIndex: number) {
     const activeAccount = selectActiveAccount(store.getState());

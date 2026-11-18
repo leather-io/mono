@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { Flex, FlexProps } from 'leather-styles/jsx';
+import { Flex, type FlexProps } from 'leather-styles/jsx';
 import { token } from 'leather-styles/tokens';
 
 interface CardProps {
@@ -47,10 +47,10 @@ export function Card({
         <Flex
           bottom={0}
           position="absolute"
+          left={0}
+          right={0}
           gap="space.05"
           p="space.05"
-          width="100vw"
-          maxWidth="100%"
           zIndex={1}
           minHeight="footerHeight"
           bg="ink.background-primary"

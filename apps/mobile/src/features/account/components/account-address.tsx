@@ -1,8 +1,8 @@
 import { useAccountDisplayAddress } from '@/hooks/use-account-display-address';
-import { AccountLookup } from '@/shared/types';
+import { type AccountLookup } from '@/shared/types';
 
-import { AccountDisplayPreference } from '@leather.io/models';
-import { Text, TextProps } from '@leather.io/ui/native';
+import { type AccountDisplayPreference } from '@leather.io/models';
+import { Text, type TextProps } from '@leather.io/ui/native';
 
 interface AccountAddressProps extends AccountLookup, TextProps {
   displayPreference?: AccountDisplayPreference;

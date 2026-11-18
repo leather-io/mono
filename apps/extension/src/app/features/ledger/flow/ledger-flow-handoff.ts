@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 
@@ -9,22 +11,14 @@ const ledgerFlowHandoffKey = 'ledger-flow-intent';
 const ledgerFlowHandoffTtlMs = 60_000;
 export const ledgerFlowHandoffParam = 'ledgerHandoff';
 
-interface LedgerFlowHandoffRecord {
-  request: LedgerFlowHandoffRequest;
-  createdAt: number;
-  token: string;
-}
-
-function isLedgerFlowHandoffRecord(value: unknown): value is LedgerFlowHandoffRecord {
-  if (typeof value !== 'object' || value === null) return false;
-  if (!('request' in value) || !('createdAt' in value) || !('token' in value)) return false;
-  return (
-    typeof value.request === 'object' &&
-    value.request !== null &&
-    typeof value.createdAt === 'number' &&
-    typeof value.token === 'string'
-  );
-}
+const ledgerFlowHandoffRecordSchema = z.object({
+  request: z.custom<LedgerFlowHandoffRequest>(
+    request => typeof request === 'object' && request !== null
+  ),
+  createdAt: z.number(),
+  token: z.string(),
+});
+type LedgerFlowHandoffRecord = z.infer<typeof ledgerFlowHandoffRecordSchema>;
 
 interface HandOffLedgerFlowOptions {
   target?: RouteUrls;
@@ -60,12 +54,14 @@ export async function consumeLedgerFlowHandoff(
   const sessionStorage = chrome.storage.session;
   if (!sessionStorage || !token) return null;
   const stored = await sessionStorage.get(ledgerFlowHandoffKey);
-  const record: unknown = stored[ledgerFlowHandoffKey];
-  if (record === undefined) return null;
-  if (!isLedgerFlowHandoffRecord(record)) {
+  const storedRecord: unknown = stored[ledgerFlowHandoffKey];
+  if (storedRecord === undefined) return null;
+  const parsedRecord = ledgerFlowHandoffRecordSchema.safeParse(storedRecord);
+  if (!parsedRecord.success) {
     await sessionStorage.remove(ledgerFlowHandoffKey);
     return null;
   }
+  const record = parsedRecord.data;
   if (Date.now() - record.createdAt > ledgerFlowHandoffTtlMs) {
     await sessionStorage.remove(ledgerFlowHandoffKey);
     return null;

@@ -5,7 +5,11 @@ import { defaultNetworksKeyedById } from '@leather.io/models';
 
 import { resolveNetworkConfiguration } from './resolve-network-configuration';
 
-const mocks = vi.hoisted(() => ({ customNetworkConfig: null as CustomNetworkConfig | null }));
+interface CustomNetworkConfigMocks {
+  customNetworkConfig: CustomNetworkConfig | null;
+}
+
+const mocks = vi.hoisted((): CustomNetworkConfigMocks => ({ customNetworkConfig: null }));
 
 vi.mock('~/constants/custom-network-config', () => ({
   get customNetworkConfig() {

@@ -13,7 +13,7 @@ import type { BitcoinPaymentTypes } from '@leather.io/rpc';
 import { isNumber, isString, isUndefined } from '@leather.io/utils';
 
 import {
-  BitcoinInputSigningConfig,
+  type BitcoinInputSigningConfig,
   getAssumedZeroIndexSigningConfig,
 } from '@shared/crypto/bitcoin/signer-config';
 import { analytics } from '@shared/utils/analytics';

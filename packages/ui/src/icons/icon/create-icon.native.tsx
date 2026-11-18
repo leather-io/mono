@@ -1,10 +1,10 @@
-import React, { ComponentPropsWithRef, ElementRef, forwardRef } from 'react';
-import Svg, { SvgProps } from 'react-native-svg';
+import { type ComponentPropsWithRef, type ComponentType, type ElementRef, forwardRef } from 'react';
+import { type Svg, type SvgProps } from 'react-native-svg';
 
 import { useTheme } from '@shopify/restyle';
 
-import { Theme } from '../../theme-native';
-import { IconSize, iconSizeMap } from './icon.shared';
+import { type Theme } from '../../theme-native';
+import { type IconSize, iconSizeMap } from './icon.shared';
 
 export interface IconProps extends SvgProps {
   variant?: IconSize;
@@ -14,9 +14,9 @@ export interface IconProps extends SvgProps {
 interface CreateNativeIconParams {
   displayName: string;
   icon: {
-    small?: React.ComponentType<ComponentPropsWithRef<typeof Svg>>;
-    medium?: React.ComponentType<ComponentPropsWithRef<typeof Svg>>;
-    large?: React.ComponentType<ComponentPropsWithRef<typeof Svg>>;
+    small?: ComponentType<ComponentPropsWithRef<typeof Svg>>;
+    medium?: ComponentType<ComponentPropsWithRef<typeof Svg>>;
+    large?: ComponentType<ComponentPropsWithRef<typeof Svg>>;
   };
   defaultVariant?: IconSize;
 }

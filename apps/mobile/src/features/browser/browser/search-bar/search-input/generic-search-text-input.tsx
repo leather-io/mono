@@ -1,6 +1,6 @@
 import { t } from '@lingui/core/macro';
 
-import { TextInput, TextInputProps, Theme, useTheme } from '@leather.io/ui/native';
+import { TextInput, type TextInputProps, type Theme, useTheme } from '@leather.io/ui/native';
 
 export function GenericSearchTextInput(props: TextInputProps<Theme>) {
   const theme = useTheme();

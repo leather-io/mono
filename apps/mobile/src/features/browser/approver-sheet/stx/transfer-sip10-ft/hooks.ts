@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { getTransferSip10TxHex } from '@/features/approver/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
-import { StacksNetwork } from '@stacks/network';
+import { type StacksNetwork } from '@stacks/network';
 
 import { useOnMount } from '@leather.io/ui/native';
 
@@ -15,6 +15,7 @@ interface UseTransferSip10FtTxHex {
   setTxHex(txHex: string): void;
   nonce: number;
   network: StacksNetwork;
+  sponsored: boolean | undefined;
 }
 
 export function useTransferSip10FtTxHex({
@@ -25,6 +26,7 @@ export function useTransferSip10FtTxHex({
   setTxHex,
   nonce,
   network,
+  sponsored,
 }: UseTransferSip10FtTxHex) {
   const { fromAccountId } = useStacksSigners();
 
@@ -32,11 +34,23 @@ export function useTransferSip10FtTxHex({
     function getTxHex() {
       const signer = fromAccountId(accountId)[0];
       assertStacksSigner(signer);
-      return getTransferSip10TxHex({ signer, assetId, nonce, amount, recipient, network });
+      return getTransferSip10TxHex({
+        signer,
+        assetId,
+        nonce,
+        amount,
+        recipient,
+        network,
+        sponsored,
+      });
     },
-    [fromAccountId, accountId, nonce, amount, assetId, recipient, network]
+    [fromAccountId, accountId, nonce, amount, assetId, recipient, network, sponsored]
   );
+  async function loadTxHex() {
+    setTxHex(await getTxHex());
+  }
+
   useOnMount(() => {
-    void getTxHex().then(txHex => setTxHex(txHex));
+    void loadTxHex();
   });
 }

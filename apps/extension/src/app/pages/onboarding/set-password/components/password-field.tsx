@@ -7,7 +7,7 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 import { Caption, Eye1ClosedIcon, Eye1Icon, Input } from '@leather.io/ui';
 
 import { useThemeSwitcher } from '@app/common/theme-provider';
-import { ValidatedPassword } from '@app/common/validation/validate-password';
+import { type ValidatedPassword } from '@app/common/validation/validate-password';
 import { ErrorLabel } from '@app/components/error-label';
 
 import { getIndicatorsOfPasswordStrength } from './password-field.utils';
@@ -23,7 +23,7 @@ export function PasswordField({
   isDisabled,
   showStrength = true,
 }: PasswordFieldProps) {
-  const [field, meta] = useField('password');
+  const [field, meta] = useField<string>('password');
   const [showPassword, setShowPassword] = useState(false);
   const { theme } = useThemeSwitcher();
 

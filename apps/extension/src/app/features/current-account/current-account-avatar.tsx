@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { AccountAvatar } from '@app/ui/components/account/account-avatar/account-avatar';

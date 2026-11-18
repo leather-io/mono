@@ -2,11 +2,10 @@ import DOMPurify from 'dompurify';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import type { Money } from '@leather.io/models';
-import { ItemLayout, Pressable, SkeletonLoader, shimmerStyles } from '@leather.io/ui';
+import { BasicTooltip, ItemLayout, Pressable, SkeletonLoader, shimmerStyles } from '@leather.io/ui';
 
 import { useSpamFilterWithWhitelist } from '@app/common/spam-filter/use-spam-filter';
 import { PrivateTextLayout } from '@app/components/privacy/private-text.layout';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 import { parseCryptoAssetBalance } from './crypto-asset-item.layout.utils';
 

@@ -1,13 +1,17 @@
 import { RpcErrorCode, type RpcMethodNames, createRpcErrorResponse } from '@leather.io/rpc';
 
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
+import { isRecord } from '@shared/utils/is-record';
 
 import type { RootState } from '@app/store';
 
 export async function getRootState() {
-  const storage = await chrome.storage.local.get(['persist:root']);
+  const storage = await chrome.storage.local.get<Partial<Record<string, RootState>>>([
+    'persist:root',
+  ]);
   if (!storage || !storage['persist:root']) return null;
-  return storage['persist:root'] as RootState;
+  const persistedRoot = storage['persist:root'];
+  return isRecord(persistedRoot) ? persistedRoot : null;
 }
 
 interface SendMissingStateErrorToTabArgs {

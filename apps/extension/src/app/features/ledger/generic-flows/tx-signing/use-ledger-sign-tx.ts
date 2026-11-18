@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
-
 import type { SupportedBlockchains } from '@leather.io/models';
 import { delay } from '@leather.io/utils';
 
@@ -10,13 +8,14 @@ import { LedgerConnectionErrors, handleLedgerConnectionError } from '../../dmk/l
 import { useLedgerDmk } from '../../dmk/ledger-dmk.context';
 import { closeLedgerSession } from '../../dmk/ledger-session';
 import { useLedgerSteps } from '../../flow/ledger-flow.context';
-import { BitcoinAppVersion } from '../../utils/bitcoin-ledger-utils';
+import { type BitcoinAppVersion } from '../../utils/bitcoin-ledger-utils';
 import {
   isCancellableConnectionInteraction,
+  isUnlockDeviceInteraction,
   useLedgerResponseState,
 } from '../../utils/generic-ledger-utils';
 import type { LedgerApp } from '../../utils/ledger-app';
-import { StacksAppVersion } from '../../utils/stacks-ledger-utils';
+import { type StacksAppVersion } from '../../utils/stacks-ledger-utils';
 
 interface UseLedgerSignTxArgs<App extends LedgerApp> {
   chain: SupportedBlockchains;
@@ -70,7 +69,7 @@ export function useLedgerSignTx<App extends LedgerApp>({
       app = await connectApp({
         onRequiredUserInteraction(interaction) {
           setLatestDeviceResponse({
-            deviceLocked: interaction === UserInteractionRequired.UnlockDevice,
+            deviceLocked: isUnlockDeviceInteraction(interaction),
           });
           setIsConnectionCancellable(isCancellableConnectionInteraction(interaction));
         },

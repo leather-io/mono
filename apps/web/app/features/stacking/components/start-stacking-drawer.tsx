@@ -1,10 +1,10 @@
-import { Dispatch, SetStateAction } from 'react';
+import { type Dispatch, type SetStateAction } from 'react';
 
 import { css } from 'leather-styles/css';
 import { Flex, styled } from 'leather-styles/jsx';
 import { Drawer } from 'vaul';
 
-import { HasChildren } from '@leather.io/ui';
+import { type HasChildren } from '@leather.io/ui';
 
 interface StartPooledStackingDrawerProps extends HasChildren {
   drawerOpen: boolean;

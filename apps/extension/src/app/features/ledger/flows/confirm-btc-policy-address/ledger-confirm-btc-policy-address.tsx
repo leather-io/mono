@@ -1,7 +1,7 @@
 import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import type { ConfirmBtcPolicyAddressLedgerFlowRequest } from '@app/features/ledger/flow/ledger-flow.types';
-import { LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
+import { type LedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 import { RequestKeysFlow } from '@app/features/ledger/generic-flows/request-keys/request-keys-flow';
 import { useRequestLedgerKeys } from '@app/features/ledger/generic-flows/request-keys/use-request-ledger-keys';
 import { useDisplayLedgerDescriptorAddress } from '@app/features/ledger/hooks/use-display-ledger-descriptor-address';

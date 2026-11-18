@@ -2,12 +2,12 @@ import { AddressVersion } from '@stacks/transactions';
 
 import { deriveRootKeychainFromMnemonicSync } from '@leather.io/crypto';
 import {
-  getBnsV2ApiClient,
-  getHiroStacksApiClient,
-  getLeatherApiClient,
+  type getBnsV2ApiClient,
+  type getHiroStacksApiClient,
+  type getLeatherApiClient,
 } from '@leather.io/services';
 import { fingerprintMigration, userAddsWallet, userRemovesWallet } from '@leather.io/state/wallet';
-import { secondsInMs } from '@leather.io/utils';
+import { isDefined, secondsInMs } from '@leather.io/utils';
 
 import { deriveEncryptionKey } from '@shared/crypto/generate-encryption-key';
 import { decryptMnemonic, encryptMnemonic } from '@shared/crypto/mnemonic-encryption';
@@ -17,8 +17,8 @@ import { assumedZeroFingerprint } from '@shared/utils';
 import { identifyUser } from '@shared/utils/analytics';
 
 import { recurseAccountsForActivity } from '@app/common/account-restoration/account-restore';
-import { AppThunk, persistor } from '@app/store';
 import { getWalletSessionKey, initalizeWalletSession } from '@app/store/session-restore';
+import { type AppThunk, persistor } from '@app/store/store';
 
 import { getNativeSegwitMainnetAddressFromRootKeychain } from '../accounts/blockchain/bitcoin/native-segwit-account.hooks';
 import { getTaprootMainnetAddressFromRootKeychain } from '../accounts/blockchain/bitcoin/taproot-account.hooks';
@@ -33,9 +33,15 @@ import { keySlice } from './software-key.slice';
 import { checkPassword } from './utils';
 
 interface AccountDiscoveryClients {
-  leatherApiClient: ReturnType<typeof getLeatherApiClient>;
-  hiroClient: ReturnType<typeof getHiroStacksApiClient>;
-  bnsClient: ReturnType<typeof getBnsV2ApiClient>;
+  leatherApiClient: Pick<
+    ReturnType<typeof getLeatherApiClient>,
+    'fetchUtxosByAddress' | 'fetchBitcoinTransactionsByAddress'
+  >;
+  hiroClient: Pick<
+    ReturnType<typeof getHiroStacksApiClient>,
+    'getAddressStxBalance' | 'getAddressTransactions'
+  >;
+  bnsClient: Pick<ReturnType<typeof getBnsV2ApiClient>, 'fetchAddressBnsNames'>;
 }
 
 interface AccountActivityCheckerArgs extends AccountDiscoveryClients {
@@ -97,7 +103,7 @@ function createAccountActivityChecker({
     const signal = AbortSignal.timeout(accountActivityRequestTimeoutMs);
     const stxAddress = deriveStacksAddress(index);
     const btcAddresses = [deriveNativeSegwitAddress(index), deriveTaprootAddress(index)].filter(
-      (address): address is string => !!address
+      isDefined
     );
 
     const results = await Promise.allSettled([
@@ -148,19 +154,21 @@ function startRecursiveAccountDiscovery({
     void persistor.flush();
   }
 
-  void recurseAccountsForActivity({
-    doesAddressHaveActivityFn,
-    fromAccountIndex,
-    onActivityFound: persistDiscoveredAccountIndex,
-  })
-    .then(recursiveActivityIndex => {
-      const end = performance.now();
-      logger.info('Found account activity at higher index', {
-        recursiveActivityIndex,
-        time: (end - start) / 1000 + ' seconds',
-      });
-    })
-    .catch(error => {
+  async function discoverAccounts() {
+    const recursiveActivityIndex = await recurseAccountsForActivity({
+      doesAddressHaveActivityFn,
+      fromAccountIndex,
+      onActivityFound: persistDiscoveredAccountIndex,
+    });
+    const end = performance.now();
+    logger.info('Found account activity at higher index', {
+      recursiveActivityIndex,
+      time: (end - start) / 1000 + ' seconds',
+    });
+  }
+
+  void discoverAccounts()
+    .catch((error: unknown) => {
       logger.warn('Account activity lookup failed', { error });
     })
     .finally(() => {
