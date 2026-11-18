@@ -33,12 +33,14 @@ auditConfig:
     # version (3.0.4) is not published on npm. Remove this entry once braces
     # 3.0.4+ is published and micromatch and chokidar pick it up.
     - GHSA-vfj7-8cjw-p6xm
+    - GHSA-fc5q-39xc-vjpf
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude:
   - axios
   - "@stacks/transactions"
   - "@stacks/common"
   - "@stacks/network"
+  - "@stacks/blockchain-api-client"
 packages:
   - 'apps/*'
   - 'packages/*'

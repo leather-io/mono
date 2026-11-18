@@ -1,7 +1,4 @@
-import {
-  useGetAccountExtendedBalancesQuery,
-  useGetStatusQuery,
-} from '~/features/stacking/hooks/stacking.query';
+import { useGetLockedStxQuery, useGetStatusQuery } from '~/features/stacking/hooks/stacking.query';
 
 import { usePox5StakerInfoQuery } from '../queries/pox5-stacking.query';
 import { getPox5NeedsRestake } from '../utils/pox5-transition';
@@ -11,15 +8,15 @@ import { getPox5NeedsRestake } from '../utils/pox5-transition';
 // Returns null until every input has resolved.
 export function usePox5NeedsRestake(): boolean | null {
   const statusQuery = useGetStatusQuery();
-  const balancesQuery = useGetAccountExtendedBalancesQuery();
+  const lockedStxQuery = useGetLockedStxQuery();
   const stakerInfoQuery = usePox5StakerInfoQuery();
 
-  if (statusQuery.data === undefined || balancesQuery.data === undefined) return null;
+  if (statusQuery.data === undefined || lockedStxQuery.data === undefined) return null;
   if (stakerInfoQuery.data === undefined) return null;
 
   return getPox5NeedsRestake({
     pox4Stacked: statusQuery.data.stacked,
-    lockedMicroStx: BigInt(balancesQuery.data.stx.locked),
+    lockedMicroStx: lockedStxQuery.data,
     pox5StakerInfo: stakerInfoQuery.data,
   });
 }
