@@ -34,7 +34,8 @@ export function ReceiveStxModal({ onClose }: ReceiveStxModalProps) {
   const singleSigAddress = policy ? undefined : currentAccount?.address;
   const address = policy?.chain === 'stacks' ? policy.address : singleSigAddress;
 
-  const canVerifyOnLedger = walletType === 'ledger' && hasLedgerStacksKeys && !policy;
+  const canVerifyOnLedger = walletType === 'ledger' && hasLedgerStacksKeys;
+  const verifyVariant = policy?.chain === 'stacks' ? 'stxMultisig' : 'stx';
 
   if (!address) return null;
 
@@ -47,7 +48,7 @@ export function ReceiveStxModal({ onClose }: ReceiveStxModalProps) {
         analytics.track('copy_stx_address_to_clipboard');
         void copyAddress(address);
       }}
-      onVerifyAddress={canVerifyOnLedger ? () => verifyAddressOnLedger('stx') : undefined}
+      onVerifyAddress={canVerifyOnLedger ? () => verifyAddressOnLedger(verifyVariant) : undefined}
       title="STX"
     />
   );
