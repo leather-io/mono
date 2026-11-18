@@ -32,6 +32,14 @@ export interface StacksTransactionFormValues {
   nonce?: number | string;
 }
 
+export type RecipientFieldName = 'recipient' | 'recipientBnsName';
+
+export interface RecipientFormValues {
+  recipient: string;
+  recipientBnsName: string;
+  symbol?: string;
+}
+
 export interface TransferRecipient {
   address: string;
   amount: Money;

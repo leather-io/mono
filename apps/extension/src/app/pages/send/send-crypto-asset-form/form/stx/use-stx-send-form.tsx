@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 
-import { type FormikHelpers } from 'formik';
 import { z } from 'zod';
 
 import { STX_DECIMALS } from '@leather.io/constants';
@@ -9,7 +8,7 @@ import { convertAmountToBaseUnit, createMoney } from '@leather.io/utils';
 import { logger } from '@shared/logger';
 import { type StacksSendFormValues } from '@shared/models/form.model';
 
-import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
+import { createFormResolver } from '@app/common/validation/form-resolver';
 import {
   stxAmountValidator,
   stxAvailableBalanceValidator,
@@ -58,9 +57,9 @@ export function useStxSendForm() {
     availableTokenBalance: availableBalance,
   });
 
-  const validationSchema = useMemo(
+  const resolver = useMemo(
     () =>
-      createFormikValidationSchema(values =>
+      createFormResolver<StacksSendFormValues>(values =>
         z.object({
           amount: stxAmountValidator(availableBalance).check(
             stxAvailableBalanceValidator(availableBalance, values)
@@ -80,13 +79,10 @@ export function useStxSendForm() {
     onFormStateChange,
     sendMaxBalance,
     stxFees,
-    validationSchema,
+    resolver,
 
-    async previewTransaction(
-      values: StacksSendFormValues,
-      formikHelpers: FormikHelpers<StacksSendFormValues>
-    ) {
-      const isFormValid = await checkFormValidation(values, formikHelpers);
+    async previewTransaction(values: StacksSendFormValues) {
+      const isFormValid = checkFormValidation(values);
 
       if (!isFormValid) return;
 

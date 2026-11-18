@@ -1,10 +1,8 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useRef, useState } from 'react';
 
 import BigNumber from 'bignumber.js';
-import type { FormikErrors } from 'formik';
 
 import { HIGH_FEE_AMOUNT_STX } from '@leather.io/constants';
-import { isEmpty } from '@leather.io/utils';
 
 import type { HasChildren } from '@app/common/has-children';
 
@@ -13,7 +11,7 @@ interface StacksHighFeeWarningContext {
   setShowHighFeeWarningSheet(val: boolean): void;
   hasBypassedFeeWarning: boolean;
   setHasBypassedFeeWarning(val: boolean): void;
-  isHighFeeWithNoFormErrors(errors: FormikErrors<unknown>, fee: number | string): boolean;
+  shouldWarnAboutHighFee(fee: number | string): boolean;
 }
 
 const stacksHighFeeWarningContext = createContext<StacksHighFeeWarningContext | null>(null);
@@ -28,11 +26,17 @@ const StacksHighFeeWarningProvider = stacksHighFeeWarningContext.Provider;
 
 export function StacksHighFeeWarningContainer({ children }: HasChildren) {
   const [showHighFeeWarningSheet, setShowHighFeeWarningSheet] = useState(false);
-  const [hasBypassedFeeWarning, setHasBypassedFeeWarning] = useState(false);
+  const [hasBypassedFeeWarning, setHasBypassedFeeWarningState] = useState(false);
+  const hasBypassedFeeWarningRef = useRef(false);
 
-  function isHighFeeWithNoFormErrors(errors: FormikErrors<unknown>, fee: number | string) {
-    if (hasBypassedFeeWarning) return false;
-    return isEmpty(errors) && new BigNumber(fee).isGreaterThan(HIGH_FEE_AMOUNT_STX);
+  function setHasBypassedFeeWarning(val: boolean) {
+    hasBypassedFeeWarningRef.current = val;
+    setHasBypassedFeeWarningState(val);
+  }
+
+  function shouldWarnAboutHighFee(fee: number | string) {
+    if (hasBypassedFeeWarningRef.current) return false;
+    return new BigNumber(fee).isGreaterThan(HIGH_FEE_AMOUNT_STX);
   }
 
   return (
@@ -42,7 +46,7 @@ export function StacksHighFeeWarningContainer({ children }: HasChildren) {
         setShowHighFeeWarningSheet,
         hasBypassedFeeWarning,
         setHasBypassedFeeWarning,
-        isHighFeeWithNoFormErrors,
+        shouldWarnAboutHighFee,
       }}
     >
       {children}

@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 
-import { type FormikHelpers } from 'formik';
 import { z } from 'zod';
 
 import type { CryptoAssetBalance, Sip10Asset } from '@leather.io/models';
@@ -10,7 +9,7 @@ import { logger } from '@shared/logger';
 import { type StacksSendFormValues } from '@shared/models/form.model';
 
 import { getSafeImageCanonicalUri } from '@app/common/stacks-utils';
-import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
+import { createFormResolver } from '@app/common/validation/form-resolver';
 import { stacksFungibleTokenAmountValidator } from '@app/common/validation/forms/amount-validators';
 import { useStacksTransactionFees } from '@app/query/stacks/fees/stacks-transaction-fees.hooks';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
@@ -64,7 +63,7 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
     symbol: info.symbol,
     decimals: info.decimals,
     avatar: createFtAvatar(),
-    validationSchema: createFormikValidationSchema(
+    resolver: createFormResolver<StacksSendFormValues>(
       z.object({
         amount: stacksFungibleTokenAmountValidator(availableTokenBalance),
         recipient,
@@ -73,11 +72,8 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
       })
     ),
 
-    async previewTransaction(
-      values: StacksSendFormValues,
-      formikHelpers: FormikHelpers<StacksSendFormValues>
-    ) {
-      const isFormValid = await checkFormValidation(values, formikHelpers);
+    async previewTransaction(values: StacksSendFormValues) {
+      const isFormValid = checkFormValidation(values);
       if (!isFormValid) return;
 
       const tx = await generateTx(values);
