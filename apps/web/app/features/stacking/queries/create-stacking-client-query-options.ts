@@ -6,7 +6,6 @@ const StackingQueryPrefixes = {
   GetCoreInfo: 'get-core-info',
   GetSecondsUntilNextCycle: 'get-seconds-until-next-cycle',
   GetPoxInfo: 'get-pox-info',
-  GetAccountExtendedBalances: 'get-account-extended-balances',
 } as const;
 
 const defaultQueryOptions = {
@@ -48,14 +47,6 @@ export function createGetPoxInfoQueryOptions({ client }: StackingParams) {
   return {
     queryKey: [StackingQueryPrefixes.GetPoxInfo, client],
     queryFn: () => client.getPoxInfo(),
-    ...defaultQueryOptions,
-  } satisfies UseQueryOptions;
-}
-
-export function createGetAccountExtendedBalancesQueryOptions({ client }: StackingParams) {
-  return {
-    queryKey: [StackingQueryPrefixes.GetAccountExtendedBalances, client],
-    queryFn: () => client.getAccountExtendedBalances(),
     ...defaultQueryOptions,
   } satisfies UseQueryOptions;
 }

@@ -5,6 +5,7 @@ export type StacksTx = MempoolTransaction | Transaction;
 export type StacksTxStatus = 'failed' | 'pending' | 'success';
 
 export type StacksTransaction = OperationResponse['get_transaction'];
+export type StacksRawTransaction = OperationResponse['get_raw_transaction'];
 export type StacksMempoolTransaction = Extract<StacksTransaction, { receipt_time: number }>;
 export type StacksConfirmedTransaction = Exclude<StacksTransaction, StacksMempoolTransaction>;
 export type StacksMempoolTransactionStatus = StacksMempoolTransaction['status'];
