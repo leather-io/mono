@@ -12,6 +12,10 @@ inputs:
     description: 'Boolean value to restore and save the turbo task cache between jobs'
     required: false
     default: 'true'
+  PNPM_CACHE:
+    description: 'Boolean value to restore and save the pnpm store cache; turn it off in jobs that run untrusted code, since setup-node saves the store after the job on a cache miss'
+    required: false
+    default: 'true'
 
 runs:
   using: 'composite'
@@ -22,7 +26,8 @@ runs:
       with:
         node-version: ${{ inputs.NODE_VERSION }}
         registry-url: 'https://registry.npmjs.org/'
-        cache: 'pnpm'
+        cache: ${{ inputs.PNPM_CACHE == 'true' && 'pnpm' || '' }}
+        package-manager-cache: ${{ inputs.PNPM_CACHE == 'true' }}
 
     - env:
         PROVISION_MOBILE: ${{ inputs.PROVISION_MOBILE }}

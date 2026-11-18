@@ -8,6 +8,8 @@ import { ChevronDownIcon } from '@leather.io/ui';
 import { type PlaygroundSectionId, playgroundAreas, playgroundSections } from '../playground-areas';
 import { playgroundPaths } from '../playground.constants';
 
+export const dockClearance = 64;
+
 // Row treatment shared by every interactive item in the dock panel, so area
 // links and utility links read as the same control.
 const rowStyles = {
