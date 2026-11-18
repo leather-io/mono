@@ -97,7 +97,14 @@ export const sendCryptoAssetFormRoutes = (
     </Route>
     <Route path="/send/:symbol/:contractId/confirm" element={<StacksSendFormConfirmation />} />
 
-    <Route path={RouteUrls.SendCollectible} element={<SendCollectibleForm />}>
+    <Route
+      path={RouteUrls.SendCollectible}
+      element={
+        <StacksHighFeeWarningContainer>
+          <SendCollectibleForm />
+        </StacksHighFeeWarningContainer>
+      }
+    >
       {broadcastErrorSheetRoute}
       {editNonceSheetRoute}
       {recipientAccountsSheetRoute}

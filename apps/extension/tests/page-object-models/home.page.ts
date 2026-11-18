@@ -106,7 +106,7 @@ export class HomePage {
     await this.clickCollectiblesTab();
     await this.page
       .getByTestId(CollectiblesSelectors.CollectibleCardSip9)
-      .filter({ hasText: name })
+      .getByRole('button', { name })
       .click();
     await this.page.getByTestId(CollectiblesSelectors.CollectibleDetailsContainer).waitFor();
   }

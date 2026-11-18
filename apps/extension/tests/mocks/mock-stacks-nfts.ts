@@ -81,7 +81,12 @@ export async function mockTestAccountCollectibleHoldings(page: Page | BrowserCon
   await Promise.all(
     collectibleHoldings.map(holding =>
       page.route(`**/metadata/v1/nft/${holding.contractId}/${holding.tokenId}`, route =>
-        route.fulfill({ json: { name: holding.name } })
+        route.fulfill({
+          json: {
+            name: holding.name,
+            image: `https://example.com/nft/${holding.assetName}/${holding.tokenId}.png`,
+          },
+        })
       )
     )
   );

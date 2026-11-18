@@ -9,6 +9,9 @@ import { mockStacksBroadcastTransaction } from '@tests/mocks/mock-stacks-txs';
 import type { SendPage } from '@tests/page-object-models/send.page';
 import { CollectiblesSelectors } from '@tests/selectors/collectibles.selectors';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
+import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
+
+import { HIGH_FEE_AMOUNT_STX } from '@leather.io/constants';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -42,7 +45,9 @@ test.describe('Send collectible', () => {
     await homePage.openCollectible(MOCKED_COLLECTIBLES.sip9Nft);
     await sendOpenCollectible(page, sendPage, MOCKED_COLLECTIBLES.sip9Nft);
 
-    await expect(page.getByText(`${MOCKED_COLLECTIBLES.sip9Nft} sent`)).toBeVisible();
+    await expect(
+      page.getByText(`${MOCKED_COLLECTIBLES.sip9Nft} sent`, { exact: true })
+    ).toBeVisible();
   });
 
   test('can send a BNS v2 name from its details page', async ({ homePage, page, sendPage }) => {
@@ -50,7 +55,33 @@ test.describe('Send collectible', () => {
     await homePage.openCollectible(MOCKED_COLLECTIBLES.bnsV2Name);
     await sendOpenCollectible(page, sendPage, MOCKED_COLLECTIBLES.bnsV2Name);
 
-    await expect(page.getByText(`${MOCKED_COLLECTIBLES.bnsV2Name} sent`)).toBeVisible();
+    await expect(
+      page.getByText(`${MOCKED_COLLECTIBLES.bnsV2Name} sent`, { exact: true })
+    ).toBeVisible();
+  });
+
+  test('warns before sending a collectible with a high fee', async ({
+    homePage,
+    page,
+    sendPage,
+  }) => {
+    await homePage.openCollectible(MOCKED_COLLECTIBLES.sip9Nft);
+    await sendPage.goToCollectibleSendForm();
+    await sendPage.recipientInput.fill(TEST_ACCOUNT_2_STX_ADDRESS);
+    await sendPage.recipientInput.blur();
+    await page.getByTestId(SharedComponentsSelectors.MiddleFeeEstimateItem).click();
+    await page.getByTestId(SharedComponentsSelectors.CustomFeeSelectItem).click();
+    await page
+      .getByTestId(SharedComponentsSelectors.CustomFeeFieldInput)
+      .fill(String(HIGH_FEE_AMOUNT_STX + 1));
+    await sendPage.previewSendTxButton.click();
+
+    const highFeeConfirmButton = page.getByTestId(
+      SendCryptoAssetSelectors.HighFeeWarningSheetSubmit
+    );
+    await expect(highFeeConfirmButton).toBeVisible();
+    await highFeeConfirmButton.click();
+    await expect(sendPage.confirmationDetails).toBeVisible();
   });
 
   test('shows no send action for a legacy BNS name', async ({ homePage, page }) => {

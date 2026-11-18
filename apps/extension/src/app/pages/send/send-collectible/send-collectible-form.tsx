@@ -3,10 +3,11 @@ import { Outlet, useNavigate } from 'react-router';
 
 import { useQuery } from '@tanstack/react-query';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
-import { Form, Formik } from 'formik';
+import { Form, Formik, type FormikHelpers } from 'formik';
 import { Box, Flex } from 'leather-styles/jsx';
 import { z } from 'zod';
 
+import { HIGH_FEE_WARNING_LEARN_MORE_URL_STX } from '@leather.io/constants';
 import type { CollectibleView } from '@leather.io/features';
 import { FeeTypes } from '@leather.io/models';
 import { createCollectibleTransferBlockerQueryConfig } from '@leather.io/queries';
@@ -27,6 +28,8 @@ import { CurrentStacksAccountLoader } from '@app/components/loaders/stacks-accou
 import { FullPageLoadingSpinner } from '@app/components/loading-spinner';
 import { NonceSetter } from '@app/components/nonce-setter';
 import { PageHeader } from '@app/features/container/headers/page.header';
+import { HighFeeSheet } from '@app/features/stacks-high-fee-warning/stacks-high-fee-dialog';
+import { useStacksHighFeeWarningContext } from '@app/features/stacks-high-fee-warning/stacks-high-fee-warning-container';
 import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useStxAddressAvailableUnlockedBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { useStacksTransactionFees } from '@app/query/stacks/fees/stacks-transaction-fees.hooks';
@@ -66,6 +69,8 @@ function CollectibleSendForm({ account, view }: CollectibleSendFormProps) {
   const network = useCurrentStacksNetworkState();
   const currentNetwork = useCurrentNetworkState();
   const availableBalance = useStxAddressAvailableUnlockedBalance(account.address);
+  const { isHighFeeWithNoFormErrors, setShowHighFeeWarningSheet } =
+    useStacksHighFeeWarningContext();
 
   const { result: unsignedTxForFeeEstimation } = useAsync(
     () =>
@@ -100,7 +105,15 @@ function CollectibleSendForm({ account, view }: CollectibleSendFormProps) {
     })
   );
 
-  async function onSubmit(values: SendCollectibleFormValues) {
+  async function onSubmit(
+    values: SendCollectibleFormValues,
+    formikHelpers: FormikHelpers<SendCollectibleFormValues>
+  ) {
+    const formErrors = await formikHelpers.validateForm();
+    if (isHighFeeWithNoFormErrors(formErrors, values.fee)) {
+      setShowHighFeeWarningSheet(true);
+      return;
+    }
     assertExistence(values.nonce, 'Nonce is required to send a collectible');
     const tx = await generateStacksUnsignedTransaction(
       createCollectibleTransferTxOptions({
@@ -173,6 +186,7 @@ function CollectibleSendForm({ account, view }: CollectibleSendFormProps) {
                   </Link>
                 </Flex>
               </Card>
+              <HighFeeSheet learnMoreUrl={HIGH_FEE_WARNING_LEARN_MORE_URL_STX} />
               <Outlet />
             </Form>
           </>
