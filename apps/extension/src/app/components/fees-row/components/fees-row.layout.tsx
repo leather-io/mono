@@ -8,7 +8,7 @@ import { SponsoredLabel } from '@app/components/sponsored-label';
 
 const feesInfo =
   'Higher fees increase the likelihood of your transaction getting confirmed before others. Click to learn more.';
-const url = 'https://leather.gitbook.io/guides/transactions/fees';
+const url = 'https://docs.leather.io/transactions/configure-transaction-fees';
 
 interface FeesRowLayoutProps extends HstackProps {
   feeField: React.JSX.Element;
