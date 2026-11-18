@@ -115,3 +115,58 @@ Run `pnpm --filter @leather.io/tools build` first if `pnpm lt` reports an unknow
   against the source (`.github/prompts/feature-map-fix.md`), fixes the statements it can prove
   false and opens or updates the `bot/feature-map-fix` pull request with a per-row citation; it
   closes that PR when a run finds nothing. Re-read the cited lines before merging it.
+
+## Mobile
+
+`pnpm lt feature-map generate --app mobile` writes `mobile.md` next to this file and
+`pnpm lt feature-map check --app mobile` is the CI gate (step `check-feature-map-mobile`). The
+sources are `apps/mobile/tests/feature-map/*.features.ts`, typed as `MobileFeatureEntry`; they
+import `AppRoutes` (`apps/mobile/src/shared/app-routes.ts`) and the `*Selectors` objects in
+`apps/mobile/src/shared/selectors/`, so a renamed key or member breaks
+`pnpm --filter @leather.io/mobile typecheck`. Everything in the extension sections above applies
+unless this section says otherwise.
+
+- **Routes are expo-router screen files.** The check enumerates every screen file under
+  `apps/mobile/src/app` (`_layout`, `+not-found` and spec files are not screens) and derives its path
+  from the file name without the extension, `index` and `(group)` segments: `(tabs)/activity.tsx`
+  is `/activity`, `(tabs)/(index)/[assetId]/index.tsx` is `/[assetId]`. Every screen must have an
+  `AppRoutes` key with that exact value and every key must match a screen, so adding or renaming a
+  screen file fails the check until `app-routes.ts` and an entry follow. The app itself still
+  navigates with literal `router.navigate` paths; `AppRoutes` exists for the map and the check.
+- **Anchors.** `route` is a screen file; `selectors` is a sheet or modal with no route (the global
+  send, receive, swap, ramp, add-account and add-wallet sheets, the approver sheet, the settings
+  sheets); `rpc` is an in-app-browser method answered without an approver (`getInfo`,
+  `supportedMethods`, enumerated from `message-routing.ts`); every `case x.method` of the switch in
+  `features/browser/approver-sheet/browser-approver.tsx` must be claimed by an `entry[].method`
+  of the entry describing its approver sheet, or by an `rpc` anchor. Handler names are the method
+  strings (`stx_callContract`), not file names.
+- **Gate.** The only guard the layouts mount is `SplashScreenGuard`
+  (`components/splash-screen-guard/splash-screen-guard.tsx`), which overlays the locked splash
+  until device authentication passes when the security preference is `secure`; every screen is
+  therefore `gate: 'splashScreen'`, and behaviors use `'none'`. Whether a screen needs a wallet is
+  `preconditions.session`: `signed-in` (a wallet with a current account), `signed-out` (no wallet;
+  Home and Activity render their without-account variants) or `locked` (secure preference, app
+  locked). `accountType` is `software` or omitted; there is no Ledger on mobile. `network` is
+  `mainnet` or `testnet` when the screen or flow depends on it.
+- **Mocks.** Mobile has no mock registry: `preconditions.mocks` is typed `readonly []`. Say in the
+  description what data the screen fetches live and what a reproduction needs (a funded testnet
+  account, a connected app).
+- **Specs** are repo-relative paths of Maestro flows under `apps/mobile/maestro/flows` or
+  `apps/mobile/maestro/shared`, or unit specs under `apps/mobile/src` (`*.spec.ts(x)`). The
+  flows under `apps/mobile/maestro/legacy-flows` are documented as outdated and failing, so they are
+  not accepted as specs; cite one in the description when it shows the old tap path.
+- **Actions and open** name shared Maestro sub-flows by repo-relative path
+  (`apps/mobile/maestro/shared/unlock.yaml`), the flows a reproduction can `runFlow`. `open` is
+  the sub-flow that reveals a sheet from `startRoute`; with none, the entry steps are the tap path
+  from the Home tab and `open` stays empty.
+- **Selectors** are `testID` values, which Maestro selects with `id:`. They live in `*Selectors`
+  `as const` objects under `apps/mobile/src/shared/selectors/` (`HomeSelectors.SettingsButton` →
+  `homeSettingsButton`); add a member and the `testID` to the component only when an entry needs
+  it as `ready` or in `others`. Dynamic ids are a prefix plus a suffix
+  (`tokenBalanceItem-<ticker>`, `defaultAccountIcon_<icon>`); say so in the description.
+- **Entry steps** start from the Home tab. A screen with a route is deep-linkable as
+  `leather://<path>` (the `leather` scheme in `app.config.ts`); set `deepLinkable: false` when it
+  reads params or sheet state a previous screen passes.
+- **Descriptions** quote the Lingui sources (`t` and `Trans` in the component), not the compiled
+  catalogs, and name the feature-flag hooks (`flags` are the LaunchDarkly keys passed to
+  `useBoolVariation` or `useStringVariation` in `features/feature-flags/index.ts`).

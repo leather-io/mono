@@ -1,6 +1,7 @@
 import { Dimensions } from 'react-native';
 
 import { WalletGenerationAnimation } from '@/components/animations/wallet-generation';
+import { OnboardingSelectors } from '@/shared/selectors/onboarding.selectors';
 import { t } from '@lingui/core/macro';
 
 import { Box, Text } from '@leather.io/ui/native';
@@ -19,7 +20,11 @@ export default function GeneratingWalletScreen() {
         justifyContent="center"
         alignItems="center"
       >
-        <Text variant="heading04" color="ink.text-subdued">
+        <Text
+          variant="heading04"
+          color="ink.text-subdued"
+          testID={OnboardingSelectors.GeneratingWalletText}
+        >
           {t`Adding wallet...`}
         </Text>
       </Box>

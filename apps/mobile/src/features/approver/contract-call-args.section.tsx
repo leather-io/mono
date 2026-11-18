@@ -1,4 +1,5 @@
 import { useGetContractInterface } from '@/queries/stacks/contract-interface.query';
+import { RpcStacksSelectors } from '@/shared/selectors/rpc-stacks.selectors';
 import { t } from '@lingui/core/macro';
 import { cvToString, deserializeTransaction } from '@stacks/transactions';
 
@@ -16,7 +17,7 @@ export function ContractCallArgsSection({ txHex }: { txHex: string }) {
   const { data } = useGetContractInterface(contractAddress, contractName.content);
 
   return (
-    <Approver.Section>
+    <Approver.Section testID={RpcStacksSelectors.ContractCallArgsSection}>
       <Box>
         <Text>{t`Contract arguments`}</Text>
       </Box>

@@ -7,6 +7,7 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 
+import { SwapSelectors } from '@/shared/selectors/swap.selectors';
 import { t } from '@lingui/core/macro';
 
 import { ArrowsRepeatLeftRightIcon, Pressable, usePressedState } from '@leather.io/ui/native';
@@ -57,6 +58,7 @@ export function FlipButton({ isVisible, onPress }: FlipButtonProps) {
       onPress={handlePress}
       style={animatedStyle}
       hitSlop={12}
+      testID={SwapSelectors.FlipButton}
     >
       <ArrowsRepeatLeftRightIcon variant="small" />
     </Pressable>

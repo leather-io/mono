@@ -17,6 +17,7 @@ import {
   useManagedSip10Tools,
   useSip10AccountBalance,
 } from '@/queries/balance/sip10-balance.query';
+import { TokenSelectors } from '@/shared/selectors/token.selectors';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 
@@ -90,7 +91,7 @@ export function ManageTokensSheet({ sheetRef, currentAccount }: ManageTokenSheet
           }}
         >
           <>
-            <Text variant="heading05" px="5">
+            <Text variant="heading05" px="5" testID={TokenSelectors.ManageTokensSheetTitle}>
               {t`Manage tokens`}
             </Text>
             <Box pt="3">

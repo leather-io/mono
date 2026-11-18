@@ -1,5 +1,5 @@
 import { InputSheetLayout } from '@/components/sheets/input-sheet.layout';
-import { TestId } from '@/shared/test-id';
+import { WalletSettingsSelectors } from '@/shared/selectors/wallet-settings.selectors';
 import { t } from '@lingui/core/macro';
 
 import { type SheetRef } from '@leather.io/ui/native';
@@ -23,8 +23,8 @@ export function WalletNameSheet({ sheetRef, name, setName }: WalletNameSheetProp
           sheetRef.current?.close();
         }
       }}
-      inputTestId={TestId.walletChangeNameSheetInput}
-      submitTestId={TestId.walletChangeNameSheetSaveButton}
+      inputTestId={WalletSettingsSelectors.WalletChangeNameSheetInput}
+      submitTestId={WalletSettingsSelectors.WalletChangeNameSheetSaveButton}
     />
   );
 }

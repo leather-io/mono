@@ -1,4 +1,5 @@
 import { assertContractCallPayload } from '@/features/approver/utils';
+import { RpcStacksSelectors } from '@/shared/selectors/rpc-stacks.selectors';
 import { useApps } from '@/store/apps/apps.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useSettings } from '@/store/settings/settings';
@@ -38,7 +39,7 @@ export function ContractCallPostConditionsSection({
   assertExistence(stacksAddress, 'Stacks address should be present during contract call');
 
   return (
-    <Approver.Section>
+    <Approver.Section testID={RpcStacksSelectors.ContractCallPostConditionsSection}>
       {tx.postConditions.values.map((pc, index) => {
         if (pc.conditionType === PostConditionType.Fungible) {
           return (

@@ -8,6 +8,7 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 
+import { SwapSelectors } from '@/shared/selectors/swap.selectors';
 import { formatCurrency } from '@/utils/currency-formatter';
 
 import { type MarketData, type Money } from '@leather.io/models';
@@ -39,7 +40,7 @@ export function TargetAmountPreview({
   });
 
   return (
-    <AnimatedBox style={pulsingStyle} gap="3">
+    <AnimatedBox style={pulsingStyle} gap="3" testID={SwapSelectors.TargetAmountPreview}>
       <Text
         fontFamily="MarchePro-Super"
         fontSize={24}
