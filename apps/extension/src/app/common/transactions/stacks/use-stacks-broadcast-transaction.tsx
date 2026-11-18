@@ -22,6 +22,7 @@ interface UseStacksBroadcastTransactionArgs {
   actionType?: StacksTransactionActionType;
   token: CryptoCurrency;
   redirectToSuccessPage?: boolean;
+  onBroadcastSuccess?(txid: string): void;
 }
 /**
  * @deprecated Use new version from `@app/common/transactions/stacks`
@@ -30,6 +31,7 @@ export function useStacksBroadcastTransaction({
   actionType,
   token,
   redirectToSuccessPage,
+  onBroadcastSuccess,
 }: UseStacksBroadcastTransactionArgs) {
   const signStacksTransaction = useSignStacksTransaction();
   const [isBroadcasting, setIsBroadcasting] = useState(false);
@@ -73,6 +75,7 @@ export function useStacksBroadcastTransaction({
             void navigate(RouteUrls.BroadcastError, { state: { message } });
           },
           onSuccess(txId) {
+            onBroadcastSuccess?.(txId);
             if (showSummaryPage) return handlePreviewSuccess(signedTx, txId);
             void navigate(RouteUrls.Activity);
             if (isCancelTransaction)
@@ -110,6 +113,7 @@ export function useStacksBroadcastTransaction({
 
     return {
       stacksBroadcastTransaction: broadcastTransaction,
+      stacksBroadcastSignedTransaction: broadcastTransactionAction,
       isBroadcasting,
     };
   }, [
@@ -123,5 +127,6 @@ export function useStacksBroadcastTransaction({
     isCancelTransaction,
     isIncreaseFeeTransaction,
     signStacksTransaction,
+    onBroadcastSuccess,
   ]);
 }

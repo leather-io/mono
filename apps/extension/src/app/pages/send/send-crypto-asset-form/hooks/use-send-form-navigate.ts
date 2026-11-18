@@ -68,6 +68,7 @@ export const stacksConfirmationRouteStateSchema = z.object({
   decimals: z.number().optional(),
   token: z.string().optional(),
   showFeeChangeWarning: z.boolean().optional(),
+  rotationTx: z.string().optional(),
 });
 
 type StacksConfirmationRouteState = z.infer<typeof stacksConfirmationRouteStateSchema>;
@@ -106,6 +107,17 @@ export function useSendFormNavigate() {
           state: {
             tx: tx.serialize(),
             showFeeChangeWarning,
+          } satisfies StacksConfirmationRouteState,
+        });
+      },
+      toConfirmAndSignStxSendAndRotate(
+        tx: StacksTransactionWire,
+        rotationTx: StacksTransactionWire
+      ) {
+        return navigate(RouteUrls.SendStxConfirmation, {
+          state: {
+            tx: tx.serialize(),
+            rotationTx: rotationTx.serialize(),
           } satisfies StacksConfirmationRouteState,
         });
       },
