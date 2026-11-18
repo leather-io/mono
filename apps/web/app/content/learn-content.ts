@@ -13,8 +13,8 @@ export const learnArticles: Record<string, LearnArticle> = {
     title: 'Pooled Staking',
     slug: 'pooled-stacking',
     sentence:
-      'Stake your STX with a pool provider to earn Bitcoin rewards without meeting the minimum threshold.',
-    body: 'Pooled staking allows users to combine their STX with others to meet the minimum staking requirement. Pool operators handle the technical aspects while you earn proportional rewards.',
+      'Stake your STX with a pool provider for variable sBTC rewards, subject to pool minimums.',
+    body: 'Pooled staking combines STX from multiple participants. A pool must meet the protocol threshold to earn rewards; provider fees, minimums and payout methods vary.',
     disclaimer: '',
   },
   liquidStacking: {
@@ -31,7 +31,7 @@ export const learnArticles: Record<string, LearnArticle> = {
     title: 'STX Token',
     slug: 'stacks-token-stx',
     sentence: 'The native token of the Stacks blockchain that enables smart contracts on Bitcoin.',
-    body: 'STX is the native cryptocurrency of the Stacks blockchain. It is used for transaction fees, smart contract execution, and can be locked (staked) to earn Bitcoin rewards.',
+    body: 'STX is the native cryptocurrency of the Stacks blockchain. It is used for transaction fees, smart contract execution, and can be staked with a pool for variable rewards paid in sBTC.',
   },
   stackingProviders: {
     id: 'stacking-providers',
@@ -51,8 +51,8 @@ export const learnArticles: Record<string, LearnArticle> = {
     id: 'stacking-rewards-tokens',
     title: 'Rewards',
     slug: 'stacking-rewards-tokens',
-    sentence: 'Earn Bitcoin or STX rewards based on your staking participation.',
-    body: 'Staking rewards are distributed in Bitcoin (for direct and pooled staking) or STX (for some liquid staking protocols). Rewards are proportional to the amount staked.',
+    sentence: 'Reward assets and payout methods depend on your staking provider.',
+    body: 'PoX-5 rewards accrue in sBTC. Pools may offer sBTC or BTC payouts, while liquid staking protocols use their own token and reward arrangements. Review provider terms.',
   },
   stackingLiquidToken: {
     id: 'stacking-liquid-token',
@@ -65,15 +65,15 @@ export const learnArticles: Record<string, LearnArticle> = {
     id: 'stacking-rewards',
     title: 'Staking Rewards',
     slug: 'stacking-rewards',
-    sentence: 'Bitcoin rewards earned through the Proof of Transfer consensus mechanism.',
-    body: 'Stakers earn BTC rewards for helping secure the network. Rewards come from miners who transfer Bitcoin to participate in the mining process.',
+    sentence: 'Variable rewards earned by participating in STX staking.',
+    body: 'PoX-5 staking rewards accrue in sBTC each cycle. The amount depends on network participation and protocol rewards; fees and payout schedules depend on the provider.',
   },
   totalLockedValueTvl: {
     id: 'total-locked-value-tvl',
     title: 'Total Value Locked',
     slug: 'total-locked-value-tvl',
     sentence: 'The total amount of STX locked in staking across all participants.',
-    body: "TVL represents the total value of assets locked in a protocol or staking pool, indicating the protocol's adoption and trustworthiness.",
+    body: 'TVL represents the total value of assets locked in a protocol or staking pool at a given time.',
   },
   historicalYield: {
     id: 'historical-yield',
@@ -87,7 +87,7 @@ export const learnArticles: Record<string, LearnArticle> = {
     title: 'Pool Fees',
     slug: 'stacking-pool-fees',
     sentence: 'Service fees charged by pool operators for managing your staking.',
-    body: 'Pool operators typically charge 5-15% of earned rewards as fees for their services, including technical management and reward distribution.',
+    body: 'Pool operators set their own fees for technical management and reward distribution. Check the current provider terms before staking.',
   },
   pooledStackingConditions: {
     id: 'pooled-stacking-conditions',
@@ -115,14 +115,14 @@ export const learnArticles: Record<string, LearnArticle> = {
     title: 'Amount',
     slug: 'stacking-amount',
     sentence: 'The amount of STX you have staked or delegated.',
-    body: 'This represents your total STX committed to staking, which will remain locked until the staking period ends.',
+    body: 'This represents your total STX committed to staking. Unlocking depends on your position duration and any confirmed early-unstaking request.',
   },
   stackingMinimumLockupPeriod: {
     id: 'stacking-minimum-lockup-period',
     title: 'Minimum Lockup Period',
     slug: 'stacking-minimum-lockup-period',
     sentence: 'The minimum time your STX must remain locked in staking.',
-    body: 'Most staking pools require a minimum lockup period, typically ranging from 1-12 cycles (about 2 weeks to 6 months).',
+    body: 'A cycle is about two weeks. With PoX-5, early unstaking can be requested outside the closing window; after confirmation, STX unlocks at the end of the current cycle.',
   },
   stackingUpcomingCycle: {
     id: 'stacking-upcoming-cycle',
@@ -142,8 +142,8 @@ export const learnArticles: Record<string, LearnArticle> = {
     id: 'stacking-duration',
     title: 'Duration',
     slug: 'stacking-duration',
-    sentence: 'The length of time your STX will be locked for staking.',
-    body: 'STX are locked for the duration of the staking cycles you participate in. This typically ranges from 2 to 12 cycles.',
+    sentence: 'The number of cycles selected for your staking position.',
+    body: 'Choose between 1 and 96 cycles for PoX-5 staking. Early unstaking is subject to the closing window and transaction confirmation; otherwise, renew when your chosen duration ends.',
   },
   stackingContractDetails: {
     id: 'stacking-contract-details',
