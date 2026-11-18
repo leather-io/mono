@@ -1,29 +1,6 @@
 import { type MetaDescriptor } from 'react-router';
 
-import { cmsClient } from '~/constants/cms-client';
 import { SbtcRewards } from '~/pages/sbtc/sbtc-rewards';
-
-import { sbtcConceptsQuery, sbtcFaqQuery, sbtcPoolsQuery } from '@leather.io/cms';
-
-export async function loader() {
-  const [sbtcPools, sbtcFaq, sbtcConcepts] = await Promise.all([
-    cmsClient.fetch(sbtcPoolsQuery),
-    cmsClient.fetch(sbtcFaqQuery),
-    cmsClient.fetch(sbtcConceptsQuery),
-  ]);
-
-  const { historicalYield, minimumCommitment, rewardsToken, tvl } = sbtcConcepts;
-  return {
-    sbtcPools,
-    sbtcFaq,
-    concepts: {
-      tvlConcept: tvl,
-      minimumCommitmentConcept: minimumCommitment,
-      historicalYieldConcept: historicalYield,
-      rewardsTokenConcept: rewardsToken,
-    },
-  };
-}
 
 export function meta() {
   return [
@@ -31,7 +8,7 @@ export function meta() {
     {
       name: 'description',
       content:
-        'Earn sBTC yield through integrated DeFi protocols while maintaining control of your Bitcoin.',
+        'Explore independent sBTC providers on Stacks and compare their strategies, reward tokens and current terms.',
     },
   ] satisfies MetaDescriptor[];
 }
