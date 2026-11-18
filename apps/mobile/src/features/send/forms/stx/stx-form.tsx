@@ -14,7 +14,12 @@ import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
 
 import { stxAsset } from '@leather.io/constants';
-import { type MarketData, type Money, type QuoteCurrency } from '@leather.io/models';
+import {
+  type MarketData,
+  type Money,
+  type QuoteCurrency,
+  type StacksTransactionFees,
+} from '@leather.io/models';
 import { Button, StxAvatarIcon } from '@leather.io/ui/native';
 import { isNumber } from '@leather.io/utils';
 
@@ -25,6 +30,7 @@ interface StxFormProps {
   quoteBalance: Money;
   nonce: number | undefined;
   marketData: MarketData;
+  fees: StacksTransactionFees;
   quoteCurrency: QuoteCurrency;
   assetItemAnimationOffsetTop?: number | null;
   onOpenAssetPicker(): void;
@@ -37,6 +43,7 @@ export function StxForm({
   quoteCurrency,
   marketData,
   nonce,
+  fees,
   onOpenAssetPicker,
 }: StxFormProps) {
   const {
@@ -50,6 +57,7 @@ export function StxForm({
     account: currentAccount,
     availableBalance,
     nonce,
+    fees,
   });
 
   return (
