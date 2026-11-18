@@ -15,5 +15,5 @@ export function StacksChainTxSummaryLoader({
   const { data: rawTx, error } = useGetRawTransactionByIdQuery(txid);
   if (error) return <Navigate to="/" replace />;
   if (!rawTx) return fallback;
-  return children({ rawTx: rawTx.raw_tx });
+  return children({ rawTx: rawTx.raw });
 }

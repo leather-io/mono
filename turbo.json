@@ -29,7 +29,8 @@
     "format:check": {},
     "lint": {
       "dependsOn": [
-        "^build"
+        "^build",
+        "@leather.io/tokens#build"
       ]
     },
     "lint:fix": {},
