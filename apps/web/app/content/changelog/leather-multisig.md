@@ -6,7 +6,7 @@ tags: ['web', 'extension']
 cover: /marketing/changelog/leather-multisig.webp
 ---
 
-Multisig is now live at [app.leather.io/multisig](https://app.leather.io/multisig). Create a shared vault with your team, family or DAO, and require more than one signature before funds move on Bitcoin or Stacks.
+Multisig is now live at [app.leather.io/multisig](/multisig). Create a shared vault with your team, family or DAO, and require more than one signature before funds move on Bitcoin or Stacks.
 
 Every member signs with the wallet they already use: a Leather extension account or a Ledger.
 

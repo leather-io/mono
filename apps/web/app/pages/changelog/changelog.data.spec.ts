@@ -105,7 +105,7 @@ describe('repo changelog content', () => {
     }
   });
 
-  test('the 2026-10-01 release is ordered deliberately', () => {
+  test('the 2026-10-01 release is ordered deliberately on the home strip', () => {
     expect(
       getChangelogEntries(new Date('2026-10-02'))
         .slice(0, 4)

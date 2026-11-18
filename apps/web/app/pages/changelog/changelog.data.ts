@@ -1,18 +1,14 @@
 import { z } from 'zod';
 
-// The changelog lives in the repo: one Markdown file per entry in app/content/changelog/<slug>.md,
-// with a small frontmatter block (title, slug, publishedAt, tags, cover). Covers and body images
-// ship from public/marketing/changelog/. Files are bundled at build time, so reading them can't
-// fail at request time; a malformed file is logged and left out rather than breaking the page.
+// Entries are bundled at build time, so a malformed file is logged and skipped rather than
+// breaking the page.
 
 export interface ChangelogEntry {
   slug: string;
   title: string;
   /** ISO timestamp. Entries dated in the future stay hidden until then. */
   publishedAt: string;
-  /** Tag names, e.g. "extension", "web", shown as chips on the changelog strip. */
   tags: string[];
-  /** Public path of the 16:9 hero image */
   cover?: string;
   /** Markdown body (GFM) */
   body: string;

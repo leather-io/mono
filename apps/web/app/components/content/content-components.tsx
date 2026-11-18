@@ -3,6 +3,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { styled } from 'leather-styles/jsx';
+import { SITE_HOSTNAMES } from '~/constants/constants';
 
 import { Link } from '@leather.io/ui';
 
@@ -284,7 +285,7 @@ function A({ children, href }: AnchorProps) {
     // Use the URL constructor for absolute URLs. For relative URLs, fallback to default behavior.
     const url = href.startsWith('http://') || href.startsWith('https://') ? new URL(href) : null;
     // Check if the host is 'leather.io' or a valid subdomain (e.g. www.leather.io)
-    if (url && (url.hostname === 'leather.io' || url.hostname.endsWith('.leather.io'))) {
+    if (url && SITE_HOSTNAMES.includes(url.hostname)) {
       isLeatherLink = true;
       normalizedHref = url.pathname + url.search + url.hash;
     }

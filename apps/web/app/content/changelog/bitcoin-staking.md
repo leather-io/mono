@@ -6,7 +6,7 @@ tags: ['web']
 cover: /marketing/changelog/bitcoin-staking.webp
 ---
 
-Bitcoin Staking (PoX-5) is live on Stacks, and you can stake directly from [app.leather.io/staking](https://app.leather.io/staking). It succeeds Stacking: lock your STX with a pool and earn rewards paid in sBTC every cycle.
+Bitcoin Staking (PoX-5) is live on Stacks, and you can stake directly from [app.leather.io/staking](/staking). It succeeds Stacking: lock your STX with a pool and earn rewards paid in sBTC every cycle.
 
 ## What's included
 

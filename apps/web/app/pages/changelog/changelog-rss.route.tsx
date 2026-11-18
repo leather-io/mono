@@ -17,8 +17,8 @@ export function loader() {
   const feed = new Feed({
     title: 'Leather Changelog',
     description: 'Product updates from Leather',
-    id: 'https://leather.io/changelog',
-    link: 'https://leather.io/changelog',
+    id: `${SITE_ORIGIN}/changelog`,
+    link: `${SITE_ORIGIN}/changelog`,
     generator: 'Leather.io',
     language: 'en',
     copyright: `All rights reserved ${new Date().getFullYear()}, Leather`,
@@ -27,8 +27,8 @@ export function loader() {
   getChangelogEntries().forEach(entry =>
     feed.addItem({
       title: entry.title,
-      id: `https://leather.io/changelog/${entry.slug}`,
-      link: `https://leather.io/changelog/${entry.slug}`,
+      id: `${SITE_ORIGIN}/changelog/${entry.slug}`,
+      link: `${SITE_ORIGIN}/changelog/${entry.slug}`,
       content: renderToStaticMarkup(
         <ReactMarkdown remarkPlugins={[remarkGfm]} urlTransform={toAbsoluteUrl}>
           {entry.body}
