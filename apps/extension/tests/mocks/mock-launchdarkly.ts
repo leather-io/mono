@@ -4,22 +4,7 @@ const launchDarklyGoals = '**/sdk/goals/**';
 const launchDarklyEvalx = '**/sdk/evalx/**';
 const launchDarklyStream = '**/eval/**';
 
-const flagData = {
-  releaseOnramperBuy: {
-    flagVersion: 7,
-    trackEvents: false,
-    value: true,
-    variation: 0,
-    version: 8,
-  },
-  releaseTrendingTokens: {
-    flagVersion: 1,
-    trackEvents: false,
-    value: true,
-    variation: 0,
-    version: 1,
-  },
-};
+const flagData = {};
 
 export async function mockLaunchDarkly(page: Page | BrowserContext) {
   await page.route('**/events.launchdarkly.com/**', route => route.fulfill({ status: 202 }));
@@ -49,7 +34,7 @@ function makeFlag(value: boolean) {
 // Layers additional flags on top of the defaults for a single spec. Register it
 // after `setupAndUseApiCalls` so it takes precedence over `mockLaunchDarkly`, and
 // route the context (not just the page) so the overrides also reach RPC popups,
-// where flags like `releaseAddAccount` gate the approval UI.
+// where flags can gate the approval UI.
 export async function overrideLaunchDarklyFlags(
   target: Page | BrowserContext,
   overrides: Record<string, boolean>
