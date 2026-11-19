@@ -62,7 +62,7 @@
     "@reduxjs/toolkit": "2.11.2",
     "@scure/btc-signer": "1.6.0",
     "@sentry/cli": "2.42.2",
-    "@sentry/react-native": "7.13.0",
+    "@sentry/react-native": "8.28.0",
     "@shopify/flash-list": "2.3.2",
     "@shopify/restyle": "2.4.5",
     "@stacks/common": "7.0.2",
@@ -157,7 +157,7 @@
   },
   "expo": {
     "install": {
-      "exclude": ["typescript", "@sentry/react-native"]
+      "exclude": ["typescript"]
     }
   },
   "private": true,

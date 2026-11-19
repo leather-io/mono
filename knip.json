@@ -92,7 +92,6 @@
         "buffer",
         "punycode",
         "@sentry/cli",
-        "@babel/core",
         "@lingui/macro",
         "@lingui/format-po",
         "@babel/plugin-transform-class-static-block"
