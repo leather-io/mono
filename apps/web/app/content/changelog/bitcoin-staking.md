@@ -22,4 +22,4 @@ Choose how long to stake (48 cycles by default) and leave whenever you need. The
 **Bitcoin staking pools**\
 Added in September: lock sBTC in a Bitcoin bond through Esbee DAO, or join the Stacking DAO liquid bond waitlist. Staking a larger amount? Request institutional access from the same page.
 
-Since launch we've added PlanBetter and Asymmetric Research as pool providers. Dual Stacking moved to Bitcoin Staking on August 24, 2026, so if you were dual stacking, pick a pool to keep earning.
+Since launch we've added Planbetter and Asymmetric Research as pool providers. Dual Stacking moved to Bitcoin Staking on August 24, 2026, so if you were dual stacking, pick a pool to keep earning.
