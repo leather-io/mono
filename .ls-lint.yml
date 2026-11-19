@@ -24,6 +24,7 @@ ignore:
   - apps/web/{.react-router,build}
   - apps/web/public
   - dist
+  - lean
   - node_modules
   - packages/**/.react-router
   - packages/*/.tsdown
