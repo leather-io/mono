@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     cache-mode: none
-    environment: review-gate
+    environment: environment/mono-review-gate
     concurrency:
       group: review-gate-${{ inputs.pr }}
       cancel-in-progress: false
