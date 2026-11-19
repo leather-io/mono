@@ -8,7 +8,7 @@ import {
   NavigationIndependentTree,
   type ParamListBase,
   useNavigationContainerRef,
-} from 'expo-router/react-navigation';
+} from '@react-navigation/native';
 
 interface SheetNavigationContainerProps extends NavigationContainerProps {
   base: string;

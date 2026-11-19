@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NativeSyntheticEvent, TextLayoutEventData } from 'react-native';
+import { TextLayoutEvent } from 'react-native';
 
 import { InputCurrencyMode } from '@/utils/types';
 
@@ -21,7 +21,7 @@ interface AmountFieldPrimaryValueProps {
 export function AmountFieldPrimaryValue({ value, color }: AmountFieldPrimaryValueProps) {
   const [lineHeight, setLineHeight] = useState(initialLineHeight);
 
-  function handleTextLayout(event: NativeSyntheticEvent<TextLayoutEventData>) {
+  function handleTextLayout(event: TextLayoutEvent) {
     const line = event.nativeEvent.lines[0];
     if (line) setLineHeight(line.ascender);
   }

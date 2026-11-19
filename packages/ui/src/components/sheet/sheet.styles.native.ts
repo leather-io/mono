@@ -38,7 +38,7 @@ function getHandleContainerStyle(theme: Theme, placement: 'inside' | 'outside'):
   };
 
   if (placement === 'outside') {
-    style.bottom = '100%';
+    return { ...style, bottom: '100%' };
   }
 
   return style;

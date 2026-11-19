@@ -1,4 +1,9 @@
-import { ComponentPropsWithoutRef } from 'react';
+import {
+  ComponentPropsWithoutRef,
+  ForwardRefExoticComponent,
+  PropsWithoutRef,
+  RefAttributes,
+} from 'react';
 import { TouchableOpacity as RNTouchableOpacity } from 'react-native';
 
 import {
@@ -73,7 +78,9 @@ const buttonRestyleFunctions = [
   createVariant({ themeKey: 'textVariants', property: 'textVariant' }),
 ];
 
-export const TouchableOpacity = createRestyleComponent<TouchableOpacityProps<Theme>, Theme>(
+export const TouchableOpacity: ForwardRefExoticComponent<
+  PropsWithoutRef<TouchableOpacityProps<Theme>> & RefAttributes<unknown>
+> = createRestyleComponent<TouchableOpacityProps<Theme>, Theme>(
   buttonRestyleFunctions as RestyleFunctionContainer<TouchableOpacityProps<Theme>, Theme>[],
   RNTouchableOpacity
 );

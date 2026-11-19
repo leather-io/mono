@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react';
-import { NativeSyntheticEvent, TextLayoutEventData, TextStyle } from 'react-native';
+import { TextLayoutEvent, TextStyle } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 
 import { decimalSeparator } from '@/features/swap/swap.utils';
@@ -24,7 +24,7 @@ interface PrimaryValueProps {
 export function PrimaryValue({ value, caret, animatedTextStyle }: PrimaryValueProps) {
   const [lineHeight, setLineHeight] = useState(baseLineHeight);
 
-  function handleTextLayout(event: NativeSyntheticEvent<TextLayoutEventData>) {
+  function handleTextLayout(event: TextLayoutEvent) {
     const line = event.nativeEvent.lines[0];
     if (!line) return;
     const { descender, capHeight } = line;

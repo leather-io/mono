@@ -1,4 +1,5 @@
 import { RefObject, useEffect, useRef, useState } from 'react';
+import { type ScrollEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ViewShot, { type ViewShotRef } from 'react-native-view-shot';
 import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
@@ -135,7 +136,7 @@ export function Browser({
       <ViewShot ref={viewShotRef} style={{ flex: 1, paddingTop: top }}>
         <WebView
           originWhitelist={['*']}
-          onScroll={({ nativeEvent }) => {
+          onScroll={({ nativeEvent }: ScrollEvent) => {
             if (nativeEvent.contentOffset.y < -CONTENT_OFFSET_FOR_BROWSER_CLOSE) {
               browserSheetRef.current?.close();
             }

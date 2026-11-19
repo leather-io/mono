@@ -137,9 +137,6 @@ msgstr "Account label"
 msgid "Account name cannot be empty"
 msgstr "Account name cannot be empty"
 
-#: src/components/activity/activity-with-account.screen.tsx:19
-#: src/components/activity/activity-without-account-screen.tsx:9
-#: src/features/navigation/tab-layout.tsx:60
 #: src/features/token/components/token-activity.tsx:40
 msgid "Activity"
 msgstr "Activity"
@@ -158,8 +155,6 @@ msgstr ""
 "Add funds to your wallet to start\n"
 "swapping between currencies."
 
-#: src/features/approver/components/memo-sheet.tsx:16
-#: src/features/approver/components/nonce-sheet.tsx:16
 #: src/features/send/components/memo.tsx:33
 #: src/features/send/components/memo.tsx:66
 msgid "Add memo"
@@ -419,13 +414,7 @@ msgstr "Be careful with this transaction"
 msgid "BIP39 passphrase"
 msgstr "BIP39 passphrase"
 
-#: src/features/balances/bitcoin/bitcoin-deposit-token-cell.tsx:25
-#: src/features/balances/bitcoin/bitcoin-token-balance.tsx:11
-#: src/features/receive/get-assets.ts:29
-#: src/features/receive/get-assets.ts:37
 #: src/features/send/forms/btc/btc-form.tsx:64
-#: src/features/swap/swap.utils.ts:10
-#: src/shared/display-preference.ts:59
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
@@ -511,7 +500,6 @@ msgid "Choose existing wallet"
 msgstr "Choose existing wallet"
 
 #: src/components/search-input.tsx:67
-#: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:31
 msgid "Clear search"
 msgstr "Clear search"
 
@@ -562,12 +550,7 @@ msgstr ""
 "Configure\n"
 "wallet"
 
-#: src/features/approver/components/memo-sheet.tsx:18
-#: src/features/approver/components/nonce-sheet.tsx:18
 #: src/features/send/components/memo.tsx:88
-#: src/features/send/components/recipient/recipient-guard-sheet.tsx:30
-#: src/features/swap/screens/swap-review-screen.tsx:203
-#: src/features/wallet-manager/recover-wallet/recover-wallet-sheet.tsx:22
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -779,7 +762,6 @@ msgstr "Enter an amount"
 msgid "Enter recipient"
 msgstr "Enter recipient"
 
-#: src/features/recover-wallet/recover-wallet.layout.tsx:40
 #: src/features/recover-wallet/recover-wallet.tsx:112
 msgid "Enter your Secret Key"
 msgstr "Enter your Secret Key"
@@ -1190,9 +1172,6 @@ msgstr "Maximum {formattedMaximum}"
 msgid "Maybe later"
 msgstr "Maybe later"
 
-#: src/features/approver/components/memo-card.tsx:19
-#: src/features/approver/components/memo-sheet.tsx:17
-#: src/features/approver/components/nonce-sheet.tsx:17
 #: src/features/send/components/memo.tsx:74
 msgid "Memo"
 msgstr "Memo"
@@ -1520,7 +1499,6 @@ msgstr "Reveal account"
 #: src/features/send/forms/btc/btc-form.tsx:126
 #: src/features/send/forms/stx/sip10-form.tsx:149
 #: src/features/send/forms/stx/stx-form.tsx:140
-#: src/features/swap/screens/swap-form-screen.tsx:118
 msgid "Review"
 msgstr "Review"
 
@@ -1711,12 +1689,7 @@ msgstr "Sponsored fee"
 msgid "StackingDAO"
 msgstr "StackingDAO"
 
-#: src/features/balances/stacks/stacks-deposit-token-cell.tsx:25
-#: src/features/balances/stacks/stacks-token-balance.tsx:12
-#: src/features/receive/get-assets.ts:45
 #: src/features/send/forms/stx/stx-form.tsx:58
-#: src/features/swap/swap.utils.ts:9
-#: src/shared/display-preference.ts:60
 msgid "Stacks"
 msgstr "Stacks"
 
