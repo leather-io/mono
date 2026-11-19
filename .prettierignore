@@ -18,3 +18,5 @@ worker-configuration.d.ts
 expo-env.d.ts
 ios/
 android/
+eslint-suppressions.json
+.react-router/

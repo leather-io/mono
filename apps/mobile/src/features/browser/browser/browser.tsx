@@ -1,17 +1,17 @@
-import { RefObject, useEffect, useRef, useState } from 'react';
+import { type RefObject, useEffect, useRef, useState } from 'react';
 import { type ScrollEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ViewShot, { type ViewShotRef } from 'react-native-view-shot';
-import { WebView, WebViewMessageEvent, WebViewNavigation } from 'react-native-webview';
+import { WebView, type WebViewMessageEvent, type WebViewNavigation } from 'react-native-webview';
 
 import { useGlobalSheets } from '@/core/global-sheet-provider';
-import { BrowserLoadingMethods } from '@/features/account/components/browser-loading';
+import { type BrowserLoadingMethods } from '@/features/account/components/browser-loading';
 import { userAddsApp } from '@/store/apps/apps.write';
 import { useAppDispatch } from '@/store/utils';
 import * as Linking from 'expo-linking';
 
 import injectedProvider from '@leather.io/provider/mobile';
-import { RpcResponses } from '@leather.io/rpc';
+import { type RpcResponses } from '@leather.io/rpc';
 import { Box, useTheme } from '@leather.io/ui/native';
 
 import { ApproverSheet } from '../approver-sheet/approver-sheet';
@@ -85,7 +85,7 @@ export function Browser({
     approverSheetRef.current?.dismiss();
   }
 
-  function onShouldStartLoadWithRequest(event: any) {
+  function onShouldStartLoadWithRequest(event: WebViewNavigation) {
     const { url } = event;
 
     // Allow normal web URLs
@@ -161,7 +161,9 @@ export function Browser({
             backgroundColor: theme.colors['ink.background-primary'],
           }}
           source={{ uri: searchUrl }}
-          onNavigationStateChange={handleWebViewNavigationStateChange}
+          onNavigationStateChange={newNavState =>
+            void handleWebViewNavigationStateChange(newNavState)
+          }
         />
       </ViewShot>
       <ApproverSheet sendResult={sendResult} />

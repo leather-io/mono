@@ -1,16 +1,16 @@
 import { useCallback } from 'react';
 
 import { AuthType } from '@stacks/transactions';
-import * as yup from 'yup';
+import { z } from 'zod';
 
-import { TransactionTypes, getStacksBurnAddress } from '@leather.io/stacks';
-import { stxToMicroStx } from '@leather.io/utils';
+import {
+  TransactionTypes,
+  generateStacksUnsignedTransaction,
+  getStacksBurnAddress,
+} from '@leather.io/stacks';
+import { createMoney, stxToMicroStx } from '@leather.io/utils';
 
 import { useRefreshAllAccountData } from '@app/common/hooks/account/use-refresh-all-account-data';
-import {
-  type GenerateUnsignedTransactionOptions,
-  generateUnsignedTransaction,
-} from '@app/common/transactions/stacks/generate-unsigned-txs';
 import { StacksTransactionActionType } from '@app/common/transactions/stacks/transaction.utils';
 import { useStacksBroadcastTransaction } from '@app/common/transactions/stacks/use-stacks-broadcast-transaction';
 import { stxFeeValidator } from '@app/common/validation/forms/fee-validators';
@@ -40,7 +40,7 @@ export function useStacksTransactionAction({ actionType, txid }: UseStacksTransa
 
   const stacksAddress = useCurrentStacksAccountAddress();
   const availableUnlockedBalance = useStxAddressAvailableUnlockedBalance(stacksAddress);
-  const validationSchema = yup.object({ fee: stxFeeValidator(availableUnlockedBalance) });
+  const validationSchema = z.object({ fee: stxFeeValidator(availableUnlockedBalance) });
 
   const { data: tx, isLoading: isLoadingTx } = useGetTransactionByIdQuery(txid);
   const { isLoadingRawTx, rawTx } = useStacksRawTransaction(txid);
@@ -51,19 +51,16 @@ export function useStacksTransactionAction({ actionType, txid }: UseStacksTransa
   const onSubmitCancelTx = useCallback(
     async (fee: number) => {
       if (!tx || !rawTx || !account) return;
-      const options: GenerateUnsignedTransactionOptions = {
+      const newTx = await generateStacksUnsignedTransaction({
+        txType: TransactionTypes.StxTokenTransfer,
         publicKey: account.stxPublicKey,
-        nonce: tx.nonce,
-        fee: stxToMicroStx(fee).toNumber(),
-        txData: {
-          txType: TransactionTypes.StxTokenTransfer,
-          recipient: getStacksBurnAddress(network.chainId),
-          amount: 1,
-          memo: '_cancel transaction',
-          network: network,
-        } as any,
-      };
-      const newTx = await generateUnsignedTransaction(options);
+        nonce: tx.sender.nonce,
+        fee: createMoney(stxToMicroStx(fee), 'STX'),
+        recipient: getStacksBurnAddress(network.chainId),
+        amount: createMoney(1, 'STX'),
+        memo: '_cancel transaction',
+        network,
+      });
       await refreshAccountData();
       await stacksBroadcastTransaction(newTx);
     },

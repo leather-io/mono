@@ -1,32 +1,33 @@
 import { useCallback, useMemo } from 'react';
 
-import { MempoolTransaction } from '@stacks/stacks-blockchain-api-types';
+import { useUserSettings } from '@/hooks/use-user-settings';
 import { useQueries } from '@tanstack/react-query';
 
-import { createGetAddressMempoolTransactionsQueryOptions } from '@leather.io/query';
-import { isUndefined, uniqueArray } from '@leather.io/utils';
+import { isStacksMempoolTransaction } from '@leather.io/models';
+import { createStacksAddressMempoolTransactionsQueryConfig } from '@leather.io/queries';
+import { type HiroPrincipalMempoolTransaction } from '@leather.io/services';
+import { uniqueArray } from '@leather.io/utils';
 
 import { useGetTransactionByIdListQuery } from '../transaction/transactions-by-id.query';
-import { useStacksClient } from './stacks-client';
 
 function useGetAddressMempoolTransactionsQueries(addresses: string[]) {
-  const client = useStacksClient();
+  const settings = useUserSettings();
   const uniqueAddresses = uniqueArray(addresses);
   const queries = useQueries({
     queries: uniqueAddresses.map(address => ({
-      ...createGetAddressMempoolTransactionsQueryOptions({ address, client }),
+      ...createStacksAddressMempoolTransactionsQueryConfig(address, settings),
     })),
   });
   const combinedResult = useCallback(
     () => ({
       totalData: queries
         .map(result => result.data)
-        .reduce((acc, result) => {
+        .reduce<HiroPrincipalMempoolTransaction[]>((acc, result) => {
           if (result?.results) {
             return [...acc, ...result.results];
           }
           return acc;
-        }, [] as MempoolTransaction[]),
+        }, []),
       isPending: queries.some(result => result.isPending),
     }),
     [queries]
@@ -40,7 +41,7 @@ const droppedCache = new Map();
 export function useStacksPendingTransactions(addresses: string[]) {
   const query = useGetAddressMempoolTransactionsQueries(addresses);
   const pendingStacksTransactions = query.totalData.filter(
-    tx => tx.tx_status === 'pending' && !droppedCache.has(tx.tx_id)
+    tx => tx.status === 'pending' && !droppedCache.has(tx.tx_id)
   );
 
   const txs = useGetTransactionByIdListQuery(pendingStacksTransactions.map(tx => tx.tx_id));
@@ -49,17 +50,17 @@ export function useStacksPendingTransactions(addresses: string[]) {
       query,
       transactions: txs
         .map(tx => tx.data)
-        .filter(tx => {
-          if (isUndefined(tx)) return false;
-          if (droppedCache.has(tx.tx_id)) return false;
-          if (tx.tx_status !== 'pending') {
+        .flatMap(tx => {
+          if (!tx) return [];
+          if (droppedCache.has(tx.tx_id)) return [];
+          if (!isStacksMempoolTransaction(tx) || tx.status !== 'pending') {
             // Stale txs persist in the mempool endpoint so we
             // need to cache dropped txids to prevent unneeded fetches
             droppedCache.set(tx.tx_id, true);
-            return false;
+            return [];
           }
-          return true;
-        }) as MempoolTransaction[],
+          return [tx];
+        }),
     };
   }, [txs, query]);
 }

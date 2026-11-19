@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import { loadLanguageData } from '@/i18n/load-language-data';
 import { useSettings } from '@/store/settings/settings';
@@ -12,17 +12,20 @@ function useI18Initialization() {
   const [ready, setReady] = useState(false);
   const { languagePreference } = useSettings();
 
-  useOnMount(() => {
-    loadLanguageData(languagePreference)
-      .then(([{ messages }]) => {
-        i18n.loadAndActivate({ locale: languagePreference, messages });
-        setReady(true);
-      })
-      .catch(error => {
-        captureException(error, {
-          extra: { context: 'i18n initialization', languagePreference },
-        });
+  async function initializeI18n() {
+    try {
+      const [{ messages }] = await loadLanguageData(languagePreference);
+      i18n.loadAndActivate({ locale: languagePreference, messages });
+      setReady(true);
+    } catch (error) {
+      captureException(error, {
+        extra: { context: 'i18n initialization', languagePreference },
       });
+    }
+  }
+
+  useOnMount(() => {
+    void initializeI18n();
   });
 
   return { ready };

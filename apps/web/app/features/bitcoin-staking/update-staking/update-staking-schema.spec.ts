@@ -159,7 +159,7 @@ describe(createUpdateStakingSchema.name, () => {
   });
 
   describe('when switching to a pool with a minimum stake', () => {
-    const minStake = { poolName: 'PlanBetter', minStakeMicroStx: 1_000_000_000n };
+    const minStake = { poolName: 'Planbetter', minStakeMicroStx: 1_000_000_000n };
     const address = 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq';
 
     test('rejects a switch whose total stays below the minimum', () => {
@@ -175,7 +175,7 @@ describe(createUpdateStakingSchema.name, () => {
       if (!result.success) {
         const issue = result.error.issues.find(candidate => candidate.path[0] === 'amountIncrease');
         expect(issue?.message).toBe(
-          'PlanBetter requires a total stake of at least 1,000 STX; add more STX to switch'
+          'Planbetter requires a total stake of at least 1,000 STX; add more STX to switch'
         );
       }
     });

@@ -1,6 +1,6 @@
 import type pino from 'pino';
 
-type LogItem = [ts: string, level: string, message: string, ...other: any];
+type LogItem = [ts: string, level: string, ...messages: unknown[]];
 
 const maxLogLength = 2_000;
 
@@ -38,8 +38,9 @@ export async function copyLogsToClipboard(): Promise<void> {
 
 export async function appendLogToBrowserStorage(logEvent: pino.LogEvent): Promise<LogItem> {
   const logs = await getLogsFromBrowserStorage();
-  const { ts, level, messages } = logEvent;
-  const formattedLogItem = [new Date(ts).toISOString(), level.label, ...messages] as LogItem;
+  const { ts, level } = logEvent;
+  const messages: unknown[] = logEvent.messages;
+  const formattedLogItem: LogItem = [new Date(ts).toISOString(), level.label, ...messages];
   return new Promise(resolve =>
     getStorageAdapter().set(
       { [logStorageKey]: truncateLogToMaxSize([formattedLogItem, ...logs]) },

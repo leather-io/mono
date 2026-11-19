@@ -1,6 +1,6 @@
 import { useSettings } from '@/store/settings/settings';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import { assertExistence } from '@leather.io/utils';
 
 export function useCurrentAccount(): AccountId {

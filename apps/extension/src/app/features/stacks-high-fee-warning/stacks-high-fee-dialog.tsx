@@ -12,7 +12,7 @@ import {
   Title,
 } from '@leather.io/ui';
 
-import { StacksSendFormValues } from '@shared/models/form.model';
+import { type StacksSendFormValues } from '@shared/models/form.model';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { ButtonRow } from '@app/components/layout';

@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
 import { Flex, styled } from 'leather-styles/jsx';
+import { keys } from 'remeda';
 
 import { analytics } from '@shared/utils/analytics';
 
@@ -17,7 +18,7 @@ import { HeaderGrid } from '@app/components/layout/headers/header-grid';
 import { ThemeListItem } from './components/theme-list-item';
 
 export function SelectTheme() {
-  const themes = Object.keys(themeLabelMap) as UserSelectedTheme[];
+  const themes = keys(themeLabelMap);
 
   const { setUserSelectedTheme } = useThemeSwitcher();
 

@@ -4,9 +4,14 @@ import { Box, Flex } from 'leather-styles/jsx';
 import { token } from 'leather-styles/tokens';
 import { Highlight, type PrismTheme } from 'prism-react-renderer';
 
-import type { PrismType } from './clarity-prism.shared';
+import { type PrismType } from './clarity-prism.shared';
 import { startPad } from './start-pad.shared';
-import { GetGrammaticalTokenProps, GrammaticalToken, Language, RenderProps } from './utils.shared';
+import {
+  type GetGrammaticalTokenProps,
+  type GrammaticalToken,
+  type Language,
+  type RenderProps,
+} from './utils.shared';
 
 const theme: PrismTheme = {
   plain: {
@@ -180,7 +185,7 @@ export interface HighlighterProps {
 export const Highlighter = memo(
   ({ code, language = 'clarity', showLineNumbers, hideLineHover, prism }: HighlighterProps) => {
     return (
-      <Highlight theme={theme} code={code} language={language} prism={prism as any}>
+      <Highlight theme={theme} code={code} language={language} prism={prism}>
         {props => (
           <Lines showLineNumbers={showLineNumbers} hideLineHover={hideLineHover} {...props} />
         )}

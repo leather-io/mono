@@ -1,7 +1,10 @@
 import axios from 'axios';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import type { HttpCacheService } from '../../cache/http-cache.service';
+import { WalletDefaultNetworkConfigurationIds, defaultNetworksKeyedById } from '@leather.io/models';
+
+import { createMock } from '../../../test/create-mock';
+import type { HttpCacheKeyArray, HttpCacheService } from '../../cache/http-cache.service';
 import type { SettingsService } from '../../settings/settings.service';
 import { EmilyApiClient } from './emily-api.client';
 import type { EmilyDepositRequest } from './emily-api.types';
@@ -22,13 +25,27 @@ const sbtcLimits = {
   accountCaps: {},
 };
 
-const fetchWithCache = vi.fn((_key: unknown, fetchFn: () => Promise<unknown>) => fetchFn());
+const networksByBitcoinMode = {
+  mainnet: defaultNetworksKeyedById[WalletDefaultNetworkConfigurationIds.mainnet],
+  testnet: defaultNetworksKeyedById[WalletDefaultNetworkConfigurationIds.testnet],
+};
+
+const fetchWithCache = vi.fn<(key: HttpCacheKeyArray, fetchFn: () => Promise<unknown>) => void>();
 
 function makeClient(mode: 'mainnet' | 'testnet' = 'mainnet') {
-  const settingsService = {
-    getSettings: () => ({ network: { chain: { bitcoin: { mode } } } }),
-  } as unknown as SettingsService;
-  const cacheService = { fetchWithCache } as unknown as HttpCacheService;
+  const settingsService: SettingsService = {
+    getSettings: () => ({
+      network: networksByBitcoinMode[mode],
+      quoteCurrency: 'USD',
+      assetVisibility: {},
+    }),
+  };
+  const cacheService = createMock<HttpCacheService>({
+    fetchWithCache(key, fetchFn) {
+      fetchWithCache(key, fetchFn);
+      return fetchFn();
+    },
+  });
   return new EmilyApiClient(settingsService, cacheService);
 }
 

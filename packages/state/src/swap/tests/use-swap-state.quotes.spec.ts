@@ -402,7 +402,10 @@ describe('quote enrichment and selection', () => {
     expect(sortedQuotes).toHaveLength(5);
 
     for (let i = 1; i < sortedQuotes.length; i++) {
-      expect(sortedQuotes[i - 1]?.score).toBeGreaterThanOrEqual(sortedQuotes[i]?.score ?? 0);
+      const previousQuote = sortedQuotes[i - 1];
+      const currentQuote = sortedQuotes[i];
+      assert(previousQuote && currentQuote);
+      expect(previousQuote.score).toBeGreaterThanOrEqual(currentQuote.score);
     }
   });
 

@@ -1,27 +1,26 @@
 import {
-  ComponentPropsWithoutRef,
-  ForwardRefExoticComponent,
-  PropsWithoutRef,
-  RefAttributes,
+  type ComponentPropsWithoutRef,
+  type ForwardRefExoticComponent,
+  type PropsWithoutRef,
+  type RefAttributes,
 } from 'react';
 import { TouchableOpacity as RNTouchableOpacity } from 'react-native';
 
 import {
-  BackgroundColorProps,
-  BackgroundColorShorthandProps,
-  BaseTheme,
-  BorderProps,
-  LayoutProps,
-  OpacityProps,
-  PositionProps,
-  ResponsiveValue,
-  RestyleFunctionContainer,
-  SpacingProps,
-  SpacingShorthandProps,
-  TextShadowProps,
-  TypographyProps,
-  VariantProps,
-  VisibleProps,
+  type BackgroundColorProps,
+  type BackgroundColorShorthandProps,
+  type BaseTheme,
+  type BorderProps,
+  type LayoutProps,
+  type OpacityProps,
+  type PositionProps,
+  type ResponsiveValue,
+  type SpacingProps,
+  type SpacingShorthandProps,
+  type TextShadowProps,
+  type TypographyProps,
+  type VariantProps,
+  type VisibleProps,
   backgroundColor,
   backgroundColorShorthand,
   border,
@@ -37,7 +36,7 @@ import {
   visible,
 } from '@shopify/restyle';
 
-import { Theme } from '../../theme-native';
+import { type Theme } from '../../theme-native';
 
 interface TextColorProps<Theme extends BaseTheme> {
   textColor?: ResponsiveValue<keyof Theme['colors'], Theme['breakpoints']>;
@@ -81,6 +80,6 @@ const buttonRestyleFunctions = [
 export const TouchableOpacity: ForwardRefExoticComponent<
   PropsWithoutRef<TouchableOpacityProps<Theme>> & RefAttributes<unknown>
 > = createRestyleComponent<TouchableOpacityProps<Theme>, Theme>(
-  buttonRestyleFunctions as RestyleFunctionContainer<TouchableOpacityProps<Theme>, Theme>[],
+  buttonRestyleFunctions,
   RNTouchableOpacity
 );

@@ -1,8 +1,8 @@
 import { fibonacciGenerator } from './fibonacci';
 
-function take(gen: IterableIterator<number>, count: number) {
+function take(gen: Iterator<number, number>, count: number) {
   const out: number[] = [];
-  for (let i = 0; i < count; i++) out.push(gen.next().value as number);
+  for (let i = 0; i < count; i++) out.push(gen.next().value);
   return out;
 }
 

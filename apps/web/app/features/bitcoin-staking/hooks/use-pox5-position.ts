@@ -1,7 +1,7 @@
-import { BitcoinStakingPool, getPoolBySignerManager } from '~/data/bitcoin-staking-data';
+import { type BitcoinStakingPool, getPoolBySignerManager } from '~/data/bitcoin-staking-data';
 
-import { Pox5StakerInfo } from '../queries/create-get-pox5-staker-info-query-options';
-import { PendingPox5Tx } from '../queries/get-pending-pox5-txs';
+import { type Pox5StakerInfo } from '../queries/create-get-pox5-staker-info-query-options';
+import { type PendingPox5Tx } from '../queries/get-pending-pox5-txs';
 import { usePox5PendingTxQuery, usePox5StakerInfoQuery } from '../queries/pox5-stacking.query';
 
 export type Pox5Position =

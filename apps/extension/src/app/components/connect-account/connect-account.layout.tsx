@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
 import { motion, useAnimationControls } from 'framer-motion';
 import { Box, Flex, VStack, styled } from 'leather-styles/jsx';
 
@@ -10,12 +11,12 @@ import {
   Flag,
   LeatherLogomarkIcon,
   QuestionCircleIcon,
+  useOnMount,
 } from '@leather.io/ui';
 import { delay } from '@leather.io/utils';
 
 import { closeWindow } from '@shared/utils';
 
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { FaviconDisplayer } from '@app/components/favicon-displayer/favicon-displayer';
 
 interface ConnectAccountLayoutProps {
@@ -139,8 +140,8 @@ export function ConnectAccountLayout({
               </Button>,
               <Button
                 key="confirm"
-                onClick={userApprovesGetAddresses}
-                data-testid="get-addresses-approve-button"
+                onClick={() => void userApprovesGetAddresses()}
+                data-testid={ConnectAccountSelectors.ApproveBtn}
               >
                 Confirm
               </Button>,

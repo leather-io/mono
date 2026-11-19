@@ -1,5 +1,6 @@
 import { styled } from 'leather-styles/jsx';
 import { RotatedArrow } from '~/components/icons/rotated-icon';
+import { InstallModal } from '~/pages/marketing/shared/install-modal';
 import { useLeatherConnect } from '~/store/addresses';
 import { leather } from '~/utils/leather-sdk';
 
@@ -27,7 +28,7 @@ function NoStacksAccountsWarningDialog() {
               display="inline-block"
               color="inherit"
               fontSize="inherit"
-              onClick={() => leather.open({ mode: 'fullpage' })}
+              onClick={() => void leather.open({ mode: 'fullpage' })}
             >
               Open Leather <RotatedArrow />
             </Link>{' '}
@@ -45,7 +46,7 @@ function NoStacksAccountsWarningDialog() {
 
 function ConnectLeatherButton() {
   const { connect } = useLeatherConnect();
-  return <SignInButtonLayout onClick={connect}>Connect</SignInButtonLayout>;
+  return <SignInButtonLayout onClick={() => void connect()}>Connect</SignInButtonLayout>;
 }
 
 function ActiveAccountButton() {
@@ -54,7 +55,7 @@ function ActiveAccountButton() {
   return (
     <ActiveAccountButtonLayout
       address={stacksAccount?.address ?? ''}
-      onSwitchAccount={connect}
+      onSwitchAccount={() => void connect()}
       onOpenExtension={isLeatherWallet ? openExtension : undefined}
       onSignout={disconnect}
     />
@@ -66,7 +67,7 @@ export function SignInButton() {
 
   return (
     <>
-      {status === 'missing' && <InstallLeatherButton />}
+      {status === 'missing' && <InstallModal section="header" trigger={<InstallLeatherButton />} />}
       {status === 'detected' && <ConnectLeatherButton />}
       {status === 'connected' && <ActiveAccountButton />}
       <NoStacksAccountsWarningDialog />

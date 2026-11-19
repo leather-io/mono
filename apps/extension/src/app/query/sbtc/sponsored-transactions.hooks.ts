@@ -43,16 +43,18 @@ export function useCheckSbtcSponsorshipEligible({
       return;
     }
 
-    verifySponsoredSbtcTransaction({
+    async function verifyEligibility(args: Parameters<typeof verifySponsoredSbtcTransaction>[0]) {
+      const eligibility = await verifySponsoredSbtcTransaction(args);
+      setResult(eligibility);
+      setLastAddressChecked(stxAddress);
+    }
+
+    void verifyEligibility({
       apiUrl: sponsorshipApiUrl,
       baseTx,
       nonce: nextNonce.nonce,
       fee: stxFees.options.standard.value.amount.toNumber(),
     })
-      .then(result => {
-        setResult(result);
-        setLastAddressChecked(stxAddress);
-      })
       .catch(e => {
         logger.error('Verification failure: ', e);
         setResult({ isEligible: false });

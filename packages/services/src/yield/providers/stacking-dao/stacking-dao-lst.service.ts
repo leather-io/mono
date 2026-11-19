@@ -14,7 +14,7 @@ import { FungibleAssetService } from '../../../assets/fungible-asset.service';
 import { HiroStacksApiClient } from '../../../infrastructure/api/hiro/hiro-stacks-api.client';
 import type {
   HiroAddressFtBalancesResponse,
-  HiroNftHolding,
+  HiroPrincipalNftBalance,
 } from '../../../infrastructure/api/hiro/hiro-stacks-api.types';
 import { LeatherApiClient } from '../../../infrastructure/api/leather/leather-api.client';
 import { MarketDataService } from '../../../market/market-data.service';
@@ -99,7 +99,7 @@ export class StackingDaoLstService {
     );
 
     return {
-      asset: asset,
+      asset,
       balance,
       balanceStx,
       balanceQuote: baseCurrencyAmountInQuote(balanceStx, stxMarketData),
@@ -110,7 +110,7 @@ export class StackingDaoLstService {
 
   public async getLstWithdrawals(
     lst: 'ststx' | 'ststxbtc',
-    nftHoldings: HiroNftHolding[],
+    nftHoldings: HiroPrincipalNftBalance[],
     signal?: AbortSignal
   ): Promise<StackingDaoLstWithdrawal[]> {
     const withdrawalNftIds = nftHoldings
@@ -148,6 +148,8 @@ export class StackingDaoLstService {
 
     return withdrawalResponses.map(withdrawalResponse => {
       const withdrawalData = parseStackingDaoGetWithdrawalResponseCV(withdrawalResponse);
+      const chainTip = serverStatus.chain_tip;
+      if (!chainTip) throw new Error('Hiro API status is missing the chain tip');
       const balanceStx = createMoney(withdrawalData.stxAmount, stxAsset.symbol, stxAsset.decimals);
       return {
         asset,
@@ -159,8 +161,7 @@ export class StackingDaoLstService {
         balanceStx,
         balanceQuote: baseCurrencyAmountInQuote(balanceStx, stxMarketData),
         unlockBurnHeight: withdrawalData.unlockBurnHeight,
-        burnBlocksUntilUnlock:
-          withdrawalData.unlockBurnHeight - serverStatus.chain_tip!.burn_block_height,
+        burnBlocksUntilUnlock: withdrawalData.unlockBurnHeight - chainTip.burn_block_height,
       };
     });
   }

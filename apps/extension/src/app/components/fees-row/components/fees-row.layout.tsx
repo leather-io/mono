@@ -1,15 +1,14 @@
 import { useField } from 'formik';
-import { HStack, HstackProps, styled } from 'leather-styles/jsx';
+import { HStack, type HstackProps, styled } from 'leather-styles/jsx';
 
-import { Callout, InfoCircleIcon } from '@leather.io/ui';
+import { BasicTooltip, Callout, InfoCircleIcon } from '@leather.io/ui';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 import { SponsoredLabel } from '@app/components/sponsored-label';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 const feesInfo =
   'Higher fees increase the likelihood of your transaction getting confirmed before others. Click to learn more.';
-const url = 'https://leather.gitbook.io/guides/transactions/fees';
+const url = 'https://docs.leather.io/transactions/configure-transaction-fees';
 
 interface FeesRowLayoutProps extends HstackProps {
   feeField: React.JSX.Element;

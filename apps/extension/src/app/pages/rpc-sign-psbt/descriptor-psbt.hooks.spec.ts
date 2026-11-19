@@ -15,7 +15,8 @@ const mocks = vi.hoisted(() => {
   return {
     walletState,
     signPsbt: vi.fn(),
-    signWithLedger: vi.fn(),
+    signWithLedger:
+      vi.fn<(request: { psbt: Uint8Array; descriptor?: string }) => Promise<unknown>>(),
   };
 });
 
@@ -288,11 +289,12 @@ describe(useSignDescriptorPsbt.name, () => {
 
       const signedTx = await useSignDescriptorPsbt()(psbtHex, multiSigDescriptor);
       if (!signedTx) throw new Error('Expected a signed transaction');
+      const anyPsbtBytes: unknown = expect.any(Uint8Array);
 
       expect(signedTx).toBe(deviceSignedTx);
       expect(mocks.signWithLedger).toHaveBeenCalledWith({
         kind: 'sign-bitcoin-tx',
-        psbt: expect.any(Uint8Array),
+        psbt: anyPsbtBytes,
         inputsToSign: [{ index: 0, derivationPath: accountDerivationPath }],
         descriptor: multiSigDescriptor,
         settleOnRejection: false,

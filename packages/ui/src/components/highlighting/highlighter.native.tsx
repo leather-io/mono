@@ -1,13 +1,13 @@
-import { memo } from 'react';
-import { View } from 'react-native';
+import { type CSSProperties, memo } from 'react';
+import { type TextStyle, View } from 'react-native';
 
 import { useTheme } from '@shopify/restyle';
-import { Highlight, PrismTheme } from 'prism-react-renderer';
+import { Highlight, type PrismTheme } from 'prism-react-renderer';
 
-import { Theme } from '../../theme-native';
+import { type Theme } from '../../theme-native';
 import { Text } from '../text/text.native';
 import { Prism, type PrismType } from './clarity-prism.shared';
-import { Language, RenderProps } from './utils.shared';
+import { type Language } from './utils.shared';
 
 interface HighlighterProps {
   code: string;
@@ -63,27 +63,33 @@ function getPrismTheme(theme: Theme): PrismTheme {
   };
 }
 
+function toTextStyle(style: CSSProperties | undefined): TextStyle | undefined {
+  if (!style) return undefined;
+  return { color: style.color };
+}
+
 export const Highlighter = memo(({ code, language = 'clarity' }: HighlighterProps) => {
   const theme = useTheme<Theme>();
   return (
-    <Highlight theme={getPrismTheme(theme)} code={code} language={language} prism={Prism as any}>
+    <Highlight theme={getPrismTheme(theme)} code={code} language={language} prism={Prism}>
       {({ tokens, getLineProps, getTokenProps }) => {
         return (
           <View>
-            {tokens.map((line, i) => (
-              <Text
-                key={i}
-                {...(getLineProps as RenderProps<'mobile'>['getLineProps'])({ line, key: i })}
-              >
-                {line.map((token, key) => (
-                  <Text
-                    variant="code"
-                    key={key}
-                    {...(getTokenProps as RenderProps<'mobile'>['getTokenProps'])({ token, key })}
-                  />
-                ))}
-              </Text>
-            ))}
+            {tokens.map((line, i) => {
+              const lineProps = getLineProps({ line, key: i });
+              return (
+                <Text key={i} style={toTextStyle(lineProps.style)}>
+                  {line.map((token, key) => {
+                    const tokenProps = getTokenProps({ token, key });
+                    return (
+                      <Text variant="code" key={key} style={toTextStyle(tokenProps.style)}>
+                        {tokenProps.children}
+                      </Text>
+                    );
+                  })}
+                </Text>
+              );
+            })}
           </View>
         );
       }}

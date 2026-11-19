@@ -1,21 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { createGetAccountNoncesQueryOptions, parseAccountNoncesResponse } from '@leather.io/query';
+import { createStacksAccountNoncesQueryConfig } from '@leather.io/queries';
+import { parseAccountNoncesResponse } from '@leather.io/stacks';
 
-import { useCurrentNetworkState } from '@app/query/leather-query-provider';
+import { useUserSettings } from '@app/hooks/use-user-settings';
 
 import { useStacksPendingTransactions } from '../mempool/mempool.hooks';
-import { useStacksClient } from '../stacks-client';
 import { useStacksConfirmedTransactions } from '../transactions/transactions-with-transfers.hooks';
 
 export function useNextNonce(address: string) {
-  const client = useStacksClient();
-  const network = useCurrentNetworkState();
+  const settings = useUserSettings();
   const confirmedTransactions = useStacksConfirmedTransactions(address);
   const { transactions: pendingTransactions } = useStacksPendingTransactions(address);
 
   return useQuery({
-    ...createGetAccountNoncesQueryOptions({ address, client, network: network.chain.stacks.url }),
+    ...createStacksAccountNoncesQueryConfig(address, settings),
     staleTime: 0,
     select: resp =>
       parseAccountNoncesResponse({

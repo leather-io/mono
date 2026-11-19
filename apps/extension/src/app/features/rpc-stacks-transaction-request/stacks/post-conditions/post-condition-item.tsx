@@ -1,8 +1,9 @@
 import {
-  NonFungiblePostConditionWire,
-  STXPostConditionWire,
-  StakingPostConditionWire,
+  type NonFungiblePostConditionWire,
+  type STXPostConditionWire,
+  type StakingPostConditionWire,
 } from '@stacks/transactions';
+import { PostConditionSelectors } from '@tests/selectors/requests.selectors';
 import { Box, Stack, styled } from 'leather-styles/jsx';
 
 import { AssetAvatarIcon, ItemLayout, StxAvatarIcon } from '@leather.io/ui';
@@ -53,7 +54,7 @@ export function PostConditionItem({
   );
 
   return (
-    <Stack gap="space.03">
+    <Stack data-testid={PostConditionSelectors.PostConditionItem} gap="space.03">
       <styled.span textStyle="label.03">{title}</styled.span>
       <ItemLayout
         img={icon}
@@ -64,7 +65,7 @@ export function PostConditionItem({
       />
       {message && (
         <Box py="space.03" borderTop="default" borderBottom={!isLast ? 'active' : 'unset'}>
-          <styled.span color="ink.text-subdued" textStyle="caption.01">
+          <styled.span color="ink.text-secondary" textStyle="caption.01">
             {message}
           </styled.span>
         </Box>

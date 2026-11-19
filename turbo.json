@@ -1,12 +1,23 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "agentGuidance": false,
+  "globalDependencies": [
+    ".dependency-cruiser-known-violations.json",
+    ".dependency-cruiser.cjs",
+    ".ls-lint.yml",
+    ".prettierignore",
+    ".prettierrc.js",
+    "eslint.config.js",
+    "knip.json",
+    "tsconfig.json",
+    "turbo.json"
+  ],
   "tasks": {
     "build": {
       "outputs": [
         "dist/**",
         "dist-*/**",
         "build/**",
-        "{ios,android,build}/**",
         "leather-styles/**"
       ],
       "dependsOn": [
@@ -16,11 +27,31 @@
     "build:watch": {},
     "format": {},
     "format:check": {},
-    "lint": {},
+    "lint": {
+      "dependsOn": [
+        "^build",
+        "@leather.io/tokens#build"
+      ]
+    },
     "lint:fix": {},
-    "test:unit": {},
-    "test:coverage": {},
-    "typecheck": {},
+    "test:unit": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "test:coverage": {
+      "outputs": [
+        "coverage/**"
+      ],
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "typecheck": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
     "check:all": {
       "dependsOn": [
         "build",
@@ -31,6 +62,19 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "@leather.io/tools#test:unit": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/apps/extension/tests/**",
+        "$TURBO_ROOT$/apps/extension/src/app/**/*.tsx",
+        "$TURBO_ROOT$/apps/extension/src/shared/route-urls.ts",
+        "$TURBO_ROOT$/apps/extension/src/background/messaging/rpc-methods/**",
+        "$TURBO_ROOT$/packages/rpc/src/methods/**"
+      ]
     }
   }
 }

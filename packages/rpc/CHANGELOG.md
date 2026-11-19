@@ -411,6 +411,32 @@
     * @leather.io/stacks bumped to 1.17.3
     * @leather.io/utils bumped to 0.46.4
 
+## [2.25.5](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.25.4...@leather.io/rpc-v2.25.5) (2026-11-19)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/stacks bumped to 1.22.10
+    * @leather.io/utils bumped to 0.55.1
+
+## [2.25.4](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.25.3...@leather.io/rpc-v2.25.4) (2026-10-27)
+
+
+### Bug Fixes
+
+* body-parser and undici audit ([#2912](https://github.com/leather-io/mono/issues/2912)) ([2bee4e7](https://github.com/leather-io/mono/commit/2bee4e772dd95fff8406822a62225854fb708fbd))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.63.1
+    * @leather.io/stacks bumped to 1.22.9
+    * @leather.io/utils bumped to 0.55.0
+
 ## [2.25.3](https://github.com/leather-io/mono/compare/@leather.io/rpc-v2.25.2...@leather.io/rpc-v2.25.3) (2026-09-29)
 
 

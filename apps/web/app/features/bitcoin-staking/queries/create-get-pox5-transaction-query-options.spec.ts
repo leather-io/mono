@@ -7,7 +7,7 @@ function makeContext() {
 }
 
 function makeClient(
-  getTransactionById: (txid: string, signal: AbortSignal) => Promise<{ tx_status: string }>
+  getTransactionById: (txid: string, signal: AbortSignal) => Promise<{ status: string }>
 ) {
   return { getTransactionById };
 }
@@ -16,14 +16,14 @@ describe(createGetPox5TransactionQueryOptions.name, () => {
   test('keys the query by txid and disables it without one', () => {
     const withTxId = createGetPox5TransactionQueryOptions({
       txId,
-      client: makeClient(() => Promise.resolve({ tx_status: 'success' })),
+      client: makeClient(() => Promise.resolve({ status: 'success' })),
     });
     expect(withTxId.queryKey).toEqual(['pox5-transaction', txId]);
     expect(withTxId.enabled).toBe(true);
 
     const withoutTxId = createGetPox5TransactionQueryOptions({
       txId: null,
-      client: makeClient(() => Promise.resolve({ tx_status: 'success' })),
+      client: makeClient(() => Promise.resolve({ status: 'success' })),
     });
     expect(withoutTxId.enabled).toBe(false);
   });
@@ -31,7 +31,7 @@ describe(createGetPox5TransactionQueryOptions.name, () => {
   test('maps the chain status to an outcome', async () => {
     const options = createGetPox5TransactionQueryOptions({
       txId,
-      client: makeClient(() => Promise.resolve({ tx_status: 'abort_by_response' })),
+      client: makeClient(() => Promise.resolve({ status: 'abort_by_response' })),
     });
     await expect(options.queryFn(makeContext())).resolves.toEqual({
       status: 'failed',

@@ -1,12 +1,12 @@
 import { useRef } from 'react';
 
+import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
 import { styled } from 'leather-styles/jsx';
 
 import { AddressDisplayer, Approver, Button, Callout } from '@leather.io/ui';
 
 import { closeWindow } from '@shared/utils';
 
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
 import { CrossOriginFrameCallout } from '@app/components/cross-origin-frame-callout';
 import { CurrentAccountDisplayer } from '@app/features/current-account/current-account-displayer';
@@ -26,8 +26,6 @@ export function RpcBtcAddAccount() {
     mode,
     walletType,
     canApprove,
-    isFeatureEnabled,
-    rejectAsUnsupported,
     focusInitiatingTab,
     finalize,
   } = useBtcAddAccount();
@@ -38,12 +36,6 @@ export function RpcBtcAddAccount() {
   useOnOriginTabClose(() => closeWindow());
 
   const { toggleSwitchAccount } = useSwitchAccountSheet();
-
-  useOnMount(() => {
-    if (!isFeatureEnabled) rejectAsUnsupported();
-  });
-
-  if (!isFeatureEnabled) return null;
 
   if (origin === null) {
     closeWindow();
@@ -129,7 +121,7 @@ export function RpcBtcAddAccount() {
             key="confirm"
             disabled={!canApprove}
             onClick={() => void onApprove()}
-            data-testid="btc-add-account-approve-button"
+            data-testid={ConnectAccountSelectors.BtcAddAccountApproveBtn}
           >
             {confirmLabel}
           </Button>,

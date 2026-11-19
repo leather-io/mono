@@ -3,11 +3,10 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { Box, Stack } from 'leather-styles/jsx';
 
-import { Tabs } from '@leather.io/ui';
+import { LoadingSpinner, Tabs } from '@leather.io/ui';
 
 import { RouteUrls } from '@shared/route-urls';
 
-import { LoadingSpinner } from '@app/components/loading-spinner';
 import { useBackgroundLocation } from '@app/routes/hooks/use-background-location';
 
 interface HomeTabsProps {
@@ -63,7 +62,7 @@ export function HomeTabs({ children, showCollectibles = true }: HomeTabsProps) {
               key={tab.value}
               data-testid={tab.testId}
               value={tab.value}
-              onClick={() => navigate(tab.value)}
+              onClick={() => void navigate(tab.value)}
             >
               {tab.label}
             </Tabs.Trigger>

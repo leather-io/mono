@@ -3,13 +3,13 @@ import { Form, FormProvider, useForm } from 'react-hook-form';
 import { Navigate, useNavigate } from 'react-router';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { StackingClient } from '@stacks/stacking';
+import { type StackingClient } from '@stacks/stacking';
 import { useMutation } from '@tanstack/react-query';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { FormPageLayout } from '~/components/forms/form-page.layout';
 import { learnArticles } from '~/content/learn-content';
 import {
-  StakingPoolSlug,
+  type StakingPoolSlug,
   getPrimarySignerManagerContract,
   getSignerManagerContracts,
   getStakingPoolFromSlug,
@@ -41,6 +41,7 @@ import { usePox5StackingClient } from '../hooks/use-pox5-clients';
 import { usePox5CycleClock } from '../hooks/use-pox5-cycle-clock';
 import { usePox5Position } from '../hooks/use-pox5-position';
 import { usePox5TxTracker } from '../hooks/use-pox5-tx-tracker';
+import { useStakingAcknowledgment } from '../hooks/use-staking-acknowledgment';
 import {
   usePox5AvailableUnlockedBalance,
   usePox5PoxInfoQuery,
@@ -58,13 +59,10 @@ import { ChoosePayoutPreference } from './components/choose-payout-preference';
 import { ChooseStakingAmount } from './components/choose-staking-amount';
 import { ChooseStakingConditions } from './components/choose-staking-conditions';
 import { ChooseStakingDuration } from './components/choose-staking-duration';
+import { StakingConfirmationSteps } from './components/staking-confirmation-steps';
 import {
-  StakingConfirmationSteps,
-  StartStakingStepId,
-} from './components/staking-confirmation-steps';
-import {
-  PoolMinStake,
-  StakingFormSchema,
+  type PoolMinStake,
+  type StakingFormSchema,
   buildPayoutPreference,
   createStakingFormSchema,
 } from './utils/staking-form-schema';
@@ -72,6 +70,12 @@ import {
 interface StartStakingProps {
   poolSlug: StakingPoolSlug;
   signerManagerContractId?: string;
+}
+
+function parseEnteredNumber(value: unknown): number | undefined {
+  if (value === undefined || value === null || value === '') return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : undefined;
 }
 
 export function StartStaking({ poolSlug, signerManagerContractId }: StartStakingProps) {
@@ -100,13 +104,12 @@ function StartStakingLayout({
   client,
   signerManagerContractId: signerManagerContractIdOverride,
 }: StartStakingLayoutProps) {
-  const { stacksAccount, btcPaymentAddress } = useLeatherConnect();
+  const { stacksAccount, btcPaymentAddress, connectedWalletId } = useLeatherConnect();
   if (!stacksAccount) throw new Error('No STX address available');
 
   const navigate = useNavigate();
   const { track } = usePox5TxTracker();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [termsConfirmed, setTermsConfirmed] = useState(false);
 
   const pool = getStakingPoolFromSlug(poolSlug);
   const signerManagerContractId =
@@ -170,18 +173,38 @@ function StartStakingLayout({
     resolver: zodResolver(schema),
   });
 
-  const stakeAmount = Number(formMethods.watch('amount') ?? NaN);
-  const watchedCycles = Number(formMethods.watch('cycles') ?? NaN);
+  const acknowledgment = useStakingAcknowledgment(
+    JSON.stringify({
+      address: stacksAccount.address,
+      connectedWalletId,
+      clientAddress: client.address,
+      payoutMode,
+      supportsMinClaim,
+      signerManagerContractId,
+      network: pox5NetworkConfig.stacksNetworkName,
+      currentCycle: cycleClock?.clock.currentCycleId,
+      values: formMethods.watch(),
+    })
+  );
+
+  const stakeAmount = parseEnteredNumber(formMethods.watch('amount'));
+  const watchedCycles = parseEnteredNumber(formMethods.watch('cycles'));
 
   const {
-    data: stakeResult,
     mutate: submitStake,
     isPending: handleStakePending,
     error: stakeError,
   } = useMutation(createStakeMutationOptions({ wallet, client }));
 
   const handleStake = formMethods.handleSubmit(values => {
-    if (!signerManagerContractId) return;
+    if (
+      !signerManagerContractId ||
+      !acknowledgment.accepted ||
+      handleStakePending ||
+      isInPreparePhase ||
+      totalAvailableBalanceIsLoading
+    )
+      return;
     const formValues: StakingFormSchema = values;
     const payoutPreference = buildPayoutPreference(formValues, payoutMode, supportsMinClaim);
 
@@ -209,7 +232,10 @@ function StartStakingLayout({
   const isInPreparePhase = cycleClock?.clock.isInPreparePhase ?? false;
 
   const estimatedUnlockDate =
-    cycleClock && Number.isInteger(watchedCycles) && watchedCycles > 0
+    cycleClock &&
+    watchedCycles !== undefined &&
+    Number.isInteger(watchedCycles) &&
+    watchedCycles > 0
       ? cycleClock.estimatedUnlockDateForCycles(watchedCycles, new Date())
       : null;
 
@@ -249,32 +275,6 @@ function StartStakingLayout({
     );
   }
 
-  function onSubmit(confirmation: StartStakingStepId) {
-    if (confirmation === 'terms') {
-      setTermsConfirmed(v => !v);
-      return;
-    }
-    if (confirmation === 'stake') {
-      if (isInPreparePhase) return;
-      return handleStake();
-    }
-
-    throw new Error(`Unknown confirmation type: ${confirmation}`);
-  }
-
-  const confirmationState = {
-    terms: {
-      accepted: termsConfirmed,
-      loading: false,
-      visible: true,
-    },
-    stake: {
-      accepted: Boolean(stakeResult),
-      loading: handleStakePending || isInPreparePhase || totalAvailableBalanceIsLoading,
-      visible: true,
-    },
-  };
-
   const confirmationSteps = (
     <>
       {isInPreparePhase && cycleClock && (
@@ -283,8 +283,11 @@ function StartStakingLayout({
         />
       )}
       <StakingConfirmationSteps
-        onSubmit={onSubmit}
-        confirmationState={confirmationState}
+        pool={poolSlug === 'byosm' ? null : pool}
+        acknowledgment={acknowledgment}
+        onConfirm={() => void handleStake()}
+        isBusy={handleStakePending}
+        isDisabled={isInPreparePhase || totalAvailableBalanceIsLoading}
         stakeAmount={stakeAmount}
         cycles={watchedCycles}
         estimatedUnlockDate={estimatedUnlockDate}
@@ -392,7 +395,9 @@ function StartStakingLayout({
       </FormProvider>
 
       <StartStackingDrawer drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen}>
-        {confirmationSteps}
+        <Stack maxHeight="85dvh" overflowY="auto">
+          {confirmationSteps}
+        </Stack>
       </StartStackingDrawer>
     </Stack>
   );

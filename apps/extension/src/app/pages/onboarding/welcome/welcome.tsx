@@ -19,7 +19,7 @@ export function WelcomePage() {
 
   const [isGeneratingWallet, setIsGeneratingWallet] = useState(false);
 
-  const startOnboarding = useCallback(async () => {
+  const startOnboarding = useCallback(() => {
     if (isPopupMode()) {
       void openIndexPageInNewTab(RouteUrls.Onboarding);
       closeWindow();
@@ -28,7 +28,7 @@ export function WelcomePage() {
     setIsGeneratingWallet(true);
     analytics.track('generate_new_secret_key');
 
-    return navigate(RouteUrls.BackUpSecretKey);
+    void navigate(RouteUrls.BackUpSecretKey);
   }, [navigate]);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export function WelcomePage() {
   function pageModeRoutingAction(url: string) {
     return whenPageMode({
       full() {
-        return navigate(url);
+        void navigate(url);
       },
       popup() {
         void openIndexPageInNewTab(url);

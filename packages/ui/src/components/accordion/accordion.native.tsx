@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import { TouchableOpacity } from '../button/touchable-opacity.native';
 import { Text } from '../text/text.native';

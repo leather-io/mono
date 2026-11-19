@@ -1,8 +1,8 @@
 import { useNetworkPreferenceStacksNetwork, useSettings } from '@/store/settings/settings';
 import { getStacksNetworkFromName } from '@/store/settings/settings.read';
-import { StacksNetwork, StacksNetworks } from '@stacks/network';
+import { type StacksNetwork, StacksNetworks } from '@stacks/network';
 
-import { NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
+import { type NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
 
 interface GetBtcNetworkFromRequestParams {
   paramsNetwork: string | undefined;

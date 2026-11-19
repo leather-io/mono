@@ -19,7 +19,7 @@ async function seedStorage(root: Record<string, unknown>) {
 }
 
 async function readStorage() {
-  const stored = await chrome.storage.local.get(persistRootKey);
+  const stored = await chrome.storage.local.get<Record<string, unknown>>(persistRootKey);
   return stored[persistRootKey];
 }
 

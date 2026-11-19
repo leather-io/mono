@@ -1,4 +1,4 @@
-import { WorkerScript, createWorker } from '../workers';
+import { WorkerScript, createWorker } from '../workers/create-worker';
 import type { DecryptionWorkerResponse } from '../workers/decryption-worker';
 
 const defaultWorkerErrorMessage = 'Encryption worker failed';

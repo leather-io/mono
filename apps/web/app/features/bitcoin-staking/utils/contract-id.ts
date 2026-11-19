@@ -1,4 +1,4 @@
-interface ContractIdParts {
+export interface ContractIdParts {
   contractAddress: string;
   contractName: string;
 }

@@ -1,6 +1,9 @@
 import { getPrimarySignerManagerContract } from '~/data/bitcoin-staking-data';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
-import { parseContractId } from '~/features/bitcoin-staking/utils/contract-id';
+import {
+  type ContractIdParts,
+  parseContractId,
+} from '~/features/bitcoin-staking/utils/contract-id';
 
 // The signer-manager the mock layer answers read-only calls for. Test chains
 // expose the "Special" reference deployment; mainnet has none, so mocked
@@ -16,4 +19,4 @@ if (!mockSignerManagerContractId) {
   );
 }
 
-export const mockSignerManager = parseContractId(mockSignerManagerContractId);
+export const mockSignerManager: ContractIdParts = parseContractId(mockSignerManagerContractId);

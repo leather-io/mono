@@ -10,8 +10,6 @@ import {
 } from '@ledgerhq/device-management-kit';
 import { filter, firstValueFrom, timeout } from 'rxjs';
 
-import { safeAwait } from '@app/common/utils/safe-await';
-
 import {
   type LedgerDeviceActionOptions,
   type RunLedgerDeviceAction,
@@ -26,6 +24,7 @@ import {
   makeLedgerDeviceNotPairedError,
   toLedgerTransportError,
 } from './ledger-dmk-errors';
+import { closeLedgerSession } from './ledger-session';
 
 const grantedDeviceLookupTimeoutMs = 500;
 const openAppUnlockTimeoutMs = 60_000;
@@ -38,8 +37,8 @@ export interface ConnectLedgerDeviceOptions
 }
 
 async function findGrantedDevice(dmk: DeviceManagementKit): Promise<DiscoveredDevice | null> {
-  const [, devices] = await safeAwait(
-    firstValueFrom(
+  try {
+    const devices = await firstValueFrom(
       dmk.listenToAvailableDevices({ transport: ledgerTransportIdentifier }).pipe(
         filter(
           (availableDevices, index) =>
@@ -47,9 +46,11 @@ async function findGrantedDevice(dmk: DeviceManagementKit): Promise<DiscoveredDe
         ),
         timeout(grantedDeviceLookupTimeoutMs)
       )
-    )
-  );
-  return devices?.[0] ?? null;
+    );
+    return devices[0] ?? null;
+  } catch {
+    return null;
+  }
 }
 
 async function discoverDevice(dmk: DeviceManagementKit): Promise<DiscoveredDevice> {
@@ -120,7 +121,7 @@ export async function connectLedgerDeviceToApp(
   try {
     await openLedgerApp(dmk, sessionId, appName, openAppOptions);
   } catch (error) {
-    await safeAwait(dmk.disconnect({ sessionId }));
+    await closeLedgerSession(dmk, sessionId);
     throw error;
   }
   return sessionId;

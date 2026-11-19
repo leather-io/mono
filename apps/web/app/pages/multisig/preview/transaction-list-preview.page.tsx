@@ -37,6 +37,7 @@ function mockItem(
       createdAt: '',
       updatedAt: '',
       approvalCount,
+      signedByMe: false,
     },
   };
 }

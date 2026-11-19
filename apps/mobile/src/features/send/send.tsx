@@ -5,7 +5,7 @@ import { Form } from '@/features/send/screens/form';
 import { SelectAsset } from '@/features/send/screens/select-asset';
 import { SendFlowProvider } from '@/features/send/send-flow-provider';
 
-import { AccountId, FungibleCryptoAsset } from '@leather.io/models';
+import { type AccountId, type FungibleCryptoAsset } from '@leather.io/models';
 
 interface SendProps {
   asset?: FungibleCryptoAsset;

@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.7.0](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.6.4...@leather.io/cms-v1.7.0) (2026-11-19)
+
+
+### Features
+
+* **web:** move leather.io into the web app with a rebuilt homepage ([#2931](https://github.com/leather-io/mono/issues/2931)) ([6c2d33f](https://github.com/leather-io/mono/commit/6c2d33fb8b458073b6ac3d380e8f08bc10494d4d))
+
+## [1.6.4](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.6.3...@leather.io/cms-v1.6.4) (2026-10-27)
+
+
+### Bug Fixes
+
+* body-parser and undici audit ([#2912](https://github.com/leather-io/mono/issues/2912)) ([2bee4e7](https://github.com/leather-io/mono/commit/2bee4e772dd95fff8406822a62225854fb708fbd))
+
 ## [1.6.3](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.6.2...@leather.io/cms-v1.6.3) (2026-09-29)
 
 

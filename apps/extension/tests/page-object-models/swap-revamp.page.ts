@@ -1,4 +1,4 @@
-import { Locator, Page, expect } from '@playwright/test';
+import { type Locator, type Page, expect } from '@playwright/test';
 import { SwapRevampSelectors } from '@tests/selectors/swap-revamp.selectors';
 
 export class SwapRevampPage {

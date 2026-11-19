@@ -20,7 +20,6 @@ import { RouteUrls } from '@shared/route-urls';
 import { closeWindow } from '@shared/utils';
 import { analytics } from '@shared/utils/analytics';
 
-import { useGenerateUnsignedBitcoinTx } from '@app/common/transactions/bitcoin/use-generate-bitcoin-tx';
 import { getTransactionActions } from '@app/components/rpc-transaction-request/get-transaction-actions';
 import { useFeeEditorContext } from '@app/features/fee-editor/fee-editor.context';
 import { getPolicyAuthNetworkId } from '@app/features/multisig/multisig-network';
@@ -34,6 +33,7 @@ import { createPolicyAddresses } from '@app/store/policy/policy-addresses';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 import { useRpcSendTransferContext } from './rpc-send-transfer.context';
+import type { RpcSendTransferTx } from './use-rpc-send-transfer-tx';
 
 interface SendTransferActionLabels {
   approveLabel?: string;
@@ -53,13 +53,15 @@ function getSendTransferActionLabels({
   return {};
 }
 
-export function useRpcSendTransferActions() {
+export function useRpcSendTransferActions({
+  tx: unsignedTx,
+  error: unsignedTxError,
+}: RpcSendTransferTx) {
   const { availableBalance, selectedFee } = useFeeEditorContext();
-  const { amount, broadcast, frameId, isLoadingBalance, recipients, requestId, tabId, utxos } =
+  const { amount, broadcast, frameId, isLoadingBalance, recipients, requestId, tabId } =
     useRpcSendTransferContext();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isBroadcasting, setIsBroadcasting] = useState(false);
-  const generateTx = useGenerateUnsignedBitcoinTx({ throwError: true });
   const signTransaction = useSignBitcoinTx();
   const { broadcastTx } = useBitcoinBroadcastTransaction();
   const { checkIfInputsIncludeTaproot } = useCheckTaprootUtxos();
@@ -141,13 +143,15 @@ export function useRpcSendTransferActions() {
           return;
         }
 
-        const resp = generateTx({ amount, recipients }, feeRate, utxos);
-        if (!resp) return logger.error('Attempted to generate raw tx, but no tx exists');
+        if (unsignedTxError) return onError(unsignedTxError);
+        if (!unsignedTx) return logger.error('Attempted to generate raw tx, but no tx exists');
 
-        const shouldHalt = await checkIfInputsIncludeTaproot(decodeBitcoinTx(resp.hex).inputs);
+        const shouldHalt = await checkIfInputsIncludeTaproot(
+          decodeBitcoinTx(unsignedTx.hex).inputs
+        );
         if (shouldHalt) return;
 
-        const tx = await signTransaction(resp.psbt, resp.signingConfig);
+        const tx = await signTransaction(unsignedTx.psbt, unsignedTx.signingConfig);
         if (!tx) return;
 
         tx.finalize();
@@ -217,12 +221,12 @@ export function useRpcSendTransferActions() {
     isSubmitted,
     navigate,
     selectedFee?.feeRate,
-    generateTx,
+    unsignedTx,
+    unsignedTxError,
     amount,
     broadcast,
     frameId,
     recipients,
-    utxos,
     signTransaction,
     broadcastTx,
     checkIfInputsIncludeTaproot,

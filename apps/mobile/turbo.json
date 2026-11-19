@@ -1,0 +1,21 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "outputs": ["$TURBO_EXTENDS$", "src/i18n/locales/**/messages.ts"]
+    },
+    "lint": {
+      "dependsOn": ["$TURBO_EXTENDS$", "build"]
+    },
+    "test:coverage": {
+      "dependsOn": ["$TURBO_EXTENDS$", "build"]
+    },
+    "test:unit": {
+      "dependsOn": ["$TURBO_EXTENDS$", "build"]
+    },
+    "typecheck": {
+      "dependsOn": ["$TURBO_EXTENDS$", "build"]
+    }
+  }
+}

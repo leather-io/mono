@@ -1,9 +1,9 @@
-import { BitcoinTransaction } from '@leather.io/models';
+import { type BitcoinTransaction } from '@leather.io/models';
 
-import { LeatherApiBitcoinTransaction } from '../infrastructure/api/leather/leather-api.client';
+import { type LeatherApiBitcoinTransaction } from '../infrastructure/api/leather/leather-api.client';
 import {
-  MempoolDescriptorFields,
-  MempoolTransaction,
+  type MempoolDescriptorFields,
+  type MempoolTransaction,
 } from '../infrastructure/api/mempool/mempool-api.schema';
 
 export function isPendingTx(bitcoinTx: LeatherApiBitcoinTransaction) {

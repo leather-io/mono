@@ -16,7 +16,7 @@ import { FungibleAssetService } from '../../../assets/fungible-asset.service';
 import { HiroStacksApiClient } from '../../../infrastructure/api/hiro/hiro-stacks-api.client';
 import { LeatherApiClient } from '../../../infrastructure/api/leather/leather-api.client';
 import { MarketDataService } from '../../../market/market-data.service';
-import { YieldProductService } from '../../yield.service';
+import type { YieldProductService } from '../../yield.service';
 import { parseGraniteProtocolGetBalanceResponseCV } from './granite-v1.utils';
 import { aeusdcAssetPrincipal, graniteProductionAddress } from './granite.constants';
 

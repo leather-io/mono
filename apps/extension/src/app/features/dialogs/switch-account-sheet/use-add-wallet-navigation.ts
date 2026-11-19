@@ -20,7 +20,7 @@ export function useAddWalletNavigation({ closeSheets }: UseAddWalletNavigationAr
   function pageModeRoutingAction(url: string) {
     return whenPageMode({
       full() {
-        return navigate(url);
+        void navigate(url);
       },
       popup() {
         void openIndexPageInNewTab(url);
@@ -31,12 +31,12 @@ export function useAddWalletNavigation({ closeSheets }: UseAddWalletNavigationAr
 
   function onCreateNewWallet() {
     closeSheets();
-    return pageModeRoutingAction(RouteUrls.CreateWallet)();
+    pageModeRoutingAction(RouteUrls.CreateWallet)();
   }
 
   function onRestoreWallet() {
     closeSheets();
-    return pageModeRoutingAction(RouteUrls.AddWallet)();
+    pageModeRoutingAction(RouteUrls.AddWallet)();
   }
 
   function onConnectLedger() {
@@ -44,7 +44,7 @@ export function useAddWalletNavigation({ closeSheets }: UseAddWalletNavigationAr
     const request: LedgerFlowHandoffRequest = doesBrowserSupportWebHidApi()
       ? { kind: 'connect-start' }
       : { kind: 'unsupported-browser' };
-    return whenPageMode({
+    whenPageMode({
       full() {
         openLedgerFlow(request);
       },

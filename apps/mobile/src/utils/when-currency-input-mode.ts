@@ -1,4 +1,4 @@
-import { InputCurrencyMode } from '@/utils/types';
+import { type InputCurrencyMode } from '@/utils/types';
 
 export function whenInputCurrencyMode<TValue>(mode: InputCurrencyMode) {
   return <TMode extends Record<InputCurrencyMode, TValue>>(

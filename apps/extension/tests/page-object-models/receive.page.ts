@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { type Page } from '@playwright/test';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 
 export class ReceivePage {

@@ -1,29 +1,39 @@
-const driverMap = new WeakMap();
-const runtimeMap = new WeakMap();
+interface StorageRuntime {
+  lastError?: chrome.runtime.LastError;
+}
+
+function toStorageError(lastError: chrome.runtime.LastError | undefined) {
+  return new Error(lastError?.message ?? 'Unknown storage error', { cause: lastError });
+}
+
+const driverMap = new WeakMap<ExtensionStorage, chrome.storage.StorageArea>();
+const runtimeMap = new WeakMap<ExtensionStorage, StorageRuntime>();
 
 class ExtensionStorage {
-  constructor(driver: any, runtime: any) {
+  constructor(driver: chrome.storage.StorageArea, runtime: StorageRuntime) {
     driverMap.set(this, driver);
     runtimeMap.set(this, runtime);
   }
 
   getDriver(): chrome.storage.StorageArea {
-    return driverMap.get(this);
+    const driver = driverMap.get(this);
+    if (!driver) throw new Error('Storage driver not initialised');
+    return driver;
   }
 
   hasError() {
     return !!this.getError();
   }
 
-  getError(): string | undefined {
-    return runtimeMap.get(this).lastError;
+  getError(): chrome.runtime.LastError | undefined {
+    return runtimeMap.get(this)?.lastError;
   }
 
-  setItem(key: string, item: any) {
+  setItem(key: string, item: unknown) {
     return new Promise((resolve, reject) => {
       this.getDriver().set({ [key]: item }, () => {
         if (this.hasError()) {
-          return reject(this.getError() as unknown as Error);
+          return reject(toStorageError(this.getError()));
         }
         return resolve(true);
       });
@@ -32,20 +42,20 @@ class ExtensionStorage {
 
   getItem(key: string) {
     return new Promise((resolve, reject) => {
-      this.getDriver().get(key, (response: any) => {
+      this.getDriver().get(key, (response: Record<string, unknown>) => {
         if (this.hasError()) {
-          return reject(this.getError() as unknown as Error);
+          return reject(toStorageError(this.getError()));
         }
         return resolve(response[key]);
       });
     });
   }
 
-  removeItem(key: string): Promise<any> {
+  removeItem(key: string): Promise<unknown> {
     return new Promise((resolve, reject) => {
       this.getDriver().remove(key, () => {
         if (this.hasError()) {
-          return reject(this.getError() as unknown as Error);
+          return reject(toStorageError(this.getError()));
         }
         return resolve(true);
       });

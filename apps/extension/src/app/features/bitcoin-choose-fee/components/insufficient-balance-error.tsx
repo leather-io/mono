@@ -1,4 +1,4 @@
-import { Box, BoxProps, styled } from 'leather-styles/jsx';
+import { Box, type BoxProps, styled } from 'leather-styles/jsx';
 
 export function InsufficientBalanceError(props: BoxProps) {
   return (

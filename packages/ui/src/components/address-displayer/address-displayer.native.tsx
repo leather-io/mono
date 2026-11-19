@@ -2,7 +2,7 @@ import { isEven } from '@leather.io/utils';
 
 import { Box } from '../box/box.native';
 import { Text, type TextProps } from '../text/text.native';
-import { AddressDisplayerBaseProps } from './address-displayer.types.shared';
+import { type AddressDisplayerBaseProps } from './address-displayer.types.shared';
 import { groupByFour } from './address-displayer.utils.shared';
 
 export type AddressDisplayerProps = AddressDisplayerBaseProps & TextProps;

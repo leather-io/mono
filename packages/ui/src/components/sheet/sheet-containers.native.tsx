@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import { type ComponentProps } from 'react';
 import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -9,9 +9,9 @@ import {
   BottomSheetVirtualizedList,
   useBottomSheetScrollableCreator,
 } from '@gorhom/bottom-sheet';
-import { BottomSheetScrollViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetScrollable/types';
-import { BottomSheetViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types';
-import { FlashList, FlashListProps } from '@shopify/flash-list';
+import { type BottomSheetScrollViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetScrollable/types';
+import { type BottomSheetViewProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetView/types';
+import { FlashList, type FlashListProps } from '@shopify/flash-list';
 
 import { useTheme } from '../../hooks/use-theme.native';
 

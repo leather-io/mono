@@ -30,9 +30,11 @@ export function Sip9({
   useEffect(() => {
     if (contentType) return;
     let cancelled = false;
-    void getSip9MediaInfo(contentUrl).then(info => {
+    async function loadMediaInfo() {
+      const info = await getSip9MediaInfo(contentUrl);
       if (!cancelled) setMediaInfo(info);
-    });
+    }
+    void loadMediaInfo();
     return () => {
       cancelled = true;
     };

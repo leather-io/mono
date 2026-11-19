@@ -74,7 +74,9 @@ test.describe('Update available callout', () => {
       .poll(async () =>
         page.evaluate(async messageId => {
           const stored = await chrome.storage.local.get('persist:root');
-          return JSON.stringify(stored['persist:root'] ?? '').includes(messageId);
+          const persistedRoot: unknown = stored['persist:root'];
+          if (persistedRoot === undefined) return false;
+          return JSON.stringify(persistedRoot).includes(messageId);
         }, makeUpdateAvailableMessageId(pendingUpdateVersion))
       )
       .toBe(true);

@@ -15,7 +15,22 @@ function createPosition(
   estimatedUnlockAt = new Date('2026-11-12T00:00:00Z'),
   rewardsClaimed: BtcStakingPosition['rewardsClaimed'] = null
 ): BtcStakingPosition {
-  return { status, estimatedUnlockAt, rewardsClaimed } as unknown as BtcStakingPosition;
+  return {
+    bondIndex: 0,
+    stxAddress: '',
+    stakerAddress: '',
+    outputs: [],
+    exitAnnouncedAtBurnHeight: null,
+    status,
+    amount: createMoney(0, 'BTC'),
+    stxStacked: null,
+    rewardsAccrued: null,
+    rewardsClaimed,
+    unlockBurnHeight: 0,
+    estimatedUnlockAt,
+    estimatedActivationAt: new Date(0),
+    bond: { index: 0, status: 'active', activationBurnHeight: 0, unlockBurnHeight: 0 },
+  };
 }
 
 describe(getRenewalOpensAt.name, () => {

@@ -3,8 +3,8 @@ import { useCallback } from 'react';
 import { Stack } from 'leather-styles/jsx';
 
 import type { BtcFeeType } from '@leather.io/models';
+import { LoadingSpinner } from '@leather.io/ui';
 
-import { LoadingSpinner } from '../loading-spinner';
 import { FeesListError } from './components/fees-list-error';
 import { FeesListItem } from './components/fees-list-item';
 
@@ -64,7 +64,7 @@ export function BitcoinFeesList({
           feeType={label}
           key={label}
           isSelected={label === selectedFeeType}
-          onClick={() => onSelectBtcFeeType({ feeRate, feeValue: value, time }, label)}
+          onClick={() => void onSelectBtcFeeType({ feeRate, feeValue: value, time }, label)}
         />
       ))}
     </Stack>

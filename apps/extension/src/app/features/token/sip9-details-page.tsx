@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { CollectiblesSelectors } from '@tests/selectors/collectibles.selectors';
 import { Stack } from 'leather-styles/jsx';
 
 import type { CollectibleView } from '@leather.io/features';
@@ -22,7 +23,11 @@ export function Sip9DetailsPage({ view, onBack }: Sip9DetailsPageProps) {
   const subtitle = view.subtitle;
 
   return (
-    <Stack width="100%" gap="space.04" data-testid="collectible-details-container">
+    <Stack
+      width="100%"
+      gap="space.04"
+      data-testid={CollectiblesSelectors.CollectibleDetailsContainer}
+    >
       <CollectibleDetailsHeader title={title} subtitle={subtitle} onBack={onBack} />
       <CollectibleDetailsPageLayout protocol="sip9" media={<Sip9Card item={asset} />}>
         <Sip9Details

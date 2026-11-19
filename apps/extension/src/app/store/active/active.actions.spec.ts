@@ -5,7 +5,7 @@ import { userRemovesWallet } from '@leather.io/state/wallet';
 
 import { broadcastWalletListChanged } from '@shared/messages';
 
-import { persistor } from '@app/store';
+import { persistor } from '@app/store/store';
 
 import { selectHiddenAccountIds } from '../accounts/accounts.selectors';
 import { selectWalletAccountRefTree } from '../common/wallet-type.selectors';
@@ -20,7 +20,7 @@ import {
 } from './active.actions';
 import { userSwitchesAccount } from './active.slice';
 
-vi.mock('@app/store', () => ({
+vi.mock('@app/store/store', () => ({
   persistor: { flush: vi.fn(() => Promise.resolve()) },
   store: { getState: vi.fn(), dispatch: vi.fn() },
 }));
@@ -52,6 +52,14 @@ vi.mock('../in-memory-key/keychain-selector-cache', () => ({
 vi.mock('@shared/messages', () => ({
   broadcastWalletListChanged: vi.fn(),
 }));
+
+type ThunkFn = (dispatch: unknown, getState: unknown, extraArgument: unknown) => unknown;
+
+type DispatchedAction = ThunkFn | { type: string };
+
+function isThunk(action: DispatchedAction) {
+  return typeof action === 'function';
+}
 
 const fingerprint = 'deadbeef';
 const otherFingerprint = 'cafebabe';
@@ -145,8 +153,8 @@ function runRemoveThunk(state: object = { active: { account: null } }) {
   const dispatch = vi.fn();
   const getState = vi.fn();
   getState.mockReturnValue(state);
-  dispatch.mockImplementation((action: unknown) =>
-    typeof action === 'function' ? action(dispatch, getState, undefined) : action
+  dispatch.mockImplementation((action: DispatchedAction) =>
+    isThunk(action) ? action(dispatch, getState, undefined) : action
   );
   const promise = removeWalletAndUpdateActive(fingerprint)(dispatch, getState, undefined);
   return { dispatch, promise };
@@ -222,8 +230,8 @@ function runApplyRemoteRemovalThunk(state: object = { active: { account: null } 
   const dispatch = vi.fn();
   const getState = vi.fn();
   getState.mockReturnValue(state);
-  dispatch.mockImplementation((action: unknown) =>
-    typeof action === 'function' ? action(dispatch, getState, undefined) : action
+  dispatch.mockImplementation((action: DispatchedAction) =>
+    isThunk(action) ? action(dispatch, getState, undefined) : action
   );
   void applyRemoteWalletRemoval(fingerprint)(dispatch, getState, undefined);
   return { dispatch };

@@ -1,15 +1,15 @@
 import { createMoney } from '@leather.io/utils';
 
-import { PoolPayoutMode } from '../../utils/pool-payout';
+import { type PoolPayoutMode } from '../../utils/pool-payout';
 import {
-  PoolMinStake,
+  type PoolMinStake,
   buildPayoutPreference,
   createStakingFormSchema,
 } from './staking-form-schema';
 
 const hundredStxMicro = 100_000_000;
 const planbetterMinStake: PoolMinStake = {
-  poolName: 'PlanBetter',
+  poolName: 'Planbetter',
   minStakeMicroStx: 1_000_000_000n,
 };
 
@@ -237,7 +237,7 @@ describe(createStakingFormSchema.name, () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0]?.message).toBe(
-          'PlanBetter requires a stake of at least 1,000 STX'
+          'Planbetter requires a stake of at least 1,000 STX'
         );
       }
     });

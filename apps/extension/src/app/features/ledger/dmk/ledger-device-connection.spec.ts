@@ -55,56 +55,72 @@ function makeConnectingDmk({
   grantedDevices = [],
   openAppStates = [completedState],
 }: FakeDmkOptions = {}) {
-  return makeFakeDmk({
-    listenToAvailableDevices: vi.fn().mockReturnValue(of(grantedDevices)),
-    startDiscovering: vi.fn().mockReturnValue(of(device)),
-    connect: vi.fn().mockResolvedValue(sessionId),
-    executeDeviceAction: vi.fn().mockReturnValue({
-      observable: of(...openAppStates),
-      cancel: vi.fn(),
-    }),
+  const startDiscovering = vi.fn().mockReturnValue(of(device));
+  const stopDiscovering = vi.fn().mockResolvedValue(undefined);
+  const connect = vi.fn().mockResolvedValue(sessionId);
+  const disconnect = vi.fn().mockResolvedValue(undefined);
+  const executeDeviceAction = vi.fn().mockReturnValue({
+    observable: of(...openAppStates),
+    cancel: vi.fn(),
   });
+  const dmk = makeFakeDmk({
+    listenToAvailableDevices: vi.fn().mockReturnValue(of(grantedDevices)),
+    startDiscovering,
+    stopDiscovering,
+    connect,
+    disconnect,
+    executeDeviceAction,
+  });
+  return { dmk, startDiscovering, stopDiscovering, connect, disconnect, executeDeviceAction };
+}
+
+function objectContaining(expected: Record<string, unknown>): unknown {
+  return expect.objectContaining(expected);
+}
+
+function stringContaining(expected: string): unknown {
+  return expect.stringContaining(expected);
 }
 
 describe(connectLedgerDeviceToApp.name, () => {
   test('connects to an already granted device without prompting', async () => {
-    const dmk = makeConnectingDmk({ grantedDevices: [device] });
+    const { dmk, startDiscovering, connect } = makeConnectingDmk({ grantedDevices: [device] });
 
     const result = await connectLedgerDeviceToApp(dmk, null);
 
     expect(result).toBe(sessionId);
-    expect(dmk.startDiscovering).not.toHaveBeenCalled();
-    expect(dmk.connect).toHaveBeenCalledWith({
+    expect(startDiscovering).not.toHaveBeenCalled();
+    expect(connect).toHaveBeenCalledWith({
       device,
       sessionRefresherOptions: { isRefresherDisabled: true },
     });
   });
 
   test('falls back to the device chooser when no device has been granted', async () => {
-    const dmk = makeConnectingDmk();
+    const { dmk, startDiscovering, stopDiscovering, connect } = makeConnectingDmk();
 
     await connectLedgerDeviceToApp(dmk, null);
 
-    expect(dmk.startDiscovering).toHaveBeenCalledOnce();
-    expect(dmk.stopDiscovering).toHaveBeenCalledOnce();
-    expect(dmk.connect).toHaveBeenCalledWith(expect.objectContaining({ device }));
+    expect(startDiscovering).toHaveBeenCalledOnce();
+    expect(stopDiscovering).toHaveBeenCalledOnce();
+    expect(connect).toHaveBeenCalledWith(expect.objectContaining({ device }));
   });
 
   test('rejects as not paired instead of prompting when the chooser cannot be shown', async () => {
-    const dmk = makeConnectingDmk();
+    const { dmk, startDiscovering, connect } = makeConnectingDmk();
 
     await expect(
       connectLedgerDeviceToApp(dmk, 'Stacks', { canPromptForDevice: false })
     ).rejects.toMatchObject({ name: LedgerConnectionErrors.DeviceNotPaired });
 
-    expect(dmk.startDiscovering).not.toHaveBeenCalled();
-    expect(dmk.connect).not.toHaveBeenCalled();
+    expect(startDiscovering).not.toHaveBeenCalled();
+    expect(connect).not.toHaveBeenCalled();
   });
 
   test('connects to a granted device when the chooser cannot be shown', async () => {
     const onRequiredUserInteraction = vi.fn();
     const runAction = vi.fn().mockResolvedValue(undefined);
-    const dmk = makeConnectingDmk({ grantedDevices: [device] });
+    const { dmk, startDiscovering } = makeConnectingDmk({ grantedDevices: [device] });
 
     await expect(
       connectLedgerDeviceToApp(dmk, 'Stacks', {
@@ -114,12 +130,12 @@ describe(connectLedgerDeviceToApp.name, () => {
       })
     ).resolves.toBe(sessionId);
 
-    expect(dmk.startDiscovering).not.toHaveBeenCalled();
+    expect(startDiscovering).not.toHaveBeenCalled();
     expect(runAction).toHaveBeenCalledWith(expect.anything(), { onRequiredUserInteraction });
   });
 
   test('falls back to the device chooser on the post-refresh emission without waiting out the window', async () => {
-    const dmk = makeConnectingDmk();
+    const { dmk, startDiscovering } = makeConnectingDmk();
     const availableDevices = new Subject<DiscoveredDevice[]>();
     dmk.listenToAvailableDevices = vi.fn().mockReturnValue(availableDevices);
     const connecting = connectLedgerDeviceToApp(dmk, null);
@@ -128,49 +144,49 @@ describe(connectLedgerDeviceToApp.name, () => {
 
     await connecting;
 
-    expect(dmk.startDiscovering).toHaveBeenCalledOnce();
+    expect(startDiscovering).toHaveBeenCalledOnce();
   });
 
   test('connects to a device that appears on the post-refresh emission', async () => {
-    const dmk = makeConnectingDmk();
+    const { dmk, startDiscovering, connect } = makeConnectingDmk();
     dmk.listenToAvailableDevices = vi.fn().mockReturnValue(of([], [device]));
 
     await connectLedgerDeviceToApp(dmk, null);
 
-    expect(dmk.startDiscovering).not.toHaveBeenCalled();
-    expect(dmk.connect).toHaveBeenCalledWith(expect.objectContaining({ device }));
+    expect(startDiscovering).not.toHaveBeenCalled();
+    expect(connect).toHaveBeenCalledWith(expect.objectContaining({ device }));
   });
 
   test('skips opening an app when no app name is given', async () => {
-    const dmk = makeConnectingDmk({ grantedDevices: [device] });
+    const { dmk, executeDeviceAction } = makeConnectingDmk({ grantedDevices: [device] });
 
     await connectLedgerDeviceToApp(dmk, null);
 
-    expect(dmk.executeDeviceAction).not.toHaveBeenCalled();
+    expect(executeDeviceAction).not.toHaveBeenCalled();
   });
 
   test('opens the requested app and resolves once the device action completes', async () => {
-    const dmk = makeConnectingDmk({
+    const { dmk, disconnect, executeDeviceAction } = makeConnectingDmk({
       grantedDevices: [device],
       openAppStates: [pendingState, pendingState, completedState],
     });
 
     await expect(connectLedgerDeviceToApp(dmk, 'Bitcoin')).resolves.toBe(sessionId);
 
-    expect(dmk.executeDeviceAction).toHaveBeenCalledWith(
+    expect(executeDeviceAction).toHaveBeenCalledWith(
       expect.objectContaining({
         sessionId,
-        deviceAction: expect.objectContaining({
-          input: expect.objectContaining({ appName: 'Bitcoin' }),
+        deviceAction: objectContaining({
+          input: objectContaining({ appName: 'Bitcoin' }),
         }),
       })
     );
-    expect(dmk.disconnect).not.toHaveBeenCalled();
+    expect(disconnect).not.toHaveBeenCalled();
   });
 
   test('reports the unlock interaction while the open-app action waits for the user', async () => {
     const onRequiredUserInteraction = vi.fn();
-    const dmk = makeConnectingDmk({
+    const { dmk, executeDeviceAction } = makeConnectingDmk({
       grantedDevices: [device],
       openAppStates: [
         {
@@ -191,10 +207,10 @@ describe(connectLedgerDeviceToApp.name, () => {
       [UserInteractionRequired.UnlockDevice],
       [UserInteractionRequired.ConfirmOpenApp],
     ]);
-    expect(dmk.executeDeviceAction).toHaveBeenCalledWith(
+    expect(executeDeviceAction).toHaveBeenCalledWith(
       expect.objectContaining({
-        deviceAction: expect.objectContaining({
-          input: expect.objectContaining({ unlockTimeout: 60_000 }),
+        deviceAction: objectContaining({
+          input: objectContaining({ unlockTimeout: 60_000 }),
         }),
       })
     );
@@ -203,19 +219,17 @@ describe(connectLedgerDeviceToApp.name, () => {
   test('runs the open-app action through the supplied runner', async () => {
     const onRequiredUserInteraction = vi.fn();
     const runAction = vi.fn().mockResolvedValue(undefined);
-    const dmk = makeConnectingDmk({ grantedDevices: [device] });
+    const { dmk, executeDeviceAction } = makeConnectingDmk({ grantedDevices: [device] });
 
     await connectLedgerDeviceToApp(dmk, 'Bitcoin', { onRequiredUserInteraction, runAction });
 
     expect(runAction).toHaveBeenCalledOnce();
-    expect(runAction).toHaveBeenCalledWith(
-      vi.mocked(dmk.executeDeviceAction).mock.results[0]?.value,
-      { onRequiredUserInteraction }
-    );
+    const actionResult: unknown = executeDeviceAction.mock.results[0]?.value;
+    expect(runAction).toHaveBeenCalledWith(actionResult, { onRequiredUserInteraction });
   });
 
   test('passes a cancelled-action error through and disconnects the session', async () => {
-    const dmk = makeConnectingDmk({
+    const { dmk, disconnect } = makeConnectingDmk({
       grantedDevices: [device],
       openAppStates: [pendingState, { status: DeviceActionStatus.Stopped }],
     });
@@ -223,11 +237,11 @@ describe(connectLedgerDeviceToApp.name, () => {
     const rejection = connectLedgerDeviceToApp(dmk, 'Bitcoin');
 
     await expect(rejection).rejects.toSatisfy(isLedgerActionCancelledError);
-    expect(dmk.disconnect).toHaveBeenCalledWith({ sessionId });
+    expect(disconnect).toHaveBeenCalledWith({ sessionId });
   });
 
   test('rejects with an AppOpenFailed error when the user refuses on the device', async () => {
-    const dmk = makeConnectingDmk({
+    const { dmk } = makeConnectingDmk({
       grantedDevices: [device],
       openAppStates: [
         {
@@ -239,13 +253,13 @@ describe(connectLedgerDeviceToApp.name, () => {
 
     await expect(connectLedgerDeviceToApp(dmk, 'Bitcoin Test')).rejects.toMatchObject({
       name: LedgerConnectionErrors.AppOpenFailed,
-      message: expect.stringContaining('Bitcoin Test'),
+      message: stringContaining('Bitcoin Test'),
     });
   });
 
   test('passes a locked-device error through unchanged', async () => {
     const lockedError = new DeviceLockedError();
-    const dmk = makeConnectingDmk({
+    const { dmk } = makeConnectingDmk({
       grantedDevices: [device],
       openAppStates: [{ status: DeviceActionStatus.Error, error: lockedError }],
     });
@@ -261,7 +275,7 @@ describe(connectLedgerDeviceToApp.name, () => {
   });
 
   test('disconnects the session and rethrows when opening the app fails', async () => {
-    const dmk = makeConnectingDmk({
+    const { dmk, disconnect } = makeConnectingDmk({
       grantedDevices: [device],
       openAppStates: [{ status: DeviceActionStatus.Error, error: new UnknownDAError() }],
     });
@@ -269,29 +283,28 @@ describe(connectLedgerDeviceToApp.name, () => {
     await expect(connectLedgerDeviceToApp(dmk, 'Stacks')).rejects.toMatchObject({
       name: LedgerConnectionErrors.AppOpenFailed,
     });
-    expect(dmk.disconnect).toHaveBeenCalledWith({ sessionId });
+    expect(disconnect).toHaveBeenCalledWith({ sessionId });
   });
 });
 
 describe(getAppAndVersion.name, () => {
   test('returns the running app name and version from the device', async () => {
-    const dmk = makeFakeDmk({
-      sendCommand: vi
-        .fn()
-        .mockResolvedValue(
-          CommandResultFactory({ data: { name: 'Bitcoin Test', version: '2.4.1', flags: 0 } })
-        ),
-    });
+    const sendCommand = vi
+      .fn()
+      .mockResolvedValue(
+        CommandResultFactory({ data: { name: 'Bitcoin Test', version: '2.4.1', flags: 0 } })
+      );
+    const dmk = makeFakeDmk({ sendCommand });
 
     await expect(getAppAndVersion(dmk, sessionId)).resolves.toEqual({
       name: 'Bitcoin Test',
       version: '2.4.1',
       flags: 0,
     });
-    expect(dmk.sendCommand).toHaveBeenCalledWith(
+    expect(sendCommand).toHaveBeenCalledWith(
       expect.objectContaining({
         sessionId,
-        command: expect.objectContaining({ name: 'getAppAndVersion' }),
+        command: objectContaining({ name: 'getAppAndVersion' }),
       })
     );
   });

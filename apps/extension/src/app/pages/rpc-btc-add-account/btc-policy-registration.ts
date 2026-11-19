@@ -10,7 +10,7 @@ import {
   type NetworkConfiguration,
   WalletDefaultNetworkConfigurationIds,
 } from '@leather.io/models';
-import { type RpcParams, btcAddAccount } from '@leather.io/rpc';
+import { type RpcParams, type btcAddAccount } from '@leather.io/rpc';
 
 import { makePolicyId } from '@app/store/policy/policy-store.utils';
 

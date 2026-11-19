@@ -10,6 +10,7 @@ import * as bitcoin from 'bitcoinjs-lib';
 
 import { deriveBip39SeedFromMnemonic, deriveRootBip32Keychain } from '@leather.io/crypto';
 
+import { expectDefined } from '../test-utils/expect-defined';
 import {
   decodeCompressedWifPrivateKey,
   makePayToScriptHashAddress,
@@ -130,7 +131,9 @@ describe('Bitcoin SegWit (P2WPKH-P2SH) address generation', () => {
 
       describe(key.path, () => {
         test(`public key`, () =>
-          expect(Buffer.from(child.publicKey!).toString('hex')).toEqual(key.public_key));
+          expect(Buffer.from(expectDefined(child.publicKey)).toString('hex')).toEqual(
+            key.public_key
+          ));
 
         test(`extended public key`, () =>
           expect(child.publicExtendedKey).toEqual(key.extended_public_key));
@@ -147,9 +150,9 @@ describe('Bitcoin SegWit (P2WPKH-P2SH) address generation', () => {
           expect(child.privateExtendedKey).toEqual(key.extended_private_key));
 
         test(`segwit address`, () => {
-          expect(publicKeyToPayToScriptHashAddress(child.publicKey!, key.network)).toEqual(
-            key.address
-          );
+          expect(
+            publicKeyToPayToScriptHashAddress(expectDefined(child.publicKey), key.network)
+          ).toEqual(key.address);
         });
       });
     });

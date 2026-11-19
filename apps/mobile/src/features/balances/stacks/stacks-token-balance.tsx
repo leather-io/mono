@@ -1,4 +1,4 @@
-import { TokenBalance, TokenBalanceProps } from '@/features/token/components/token-balance';
+import { TokenBalance, type TokenBalanceProps } from '@/features/token/components/token-balance';
 import { t } from '@lingui/core/macro';
 
 import { StacksFilledCircleIcon, StxAvatarIcon } from '@leather.io/ui/native';

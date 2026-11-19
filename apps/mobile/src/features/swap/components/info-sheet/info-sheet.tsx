@@ -1,8 +1,8 @@
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import { t } from '@lingui/core/macro';
 
-import { Box, IconButton, InfoCircleIcon, Sheet, SheetInstance } from '@leather.io/ui/native';
+import { Box, IconButton, InfoCircleIcon, Sheet, type SheetInstance } from '@leather.io/ui/native';
 
 interface InfoSheetProps {
   title: string;

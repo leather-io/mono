@@ -2,8 +2,9 @@ import { type ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 
 import { Flex, styled } from 'leather-styles/jsx';
-import { LearnArticle } from '~/content/learn-content';
+import { type LearnArticle } from '~/content/learn-content';
 import { LearnMoreLink } from '~/layouts/page/page';
+import { getPostHref } from '~/utils/post-link';
 import { sanitizeContent } from '~/utils/sanitize-content';
 
 import { HoverCard, InfoCircleIcon } from '@leather.io/ui';
@@ -59,7 +60,7 @@ export function LearnHoverCard({
   function handleIconClick(e: React.MouseEvent): void {
     e.stopPropagation();
     if (article?.slug) {
-      void navigate(`/support/${article.slug}`);
+      void navigate(getPostHref(article.slug));
     }
   }
 

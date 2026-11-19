@@ -1,19 +1,19 @@
 import {
-  BtcBond,
-  BtcBondEnrollmentWindow,
-  BtcBondOutput,
-  BtcStakingPosition,
-  BtcStakingPositionStatus,
-  Money,
+  type BtcBond,
+  type BtcBondEnrollmentWindow,
+  type BtcBondOutput,
+  type BtcStakingPosition,
+  type BtcStakingPositionStatus,
+  type Money,
 } from '@leather.io/models';
 import { createMoney, initBigNumber, minutesInMs, sumMoney } from '@leather.io/utils';
 
 import {
-  HiroPoxInfoResponse,
-  HiroPrincipalStakingBond,
-  HiroStakingBond,
+  type HiroPoxInfoResponse,
+  type HiroPrincipalStakingBond,
+  type HiroStakingBond,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
-import { LeatherApiStakingBond } from '../infrastructure/api/leather/leather-api.client';
+import { type LeatherApiStakingBond } from '../infrastructure/api/leather/leather-api.client';
 
 type LeatherApiStakingBondOutput = LeatherApiStakingBond['outputs'][number];
 

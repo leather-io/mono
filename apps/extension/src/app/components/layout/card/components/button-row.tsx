@@ -1,6 +1,6 @@
-import { Flex, FlexProps } from 'leather-styles/jsx';
+import { Flex, type FlexProps } from 'leather-styles/jsx';
 
-import { HasChildren } from '@app/common/has-children';
+import { type HasChildren } from '@app/common/has-children';
 
 export function ButtonRow({ children, ...props }: HasChildren & FlexProps) {
   return (

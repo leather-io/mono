@@ -1,10 +1,10 @@
-import { ReactElement } from 'react';
+import { type ReactElement } from 'react';
 
 import { styled } from 'leather-styles/jsx';
 
 import { LedgerIcon } from '@leather.io/ui';
 
-import { WalletType } from '@app/store/common/wallet-type.selectors';
+import { type WalletType } from '@app/store/common/wallet-type.selectors';
 
 const ledgerAccountIndicatorLabel = 'Ledger hardware wallet account';
 

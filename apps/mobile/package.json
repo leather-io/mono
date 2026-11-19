@@ -1,6 +1,6 @@
 {
   "name": "@leather.io/mobile",
-  "version": "2.115.2",
+  "version": "2.117.0",
   "type": "module",
   "scripts": {
     "1password:env:dev": "op read \"op://leather-cli/env-content/dev\" > .env",
@@ -9,6 +9,7 @@
     "android:release": "expo run:android --variant release",
     "build": "pnpm lingui",
     "check:cocoapods": "sh scripts/enforce-cocoapods-version.sh",
+    "expo:prebuild": "expo prebuild --clean",
     "format": "prettier . --write --ignore-path ../../.prettierignore",
     "format:check": "prettier . --check --ignore-path ../../.prettierignore",
     "ios": "expo run:ios",
@@ -20,7 +21,6 @@
     "lint": "eslint --cache --max-warnings 0",
     "lint:fix": "pnpm lint --fix",
     "postinstall": "pnpm lingui:compile && if [ \"$PROVISION_MOBILE\" = \"true\" ]; then pnpm -w build:mobile; fi",
-    "prebuild": "expo prebuild --clean",
     "preios": "pnpm run check:cocoapods",
     "start": "expo start",
     "test:coverage": "vitest run --coverage",
@@ -47,7 +47,6 @@
     "@leather.io/models": "workspace:*",
     "@leather.io/provider": "workspace:*",
     "@leather.io/queries": "workspace:*",
-    "@leather.io/query": "workspace:*",
     "@leather.io/rpc": "workspace:*",
     "@leather.io/services": "workspace:*",
     "@leather.io/stacks": "workspace:*",
@@ -74,7 +73,7 @@
     "@types/react-dom": "19.3.0",
     "axios": "1.20.0",
     "bignumber.js": "9.1.2",
-    "bitcoinjs-lib": "7.0.1",
+    "bitcoinjs-lib": "7.0.5",
     "buffer": "6.0.3",
     "dayjs": "1.11.13",
     "expo": "58.0.25",
@@ -130,7 +129,7 @@
     "redux-persist": "6.0.0",
     "remeda": "2.21.2",
     "use-debounce": "10.0.5",
-    "zod": "4.0.17"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@babel/core": "7.29.7",

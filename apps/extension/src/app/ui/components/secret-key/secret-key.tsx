@@ -18,7 +18,7 @@ interface SecretKeyProps {
   onDone(): void;
 }
 export function SecretKey({ secretKey, onDone }: SecretKeyProps) {
-  const { onCopy, hasCopied } = useClipboard(secretKey || '');
+  const { onCopy, hasCopied } = useClipboard(secretKey);
   const [showSecretKey, setShowSecretKey] = useState(false);
 
   function copyToClipboard() {

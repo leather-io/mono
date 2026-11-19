@@ -6,7 +6,7 @@ import { useWalletByFingerprint, useWallets } from '@/store/wallets/wallets.read
 import { captureMessage } from '@sentry/react-native';
 import { once } from 'remeda';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import { Box, Pressable, Text } from '@leather.io/ui/native';
 
 const triggerAccountDataWarning = once(() => {

@@ -28,7 +28,7 @@ import { LeatherApiClient } from '../../../infrastructure/api/leather/leather-ap
 import type { SettingsService } from '../../../infrastructure/settings/settings.service';
 import { Types } from '../../../inversify.types';
 import { MarketDataService } from '../../../market/market-data.service';
-import { YieldProductService } from '../../yield.service';
+import type { YieldProductService } from '../../yield.service';
 import {
   parseZestGetUserAssetsReadResponseCV,
   parseZestGetZTokenBalanceResponseCV,
@@ -76,18 +76,19 @@ export class ZestBorrowService implements YieldProductService {
     if (!account.stacks) {
       return [];
     }
+    const { stxAddress } = account.stacks;
 
-    const positionAssets = await this.callGetUserAssetsRead(account.stacks.stxAddress, signal);
+    const positionAssets = await this.callGetUserAssetsRead(stxAddress, signal);
 
     const borrowPositions = await Promise.all(
       positionAssets.borrowedAssetPrincipals.map(async assetPrincipal =>
-        this.getAssetBorrowPosition(account.stacks!.stxAddress, assetPrincipal, signal)
+        this.getAssetBorrowPosition(stxAddress, assetPrincipal, signal)
       )
     );
 
     const supplyPositions = await Promise.all(
       positionAssets.suppliedAssetPrincipals.map(async assetPrincipal =>
-        this.getAssetSupplyPosition(account.stacks!.stxAddress, assetPrincipal, signal)
+        this.getAssetSupplyPosition(stxAddress, assetPrincipal, signal)
       )
     );
 

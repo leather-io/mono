@@ -3,7 +3,7 @@ import { createAction, createEntityAdapter, createSlice } from '@reduxjs/toolkit
 import { handleAppResetWithState } from '@leather.io/state';
 import { userRemovesWallet } from '@leather.io/state/wallet';
 
-import { PolicyStore } from './policy-store.utils';
+import { type PolicyStore } from './policy-store.utils';
 
 export const policyAdapter = createEntityAdapter<PolicyStore, string>({
   selectId: policy => policy.id,

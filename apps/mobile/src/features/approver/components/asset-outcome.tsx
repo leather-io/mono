@@ -1,7 +1,7 @@
 import { TokenBalance } from '@/features/token/components/token-balance';
 import { useMarketDataQuery } from '@/queries/market-data/market-data.query';
 
-import { Sip10Asset } from '@leather.io/models';
+import { type Sip10Asset } from '@leather.io/models';
 import { Sip10AvatarIcon } from '@leather.io/ui/native';
 import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 

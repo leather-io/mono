@@ -1,16 +1,16 @@
 import { isStackingDaoSignerManager } from '~/data/bitcoin-staking-data';
-import { StxCallContractParams } from '~/utils/leather-sdk';
+import { type StxCallContractParams } from '~/utils/leather-sdk';
 
-import { ClaimStakerRewardsArgs, getClaimStakerRewardsOptions } from './pox5-claim-rewards';
+import { type ClaimStakerRewardsArgs, getClaimStakerRewardsOptions } from './pox5-claim-rewards';
 import {
   getStackingDaoClaimStakerRewardsOptions,
   getStackingDaoStakeOptions,
   getStackingDaoStakeUpdateOptions,
   getStackingDaoUnstakeOptions,
 } from './pox5-stacking-dao';
-import { StakeArgs, getStakeOptions } from './pox5-stake';
-import { StakeUpdateArgs, getStakeUpdateOptions } from './pox5-stake-update';
-import { UnstakeArgs, getUnstakeOptions } from './pox5-unstake';
+import { type StakeArgs, getStakeOptions } from './pox5-stake';
+import { type StakeUpdateArgs, getStakeUpdateOptions } from './pox5-stake-update';
+import { type UnstakeArgs, getUnstakeOptions } from './pox5-unstake';
 
 // Normalized transaction-building surface for a pool. Callers pick the right
 // instance with getPoolContractData and stay agnostic of pool-specific call

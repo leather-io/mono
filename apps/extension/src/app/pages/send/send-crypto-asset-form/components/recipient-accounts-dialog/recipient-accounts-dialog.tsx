@@ -12,7 +12,7 @@ import { Box } from 'leather-styles/jsx';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
 
-import { BitcoinSendFormValues, StacksSendFormValues } from '@shared/models/form.model';
+import { type BitcoinSendFormValues, type StacksSendFormValues } from '@shared/models/form.model';
 
 import { WalletHeader } from '@app/features/dialogs/switch-account-sheet/components/wallet-header';
 import { useHiddenAccountIds } from '@app/store/accounts/accounts.selectors';
@@ -38,7 +38,7 @@ export function RecipientAccountsSheet() {
   const network = useCurrentNetwork();
   const { values } = useFormikContext<BitcoinSendFormValues | StacksSendFormValues>();
 
-  const onGoBack = useCallback(() => navigate('..', { replace: true }), [navigate]);
+  const onGoBack = useCallback(() => void navigate('..', { replace: true }), [navigate]);
 
   const { groups } = useMemo(
     () => getVisibleWalletAccountGroups(walletTree, hiddenAccountIds),

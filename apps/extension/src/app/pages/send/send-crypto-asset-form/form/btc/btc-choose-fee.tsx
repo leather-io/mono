@@ -1,8 +1,5 @@
-import type { BtcFeeType, OwnedUtxo } from '@leather.io/models';
+import type { BtcFeeType } from '@leather.io/models';
 
-import { BitcoinSendFormValues } from '@shared/models/form.model';
-
-import { useLocationStateWithCache } from '@app/common/hooks/use-location-state';
 import { BitcoinFeesList } from '@app/components/bitcoin-fees-list/bitcoin-fees-list';
 import { useBitcoinFeesList } from '@app/components/bitcoin-fees-list/use-bitcoin-fees-list';
 import { Content, Page } from '@app/components/layout';
@@ -12,14 +9,7 @@ import { PageHeader } from '@app/features/container/headers/page.header';
 import { useAccountRequest } from '@app/services/accounts/use-account-request';
 
 import { useSendBitcoinAssetContextState } from '../../family/bitcoin/components/send-bitcoin-asset-container';
-import { useBtcChooseFee } from './use-btc-choose-fee';
-
-export function useBtcChooseFeeState() {
-  const isSendingMax = useLocationStateWithCache('isSendingMax') as boolean;
-  const txValues = useLocationStateWithCache('values') as BitcoinSendFormValues;
-  const utxos = useLocationStateWithCache('utxos') as OwnedUtxo[];
-  return { isSendingMax, txValues, utxos };
-}
+import { useBtcChooseFee, useBtcChooseFeeState } from './use-btc-choose-fee';
 
 export function BtcChooseFee() {
   const { isSendingMax, txValues } = useBtcChooseFeeState();

@@ -19,7 +19,6 @@ import { initialSearchParams } from '@app/common/initial-search-params';
 import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useNetworks } from '@app/store/networks/networks.selectors';
 
-import { usePolicyFeatureGate } from '../policy-feature-gate';
 import {
   type PolicyApprovalMode,
   type PolicyMatchStatus,
@@ -42,12 +41,6 @@ export function useStxAddAccount() {
   const stacksAccount = useCurrentStacksAccount();
   const registerStxPolicy = useRegisterStxPolicy();
   const networks = useNetworks();
-  const { isFeatureEnabled, rejectAsUnsupported } = usePolicyFeatureGate({
-    method: request.method,
-    frameId,
-    id: request.id,
-    tabId,
-  });
 
   // Whitelisted origins may register the policy; any other origin may only let
   // the user verify the derived address (nothing is written to the extension).
@@ -142,8 +135,6 @@ export function useStxAddAccount() {
     matchStatus,
     mode,
     canApprove: matchStatus === 'match' && address !== null,
-    isFeatureEnabled,
-    rejectAsUnsupported,
     focusInitiatingTab,
     finalize,
   };

@@ -1,3 +1,5 @@
+import type * as ReactRouterModule from 'react-router';
+
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -13,7 +15,7 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock('react-router', async importOriginal => {
-  const actual = await importOriginal<typeof import('react-router')>();
+  const actual = await importOriginal<typeof ReactRouterModule>();
   return { ...actual, useNavigate: () => mocks.navigate };
 });
 

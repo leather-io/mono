@@ -20,11 +20,12 @@ export const GAMMA_API_URL: string = `${GAMMA_URL}/api`;
 export const BNS_REGISTRATION_URL = 'https://bns.one/';
 export const LEATHER_IPFS_GATEWAY_URL = 'https://leather.quicknode-ipfs.com/ipfs/';
 export const SBTC_RECLAIM_URL = 'https://sbtc.stacks.co/activity';
+export const STACKS_BRIDGE_URL = 'https://bridge.stacks.co/';
 
 export const HIGH_FEE_AMOUNT_STX = 5;
 export const HIGH_FEE_WARNING_LEARN_MORE_URL_BTC = 'https://bitcoinfees.earn.com/';
 export const HIGH_FEE_WARNING_LEARN_MORE_URL_STX =
-  'https://leather.gitbook.io/guides/transactions/fees';
+  'https://docs.leather.io/transactions/configure-transaction-fees';
 
 export const DEFAULT_FEE_RATE = 400;
 
@@ -95,7 +96,7 @@ export const BTC_US_URL = 'https://btc.us/';
 
 export const LEATHER_LEARN_URL = 'https://leather.io/learn';
 
-export const LEATHER_GITBOOK_DEVS = 'https://leather.gitbook.io/developers';
+export const LEATHER_GITBOOK_DEVS = 'https://docs.leather.io/developers';
 
 export const LEATHER_EXTENSION_CHROME_STORE_URL =
   'https://chromewebstore.google.com/detail/leather/ldinpeekobnhjjdofggfgjlcehhmanlj?hl=en';
@@ -118,12 +119,14 @@ export const bitcoinUnitsKeyedByName: Record<BitcoinUnit, BitcoinUnitInfo> = {
   },
 };
 
-export enum AccountDisplayPreferenceType {
-  NativeSegwit = 'native-segwit',
-  Taproot = 'taproot',
-  Bns = 'bns',
-  Stacks = 'stacks',
-}
+export const AccountDisplayPreferenceType = {
+  NativeSegwit: 'native-segwit',
+  Taproot: 'taproot',
+  Bns: 'bns',
+  Stacks: 'stacks',
+} as const;
+export type AccountDisplayPreferenceType =
+  (typeof AccountDisplayPreferenceType)[keyof typeof AccountDisplayPreferenceType];
 
 export const accountDisplayPreferencesKeyedByType: Record<
   AccountDisplayPreference,
@@ -193,6 +196,8 @@ export const USDCX_ASSET_ID_MAINNET =
 
 export const USDCX_ASSET_ID_TESTNET =
   'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.usdcx::usdcx-token';
+
+export const USDCX_SYMBOL = 'USDCx';
 
 export const SBTC_ASSET_ID_MAINNET =
   'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token';

@@ -14,7 +14,7 @@ import { useLedgerDmk } from '@app/features/ledger/dmk/ledger-dmk.context';
 import { useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import type { ActiveLedgerSigningRequest } from '@app/features/ledger/flow/ledger-flow.types';
 import { ApproveSignLedgerBitcoinTx } from '@app/features/ledger/flows/bitcoin-tx-signing/steps/approve-bitcoin-sign-ledger-tx';
-import { LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
+import { type LedgerTxSigningContext } from '@app/features/ledger/generic-flows/tx-signing/ledger-sign-tx.context';
 import { TxSigningFlow } from '@app/features/ledger/generic-flows/tx-signing/tx-signing-flow';
 import { useLedgerSignTx } from '@app/features/ledger/generic-flows/tx-signing/use-ledger-sign-tx';
 import { useLedgerAnalytics } from '@app/features/ledger/hooks/use-ledger-analytics.hook';

@@ -2,7 +2,7 @@
 import { act, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { type Mock, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -10,15 +10,27 @@ import { useAddWalletNavigation } from './use-add-wallet-navigation';
 
 Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true);
 
-const h = vi.hoisted(() => ({
-  navigate: vi.fn(),
-  openInNewTab: vi.fn(),
-  closeWindow: vi.fn(),
-  openLedgerFlow: vi.fn(),
-  handOffLedgerFlow: vi.fn(),
-  pageMode: 'full' as 'full' | 'popup',
-  webHidSupported: true,
-}));
+interface HoistedMocks {
+  navigate: Mock;
+  openInNewTab: Mock;
+  closeWindow: Mock;
+  openLedgerFlow: Mock;
+  handOffLedgerFlow: Mock;
+  pageMode: 'full' | 'popup';
+  webHidSupported: boolean;
+}
+
+const h = vi.hoisted(
+  (): HoistedMocks => ({
+    navigate: vi.fn(),
+    openInNewTab: vi.fn(),
+    closeWindow: vi.fn(),
+    openLedgerFlow: vi.fn(),
+    handOffLedgerFlow: vi.fn(),
+    pageMode: 'full',
+    webHidSupported: true,
+  })
+);
 
 vi.mock('react-router', () => ({ useNavigate: () => h.navigate }));
 
