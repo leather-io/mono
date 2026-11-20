@@ -105,16 +105,16 @@ describe('repo changelog content', () => {
     }
   });
 
-  test('the 2026-10-01 release is ordered deliberately on the home strip', () => {
+  test('the four extension updates have individual dates and appear newest first', () => {
     expect(
       getChangelogEntries(new Date('2026-10-02'))
         .slice(0, 4)
-        .map(entry => entry.slug)
+        .map(entry => [entry.slug, entry.publishedAt.slice(0, 10)])
     ).toEqual([
-      'redesigned-swaps-extension',
-      'token-price-charts',
-      'ledger-improvements',
-      'extension-update-notice',
+      ['extension-update-notice', '2026-09-28'],
+      ['token-price-charts', '2026-09-21'],
+      ['ledger-improvements', '2026-09-18'],
+      ['redesigned-swaps-extension', '2026-09-15'],
     ]);
   });
 
