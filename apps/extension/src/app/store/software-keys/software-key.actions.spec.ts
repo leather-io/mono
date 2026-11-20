@@ -312,8 +312,8 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
       },
     });
     const hiroClient = {
-      getAddressStxBalance: vi.fn().mockResolvedValue({ balance: '0' }),
-      getAddressTransactions: vi.fn().mockResolvedValue([]),
+      getPrincipalStxBalance: vi.fn().mockResolvedValue({ balance: '0' }),
+      getPrincipalTransactions: vi.fn().mockResolvedValue({ results: [] }),
     };
     const leatherApiClient = {
       fetchUtxosByAddress: vi.fn().mockResolvedValue([]),
@@ -340,9 +340,14 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
     })(dispatch, getState, undefined);
     await flushPromises();
 
-    expect(hiroClient.getAddressStxBalance).toHaveBeenCalledWith('stx-3', {
+    expect(hiroClient.getPrincipalStxBalance).toHaveBeenCalledWith('stx-3', {
       signal: anyAbortSignal(),
     });
+    expect(hiroClient.getPrincipalTransactions).toHaveBeenCalledWith(
+      'stx-3',
+      { limit: 1 },
+      { signal: anyAbortSignal() }
+    );
     expect(leatherApiClient.fetchUtxosByAddress).toHaveBeenCalledWith('segwit-3', {
       signal: anyAbortSignal(),
     });
@@ -387,8 +392,8 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
       },
     });
     const hiroClient = {
-      getAddressStxBalance: vi.fn().mockResolvedValue({ balance: '0' }),
-      getAddressTransactions: vi.fn().mockResolvedValue([]),
+      getPrincipalStxBalance: vi.fn().mockResolvedValue({ balance: '0' }),
+      getPrincipalTransactions: vi.fn().mockResolvedValue({ results: [] }),
     };
     const leatherApiClient = {
       fetchUtxosByAddress: vi.fn().mockResolvedValue([]),
@@ -406,7 +411,7 @@ describe('probeNextAccountAndDiscoverAccounts', () => {
       bnsClient,
     })(dispatch, getState, undefined);
 
-    expect(hiroClient.getAddressStxBalance).toHaveBeenCalledWith('stx-2', {
+    expect(hiroClient.getPrincipalStxBalance).toHaveBeenCalledWith('stx-2', {
       signal: anyAbortSignal(),
     });
     expect(recurseAccountsForActivity).not.toHaveBeenCalled();

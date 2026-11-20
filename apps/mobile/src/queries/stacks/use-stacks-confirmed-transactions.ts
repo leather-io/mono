@@ -5,5 +5,10 @@ import { useGetAccountTransactionsWithTransfersQueries } from './use-transaction
 export function useStacksConfirmedTransactions(addresses: string[]) {
   const txs = useGetAccountTransactionsWithTransfersQueries(addresses).totalData;
 
-  return useMemo(() => txs?.map(txWithTransfers => txWithTransfers.tx), [txs]) ?? [];
+  return (
+    useMemo(
+      () => txs?.map(tx => ({ sender_address: tx.sender.address, nonce: tx.sender.nonce })),
+      [txs]
+    ) ?? []
+  );
 }
