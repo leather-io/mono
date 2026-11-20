@@ -50,16 +50,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         NSPrivacyCollectedDataTypes: [],
         NSPrivacyTracking: false,
       },
-      splash: {
-        image: './src/assets/light-mode-splash.png',
-        resizeMode: 'contain',
-        backgroundColor: '#12100F',
-        dark: {
-          image: './src/assets/dark-mode-splash.png',
-          resizeMode: 'contain',
-          backgroundColor: '#716A60',
-        },
-      },
     },
     android: {
       ...config.android,
@@ -68,18 +58,23 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         foregroundImage: './src/assets/adaptive-icon.png',
         backgroundColor: '#12100F',
       },
-      splash: {
-        image: './src/assets/light-mode-splash.png',
-        resizeMode: 'contain',
-        backgroundColor: '#12100F',
-        dark: {
-          image: './src/assets/dark-mode-splash.png',
-          resizeMode: 'contain',
-          backgroundColor: '#716A60',
-        },
-      },
     },
     plugins: [
+      [
+        'expo-splash-screen',
+        {
+          image: './src/assets/light-mode-splash.png',
+          resizeMode: 'contain',
+          backgroundColor: '#12100F',
+          dark: {
+            image: './src/assets/dark-mode-splash.png',
+            backgroundColor: '#716A60',
+          },
+          ios: {
+            enableFullScreenImage_legacy: true,
+          },
+        },
+      ],
       [
         '@sentry/react-native/expo',
         {

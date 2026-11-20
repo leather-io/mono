@@ -64,11 +64,7 @@ export async function captureScreenshot(
     const tmpFile = new File(tmpFileUri);
     const screenshotFile = getScreenshotFile(hostname);
 
-    if (screenshotFile.exists) {
-      screenshotFile.delete();
-    }
-
-    await tmpFile.copy(screenshotFile);
+    await tmpFile.copy(screenshotFile, { overwrite: true });
 
     return screenshotFile.uri;
   } catch (error) {

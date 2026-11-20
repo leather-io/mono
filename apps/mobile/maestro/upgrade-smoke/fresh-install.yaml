@@ -1,0 +1,50 @@
+appId: io.leather.mobilewallet
+name: Upgrade smoke - fresh install and wallet creation
+---
+- launchApp:
+    clearState: true
+    clearKeychain: true
+- openLink: ${DEV_CLIENT_URL}
+- runFlow:
+    when:
+      visible: 'Open'
+    commands:
+      - tapOn: 'Open'
+- runFlow:
+    when:
+      visible: 'Close'
+    commands:
+      - tapOn: 'Close'
+- extendedWaitUntil:
+    visible:
+      id: 'homeCreateWalletCard'
+    timeout: 120000
+- takeScreenshot: fresh-01-home-empty
+- tapOn:
+    id: 'homeCreateWalletCard'
+- waitForAnimationToEnd
+- takeScreenshot: fresh-02-add-wallet-sheet
+- tapOn:
+    id: 'createNewWalletSheetButton'
+- extendedWaitUntil:
+    visible:
+      id: 'walletCreationBackedUpButton'
+    timeout: 20000
+- tapOn:
+    id: 'walletCreationTapToReveal'
+    optional: true
+- tapOn:
+    id: 'walletCreationBackedUpButton'
+- extendedWaitUntil:
+    visible: 'Skip for now'
+    timeout: 20000
+- takeScreenshot: fresh-03-secure-your-wallet
+- tapOn: 'Skip for now'
+- waitForAnimationToEnd
+- takeScreenshot: fresh-04-continue-without-security
+- tapOn: 'Continue'
+- extendedWaitUntil:
+    visible: 'Account 1'
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: fresh-05-home-with-wallet

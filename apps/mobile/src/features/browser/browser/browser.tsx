@@ -3,6 +3,7 @@ import { type ScrollEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ViewShot, { type ViewShotRef } from 'react-native-view-shot';
 import { WebView, type WebViewMessageEvent, type WebViewNavigation } from 'react-native-webview';
+import { type ShouldStartLoadRequest } from 'react-native-webview/lib/WebViewTypes';
 
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { type BrowserLoadingMethods } from '@/features/account/components/browser-loading';
@@ -85,11 +86,15 @@ export function Browser({
     approverSheetRef.current?.dismiss();
   }
 
-  function onShouldStartLoadWithRequest(event: WebViewNavigation) {
-    const { url } = event;
+  function onShouldStartLoadWithRequest(event: ShouldStartLoadRequest) {
+    const { url, isTopFrame } = event;
 
     // Allow normal web URLs
     if (url.startsWith('http://') || url.startsWith('https://')) {
+      return true;
+    }
+
+    if (isTopFrame === false && (url === 'about:blank' || url === 'about:srcdoc')) {
       return true;
     }
 
@@ -98,13 +103,13 @@ export function Browser({
       const fallbackMatch = url.match(/S\.browser_fallback_url=([^;]+)/);
       if (fallbackMatch && fallbackMatch[1]) {
         const fallbackUrl = decodeURIComponent(fallbackMatch[1]);
-        void Linking.openURL(fallbackUrl);
+        void Linking.openURL(fallbackUrl).catch(() => undefined);
       }
       return false;
     }
     // Handle all other deep links normally
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      void Linking.openURL(url);
+      void Linking.openURL(url).catch(() => undefined);
 
       return false;
     }
