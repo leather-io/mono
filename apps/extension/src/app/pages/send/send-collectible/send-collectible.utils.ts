@@ -49,7 +49,20 @@ export function getCollectibleTransferBlockerMessage(blocker: CollectibleTransfe
     case 'managed-namespace':
       return 'The manager of this namespace controls transfers. Use the namespace manager to send this name.';
     case 'listed':
-      return 'This name is listed for sale. Remove the listing before you send it.';
+      return 'Remove the listing before you send it.';
+    default:
+      return assertUnreachable(blocker);
+  }
+}
+
+export function getCollectibleTransferBlockerTitle(blocker: CollectibleTransferBlocker) {
+  switch (blocker) {
+    case 'unsupported-contract':
+      return "This collectible can't be sent";
+    case 'managed-namespace':
+      return 'This namespace controls transfers';
+    case 'listed':
+      return 'This name is listed for sale';
     default:
       return assertUnreachable(blocker);
   }

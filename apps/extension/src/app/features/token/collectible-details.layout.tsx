@@ -8,13 +8,14 @@ import { openInNewTab } from '@app/common/utils/open-in-new-tab';
 
 interface SectionCardProps {
   title?: string;
+  hasDivider?: boolean;
   children: ReactNode;
 }
 
-export function SectionCard({ title, children }: SectionCardProps) {
+export function SectionCard({ title, hasDivider = true, children }: SectionCardProps) {
   return (
     <Stack bg="ink.background-primary" py="space.03" gap="space.00">
-      <Box mx="space.05" borderTopWidth="1px" borderColor="ink.border-default" />
+      {hasDivider && <Box mx="space.05" borderTopWidth="1px" borderColor="ink.border-default" />}
       {title && (
         <Flex px="space.05" py="space.02" alignItems="center" height="40px">
           <styled.h2 textStyle="label.03" margin="0">

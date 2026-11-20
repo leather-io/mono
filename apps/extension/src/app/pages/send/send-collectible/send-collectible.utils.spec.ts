@@ -15,6 +15,7 @@ import { createMoney } from '@leather.io/utils';
 import {
   createCollectibleTransferTxOptions,
   getCollectibleTransferBlockerMessage,
+  getCollectibleTransferBlockerTitle,
 } from './send-collectible.utils';
 
 const sender = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE';
@@ -88,6 +89,18 @@ describe(getCollectibleTransferBlockerMessage.name, () => {
   });
 
   it('should explain that a listed name must be unlisted first', () => {
-    expect(getCollectibleTransferBlockerMessage('listed')).toContain('listed for sale');
+    expect(getCollectibleTransferBlockerMessage('listed')).toContain('Remove the listing');
+  });
+});
+
+describe(getCollectibleTransferBlockerTitle.name, () => {
+  it('should give each blocker its own title', () => {
+    expect(getCollectibleTransferBlockerTitle('unsupported-contract')).toBe(
+      "This collectible can't be sent"
+    );
+    expect(getCollectibleTransferBlockerTitle('managed-namespace')).toBe(
+      'This namespace controls transfers'
+    );
+    expect(getCollectibleTransferBlockerTitle('listed')).toBe('This name is listed for sale');
   });
 });

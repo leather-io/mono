@@ -1,21 +1,12 @@
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { useFormikContext } from 'formik';
-import { HStack, Stack } from 'leather-styles/jsx';
 
-import {
-  Button,
-  Caption,
-  ErrorTriangleIcon,
-  Link,
-  Sheet,
-  SheetHeader,
-  Title,
-} from '@leather.io/ui';
+import { ErrorTriangleIcon, Link } from '@leather.io/ui';
 
 import { type StacksSendFormValues } from '@shared/models/form.model';
 
 import { openInNewTab } from '@app/common/utils/open-in-new-tab';
-import { ButtonRow } from '@app/components/layout';
+import { WarningSheet } from '@app/components/warning-sheet/warning-sheet';
 
 import { useStacksHighFeeWarningContext } from './stacks-high-fee-warning-container';
 
@@ -28,45 +19,32 @@ export function HighFeeSheet({ learnMoreUrl }: HighFeeSheetProps) {
     useStacksHighFeeWarningContext();
 
   return (
-    <Sheet
+    <WarningSheet
       data-testid={SendCryptoAssetSelectors.HighFeeWarningSheet}
-      header={<SheetHeader />}
       isShowing={showHighFeeWarningSheet}
       onClose={() => setShowHighFeeWarningSheet(false)}
-      footer={
-        <ButtonRow flexDirection="row">
-          <Button onClick={() => setShowHighFeeWarningSheet(false)} variant="outline" flexGrow={1}>
-            Edit fee
-          </Button>
-          <Button
-            onClick={() => {
-              setHasBypassedFeeWarning(true);
-              handleSubmit();
-            }}
-            data-testid={SendCryptoAssetSelectors.HighFeeWarningSheetSubmit}
-            type="submit"
-            flexGrow={1}
-          >
-            Yes, I'm sure
-          </Button>
-        </ButtonRow>
-      }
-    >
-      <Stack px="space.05" gap="space.05" pb="space.06">
-        <HStack>
-          <ErrorTriangleIcon color="red.action-primary-default" />
-          <Title>
-            Are you sure you want to pay {values.fee} {values.feeCurrency} in fees for this
-            transaction?
-          </Title>
-        </HStack>
-        <Caption>
-          This action cannot be undone. The fees won't be returned, even if the transaction fails.
-          <Link onClick={() => openInNewTab(learnMoreUrl)} size="sm" ml="space.01">
+      icon={<ErrorTriangleIcon />}
+      title={`Are you sure you want to pay ${values.fee} ${values.feeCurrency} in fees for this transaction?`}
+      body={
+        <>
+          This action cannot be undone. The fees won't be returned, even if the transaction fails.{' '}
+          <Link onClick={() => openInNewTab(learnMoreUrl)} whiteSpace="nowrap">
             Learn more
           </Link>
-        </Caption>
-      </Stack>
-    </Sheet>
+        </>
+      }
+      primaryAction={{
+        label: "Yes, I'm sure",
+        testId: SendCryptoAssetSelectors.HighFeeWarningSheetSubmit,
+        onClick() {
+          setHasBypassedFeeWarning(true);
+          handleSubmit();
+        },
+      }}
+      secondaryAction={{
+        label: 'Edit fee',
+        onClick: () => setShowHighFeeWarningSheet(false),
+      }}
+    />
   );
 }

@@ -42,7 +42,6 @@ export function Sip9Details({
     <>
       {description && (
         <Stack bg="ink.background-primary" py="space.03" gap="space.00">
-          <Box mx="space.05" borderTopWidth="1px" borderColor="ink.border-default" />
           <Box px="space.05" py="space.02">
             <styled.h2 textStyle="label.03" margin="0">
               Description
@@ -77,7 +76,7 @@ export function Sip9Details({
         </Stack>
       )}
 
-      <SectionCard title="Details">
+      <SectionCard title="Details" hasDivider={Boolean(description)}>
         {info.collectionName && (
           <Row label="Collection" value={info.collectionName} externalLink={info.collectionUrl} />
         )}
