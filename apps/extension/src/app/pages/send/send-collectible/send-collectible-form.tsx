@@ -47,6 +47,7 @@ import type { SendCollectibleConfirmationRouteState } from './send-collectible-c
 import {
   createCollectibleTransferTxOptions,
   getCollectibleTransferBlockerMessage,
+  getCollectibleTransferBlockerTitle,
 } from './send-collectible.utils';
 import { useSendableCollectible } from './use-sendable-collectible';
 
@@ -218,7 +219,7 @@ function CollectibleTransferGate({ view }: CollectibleTransferGateProps) {
     return (
       <Callout
         variant="warning"
-        title="This collectible cannot be sent"
+        title={getCollectibleTransferBlockerTitle(transferBlocker.data)}
         data-testid={SendCryptoAssetSelectors.SendCollectibleTransferBlocked}
       >
         {getCollectibleTransferBlockerMessage(transferBlocker.data)}
