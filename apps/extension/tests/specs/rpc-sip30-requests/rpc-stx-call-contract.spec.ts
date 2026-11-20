@@ -99,6 +99,22 @@ test.describe('RPC: stx_callContract', () => {
     };
   }
 
+  function checkVisibleTexts(context: BrowserContext, texts: string[]) {
+    return async (buttonToPress: 'Cancel' | 'Confirm') => {
+      const popup = await context.waitForEvent('page');
+      for (const text of texts) {
+        await test.expect(popup.getByText(text, { exact: true })).toBeVisible();
+      }
+      const btn = popup.getByText('Confirm', { exact: true });
+
+      if (buttonToPress === 'Confirm') {
+        await btn.click();
+      } else {
+        await popup.close();
+      }
+    };
+  }
+
   function initiateSip30RpcCallContract(page: Page) {
     return async (params: RpcParams<typeof stxCallContract>) =>
       page.evaluate(requestLeatherProvider, { method: 'stx_callContract', params: { ...params } });
@@ -176,5 +192,69 @@ test.describe('RPC: stx_callContract', () => {
         message: RpcErrorMessage.UserRejectedOperation,
       },
     });
+  });
+
+  const postConditionTransferText =
+    'The contract will transfer exactly 0.000042 STX or the transaction will abort.';
+
+  test.describe('post condition mode callouts', () => {
+    const cases = [
+      {
+        name: 'originator mode with post conditions',
+        postConditionMode: 'originator' as const,
+        postConditions: ['00021a8813c5086ddf53beada66744d40b1dcd0ac1d42001000000000000002a'],
+        texts: [
+          'Originator mode',
+          "Only the transfers shown below can move assets out of your account. Assets owned by contracts aren't restricted.",
+          postConditionTransferText,
+        ],
+      },
+      {
+        name: 'originator mode with no post conditions',
+        postConditionMode: 'originator' as const,
+        postConditions: [],
+        texts: [
+          'Originator mode',
+          "No assets will be transferred from your account by this transaction. Assets owned by contracts aren't restricted.",
+          'Only fees will be transferred from your account or the transaction will abort.',
+        ],
+      },
+      {
+        name: 'allow mode with post conditions',
+        postConditionMode: 'allow' as const,
+        postConditions: ['00021a8813c5086ddf53beada66744d40b1dcd0ac1d42001000000000000002a'],
+        texts: [
+          'Allow mode',
+          'The transfers shown will be checked, but this transaction can also move any other assets — including from your account — without limit. Only confirm if you fully trust the contract.',
+          postConditionTransferText,
+        ],
+      },
+    ];
+
+    for (const { name, postConditionMode, postConditions, texts } of cases) {
+      test(`call contract shows callout for ${name}`, async ({ page, context }) => {
+        const [result] = await Promise.all([
+          initiateSip30RpcCallContract(page)({
+            contract: 'ST1X6M947Z7E58CNE0H8YJVJTVKS9VW0PHEG3NHN3.dull-sapphire-bird',
+            functionName: 'buy',
+            functionArgs: ['010000000000000000000000000000002a'],
+            network: 'testnet',
+            postConditions,
+            postConditionMode,
+          }),
+          checkVisibleTexts(context, texts)('Cancel'),
+        ]);
+
+        delete result.id;
+
+        test.expect(result).toEqual({
+          jsonrpc: '2.0',
+          error: {
+            code: 4001,
+            message: RpcErrorMessage.UserRejectedOperation,
+          },
+        });
+      });
+    }
   });
 });

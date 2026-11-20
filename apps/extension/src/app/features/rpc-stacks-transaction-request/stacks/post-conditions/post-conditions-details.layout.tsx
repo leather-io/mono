@@ -19,19 +19,26 @@ export function PostConditionsDetailsLayout({
   postConditions,
   postConditionMode = PostConditionMode.Deny,
 }: PostConditionsDetailsLayoutProps) {
-  if (postConditionMode === PostConditionMode.Allow || postConditionMode === 'allow')
-    return <PostConditionModeWarning />;
+  const hasPostConditions = postConditions.length > 0;
+  const isAllowMode =
+    postConditionMode === PostConditionMode.Allow || postConditionMode === 'allow';
+  const showPostConditionsSection = hasPostConditions || !isAllowMode;
 
   return (
-    <Approver.Section>
-      <Approver.Subheader>Post conditions</Approver.Subheader>
-      {postConditions.length ? (
-        <PostConditionList
-          postConditions={postConditions.map(pc => ensurePostConditionWireFormat(pc))}
-        />
-      ) : (
-        <NoPostConditions />
+    <>
+      <PostConditionModeWarning mode={postConditionMode} hasPostConditions={hasPostConditions} />
+      {showPostConditionsSection && (
+        <Approver.Section>
+          <Approver.Subheader>Post conditions</Approver.Subheader>
+          {hasPostConditions ? (
+            <PostConditionList
+              postConditions={postConditions.map(pc => ensurePostConditionWireFormat(pc))}
+            />
+          ) : (
+            <NoPostConditions />
+          )}
+        </Approver.Section>
       )}
-    </Approver.Section>
+    </>
   );
 }
