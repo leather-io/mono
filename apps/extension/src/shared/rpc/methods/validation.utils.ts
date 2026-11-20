@@ -5,6 +5,7 @@ export const RpcErrorMessage = {
   InvalidParams: 'Invalid parameters',
   NullOrigin: 'Origin is null',
   UndefinedParams: 'Undefined parameters',
+  UnknownNetwork: 'Unknown network',
   UserRejectedOperation: 'User rejected request',
   UndefinedTransaction: 'Error generating unsigned transaction',
   UnsignedTransaction: 'Error signing transaction',

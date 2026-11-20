@@ -3,6 +3,7 @@ import { getResponseAddresses } from '@tests/leather-provider';
 import { TEST_PASSWORD } from '@tests/mocks/constants';
 import {
   type OnboardingPage,
+  getConnectedTestAppPermissionsState,
   makeLedgerTestAccountWalletState,
   testFingerprint,
 } from '@tests/page-object-models/onboarding.page';
@@ -11,6 +12,10 @@ import type { SupportedBlockchains } from '@leather.io/models';
 import { assertExistence } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
+
+interface PersistedRootState {
+  appPermissions?: { entities?: Record<string, { accountIndex?: number } | undefined> };
+}
 
 const getAddressesMethods = ['getAddresses', 'stx_getAddresses'] as const;
 type GetAddressesMethods = (typeof getAddressesMethods)[number];
@@ -195,5 +200,62 @@ getAddressesMethods.forEach(method => {
         }
       });
     });
+  });
+});
+
+test.describe('Rpc: getAddresses defaults', () => {
+  test.beforeEach(
+    async ({ extensionId, globalPage }) => await globalPage.setupAndUseApiCalls(extensionId)
+  );
+
+  test('it returns mainnet addresses when the wallet is set to testnet and the request omits network', async ({
+    page,
+    context,
+    extensionId,
+    onboardingPage,
+  }) => {
+    await onboardingPage.signInWithTestAccount(extensionId, {
+      networks: { ids: [], entities: {}, currentNetworkId: 'testnet' },
+    });
+    await page.goto('localhost:3000');
+    const getAddressesPromise = initiateGetAddresses(page, 'getAddresses');
+    const popup = await interceptRequestPopup(context);
+    await clickConnectLeatherButton(popup);
+
+    const result = await getAddressesPromise;
+    test
+      .expect(getResponseAddresses(result)[0].address)
+      .toEqual('bc1q530dz4h80kwlzywlhx2qn0k6vdtftd93c499yq');
+  });
+
+  test('it defaults to the account the app originally connected with', async ({
+    page,
+    context,
+    extensionId,
+    onboardingPage,
+  }) => {
+    await onboardingPage.signInWithTestAccount(
+      extensionId,
+      getConnectedTestAppPermissionsState({ accountIndex: 1 })
+    );
+    await page.goto('localhost:3000');
+    const getAddressesPromise = initiateGetAddresses(page, 'getAddresses');
+    const popup = await interceptRequestPopup(context);
+    await clickConnectLeatherButton(popup);
+
+    const result = await getAddressesPromise;
+    test
+      .expect(getResponseAddresses(result)[0].address)
+      .toEqual('bc1qr9wmz342txkcmxxq5ysmfqrd5rvmxtu6nldjgp');
+
+    await page.goto(`chrome-extension://${extensionId}/index.html`);
+    const permission = await page.evaluate(async () => {
+      const state = await chrome.storage.local.get<{ 'persist:root': PersistedRootState }>([
+        'persist:root',
+      ]);
+      return state['persist:root'].appPermissions?.entities?.['localhost:3000'];
+    });
+    assertExistence(permission, 'Expected persisted permission');
+    test.expect(permission.accountIndex).toBe(1);
   });
 });

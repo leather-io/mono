@@ -14,6 +14,7 @@ import {
   createConnectingAppSearchParamsWithLastKnownAccount,
   listenForPopupClose,
   triggerRequestPopupWindowOpen,
+  validateRequestNetwork,
   validateRequestParams,
 } from '../rpc-request-utils';
 
@@ -29,17 +30,22 @@ export const stxDeployContractHandler = defineRpcRequestHandler(
       schema: stxDeployContract.params,
     });
     if (status === 'failure') return;
+    const networkValidation = await validateRequestNetwork({
+      id: requestId,
+      method,
+      network: params?.network,
+      port,
+    });
+    if (networkValidation.status === 'failure') return;
     const { frameId, tabId, urlParams } = await createConnectingAppSearchParamsWithLastKnownAccount(
       port,
       [
         ['requestId', request.id],
         ['rpcRequest', encodeBase64Json(request)],
-      ]
+      ],
+      { network: request.params?.network }
     );
 
-    if (request.params && request.params.network) {
-      urlParams.append('network', request.params.network);
-    }
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcStxDeployContract, urlParams);
     void trackRpcRequestSuccess({ endpoint: request.method });
 

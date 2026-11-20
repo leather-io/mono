@@ -20,6 +20,7 @@ const mocks = vi.hoisted(() => ({
   trackRpcRequestError: vi.fn(),
   trackRpcRequestSuccess: vi.fn(),
   sendMessage: vi.fn(),
+  validateRequestNetwork: vi.fn(),
 }));
 
 vi.mock('../define-rpc-request-handler', () => ({
@@ -37,6 +38,7 @@ vi.mock('../rpc-request-utils', () => ({
     mocks.createConnectingAppSearchParamsWithLastKnownAccount,
   triggerRequestPopupWindowOpen: mocks.triggerRequestPopupWindowOpen,
   sendErrorResponseOnUserPopupClose: mocks.sendErrorResponseOnUserPopupClose,
+  validateRequestNetwork: mocks.validateRequestNetwork,
 }));
 
 vi.mock('../rpc-helpers', () => ({
@@ -83,6 +85,7 @@ describe('signMessageHandler', () => {
       tabId,
     });
     mocks.triggerRequestPopupWindowOpen.mockResolvedValue({ id: 1 });
+    mocks.validateRequestNetwork.mockResolvedValue({ status: 'success' });
   });
 
   afterEach(() => {

@@ -11,8 +11,6 @@ import { stringField } from '@shared/forms/field-schemas';
 
 import { accountSchema, formatValidationErrors, getRpcParamErrors } from './validation.utils';
 
-export const defaultRpcSendTransferNetwork = 'mainnet';
-
 function defaultNetworkIdToBitcoinNetworkMode(networkId: string): BitcoinNetworkModes | undefined {
   switch (networkId) {
     case 'mainnet':

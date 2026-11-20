@@ -1,11 +1,10 @@
 import { RpcErrorCode, createRpcErrorResponse, sendTransfer } from '@leather.io/rpc';
-import { isUndefined } from '@leather.io/utils';
+import { isDefined, isUndefined } from '@leather.io/utils';
 
 import { sendMessageToOriginatingFrame } from '@shared/messaging/send-message-to-originating-frame';
 import { RouteUrls } from '@shared/route-urls';
 import {
   convertRpcSendTransferLegacyParamsToNew,
-  defaultRpcSendTransferNetwork,
   getRpcSendTransferParamErrors,
   rpcSendTransferParamsSchema,
   rpcSendTransferParamsSchemaLegacy,
@@ -19,6 +18,7 @@ import {
   getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
+  validateRequestNetwork,
 } from '../rpc-request-utils';
 
 export const sendTransferHandler = defineRpcRequestHandler(
@@ -60,6 +60,14 @@ export const sendTransferHandler = defineRpcRequestHandler(
       return;
     }
 
+    const networkValidation = await validateRequestNetwork({
+      id: request.id,
+      method: request.method,
+      network: parsedParams.data.network,
+      port,
+    });
+    if (networkValidation.status === 'failure') return;
+
     void trackRpcRequestSuccess({ endpoint: request.method });
 
     const validParams = parsedParams.data;
@@ -73,14 +81,9 @@ export const sendTransferHandler = defineRpcRequestHandler(
       amount,
     ]);
 
-    const requestParams: RequestParams = [
-      ...recipients,
-      ...amounts,
-      ['network', validParams.network ?? defaultRpcSendTransferNetwork],
-      ['requestId', request.id],
-    ];
+    const requestParams: RequestParams = [...recipients, ...amounts, ['requestId', request.id]];
 
-    if (validParams.account) {
+    if (isDefined(validParams.account)) {
       requestParams.push(['accountIndex', validParams.account.toString()]);
     }
 
@@ -88,7 +91,8 @@ export const sendTransferHandler = defineRpcRequestHandler(
 
     const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
       port,
-      requestParams
+      requestParams,
+      { network: validParams.network }
     );
 
     const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcSendTransfer, urlParams);

@@ -4,6 +4,7 @@ import { createSelector } from '@reduxjs/toolkit';
 
 import {
   type NetworkConfiguration,
+  WalletDefaultNetworkConfigurationIds,
   defaultCurrentNetwork,
   defaultNetworksKeyedById,
 } from '@leather.io/models';
@@ -34,7 +35,9 @@ const selectAppRequestedNetworkId = createSelector(selectNetworks, networks => {
   // `network` param is a more generic network selector that doesn't deal with
   // custom networks
   const network = initialSearchParams.get('network');
-  return network ? networks[network]?.id : undefined;
+  if (network) return networks[network]?.id ?? WalletDefaultNetworkConfigurationIds.mainnet;
+
+  return undefined;
 });
 
 export const selectCurrentNetwork = createSelector(

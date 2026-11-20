@@ -18,10 +18,11 @@ import {
 import { defineRpcRequestHandler } from '../define-rpc-request-handler';
 import { trackRpcRequestError, trackRpcRequestSuccess } from '../rpc-helpers';
 import {
-  createConnectingAppMetadataSearchParams,
+  createConnectingAppSearchParamsWithLastKnownAccount,
   getOriginatingFrameFromPort,
   sendErrorResponseOnUserPopupClose,
   triggerRequestPopupWindowOpen,
+  validateRequestNetwork,
 } from '../rpc-request-utils';
 
 type GetAddressesRequest = RpcRequest<typeof getAddresses> | RpcRequest<typeof stxGetAddresses>;
@@ -46,14 +47,22 @@ async function sharedGetAddressesHandler(request: GetAddressesRequest, port: chr
     return;
   }
 
-  const { frameId, urlParams, tabId } = createConnectingAppMetadataSearchParams(port, [
-    ['requestId', request.id],
-    ['rpcRequest', encodeBase64Json(request)],
-  ]);
+  const networkValidation = await validateRequestNetwork({
+    id: request.id,
+    method: request.method,
+    network: request.params?.network,
+    port,
+  });
+  if (networkValidation.status === 'failure') return;
 
-  if (request.params && request.params.network) {
-    urlParams.append('network', request.params.network);
-  }
+  const { frameId, urlParams, tabId } = await createConnectingAppSearchParamsWithLastKnownAccount(
+    port,
+    [
+      ['requestId', request.id],
+      ['rpcRequest', encodeBase64Json(request)],
+    ],
+    { network: request.params?.network }
+  );
 
   const { id } = await triggerRequestPopupWindowOpen(RouteUrls.RpcGetAddresses, urlParams);
   void trackRpcRequestSuccess({ endpoint: request.method });
