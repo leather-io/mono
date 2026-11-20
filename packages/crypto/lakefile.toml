@@ -1,0 +1,21 @@
+name = "crypto-proofs"
+defaultTargets = ["CryptoProofs", "crypto-oracle"]
+
+[[lean_lib]]
+name = "CryptoProofs"
+srcDir = "src"
+globs = [
+  "proofs.+",
+  "multisig.+",
+  "DerivationPathUtils",
+  "DerivationPathUtilsProofs",
+  "Keychain",
+  "KeychainProofs",
+  "WalletAccountCount",
+  "WalletAccountCountProofs",
+]
+
+[[lean_exe]]
+name = "crypto-oracle"
+srcDir = "src"
+root = "proofs.Oracle"

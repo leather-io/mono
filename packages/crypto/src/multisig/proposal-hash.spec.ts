@@ -45,6 +45,48 @@ const sampleAddress = 'bc1qexampleexampleexampleexampleexampleexampleexampleex';
 const samplePayload = new Uint8Array([0x70, 0x73, 0x62, 0x74, 0xff, 0x00, 0x01]);
 const sampleTimestamp = 1_718_600_000;
 
+function patternedPayload(length: number): Uint8Array {
+  return Uint8Array.from({ length }, (_, index) => (index * 31 + 7) & 0xff);
+}
+
+const baselineHashVectors = [
+  {
+    label: 'empty address, empty payload, zero timestamp',
+    multisigAddress: '',
+    rawPayload: new Uint8Array(0),
+    proposalTimestamp: 0,
+    hash: '5833ccfda87116213acc9f504eb51903bc69e48a1934b4fea43cdf0161d29e13',
+  },
+  {
+    label: 'STX address with a 180-byte payload',
+    multisigAddress: 'SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7',
+    rawPayload: patternedPayload(180),
+    proposalTimestamp: 1_763_510_400,
+    hash: '87f7b75eca8d443dc84841724a5590abb9d12f1748149c3ee8c2e2381c4934a7',
+  },
+  {
+    label: '70000-byte payload with a timestamp above 2^32',
+    multisigAddress: 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4',
+    rawPayload: patternedPayload(70_000),
+    proposalTimestamp: 4_294_967_296,
+    hash: 'be7bdfe8a30c259788677c69539f93faeb26528241faca570fa8546b7e6d66cc',
+  },
+  {
+    label: 'non-ASCII address',
+    multisigAddress: 'адрес-🔐-多重署名',
+    rawPayload: new Uint8Array([0]),
+    proposalTimestamp: 1,
+    hash: 'de361e4ad1298eb46b799d38d0be3a1d041dcdab435217e9a6f52bcd315dcf09',
+  },
+  {
+    label: 'largest safe integer timestamp',
+    multisigAddress: 'a',
+    rawPayload: new Uint8Array(0),
+    proposalTimestamp: Number.MAX_SAFE_INTEGER,
+    hash: '543689e791ceb2f2a2659b2603d8a1c565c72bac07e07b97c51775db82e12f16',
+  },
+];
+
 describe(computeProposalHash, () => {
   it('returns a 64-char lowercase hex string', () => {
     const hash = computeProposalHash({
@@ -140,6 +182,30 @@ describe(computeProposalHash, () => {
         proposalTimestamp: 1_750_000_000,
       })
     ).toBe('9ca717cea2e28cce2dd2db175ed9bc5a959748cade6c4e1bf11eacc53dd54c6c');
+  });
+
+  it.each(baselineHashVectors)(
+    'keeps the hash pinned before the encoder was hardened: $label',
+    ({ multisigAddress, rawPayload, proposalTimestamp, hash }) => {
+      expect(computeProposalHash({ multisigAddress, rawPayload, proposalTimestamp })).toBe(hash);
+    }
+  );
+
+  it('throws instead of hashing a timestamp that would wrap around u64', () => {
+    expect(() =>
+      computeProposalHash({
+        multisigAddress: sampleAddress,
+        rawPayload: samplePayload,
+        proposalTimestamp: 2 ** 64,
+      })
+    ).toThrowError(RangeError);
+    expect(() =>
+      computeProposalHash({
+        multisigAddress: sampleAddress,
+        rawPayload: samplePayload,
+        proposalTimestamp: -1,
+      })
+    ).toThrowError(RangeError);
   });
 });
 

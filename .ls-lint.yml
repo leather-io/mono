@@ -26,6 +26,7 @@ ignore:
   - dist
   - node_modules
   - packages/**/.react-router
+  - packages/*/.lake
   - packages/*/.tsdown
   - packages/*/dist
   - packages/*/node_modules
