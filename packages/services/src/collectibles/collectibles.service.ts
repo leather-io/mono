@@ -1,28 +1,23 @@
 import { injectable } from 'inversify';
+import { partition } from 'remeda';
 
-import { NonFungibleCryptoAsset } from '@leather.io/models';
+import { NonFungibleCryptoAsset, bnsV1AssetIdentifiers } from '@leather.io/models';
 
-import { BnsService } from '../bns/bns.service';
 import { AccountRequest } from '../types';
 import { Sip9sService } from './sip9s.service';
 
 @injectable()
 export class CollectiblesService {
-  constructor(
-    private readonly sip9sService: Sip9sService,
-    private readonly bnsService: BnsService
-  ) {}
+  constructor(private readonly sip9sService: Sip9sService) {}
 
   public async getAccountCollectibles(
     request: AccountRequest,
     signal?: AbortSignal
   ): Promise<NonFungibleCryptoAsset[]> {
-    const [stacksCollectibles, bnsNames] = await Promise.all([
-      this.sip9sService.getAccountSip9s(request, signal),
-      this.bnsService.getAccountBnsNames(request, signal),
-    ]);
-
-    const bnsNameSet = new Set(bnsNames.map(n => n.fullName));
-    return stacksCollectibles.filter(sip9 => !bnsNameSet.has(sip9.name));
+    const sip9s = await this.sip9sService.getAccountSip9s(request, signal);
+    const [bnsV1Names, otherSip9s] = partition(sip9s, sip9 =>
+      bnsV1AssetIdentifiers.includes(sip9.assetId)
+    );
+    return [...otherSip9s, ...bnsV1Names];
   }
 }

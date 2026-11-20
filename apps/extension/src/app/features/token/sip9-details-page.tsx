@@ -29,9 +29,13 @@ export function Sip9DetailsPage({ view, onBack }: Sip9DetailsPageProps) {
       data-testid={CollectiblesSelectors.CollectibleDetailsContainer}
     >
       <CollectibleDetailsHeader title={title} subtitle={subtitle} onBack={onBack} />
-      <CollectibleDetailsPageLayout protocol="sip9" media={<Sip9Card item={asset} />}>
+      <CollectibleDetailsPageLayout
+        protocol="sip9"
+        media={<Sip9Card item={asset} kind={view.kind} />}
+      >
         <Sip9Details
           asset={asset}
+          kind={view.kind}
           isDescriptionExpanded={isDescriptionExpanded}
           onToggleDescription={() => setIsDescriptionExpanded(v => !v)}
         />
