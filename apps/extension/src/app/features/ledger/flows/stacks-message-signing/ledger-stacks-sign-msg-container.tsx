@@ -23,6 +23,7 @@ import {
   isCancellableConnectionInteraction,
   isUnlockDeviceInteraction,
   useCancelLedgerAction,
+  useLedgerAttemptGuard,
 } from '@app/features/ledger/utils/generic-ledger-utils';
 import {
   getStacksAppVersion,
@@ -59,6 +60,7 @@ function LedgerSignStacksMsg({ account, request }: LedgerSignMsgProps) {
   const ledgerNavigate = useLedgerSteps();
   const ledgerAnalytics = useLedgerAnalytics();
   const migrateFingerprintIfNeeded = useLedgerFingerprintMigration();
+  const ledgerAttempt = useLedgerAttemptGuard();
 
   const [latestDeviceResponse, setLatestDeviceResponse] = useLedgerResponseState();
 
@@ -68,6 +70,8 @@ function LedgerSignStacksMsg({ account, request }: LedgerSignMsgProps) {
   const chain = 'stacks';
 
   async function signMessage() {
+    const attempt = ledgerAttempt.start();
+    if (!attempt) return;
     const stacksApp = await prepareLedgerDeviceStacksAppConnection(dmk, {
       runAction: signerActions.run,
       onRequiredUserInteraction(interaction) {
@@ -88,14 +92,20 @@ function LedgerSignStacksMsg({ account, request }: LedgerSignMsgProps) {
       },
     }).catch(() => null);
     setIsConnectionCancellable(false);
-    if (!stacksApp) return;
+    if (!stacksApp) {
+      attempt.finish();
+      return;
+    }
 
+    let failure: { error: unknown } | undefined;
     try {
+      if (attempt.isDismissed()) return;
       // Show checking version page immediately
       ledgerNavigate.toCheckingAppVersion();
       await delay(1000);
 
       const versionInfo = await getStacksAppVersion(stacksApp);
+      if (attempt.isDismissed()) return;
       ledgerAnalytics.trackDeviceVersionInfo(versionInfo);
       setLatestDeviceResponse({ deviceLocked: versionInfo.deviceLocked });
       if (versionInfo.deviceLocked) {
@@ -104,6 +114,7 @@ function LedgerSignStacksMsg({ account, request }: LedgerSignMsgProps) {
       }
 
       const passesVersionCheck = await stacksVersionGate(ledgerNavigate)(versionInfo);
+      if (attempt.isDismissed()) return;
       if (!passesVersionCheck) {
         setAwaitingDeviceConnection(false);
         return;
@@ -114,6 +125,7 @@ function LedgerSignStacksMsg({ account, request }: LedgerSignMsgProps) {
 
       ledgerNavigate.toConnectionSuccessStep('stacks');
       await delay(1000);
+      if (attempt.isDismissed()) return;
       ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: false });
 
       const resp = await whenSignableMessageOfType(unsignedMessage)({
@@ -128,6 +140,7 @@ function LedgerSignStacksMsg({ account, request }: LedgerSignMsgProps) {
           );
         },
       });
+      if (attempt.isDismissed()) return;
 
       // Assuming here that public keys are wrong. Alternatively, we may want
       // to proactively check the key before signing
@@ -149,6 +162,7 @@ function LedgerSignStacksMsg({ account, request }: LedgerSignMsgProps) {
 
       ledgerNavigate.toAwaitingDeviceOperation({ hasApprovedOperation: true });
       await delay(1000);
+      if (attempt.isDismissed()) return;
 
       ledgerAnalytics.messageSignedOnLedgerSuccessfully();
 
@@ -160,9 +174,17 @@ function LedgerSignStacksMsg({ account, request }: LedgerSignMsgProps) {
         },
       });
     } catch (e) {
-      handleLedgerConnectionError(e, { chain, ledgerNavigate, setLatestDeviceResponse });
+      failure = { error: e };
     } finally {
       await closeLedgerSession(dmk, stacksApp.sessionId);
+      attempt.finish();
+    }
+    if (failure && !attempt.isDismissed()) {
+      handleLedgerConnectionError(failure.error, {
+        chain,
+        ledgerNavigate,
+        setLatestDeviceResponse,
+      });
     }
   }
 
