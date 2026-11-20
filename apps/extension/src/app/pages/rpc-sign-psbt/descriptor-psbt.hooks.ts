@@ -12,6 +12,7 @@ import {
 import { useWalletType } from '@app/common/use-wallet-type';
 import { useLedgerFlow } from '@app/features/ledger/flow/ledger-flow.context';
 import { unwrapLedgerSigningOutcome } from '@app/features/ledger/flow/unwrap-ledger-signing-outcome';
+import { assertLedgerBitcoinInputLimit } from '@app/features/ledger/utils/ledger-bitcoin-input-limit';
 import { usePsbtSigner } from '@app/features/psbt-signer/hooks/use-psbt-signer';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 
@@ -76,6 +77,7 @@ export function useSignDescriptorPsbt() {
     const signedTx = await whenWallet({
       software: () => signPsbt({ tx, signingConfig }),
       async ledger() {
+        assertLedgerBitcoinInputLimit(tx.inputsLength);
         const ledgerDescriptor = resolveLedgerSignableDescriptor({
           descriptor,
           psbt: tx.toPSBT(),

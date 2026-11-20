@@ -32,6 +32,7 @@ import {
   signPsbtWithWallet,
 } from '@app/features/ledger/utils/bitcoin-signer-kit-utils';
 import type { LedgerBitcoinApp } from '@app/features/ledger/utils/ledger-app';
+import { assertLedgerBitcoinInputLimit } from '@app/features/ledger/utils/ledger-bitcoin-input-limit';
 import {
   useCurrentAccountTaprootPayer,
   useTaprootAccount,
@@ -289,6 +290,7 @@ export function useSignBitcoinTx({ settleOnRejection = false }: UseSignBitcoinTx
 
     return whenWallet({
       async ledger() {
+        assertLedgerBitcoinInputLimit(btc.Transaction.fromPSBT(psbt).inputsLength);
         // Because Ledger signing is a multi-step process that takes place over
         // many routes, in order to achieve a consistent API between
         // Ledger/software, we subscribe to the event that occurs when the
