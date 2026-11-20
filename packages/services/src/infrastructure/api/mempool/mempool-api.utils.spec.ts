@@ -42,25 +42,21 @@ describe(getMempoolUrlFromUserSettings.name, () => {
     );
   });
 
-  it('returns the configured bitcoin url for sbtc networks', () => {
+  it('returns the configured bitcoin url for the primary testnet and sbtc devenv', () => {
     expect(
-      getMempoolUrlFromUserSettings(makeUserSettings(defaultNetworksKeyedById.sbtcTestnet))
-    ).toEqual(defaultNetworksKeyedById.sbtcTestnet.chain.bitcoin.bitcoinUrl);
+      getMempoolUrlFromUserSettings(makeUserSettings(defaultNetworksKeyedById.primaryStacksTestnet))
+    ).toEqual(defaultNetworksKeyedById.primaryStacksTestnet.chain.bitcoin.bitcoinUrl);
     expect(
       getMempoolUrlFromUserSettings(makeUserSettings(defaultNetworksKeyedById.sbtcDevenv))
     ).toEqual(defaultNetworksKeyedById.sbtcDevenv.chain.bitcoin.bitcoinUrl);
   });
 
-  it('returns the configured bitcoin url for the private-1 network', () => {
-    expect(
-      getMempoolUrlFromUserSettings(makeUserSettings(defaultNetworksKeyedById['private-1']))
-    ).toEqual(defaultNetworksKeyedById['private-1'].chain.bitcoin.bitcoinUrl);
-  });
-
   it('returns the configured bitcoin url for the staking testnet network', () => {
     expect(
-      getMempoolUrlFromUserSettings(makeUserSettings(defaultNetworksKeyedById.stakingTestnet))
-    ).toEqual(defaultNetworksKeyedById.stakingTestnet.chain.bitcoin.bitcoinUrl);
+      getMempoolUrlFromUserSettings(
+        makeUserSettings(defaultNetworksKeyedById.btcStakingStacksTestnet)
+      )
+    ).toEqual(defaultNetworksKeyedById.btcStakingStacksTestnet.chain.bitcoin.bitcoinUrl);
   });
 
   it('returns the configured bitcoin url for user-added custom networks', () => {

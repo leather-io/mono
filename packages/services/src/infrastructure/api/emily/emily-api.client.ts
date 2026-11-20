@@ -4,7 +4,6 @@ import { inject, injectable } from 'inversify';
 
 import { Types } from '../../../inversify.types';
 import type { HttpCacheService } from '../../cache/http-cache.service';
-import { selectBitcoinNetworkMode } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
 import type { ApiRequestOptions } from '../types';
 import {
@@ -24,7 +23,7 @@ export class EmilyApiClient {
   ) {}
 
   private getBaseUrl() {
-    return getEmilyApiUrl(selectBitcoinNetworkMode(this.settingsService.getSettings()));
+    return getEmilyApiUrl(this.settingsService.getSettings().network);
   }
 
   public async getSbtcLimits({

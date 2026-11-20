@@ -62,7 +62,7 @@ const pox5Chains: Record<Pox5ChainName, Pox5ChainConfig> = {
     specialSignerManagerContracts: ['ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.signer-manager'],
   },
   stakingTestnet: {
-    walletRpcNetwork: WalletDefaultNetworkConfigurationIds.stakingTestnet,
+    walletRpcNetwork: WalletDefaultNetworkConfigurationIds.btcStakingStacksTestnet,
     contractNetworkMode: 'testnet',
     apiUrl: HIRO_API_BASE_URL_STAKING_TESTNET,
     stacksNetworkName: 'testnet',
