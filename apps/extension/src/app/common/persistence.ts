@@ -1,5 +1,10 @@
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
-import { QueryCache, QueryClient } from '@tanstack/react-query';
+import {
+  type Query,
+  QueryCache,
+  QueryClient,
+  defaultShouldDehydrateQuery,
+} from '@tanstack/react-query';
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { HttpStatusCode, isAxiosError } from 'axios';
 import { BigNumber } from 'bignumber.js';
@@ -7,6 +12,7 @@ import superjson from 'superjson';
 import { ZodError, z } from 'zod';
 
 import { PERSISTENCE_CACHE_TIME } from '@leather.io/constants';
+import { onramperWidgetSignatureQueryPrefix } from '@leather.io/queries';
 
 import { IS_TEST_ENV } from '@shared/environment';
 import { logger } from '@shared/logger';
@@ -93,12 +99,19 @@ export const queryClient = new QueryClient({
   },
 });
 
+function shouldDehydrateQuery(query: Query) {
+  return (
+    defaultShouldDehydrateQuery(query) && query.queryKey[0] !== onramperWidgetSignatureQueryPrefix
+  );
+}
+
 export function persistAndRenderApp(renderApp: () => Promise<void>) {
   if (!IS_TEST_ENV) {
     void persistQueryClient({
       queryClient,
       persister: chromeStorageLocalPersister,
       buster: VERSION,
+      dehydrateOptions: { shouldDehydrateQuery },
     });
   }
   void renderApp();

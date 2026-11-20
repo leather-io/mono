@@ -21,6 +21,7 @@ import { BnsV2ApiClient } from './infrastructure/api/bns-v2/bns-v2-api.client';
 import { HiroStacksApiClient } from './infrastructure/api/hiro/hiro-stacks-api.client';
 import { LeatherApiClient } from './infrastructure/api/leather/leather-api.client';
 import { LeatherAuthApiClient } from './infrastructure/api/leather/leather-auth-api.client';
+import { OnramperWidgetSignatureClient } from './infrastructure/api/leather/onramper-widget-signature.client';
 import { MempoolApiClient } from './infrastructure/api/mempool/mempool-api.client';
 import type { AuthSessionService } from './infrastructure/auth/auth-session.service';
 import { SignInService } from './infrastructure/auth/sign-in.service';
@@ -209,6 +210,9 @@ export function getLeatherApiClient() {
 }
 export function getLeatherAuthApiClient() {
   return getServicesContainer().get(LeatherAuthApiClient);
+}
+export function getOnramperWidgetSignatureClient() {
+  return getServicesContainer().get(OnramperWidgetSignatureClient);
 }
 export function getHiroStacksApiClient() {
   return getServicesContainer().get(HiroStacksApiClient);
