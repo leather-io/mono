@@ -52,7 +52,7 @@ export function WarningSheet({
           >
             {icon}
           </Flex>
-          <styled.p textStyle="heading.05" color="ink.text-primary" margin="0">
+          <styled.p textStyle="heading.05" color="ink.text-primary" margin="0" textWrap="pretty">
             {title}
           </styled.p>
         </HStack>

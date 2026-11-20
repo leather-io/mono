@@ -24,10 +24,11 @@ export function HighFeeSheet({ learnMoreUrl }: HighFeeSheetProps) {
       isShowing={showHighFeeWarningSheet}
       onClose={() => setShowHighFeeWarningSheet(false)}
       icon={<ErrorTriangleIcon />}
-      title={`Are you sure you want to pay ${values.fee}\u00A0${values.feeCurrency} in fees for this transaction?`}
+      title={`Pay ${values.fee}\u00A0${values.feeCurrency} in fees?`}
       body={
         <>
-          This action cannot be undone. The fees won't be returned, even if the transaction fails.{' '}
+          This fee is higher than usual. It can't be undone and won't be returned, even if the
+          transaction fails.{' '}
           <Link onClick={() => openInNewTab(learnMoreUrl)} whiteSpace="nowrap">
             Learn more
           </Link>

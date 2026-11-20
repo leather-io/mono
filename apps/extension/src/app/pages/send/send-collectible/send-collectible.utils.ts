@@ -47,7 +47,7 @@ export function getCollectibleTransferBlockerMessage(blocker: CollectibleTransfe
     case 'unsupported-contract':
       return 'The contract of this collectible has no standard SIP-009 transfer function, so Leather cannot send it.';
     case 'managed-namespace':
-      return 'The manager of this namespace controls transfers. Use the namespace manager to send this name.';
+      return 'Use the namespace manager to send this name.';
     case 'listed':
       return 'Remove the listing before you send it.';
     default:
