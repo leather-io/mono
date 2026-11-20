@@ -17,6 +17,7 @@ import {
 } from './components/home-features';
 import { HomeHero } from './components/home-hero';
 import { HomeProviders } from './components/home-providers';
+import { HomeSocialProof } from './components/home-social-proof';
 import { HomeTrust } from './components/home-trust';
 
 export const headers = marketingHeaders;
@@ -38,6 +39,7 @@ export default function HomeRoute({ loaderData }: Route.ComponentProps) {
       <HomeHero />
       <HomeSwapsAndLedger />
       <HomeWallets />
+      <HomeSocialProof />
       <HomeFullControl />
       <HomeProtection />
       <HomeVaultsAndStaking />

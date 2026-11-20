@@ -1,7 +1,7 @@
 ---
 title: 'Ledger: verify addresses on your device and a steadier connection'
 slug: ledger-improvements
-publishedAt: 2026-10-01T12:01:00.000Z
+publishedAt: 2026-09-18T12:00:00.000Z
 tags: ['extension']
 cover: /marketing/changelog/ledger-improvements.webp
 ---

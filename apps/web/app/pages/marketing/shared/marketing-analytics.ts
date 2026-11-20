@@ -9,6 +9,7 @@ export type MarketingSection =
   | 'home_hero'
   | 'home_features'
   | 'home_trust'
+  | 'home_social_proof'
   | 'home_providers'
   | 'apps_core_token'
   | 'install_modal';
