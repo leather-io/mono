@@ -11,12 +11,13 @@ import { type HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 import { type Network, Psbt, networks, payments } from 'bitcoinjs-lib';
 import { values } from 'remeda';
-import { encode as encodeVaruint } from 'varuint-bitcoin';
 
 import { type BitcoinNetworkModes, type NetworkModes } from '@leather.io/models';
 
 import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import { deriveAddressIndexKeychainFromAccount } from '../utils/bitcoin.utils';
+import { witnessStackCodec } from '../utils/witness-stack.kernel';
+import { descriptorKeyPath } from './descriptor-key-path.kernel';
 
 const { Output, parseKeyExpression } = DescriptorsFactory(createBitcoinjsLib(ecc));
 
@@ -106,7 +107,17 @@ export interface DescriptorKeyPathIndexes {
   addressIndex: number;
 }
 
-const allowedDescriptorKeyPathPattern = /^\/[01]\/\d+$/;
+const allowedChangeIndexes = [0, 1];
+
+function readKeyPathIndexes(keyPath: string | undefined): DescriptorKeyPathIndexes | undefined {
+  if (!keyPath) return undefined;
+  try {
+    const [changeIndex, addressIndex] = descriptorKeyPath.parse(keyPath);
+    return allowedChangeIndexes.includes(changeIndex) ? { changeIndex, addressIndex } : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 function getUniformKeyPathIndexes(keys: KeyInfo[]): DescriptorKeyPathIndexes {
   const keyPaths = keys.filter(key => key.bip32).map(key => key.keyPath);
@@ -116,11 +127,11 @@ function getUniformKeyPathIndexes(keys: KeyInfo[]): DescriptorKeyPathIndexes {
   if (remainingKeyPaths.some(path => path !== keyPath))
     throw new Error('All extended keys in the descriptor must use the same key path');
 
-  if (!keyPath || !allowedDescriptorKeyPathPattern.test(keyPath))
+  const keyPathIndexes = readKeyPathIndexes(keyPath);
+  if (!keyPathIndexes)
     throw new Error('Extended keys in the descriptor must use a key path of the form /0/N or /1/N');
 
-  const [, changeIndex, addressIndex] = keyPath.split('/');
-  return { changeIndex: Number(changeIndex), addressIndex: Number(addressIndex) };
+  return keyPathIndexes;
 }
 
 export interface CompiledWshDescriptor {
@@ -391,11 +402,7 @@ export function extractWshDescriptorPreimages(
 }
 
 function witnessStackToScriptWitness(stack: Uint8Array[]): Uint8Array {
-  const parts = [encodeVaruint(stack.length).buffer];
-  for (const item of stack) {
-    parts.push(encodeVaruint(item.length).buffer, item);
-  }
-  return Buffer.concat(parts);
+  return Buffer.from(witnessStackCodec.encode(stack));
 }
 
 function validateDescriptorSignature(

@@ -3,7 +3,7 @@ const cleanLayers = {
   application: ['queries', 'services'],
   domain: ['models', 'bitcoin', 'stacks'],
   state: ['state'],
-  foundation: ['utils', 'constants', 'tokens', 'crypto'],
+  foundation: ['utils', 'constants', 'tokens', 'crypto', 'kernel'],
 };
 
 function fromLayer(layer) {
@@ -23,7 +23,7 @@ module.exports = {
     {
       name: 'clean-foundation-not-to-higher-layers',
       severity: 'error',
-      comment: `Foundation packages (utils, constants, tokens, crypto) must not import domain, application, state or presentation code.`,
+      comment: `Foundation packages (utils, constants, tokens, crypto, kernel) must not import domain, application, state or presentation code.`,
       from: {
         path: fromLayer('foundation'),
       },

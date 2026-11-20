@@ -1,32 +1,17 @@
 import ecc from '@bitcoinerlab/secp256k1';
 import { base64 } from '@scure/base';
 import * as bitcoin from 'bitcoinjs-lib';
-import { decode as decodeVaruint } from 'varuint-bitcoin';
 
 import { getBitcoinJsLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import { inferNetworkFromAddress } from '../utils/bitcoin.utils';
+import { witnessStackCodec } from '../utils/witness-stack.kernel';
 import { createBitcoinAddress } from '../validation/bitcoin-address';
 import { createToSpendTx } from './sign-message-bip322-bitcoinjs';
 
 // Decodes a serialized witness stack: a varint item count followed by each item
 // as a varint length prefix plus its bytes.
-function decodeWitnessStack(bytes: Uint8Array): Buffer[] {
-  const buffer = Buffer.from(bytes);
-  let offset = 0;
-  const count = decodeVaruint(buffer, offset);
-  if (count.numberValue === null) throw new Error('Witness item count exceeds safe range');
-  offset += count.bytes;
-
-  const items: Buffer[] = [];
-  for (let i = 0; i < count.numberValue; i++) {
-    const length = decodeVaruint(buffer, offset);
-    if (length.numberValue === null) throw new Error('Witness item length exceeds safe range');
-    offset += length.bytes;
-    items.push(buffer.subarray(offset, offset + length.numberValue));
-    offset += length.numberValue;
-  }
-  if (offset !== buffer.length) throw new Error('Trailing bytes after witness stack');
-  return items;
+function decodeWitnessStack(serialized: Uint8Array): Buffer[] {
+  return witnessStackCodec.decode(serialized).map(item => Buffer.from(item));
 }
 
 // Verifies a BIP-322 "simple" signature for a P2WPKH address: rebuilds the

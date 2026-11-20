@@ -1,0 +1,63 @@
+name: packages:lean-proofs
+
+on:
+  pull_request:
+    paths:
+      - 'packages/kernel/**'
+      - 'eslint-rules/kernel/**'
+      - 'tools/src/lean/**'
+      - 'tools/src/kernel/**'
+      - '.github/workflows/packages:lean-proofs.yml'
+  merge_group:
+
+# GITHUB_TOKEN only needs to read the repository for checkout.
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lean-proofs:
+    name: lean-proofs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: $/.github/actions/provision
+
+      - name: test-kernel-lint-rules
+        run: pnpm kernel:test-rules
+
+      - name: cache-lean-toolchain
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.elan/toolchains
+          key: ${{ runner.os }}-lean-${{ hashFiles('packages/kernel/lean-toolchain') }}
+
+      - name: install-elan
+        run: pnpm lt lean install-elan
+
+      # Fails on a broken proof, on any warning, and on a `sorry` or added axiom
+      # (src/Audit.lean). Also builds the oracle binary.
+      - name: check-proofs-and-build-oracle
+        working-directory: packages/kernel
+        run: lake build --wfail
+
+      - name: build-kernel-dependencies
+        run: pnpm turbo run build --filter="@leather.io/kernel^..."
+
+      # Run the package script directly: turbo would not pass REQUIRE_LEAN_ORACLE
+      # through.
+      - name: test-typescript-against-lean-oracle
+        env:
+          REQUIRE_LEAN_ORACLE: '1'
+        run: pnpm --filter @leather.io/kernel test:unit
+
+      # Breaks the TypeScript kernel on purpose in each listed way and fails
+      # unless the tests notice, so the comparison with Lean cannot go blind.
+      - name: check-tests-notice-deliberate-breakages
+        run: pnpm lt kernel mutation-gate

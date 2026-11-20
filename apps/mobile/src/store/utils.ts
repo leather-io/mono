@@ -5,7 +5,9 @@ import { type ThunkAction, type UnknownAction } from '@reduxjs/toolkit';
 import {
   extractAddressIndexFromPath,
   extractFingerprintFromDescriptor,
+  extractKeyOriginPathFromDescriptor,
   makeAccountIdentifer,
+  parseAccountIdentifier,
 } from '@leather.io/crypto';
 
 import type { RootState, StoreDispatch } from './store';
@@ -19,21 +21,11 @@ export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export function destructAccountIdentifier(accountId: string) {
-  const [fingerprint, accountIndex, ...rest] = accountId.split('/');
-  if (
-    fingerprint === undefined ||
-    accountIndex === undefined ||
-    Number.isNaN(+accountIndex) ||
-    rest.length !== 0
-  ) {
-    throw new Error('Incorrect accountId is passed to destructAccountIdentifier function');
-  }
-
-  return { fingerprint, accountIndex: +accountIndex };
+  return parseAccountIdentifier(accountId);
 }
 
 export function makeStacksAccountIdentiferFromDescriptor(descriptor: string) {
-  const accountIdx = extractAddressIndexFromPath(descriptor);
+  const accountIdx = extractAddressIndexFromPath(extractKeyOriginPathFromDescriptor(descriptor));
   const accountFingerprint = extractFingerprintFromDescriptor(descriptor);
 
   return makeAccountIdentifer(accountFingerprint, accountIdx);

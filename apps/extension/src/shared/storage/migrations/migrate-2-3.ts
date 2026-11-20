@@ -1,17 +1,17 @@
 import { produce } from 'immer';
 
-import {
-  createDescriptor,
-  createKeyOriginPath,
-  extractFingerprintFromDescriptor,
-  extractKeyOriginPathFromDescriptor,
-} from '@leather.io/crypto';
 import { isDefined, isString } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 import { assumedZeroFingerprint } from '@shared/utils';
 import { isRecord } from '@shared/utils/is-record';
 
+import {
+  legacyCreateDescriptor,
+  legacyCreateKeyOriginPath,
+  legacyExtractFingerprintFromDescriptor,
+  legacyExtractKeyOriginPathFromDescriptor,
+} from './legacy-descriptor-parsing';
 import { type LegacyRecord, asUnknownArray, getRecordAtPath } from './legacy-state';
 
 interface LegacyWalletEntity {
@@ -46,7 +46,7 @@ function findDefaultAccountFingerprint(state: unknown): string {
   )?.currentAccountStacksDescriptor;
   if (isString(stacksDescriptor) && stacksDescriptor.includes('[')) {
     try {
-      const fingerprint = extractFingerprintFromDescriptor(stacksDescriptor);
+      const fingerprint = legacyExtractFingerprintFromDescriptor(stacksDescriptor);
       if (fingerprint) return fingerprint;
     } catch (error) {
       // Continue to try ledger wallet
@@ -62,7 +62,7 @@ function findDefaultAccountFingerprint(state: unknown): string {
     const policy = firstEntity?.policy;
     if (isString(policy) && policy.includes('[')) {
       try {
-        const fingerprint = extractFingerprintFromDescriptor(policy);
+        const fingerprint = legacyExtractFingerprintFromDescriptor(policy);
         if (fingerprint) return fingerprint;
       } catch (error) {
         // Continue to default
@@ -304,7 +304,7 @@ export function migrateMultiWalletSupport(state: unknown) {
           if (isString(descriptor) && descriptor) {
             // Bitcoin keys already have the descriptor (policy) which includes the key origin path
             try {
-              const keyOriginPath = extractKeyOriginPathFromDescriptor(descriptor);
+              const keyOriginPath = legacyExtractKeyOriginPathFromDescriptor(descriptor);
               if (keyOriginPath && !keychainEntities[keyOriginPath]) {
                 keychainEntities[keyOriginPath] = {
                   descriptor,
@@ -341,8 +341,8 @@ export function migrateMultiWalletSupport(state: unknown) {
 
           const entityFingerprint = entity.fingerprint || fingerprint;
           if (!isString(entityFingerprint)) continue;
-          const keyOrigin = createKeyOriginPath(entityFingerprint, entity.path);
-          const descriptor = createDescriptor(keyOrigin, publicKey);
+          const keyOrigin = legacyCreateKeyOriginPath(entityFingerprint, entity.path);
+          const descriptor = legacyCreateDescriptor(keyOrigin, publicKey);
           if (!keychainEntities[keyOrigin]) {
             keychainEntities[keyOrigin] = {
               descriptor,

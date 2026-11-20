@@ -6,7 +6,10 @@ import {
   getPsbtAsTransaction,
   getPsbtTxInputs,
 } from '@leather.io/bitcoin';
-import { decomposeDescriptor } from '@leather.io/crypto';
+import {
+  extractAccountIndexFromPath,
+  extractFingerprintFromKeyOriginPath,
+} from '@leather.io/crypto';
 import {
   type BitcoinNetworkModes,
   FeeTypes,
@@ -17,12 +20,16 @@ import {
 import { isDefined } from '@leather.io/utils';
 
 function getTxInputDerivationPath(input: TransactionInput | TransactionOutput) {
-  const inputDescriptor = extractRequiredKeyOrigins(
+  const keyOrigin = extractRequiredKeyOrigins(
     input.bip32Derivation ?? input.tapBip32Derivation ?? []
   )[0];
-  if (inputDescriptor) return decomposeDescriptor(inputDescriptor);
+  if (!keyOrigin) return undefined;
 
-  return undefined;
+  return {
+    keyOrigin,
+    fingerprint: extractFingerprintFromKeyOriginPath(keyOrigin),
+    accountIndex: extractAccountIndexFromPath(keyOrigin),
+  };
 }
 
 export function getPsbtInputDerivationPaths({ psbtHex }: { psbtHex: string }) {

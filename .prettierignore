@@ -2,6 +2,8 @@ node_modules/
 pnpm-lock.yaml
 .turbo/
 .tsdown/
+.lake/
+lake-manifest.json
 dist/
 dist-native/
 dist-web/

@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@leather.io/constants": "workspace:*",
+    "@leather.io/kernel": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "@noble/hashes": "1.5.0",
     "@scure/base": "1.2.4",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",
     "@leather.io/test-config": "workspace:*",
+    "fast-check": "4.10.2",
     "prettier": "3.5.1",
     "tsdown": "0.16.5",
     "vitest": "2.1.9"

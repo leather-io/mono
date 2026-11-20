@@ -13,7 +13,7 @@ This is a Turborepo monorepo with 3 apps and packages organized in a **CLEAN arc
 **Application** → `@leather.io/queries`, `@leather.io/services`, `@leather.io/rpc`, `@leather.io/sdk`, `@leather.io/cms`
 **Domain** → `@leather.io/models`, `@leather.io/bitcoin`, `@leather.io/stacks`
 **State** → `@leather.io/state` (Redux Toolkit)
-**Foundation** → `@leather.io/utils`, `@leather.io/constants`, `@leather.io/tokens`, `@leather.io/crypto`, `@leather.io/analytics`
+**Foundation** → `@leather.io/utils`, `@leather.io/constants`, `@leather.io/tokens`, `@leather.io/crypto`, `@leather.io/kernel`, `@leather.io/analytics`
 
 ## Apps
 
@@ -66,6 +66,7 @@ App-specific state:
 | `@leather.io/utils` | `packages/utils/` | Generic utilities (money, formatting, guards) |
 | `@leather.io/constants` | `packages/constants/` | Shared constants, currency decimals |
 | `@leather.io/crypto` | `packages/crypto/` | Cryptographic primitives, key derivation |
+| `@leather.io/kernel` | `packages/kernel/` | Building blocks proved in Lean (byte codecs); use them for anything hashed, signed or parsed from bytes |
 | `@leather.io/tokens` | `packages/tokens/` | Token metadata |
 | `@leather.io/analytics` | `packages/analytics/` | Mixpanel analytics |
 

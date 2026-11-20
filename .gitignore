@@ -3,6 +3,7 @@ dist
 tsconfig.tsbuildinfo
 .turbo/
 .tsdown/
+.lake/
 .idea
 .eslintcache
 .pnpm-store/

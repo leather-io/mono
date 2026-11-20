@@ -32,6 +32,7 @@
     "@bitcoinerlab/secp256k1": "1.0.2",
     "@leather.io/constants": "workspace:*",
     "@leather.io/crypto": "workspace:*",
+    "@leather.io/kernel": "workspace:*",
     "@leather.io/models": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "@noble/hashes": "1.5.0",
@@ -47,7 +48,6 @@
     "bitcoinjs-lib": "7.0.5",
     "ecpair": "3.0.1",
     "remeda": "2.21.2",
-    "varuint-bitcoin": "2.0.0",
     "zod": "4.6.7"
   },
   "devDependencies": {

@@ -1,0 +1,12 @@
+name = "kernel-proofs"
+defaultTargets = ["KernelProofs", "kernel-oracle"]
+
+[[lean_lib]]
+name = "KernelProofs"
+srcDir = "src"
+globs = ["codec.+", "format.+", "Audit"]
+
+[[lean_exe]]
+name = "kernel-oracle"
+srcDir = "src"
+root = "Oracle"

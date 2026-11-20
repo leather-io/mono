@@ -14,6 +14,7 @@ import {
   createKeyOriginPath,
   extractAccountIndexFromPath,
   extractAddressIndexFromPath,
+  extractKeyOriginPathFromDescriptor,
   fingerprintAsNumberToHex,
 } from '@leather.io/crypto';
 import type { NetworkModes } from '@leather.io/models';
@@ -33,14 +34,24 @@ export function makeAccountIndexDerivationPathFactory(derivationPath: string) {
   return (account: number) => derivationPath.replace('{account}', account.toString());
 }
 
-export function extractStacksDerivationPathAccountIndex(path: string) {
+function pathOfDescriptorOrPath(descriptorOrPath: string) {
+  return descriptorOrPath.startsWith('[')
+    ? extractKeyOriginPathFromDescriptor(descriptorOrPath)
+    : descriptorOrPath;
+}
+
+export function extractStacksDerivationPathAccountIndex(descriptorOrPath: string) {
+  const path = pathOfDescriptorOrPath(descriptorOrPath);
   if (!path.includes('5757')) throw new Error('Not a valid Stacks derivation path: ' + path);
   if (stacksDerivationPathTypeFromPath(path) === 'ledgerLive')
     return extractAccountIndexFromPath(path);
   return extractAddressIndexFromPath(path);
 }
 
-export function stacksDerivationPathTypeFromPath(path: string): StacksDerivationPathType | null {
+export function stacksDerivationPathTypeFromPath(
+  descriptorOrPath: string
+): StacksDerivationPathType | null {
+  const path = pathOfDescriptorOrPath(descriptorOrPath);
   if (!path.includes('5757')) throw new Error('Not a valid Stacks derivation path: ' + path);
   if (extractAddressIndexFromPath(path) > 0) return 'stacks';
   if (extractAccountIndexFromPath(path) > 0) return 'ledgerLive';

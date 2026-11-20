@@ -13,6 +13,7 @@ import {
   generateMnemonic,
   getMnemonicRootKeyFingerprint,
   makeAccountIdentifer,
+  parseAccountIdentifier,
   safelyReadPaddedFingerprint,
   unpadHex,
 } from './keychain';
@@ -117,5 +118,21 @@ const accountId = 'yg82822e/42';
 describe(makeAccountIdentifer.name, () => {
   test('it makes correct accountId', () => {
     expect(makeAccountIdentifer(fingerprint, accountIndex)).toEqual(accountId);
+  });
+
+  test('it refuses an empty fingerprint and one that contains the separator', () => {
+    expect(() => makeAccountIdentifer('', 0)).toThrowError(RangeError);
+    expect(() => makeAccountIdentifer('a/b', 0)).toThrowError(RangeError);
+  });
+});
+
+describe(parseAccountIdentifier.name, () => {
+  test('it reads back the fingerprint and index', () => {
+    expect(parseAccountIdentifier(accountId)).toEqual({ fingerprint, accountIndex });
+  });
+
+  test('it rejects an identifier with no fingerprint or with anything after the index', () => {
+    expect(() => parseAccountIdentifier('/42')).toThrowError(RangeError);
+    expect(() => parseAccountIdentifier('yg82822e/42/1')).toThrowError(RangeError);
   });
 });

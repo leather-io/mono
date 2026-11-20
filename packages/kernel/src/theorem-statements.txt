@@ -1,0 +1,41 @@
+Codec.decode_encode
+  theorem decode_encode (shape : Shape) : ∀ {value : Value} {bytes : Bytes} (rest : Bytes), encode shape value = some bytes → decode shape (bytes ++ rest) = some (value, rest)
+
+Codec.encode_decode
+  theorem encode_decode (shape : Shape) : ∀ {bytes : Bytes} {value : Value} {rest : Bytes}, decode shape bytes = some (value, rest) → ∃ encoded, encode shape value = some encoded ∧ bytes = encoded ++ rest
+
+Codec.encode_append_inj
+  theorem encode_append_inj {shape : Shape} {v w : Value} {a b rest rest' : Bytes} (hv : encode shape v = some a) (hw : encode shape w = some b) (h : a ++ rest = b ++ rest') : v = w ∧ rest = rest'
+
+Codec.encode_injective
+  theorem encode_injective {shape : Shape} {v w : Value} {bytes : Bytes} (hv : encode shape v = some bytes) (hw : encode shape w = some bytes) : v = w
+
+Codec.decodeExact_encode
+  theorem decodeExact_encode {shape : Shape} {value : Value} {bytes : Bytes} (h : encode shape value = some bytes) : decodeExact shape bytes = some value
+
+Codec.encode_decodeExact
+  theorem encode_decodeExact {shape : Shape} {bytes : Bytes} {value : Value} (h : decodeExact shape bytes = some value) : encode shape value = some bytes
+
+Codec.decodeWithTail_encodeWithTail
+  theorem decodeWithTail_encodeWithTail {shape : Shape} {tail : Tail} {value rest : Value} {bytes : Bytes} (h : encodeWithTail shape tail value rest = some bytes) : decodeWithTail shape tail bytes = some (value, rest)
+
+Codec.encodeWithTail_decodeWithTail
+  theorem encodeWithTail_decodeWithTail {shape : Shape} {tail : Tail} {bytes : Bytes} {value rest : Value} (h : decodeWithTail shape tail bytes = some (value, rest)) : encodeWithTail shape tail value rest = some bytes
+
+Codec.encodeWithTail_injective
+  theorem encodeWithTail_injective {shape : Shape} {tail : Tail} {v w rest rest' : Value} {bytes : Bytes} (hv : encodeWithTail shape tail v rest = some bytes) (hw : encodeWithTail shape tail w rest' = some bytes) : v = w ∧ rest = rest'
+
+Format.alphabet_of_print
+  theorem alphabet_of_print (shape : Shape) : wellFormed shape = true → ∀ {value : Value} {text : Str}, print shape value = some text → ∀ c ∈ text, alphabet shape c = true
+
+Format.parse_print
+  theorem parse_print (shape : Shape) : wellFormed shape = true → ∀ {value : Value} {text : Str}, print shape value = some text → parse shape text = some value
+
+Format.print_parse
+  theorem print_parse (shape : Shape) : wellFormed shape = true → ∀ {text : Str} {value : Value}, parse shape text = some value → print shape value = some text
+
+Format.print_injective
+  theorem print_injective {shape : Shape} (hwf : wellFormed shape = true) {v w : Value} {text : Str} (hv : print shape v = some text) (hw : print shape w = some text) : v = w
+
+Format.parse_injective
+  theorem parse_injective {shape : Shape} (hwf : wellFormed shape = true) {s t : Str} {value : Value} (hs : parse shape s = some value) (ht : parse shape t = some value) : s = t
