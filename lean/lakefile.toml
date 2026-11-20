@@ -1,9 +1,0 @@
-name = "proposal-preimage"
-defaultTargets = ["ProposalPreimage", "proposal-preimage"]
-
-[[lean_lib]]
-name = "ProposalPreimage"
-
-[[lean_exe]]
-name = "proposal-preimage"
-root = "Main"

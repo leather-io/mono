@@ -1,6 +1,6 @@
 /-!
 Executable model of the multisig proposal-hash preimage built by
-`encodeProposalPreimage` in `packages/crypto/src/multisig/proposal-preimage.ts`.
+`encodeProposalPreimage` in `proposal-preimage.ts`, next to this file.
 
     preimage = u32be(len tag) ‖ tag ‖ u32be(len address) ‖ address
              ‖ u32be(len payload) ‖ payload ‖ u64be(timestamp)

@@ -1,10 +1,14 @@
 import { bytesToHex } from '@noble/hashes/utils';
 import fc from 'fast-check';
-import { execFileSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import { describe, expect, test } from 'vitest';
 
+import {
+  askLeanOracle,
+  encodeText,
+  expectAgreementWithLeanModel,
+  leanCall,
+  leanOracleAvailable,
+} from '../proofs/lean-oracle';
 import { multisigProposalDomainTag } from './proposal-hash';
 import { encodeProposalPreimage } from './proposal-preimage';
 
@@ -439,45 +443,26 @@ describe(encodeProposalPreimage.name, () => {
   });
 });
 
-const leanOracleBinary =
-  process.env.LEAN_PROPOSAL_PREIMAGE_BIN ??
-  fileURLToPath(new URL('../../../../lean/.lake/build/bin/proposal-preimage', import.meta.url));
-const leanOracleAvailable = existsSync(leanOracleBinary);
-const leanOracleRequired = process.env.REQUIRE_LEAN_ORACLE === '1';
-const leanOracleBatchSize = 64;
-const leanOracleRuns = 60;
-
-function codePointsHex(text: string): string {
-  return Array.from(text, character => (character.codePointAt(0) ?? 0).toString(16)).join(',');
-}
-
-function leanOracleLine(input: PreimageInput): string {
-  return [
-    codePointsHex(input.domainTag),
-    codePointsHex(input.multisigAddress),
+function leanPreimageCall(input: PreimageInput): string {
+  return leanCall(
+    'encodeProposalPreimage',
+    encodeText(input.domainTag),
+    encodeText(input.multisigAddress),
     bytesToHex(input.rawPayload),
-    input.proposalTimestamp.toString(),
-  ].join(' ');
+    input.proposalTimestamp.toString()
+  );
 }
 
-function leanOraclePreimages(inputs: PreimageInput[]): string[] {
-  const stdout = execFileSync(leanOracleBinary, {
-    input: inputs.map(leanOracleLine).join('\n') + '\n',
-    encoding: 'utf8',
-  });
-  return stdout.trimEnd().split('\n');
+function observedPreimage(input: PreimageInput): string {
+  return `ok ${bytesToHex(encodeProposalPreimage(input))}`;
 }
 
 describe('Lean model of the proposal preimage', () => {
-  test.runIf(leanOracleRequired)('has its oracle binary built when it is required', () => {
-    expect(leanOracleAvailable).toBe(true);
-  });
-
   test.skipIf(!leanOracleAvailable)(
     'agrees with the TypeScript encoder on the fixed vector',
     () => {
-      expect(leanOraclePreimages([sampleInput])).toEqual([
-        bytesToHex(encodeProposalPreimage(sampleInput)),
+      expect(askLeanOracle([leanPreimageCall(sampleInput)])).toEqual([
+        observedPreimage(sampleInput),
       ]);
     }
   );
@@ -485,23 +470,22 @@ describe('Lean model of the proposal preimage', () => {
   test.skipIf(!leanOracleAvailable)(
     'agrees with the TypeScript encoder on generated inputs',
     () => {
-      fc.assert(
-        fc.property(
-          fc.array(wellFormedInputArbitrary, { minLength: 1, maxLength: leanOracleBatchSize }),
-          inputs => {
-            expect(leanOraclePreimages(inputs)).toEqual(
-              inputs.map(input => bytesToHex(encodeProposalPreimage(input)))
-            );
-          }
-        ),
-        { numRuns: leanOracleRuns }
+      expectAgreementWithLeanModel(
+        wellFormedInputArbitrary,
+        input => ({ call: leanPreimageCall(input), observed: observedPreimage(input) }),
+        { minimumSupportedShare: 1 }
       );
     }
   );
 
   test.skipIf(!leanOracleAvailable)('refuses a timestamp outside its u64 precondition', () => {
-    const line = [codePointsHex('a'), codePointsHex('b'), '', '18446744073709551616'].join(' ');
-    const stdout = execFileSync(leanOracleBinary, { input: line + '\n', encoding: 'utf8' });
-    expect(stdout.trimEnd()).toMatch(/^error/);
+    const call = leanCall(
+      'encodeProposalPreimage',
+      encodeText('a'),
+      encodeText('b'),
+      '',
+      '18446744073709551616'
+    );
+    expect(askLeanOracle([call])).toEqual(['unsupported']);
   });
 });

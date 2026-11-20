@@ -24,9 +24,9 @@ ignore:
   - apps/web/{.react-router,build}
   - apps/web/public
   - dist
-  - lean
   - node_modules
   - packages/**/.react-router
+  - packages/*/.lake
   - packages/*/.tsdown
   - packages/*/dist
   - packages/*/node_modules

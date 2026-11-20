@@ -1,4 +1,4 @@
-import ProposalPreimage.Model
+import multisig.ProposalPreimage
 
 namespace ProposalPreimage
 

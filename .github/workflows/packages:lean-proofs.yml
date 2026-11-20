@@ -3,8 +3,7 @@ name: packages:lean-proofs
 on:
   pull_request:
     paths:
-      - 'lean/**'
-      - 'packages/crypto/src/multisig/**'
+      - 'packages/crypto/**'
       - 'tools/src/lean/**'
       - '.github/workflows/packages:lean-proofs.yml'
   merge_group:
@@ -32,23 +31,23 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.elan/toolchains
-          key: ${{ runner.os }}-lean-${{ hashFiles('lean/lean-toolchain') }}
+          key: ${{ runner.os }}-lean-${{ hashFiles('packages/crypto/lean-toolchain') }}
 
       - name: install-elan
         run: pnpm lt lean install-elan
 
       # Fails on a broken proof, on any warning, and on a `sorry` or added axiom
-      # (ProposalPreimage/Audit.lean). Also builds the oracle binary.
+      # (src/proofs/Audit.lean). Also builds the oracle binary.
       - name: check-proofs-and-build-oracle
-        working-directory: lean
+        working-directory: packages/crypto
         run: lake build --wfail
 
       - name: build-crypto-dependencies
         run: pnpm turbo run build --filter="@leather.io/crypto^..."
 
       # Run the package script directly: turbo would not pass REQUIRE_LEAN_ORACLE
-      # through and does not track lean/ as a task input.
+      # through.
       - name: test-typescript-against-lean-oracle
         env:
           REQUIRE_LEAN_ORACLE: '1'
-        run: pnpm --filter @leather.io/crypto test:unit src/multisig
+        run: pnpm --filter @leather.io/crypto test:unit
