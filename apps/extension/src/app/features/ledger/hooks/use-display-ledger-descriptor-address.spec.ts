@@ -5,6 +5,7 @@ import { HDKey } from '@scure/bip32';
 import { of } from 'rxjs';
 
 import { fakeSignerAction, makeFakeLedgerBitcoinApp } from '../utils/ledger-app.mocks';
+import { ledgerRawKeyUnsupportedMessage } from '../utils/ledger-descriptor-address';
 import { useDisplayLedgerDescriptorAddress } from './use-display-ledger-descriptor-address';
 
 const mocks = vi.hoisted(() => ({
@@ -122,7 +123,7 @@ describe(useDisplayLedgerDescriptorAddress.name, () => {
     const displayAddress = useDisplayLedgerDescriptorAddress();
 
     await expect(displayAddress(makeFakeLedgerApp(), rawKeyDescriptor)).rejects.toThrow(
-      'another signer is a raw public key'
+      ledgerRawKeyUnsupportedMessage
     );
     expect(mocks.registerWallet).not.toHaveBeenCalled();
   });

@@ -5,8 +5,9 @@ import * as btc from '@scure/btc-signer';
 import { describe, expect, it } from 'vitest';
 
 import { makeNativeSegwitAccountXpub, makeNativeSegwitAddressPubkeyHex } from '../mocks/key-mocks';
+import { instantiateBondDescriptor } from './bond-template';
 import { buildLedgerWalletPolicy, ledgerWalletPolicyName } from './ledger-wallet-policy';
-import { compileWshDescriptor } from './wsh-descriptor';
+import { compileWshDescriptor, toLedgerSignableDescriptor } from './wsh-descriptor';
 
 const testnetExtendedKeyVersions = { private: 0x04358394, public: 0x043587cf };
 function makeNativeSegwitAccountTpub(seedByte: number) {
@@ -204,5 +205,60 @@ describe(buildLedgerWalletPolicy.name, () => {
         'x'.repeat(65)
       )
     ).toThrow('Ledger wallet policy name must be at most 64 characters');
+  });
+});
+
+const bondHash = bytesToHex(sha256(new Uint8Array([1, 2, 3])));
+const bondUnlockHeight = 1000;
+const bondCounterpartyKey = `${fifteenXpubs[5]}/0/0`;
+const bondTemplatePrefix = `wsh(and_v(v:or_i(after(${bondUnlockHeight}),and_v(v:sha256(${bondHash}),pk(@0/**))),`;
+const accountZeroKey = `[${deviceOrigin}]${fifteenXpubs[0]}`;
+
+function buildAccountZeroLedgerWalletPolicy(descriptor: string) {
+  const compiled = compileWshDescriptor(descriptor);
+  const accountKey = compiled.keys.find(key => key.keyExpression.startsWith(fifteenXpubs[0]));
+  if (!accountKey) throw new Error('Account key not found in descriptor');
+
+  const ledgerDescriptor = toLedgerSignableDescriptor(
+    descriptor,
+    accountKey,
+    fifteenXpubs[0],
+    deviceOrigin
+  );
+
+  return buildLedgerWalletPolicy(ledgerDescriptor, deviceFingerprint);
+}
+
+describe('bond descriptor through the Ledger policy pipeline', () => {
+  it('builds a multisig-vault bond as a miniscript policy keyed by the account', () => {
+    const bondDescriptor = instantiateBondDescriptor({
+      unlockHeight: bondUnlockHeight,
+      hash: bondHash,
+      counterpartyKey: bondCounterpartyKey,
+      threshold: 2,
+      keyExpressions: [
+        `${fifteenXpubs[0]}/0/0`,
+        `${fifteenXpubs[1]}/0/0`,
+        `${fifteenXpubs[2]}/0/0`,
+      ],
+    });
+
+    const policy = buildAccountZeroLedgerWalletPolicy(bondDescriptor);
+
+    expect(policy.keys).toHaveLength(4);
+    expect(policy.keys[0]).toBe(fifteenXpubs[5]);
+    expect(policy.keys.filter(key => key.startsWith(`[${deviceOrigin}]`))).toEqual([
+      accountZeroKey,
+    ]);
+    expect(policy.descriptorTemplate).toBe(`${bondTemplatePrefix}multi(2,@1/**,@2/**,@3/**)))`);
+  });
+
+  it('builds a single-signer vault bond', () => {
+    const bondDescriptor = `wsh(and_v(v:or_i(after(${bondUnlockHeight}),and_v(v:sha256(${bondHash}),pk(${bondCounterpartyKey}))),pk(${fifteenXpubs[0]}/0/0)))`;
+
+    const policy = buildAccountZeroLedgerWalletPolicy(bondDescriptor);
+
+    expect(policy.keys).toEqual([fifteenXpubs[5], accountZeroKey]);
+    expect(policy.descriptorTemplate).toBe(`${bondTemplatePrefix}pk(@1/**)))`);
   });
 });

@@ -4,7 +4,7 @@ import { WalletPolicy } from '@ledgerhq/device-signer-kit-bitcoin';
 import {
   buildLedgerWalletPolicy,
   compileWshDescriptor,
-  findAccountDescriptorKey,
+  findPolicyMemberAccountKey,
   toLedgerSignableDescriptor,
 } from '@leather.io/bitcoin';
 
@@ -18,7 +18,10 @@ import {
   registerWalletPolicy,
 } from '../utils/bitcoin-signer-kit-utils';
 import type { LedgerBitcoinApp } from '../utils/ledger-app';
-import { descriptorHasNonAccountRawKey } from '../utils/ledger-descriptor-address';
+import {
+  isLedgerDisplayableDescriptor,
+  ledgerRawKeyUnsupportedMessage,
+} from '../utils/ledger-descriptor-address';
 
 interface DisplayLedgerDescriptorAddressOptions {
   onWalletRegistered?(): void;
@@ -44,17 +47,19 @@ export function useDisplayLedgerDescriptorAddress() {
     if (!nativeSegwitAccount) throw new Error('No native segwit account available');
 
     const compiled = compileWshDescriptor(descriptor);
-    const accountDescriptorKey = findAccountDescriptorKey(compiled, nativeSegwitAccount.keychain);
+    const accountDescriptorKey = findPolicyMemberAccountKey(
+      descriptor,
+      compiled,
+      nativeSegwitAccount.keychain
+    );
     if (!accountDescriptorKey) throw new Error('Current account is not part of this descriptor');
 
     // Ledger can only register a wallet policy whose keys are extended keys
     // (`[fingerprint/path]xpub`). A co-signer supplied as a raw public key has no
     // xpub/origin and cannot be expressed in a Ledger policy — fail fast with a
     // clear message instead of a masked on-device rejection.
-    if (descriptorHasNonAccountRawKey(compiled, accountDescriptorKey.key))
-      throw new Error(
-        'Ledger cannot display this address: another signer is a raw public key. Ledger requires every key to be an extended public key (xpub).'
-      );
+    if (!isLedgerDisplayableDescriptor(compiled, accountDescriptorKey))
+      throw new Error(ledgerRawKeyUnsupportedMessage);
 
     const ledgerDescriptor = toLedgerSignableDescriptor(
       descriptor,
