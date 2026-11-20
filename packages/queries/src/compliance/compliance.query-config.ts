@@ -18,7 +18,7 @@ export function createAddressComplianceCheckQueryConfig(address: string, setting
     queryKey: createAddressComplianceCheckQueryKey(address, settings),
     queryFn: ({ signal }: QueryFunctionContext) =>
       getComplianceService().checkAddressCompliance(address, signal),
-    staleTime: oneWeekInMs,
+    staleTime: query => (query.state.data?.status === 'unavailable' ? 0 : oneWeekInMs),
     gcTime: oneWeekInMs,
     refetchInterval: query =>
       query.state.data?.status === 'unavailable' ? fiveMinInMs : oneWeekInMs,

@@ -9,6 +9,7 @@ import { stxMemoValidator } from '@app/common/validation/forms/memo-validators';
 import { stxRecipientValidator } from '@app/common/validation/forms/recipient-validators';
 import { nonceValidator } from '@app/common/validation/nonce-validators';
 import { useStacksHighFeeWarningContext } from '@app/features/stacks-high-fee-warning/stacks-high-fee-warning-container';
+import { useUserSettings } from '@app/hooks/use-user-settings';
 import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
@@ -30,6 +31,7 @@ export function useStacksCommonSendForm({
   const { data: nextNonce } = useNextNonce(stxAddress);
   const currentNetwork = useCurrentNetworkState();
   const policy = useCurrentPolicy();
+  const settings = useUserSettings();
   const isStacksPolicy = policy?.chain === 'stacks';
   const { isHighFeeWithNoFormErrors, setShowHighFeeWarningSheet } =
     useStacksHighFeeWarningContext();
@@ -66,7 +68,8 @@ export function useStacksCommonSendForm({
     checkFormValidation,
     recipient: stxRecipientValidator(
       policy?.chain === 'stacks' ? policy.address : stxAddress,
-      currentNetwork
+      currentNetwork,
+      settings
     ),
     memo: stxMemoValidator(FormErrorMessages.MemoExceedsLimit),
     nonce: nonceValidator,
