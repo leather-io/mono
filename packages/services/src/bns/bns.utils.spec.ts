@@ -1,8 +1,15 @@
+import { Cl } from '@stacks/transactions';
+
 import {
   type BnsV2ApiZoneFilResponse,
   type BnsV2ApiZoneFileAddress,
 } from '../infrastructure/api/bns-v2/bns-v2-api.schema';
-import { mapBnsProfileDataAddresses, mapBnsProfileDataFromZoneFile } from './bns.utils';
+import {
+  getBnsNamespaceCVFromGetBnsFromIdResponseCV,
+  isManagerTransferableNamespaceResponseCV,
+  mapBnsProfileDataAddresses,
+  mapBnsProfileDataFromZoneFile,
+} from './bns.utils';
 
 describe(mapBnsProfileDataAddresses.name, () => {
   const oldSchemaBtcAddress = '3123123123123123123123123123123123123123';
@@ -84,5 +91,45 @@ describe(mapBnsProfileDataFromZoneFile.name, () => {
     expect(mapBnsProfileDataFromZoneFile({ bio })).toEqual({
       bio,
     });
+  });
+});
+
+describe(getBnsNamespaceCVFromGetBnsFromIdResponseCV.name, () => {
+  it('should return the namespace buffer of a known token id', () => {
+    const res = Cl.some(
+      Cl.tuple({ name: Cl.bufferFromAscii('leather'), namespace: Cl.bufferFromAscii('btc') })
+    );
+    expect(getBnsNamespaceCVFromGetBnsFromIdResponseCV(res)).toEqual(Cl.bufferFromAscii('btc'));
+  });
+
+  it('should throw for an unknown token id', () => {
+    expect(() => getBnsNamespaceCVFromGetBnsFromIdResponseCV(Cl.none())).toThrow();
+  });
+});
+
+describe(isManagerTransferableNamespaceResponseCV.name, () => {
+  function createNamespacePropertiesResponse(managerTransferable: boolean) {
+    return Cl.ok(
+      Cl.tuple({
+        namespace: Cl.bufferFromAscii('btc'),
+        properties: Cl.tuple({ 'manager-transferable': Cl.bool(managerTransferable) }),
+      })
+    );
+  }
+
+  it('should return true for a manager-transferable namespace', () => {
+    expect(isManagerTransferableNamespaceResponseCV(createNamespacePropertiesResponse(true))).toBe(
+      true
+    );
+  });
+
+  it('should return false for a namespace without manager transfers', () => {
+    expect(isManagerTransferableNamespaceResponseCV(createNamespacePropertiesResponse(false))).toBe(
+      false
+    );
+  });
+
+  it('should throw for an unknown namespace', () => {
+    expect(() => isManagerTransferableNamespaceResponseCV(Cl.error(Cl.uint(113)))).toThrow();
   });
 });

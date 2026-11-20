@@ -117,3 +117,28 @@ export function parseBnsContractGetPrimaryResponseCV(
     throw new Error(`Unexpected BNS primary name Clarity Value type: ${getCVTypeString(res)}`);
   }
 }
+
+export function getBnsNamespaceCVFromGetBnsFromIdResponseCV(res: ClarityValue) {
+  if (res.type !== ClarityType.OptionalSome || res.value.type !== ClarityType.Tuple) {
+    throw new Error('BNS name not found for token id');
+  }
+  const namespace = res.value.value['namespace'];
+  if (namespace?.type !== ClarityType.Buffer) {
+    throw new Error('Unexpected BNS name response structure');
+  }
+  return namespace;
+}
+
+export function isManagerTransferableNamespaceResponseCV(res: ClarityValue) {
+  if (res.type !== ClarityType.ResponseOk || res.value.type !== ClarityType.Tuple) {
+    throw new Error('BNS namespace not found');
+  }
+  const properties = res.value.value['properties'];
+  if (properties?.type !== ClarityType.Tuple) {
+    throw new Error('Unexpected BNS namespace response structure');
+  }
+  const managerTransferable = properties.value['manager-transferable'];
+  if (managerTransferable?.type === ClarityType.BoolTrue) return true;
+  if (managerTransferable?.type === ClarityType.BoolFalse) return false;
+  throw new Error('Unexpected BNS namespace response structure');
+}

@@ -8,6 +8,7 @@ export * from './balances/btc-balances.service';
 export * from './balances/sip10-balances.service';
 export * from './balances/stx-balances.service';
 export * from './bns/bns.service';
+export type { CollectibleTransferBlocker } from './collectibles/collectibles.service';
 export * from './coin-selection/bitcoin-coin-selection.service';
 export * from './coin-selection/bitcoin-coin-selection.utils';
 export * from './compliance/compliance.service';

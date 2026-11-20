@@ -1,6 +1,7 @@
 import { Box, Stack, styled } from 'leather-styles/jsx';
 
 import {
+  type CollectibleKind,
   formatAttributeValue,
   getChainDisplayLabel,
   getProtocolDisplayLabel,
@@ -17,12 +18,14 @@ import { Row, SectionCard } from './collectible-details.layout';
 
 interface Sip9DetailsProps {
   asset: Sip9Asset;
+  kind: CollectibleKind;
   isDescriptionExpanded: boolean;
   onToggleDescription(): void;
 }
 
 export function Sip9Details({
   asset,
+  kind,
   isDescriptionExpanded,
   onToggleDescription,
 }: Sip9DetailsProps) {
@@ -81,7 +84,10 @@ export function Sip9Details({
         {info.creator && <Row label="Creator" value={info.creator} />}
         {floorPrice && <Row label="Floor price" value={formatCurrency(floorPrice)} />}
         <Row label="Layer" value={getChainDisplayLabel(asset.chain)} />
-        <Row label="Protocol" value={getProtocolDisplayLabel(asset.protocol)} />
+        <Row
+          label="Protocol"
+          value={kind === 'legacy-bns' ? 'Legacy BNS' : getProtocolDisplayLabel(asset.protocol)}
+        />
         {asset.contractId && (
           <Row
             label="Contract details"

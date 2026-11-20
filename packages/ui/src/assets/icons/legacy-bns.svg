@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="legacyBnsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF9900" />
+      <stop offset="100%" stop-color="#FF5500" />
+    </linearGradient>
+  </defs>
+  <circle cx="256" cy="256" r="240" fill="url(#legacyBnsGradient)" />
+  <circle cx="256" cy="256" r="210" fill="none" stroke="#FFFFFF" stroke-width="12" opacity="0.3" />
+  <g transform="translate(256, 275)" text-anchor="middle">
+    <text font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="160" fill="#FFFFFF">₿</text>
+    <text y="110" font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="42" fill="#FFFFFF" letter-spacing="4">BNS V1</text>
+  </g>
+  <circle cx="256" cy="46" r="14" fill="#FFFFFF" />
+  <circle cx="256" cy="466" r="14" fill="#FFFFFF" />
+  <circle cx="46" cy="256" r="14" fill="#FFFFFF" />
+  <circle cx="466" cy="256" r="14" fill="#FFFFFF" />
+</svg>
