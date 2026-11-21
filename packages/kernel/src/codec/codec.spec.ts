@@ -18,8 +18,6 @@ import {
   uint,
 } from './codec';
 
-type Value = ReturnType<Codec<unknown>['toValue']>;
-
 interface Sample {
   codec: Codec<unknown>;
   values: fc.Arbitrary<unknown>;
@@ -43,23 +41,13 @@ const twoToThe64 = 2 ** 64;
 const u32be = uint(4, 'big');
 const u64be = uint(8, 'big');
 
-function hexOrDash(value: Uint8Array): string {
-  return value.length === 0 ? '-' : bytesToHex(value);
-}
-
-function codePointsOrDash(value: string): string {
-  if (value === '') return '-';
-  return Array.from(value, character => (character.codePointAt(0) ?? 0).toString(16)).join(',');
-}
-
-function describeValue(value: Value): string[] {
-  if (value.kind === 'int') return [BigInt(value.value).toString()];
-  if (value.kind === 'bytes') return [hexOrDash(value.value)];
-  if (value.kind === 'text') return [codePointsOrDash(value.value)];
-  if (value.kind === 'unit') return [];
-  if (value.kind === 'list')
-    return [String(value.items.length), ...value.items.flatMap(describeValue)];
-  return [...describeValue(value.first), ...describeValue(value.second)];
+function describeValue(value: unknown): string {
+  if (value instanceof Uint8Array) return `bytes:${bytesToHex(value)}`;
+  if (typeof value === 'string')
+    return `text:${Array.from(value, character => (character.codePointAt(0) ?? 0).toString(16)).join(',')}`;
+  if (typeof value === 'number') return `int:${BigInt(value)}`;
+  if (Array.isArray(value)) return `[${value.map(describeValue).join(' ')}]`;
+  return 'unit';
 }
 
 const intCodecArbitrary: fc.Arbitrary<IntCodec> = fc.oneof(
@@ -344,9 +332,7 @@ describe('codec kernel', () => {
     ['NaN', Number.NaN],
     ['Infinity', Number.POSITIVE_INFINITY],
   ])('rejects integer: %s', (_label, value) => {
-    const expected = new RangeError(
-      'Integer must be a non-negative safe integer that fits its codec.'
-    );
+    const expected = new RangeError('Value cannot be encoded by this codec.');
     expect(() => u64be.encode(value)).toThrowError(expected);
     expect(() => compactSize.encode(value)).toThrowError(expected);
   });
@@ -359,9 +345,9 @@ describe('codec kernel', () => {
 
   test('rejects text with a lone surrogate, which UTF-8 would collapse into U+FFFD', () => {
     expect(() => text(u32be).encode('\ud800')).toThrowError(
-      new TypeError('Text must not contain lone surrogates.')
+      new RangeError('Value cannot be encoded by this codec.')
     );
-    expect(() => text(u32be).encode('a\udfffb')).toThrowError(TypeError);
+    expect(() => text(u32be).encode('a\udfffb')).toThrowError(RangeError);
     expect(bytesToHex(text(u32be).encode('🔐'))).toBe('00000004f09f9490');
   });
 
@@ -374,7 +360,7 @@ describe('codec kernel', () => {
 
   test('rejects bytes of the wrong fixed length', () => {
     expect(() => fixedBytes(2).encode(Uint8Array.of(1))).toThrowError(
-      new RangeError('Bytes must have the fixed length of their codec.')
+      new RangeError('Value cannot be encoded by this codec.')
     );
   });
 
@@ -449,7 +435,7 @@ describe('message ending with the rest of the bytes', () => {
   test('rejects a wrong head, a rest that is not UTF-8, and text with a lone surrogate', () => {
     expect(() => tagged.decode(hexToBytes('cafd01'))).toThrowError(RangeError);
     expect(() => greeting.decode(hexToBytes('07c080'))).toThrowError(RangeError);
-    expect(() => greeting.encode(7, '\ud800')).toThrowError(TypeError);
+    expect(() => greeting.encode(7, '\ud800')).toThrowError(RangeError);
   });
 });
 
@@ -473,7 +459,7 @@ function tryDecode(codec: Codec<unknown>, encoded: Uint8Array): { value: unknown
 }
 
 function shown(codec: Codec<unknown>, value: unknown): string {
-  return describeValue(codec.toValue(value)).join(' ');
+  return describeValue(value);
 }
 
 function hexOfEncoding(encoded: Uint8Array | undefined): string | undefined {
@@ -805,9 +791,7 @@ describe('codec kernel properties', () => {
         if (!encoded) return;
         const [backValue, backRest] = message.decode(encoded);
         expect(shown(head, backValue)).toBe(shown(head, value));
-        expect(describeValue(message.restToValue(backRest)).join(' ')).toBe(
-          describeValue(message.restToValue(rest)).join(' ')
-        );
+        expect(describeValue(backRest)).toBe(describeValue(rest));
       }),
       { numRuns: structuralRuns, endOnFailure: true }
     );

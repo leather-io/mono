@@ -1599,10 +1599,16 @@ importers:
 
   packages/kernel:
     dependencies:
+      '@scure/btc-signer':
+        specifier: 1.6.0
+        version: 1.6.0
+      micro-packed:
+        specifier: 0.7.3
+        version: 0.7.3
+    devDependencies:
       '@noble/hashes':
         specifier: 1.5.0
         version: 1.5.0
-    devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config

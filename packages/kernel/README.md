@@ -6,6 +6,8 @@ Building blocks for byte and text formats, checked by property tests. Code assem
 
 A codec turns a value into bytes and reads it back. You describe one by combining blocks; you never write the byte handling yourself.
 
+The byte handling itself is [`micro-packed`](https://github.com/paulmillr/micro-packed), with Bitcoin's compact size from `@scure/btc-signer`. This file adds only what those leave loose: strict UTF-8 for text, refusal of zero-size list items, and a fixed set of blocks.
+
 ```ts
 import { bytes, compactSize, list, text, tuple, uint } from '@leather.io/kernel';
 

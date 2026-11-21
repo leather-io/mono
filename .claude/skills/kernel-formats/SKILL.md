@@ -88,7 +88,7 @@ Parsing is strict. Replacing hand-written `split` and `parseInt` code with a ker
 
 Only when a real function needs it. In this order, inside `packages/kernel`:
 
-1. **TypeScript**: add the constructor to `codec.ts` or `format.ts`. Keep the class private so nothing outside the kernel can construct a codec or format.
+1. **TypeScript**: add the constructor to `codec.ts` or `format.ts`. Byte blocks wrap `micro-packed`; check that the library's block is strict (one encoding per value, nothing silently repaired) before exposing it. Keep the class private so nothing outside the kernel can construct a codec or format.
 2. **Generators**: add the block to the random generators and to the small-case enumeration in the spec, so the general properties (round trip, canonical, injective) cover it.
 3. **Its own property**: add a property that states what the block writes and reads, plus a few fixed examples of its exact output.
 4. **Mutation gate**: add several deliberate breakages of the new code (wrong byte order, missing bound, skipped check) to `tools/src/kernel/kernel-mutants.ts`. `pnpm lt kernel mutation-gate` applies each one and fails unless the tests notice it. It also fails when an entry no longer matches the code, so update the list when you change the lines it targets.
