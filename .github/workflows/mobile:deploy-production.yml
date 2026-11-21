@@ -54,7 +54,9 @@ jobs:
 
       - name: enforce-cocoapods-version
         working-directory: apps/mobile
-        run: bash scripts/enforce-cocoapods-version.sh
+        env:
+          BUNDLE_GEMFILE: ${{ github.workspace }}/apps/mobile/fastlane/Gemfile
+        run: bundle exec bash scripts/enforce-cocoapods-version.sh
 
       - name: cache-pods
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
