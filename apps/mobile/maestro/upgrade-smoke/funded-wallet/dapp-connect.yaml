@@ -1,0 +1,36 @@
+appId: io.leather.mobilewallet
+name: Funded wallet - open the RPC test app in the Browser tab and connect
+---
+- tapOn: 'Browser'
+- waitForAnimationToEnd
+- runFlow:
+    when:
+      notVisible: '.*Leather RPC test.*'
+    commands:
+      - tapOn:
+          point: 50%, 85%
+      - waitForAnimationToEnd
+      - eraseText: 40
+      - inputText: 'http://localhost:3000'
+      - pressKey: enter
+- extendedWaitUntil:
+    visible: '.*Leather RPC test.*'
+    timeout: 40000
+- tapOn: 'Load account'
+- extendedWaitUntil:
+    visible: 'Approve'
+    timeout: 15000
+- runFlow:
+    when:
+      visible: 'Choose an account'
+    commands:
+      - tapOn: 'Choose an account'
+      - waitForAnimationToEnd
+      - tapOn:
+          point: 40%, 22%
+      - waitForAnimationToEnd
+- tapOn: 'Approve'
+- extendedWaitUntil:
+    visible: 'Refresh'
+    timeout: 20000
+- takeScreenshot: funded-dapp-connected

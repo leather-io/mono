@@ -1,0 +1,58 @@
+appId: io.leather.mobilewallet
+name: Funded wallet - build a 0.0001 send and stop at the review screen
+env:
+  KEY_0: 50%, 86%
+  KEY_DOT: 16%, 86%
+  KEY_1: 16%, 68%
+---
+- tapOn: 'Home'
+- waitForAnimationToEnd
+- scrollUntilVisible:
+    element: 'Send'
+    direction: UP
+- tapOn: 'Send'
+- extendedWaitUntil:
+    visible: 'Select asset'
+    timeout: 15000
+- tapOn:
+    point: ${ASSET_ROW}
+- extendedWaitUntil:
+    visible: 'Enter recipient.*'
+    timeout: 15000
+- tapOn:
+    point: ${KEY_0}
+- tapOn:
+    point: ${KEY_DOT}
+- tapOn:
+    point: ${KEY_0}
+- tapOn:
+    point: ${KEY_0}
+- tapOn:
+    point: ${KEY_0}
+- tapOn:
+    point: ${KEY_1}
+- waitForAnimationToEnd
+- tapOn: 'Enter recipient.*'
+- waitForAnimationToEnd
+- inputText: ${RECIPIENT}
+- extendedWaitUntil:
+    visible: 'Matching'
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn:
+    point: ${FIRST_MATCH}
+- runFlow:
+    when:
+      visible: 'Confirm'
+    commands:
+      - tapOn: 'Confirm'
+- extendedWaitUntil:
+    visible: 'Review'
+    timeout: 15000
+- waitForAnimationToEnd
+- tapOn: 'Review'
+- extendedWaitUntil:
+    visible: 'Approve'
+    timeout: 20000
+- waitForAnimationToEnd
+- takeScreenshot: funded-send-review

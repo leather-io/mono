@@ -32,7 +32,7 @@ Use a simulator that holds no real wallet. `fresh-install.yaml` and `restore-wal
 ## What the flows do not cover
 
 - The Buy sheet. It needs `EXPO_PUBLIC_ONRAMPER_API_KEY`, `EXPO_PUBLIC_ONRAMPER_SIGNING_SECRET` and `EXPO_PUBLIC_ONRAMPER_WIDGET_HOST`. Without the key the sheet throws during render and the whole app falls to the error screen.
-- Anything that moves funds. The flows never reach a review or approve step.
+- Anything that moves funds. The flows never reach a review or approve step. The flows in `funded-wallet/` do: they restore a real wallet from the macOS keychain, send, and sign dApp requests. Its README also describes the upgrade-over-existing-install check.
 - The device-security path, release builds and dApp requests. Each was checked by hand during the SDK 58 upgrade; the recipes are below.
 
 ## Checks to run by hand

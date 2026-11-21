@@ -1,0 +1,11 @@
+appId: io.leather.mobilewallet
+name: Funded wallet - skip device security and land on Home
+---
+- tapOn: 'Skip for now'
+- waitForAnimationToEnd
+- tapOn: 'Continue'
+- extendedWaitUntil:
+    visible: 'Account 1'
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: funded-home
