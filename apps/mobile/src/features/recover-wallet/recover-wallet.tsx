@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useRef } from 'react';
-import { Keyboard, type TextInput as RNTextInput } from 'react-native';
+import { Keyboard, type TextInputInstance } from 'react-native';
 
 import { TextInput } from '@/components/text-input';
 import { useCreateWallet } from '@/hooks/use-create-wallet';
@@ -24,7 +24,7 @@ import { initialState, reducer } from './reducer';
 import { getInvalidMnemonicWords } from './utils';
 
 export function RecoverWallet() {
-  const inputRef = useRef<RNTextInput>(null);
+  const inputRef = useRef<TextInputInstance>(null);
   const { navigateAndCreateWallet } = useCreateWallet();
 
   const [state, dispatch] = useReducer(reducer, initialState);

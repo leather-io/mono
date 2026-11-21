@@ -1,5 +1,5 @@
 import { type ReactElement, cloneElement, useRef } from 'react';
-import { View } from 'react-native';
+import { View, type ViewInstance } from 'react-native';
 
 interface AssetPickerItemProps {
   onPress(top: number | null): void;
@@ -8,7 +8,7 @@ interface AssetPickerItemProps {
 }
 
 export function AssetPickerItem({ onPress, children, canAnimate }: AssetPickerItemProps) {
-  const ref = useRef<View>(null);
+  const ref = useRef<ViewInstance>(null);
 
   function handlePress() {
     if (canAnimate) {
