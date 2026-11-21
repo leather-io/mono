@@ -12,6 +12,7 @@ import { noDimensionsScreenRule } from '@leather.io/eslint-config/rules/no-dimen
 import { noSamePackageBarrelImportRule } from '@leather.io/eslint-config/rules/no-same-package-barrel-import';
 
 import { toolkitDesignConfig } from './eslint-rules/design-system/config.js';
+import { kernelPlugin } from './eslint-rules/kernel/index.js';
 
 const useQueryConfigOrKeyRule = {
   meta: {
@@ -420,6 +421,61 @@ export default defineConfig([
     files: ['**/*.spec.ts', '**/*.mocks.ts'],
     rules: {
       'lingui/no-unlocalized-strings': 'off',
+    },
+  },
+  {
+    name: 'kernel-only-files',
+    files: ['{packages,apps}/**/*.kernel.ts'],
+    ignores: ['packages/kernel/**'],
+    plugins: { kernel: kernelPlugin },
+    rules: {
+      'kernel/kernel-only-file': ['error', { requireSpec: true }],
+    },
+  },
+  {
+    name: 'kernel-blocks-only-in-kernel-files',
+    files: ['{packages,apps}/**/*.{ts,tsx}'],
+    ignores: ['packages/kernel/**', '**/*.kernel.ts', '**/*.spec.{ts,tsx}'],
+    plugins: { kernel: kernelPlugin },
+    rules: {
+      'kernel/no-blocks-outside-kernel-files': 'error',
+    },
+  },
+  {
+    name: 'kernel-no-hand-rolled-encoding',
+    files: ['packages/*/src/**/*.{ts,tsx}'],
+    ignores: ['packages/kernel/**', '**/*.spec.{ts,tsx}'],
+    plugins: { kernel: kernelPlugin },
+    rules: {
+      'kernel/no-hand-rolled-encoding': 'error',
+    },
+  },
+  {
+    name: 'kernel-no-hand-rolled-encoding-amount-parsing',
+    files: ['packages/{ui,utils}/src/**/*.{ts,tsx}'],
+    ignores: ['**/*.spec.{ts,tsx}'],
+    rules: {
+      'kernel/no-hand-rolled-encoding': ['error', { allow: ['parseInt'] }],
+    },
+  },
+  {
+    name: 'kernel-no-hand-rolled-encoding-text-for-hashing',
+    files: ['packages/features/src/**/*.{ts,tsx}'],
+    ignores: ['**/*.spec.{ts,tsx}'],
+    rules: {
+      'kernel/no-hand-rolled-encoding': ['error', { allow: ['TextEncoder'] }],
+    },
+  },
+  {
+    name: 'kernel-no-hand-rolled-bytes-in-apps',
+    files: ['apps/**/*.{ts,tsx}'],
+    ignores: ['**/*.spec.{ts,tsx}', 'apps/*/tests/**', 'apps/test-app/**'],
+    plugins: { kernel: kernelPlugin },
+    rules: {
+      'kernel/no-hand-rolled-encoding': [
+        'error',
+        { allow: ['parseInt', 'TextEncoder', 'TextDecoder', 'utf8ToBytes'] },
+      ],
     },
   },
   {

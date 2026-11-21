@@ -1,16 +1,15 @@
 import ecc from '@bitcoinerlab/secp256k1';
 import { sha256 } from '@noble/hashes/sha256';
-import { hexToBytes, utf8ToBytes } from '@noble/hashes/utils';
+import { hexToBytes } from '@noble/hashes/utils';
 import * as bitcoin from 'bitcoinjs-lib';
 import { ECPairFactory } from 'ecpair';
-import { encode } from 'varuint-bitcoin';
 
 import { type PaymentTypes } from '@leather.io/rpc';
 import { isString } from '@leather.io/utils';
 
 import { toXOnly } from '../utils/bitcoin.utils';
-
-const bip322MessageTag = 'BIP0322-signed-message';
+import { witnessStackCodec } from '../utils/witness-stack.kernel';
+import { taggedMessageBytes, taggedMessageText } from './tagged-message.kernel';
 
 const ECPair = ECPairFactory(ecc);
 bitcoin.initEccLib(ecc);
@@ -21,14 +20,11 @@ export function ecPairFromPrivateKey(key: Uint8Array) {
 
 // See tagged hashes section of BIP-340
 // https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki#design
-const messageTagHash = Uint8Array.from([
-  ...sha256(utf8ToBytes(bip322MessageTag)),
-  ...sha256(utf8ToBytes(bip322MessageTag)),
-]);
-
 export function hashBip322Message(message: Uint8Array | string) {
   return sha256(
-    Uint8Array.from([...messageTagHash, ...(isString(message) ? utf8ToBytes(message) : message)])
+    isString(message)
+      ? taggedMessageText.encode(undefined, message)
+      : taggedMessageBytes.encode(undefined, message)
   );
 }
 
@@ -37,10 +33,6 @@ export const bip322TransactionToSignValues = {
   prevoutIndex: 0xffffffff,
   sequence: 0,
 };
-
-function encodeVarString(b: Uint8Array) {
-  return Buffer.concat([encode(b.byteLength).buffer, b]);
-}
 
 const supportedMessageSigningPaymentTypes: PaymentTypes[] = ['p2wpkh', 'p2tr'];
 
@@ -53,8 +45,7 @@ export function isSupportedMessageSigningPaymentType(paymentType: string) {
  * TODO: Refactor to remove `Buffer` use
  */
 export function encodeMessageWitnessData(witnessArray: Uint8Array[]) {
-  const len = encode(witnessArray.length);
-  return Buffer.concat([len.buffer, ...witnessArray.map(witness => encodeVarString(witness))]);
+  return Buffer.from(witnessStackCodec.encode(witnessArray));
 }
 
 function tapTweakHash(pubKey: Uint8Array, h: Uint8Array | undefined): Uint8Array {

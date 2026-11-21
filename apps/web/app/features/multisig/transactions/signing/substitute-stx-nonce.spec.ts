@@ -41,6 +41,20 @@ describe(substituteStxNonce.name, () => {
     expect(() => substituteStxNonce({ rawPayload: tampered, nonce: 1 })).toThrow('hash mode');
   });
 
+  test('rejects a nonce that is negative, fractional or above the largest safe integer', () => {
+    expect(() => substituteStxNonce({ rawPayload: realPayload, nonce: -1 })).toThrow(RangeError);
+    expect(() => substituteStxNonce({ rawPayload: realPayload, nonce: 1.5 })).toThrow(RangeError);
+    expect(() =>
+      substituteStxNonce({ rawPayload: realPayload, nonce: Number.MAX_SAFE_INTEGER + 1 })
+    ).toThrow(RangeError);
+  });
+
+  test('rejects a payload too short to hold a nonce', () => {
+    expect(() => substituteStxNonce({ rawPayload: realPayload.slice(0, 60), nonce: 1 })).toThrow(
+      RangeError
+    );
+  });
+
   test('rejects sponsored auth', () => {
     const tampered = `${realPayload.slice(0, 10)}05${realPayload.slice(12)}`;
     expect(() => substituteStxNonce({ rawPayload: tampered, nonce: 1 })).toThrow('auth type');

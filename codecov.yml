@@ -32,6 +32,11 @@ component_management:
       paths:
         - packages/crypto
 
+    - component_id: packages-kernel
+      name: kernel
+      paths:
+        - packages/kernel
+
     - component_id: packages-stacks
       name: stacks
       paths:

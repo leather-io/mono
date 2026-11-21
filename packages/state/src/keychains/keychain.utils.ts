@@ -3,9 +3,9 @@ import { values } from 'remeda';
 
 import {
   extractAccountIndexFromDescriptor,
-  extractAccountIndexFromPath,
   extractFingerprintFromDescriptor,
   extractKeyOriginPathFromDescriptor,
+  parseAccountIdentifier,
 } from '@leather.io/crypto';
 import { extractStacksDerivationPathAccountIndex } from '@leather.io/stacks';
 import { isDefined } from '@leather.io/utils';
@@ -64,7 +64,7 @@ export function findHighestAccountIndexOfFingerprint(
     0,
     ...accounts
       .filter(filterKeychainsByFingerprint(fingerprint))
-      .map(account => extractAccountIndexFromPath(account.descriptor))
+      .map(account => extractAccountIndexFromDescriptor(account.descriptor))
   );
 }
 
@@ -81,17 +81,8 @@ export function descriptorKeychainSelectors<T extends WithDescriptor>(
   }
 
   function fromAccountId(accountId: string) {
-    const [fingerprint, accountIndex, ...rest] = accountId.split('/');
-    if (
-      fingerprint === undefined ||
-      accountIndex === undefined ||
-      Number.isNaN(+accountIndex) ||
-      rest.length !== 0
-    ) {
-      throw new Error('Incorrect accountId is passed to destructAccountIdentifier function');
-    }
-
-    return fromAccountIndex(fingerprint, +accountIndex);
+    const { fingerprint, accountIndex } = parseAccountIdentifier(accountId);
+    return fromAccountIndex(fingerprint, accountIndex);
   }
 
   return {

@@ -25,6 +25,7 @@
     "install:clean": "rm -rf \"**/node_modules\" && pnpm -r clean",
     "install:fresh": "pnpm install:clean && pnpm i",
     "install:nuke": "rm -rf pnpm-lock.yaml && pnpm install:fresh",
+    "kernel:test-rules": "node --test eslint-rules/kernel/*.spec.js",
     "knip": "knip",
     "lint": "pnpm design:scripts:lint && turbo run lint",
     "lint:deps": "pnpm dependency-cruiser --ignore-known .dependency-cruiser-known-violations.json .",

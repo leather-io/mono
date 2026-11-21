@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { t } from '@lingui/core/macro';
 import { createSelector } from '@reduxjs/toolkit';
 
+import { parseAccountIdentifier } from '@leather.io/crypto';
 import { isDefined } from '@leather.io/utils';
 
 import { type RootState } from '../store';
@@ -10,9 +11,7 @@ import { accountsAdapter } from './accounts.write';
 import { type AccountStatus, type AccountStore, deriveIconFromAccountId } from './utils';
 
 export function deserializeAccountId(accountId: string) {
-  const [fingerprint, accountIndex] = accountId.split('/');
-  if (!fingerprint || !accountIndex) throw new Error('Invalid account ID ' + accountId);
-  return { fingerprint, accountIndex: Number(accountIndex) };
+  return parseAccountIdentifier(accountId);
 }
 
 function initializeAccount(account: AccountStore) {

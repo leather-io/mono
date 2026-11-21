@@ -1,3 +1,4 @@
+import { createKeyOriginPath } from '@leather.io/crypto';
 import {
   type AccountAddresses,
   type BitcoinTransaction,
@@ -84,7 +85,7 @@ export function getOutboundUtxos(txs: BitcoinTransaction[], fingerprint: string)
         address: vin.address ?? '',
         path: vin.path ?? '',
         value: Number(vin.value),
-        keyOrigin: vin.path ? getKeyOrigin(fingerprint, vin.path) : '',
+        keyOrigin: (vin.path ? getKeyOrigin(fingerprint, vin.path) : undefined) ?? '',
         height: txMap.get(txid)?.height ?? fallbackUtxoHeight,
       };
     })
@@ -98,7 +99,7 @@ export function createOwnedUtxoFromMempool(
   return {
     ...utxo,
     ...(utxo.status.block_height !== undefined ? { height: utxo.status.block_height } : {}),
-    keyOrigin: getKeyOrigin(masterFingerprint, utxo.path),
+    keyOrigin: getKeyOrigin(masterFingerprint, utxo.path) ?? '',
   };
 }
 
@@ -109,12 +110,16 @@ export function createOwnedUtxoFromLeather(
   return {
     ...utxo,
     value: Number(utxo.value),
-    keyOrigin: getKeyOrigin(masterFingerprint, utxo.path),
+    keyOrigin: getKeyOrigin(masterFingerprint, utxo.path) ?? '',
   };
 }
 
 export function getKeyOrigin(fingerprint: string, path: string) {
-  return `${fingerprint}/${path.replace('m/', '')}`;
+  try {
+    return createKeyOriginPath(fingerprint, path);
+  } catch {
+    return undefined;
+  }
 }
 
 export function getBondStakerAddress(

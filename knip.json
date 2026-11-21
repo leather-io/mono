@@ -158,7 +158,7 @@
       ]
     },
     ".": {
-      "entry": ["scripts/design/*.ts", "eslint-rules/design-system/*.spec.js"]
+      "entry": ["scripts/design/*.ts", "eslint-rules/design-system/*.spec.js", "eslint-rules/kernel/*.spec.js"]
     }
   }
 }
