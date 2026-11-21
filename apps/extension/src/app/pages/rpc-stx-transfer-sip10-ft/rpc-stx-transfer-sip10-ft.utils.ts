@@ -10,7 +10,7 @@ import {
   uintCV,
 } from '@stacks/transactions';
 
-import type { Money } from '@leather.io/models';
+import type { MarketData, Money, Sip10Asset } from '@leather.io/models';
 import { createRequestEncoder, stxTransferSip10Ft } from '@leather.io/rpc';
 import { getAddressFromAssetIdentifier } from '@leather.io/services';
 import {
@@ -18,7 +18,7 @@ import {
   TransactionTypes,
   getStacksAssetStringParts,
 } from '@leather.io/stacks';
-import { createMoney } from '@leather.io/utils';
+import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 
 import { makeFtPostCondition } from '@shared/utils/post-conditions';
 
@@ -30,6 +30,27 @@ export function getDecodedRpcStxTransferSip10FtRequest() {
   const rpcRequest = initialSearchParams.get('rpcRequest');
   if (!rpcRequest) throw new Error('Missing rpcRequest');
   return decode(rpcRequest);
+}
+
+export function getSip10ContractIdFromAssetIdentifier(assetIdentifier: string) {
+  const { contractAddress, contractName } = getStacksAssetStringParts(assetIdentifier);
+  return `${contractAddress}.${contractName}`;
+}
+
+interface GetSip10TokenAmountInQuoteArgs {
+  amount: number;
+  asset?: Sip10Asset;
+  marketData?: MarketData;
+}
+export function getSip10TokenAmountInQuote({
+  amount,
+  asset,
+  marketData,
+}: GetSip10TokenAmountInQuoteArgs) {
+  if (!asset || !marketData) return;
+  if (!marketData.price.amount.isGreaterThan(0)) return;
+  if (marketData.pair.base !== asset.symbol) return;
+  return baseCurrencyAmountInQuote(createMoney(amount, asset.symbol, asset.decimals), marketData);
 }
 
 function getTransactionOptionsFromRpcRequest(address: string) {

@@ -5,7 +5,7 @@ import {
   ensurePostConditionWireFormat,
   generateStacksUnsignedTransaction,
 } from '@leather.io/stacks';
-import { createMoneyFromDecimal } from '@leather.io/utils';
+import { createMoney } from '@leather.io/utils';
 
 import { useConvertCryptoCurrencyToFiatAmount } from '@app/common/hooks/use-convert-to-fiat-amount';
 import { AccountStacksAddress } from '@app/components/account/account-stacks-address';
@@ -21,9 +21,13 @@ import { useStacksRpcTransactionRequestContext } from '@app/features/rpc-stacks-
 import { useSignAndBroadcastStacksTransaction } from '@app/features/rpc-stacks-transaction-request/stacks/use-sign-and-broadcast-stacks-transaction';
 import { useStacksRpcTransactionRequestApproval } from '@app/features/rpc-stacks-transaction-request/stacks/use-stacks-rpc-transaction-request-approval';
 import { TransactionActionsWithSpend } from '@app/features/rpc-stacks-transaction-request/transaction-actions/transaction-actions-with-spend';
+import { useMarketDataByAssetId } from '@app/query/common/market-data/market-data.query';
+import { useGetSip10AssetByPrincipalQuery } from '@app/query/stacks/sip10/sip10-asset.query';
 
 import {
   getDecodedRpcStxTransferSip10FtRequest,
+  getSip10ContractIdFromAssetIdentifier,
+  getSip10TokenAmountInQuote,
   getUnsignedStacksContractCallOptions,
 } from './rpc-stx-transfer-sip10-ft.utils';
 
@@ -44,6 +48,20 @@ export function RpcStxTransferSip10Ft() {
   );
 
   const rpcRequest = useMemo(() => getDecodedRpcStxTransferSip10FtRequest(), []);
+  const contractId = getSip10ContractIdFromAssetIdentifier(rpcRequest.params.asset);
+  const { data: tokenAsset } = useGetSip10AssetByPrincipalQuery(contractId);
+  const tokenMarketDataState = useMarketDataByAssetId({ protocol: 'sip10', id: contractId });
+  const tokenMarketData =
+    tokenMarketDataState.state === 'success' ? tokenMarketDataState.value : undefined;
+  const tokenAmountInQuote = useMemo(
+    () =>
+      getSip10TokenAmountInQuote({
+        amount: rpcRequest.params.amount,
+        asset: tokenAsset,
+        marketData: tokenMarketData,
+      }),
+    [rpcRequest.params.amount, tokenAsset, tokenMarketData]
+  );
   const txOptionsForBroadcast = useMemo(
     () =>
       getUnsignedStacksContractCallOptions({
@@ -72,7 +90,8 @@ export function RpcStxTransferSip10Ft() {
         <TransactionActionsWithSpend
           isLoading={isLoadingBalance || isLoadingFees}
           isSponsored={isSponsored}
-          txAmount={createMoneyFromDecimal(rpcRequest.params.amount, 'STX')}
+          txAmount={createMoney(0, 'STX')}
+          tokenAmountInQuote={tokenAmountInQuote}
           onApprove={onApprove}
         />
       }

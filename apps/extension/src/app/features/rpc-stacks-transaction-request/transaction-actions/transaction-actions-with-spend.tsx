@@ -18,6 +18,7 @@ interface TransactionActionsWithSpendProps {
   isLoading: boolean;
   isSponsored: boolean;
   txAmount: Money;
+  tokenAmountInQuote?: Money;
   onApprove(): Promise<void>;
   approveLabel?: string;
   busyLabel?: string;
@@ -26,6 +27,7 @@ export function TransactionActionsWithSpend({
   isLoading,
   isSponsored,
   txAmount,
+  tokenAmountInQuote,
   onApprove,
   approveLabel,
   busyLabel,
@@ -33,15 +35,21 @@ export function TransactionActionsWithSpend({
   const { availableBalance, marketData, selectedFee } = useFeeEditorContext();
   const { status } = useStacksRpcTransactionRequestContext();
 
-  const totalSpend = useMemo(() => {
+  const stxSpend = useMemo(() => {
     const fee = selectedFee?.txFee;
     if (!fee) return txAmount;
-    return baseCurrencyAmountInQuote(sumMoney([txAmount, fee]), marketData);
-  }, [marketData, selectedFee?.txFee, txAmount]);
+    return sumMoney([txAmount, fee]);
+  }, [selectedFee?.txFee, txAmount]);
 
-  // TODO LEA-2537: Refactor error state
-  const isInsufficientBalance =
-    !isSponsored && availableBalance.amount.isLessThan(totalSpend.amount);
+  const totalSpend = useMemo(() => {
+    if (!selectedFee?.txFee) return txAmount;
+    const stxSpendInQuote = baseCurrencyAmountInQuote(stxSpend, marketData);
+    if (!tokenAmountInQuote || tokenAmountInQuote.symbol !== stxSpendInQuote.symbol)
+      return stxSpendInQuote;
+    return sumMoney([stxSpendInQuote, tokenAmountInQuote]);
+  }, [marketData, selectedFee?.txFee, stxSpend, tokenAmountInQuote, txAmount]);
+
+  const isInsufficientBalance = !isSponsored && availableBalance.amount.isLessThan(stxSpend.amount);
   const isBroadcasting = status === 'broadcasting';
   const isSubmitted = status === 'submitted';
 
