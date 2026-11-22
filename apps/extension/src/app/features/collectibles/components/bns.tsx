@@ -2,6 +2,8 @@ import { Stack, styled } from 'leather-styles/jsx';
 
 import { BnsIcon, LegacyBnsIcon } from '@leather.io/ui';
 
+import { parseIfValidPunycode } from '@app/common/utils';
+
 import { CollectibleCard } from './collectible-card';
 
 function getNameTextStyle(name: string) {
@@ -17,6 +19,7 @@ interface BnsCardContentProps {
 }
 
 function BnsCardContent({ name, isLegacy }: BnsCardContentProps) {
+  const displayName = parseIfValidPunycode(name);
   return (
     <Stack
       width="100%"
@@ -33,13 +36,13 @@ function BnsCardContent({ name, isLegacy }: BnsCardContentProps) {
         <BnsIcon color="orange.action-primary-default" width="40%" height="40%" />
       )}
       <styled.span
-        textStyle={getNameTextStyle(name)}
+        textStyle={getNameTextStyle(displayName)}
         maxWidth="100%"
         overflow="hidden"
         textOverflow="ellipsis"
         whiteSpace="nowrap"
       >
-        {name}
+        {displayName}
       </styled.span>
       {isLegacy && (
         <styled.span textStyle="caption.01" color="ink.text-subdued">
