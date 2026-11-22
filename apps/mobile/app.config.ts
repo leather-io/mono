@@ -73,6 +73,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           ios: {
             enableFullScreenImage_legacy: true,
           },
+          android: {
+            imageWidth: 200,
+          },
         },
       ],
       [
