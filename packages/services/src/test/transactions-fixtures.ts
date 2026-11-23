@@ -1,8 +1,9 @@
-import { type MempoolTokenTransferTransaction } from '@stacks/stacks-blockchain-api-types';
-
 import { type NetworkConfiguration } from '@leather.io/models';
 
-import { type HiroPrincipalMempoolTransaction } from '../infrastructure/api/hiro/hiro-stacks-api.types';
+import {
+  type HiroPrincipalMempoolTransaction,
+  type HiroPrincipalTransaction,
+} from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import {
   type LeatherApiBitcoinTransaction,
   type LeatherApiClient,
@@ -40,27 +41,24 @@ export function createTestLeatherBitcoinTransactionsPage(
   };
 }
 
-export function createTestMempoolTokenTransferTransaction(
-  overrides: Partial<MempoolTokenTransferTransaction> = {}
-): MempoolTokenTransferTransaction {
+type HiroPrincipalTokenTransferTransaction = Extract<
+  HiroPrincipalTransaction,
+  { type: 'token_transfer' }
+>;
+
+export function createTestPrincipalTokenTransferTx(
+  overrides: Partial<HiroPrincipalTokenTransferTransaction> = {}
+): HiroPrincipalTokenTransferTransaction {
   return {
     tx_id: '0x00',
-    nonce: 0,
+    sender: { address: 'SP000000000000000000002Q6VF78', nonce: 0 },
+    sponsor: null,
     fee_rate: '0',
-    sender_address: 'SP000000000000000000002Q6VF78',
-    sponsored: false,
-    post_condition_mode: 'deny',
-    post_conditions: [],
-    anchor_mode: 'any',
-    tx_status: 'pending',
-    receipt_time: 0,
-    receipt_time_iso: '1970-01-01T00:00:00.000Z',
-    tx_type: 'token_transfer',
-    token_transfer: {
-      recipient_address: 'SP000000000000000000002Q6VF78',
-      amount: '0',
-      memo: '',
-    },
+    block: { height: 0, hash: '0x00', index_hash: '0x00', time: 0, tx_index: 0 },
+    bitcoin_block: { height: 0, time: 0 },
+    status: 'success',
+    type: 'token_transfer',
+    token_transfer: { recipient: 'SP000000000000000000002Q6VF78', amount: '0', memo: null },
     ...overrides,
   };
 }

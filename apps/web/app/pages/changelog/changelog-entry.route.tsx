@@ -1,6 +1,7 @@
-import { Link, type MetaDescriptor } from 'react-router';
+import { Link, type MetaDescriptor, data } from 'react-router';
 
 import { SITE_ORIGIN } from '~/constants/constants';
+import { NotFound } from '~/pages/error/not-found';
 
 import { ArrowLeftIcon, Button } from '@leather.io/ui';
 
@@ -10,7 +11,8 @@ import { ChangelogEntry } from './components/changelog-entry';
 import { ChangelogEntryLayout, ChangelogPageLayout } from './components/changelog-page-layout';
 
 export function loader({ params }: Route.LoaderArgs) {
-  return { entry: getChangelogEntry(params.slug) };
+  const entry = getChangelogEntry(params.slug);
+  return data({ entry }, { status: entry ? 200 : 404 });
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {
@@ -49,7 +51,14 @@ export function meta({ loaderData }: Route.MetaArgs) {
 export default function ChangelogEntryRoute({ loaderData }: Route.ComponentProps) {
   const { entry } = loaderData;
 
-  if (!entry) return null;
+  if (!entry) {
+    return (
+      <NotFound
+        heading="Changelog entry not found"
+        recovery={{ href: '/changelog', label: 'Back to changelog' }}
+      />
+    );
+  }
 
   return (
     <ChangelogPageLayout

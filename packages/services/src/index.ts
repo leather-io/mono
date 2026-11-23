@@ -22,6 +22,7 @@ export type {
   HiroFtMetadata,
   HiroPrincipalMempoolTransaction,
   HiroPrincipalMempoolTransactionsResponse,
+  HiroPrincipalTransaction,
 } from './infrastructure/api/hiro/hiro-stacks-api.types';
 export * from './infrastructure/cache/http-cache.config';
 export * from './infrastructure/cache/http-cache.service';
