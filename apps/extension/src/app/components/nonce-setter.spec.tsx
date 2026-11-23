@@ -37,10 +37,12 @@ interface NonceFormValues {
 function FailingNonceForm() {
   const form = useForm<NonceFormValues>({
     defaultValues: { nonce: '', recipient: '' },
-    resolver: () => ({
-      values: {},
-      errors: { recipient: { type: 'custom', message: 'Enter an address' } },
-    }),
+    resolver() {
+      return {
+        values: {},
+        errors: { recipient: { type: 'custom', message: 'Enter an address' } },
+      };
+    },
   });
   const { submitCount } = form.formState;
   const nonce = form.watch('nonce');
@@ -50,8 +52,11 @@ function FailingNonceForm() {
         <NonceSetter />
         <output data-testid="nonce">{nonce}</output>
         <output data-testid="submit-count">{submitCount}</output>
-        <button type="button" onClick={() => form.setValue('nonce', customNonce)}>
-          Set custom nonce
+        <button
+          type="button"
+          onClick={() => form.setValue('nonce', customNonce, { shouldTouch: true })}
+        >
+          Apply custom nonce
         </button>
         <button type="submit">Submit</button>
       </form>
@@ -63,36 +68,64 @@ function getNonce() {
   return screen.getByTestId('nonce').textContent;
 }
 
+async function refetchNextNonce(rerender: (ui: React.ReactNode) => void) {
+  mocks.nextNonce = refetchedNextNonce;
+  await act(async () => {
+    rerender(<FailingNonceForm />);
+    await Promise.resolve();
+  });
+}
+
+async function submitOnce() {
+  fireEvent.click(screen.getByText('Submit'));
+  await waitFor(() => expect(screen.getByTestId('submit-count').textContent).toBe('1'));
+}
+
 describe(NonceSetter.name, () => {
   beforeEach(() => {
     mocks.nextNonce = initialNextNonce;
   });
 
-  test('follows the next nonce until the form is submitted', async () => {
+  test('follows the next nonce while the user has not applied their own', async () => {
     const { rerender } = render(<FailingNonceForm />);
     await waitFor(() => expect(getNonce()).toBe(String(initialNextNonce)));
 
-    mocks.nextNonce = refetchedNextNonce;
-    rerender(<FailingNonceForm />);
+    await refetchNextNonce(rerender);
 
-    await waitFor(() => expect(getNonce()).toBe(String(refetchedNextNonce)));
+    expect(getNonce()).toBe(String(refetchedNextNonce));
   });
 
-  test('keeps a custom nonce when the next nonce changes after a failed submit', async () => {
+  test('keeps following the next nonce after a failed submit', async () => {
     const { rerender } = render(<FailingNonceForm />);
     await waitFor(() => expect(getNonce()).toBe(String(initialNextNonce)));
 
-    fireEvent.click(screen.getByText('Set custom nonce'));
+    await submitOnce();
+    await refetchNextNonce(rerender);
+
+    expect(getNonce()).toBe(String(refetchedNextNonce));
+  });
+
+  test('keeps an applied nonce when the next nonce changes before a submit', async () => {
+    const { rerender } = render(<FailingNonceForm />);
+    await waitFor(() => expect(getNonce()).toBe(String(initialNextNonce)));
+
+    fireEvent.click(screen.getByText('Apply custom nonce'));
     await waitFor(() => expect(getNonce()).toBe(String(customNonce)));
 
-    fireEvent.click(screen.getByText('Submit'));
-    await waitFor(() => expect(screen.getByTestId('submit-count').textContent).toBe('1'));
+    await refetchNextNonce(rerender);
 
-    mocks.nextNonce = refetchedNextNonce;
-    await act(async () => {
-      rerender(<FailingNonceForm />);
-      await Promise.resolve();
-    });
+    expect(getNonce()).toBe(String(customNonce));
+  });
+
+  test('keeps an applied nonce when the next nonce changes after a failed submit', async () => {
+    const { rerender } = render(<FailingNonceForm />);
+    await waitFor(() => expect(getNonce()).toBe(String(initialNextNonce)));
+
+    fireEvent.click(screen.getByText('Apply custom nonce'));
+    await waitFor(() => expect(getNonce()).toBe(String(customNonce)));
+
+    await submitOnce();
+    await refetchNextNonce(rerender);
 
     expect(getNonce()).toBe(String(customNonce));
   });

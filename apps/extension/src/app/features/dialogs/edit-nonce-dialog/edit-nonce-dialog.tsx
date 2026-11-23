@@ -47,8 +47,11 @@ export function EditNonceSheet() {
   }, [clearErrors, getValues, setError]);
 
   const onSubmit = useCallback(() => {
-    if (validateNonce()) void onGoBack();
-  }, [onGoBack, validateNonce]);
+    if (!validateNonce()) return;
+    const nonce = getValues('nonce');
+    if (String(nonce) !== String(loadedNextNonce)) setValue('nonce', nonce, { shouldTouch: true });
+    void onGoBack();
+  }, [getValues, loadedNextNonce, onGoBack, setValue, validateNonce]);
 
   const onClose = useCallback(() => {
     clearErrors('nonce');
