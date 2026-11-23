@@ -413,6 +413,26 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.67.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.66.3...@leather.io/services-v1.67.0) (2026-11-19)
+
+
+### Features
+
+* **mobile:** token presets and a hidden tokens pill under the list ([#2859](https://github.com/leather-io/mono/issues/2859)) ([9e71d62](https://github.com/leather-io/mono/commit/9e71d6218aca02385ab98330c9ff90c8e85bd2fe))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.42.2
+    * @leather.io/constants bumped to 0.41.1
+    * @leather.io/crypto bumped to 1.13.12
+    * @leather.io/stacks bumped to 1.22.10
+    * @leather.io/utils bumped to 0.55.1
+  * devDependencies
+    * @leather.io/rpc bumped to 2.25.5
+
 ## [1.66.3](https://github.com/leather-io/mono/compare/@leather.io/services-v1.66.2...@leather.io/services-v1.66.3) (2026-10-27)
 
 

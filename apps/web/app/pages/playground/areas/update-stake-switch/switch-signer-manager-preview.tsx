@@ -36,7 +36,7 @@ interface PreviewPoolFacts {
 
 const previewPoolFacts: Record<string, PreviewPoolFacts> = {
   stackingDao: { name: 'Stacking DAO', feePercent: 0, rewardsLabel: 'sBTC' },
-  planbetter: { name: 'PlanBetter', feePercent: 5, rewardsLabel: 'BTC' },
+  planbetter: { name: 'Planbetter', feePercent: 5, rewardsLabel: 'BTC' },
   fastPool: { name: 'Fast Pool', feePercent: 0, rewardsLabel: 'sBTC / BTC' },
   xversePool: { name: 'Xverse', feePercent: 4.95, rewardsLabel: 'sBTC / BTC' },
   senseiNode: { name: 'SenseiNode', feePercent: 10, rewardsLabel: 'sBTC / BTC' },

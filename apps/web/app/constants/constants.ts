@@ -12,4 +12,6 @@ export const STACKING_TRACKER_API_URL = 'https://api.stacking-tracker.com';
 
 export const EM_DASH = '—';
 
-export const FRONT_INBOX_ID = 'inb_6cw7l';
+export const SITE_ORIGIN = 'https://leather.io';
+
+export const SITE_HOSTNAMES = ['leather.io', 'www.leather.io', 'app.leather.io'];

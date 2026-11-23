@@ -1,0 +1,59 @@
+name: repo:review-gate
+run-name: 'review-gate: #${{ inputs.pr }}'
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: The pull request to check
+        type: number
+        required: true
+
+permissions: {}
+
+jobs:
+  check:
+    name: check
+    if: github.ref_name == 'dev'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    cache-mode: none
+    environment: environment/mono-review-gate
+    concurrency:
+      group: review-gate-${{ inputs.pr }}
+      cancel-in-progress: false
+    permissions:
+      contents: read # checkout of dev only; every GitHub write uses the review gate app token
+      id-token: write # OIDC exchange for the AWS role that signs the review gate App JWT with its KMS key
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: $/.github/actions/setup-tools
+
+      - name: aws-credentials
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: app-token
+        id: app-token
+        env:
+          APP_CLIENT_ID: ${{ vars.REVIEW_GATE_APP_CLIENT_ID }}
+          KMS_KEY_ID: ${{ vars.REVIEW_GATE_APP_KMS_KEY_ID }}
+        run: pnpm lt review-gate app-token create --client-id "$APP_CLIENT_ID" --kms-key-id "$KMS_KEY_ID"
+
+      - name: check-dispatched-pull-request
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PR: ${{ inputs.pr }}
+        run: pnpm lt review-gate check --pr "$PR"
+
+      - name: revoke-app-token
+        if: always() && steps.app-token.outputs.token != ''
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: pnpm lt review-gate app-token revoke
