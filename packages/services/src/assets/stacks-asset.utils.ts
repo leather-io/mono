@@ -25,21 +25,6 @@ export function getAddressFromAssetIdentifier(assetIdentifier: string) {
   return principal.split('.')[0];
 }
 
-export function getAssetIdentifierFromContract(
-  contractAddress: string,
-  contractName: string,
-  assetName: string
-) {
-  return `${contractAddress}.${contractName}::${assetName}`;
-}
-
-export function getContractPrincipalFromAddressAndName(
-  contractAddress: string,
-  contractName: string
-) {
-  return `${contractAddress}.${contractName}`;
-}
-
 export function createSip10Asset(sip10Token: LeatherApiSip10Token): Sip10Asset {
   const assetName = getAssetNameFromIdentifier(sip10Token.assetIdentifier);
   const name = getSip10TokenNameWithOverrides(sip10Token.principal, sip10Token.name ?? assetName);

@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 
-import { useActivity } from '~/queries/activity/activity.query';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useUserSettings } from '~/hooks/use-user-settings';
+import { createBlockchainActivityViewsFeedQuery } from '~/queries/activity/blockchain-activity.query';
 import { useBtcAccountBalance } from '~/queries/balance/btc-balance.hooks';
 import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
 import { useStxAccountBalance } from '~/queries/balance/stx-balance.hooks';
@@ -16,6 +18,8 @@ import { PortfolioSummary } from './components/portfolio-summary';
 import { WalletConnectionModal } from './components/wallet-connection-modal';
 import { dummyPortfolioAssets, dummyTotalBalance } from './dummy-portfolio-data';
 import { type PortfolioAsset, PortfolioTable } from './portfolio-table/portfolio-table';
+
+const activityFeedPageSize = 25;
 
 function sortAssetsByValue(a: PortfolioAsset, b: PortfolioAsset) {
   const aValue = Number(a.quote.availableBalance.amount);
@@ -52,9 +56,12 @@ export function PortfolioPage() {
     }),
     [btcAccount, stacksAccount]
   );
-  const activityQuery = useActivity(activityAccount);
-
   const isConnected = status === 'connected';
+  const settings = useUserSettings();
+  const activityQuery = useInfiniteQuery({
+    ...createBlockchainActivityViewsFeedQuery(activityAccount, settings, activityFeedPageSize),
+    enabled: isConnected,
+  });
   const allAssets = useMemo(() => {
     const assets: PortfolioAsset[] = [];
 
@@ -109,6 +116,9 @@ export function PortfolioPage() {
         <ActivityList
           activity={isConnected ? (activityQuery.data ?? []) : []}
           isLoading={isConnected && activityQuery.isLoading}
+          hasNextPage={activityQuery.hasNextPage}
+          isFetchingNextPage={activityQuery.isFetchingNextPage}
+          onLoadMore={() => void activityQuery.fetchNextPage()}
         />
       }
     />

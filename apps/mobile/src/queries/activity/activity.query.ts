@@ -1,59 +1,91 @@
 import { toFetchState } from '@/components/loading/fetch-state';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
-import { type UseQueryOptions, useQuery } from '@tanstack/react-query';
+import { formatCurrency } from '@/utils/currency-formatter';
+import { type InfiniteData, useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
-import { type ActivityView, createActivityView } from '@leather.io/features';
-import { type AccountAddresses, type Activity, type CryptoAsset } from '@leather.io/models';
-import { createActivityByAssetQueryConfig, createActivityQueryConfig } from '@leather.io/queries';
-import type { UserSettings } from '@leather.io/services';
+import {
+  type BlockchainActivityViewDeps,
+  createBlockchainActivityItems,
+} from '@leather.io/features';
+import type { BlockchainActivity, CryptoAssetId, Money } from '@leather.io/models';
+import {
+  createBlockchainActivityByAssetIdQueryConfig,
+  createBlockchainActivityInfiniteQueryConfig,
+} from '@leather.io/queries';
+import type { ActivityResponse, UserSettings } from '@leather.io/services';
+import type { FormatAmountOptions } from '@leather.io/utils';
 
 import { retriableActivityQueryOptions } from './activity-query-options';
 
-function useBaseActivityQuery(
-  account: AccountAddresses,
-  options: Partial<UseQueryOptions<Activity[], Error, ActivityView[]>> = {}
-) {
+const feedPageSize = 25;
+
+function formatActivityMoney(money: Money, options?: FormatAmountOptions) {
+  return formatCurrency(money, { ...options, showCurrency: false });
+}
+
+const activityViewDeps: BlockchainActivityViewDeps = { formatMoney: formatActivityMoney };
+
+function selectActivityFeedItems(data: InfiniteData<ActivityResponse>) {
+  return createBlockchainActivityItems(
+    data.pages.flatMap(page => page.items),
+    activityViewDeps
+  );
+}
+
+function selectActivityItems(activities: BlockchainActivity[]) {
+  return createBlockchainActivityItems(activities, activityViewDeps);
+}
+
+function useActivitySettings(): UserSettings {
   const { networkPreference, fiatCurrencyPreference, assetVisibility } = useSettings();
-  const settings: UserSettings = {
+  return {
     network: networkPreference,
     quoteCurrency: fiatCurrencyPreference,
     assetVisibility,
   };
-  const baseConfig = createActivityQueryConfig(account, settings);
-  const { select, ...rest } = options;
-  const queryKeyWithCurrency = [...(baseConfig.queryKey ?? []), fiatCurrencyPreference];
+}
 
-  return useQuery<Activity[], Error, ActivityView[]>({
-    ...baseConfig,
+export function useActivityFeed(fingerprint: string, accountIndex: number) {
+  const account = useAccountAddresses(fingerprint, accountIndex);
+  const settings = useActivitySettings();
+  const feedQuery = useInfiniteQuery({
+    ...createBlockchainActivityInfiniteQueryConfig({ account, limit: feedPageSize }, settings),
     ...retriableActivityQueryOptions,
-    ...rest,
-    queryKey: queryKeyWithCurrency,
-    select:
-      select ?? (activity => activity.map(item => createActivityView(item, settings.network))),
+    select: selectActivityFeedItems,
   });
-}
 
-export function useActivity(fingerprint: string, accountIndex: number) {
-  const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(useBaseActivityQuery(account));
-}
-
-export function useActivityByAsset(fingerprint: string, accountIndex: number, asset: CryptoAsset) {
-  const account = useAccountAddresses(fingerprint, accountIndex);
-  return toFetchState(useActivityByAssetQuery(account, asset));
-}
-
-function useActivityByAssetQuery(account: AccountAddresses, asset: CryptoAsset) {
-  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
-  const settings: UserSettings = {
-    network: networkPreference,
-    quoteCurrency: fiatCurrencyPreference,
-    assetVisibility,
+  return {
+    activity: toFetchState(feedQuery),
+    hasNextPage: feedQuery.hasNextPage,
+    isFetchingNextPage: feedQuery.isFetchingNextPage,
+    fetchNextPage() {
+      void feedQuery.fetchNextPage();
+    },
   };
-  return useQuery<Activity[], Error, ActivityView[]>({
-    ...createActivityByAssetQueryConfig(account, asset, settings),
+}
+
+export function useActivityByAssetIdQuery<T>(
+  fingerprint: string,
+  accountIndex: number,
+  assetId: CryptoAssetId,
+  select: (activities: BlockchainActivity[]) => T
+) {
+  const account = useAccountAddresses(fingerprint, accountIndex);
+  const settings = useActivitySettings();
+  return useQuery({
+    ...createBlockchainActivityByAssetIdQueryConfig(account, assetId, settings),
     ...retriableActivityQueryOptions,
-    select: activity => activity.map(item => createActivityView(item, settings.network)),
+    select,
   });
+}
+
+export function useActivityByAssetId(
+  fingerprint: string,
+  accountIndex: number,
+  assetId: CryptoAssetId
+) {
+  return toFetchState(
+    useActivityByAssetIdQuery(fingerprint, accountIndex, assetId, selectActivityItems)
+  );
 }
