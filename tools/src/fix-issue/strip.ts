@@ -1,7 +1,7 @@
 import { rmSync } from 'node:fs';
 import path from 'node:path';
 
-import { runCommand, runOrThrow } from './exec.js';
+import { runCommand, runOrThrow } from '../ci/exec.js';
 import { changedPaths, refusedPaths } from './git.js';
 import type { FixIssuePaths } from './paths.js';
 import { readStatus, writeStatus } from './status.js';
