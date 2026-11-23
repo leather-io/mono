@@ -3,18 +3,19 @@ import { isPlainObject } from 'remeda';
 import { type Sip9Attribute, type Sip9Collection } from '@leather.io/models';
 
 import {
-  type HiroAddressStxBalanceResponse,
   type HiroAddressTransactionWithTransfers,
   type HiroMetadata,
+  type HiroPrincipalStxBalanceResponse,
 } from './hiro-stacks-api.types';
 
-export function readStxTotalBalance(stxBalance: HiroAddressStxBalanceResponse) {
+export function readStxTotalBalance(stxBalance: HiroPrincipalStxBalanceResponse) {
   const totalBalance = Number(stxBalance.balance);
   return isNaN(totalBalance) ? 0 : totalBalance;
 }
 
-export function readStxLockedBalance(stxBalance: HiroAddressStxBalanceResponse) {
-  const lockedBalance = Number(stxBalance.locked);
+export function readStxLockedBalance(stxBalance: HiroPrincipalStxBalanceResponse) {
+  if (!stxBalance.locked) return 0;
+  const lockedBalance = Number(stxBalance.locked.amount);
   return isNaN(lockedBalance) ? 0 : lockedBalance;
 }
 

@@ -31,7 +31,6 @@
     "@leather.io/models": "workspace:*",
     "@leather.io/services": "workspace:*",
     "@leather.io/utils": "workspace:*",
-    "@stacks/stacks-blockchain-api-types": "7.14.1",
     "@stacks/transactions": "7.5.0"
   },
   "devDependencies": {
