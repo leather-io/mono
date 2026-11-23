@@ -16,7 +16,7 @@ function createNonces(overrides: Partial<StacksAccountNonces> = {}): StacksAccou
 }
 
 function createConfirmedTx(nonce: number): ConfirmedTransactionNonce {
-  return { nonce, sender_address: senderAddress };
+  return { sender: { address: senderAddress, nonce } };
 }
 
 function createPendingTx(nonce: number): StacksMempoolTransaction {

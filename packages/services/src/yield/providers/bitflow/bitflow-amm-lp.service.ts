@@ -69,12 +69,12 @@ export class BitflowAmmLpService implements YieldProductService {
       return [];
     }
     const [ftTokensBalances, poolMap] = await Promise.all([
-      this.hiroStacksApiClient.getAddressFtBalances(account.stacks.stxAddress, { signal }),
+      this.hiroStacksApiClient.getPrincipalFtBalances(account.stacks.stxAddress, { signal }),
       this.leatherApiClient.fetchBitflowPoolMap({ signal }),
     ]);
     const calls = [];
-    for (const ftBalance of ftTokensBalances.results) {
-      const principal = getPrincipalFromAssetString(ftBalance.token);
+    for (const ftBalance of ftTokensBalances) {
+      const principal = getPrincipalFromAssetString(ftBalance.asset_identifier);
       if (poolMap[principal]) {
         calls.push(
           this.getBitflowAmmLpPosition(Number(ftBalance.balance), poolMap[principal], signal)

@@ -52,7 +52,7 @@ through KMS (`app-token.ts`). `client.ts` scopes the shared client to the reposi
 ## Trust
 
 `repo:review-gate` only runs from `dev`: `workflow_dispatch` is started with `--ref dev`, and the
-App key sits in the `review-gate` environment, whose deployment branches are limited to `dev`. A pull request can edit
+App key sits in the `environment/mono-review-gate` environment, whose deployment branches are limited to `dev`. A pull request can edit
 `repo:review-gate-dispatch`, but the most it can do is not start the gate, or start it from its own
 branch, where the environment refuses the key. Either way no App status appears and the pull
 request stays blocked.
@@ -75,10 +75,11 @@ signature is logged in CloudTrail.
 1. Create a GitHub App (webhook off; repository permissions Actions read, Commit statuses read and
    write, Pull requests read, Metadata read; organization permission Members read) and install it
    on the repository only. Set the repository variable `REVIEW_GATE_APP_CLIENT_ID`.
-2. Create the environment `review-gate`, limited to the `dev` branch, with the variables
+2. Create the environment `environment/mono-review-gate`, limited to the `dev` branch, with the variables
    `AWS_ROLE_ARN`, `AWS_REGION` and `REVIEW_GATE_APP_KMS_KEY_ID`. It holds no secrets.
 3. In AWS, import a private key generated for the App into an asymmetric KMS key (`RSA_2048`,
    `SIGN_VERIFY`), then delete the downloaded `.pem` and every other key on the App's settings page.
    The role in `AWS_ROLE_ARN` trusts only GitHub's OIDC subject
-   `repo:leather-io/mono:environment:review-gate` and may only call `kms:Sign` on that key.
+   `repo:leather-io/mono:environment:environment/mono-review-gate` and may only call `kms:Sign` on
+   that key.
 4. In the `dev` ruleset, require the `review-gate` status from this App.
