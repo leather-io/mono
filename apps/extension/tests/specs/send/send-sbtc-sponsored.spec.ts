@@ -5,7 +5,7 @@ import {
   mockSbtcSponsorshipQuote,
   mockSbtcSponsorshipSubmit,
 } from '@tests/mocks/mock-sbtc';
-import { mockZeroStxBalanceV2Request } from '@tests/mocks/mock-stacks-balances-v2';
+import { mockZeroStxPrincipalBalanceRequest } from '@tests/mocks/mock-stacks-principal-balances';
 import type { HomePage } from '@tests/page-object-models/home.page';
 import type { OnboardingPage } from '@tests/page-object-models/onboarding.page';
 import type { SendPage } from '@tests/page-object-models/send.page';
@@ -78,7 +78,7 @@ test.describe('Send sBTC with an STX balance that covers the fee', () => {
 test.describe('Send sBTC without STX to cover the fee', () => {
   test.beforeEach(async ({ extensionId, globalPage, page }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await mockZeroStxBalanceV2Request(page);
+    await mockZeroStxPrincipalBalanceRequest(page);
   });
 
   test('offers the sBTC fee tiers with a sponsored badge', async ({

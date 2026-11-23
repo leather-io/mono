@@ -4,7 +4,7 @@ import { mockTestAccountStacksTxsRequestsWithPendingTx } from '@tests/mocks/mock
 import { test } from '../../fixtures/fixtures';
 import { mockEmptyLeatherApiUtxosRequest } from '../../mocks/mock-leather-api';
 import { mockEmptyStacksBalancesRequest } from '../../mocks/mock-stacks-balances';
-import { mockEmptyStacksBalancesV2Request } from '../../mocks/mock-stacks-balances-v2';
+import { mockEmptyStacksPrincipalBalancesRequest } from '../../mocks/mock-stacks-principal-balances';
 import { CoreAssetSelectors, MockedTokensSelectors } from '../../selectors/mocked-tokens.selectors';
 import { TokenDetailsSelectors } from '../../selectors/token-details.selectors';
 
@@ -105,7 +105,7 @@ test.describe('Token details', () => {
       test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
         await globalPage.setupAndUseApiCalls(extensionId);
         await mockEmptyStacksBalancesRequest(page);
-        await mockEmptyStacksBalancesV2Request(page);
+        await mockEmptyStacksPrincipalBalancesRequest(page);
         await mockEmptyLeatherApiUtxosRequest(page);
         await onboardingPage.signInWithTestAccount(extensionId);
       });
