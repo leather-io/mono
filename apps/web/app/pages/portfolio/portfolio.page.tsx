@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useUserSettings } from '~/hooks/use-user-settings';
 import { createBlockchainActivityViewsFeedQuery } from '~/queries/activity/blockchain-activity.query';
+import { useFetchPastEmptyActivityPages } from '~/queries/activity/use-fetch-past-empty-activity-pages';
 import { useBtcAccountBalance } from '~/queries/balance/btc-balance.hooks';
 import { useSip10AccountBalance } from '~/queries/balance/sip10-balance.hooks';
 import { useStxAccountBalance } from '~/queries/balance/stx-balance.hooks';
@@ -62,6 +63,16 @@ export function PortfolioPage() {
     ...createBlockchainActivityViewsFeedQuery(activityAccount, settings, activityFeedPageSize),
     enabled: isConnected,
   });
+  const isActivityTailEmpty = activityQuery.data?.isTailEmpty ?? false;
+  useFetchPastEmptyActivityPages({
+    isTailEmpty: isActivityTailEmpty,
+    isFetching: activityQuery.isFetching,
+    isFetchNextPageError: activityQuery.isFetchNextPageError,
+    fetchNextPage: activityQuery.fetchNextPage,
+  });
+  const activityViews = activityQuery.data?.views ?? [];
+  const isSearchingActivity =
+    activityViews.length === 0 && isActivityTailEmpty && !activityQuery.isFetchNextPageError;
   const allAssets = useMemo(() => {
     const assets: PortfolioAsset[] = [];
 
@@ -114,8 +125,8 @@ export function PortfolioPage() {
       visualization={<PortfolioChart assets={allAssets} />}
       activityList={
         <ActivityList
-          activity={isConnected ? (activityQuery.data ?? []) : []}
-          isLoading={isConnected && activityQuery.isLoading}
+          activity={isConnected ? activityViews : []}
+          isLoading={isConnected && (activityQuery.isLoading || isSearchingActivity)}
           hasNextPage={activityQuery.hasNextPage}
           isFetchingNextPage={activityQuery.isFetchingNextPage}
           onLoadMore={() => void activityQuery.fetchNextPage()}

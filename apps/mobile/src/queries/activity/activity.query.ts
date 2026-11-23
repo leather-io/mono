@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { toFetchState } from '@/components/loading/fetch-state';
 import { defaultMask } from '@/components/private-text';
@@ -16,6 +16,7 @@ import type { BlockchainActivity, CryptoAssetId, Money } from '@leather.io/model
 import {
   createBlockchainActivityByAssetIdQueryConfig,
   createBlockchainActivityInfiniteQueryConfig,
+  isActivityFeedTailEmpty,
 } from '@leather.io/queries';
 import type { ActivityResponse, UserSettings } from '@leather.io/services';
 import type { FormatAmountOptions } from '@leather.io/utils';
@@ -53,11 +54,13 @@ export function useActivityFeed(fingerprint: string, accountIndex: number) {
   const settings = useActivitySettings();
   const viewDeps = useActivityViewDeps();
   const selectActivityFeedItems = useCallback(
-    (data: InfiniteData<ActivityResponse>) =>
-      createBlockchainActivityItems(
+    (data: InfiniteData<ActivityResponse>) => ({
+      items: createBlockchainActivityItems(
         data.pages.flatMap(page => page.items),
         viewDeps
       ),
+      isTailEmpty: isActivityFeedTailEmpty(data),
+    }),
     [viewDeps]
   );
   const feedQuery = useInfiniteQuery({
@@ -65,18 +68,25 @@ export function useActivityFeed(fingerprint: string, accountIndex: number) {
     ...retriableActivityQueryOptions,
     select: selectActivityFeedItems,
   });
+  const { fetchNextPage, isFetching, isFetchNextPageError } = feedQuery;
+  const isTailEmpty = feedQuery.data?.isTailEmpty ?? false;
+  useEffect(() => {
+    if (isTailEmpty && !isFetching && !isFetchNextPageError) void fetchNextPage();
+  }, [isTailEmpty, isFetching, isFetchNextPageError, fetchNextPage]);
+  const isSearchingActivity =
+    feedQuery.data?.items.length === 0 && isTailEmpty && !isFetchNextPageError;
 
   return {
     activity: toFetchState({
-      data: feedQuery.data,
-      isLoading: feedQuery.isLoading,
+      data: feedQuery.data?.items,
+      isLoading: feedQuery.isLoading || isSearchingActivity,
       isError: feedQuery.isError && feedQuery.data === undefined,
       error: feedQuery.error,
     }),
     hasNextPage: feedQuery.hasNextPage,
     isFetchingNextPage: feedQuery.isFetchingNextPage,
     fetchNextPage() {
-      void feedQuery.fetchNextPage();
+      void fetchNextPage();
     },
   };
 }

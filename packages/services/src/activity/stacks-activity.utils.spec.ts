@@ -584,19 +584,22 @@ type TestPostCondition = Parameters<typeof getPendingOutflowsFromPostConditions>
 function ftPostCondition(
   principal: TestPostCondition['principal'],
   amount: string,
-  assetName = 'tok'
+  conditionCode: Extract<
+    TestPostCondition,
+    { type: 'fungible' }
+  >['condition_code'] = 'sent_equal_to'
 ): TestPostCondition {
   return {
     principal,
-    condition_code: 'sent_equal_to',
+    condition_code: conditionCode,
     amount,
     type: 'fungible',
-    asset: { contract_address: 'SP', contract_name: 'token', asset_name: assetName },
+    asset: { contract_address: 'SP', contract_name: 'token', asset_name: 'tok' },
   };
 }
 
 describe(getPendingOutflowsFromPostConditions.name, () => {
-  it('sums the sender stx and fungible outflows per asset', () => {
+  it('returns the exact sender stx and fungible outflows per asset', () => {
     const outflows = getPendingOutflowsFromPostConditions(
       [
         {
@@ -606,14 +609,46 @@ describe(getPendingOutflowsFromPostConditions.name, () => {
           type: 'stx',
         },
         ftPostCondition({ type_id: 'principal_origin' }, '100'),
-        ftPostCondition({ type_id: 'principal_standard', address: 'SP1' }, '50'),
       ],
       'SP1'
     );
     expect(outflows).toEqual([
       { type: 'stx', amount: '10' },
-      { type: 'ft', identifier: 'SP.token::tok', amount: '150' },
+      { type: 'ft', identifier: 'SP.token::tok', amount: '100' },
     ]);
+  });
+
+  it('counts equivalent origin and sender conditions once', () => {
+    const outflows = getPendingOutflowsFromPostConditions(
+      [
+        ftPostCondition({ type_id: 'principal_origin' }, '100'),
+        ftPostCondition({ type_id: 'principal_standard', address: 'SP1' }, '100'),
+      ],
+      'SP1'
+    );
+    expect(outflows).toEqual([{ type: 'ft', identifier: 'SP.token::tok', amount: '100' }]);
+  });
+
+  it('returns no outflow when exact conditions for an asset disagree', () => {
+    const outflows = getPendingOutflowsFromPostConditions(
+      [
+        ftPostCondition({ type_id: 'principal_origin' }, '100'),
+        ftPostCondition({ type_id: 'principal_standard', address: 'SP1' }, '50'),
+      ],
+      'SP1'
+    );
+    expect(outflows).toEqual([]);
+  });
+
+  it('ignores conditions that do not establish an exact amount', () => {
+    const outflows = getPendingOutflowsFromPostConditions(
+      [
+        ftPostCondition({ type_id: 'principal_origin' }, '100', 'sent_less_than_or_equal_to'),
+        ftPostCondition({ type_id: 'principal_origin' }, '1', 'sent_greater_than'),
+      ],
+      'SP1'
+    );
+    expect(outflows).toEqual([]);
   });
 
   it('ignores other principals, zero amounts and non-fungible conditions', () => {

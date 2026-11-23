@@ -217,20 +217,22 @@ export function getPendingOutflowsFromPostConditions(
   postConditions: StacksPostCondition[],
   senderAddress: string
 ): PendingOutflow[] {
-  const totals = new Map<string, BigNumber>();
+  const exactAmounts = new Map<string, BigNumber[]>();
   for (const postCondition of postConditions) {
     if (postCondition.type !== 'stx' && postCondition.type !== 'fungible') continue;
+    if (postCondition.condition_code !== 'sent_equal_to') continue;
     if (!isSenderPostConditionPrincipal(postCondition.principal, senderAddress)) continue;
     const key = getPostConditionOutflowKey(postCondition);
-    const amount = initBigNumber(postCondition.amount);
-    if (key === undefined || !amount.isGreaterThan(0)) continue;
-    totals.set(key, (totals.get(key) ?? initBigNumber(0)).plus(amount));
+    if (key === undefined) continue;
+    exactAmounts.set(key, [...(exactAmounts.get(key) ?? []), initBigNumber(postCondition.amount)]);
   }
-  return [...totals].map(([key, amount]) =>
-    key === stxOutflowKey
-      ? { type: 'stx', amount: amount.toString() }
-      : { type: 'ft', identifier: key, amount: amount.toString() }
-  );
+  return [...exactAmounts].flatMap(([key, amounts]): PendingOutflow[] => {
+    const [amount] = amounts;
+    if (!amount.isGreaterThan(0)) return [];
+    if (!amounts.every(other => other.isEqualTo(amount))) return [];
+    if (key === stxOutflowKey) return [{ type: 'stx', amount: amount.toString() }];
+    return [{ type: 'ft', identifier: key, amount: amount.toString() }];
+  });
 }
 
 export function buildPendingStacksActivity(
