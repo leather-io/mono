@@ -1,7 +1,7 @@
 ---
 title: 'Know when a new version is ready'
 slug: extension-update-notice
-publishedAt: 2026-09-28T12:00:00.000Z
+publishedAt: 2026-10-01T12:00:00.000Z
 tags: ['extension']
 cover: /marketing/changelog/extension-update-notice.webp
 ---
