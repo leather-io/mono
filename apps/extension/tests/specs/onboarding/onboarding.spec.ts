@@ -9,6 +9,7 @@ import {
 } from '@tests/page-object-models/onboarding.page';
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 import { OnboardingSelectors } from '@tests/selectors/onboarding.selectors';
+import { expectToSettleAt } from '@tests/utils';
 import { z } from 'zod';
 
 import { test } from '../../fixtures/fixtures';
@@ -121,6 +122,20 @@ test.describe('Onboarding an existing user', () => {
     await onboardingPage.signInMnemonicKey(validPartialKey);
     const signInSeedError = onboardingPage.page.getByTestId(OnboardingSelectors.SignInSeedError);
     await test.expect(signInSeedError).toBeHidden();
+  });
+
+  test('mnemonic key validation: should keep continue enabled after leaving a word empty', async ({
+    extensionId,
+    globalPage,
+    onboardingPage,
+  }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await onboardingPage.signInMnemonicKey('shoulder any pencil');
+    const emptyWordInput = onboardingPage.page.getByTestId('mnemonic-input-4');
+    await emptyWordInput.focus();
+    await emptyWordInput.blur();
+    const signInButton = onboardingPage.page.getByTestId(OnboardingSelectors.SignInBtn);
+    await expectToSettleAt(() => signInButton.isEnabled(), true);
   });
 
   test('Activity tab', async ({ extensionId, globalPage, onboardingPage, homePage, page }) => {

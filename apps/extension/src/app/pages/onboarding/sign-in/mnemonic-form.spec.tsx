@@ -124,4 +124,17 @@ describe(MnemonicForm.name, () => {
     await waitFor(() => expect(getContinueButton().hasAttribute('disabled')).toBe(true));
     expect(screen.getByText('Word 3 is incorrect or misspelled')).toBeDefined();
   });
+
+  test('ignores an empty word that was focused and left', async () => {
+    render(<MnemonicFormHarness onSubmit={vi.fn()} />);
+
+    twelveValidWords.forEach((word, index) => typeWord(index + 1, word));
+    fireEvent.blur(screen.getByTestId('mnemonic-input-13'));
+
+    typeWord(3, 'notaword');
+    await waitFor(() => expect(getContinueButton().hasAttribute('disabled')).toBe(true));
+
+    typeWord(3, 'abandon');
+    await waitFor(() => expect(getContinueButton().hasAttribute('disabled')).toBe(false));
+  });
 });

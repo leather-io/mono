@@ -14,7 +14,7 @@ function isValidMnemonic(word: string): boolean {
 const dynamicObjectValue = stringField().check(
   z.refine<string | undefined>(
     value => {
-      if (!value) return false;
+      if (!value) return true;
       return isValidMnemonic(value);
     },
     { error: issue => `${String(issue.path?.at(-1))} is invalid` }

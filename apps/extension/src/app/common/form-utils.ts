@@ -16,12 +16,14 @@ export function useFieldError(name: string) {
 export function useShowFieldError(name: string) {
   const { getFieldState } = useFormContext();
   const formState = useFormState({ name });
+  const { submitCount } = formState;
   const { error, isTouched } = getFieldState(name, formState);
+  const errorMessage = error?.message;
   const isDirty = useIsFieldDirty(name);
   const isFieldInFocus = document.activeElement?.getAttribute('name') === name;
 
   return !!(
-    (formState.submitCount > 0 && error) ||
-    (!isFieldInFocus && isTouched && isDirty && error)
+    (submitCount > 0 && errorMessage) ||
+    (!isFieldInFocus && isTouched && isDirty && errorMessage)
   );
 }

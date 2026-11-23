@@ -17,7 +17,9 @@ export function NonceSetter() {
     StacksSendFormValues | StacksTransactionFormValues
   >();
   const nonce = watch('nonce');
+  const { submitCount } = formState;
   const { isTouched } = getFieldState('nonce', formState);
+  const isNonceLocked = isTouched || submitCount > 0;
   const stxAddress = useCurrentStacksAccountAddress();
   const { data: nextNonce } = useNextNonce(stxAddress);
   const policy = useCurrentPolicy();
@@ -25,7 +27,7 @@ export function NonceSetter() {
 
   useAsync(async () => {
     if (isStacksPolicy) return;
-    if (isDefined(nextNonce?.nonce) && !isTouched && nonce !== nextNonce.nonce) {
+    if (isDefined(nextNonce?.nonce) && !isNonceLocked && nonce !== nextNonce.nonce) {
       setValue('nonce', nextNonce.nonce);
     }
     return Promise.resolve();
