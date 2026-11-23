@@ -98,6 +98,7 @@ export async function mockSbtcSponsorshipQuote(
 
 type SbtcSponsorshipSubmitResult =
   | { txid?: string }
+  | { networkFailure: true }
   | { status: number; code: string; error?: string; reason?: string };
 
 export async function mockSbtcSponsorshipSubmit(
@@ -108,6 +109,7 @@ export async function mockSbtcSponsorshipSubmit(
   await target.route(sbtcSponsorshipSubmitUrl, route => {
     if (!isPost(route)) return route.fallback();
     const result = queue.length > 1 ? queue.shift() : queue[0];
+    if (result && 'networkFailure' in result) return route.abort();
     if (result && 'status' in result) {
       const { status, code, error = code, reason } = result;
       return route.fulfill({ status, json: { error, code, reason } });
@@ -115,7 +117,8 @@ export async function mockSbtcSponsorshipSubmit(
     const body: unknown = route.request().postDataJSON();
     const transaction =
       body && typeof body === 'object' && 'transaction' in body ? body.transaction : '';
-    return route.fulfill({ json: { txid: result?.txid ?? SBTC_SPONSORSHIP_TXID, transaction } });
+    const txid = result && 'txid' in result && result.txid ? result.txid : SBTC_SPONSORSHIP_TXID;
+    return route.fulfill({ json: { txid, transaction } });
   });
 }
 

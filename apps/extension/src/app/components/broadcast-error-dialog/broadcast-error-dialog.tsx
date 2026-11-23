@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router';
 
 import GenericError from '@assets/images/generic-error.png';
+import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 import { z } from 'zod';
 
@@ -32,7 +33,12 @@ export function BroadcastErrorSheet() {
       header={<SheetHeader />}
       onClose={() => void navigate(closePath)}
       footer={
-        <Button fullWidth onClick={() => void navigate(closePath)} mt="space.05">
+        <Button
+          data-testid={SharedComponentsSelectors.BroadcastErrorSheetCloseBtn}
+          fullWidth
+          onClick={() => void navigate(closePath)}
+          mt="space.05"
+        >
           Close
         </Button>
       }

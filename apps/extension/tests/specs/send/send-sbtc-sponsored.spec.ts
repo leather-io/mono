@@ -11,6 +11,7 @@ import type { OnboardingPage } from '@tests/page-object-models/onboarding.page';
 import type { SendPage } from '@tests/page-object-models/send.page';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
+import { expectToSettleAt } from '@tests/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -190,6 +191,77 @@ test.describe('Send sBTC without STX to cover the fee', () => {
     await expect(page.getByText('Sent')).toBeVisible({ timeout: sponsoredFeeRowTimeout });
     test.expect(submittedTransactions).toHaveLength(2);
     test.expect(submittedTransactions[1]).toEqual(submittedTransactions[0]);
+  });
+
+  test('keeps confirm disabled while waiting to resubmit', async ({
+    extensionId,
+    homePage,
+    onboardingPage,
+    sendPage,
+  }) => {
+    await openSbtcSendForm({ extensionId, homePage, onboardingPage, sendPage });
+    const page = sendPage.page;
+    await mockSbtcSponsorshipSubmit(page, [{ status: 503, code: 'funding_pending' }, {}]);
+    const confirmButton = page.getByTestId(SendCryptoAssetSelectors.ConfirmSendTxBtn);
+
+    await waitForSponsoredFeeRow(page);
+    await sendPage.previewSendTxButton.click();
+    const fundingPendingResponse = page.waitForResponse(
+      response => response.url().includes(sponsorshipSubmitUrl) && response.status() === 503
+    );
+    await sendPage.confirmSendTransaction();
+    await fundingPendingResponse;
+
+    await expectToSettleAt(() => confirmButton.isDisabled(), true);
+    await expect(page.getByText('Sent')).toBeVisible({ timeout: sponsoredFeeRowTimeout });
+  });
+
+  test('reports an unknown status when the sponsor connection drops', async ({
+    extensionId,
+    homePage,
+    onboardingPage,
+    sendPage,
+  }) => {
+    await openSbtcSendForm({ extensionId, homePage, onboardingPage, sendPage });
+    const page = sendPage.page;
+    await mockSbtcSponsorshipSubmit(page, [{ networkFailure: true }]);
+
+    await waitForSponsoredFeeRow(page);
+    await sendPage.previewSendTxButton.click();
+    await sendPage.confirmSendTransaction();
+
+    await expect(page.getByText('Transaction status unknown', { exact: true })).toBeVisible();
+    await expect(
+      page.getByText(
+        'Your transaction may have been sent. Check your activity before trying again.',
+        { exact: true }
+      )
+    ).toBeVisible();
+    await expect(page.getByText('Unable to broadcast transaction', { exact: true })).toHaveCount(0);
+
+    await page.getByTestId(SharedComponentsSelectors.BroadcastErrorSheetCloseBtn).click();
+    await homePage.waitForHomePageReady();
+    await expect(page.getByTestId(SendCryptoAssetSelectors.ConfirmationDetails)).toHaveCount(0);
+  });
+
+  test('reports a failed broadcast when the sponsor rejects the transfer', async ({
+    extensionId,
+    homePage,
+    onboardingPage,
+    sendPage,
+  }) => {
+    await openSbtcSendForm({ extensionId, homePage, onboardingPage, sendPage });
+    const page = sendPage.page;
+    await mockSbtcSponsorshipSubmit(page, [
+      { status: 422, code: 'not_eligible', reason: 'insufficient_sbtc' },
+    ]);
+
+    await waitForSponsoredFeeRow(page);
+    await sendPage.previewSendTxButton.click();
+    await sendPage.confirmSendTransaction();
+
+    await expect(page.getByText('Unable to broadcast transaction', { exact: true })).toBeVisible();
+    await expect(page.getByText('Transaction status unknown', { exact: true })).toHaveCount(0);
   });
 
   test('rejects the amount when the balance cannot cover amount plus the sBTC fee', async ({

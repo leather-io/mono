@@ -29,6 +29,7 @@ export const SharedComponentsSelectors = {
 
   // Error
   BroadcastErrorTitle: 'broadcast-error-title',
+  BroadcastErrorSheetCloseBtn: 'broadcast-error-sheet-close-btn',
   GenericErrorTitle: 'generic-error-title',
   HeaderBackBtn: 'header-back-button',
   HeaderCloseBtn: 'header-close-button',
