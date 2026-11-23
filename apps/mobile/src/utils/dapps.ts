@@ -37,7 +37,7 @@ export function getDappMap() {
     },
     planbetter: {
       icon: PlanBetterLogo,
-      title: t`PlanBetter`,
+      title: t`Planbetter`,
       url: 'https://planbetter.com',
     },
     bitflow: {
