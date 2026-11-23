@@ -36,12 +36,12 @@ export type ChainId = (typeof ChainId)[keyof typeof ChainId];
 export const WalletDefaultNetworkConfigurationIds = {
   mainnet: 'mainnet',
   testnet: 'testnet',
-  primaryStacksTestnet: 'primaryStacksTestnet',
+  primaryTestnet: 'primaryTestnet',
   testnet4: 'testnet4',
   signet: 'signet',
   sbtcDevenv: 'sbtcDevenv',
   devnet: 'devnet',
-  btcStakingStacksTestnet: 'btcStakingStacksTestnet',
+  stakingTestnet: 'stakingTestnet',
 } as const;
 export type WalletDefaultNetworkConfigurationIds =
   (typeof WalletDefaultNetworkConfigurationIds)[keyof typeof WalletDefaultNetworkConfigurationIds];
@@ -49,12 +49,12 @@ export type WalletDefaultNetworkConfigurationIds =
 export const defaultNetworkConfigurationsSchema = z.enum([
   'mainnet',
   'testnet',
-  'primaryStacksTestnet',
+  'primaryTestnet',
   'testnet4',
   'signet',
   'sbtcDevenv',
   'devnet',
-  'btcStakingStacksTestnet',
+  'stakingTestnet',
 ]);
 export type DefaultNetworkConfigurations = z.infer<typeof defaultNetworkConfigurationsSchema>;
 
@@ -132,8 +132,8 @@ const networkMainnet: NetworkConfiguration = {
   },
 };
 
-const networkPrimaryStacksTestnet: NetworkConfiguration = {
-  id: WalletDefaultNetworkConfigurationIds.primaryStacksTestnet,
+const networkPrimaryTestnet: NetworkConfiguration = {
+  id: WalletDefaultNetworkConfigurationIds.primaryTestnet,
   name: 'Primary Hiro Testnet',
   chain: {
     stacks: {
@@ -240,15 +240,15 @@ const networkDevnet: NetworkConfiguration = {
   },
 };
 
-const btcStakingStacksTestnetChainId = 1280;
+const stakingTestnetStacksChainId = 1280;
 
-const networkBtcStakingStacksTestnet: NetworkConfiguration = {
-  id: WalletDefaultNetworkConfigurationIds.btcStakingStacksTestnet,
+const networkStakingTestnet: NetworkConfiguration = {
+  id: WalletDefaultNetworkConfigurationIds.stakingTestnet,
   name: 'BTC Staking Testnet',
   chain: {
     stacks: {
       blockchain: 'stacks',
-      chainId: btcStakingStacksTestnetChainId,
+      chainId: stakingTestnetStacksChainId,
       url: HIRO_API_BASE_URL_STAKING_TESTNET,
     },
     bitcoin: {
@@ -267,24 +267,11 @@ export const defaultNetworksKeyedById: Record<
   NetworkConfiguration
 > = {
   [WalletDefaultNetworkConfigurationIds.mainnet]: networkMainnet,
-  [WalletDefaultNetworkConfigurationIds.primaryStacksTestnet]: networkPrimaryStacksTestnet,
-  [WalletDefaultNetworkConfigurationIds.btcStakingStacksTestnet]: networkBtcStakingStacksTestnet,
+  [WalletDefaultNetworkConfigurationIds.primaryTestnet]: networkPrimaryTestnet,
+  [WalletDefaultNetworkConfigurationIds.stakingTestnet]: networkStakingTestnet,
   [WalletDefaultNetworkConfigurationIds.signet]: networkSignet,
   [WalletDefaultNetworkConfigurationIds.testnet4]: networkTestnet4,
   [WalletDefaultNetworkConfigurationIds.testnet]: networkTestnet,
   [WalletDefaultNetworkConfigurationIds.sbtcDevenv]: networkSbtcDevenv,
   [WalletDefaultNetworkConfigurationIds.devnet]: networkDevnet,
 };
-
-const legacyNetworkIdsResolvedToPrimaryStacksTestnet = ['sbtcTestnet', 'private-1'];
-const legacyBtcStakingStacksTestnetId = 'stakingTestnet';
-
-export function resolveLegacyNetworkConfigurationId(networkId: string): string {
-  if (legacyNetworkIdsResolvedToPrimaryStacksTestnet.includes(networkId)) {
-    return WalletDefaultNetworkConfigurationIds.primaryStacksTestnet;
-  }
-  if (networkId === legacyBtcStakingStacksTestnetId) {
-    return WalletDefaultNetworkConfigurationIds.btcStakingStacksTestnet;
-  }
-  return networkId;
-}

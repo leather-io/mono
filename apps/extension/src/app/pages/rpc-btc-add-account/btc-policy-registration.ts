@@ -9,7 +9,6 @@ import { makeAccountIdentifer } from '@leather.io/crypto';
 import {
   type NetworkConfiguration,
   WalletDefaultNetworkConfigurationIds,
-  resolveLegacyNetworkConfigurationId,
 } from '@leather.io/models';
 import { type RpcParams, type btcAddAccount } from '@leather.io/rpc';
 
@@ -23,7 +22,7 @@ interface ResolveBtcPolicyNetworkArgs {
 function resolveBtcPolicyNetwork({ paramsNetwork, networks }: ResolveBtcPolicyNetworkArgs) {
   const networkKey = paramsNetwork ?? WalletDefaultNetworkConfigurationIds.mainnet;
 
-  const network = networks[resolveLegacyNetworkConfigurationId(networkKey)];
+  const network = networks[networkKey];
   if (!network) throw new Error(`Unknown BTC add account network: ${networkKey}`);
 
   return { network, networkId: network.id };

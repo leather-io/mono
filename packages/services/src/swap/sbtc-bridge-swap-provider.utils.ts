@@ -27,7 +27,7 @@ export const sbtcStacksAddressMap = {
 };
 
 export function getSbtcWithdrawalNetworkMode(network: NetworkConfiguration): NetworkModes | null {
-  if (network.id === WalletDefaultNetworkConfigurationIds.primaryStacksTestnet) return 'testnet';
+  if (network.id === WalletDefaultNetworkConfigurationIds.primaryTestnet) return 'testnet';
   const { mode } = network.chain.bitcoin;
   if (mode === 'mainnet' || mode === 'testnet') return mode;
   return null;

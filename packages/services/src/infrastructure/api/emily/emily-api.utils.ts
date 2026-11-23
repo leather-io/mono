@@ -7,7 +7,7 @@ import {
 } from '@leather.io/models';
 
 export function getEmilyApiUrl(network: NetworkConfiguration): string {
-  if (network.id === WalletDefaultNetworkConfigurationIds.primaryStacksTestnet) {
+  if (network.id === WalletDefaultNetworkConfigurationIds.primaryTestnet) {
     return EMILY_API_BASE_URL_TESTNET;
   }
   switch (network.chain.bitcoin.mode) {

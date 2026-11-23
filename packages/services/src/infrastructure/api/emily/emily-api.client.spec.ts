@@ -69,7 +69,7 @@ describe(EmilyApiClient.name, () => {
     it('uses the hosted testnet emily url for the primary stacks testnet', async () => {
       vi.spyOn(axios, 'get').mockResolvedValue({ data: sbtcLimits });
 
-      await makeClient('primaryStacksTestnet').getSbtcLimits();
+      await makeClient('primaryTestnet').getSbtcLimits();
       expect(fetchWithCache).toHaveBeenLastCalledWith(
         ['emily-api-get-sbtc-limits', 'https://testnet.sbtc-emily.com'],
         expect.any(Function)

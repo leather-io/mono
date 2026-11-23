@@ -6,7 +6,6 @@ import {
   type NetworkConfiguration,
   defaultCurrentNetwork,
   defaultNetworksKeyedById,
-  resolveLegacyNetworkConfigurationId,
 } from '@leather.io/models';
 
 import { initialSearchParams } from '@app/common/initial-search-params';
@@ -29,15 +28,13 @@ const selectNetworks = createSelector(
   })
 );
 
-const selectCurrentNetworkId = createSelector(selectNetworksSlice, state =>
-  resolveLegacyNetworkConfigurationId(state.currentNetworkId)
-);
+const selectCurrentNetworkId = createSelector(selectNetworksSlice, state => state.currentNetworkId);
 
 const selectAppRequestedNetworkId = createSelector(selectNetworks, networks => {
   // `network` param is a more generic network selector that doesn't deal with
   // custom networks
   const network = initialSearchParams.get('network');
-  return network ? networks[resolveLegacyNetworkConfigurationId(network)]?.id : undefined;
+  return network ? networks[network]?.id : undefined;
 });
 
 export const selectCurrentNetwork = createSelector(

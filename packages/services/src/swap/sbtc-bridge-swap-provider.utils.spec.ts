@@ -292,9 +292,7 @@ describe('getSbtcWithdrawalNetworkMode', () => {
   });
 
   it('supports the primary stacks testnet on testnet', () => {
-    expect(getSbtcWithdrawalNetworkMode(defaultNetworksKeyedById.primaryStacksTestnet)).toBe(
-      'testnet'
-    );
+    expect(getSbtcWithdrawalNetworkMode(defaultNetworksKeyedById.primaryTestnet)).toBe('testnet');
   });
 
   it('does not support other regtest or signet networks', () => {

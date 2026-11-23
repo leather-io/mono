@@ -58,7 +58,7 @@ describe('activity-links', () => {
     it('returns the staking testnet mempool link for a Bitcoin asset', () => {
       const result = makeActivityLink({
         txid: 'abc123',
-        networkPreference: defaultNetworksKeyedById.btcStakingStacksTestnet,
+        networkPreference: defaultNetworksKeyedById.stakingTestnet,
         asset: {
           chain: 'bitcoin',
           category: 'fungible',
@@ -76,7 +76,7 @@ describe('activity-links', () => {
     it('returns a testnet explorer link pinned to the staking testnet api for a Stacks asset', () => {
       const result = makeActivityLink({
         txid: 'def456',
-        networkPreference: defaultNetworksKeyedById.btcStakingStacksTestnet,
+        networkPreference: defaultNetworksKeyedById.stakingTestnet,
         asset: {
           chain: 'stacks',
           category: 'fungible',
@@ -211,7 +211,7 @@ describe('activity-links', () => {
         id: 'txabc',
         type: 'tx',
         networkPreference: 'regtest',
-        bitcoinUrl: defaultNetworksKeyedById.primaryStacksTestnet.chain.bitcoin.bitcoinUrl,
+        bitcoinUrl: defaultNetworksKeyedById.primaryTestnet.chain.bitcoin.bitcoinUrl,
       });
 
       expect(result).toBe('https://mempool.bitcoin.regtest.hiro.so/tx/txabc');
