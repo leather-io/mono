@@ -38,7 +38,7 @@ describe('bitcoinNetworkPresets', () => {
       stacksUrl: 'https://api.testnet.hiro.so',
     });
     expect(bitcoinNetworkPresets.regtest).toEqual({
-      label: 'Primary Hiro Testnet',
+      label: 'Primary Testnet',
       bitcoinUrl: BITCOIN_API_BASE_URL_PRIMARY_TESTNET,
       stacksUrl: 'https://api.testnet.hiro.so',
     });

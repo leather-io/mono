@@ -134,7 +134,7 @@ const networkMainnet: NetworkConfiguration = {
 
 const networkPrimaryTestnet: NetworkConfiguration = {
   id: WalletDefaultNetworkConfigurationIds.primaryTestnet,
-  name: 'Primary Hiro Testnet',
+  name: 'Primary Testnet',
   chain: {
     stacks: {
       blockchain: 'stacks',

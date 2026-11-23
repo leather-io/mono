@@ -47,7 +47,7 @@ export const bitcoinNetworkPresets: Record<BitcoinNetwork, NetworkPreset> = {
     stacksUrl: HIRO_API_BASE_URL_TESTNET,
   },
   regtest: {
-    label: 'Primary Hiro Testnet',
+    label: 'Primary Testnet',
     bitcoinUrl: BITCOIN_API_BASE_URL_PRIMARY_TESTNET,
     stacksUrl: HIRO_API_BASE_URL_TESTNET,
   },
