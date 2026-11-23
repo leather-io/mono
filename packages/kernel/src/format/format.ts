@@ -1,45 +1,13 @@
-type CharRange = readonly [number, number];
-
 interface CharSet {
-  readonly ranges: readonly CharRange[];
+  readonly ranges: readonly (readonly [number, number])[];
   readonly negated: boolean;
 }
 
-type Shape =
-  | { readonly kind: 'number'; readonly base: number; readonly width: number | undefined }
-  | {
-      readonly kind: 'chars';
-      readonly set: CharSet;
-      readonly minLength: number;
-      readonly maxLength: number;
-    }
-  | { readonly kind: 'prefixed'; readonly text: string; readonly inner: Shape }
-  | { readonly kind: 'optionalSuffix'; readonly mark: string; readonly inner: Shape }
-  | {
-      readonly kind: 'separated';
-      readonly separator: string;
-      readonly minCount: number;
-      readonly item: Shape;
-    }
-  | {
-      readonly kind: 'split';
-      readonly separator: string;
-      readonly first: Shape;
-      readonly second: Shape;
-    }
-  | {
-      readonly kind: 'leading';
-      readonly separator: string;
-      readonly first: Shape;
-      readonly rest: Shape;
-    };
-
-type Value =
-  | { readonly kind: 'nat'; readonly value: number }
-  | { readonly kind: 'text'; readonly value: string }
-  | { readonly kind: 'bool'; readonly value: boolean }
-  | { readonly kind: 'list'; readonly items: readonly Value[] }
-  | { readonly kind: 'pair'; readonly first: Value; readonly second: Value };
+interface Parts<T> {
+  print(input: T): string;
+  parse(text: string): T;
+  canContain(character: string): boolean;
+}
 
 const digitChars = '0123456789abcdef';
 const minBase = 2;
@@ -50,10 +18,6 @@ const lastSurrogate = 0xdfff;
 
 function invalidText(): RangeError {
   return new RangeError('Text is not valid for this format.');
-}
-
-function shapeMismatch(): TypeError {
-  return new TypeError('Value does not match the format shape.');
 }
 
 function isLoneSurrogate(character: string): boolean {
@@ -75,31 +39,10 @@ function singleCharacter(text: string): string {
 }
 
 function setContains(set: CharSet, character: string): boolean {
-  const codePoint = character.codePointAt(0) ?? 0;
+  const codePoint = character.codePointAt(0);
+  if (codePoint === undefined) return false;
   const inRanges = set.ranges.some(([low, high]) => low <= codePoint && codePoint <= high);
   return inRanges !== set.negated;
-}
-
-function alphabet(shape: Shape, character: string): boolean {
-  if (shape.kind === 'number') return digitChars.slice(0, shape.base).includes(character);
-  if (shape.kind === 'chars') return setContains(shape.set, character);
-  if (shape.kind === 'prefixed')
-    return codePoints(shape.text).includes(character) || alphabet(shape.inner, character);
-  if (shape.kind === 'optionalSuffix')
-    return character === shape.mark || alphabet(shape.inner, character);
-  if (shape.kind === 'separated')
-    return character === shape.separator || alphabet(shape.item, character);
-  if (shape.kind === 'leading')
-    return (
-      character === shape.separator ||
-      alphabet(shape.first, character) ||
-      alphabet(shape.rest, character)
-    );
-  return (
-    character === shape.separator ||
-    alphabet(shape.first, character) ||
-    alphabet(shape.second, character)
-  );
 }
 
 function printNumber(base: number, width: number | undefined, value: number): string {
@@ -134,146 +77,33 @@ function parseNumber(base: number, width: number | undefined, text: string): num
   return digitsValue(base, characters);
 }
 
-function isValidChars(shape: Extract<Shape, { kind: 'chars' }>, text: string): boolean {
-  const characters = codePoints(text);
-  return (
-    characters.every(character => setContains(shape.set, character)) &&
-    shape.minLength <= characters.length &&
-    characters.length <= shape.maxLength
-  );
-}
-
-function printValue(shape: Shape, value: Value): string {
-  if (shape.kind === 'number' && value.kind === 'nat')
-    return printNumber(shape.base, shape.width, value.value);
-  if (shape.kind === 'chars' && value.kind === 'text') {
-    if (!isValidChars(shape, value.value))
-      throw new RangeError('Text must use only the characters and length of its format.');
-    return value.value;
-  }
-  if (shape.kind === 'prefixed') return shape.text + printValue(shape.inner, value);
-  if (shape.kind === 'optionalSuffix' && value.kind === 'pair' && value.second.kind === 'bool') {
-    const body = printValue(shape.inner, value.first);
-    return value.second.value ? body + shape.mark : body;
-  }
-  if (shape.kind === 'separated' && value.kind === 'list') {
-    if (value.items.length === 0 || value.items.length < shape.minCount)
-      throw new RangeError('List must have at least the item count of its format.');
-    const { item } = shape;
-    return value.items.map(element => printValue(item, element)).join(shape.separator);
-  }
-  if (shape.kind === 'split' && value.kind === 'pair')
-    return (
-      printValue(shape.first, value.first) +
-      shape.separator +
-      printValue(shape.second, value.second)
-    );
-  if (shape.kind === 'leading' && value.kind === 'pair' && value.second.kind === 'list') {
-    const { rest } = shape;
-    const first = printValue(shape.first, value.first);
-    const others = value.second.items.map(element => printValue(rest, element));
-    return [first, ...others].join(shape.separator);
-  }
-  throw shapeMismatch();
-}
-
-function parseValue(shape: Shape, text: string): Value {
-  if (shape.kind === 'number')
-    return { kind: 'nat', value: parseNumber(shape.base, shape.width, text) };
-  if (shape.kind === 'chars') {
-    if (!isValidChars(shape, text)) throw invalidText();
-    return { kind: 'text', value: text };
-  }
-  if (shape.kind === 'prefixed') {
-    if (!text.startsWith(shape.text)) throw invalidText();
-    return parseValue(shape.inner, text.slice(shape.text.length));
-  }
-  if (shape.kind === 'optionalSuffix') {
-    const marked = text.endsWith(shape.mark);
-    const body = marked ? text.slice(0, text.length - shape.mark.length) : text;
-    return {
-      kind: 'pair',
-      first: parseValue(shape.inner, body),
-      second: { kind: 'bool', value: marked },
-    };
-  }
-  if (shape.kind === 'separated') {
-    const { item } = shape;
-    const items = text.split(shape.separator).map(piece => parseValue(item, piece));
-    if (items.length < shape.minCount) throw invalidText();
-    return { kind: 'list', items };
-  }
-  if (shape.kind === 'leading') {
-    const { rest } = shape;
-    const [first = '', ...others] = text.split(shape.separator);
-    return {
-      kind: 'pair',
-      first: parseValue(shape.first, first),
-      second: { kind: 'list', items: others.map(piece => parseValue(rest, piece)) },
-    };
-  }
-  const cut = text.indexOf(shape.separator);
-  if (cut < 0) throw invalidText();
-  return {
-    kind: 'pair',
-    first: parseValue(shape.first, text.slice(0, cut)),
-    second: parseValue(shape.second, text.slice(cut + shape.separator.length)),
-  };
-}
-
-interface Conversions<T> {
-  toValue(input: T): Value;
-  fromValue(value: Value): T;
+function requireArray(input: unknown): readonly unknown[] {
+  if (!Array.isArray(input)) throw new TypeError('Value must be an array.');
+  return input;
 }
 
 class Format<T> {
-  readonly shape: Shape;
-  private readonly conversions: Conversions<T>;
+  private readonly parts: Parts<T>;
 
-  constructor(shape: Shape, conversions: Conversions<T>) {
-    this.shape = Object.freeze(shape);
-    this.conversions = conversions;
+  constructor(parts: Parts<T>) {
+    this.parts = parts;
   }
 
-  toValue(input: T): Value {
-    return this.conversions.toValue(input);
-  }
-
-  fromValue(value: Value): T {
-    return this.conversions.fromValue(value);
+  canContain(character: string): boolean {
+    return this.parts.canContain(character);
   }
 
   print(input: T): string {
-    return printValue(this.shape, this.toValue(input));
+    return this.parts.print(input);
   }
 
   parse(text: string): T {
     codePoints(text);
-    return this.fromValue(parseValue(this.shape, text));
+    return this.parts.parse(text);
   }
 }
 
 export type { Format };
-
-const natConversions: Conversions<number> = {
-  toValue(input) {
-    return { kind: 'nat', value: input };
-  },
-  fromValue(value) {
-    if (value.kind !== 'nat') throw shapeMismatch();
-    return value.value;
-  },
-};
-
-const textConversions: Conversions<string> = {
-  toValue(input) {
-    return { kind: 'text', value: input };
-  },
-  fromValue(value) {
-    if (value.kind !== 'text') throw shapeMismatch();
-    return value.value;
-  },
-};
 
 function isLength(value: number): boolean {
   return Number.isSafeInteger(value) && value >= 0;
@@ -284,12 +114,23 @@ export function numeral(base: number, width?: number): Format<number> {
     throw new RangeError('Number base must be between 2 and 16.');
   if (width !== undefined && (!isLength(width) || width === 0))
     throw new RangeError('Number width must be a positive safe integer.');
-  return new Format({ kind: 'number', base, width }, natConversions);
+  const digits = digitChars.slice(0, base);
+  return new Format({
+    print(input) {
+      return printNumber(base, width, input);
+    },
+    parse(text) {
+      return parseNumber(base, width, text);
+    },
+    canContain(character) {
+      return digits.includes(character);
+    },
+  });
 }
 
-function rangeOf(range: string): CharRange {
-  const [low, high = low] = codePoints(range).map(character => character.codePointAt(0) ?? 0);
-  if (low === undefined || codePoints(range).length > 2)
+function rangeOf(range: string): readonly [number, number] {
+  const [low, high = low] = codePoints(range).map(character => character.codePointAt(0));
+  if (low === undefined || high === undefined || codePoints(range).length > 2)
     throw new RangeError('A character range is one character or a first and last character.');
   return [low, high];
 }
@@ -313,48 +154,69 @@ export function characters(
 ): Format<string> {
   if (!isLength(minLength) || !isLength(maxLength))
     throw new RangeError('Length limits must be non-negative safe integers.');
-  return new Format({ kind: 'chars', set, minLength, maxLength }, textConversions);
+  function isValid(text: string): boolean {
+    const symbols = codePoints(text);
+    return (
+      symbols.every(symbol => setContains(set, symbol)) &&
+      minLength <= symbols.length &&
+      symbols.length <= maxLength
+    );
+  }
+  return new Format({
+    print(input) {
+      if (!isValid(input))
+        throw new RangeError('Text must use only the characters and length of its format.');
+      return input;
+    },
+    parse(text) {
+      if (!isValid(text)) throw invalidText();
+      return text;
+    },
+    canContain(character) {
+      return setContains(set, character);
+    },
+  });
 }
 
 export function prefixed<T>(text: string, inner: Format<T>): Format<T> {
-  codePoints(text);
-  return new Format<T>(
-    { kind: 'prefixed', text, inner: inner.shape },
-    {
-      toValue(input) {
-        return inner.toValue(input);
-      },
-      fromValue(value) {
-        return inner.fromValue(value);
-      },
-    }
-  );
+  const prefix = codePoints(text);
+  return new Format<T>({
+    print(input) {
+      return text + inner.print(input);
+    },
+    parse(whole) {
+      if (!whole.startsWith(text)) throw invalidText();
+      return inner.parse(whole.slice(text.length));
+    },
+    canContain(character) {
+      return prefix.includes(character) || inner.canContain(character);
+    },
+  });
 }
 
-function refuseDelimiterInside(shape: Shape, delimiter: string): void {
-  if (alphabet(shape, delimiter))
+function refuseDelimiterInside(part: Format<unknown>, delimiter: string): void {
+  if (part.canContain(delimiter))
     throw new RangeError('The part before a delimiter must not be able to contain it.');
 }
 
 export function optionalSuffix<T>(mark: string, inner: Format<T>): Format<[T, boolean]> {
-  refuseDelimiterInside(inner.shape, singleCharacter(mark));
-  return new Format<[T, boolean]>(
-    { kind: 'optionalSuffix', mark, inner: inner.shape },
-    {
-      toValue(input) {
-        if (!Array.isArray(input)) throw new TypeError('Pair must be an array.');
-        return {
-          kind: 'pair',
-          first: inner.toValue(input[0]),
-          second: { kind: 'bool', value: input[1] },
-        };
-      },
-      fromValue(value) {
-        if (value.kind !== 'pair' || value.second.kind !== 'bool') throw shapeMismatch();
-        return [inner.fromValue(value.first), value.second.value];
-      },
-    }
-  );
+  refuseDelimiterInside(inner, singleCharacter(mark));
+  return new Format<[T, boolean]>({
+    print(input) {
+      requireArray(input);
+      const [value, isMarked] = input;
+      if (typeof isMarked !== 'boolean') throw new TypeError('The mark must be true or false.');
+      return isMarked ? inner.print(value) + mark : inner.print(value);
+    },
+    parse(text) {
+      const isMarked = text.endsWith(mark);
+      const body = isMarked ? text.slice(0, text.length - mark.length) : text;
+      return [inner.parse(body), isMarked];
+    },
+    canContain(character) {
+      return character === mark || inner.canContain(character);
+    },
+  });
 }
 
 interface CountLimits {
@@ -366,21 +228,24 @@ export function separated<T>(
   item: Format<T>,
   { minCount = 1 }: CountLimits = {}
 ): Format<T[]> {
-  refuseDelimiterInside(item.shape, singleCharacter(separator));
+  refuseDelimiterInside(item, singleCharacter(separator));
   if (!isLength(minCount)) throw new RangeError('Item count must be a non-negative safe integer.');
-  return new Format<T[]>(
-    { kind: 'separated', separator, minCount, item: item.shape },
-    {
-      toValue(input) {
-        if (!Array.isArray(input)) throw new TypeError('List must be an array.');
-        return { kind: 'list', items: input.map(element => item.toValue(element)) };
-      },
-      fromValue(value) {
-        if (value.kind !== 'list') throw shapeMismatch();
-        return value.items.map(element => item.fromValue(element));
-      },
-    }
-  );
+  return new Format<T[]>({
+    print(input) {
+      requireArray(input);
+      if (input.length === 0 || input.length < minCount)
+        throw new RangeError('List must have at least the item count of its format.');
+      return input.map(element => item.print(element)).join(separator);
+    },
+    parse(text) {
+      const items = text.split(separator).map(piece => item.parse(piece));
+      if (items.length < minCount) throw invalidText();
+      return items;
+    },
+    canContain(character) {
+      return character === separator || item.canContain(character);
+    },
+  });
 }
 
 export function splitAt<A, B>(
@@ -388,20 +253,21 @@ export function splitAt<A, B>(
   first: Format<A>,
   second: Format<B>
 ): Format<[A, B]> {
-  refuseDelimiterInside(first.shape, singleCharacter(separator));
-  return new Format<[A, B]>(
-    { kind: 'split', separator, first: first.shape, second: second.shape },
-    {
-      toValue(input) {
-        if (!Array.isArray(input)) throw new TypeError('Pair must be an array.');
-        return { kind: 'pair', first: first.toValue(input[0]), second: second.toValue(input[1]) };
-      },
-      fromValue(value) {
-        if (value.kind !== 'pair') throw shapeMismatch();
-        return [first.fromValue(value.first), second.fromValue(value.second)];
-      },
-    }
-  );
+  refuseDelimiterInside(first, singleCharacter(separator));
+  return new Format<[A, B]>({
+    print(input) {
+      requireArray(input);
+      return first.print(input[0]) + separator + second.print(input[1]);
+    },
+    parse(text) {
+      const cut = text.indexOf(separator);
+      if (cut < 0) throw invalidText();
+      return [first.parse(text.slice(0, cut)), second.parse(text.slice(cut + separator.length))];
+    },
+    canContain(character) {
+      return character === separator || first.canContain(character) || second.canContain(character);
+    },
+  });
 }
 
 export function leading<A, B>(
@@ -409,63 +275,27 @@ export function leading<A, B>(
   first: Format<A>,
   rest: Format<B>
 ): Format<[A, B[]]> {
-  refuseDelimiterInside(first.shape, singleCharacter(separator));
-  refuseDelimiterInside(rest.shape, separator);
-  return new Format<[A, B[]]>(
-    { kind: 'leading', separator, first: first.shape, rest: rest.shape },
-    {
-      toValue(input) {
-        if (!Array.isArray(input) || !Array.isArray(input[1]))
-          throw new TypeError('Pair must be an array whose second part is an array.');
-        return {
-          kind: 'pair',
-          first: first.toValue(input[0]),
-          second: { kind: 'list', items: input[1].map(element => rest.toValue(element)) },
-        };
-      },
-      fromValue(value) {
-        if (value.kind !== 'pair' || value.second.kind !== 'list') throw shapeMismatch();
-        return [
-          first.fromValue(value.first),
-          value.second.items.map(element => rest.fromValue(element)),
-        ];
-      },
-    }
-  );
+  refuseDelimiterInside(first, singleCharacter(separator));
+  refuseDelimiterInside(rest, separator);
+  return new Format<[A, B[]]>({
+    print(input) {
+      requireArray(input);
+      requireArray(input[1]);
+      const [head, others] = input;
+      return [first.print(head), ...others.map(element => rest.print(element))].join(separator);
+    },
+    parse(text) {
+      const [head = '', ...others] = text.split(separator);
+      return [first.parse(head), others.map(piece => rest.parse(piece))];
+    },
+    canContain(character) {
+      return character === separator || first.canContain(character) || rest.canContain(character);
+    },
+  });
 }
 
 type Field<Name extends string, T> = readonly [name: Name, format: Format<T>];
 type NamedParts = Record<string, unknown>;
-
-function requireDifferentNames(parts: readonly Field<string, unknown>[]): void {
-  const names = parts.map(([name]) => name);
-  if (new Set(names).size !== names.length) throw new RangeError('Field names must be different.');
-}
-
-function chained(separator: string, formats: readonly Format<unknown>[]): Format<unknown> {
-  const [first, ...others] = formats;
-  if (first === undefined) throw new RangeError('A format needs at least one field.');
-  if (others.length === 0) return first;
-  return splitAt(separator, first, chained(separator, others));
-}
-
-function partsToValue(parts: readonly Field<string, unknown>[], input: NamedParts): Value {
-  const [first, ...others] = parts;
-  if (first === undefined) throw shapeMismatch();
-  const [name, format] = first;
-  const value = format.toValue(input[name]);
-  if (others.length === 0) return value;
-  return { kind: 'pair', first: value, second: partsToValue(others, input) };
-}
-
-function partsFromValue(parts: readonly Field<string, unknown>[], value: Value): NamedParts {
-  const [first, ...others] = parts;
-  if (first === undefined) throw shapeMismatch();
-  const [name, format] = first;
-  if (others.length === 0) return { [name]: format.fromValue(value) };
-  if (value.kind !== 'pair') throw shapeMismatch();
-  return { [name]: format.fromValue(value.first), ...partsFromValue(others, value.second) };
-}
 
 function requireNamedParts(input: NamedParts): NamedParts {
   if (typeof input !== 'object' || input === null || Array.isArray(input))
@@ -473,21 +303,42 @@ function requireNamedParts(input: NamedParts): NamedParts {
   return input;
 }
 
+function parseNamedParts(
+  separator: string,
+  parts: readonly Field<string, unknown>[],
+  text: string
+): NamedParts {
+  const [first, ...others] = parts;
+  if (first === undefined) return {};
+  const [name, format] = first;
+  if (others.length === 0) return { [name]: format.parse(text) };
+  const cut = text.indexOf(separator);
+  if (cut < 0) throw invalidText();
+  return {
+    [name]: format.parse(text.slice(0, cut)),
+    ...parseNamedParts(separator, others, text.slice(cut + separator.length)),
+  };
+}
+
 function namedParts(
   separator: string,
   parts: readonly Field<string, unknown>[]
 ): Format<NamedParts> {
-  requireDifferentNames(parts);
-  const chain = chained(
-    separator,
-    parts.map(([, format]) => format)
-  );
-  return new Format<NamedParts>(chain.shape, {
-    toValue(input) {
-      return partsToValue(parts, requireNamedParts(input));
+  const names = parts.map(([name]) => name);
+  if (new Set(names).size !== names.length) throw new RangeError('Field names must be different.');
+  if (parts.length === 0) throw new RangeError('A format needs at least one field.');
+  singleCharacter(separator);
+  for (const [, format] of parts.slice(0, -1)) refuseDelimiterInside(format, separator);
+  return new Format<NamedParts>({
+    print(input) {
+      const named = requireNamedParts(input);
+      return parts.map(([name, format]) => format.print(named[name])).join(separator);
     },
-    fromValue(value) {
-      return partsFromValue(parts, value);
+    parse(text) {
+      return parseNamedParts(separator, parts, text);
+    },
+    canContain(character) {
+      return character === separator || parts.some(([, format]) => format.canContain(character));
     },
   });
 }
@@ -713,24 +564,26 @@ export function fieldsThenMore(
   const [last, more] = parts.slice(-2);
   if (last === undefined || more === undefined)
     throw new RangeError('A format needs at least one field before the further parts.');
-  requireDifferentNames(parts);
   const [lastName, lastFormat] = last;
   const [moreName, moreFormat] = more;
+  if (parts.some(([name], index) => index < parts.length - 1 && name === moreName))
+    throw new RangeError('Field names must be different.');
   const inner = namedParts(separator, [
     ...fixed,
     [lastName, leading(separator, lastFormat, moreFormat)],
   ]);
-  return new Format<NamedParts>(inner.shape, {
-    toValue(input) {
+  return new Format<NamedParts>({
+    print(input) {
       const named = requireNamedParts(input);
-      return inner.toValue({ ...named, [lastName]: [named[lastName], named[moreName]] });
+      return inner.print({ ...named, [lastName]: [named[lastName], named[moreName]] });
     },
-    fromValue(value) {
-      const named = inner.fromValue(value);
-      const lastAndMore = named[lastName];
-      if (!Array.isArray(lastAndMore)) throw shapeMismatch();
-      const lastThenMore: readonly unknown[] = lastAndMore;
-      return { ...named, [lastName]: lastThenMore[0], [moreName]: lastThenMore[1] };
+    parse(text) {
+      const named = inner.parse(text);
+      const [lastValue, moreValues] = requireArray(named[lastName]);
+      return { ...named, [lastName]: lastValue, [moreName]: moreValues };
+    },
+    canContain(character) {
+      return inner.canContain(character);
     },
   });
 }

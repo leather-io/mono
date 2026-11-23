@@ -1,6 +1,6 @@
 ---
 name: kernel-formats
-description: Use `@leather.io/kernel` for any byte or text format Leather defines itself. Use when adding or changing code that builds bytes to hash or sign, reads bytes back, or builds or parses a structured string (derivation paths, key origins, descriptors, identifiers), or when tempted to reach for DataView, concatBytes, split, parseInt or a regex for such a format. Covers which block to use, the rules that keep the kernel guarantees valid, how to add a block, and what the kernel does not guarantee.
+description: Use `@leather.io/kernel` for any byte or text format Leather defines itself, and for amounts, fee arithmetic and site origins. Use when adding or changing code that builds bytes to hash or sign, reads bytes back, builds or parses a structured string (derivation paths, key origins, descriptors, identifiers), parses or prints an amount, adds or subtracts money, validates a numeric dapp or API parameter, or compares site origins; or when tempted to reach for DataView, concatBytes, split, parseInt, parseFloat, Number() on an amount, or a regex for such a format. Covers which block to use, the rules that keep the kernel guarantees valid, how to add a block, and what the kernel does not guarantee.
 ---
 
 # Kernel formats
@@ -39,6 +39,26 @@ Text (`Format`, with `print` and `parse`):
 | Several named parts with a separator | `fields('/', ['change', a], ['index', b])` |
 | Named parts, then any number of further parts | `fieldsThenMore('/', ['purpose', a], ['account', b], ['rest', c])` |
 
+Whole numbers and amounts (`bigint`, defined in a `*.kernel.ts` file like the above):
+
+| Job | Block |
+| --- | --- |
+| Whole number as text or as a dapp or API parameter | `integer({ bits: 64 })`, then `parse`, `print` or `read(unknown)` |
+| Amount as text, such as `"1.5"` BTC to base units | `decimalAmount(8, { bits: 64 })`, then `parse`, `print`, or `read` for typed input |
+
+Used directly where the logic is, with no `*.kernel.ts` file:
+
+| Job | Block |
+| --- | --- |
+| Add, subtract or compare amounts, fees, balances | `quantity('sat', value)`, `plus`, `minus`, `compare`, `sumQuantities` |
+| Fee or change of a transaction | `settle('sat', inputs, outputs)` |
+| Percentages, slippage, rate conversion | `mulDiv(numerator, denominator, 'floor' \| 'ceil')`: say which way to round |
+| Keep a value in a range | `clamp(min, max)` |
+| Rate times size | `rate.times(size, 'sat')` |
+| Key a permission or compare sites | `webOrigin(url)`, `isSameWebOrigin(a, b)` |
+
+Bitcoin addresses: `classifyBitcoinAddress(address)` from `@leather.io/bitcoin` returns the network and type, or throws.
+
 Existing uses to copy from:
 
 - `packages/crypto/src/multisig/proposal-preimage.kernel.ts`: a hashed preimage
@@ -58,7 +78,7 @@ Existing uses to copy from:
 Three lint rules in `eslint-rules/kernel` enforce this, so fix the code rather than the rule:
 
 - `kernel/kernel-only-file`: a `*.kernel.ts` file contains nothing but kernel definitions, and has a spec beside it (`x.kernel.spec.ts`) with a fixed vector for each definition.
-- `kernel/no-blocks-outside-kernel-files`: kernel blocks are imported only in those files. Importing a kernel type elsewhere is fine.
+- `kernel/no-blocks-outside-kernel-files`: kernel blocks are imported only in those files. Importing a kernel type, or the quantity and origin blocks, elsewhere is fine.
 - `kernel/no-hand-rolled-encoding`: no `DataView`, `TextEncoder`, `TextDecoder`, `parseInt`, `concatBytes` or `utf8ToBytes` in any package. `packages/ui` and `packages/utils` may use `parseInt` for amounts, and `packages/features` may use `TextEncoder`. In the apps only `DataView` and `concatBytes` are banned.
 
 A constant needs literal bytes: `Uint8Array.of(…)` or `hexToBytes('…')` from `@noble/hashes/utils`. If the bytes are derived (a hash of a tag, say), write the result as a literal and pin it with a test that recomputes it.

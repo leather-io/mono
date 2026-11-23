@@ -1366,6 +1366,9 @@ importers:
       '@leather.io/tsconfig-config':
         specifier: workspace:*
         version: link:../tsconfig-config
+      fast-check:
+        specifier: 4.10.2
+        version: 4.10.2
       prettier:
         specifier: 3.5.1
         version: 3.5.1

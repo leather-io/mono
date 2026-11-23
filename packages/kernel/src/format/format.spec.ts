@@ -16,8 +16,6 @@ import {
   splitAt,
 } from './format';
 
-type Value = ReturnType<Format<unknown>['toValue']>;
-
 type Blueprint =
   | { kind: 'number'; base: number; width: number | undefined }
   | { kind: 'chars'; ranges: string[]; negated: boolean; minLength: number; maxLength: number }
@@ -47,21 +45,16 @@ const blueprintDepth = 3;
 const delimiters = ['/', "'", ']', ':', ','];
 const characterPool = ['0', '1', '7', '9', 'a', 'f', 'g', 'x', 'A', '🔐', ...delimiters, '['];
 
-function codePoint(character: string): string {
-  return (character.codePointAt(0) ?? 0).toString(16);
-}
-
-function codePointsOrDash(text: string): string {
-  return text === '' ? '-' : Array.from(text, codePoint).join(',');
-}
-
-function describeValue(value: Value): string[] {
-  if (value.kind === 'nat') return [BigInt(value.value).toString()];
-  if (value.kind === 'text') return [codePointsOrDash(value.value)];
-  if (value.kind === 'bool') return [value.value ? '1' : '0'];
-  if (value.kind === 'list')
-    return [String(value.items.length), ...value.items.flatMap(describeValue)];
-  return [...describeValue(value.first), ...describeValue(value.second)];
+function describeValue(value: unknown): string {
+  if (typeof value === 'string')
+    return `text:${value
+      .split('')
+      .map(unit => unit.charCodeAt(0).toString(16))
+      .join(',')}`;
+  if (typeof value === 'number') return `nat:${value}`;
+  if (typeof value === 'boolean') return `bool:${value}`;
+  if (Array.isArray(value)) return `[${value.map(describeValue).join(' ')}]`;
+  return 'other';
 }
 
 const natArbitrary = fc.oneof(
@@ -482,7 +475,7 @@ function tryParse(format: Format<unknown>, text: string): { value: unknown } | u
 }
 
 function shown(format: Format<unknown>, value: unknown): string {
-  return describeValue(format.toValue(value)).join(' ');
+  return describeValue(value);
 }
 
 function joinedParts(parts: (string | undefined)[], separator: string): string | undefined {
@@ -877,6 +870,13 @@ describe('text-format kernel properties', () => {
     expect(() => separated("'", optionalSuffix("'", numeral(10)))).toThrow();
     expect(() => separated('/', separated('/', numeral(10)))).toThrow();
     expect(() => separated('/', leading(':', numeral(10), anything))).toThrow();
+
+    expect(() => fields('/', ['a', anything], ['b', numeral(10)])).toThrow();
+    expect(() => fields('/', ['a', numeral(10)], ['b', anything], ['c', numeral(10)])).toThrow();
+    const named = fields('/', ['a', numeral(10)], ['b', characters(charactersExcept('/'))]);
+    expect(() => separated(':', named)).toThrow();
+    expect(() => separated('/', named)).toThrow();
+    expect(() => separated(':', fields('/', ['a', numeral(10)], ['b', numeral(16)]))).not.toThrow();
 
     const safe = characters(charactersExcept('/', "'", ':'));
     expect(() => separated('/', optionalSuffix("'", numeral(10)))).not.toThrow();

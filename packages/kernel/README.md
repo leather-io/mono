@@ -80,9 +80,53 @@ A part that is followed by a separator must not be able to contain that separato
 
 `src/format/format.spec.ts` checks, on every small format and on random ones: parsing what was printed returns the same value, printing what was parsed returns the same text, and each block prints what its row in the table above says.
 
+## Whole numbers and amounts
+
+Both are defined once in a `*.kernel.ts` file, like a codec or format, and work on `bigint`, never on a JavaScript number.
+
+| Block                               | Text                                            | Value                                           |
+| ----------------------------------- | ----------------------------------------------- | ----------------------------------------------- |
+| `integer({ bits })`                 | plain decimal digits, no sign, no leading zeros | `bigint` from 0 to 2^bits − 1                   |
+| `decimalAmount(decimals, { bits })` | `"1.5"`                                         | base units, such as `150000000n` for 8 decimals |
+
+```ts
+export const btcAmount = decimalAmount(8, { bits: 64 });
+
+btcAmount.parse('1.5'); // 150000000n
+btcAmount.print(150000000n); // '1.5'
+```
+
+- `parse` accepts only the text `print` would write, so each value has one text.
+- `decimalAmount(...).read` is for what a person typed: it also accepts trailing zeros (`"1.50"`), and nothing else.
+- `integer(...).read` is for a parameter from a dapp or an API: a canonical string, a safe whole number or a `bigint`. It refuses `""`, `null`, `true`, `1.5`, `"0x10"`, `"1e3"` and negatives instead of coercing them.
+
+## Quantities
+
+A quantity is a non-negative `bigint` with a unit name. Import these directly where the arithmetic happens.
+
+```ts
+const fee = quantity('sat/vB', 10n).times(quantity('vB', 141n), 'sat');
+const change = settle('sat', inputs, [...outputs, fee]);
+```
+
+| Operation                                           | Guarantee                                                                              |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `plus`, `minus`, `compare`                          | only between the same unit; `minus` refuses a result below zero                        |
+| `sumQuantities(unit, items)`                        | the total, zero for an empty list                                                      |
+| `settle(unit, inputs, outputs)`                     | what is left over, so inputs = outputs + result; refuses spending more than the inputs |
+| `mulDiv(numerator, denominator, 'floor' \| 'ceil')` | within one unit of exact, on the side you chose                                        |
+| `clamp(min, max)`                                   | always inside the range; refuses a range that is upside down                           |
+| `times(other, unit)`                                | the only way to change unit, and you name the result                                   |
+
+Mixing units, such as comparing a fee rate with a balance, is a type error and also throws at run time.
+
+## Web origins
+
+`webOrigin(url)` returns scheme, host and port in canonical form and refuses anything that is not `http` or `https`. `isSameWebOrigin(a, b)` is true only when all three match. Use the origin, never the hostname, as the key for anything a site is allowed to do.
+
 ## Adding a block
 
-1. Add the block to `codec.ts` or `format.ts`.
+1. Add the block to its file under `src`.
 2. Add it to the generators in the spec file, so the general properties cover it.
 3. Add a property that states what the block writes, and fixed examples for its exact output.
 

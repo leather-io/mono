@@ -5,6 +5,13 @@ ruleTester.run('kernel-only-file', kernelOnlyFileRule, {
   valid: [
     {
       code: `
+        import { decimalAmount, integer } from '@leather.io/kernel';
+        export const btcAmount = decimalAmount(8, { bits: 64 });
+        export const uint128 = integer({ bits: 128 });
+      `,
+    },
+    {
+      code: `
         import { bytes, compactSize, list } from '@leather.io/kernel';
         export const witnessStackCodec = list(compactSize, bytes(compactSize));
       `,

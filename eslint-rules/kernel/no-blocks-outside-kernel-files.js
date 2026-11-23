@@ -1,11 +1,11 @@
-import { isTypeOnlyImport, kernelPackage } from './shared.js';
+import { importsOnlyDirectUseBlocks, isTypeOnlyImport, kernelPackage } from './shared.js';
 
 export const noBlocksOutsideKernelFilesRule = {
   meta: {
     type: 'problem',
     docs: {
       description:
-        'Codecs and formats may only be assembled from @leather.io/kernel blocks inside *.kernel.ts files.',
+        'Codecs and formats may only be assembled from @leather.io/kernel blocks inside *.kernel.ts files. Arithmetic and origin blocks are used directly.',
     },
     schema: [],
     messages: {
@@ -17,6 +17,7 @@ export const noBlocksOutsideKernelFilesRule = {
     return {
       ImportDeclaration(node) {
         if (node.source.value !== kernelPackage || isTypeOnlyImport(node)) return;
+        if (importsOnlyDirectUseBlocks(node)) return;
         context.report({ node, messageId: 'defineInKernelFile' });
       },
     };

@@ -44,7 +44,10 @@ const u64be = uint(8, 'big');
 function describeValue(value: unknown): string {
   if (value instanceof Uint8Array) return `bytes:${bytesToHex(value)}`;
   if (typeof value === 'string')
-    return `text:${Array.from(value, character => (character.codePointAt(0) ?? 0).toString(16)).join(',')}`;
+    return `text:${value
+      .split('')
+      .map(unit => unit.charCodeAt(0).toString(16))
+      .join(',')}`;
   if (typeof value === 'number') return `int:${BigInt(value)}`;
   if (Array.isArray(value)) return `[${value.map(describeValue).join(' ')}]`;
   return 'unit';
