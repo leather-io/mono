@@ -1,15 +1,15 @@
 const bannedConstructors = new Map([
   ['DataView', 'a micro-packed coder such as U32BE'],
-  ['TextDecoder', 'strictText(length) from @leather.io/kernel'],
-  ['TextEncoder', 'strictText(length) from @leather.io/kernel'],
+  ['TextDecoder', 'strictText(length) from @leather.io/utils/kernel'],
+  ['TextEncoder', 'strictText(length) from @leather.io/utils/kernel'],
 ]);
 
 const bannedImports = new Map([
   ['concatBytes', 'tuple([…]) or struct({…}) from micro-packed'],
-  ['utf8ToBytes', 'strictText(length) from @leather.io/kernel'],
+  ['utf8ToBytes', 'strictText(length) from @leather.io/utils/kernel'],
 ]);
 
-const parseIntReplacement = 'numeral(10) or numeral(16) from @leather.io/kernel';
+const parseIntReplacement = 'numeral(10) or numeral(16) from @leather.io/utils/kernel';
 
 function isParseInt(callee) {
   if (callee.type === 'Identifier') return callee.name === 'parseInt';
@@ -27,7 +27,7 @@ export const noHandRolledEncodingRule = {
     type: 'problem',
     docs: {
       description:
-        'Build and parse bytes and structured text with @leather.io/kernel instead of by hand.',
+        'Build and parse bytes and structured text with @leather.io/utils/kernel instead of by hand.',
     },
     schema: [
       {

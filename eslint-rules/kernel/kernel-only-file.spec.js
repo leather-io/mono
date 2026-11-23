@@ -5,7 +5,7 @@ ruleTester.run('kernel-only-file', kernelOnlyFileRule, {
   valid: [
     {
       code: `
-        import { decimalAmount, integer } from '@leather.io/kernel';
+        import { decimalAmount, integer } from '@leather.io/utils/kernel';
         export const btcAmount = decimalAmount(8, { bits: 64 });
         export const uint128 = integer({ bits: 128 });
       `,
@@ -13,7 +13,7 @@ ruleTester.run('kernel-only-file', kernelOnlyFileRule, {
     {
       code: `
         import * as P from 'micro-packed';
-        import { strictText } from '@leather.io/kernel';
+        import { strictText } from '@leather.io/utils/kernel';
         export const preimage = P.tuple([
           strictText(P.U32BE),
           P.bytes(P.U32BE),
@@ -26,7 +26,7 @@ ruleTester.run('kernel-only-file', kernelOnlyFileRule, {
     {
       code: `
         import { type CoderType, U32BE, bytes, magicBytes, tuple } from 'micro-packed';
-        import { strictText } from '@leather.io/kernel';
+        import { strictText } from '@leather.io/utils/kernel';
         import { hexToBytes } from '@noble/hashes/utils';
         import { segment } from './path.kernel';
         const tagLength = 4;
@@ -38,14 +38,14 @@ ruleTester.run('kernel-only-file', kernelOnlyFileRule, {
     },
     {
       code: `
-        import { characters, charactersIn, numeral, optionalSuffix, separated } from '@leather.io/kernel';
+        import { characters, charactersIn, numeral, optionalSuffix, separated } from '@leather.io/utils/kernel';
         const fingerprint = characters(charactersIn('09', 'af'), { minLength: 1, maxLength: 8 });
         export const path = separated('/', optionalSuffix("'", numeral(10)), { minCount: 3 });
       `,
     },
     {
       code: `
-        import { fields, numeral } from '@leather.io/kernel';
+        import { fields, numeral } from '@leather.io/utils/kernel';
         export const keyPath = fields('/', ['change', numeral(2, 1)], ['index', numeral(10)]);
       `,
     },
@@ -53,7 +53,7 @@ ruleTester.run('kernel-only-file', kernelOnlyFileRule, {
   invalid: [
     {
       code: `
-        import { fields, numeral } from '@leather.io/kernel';
+        import { fields, numeral } from '@leather.io/utils/kernel';
         export const keyPath = fields('/', [nameOf('change'), numeral(2, 1)], ['index', numeral(10)]);
       `,
       errors: [{ messageId: 'onlyKernelBlocks' }],
@@ -61,7 +61,7 @@ ruleTester.run('kernel-only-file', kernelOnlyFileRule, {
     {
       code: `
         import { sha256 } from '@noble/hashes/sha256';
-        import { numeral } from '@leather.io/kernel';
+        import { numeral } from '@leather.io/utils/kernel';
       `,
       errors: [{ messageId: 'onlyKernelImports' }],
     },
@@ -80,21 +80,21 @@ ruleTester.run('kernel-only-file', kernelOnlyFileRule, {
     },
     {
       code: `
-        import { numeral } from '@leather.io/kernel';
+        import { numeral } from '@leather.io/utils/kernel';
         let width = numeral(10);
       `,
       errors: [{ messageId: 'onlyConstDefinitions' }],
     },
     {
       code: `
-        import { numeral } from '@leather.io/kernel';
+        import { numeral } from '@leather.io/utils/kernel';
         if (true) numeral(10);
       `,
       errors: [{ messageId: 'onlyConstDefinitions' }],
     },
     {
       code: `
-        import { numeral } from '@leather.io/kernel';
+        import { numeral } from '@leather.io/utils/kernel';
         export const parseIndex = text => numeral(10).parse(text);
       `,
       errors: [{ messageId: 'onlyKernelBlocks' }],
@@ -115,14 +115,14 @@ ruleTester.run('kernel-only-file', kernelOnlyFileRule, {
     },
     {
       code: `
-        import { numeral } from '@leather.io/kernel';
+        import { numeral } from '@leather.io/utils/kernel';
         export const encoded = numeral(10).print(5);
       `,
       errors: [{ messageId: 'onlyKernelBlocks' }],
     },
     {
       code: `
-        import { prefixed, numeral } from '@leather.io/kernel';
+        import { prefixed, numeral } from '@leather.io/utils/kernel';
         export const format = prefixed(\`\${root}/\`, numeral(10));
       `,
       errors: [{ messageId: 'onlyKernelBlocks' }],

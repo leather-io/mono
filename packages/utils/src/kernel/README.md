@@ -1,4 +1,4 @@
-# `@leather.io/kernel`
+# `@leather.io/utils/kernel`
 
 Building blocks for text formats, strict text in bytes, amounts and origins, checked by property tests. Code assembled only from these blocks gets the properties below without tests of its own for them.
 
@@ -13,7 +13,7 @@ Byte layouts are written with [`micro-packed`](https://github.com/paulmillr/micr
 ```ts
 import * as P from 'micro-packed';
 
-import { strictText } from '@leather.io/kernel';
+import { strictText } from '@leather.io/utils/kernel';
 
 export const proposalPreimage = P.tuple([
   strictText(P.U32BE),
@@ -23,7 +23,7 @@ export const proposalPreimage = P.tuple([
 ]);
 ```
 
-`micro-packed`'s own `string` and `cstring` turn invalid UTF-8 into U+FFFD, write lone surrogates and drop a leading byte order mark, so two different inputs can share a hash. `strictText` refuses all three. `src/text/strict-text.spec.ts` checks that text is written exactly when it has no lone surrogate, that bytes are read exactly when they are valid UTF-8, and that both directions round trip.
+`micro-packed`'s own `string` and `cstring` turn invalid UTF-8 into U+FFFD, write lone surrogates and drop a leading byte order mark, so two different inputs can share a hash. `strictText` refuses all three. `text/strict-text.spec.ts` checks that text is written exactly when it has no lone surrogate, that bytes are read exactly when they are valid UTF-8, and that both directions round trip.
 
 The library itself is trusted and not re-tested here. Two things it does not do for you:
 
@@ -50,7 +50,7 @@ A format turns a value into text and reads it back, with `print` and `parse`. Yo
 
 A part that is followed by a separator must not be able to contain that separator. The constructors refuse a format that breaks this, which is what keeps parsing unambiguous.
 
-`src/format/format.spec.ts` checks, on every small format and on random ones: parsing what was printed returns the same value, printing what was parsed returns the same text, and each block prints what its row in the table above says.
+`format/format.spec.ts` checks, on every small format and on random ones: parsing what was printed returns the same value, printing what was parsed returns the same text, and each block prints what its row in the table above says.
 
 ## Whole numbers and amounts
 

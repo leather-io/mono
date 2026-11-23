@@ -1,17 +1,17 @@
 import type { Mutant } from './mutation-gate.js';
 
-const textFile = 'src/text/strict-text.ts';
-const textSpec = 'src/text/strict-text.spec.ts';
-const formatFile = 'src/format/format.ts';
-const formatSpec = 'src/format/format.spec.ts';
-const integerFile = 'src/integer/integer.ts';
-const integerSpec = 'src/integer/integer.spec.ts';
-const amountFile = 'src/amount/decimal-amount.ts';
-const amountSpec = 'src/amount/decimal-amount.spec.ts';
-const quantityFile = 'src/quantity/quantity.ts';
-const quantitySpec = 'src/quantity/quantity.spec.ts';
-const originFile = 'src/origin/origin.ts';
-const originSpec = 'src/origin/origin.spec.ts';
+const textFile = 'src/kernel/text/strict-text.ts';
+const textSpec = 'src/kernel/text/strict-text.spec.ts';
+const formatFile = 'src/kernel/format/format.ts';
+const formatSpec = 'src/kernel/format/format.spec.ts';
+const integerFile = 'src/kernel/integer/integer.ts';
+const integerSpec = 'src/kernel/integer/integer.spec.ts';
+const amountFile = 'src/kernel/amount/decimal-amount.ts';
+const amountSpec = 'src/kernel/amount/decimal-amount.spec.ts';
+const quantityFile = 'src/kernel/quantity/quantity.ts';
+const quantitySpec = 'src/kernel/quantity/quantity.spec.ts';
+const originFile = 'src/kernel/origin/origin.ts';
+const originSpec = 'src/kernel/origin/origin.spec.ts';
 
 export const kernelMutants: Mutant[] = [
   {

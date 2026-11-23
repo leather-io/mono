@@ -1,11 +1,11 @@
 ---
 name: kernel-formats
-description: Use `@leather.io/kernel` for any byte or text format Leather defines itself, and for amounts, fee arithmetic and site origins. Use when adding or changing code that builds bytes to hash or sign, reads bytes back, builds or parses a structured string (derivation paths, key origins, descriptors, identifiers), parses or prints an amount, adds or subtracts money, validates a numeric dapp or API parameter, or compares site origins; or when tempted to reach for DataView, concatBytes, split, parseInt, parseFloat, Number() on an amount, or a regex for such a format. Covers which block to use, the rules that keep the kernel guarantees valid, how to add a block, and what the kernel does not guarantee.
+description: Use `@leather.io/utils/kernel` for any byte or text format Leather defines itself, and for amounts, fee arithmetic and site origins. Use when adding or changing code that builds bytes to hash or sign, reads bytes back, builds or parses a structured string (derivation paths, key origins, descriptors, identifiers), parses or prints an amount, adds or subtracts money, validates a numeric dapp or API parameter, or compares site origins; or when tempted to reach for DataView, concatBytes, split, parseInt, parseFloat, Number() on an amount, or a regex for such a format. Covers which block to use, the rules that keep the kernel guarantees valid, how to add a block, and what the kernel does not guarantee.
 ---
 
 # Kernel formats
 
-`@leather.io/kernel` (`packages/kernel`) holds building blocks whose properties are checked once, by property tests, across random and small combinations. A format built only from those blocks gets the properties without tests of its own for them. Byte layouts are built from `micro-packed`, a trusted library, plus the kernel's `strictText`.
+`@leather.io/utils/kernel` (`packages/utils/src/kernel`) holds building blocks whose properties are checked once, by property tests, across random and small combinations. A format built only from those blocks gets the properties without tests of its own for them. Byte layouts are built from `micro-packed`, a trusted library, plus the kernel's `strictText`.
 
 Use it for formats we define. Leave third-party formats to their libraries: transactions and PSBTs to `@scure/btc-signer`, `bitcoinjs-lib` and `@stacks/transactions`, descriptors and miniscript to `@bitcoinerlab/descriptors`, base encodings to `@scure/base`.
 
@@ -18,7 +18,7 @@ Bytes: use `micro-packed` directly (`import * as P from 'micro-packed'`), with `
 | Integer | `P.U8`, `P.U32BE`, `P.U32LE`; `P.apply(P.U64BE, P.coders.numberBigint)` for a `number` of 8 bytes |
 | Exactly N bytes | `P.bytes(n)` |
 | Bytes with a length in front | `P.bytes(P.U32BE)` |
-| UTF-8 text with a length in front | `strictText(P.U32BE)` from `@leather.io/kernel`, never `P.string` or `P.cstring` |
+| UTF-8 text with a length in front | `strictText(P.U32BE)` from `@leather.io/utils/kernel`, never `P.string` or `P.cstring` |
 | Magic number, version or domain tag | `P.magicBytes(bytes)` |
 | Counted list | `P.array(count, item)` |
 | Parts in a row | `P.tuple([a, b, …])`, or `P.struct({ name: a, … })` |
@@ -106,7 +106,7 @@ Parsing is strict. Replacing hand-written `split` and `parseInt` code with a ker
 
 ## Adding a block
 
-Only when a real function needs it. In this order, inside `packages/kernel`:
+Only when a real function needs it. In this order, inside `packages/utils/src/kernel`:
 
 1. **TypeScript**: add the constructor to `format.ts` or a new file. For bytes, add a block only where `micro-packed` is loose (more than one encoding per value, or input silently repaired), as `strict-text.ts` does. Keep the class private so nothing outside the kernel can construct a format.
 2. **Generators**: add the block to the random generators and to the small-case enumeration in the spec, so the general properties (round trip, canonical, injective) cover it.
@@ -116,7 +116,7 @@ Only when a real function needs it. In this order, inside `packages/kernel`:
 
 ## Commands
 
-`pnpm --filter @leather.io/kernel test:unit` runs the kernel's fixed examples and property tests.
+`pnpm --filter @leather.io/utils test:unit src/kernel` runs the kernel's fixed examples and property tests.
 
 `pnpm kernel:test-rules` from the repo root runs the tests of the three lint rules.
 

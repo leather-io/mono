@@ -134,6 +134,7 @@
       "entry": ["src/lt.ts", "src/feature-map/feature-entry.ts"]
     },
     "packages/utils": {
+      "entry": ["src/index.ts!", "src/kernel/index.ts!"],
       "ignoreDependencies": ["@types/dompurify"]
     },
     "packages/ui": {

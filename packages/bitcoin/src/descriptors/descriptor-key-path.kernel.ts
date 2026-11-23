@@ -1,4 +1,4 @@
-import { fields, numeral, prefixed } from '@leather.io/kernel';
+import { fields, numeral, prefixed } from '@leather.io/utils/kernel';
 
 export const descriptorKeyPath = prefixed(
   '/',

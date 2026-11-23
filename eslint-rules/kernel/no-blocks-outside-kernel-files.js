@@ -10,7 +10,7 @@ export const noBlocksOutsideKernelFilesRule = {
     type: 'problem',
     docs: {
       description:
-        'Codecs and formats may only be assembled from micro-packed coders and @leather.io/kernel blocks inside *.kernel.ts files. Arithmetic and origin blocks are used directly.',
+        'Codecs and formats may only be assembled from micro-packed coders and @leather.io/utils/kernel blocks inside *.kernel.ts files. Arithmetic and origin blocks are used directly.',
     },
     schema: [],
     messages: {

@@ -31,7 +31,7 @@ export const kernelOnlyFileRule = {
     type: 'problem',
     docs: {
       description:
-        'A *.kernel.ts file may only define codecs and formats by calling micro-packed coders and @leather.io/kernel blocks.',
+        'A *.kernel.ts file may only define codecs and formats by calling micro-packed coders and @leather.io/utils/kernel blocks.',
     },
     schema: [
       {
@@ -44,13 +44,13 @@ export const kernelOnlyFileRule = {
       missingSpec:
         'Add {{spec}} with at least one fixed vector for each codec or format in this file, so a change to its layout is deliberate.',
       onlyKernelImports:
-        'Import only from micro-packed, @leather.io/kernel or another *.kernel.ts file here. Other code belongs in the file that uses the codec or format.',
+        'Import only from micro-packed, @leather.io/utils/kernel or another *.kernel.ts file here. Other code belongs in the file that uses the codec or format.',
       onlyConstDefinitions:
-        'Only `const` definitions built from micro-packed coders and @leather.io/kernel blocks are allowed here. Move functions, branches and other logic to the file that uses the codec or format.',
+        'Only `const` definitions built from micro-packed coders and @leather.io/utils/kernel blocks are allowed here. Move functions, branches and other logic to the file that uses the codec or format.',
       onlyKernelBlocks:
-        'Build this value only from micro-packed coders, @leather.io/kernel blocks, other codecs or formats, and literals. See the kernel-formats skill.',
+        'Build this value only from micro-packed coders, @leather.io/utils/kernel blocks, other codecs or formats, and literals. See the kernel-formats skill.',
       useStrictText:
-        'Do not use {{name}} from micro-packed: it repairs invalid UTF-8 instead of refusing it. Use strictText(length) from @leather.io/kernel.',
+        'Do not use {{name}} from micro-packed: it repairs invalid UTF-8 instead of refusing it. Use strictText(length) from @leather.io/utils/kernel.',
     },
   },
   create(context) {

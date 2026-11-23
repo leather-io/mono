@@ -4,28 +4,28 @@ import { noBlocksOutsideKernelFilesRule } from './no-blocks-outside-kernel-files
 ruleTester.run('no-blocks-outside-kernel-files', noBlocksOutsideKernelFilesRule, {
   valid: [
     { code: "import { witnessStackCodec } from './witness-stack.kernel';" },
-    { code: "import type { Format } from '@leather.io/kernel';" },
-    { code: "import { type Format, type IntegerFormat } from '@leather.io/kernel';" },
+    { code: "import type { Format } from '@leather.io/utils/kernel';" },
+    { code: "import { type Format, type IntegerFormat } from '@leather.io/utils/kernel';" },
     { code: "import type { CoderType } from 'micro-packed';" },
     { code: "import { sha256 } from '@noble/hashes/sha256';" },
-    { code: "import { quantity, settle, sumQuantities } from '@leather.io/kernel';" },
-    { code: "import { type Quantity, isSameWebOrigin, webOrigin } from '@leather.io/kernel';" },
+    { code: "import { quantity, settle, sumQuantities } from '@leather.io/utils/kernel';" },
+    { code: "import { type Quantity, isSameWebOrigin, webOrigin } from '@leather.io/utils/kernel';" },
   ],
   invalid: [
     {
-      code: "import { strictText } from '@leather.io/kernel';",
+      code: "import { strictText } from '@leather.io/utils/kernel';",
       errors: [{ messageId: 'defineInKernelFile' }],
     },
     {
-      code: "import { type Format, fields } from '@leather.io/kernel';",
+      code: "import { type Format, fields } from '@leather.io/utils/kernel';",
       errors: [{ messageId: 'defineInKernelFile' }],
     },
     {
-      code: "import { decimalAmount, quantity } from '@leather.io/kernel';",
+      code: "import { decimalAmount, quantity } from '@leather.io/utils/kernel';",
       errors: [{ messageId: 'defineInKernelFile' }],
     },
     {
-      code: "import { integer } from '@leather.io/kernel';",
+      code: "import { integer } from '@leather.io/utils/kernel';",
       errors: [{ messageId: 'defineInKernelFile' }],
     },
     {
@@ -37,7 +37,7 @@ ruleTester.run('no-blocks-outside-kernel-files', noBlocksOutsideKernelFilesRule,
       errors: [{ messageId: 'defineInKernelFile' }],
     },
     {
-      code: "import * as kernel from '@leather.io/kernel';",
+      code: "import * as kernel from '@leather.io/utils/kernel';",
       errors: [{ messageId: 'defineInKernelFile' }],
     },
   ],

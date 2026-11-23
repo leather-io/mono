@@ -426,7 +426,7 @@ export default defineConfig([
   {
     name: 'kernel-only-files',
     files: ['{packages,apps}/**/*.kernel.ts'],
-    ignores: ['packages/kernel/**'],
+    ignores: ['packages/utils/src/kernel/**'],
     plugins: { kernel: kernelPlugin },
     rules: {
       'kernel/kernel-only-file': ['error', { requireSpec: true }],
@@ -435,7 +435,7 @@ export default defineConfig([
   {
     name: 'kernel-blocks-only-in-kernel-files',
     files: ['{packages,apps}/**/*.{ts,tsx}'],
-    ignores: ['packages/kernel/**', '**/*.kernel.ts', '**/*.spec.{ts,tsx}'],
+    ignores: ['packages/utils/src/kernel/**', '**/*.kernel.ts', '**/*.spec.{ts,tsx}'],
     plugins: { kernel: kernelPlugin },
     rules: {
       'kernel/no-blocks-outside-kernel-files': 'error',
@@ -444,7 +444,7 @@ export default defineConfig([
   {
     name: 'kernel-no-hand-rolled-encoding',
     files: ['packages/*/src/**/*.{ts,tsx}'],
-    ignores: ['packages/kernel/**', '**/*.spec.{ts,tsx}'],
+    ignores: ['packages/utils/src/kernel/**', '**/*.spec.{ts,tsx}'],
     plugins: { kernel: kernelPlugin },
     rules: {
       'kernel/no-hand-rolled-encoding': 'error',
@@ -453,7 +453,7 @@ export default defineConfig([
   {
     name: 'kernel-no-hand-rolled-encoding-amount-parsing',
     files: ['packages/{ui,utils}/src/**/*.{ts,tsx}'],
-    ignores: ['**/*.spec.{ts,tsx}'],
+    ignores: ['packages/utils/src/kernel/**', '**/*.spec.{ts,tsx}'],
     rules: {
       'kernel/no-hand-rolled-encoding': ['error', { allow: ['parseInt'] }],
     },

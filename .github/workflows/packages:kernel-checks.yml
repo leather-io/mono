@@ -3,7 +3,7 @@ name: packages:kernel-checks
 on:
   pull_request:
     paths:
-      - 'packages/kernel/**'
+      - 'packages/utils/src/kernel/**'
       - 'eslint-rules/kernel/**'
       - 'tools/src/kernel/**'
       - '.github/workflows/packages:kernel-checks.yml'
@@ -32,7 +32,7 @@ jobs:
         run: pnpm kernel:test-rules
 
       - name: build-kernel-dependencies
-        run: pnpm turbo run build --filter="@leather.io/kernel^..."
+        run: pnpm turbo run build --filter="@leather.io/utils^..."
 
       # Breaks the TypeScript kernel on purpose in each listed way and fails
       # unless the tests notice, so the tests cannot go blind.

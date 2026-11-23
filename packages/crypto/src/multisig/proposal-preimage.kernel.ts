@@ -1,6 +1,6 @@
 import * as P from 'micro-packed';
 
-import { strictText } from '@leather.io/kernel';
+import { strictText } from '@leather.io/utils/kernel';
 
 export const proposalPreimageCodec = P.tuple([
   strictText(P.U32BE),

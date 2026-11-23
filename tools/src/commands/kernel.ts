@@ -9,7 +9,7 @@ import { getMonorepoRoot } from '../utils/paths.js';
 
 function runKernelMutationGate(): void {
   const root = getMonorepoRoot();
-  const kernelDir = path.join(root, 'packages', 'kernel');
+  const kernelDir = path.join(root, 'packages', 'utils');
 
   const { caught, survived, stale } = runMutationGate({
     mutants: kernelMutants,
@@ -20,7 +20,7 @@ function runKernelMutationGate(): void {
       writeFileSync(path.join(kernelDir, file), content);
     },
     testsPass(spec) {
-      const result = runCommand('pnpm', ['--filter', '@leather.io/kernel', 'test:unit', spec], {
+      const result = runCommand('pnpm', ['--filter', '@leather.io/utils', 'test:unit', spec], {
         cwd: root,
       });
       return result.status === 0;
@@ -45,7 +45,7 @@ function runKernelMutationGate(): void {
 export function registerKernelCommands(program: Command): void {
   const kernel = program
     .command('kernel')
-    .description('Checks for the building blocks in packages/kernel');
+    .description('Checks for the building blocks in packages/utils/src/kernel');
 
   kernel
     .command('mutation-gate')

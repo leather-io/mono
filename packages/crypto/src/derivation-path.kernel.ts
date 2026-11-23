@@ -9,7 +9,7 @@ import {
   optionalSuffix,
   prefixed,
   separated,
-} from '@leather.io/kernel';
+} from '@leather.io/utils/kernel';
 
 const fingerprintLength = 8;
 

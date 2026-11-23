@@ -1,4 +1,4 @@
-import { characters, charactersExcept, fields, numeral } from '@leather.io/kernel';
+import { characters, charactersExcept, fields, numeral } from '@leather.io/utils/kernel';
 
 const fingerprintHexWidth = 8;
 
