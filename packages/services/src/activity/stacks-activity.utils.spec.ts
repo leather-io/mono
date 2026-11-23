@@ -12,11 +12,14 @@ import type {
   HiroPrincipalTransactionsResultItem,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import { createActivityBalanceChange, createActivitySip10Asset } from '../test/activity-fixtures';
+import { createTestPrincipalMempoolContractCallTx } from '../test/transactions-fixtures';
 import {
   buildConfirmedStacksActivity,
   buildOnchainStacksActivity,
+  buildPendingStacksActivity,
   buildStacksActivity,
   buildStxBalanceChange,
+  getPendingOutflowsFromPostConditions,
   mapStacksActivityStatus,
   reclassifySip10Transfer,
   toStacksActivityResultItem,
@@ -573,5 +576,86 @@ describe(buildOnchainStacksActivity.name, () => {
       coinbase: { payload: '0x', alt_recipient: null, vrf_proof: null },
     };
     expect(buildOnchainStacksActivity(tx, stxAddress, noChanges)).toBeNull();
+  });
+});
+
+type TestPostCondition = Parameters<typeof getPendingOutflowsFromPostConditions>[0][number];
+
+function ftPostCondition(
+  principal: TestPostCondition['principal'],
+  amount: string,
+  assetName = 'tok'
+): TestPostCondition {
+  return {
+    principal,
+    condition_code: 'sent_equal_to',
+    amount,
+    type: 'fungible',
+    asset: { contract_address: 'SP', contract_name: 'token', asset_name: assetName },
+  };
+}
+
+describe(getPendingOutflowsFromPostConditions.name, () => {
+  it('sums the sender stx and fungible outflows per asset', () => {
+    const outflows = getPendingOutflowsFromPostConditions(
+      [
+        {
+          principal: { type_id: 'principal_origin' },
+          condition_code: 'sent_equal_to',
+          amount: '10',
+          type: 'stx',
+        },
+        ftPostCondition({ type_id: 'principal_origin' }, '100'),
+        ftPostCondition({ type_id: 'principal_standard', address: 'SP1' }, '50'),
+      ],
+      'SP1'
+    );
+    expect(outflows).toEqual([
+      { type: 'stx', amount: '10' },
+      { type: 'ft', identifier: 'SP.token::tok', amount: '150' },
+    ]);
+  });
+
+  it('ignores other principals, zero amounts and non-fungible conditions', () => {
+    const outflows = getPendingOutflowsFromPostConditions(
+      [
+        ftPostCondition({ type_id: 'principal_standard', address: 'SP2' }, '100'),
+        ftPostCondition(
+          { type_id: 'principal_contract', address: 'SP', contract_name: 'pool' },
+          '100'
+        ),
+        ftPostCondition({ type_id: 'principal_origin' }, '0'),
+        {
+          principal: { type_id: 'principal_origin' },
+          condition_code: 'sent',
+          type: 'non_fungible',
+          asset_value: { hex: '0x01', repr: 'u1' },
+          asset: { contract_address: 'SP', contract_name: 'nft', asset_name: 'nft' },
+        },
+      ],
+      'SP1'
+    );
+    expect(outflows).toEqual([]);
+  });
+});
+
+describe(buildPendingStacksActivity.name, () => {
+  it('reclassifies a pending SIP-10 transfer with post-condition outflows as a send', () => {
+    const tx = createTestPrincipalMempoolContractCallTx({
+      sender: { address: 'SP1', nonce: 0 },
+      contract_call: { contract_id: 'SP.token', function_name: 'transfer' },
+    });
+    const sent = createActivityBalanceChange({ direction: 'sent' });
+    const activity = buildPendingStacksActivity(tx, 'SP1', undefined, [sent]);
+    expect(activity?.action).toBe('send');
+    expect(activity?.status).toBe('pending');
+    expect(activity?.balanceChanges).toEqual([sent]);
+  });
+
+  it('keeps a pending contract call without outflows as a contract execution', () => {
+    const tx = createTestPrincipalMempoolContractCallTx({ sender: { address: 'SP1', nonce: 0 } });
+    const activity = buildPendingStacksActivity(tx, 'SP1');
+    expect(activity?.action).toBe('contract-execution');
+    expect(activity?.balanceChanges).toEqual([]);
   });
 });

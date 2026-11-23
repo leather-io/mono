@@ -26,6 +26,7 @@ import {
   HiroPoxInfoResponse,
   HiroPrincipalFtBalance,
   HiroPrincipalFtBalancesResponse,
+  HiroPrincipalFtTransfersResponse,
   HiroPrincipalMempoolTransactionsResponse,
   HiroPrincipalNftBalance,
   HiroPrincipalNftBalancesResponse,
@@ -173,6 +174,44 @@ export class HiroStacksApiClient {
         principal,
         sortedTxIds.join(','),
         cursor ?? 'start',
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      fetchFn,
+      { skipCache }
+    );
+  }
+
+  public async getPrincipalFtTransfers(
+    principal: string,
+    assetIdentifier: string,
+    { cursor, limit = DEFAULT_LIST_LIMIT }: { cursor?: string | null; limit?: number } = {},
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Promise<HiroPrincipalFtTransfersResponse> {
+    const fetchFn = async () => {
+      const params = new URLSearchParams({ limit: String(limit) });
+      if (cursor) params.set('cursor', cursor);
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.get<HiroPrincipalFtTransfersResponse>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/principals/${principal}/transfers/ft/${encodeURIComponent(assetIdentifier)}?${params.toString()}`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getAccountTransactions,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return res.data;
+    };
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-principal-ft-transfers',
+        principal,
+        assetIdentifier,
+        cursor ?? 'start',
+        limit,
         selectStacksChainId(this.settings.getSettings()),
       ],
       fetchFn,

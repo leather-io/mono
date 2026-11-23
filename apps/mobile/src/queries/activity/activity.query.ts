@@ -1,6 +1,10 @@
+import { useCallback } from 'react';
+
 import { toFetchState } from '@/components/loading/fetch-state';
+import { defaultMask } from '@/components/private-text';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
 import { useSettings } from '@/store/settings/settings';
+import { usePrivacyMode } from '@/store/settings/settings.read';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { type InfiniteData, useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
@@ -24,17 +28,15 @@ function formatActivityMoney(money: Money, options?: FormatAmountOptions) {
   return formatCurrency(money, { ...options, showCurrency: false });
 }
 
-const activityViewDeps: BlockchainActivityViewDeps = { formatMoney: formatActivityMoney };
-
-function selectActivityFeedItems(data: InfiniteData<ActivityResponse>) {
-  return createBlockchainActivityItems(
-    data.pages.flatMap(page => page.items),
-    activityViewDeps
-  );
+function maskActivityMoney() {
+  return defaultMask;
 }
 
-function selectActivityItems(activities: BlockchainActivity[]) {
-  return createBlockchainActivityItems(activities, activityViewDeps);
+const activityViewDeps: BlockchainActivityViewDeps = { formatMoney: formatActivityMoney };
+const privateActivityViewDeps: BlockchainActivityViewDeps = { formatMoney: maskActivityMoney };
+
+function useActivityViewDeps() {
+  return usePrivacyMode() ? privateActivityViewDeps : activityViewDeps;
 }
 
 function useActivitySettings(): UserSettings {
@@ -49,6 +51,15 @@ function useActivitySettings(): UserSettings {
 export function useActivityFeed(fingerprint: string, accountIndex: number) {
   const account = useAccountAddresses(fingerprint, accountIndex);
   const settings = useActivitySettings();
+  const viewDeps = useActivityViewDeps();
+  const selectActivityFeedItems = useCallback(
+    (data: InfiniteData<ActivityResponse>) =>
+      createBlockchainActivityItems(
+        data.pages.flatMap(page => page.items),
+        viewDeps
+      ),
+    [viewDeps]
+  );
   const feedQuery = useInfiniteQuery({
     ...createBlockchainActivityInfiniteQueryConfig({ account, limit: feedPageSize }, settings),
     ...retriableActivityQueryOptions,
@@ -56,7 +67,12 @@ export function useActivityFeed(fingerprint: string, accountIndex: number) {
   });
 
   return {
-    activity: toFetchState(feedQuery),
+    activity: toFetchState({
+      data: feedQuery.data,
+      isLoading: feedQuery.isLoading,
+      isError: feedQuery.isError && feedQuery.data === undefined,
+      error: feedQuery.error,
+    }),
     hasNextPage: feedQuery.hasNextPage,
     isFetchingNextPage: feedQuery.isFetchingNextPage,
     fetchNextPage() {
@@ -85,6 +101,11 @@ export function useActivityByAssetId(
   accountIndex: number,
   assetId: CryptoAssetId
 ) {
+  const viewDeps = useActivityViewDeps();
+  const selectActivityItems = useCallback(
+    (activities: BlockchainActivity[]) => createBlockchainActivityItems(activities, viewDeps),
+    [viewDeps]
+  );
   return toFetchState(
     useActivityByAssetIdQuery(fingerprint, accountIndex, assetId, selectActivityItems)
   );

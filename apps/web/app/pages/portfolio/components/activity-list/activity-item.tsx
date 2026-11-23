@@ -11,7 +11,7 @@ import {
   type BlockchainActivityDirection,
   type BlockchainActivityIndicator,
   type BlockchainActivityView,
-  formatActivityCaption,
+  formatBlockchainActivityCaption,
   makeActivityLink,
 } from '@leather.io/features';
 import {
@@ -71,7 +71,7 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
           {item.title || item.subtitle || '—'}
         </styled.span>
       }
-      caption={item.subtitle || formatActivityCaption({ timestamp: item.timestamp })}
+      caption={formatBlockchainActivityCaption(item)}
       trailing={
         amount ? (
           <Balance

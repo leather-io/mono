@@ -180,6 +180,15 @@ export interface HiroBalanceChangesResponse {
   };
   readonly results: HiroBalanceChangeResultItem[];
 }
+interface HiroPrincipalFtTransfer {
+  readonly sender: string | null;
+  readonly recipient: string | null;
+  readonly amount: string;
+  readonly transaction: { readonly tx_id: string; readonly event_index: number };
+}
+
+export type HiroPrincipalFtTransfersResponse = HiroCursorPageResponse<HiroPrincipalFtTransfer>;
+
 export type HiroTransactionIncludeField =
   | 'function_args'
   | 'source_code'

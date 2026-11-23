@@ -7,7 +7,10 @@ export {
   getBitcoinExplorerLink,
   makeActivityLink,
 } from './activity/activity-links';
-export { formatActivityCaption } from './activity/activity-timestamp';
+export {
+  formatActivityCaption,
+  formatBlockchainActivityCaption,
+} from './activity/activity-timestamp';
 export type { ActivityGroup, GroupActivityByDateOptions } from './activity/activity-grouping';
 export { formatActivityDateLabel, groupActivityByDate } from './activity/activity-grouping';
 export { createBlockchainActivityView } from './activity/blockchain-activity-view';

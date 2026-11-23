@@ -47,6 +47,7 @@ export function ActivityList({
         data={[]}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
+        refreshControl={<RefreshControl />}
         ListHeaderComponent={<>{header}</>}
         ListEmptyComponent={<ActivityEmpty />}
       />
