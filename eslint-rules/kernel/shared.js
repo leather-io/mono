@@ -1,4 +1,6 @@
 export const kernelPackage = '@leather.io/kernel';
+export const codecLibrary = 'micro-packed';
+export const looseTextCoders = new Set(['string', 'cstring']);
 
 const directUseBlocks = new Set([
   'quantity',

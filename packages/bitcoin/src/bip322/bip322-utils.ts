@@ -1,6 +1,7 @@
 import ecc from '@bitcoinerlab/secp256k1';
 import { sha256 } from '@noble/hashes/sha256';
 import { hexToBytes } from '@noble/hashes/utils';
+import { RawWitness } from '@scure/btc-signer';
 import * as bitcoin from 'bitcoinjs-lib';
 import { ECPairFactory } from 'ecpair';
 
@@ -8,7 +9,6 @@ import { type PaymentTypes } from '@leather.io/rpc';
 import { isString } from '@leather.io/utils';
 
 import { toXOnly } from '../utils/bitcoin.utils';
-import { witnessStackCodec } from '../utils/witness-stack.kernel';
 import { taggedMessageBytes, taggedMessageText } from './tagged-message.kernel';
 
 const ECPair = ECPairFactory(ecc);
@@ -23,8 +23,8 @@ export function ecPairFromPrivateKey(key: Uint8Array) {
 export function hashBip322Message(message: Uint8Array | string) {
   return sha256(
     isString(message)
-      ? taggedMessageText.encode(undefined, message)
-      : taggedMessageBytes.encode(undefined, message)
+      ? taggedMessageText.encode([undefined, message])
+      : taggedMessageBytes.encode([undefined, message])
   );
 }
 
@@ -45,7 +45,7 @@ export function isSupportedMessageSigningPaymentType(paymentType: string) {
  * TODO: Refactor to remove `Buffer` use
  */
 export function encodeMessageWitnessData(witnessArray: Uint8Array[]) {
-  return Buffer.from(witnessStackCodec.encode(witnessArray));
+  return Buffer.from(RawWitness.encode(witnessArray));
 }
 
 function tapTweakHash(pubKey: Uint8Array, h: Uint8Array | undefined): Uint8Array {

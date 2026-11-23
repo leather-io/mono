@@ -15,16 +15,17 @@ describe('stx nonce codecs', () => {
   });
 
   test('a transaction is read as version and chain id, auth type, hash mode, signer hash, nonce, then the rest', () => {
-    const [fields, rest] = transactionUpToNonce.decode(
-      hexToBytes(versionAndChainId + authType + hashMode + signerHash + nonce + afterNonce)
-    );
-    expect(fields).toEqual([
+    expect(
+      transactionUpToNonce.decode(
+        hexToBytes(versionAndChainId + authType + hashMode + signerHash + nonce + afterNonce)
+      )
+    ).toEqual([
       hexToBytes(versionAndChainId),
       4,
       5,
       hexToBytes(signerHash),
       hexToBytes(nonce),
+      hexToBytes(afterNonce),
     ]);
-    expect(rest).toEqual(hexToBytes(afterNonce));
   });
 });

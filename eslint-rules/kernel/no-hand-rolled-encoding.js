@@ -1,12 +1,12 @@
 const bannedConstructors = new Map([
-  ['DataView', 'uint(width, endian) or another @leather.io/kernel codec'],
-  ['TextDecoder', 'text(length) or thenRestAsText(head) from @leather.io/kernel'],
-  ['TextEncoder', 'text(length) or thenRestAsText(head) from @leather.io/kernel'],
+  ['DataView', 'a micro-packed coder such as U32BE'],
+  ['TextDecoder', 'strictText(length) from @leather.io/kernel'],
+  ['TextEncoder', 'strictText(length) from @leather.io/kernel'],
 ]);
 
 const bannedImports = new Map([
-  ['concatBytes', 'tuple(…) or another @leather.io/kernel codec'],
-  ['utf8ToBytes', 'text(length) or thenRestAsText(head) from @leather.io/kernel'],
+  ['concatBytes', 'tuple([…]) or struct({…}) from micro-packed'],
+  ['utf8ToBytes', 'strictText(length) from @leather.io/kernel'],
 ]);
 
 const parseIntReplacement = 'numeral(10) or numeral(16) from @leather.io/kernel';

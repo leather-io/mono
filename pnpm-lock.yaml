@@ -1030,9 +1030,6 @@ importers:
       '@leather.io/features':
         specifier: workspace:*
         version: link:../../packages/features
-      '@leather.io/kernel':
-        specifier: workspace:*
-        version: link:../../packages/kernel
       '@leather.io/models':
         specifier: workspace:*
         version: link:../../packages/models
@@ -1123,6 +1120,9 @@ importers:
       lottie-web:
         specifier: 5.13.0
         version: 5.13.0
+      micro-packed:
+        specifier: 0.7.3
+        version: 0.7.3
       mixpanel-browser:
         specifier: 2.71.1
         version: 2.71.1
@@ -1347,6 +1347,9 @@ importers:
       ecpair:
         specifier: 3.0.1
         version: 3.0.1(typescript@5.9.3)
+      micro-packed:
+        specifier: 0.7.3
+        version: 0.7.3
       remeda:
         specifier: 2.21.2
         version: 2.21.2
@@ -1497,6 +1500,9 @@ importers:
       just-memoize:
         specifier: 2.2.0
         version: 2.2.0
+      micro-packed:
+        specifier: 0.7.3
+        version: 0.7.3
     devDependencies:
       '@leather.io/prettier-config':
         specifier: workspace:*
@@ -1602,16 +1608,10 @@ importers:
 
   packages/kernel:
     dependencies:
-      '@scure/btc-signer':
-        specifier: 1.6.0
-        version: 1.6.0
       micro-packed:
         specifier: 0.7.3
         version: 0.7.3
     devDependencies:
-      '@noble/hashes':
-        specifier: 1.5.0
-        version: 1.5.0
       '@leather.io/prettier-config':
         specifier: workspace:*
         version: link:../prettier-config

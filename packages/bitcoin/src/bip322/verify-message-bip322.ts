@@ -1,17 +1,17 @@
 import ecc from '@bitcoinerlab/secp256k1';
 import { base64 } from '@scure/base';
+import { RawWitness } from '@scure/btc-signer';
 import * as bitcoin from 'bitcoinjs-lib';
 
 import { getBitcoinJsLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import { inferNetworkFromAddress } from '../utils/bitcoin.utils';
-import { witnessStackCodec } from '../utils/witness-stack.kernel';
 import { createBitcoinAddress } from '../validation/bitcoin-address';
 import { createToSpendTx } from './sign-message-bip322-bitcoinjs';
 
 // Decodes a serialized witness stack: a varint item count followed by each item
 // as a varint length prefix plus its bytes.
 function decodeWitnessStack(serialized: Uint8Array): Buffer[] {
-  return witnessStackCodec.decode(serialized).map(item => Buffer.from(item));
+  return RawWitness.decode(serialized).map(item => Buffer.from(item));
 }
 
 // Verifies a BIP-322 "simple" signature for a P2WPKH address: rebuilds the

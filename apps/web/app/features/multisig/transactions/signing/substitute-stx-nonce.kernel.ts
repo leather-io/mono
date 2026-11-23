@@ -1,16 +1,15 @@
-import { fixedBytes, thenRestAsBytes, tuple, uint } from '@leather.io/kernel';
+import * as P from 'micro-packed';
 
 const versionAndChainIdLength = 5;
 const signerHashLength = 20;
 const nonceByteLength = 8;
 
-export const nonceCodec = uint(nonceByteLength, 'big');
-export const transactionUpToNonce = thenRestAsBytes(
-  tuple(
-    fixedBytes(versionAndChainIdLength),
-    uint(1, 'big'),
-    uint(1, 'big'),
-    fixedBytes(signerHashLength),
-    fixedBytes(nonceByteLength)
-  )
-);
+export const nonceCodec = P.apply(P.U64BE, P.coders.numberBigint);
+export const transactionUpToNonce = P.tuple([
+  P.bytes(versionAndChainIdLength),
+  P.U8,
+  P.U8,
+  P.bytes(signerHashLength),
+  P.bytes(nonceByteLength),
+  P.bytes(null),
+]);

@@ -4,19 +4,20 @@ import { noBlocksOutsideKernelFilesRule } from './no-blocks-outside-kernel-files
 ruleTester.run('no-blocks-outside-kernel-files', noBlocksOutsideKernelFilesRule, {
   valid: [
     { code: "import { witnessStackCodec } from './witness-stack.kernel';" },
-    { code: "import type { Codec } from '@leather.io/kernel';" },
-    { code: "import { type Codec, type Format } from '@leather.io/kernel';" },
+    { code: "import type { Format } from '@leather.io/kernel';" },
+    { code: "import { type Format, type IntegerFormat } from '@leather.io/kernel';" },
+    { code: "import type { CoderType } from 'micro-packed';" },
     { code: "import { sha256 } from '@noble/hashes/sha256';" },
     { code: "import { quantity, settle, sumQuantities } from '@leather.io/kernel';" },
     { code: "import { type Quantity, isSameWebOrigin, webOrigin } from '@leather.io/kernel';" },
   ],
   invalid: [
     {
-      code: "import { uint } from '@leather.io/kernel';",
+      code: "import { strictText } from '@leather.io/kernel';",
       errors: [{ messageId: 'defineInKernelFile' }],
     },
     {
-      code: "import { type Codec, tuple } from '@leather.io/kernel';",
+      code: "import { type Format, fields } from '@leather.io/kernel';",
       errors: [{ messageId: 'defineInKernelFile' }],
     },
     {
@@ -25,6 +26,14 @@ ruleTester.run('no-blocks-outside-kernel-files', noBlocksOutsideKernelFilesRule,
     },
     {
       code: "import { integer } from '@leather.io/kernel';",
+      errors: [{ messageId: 'defineInKernelFile' }],
+    },
+    {
+      code: "import * as P from 'micro-packed';",
+      errors: [{ messageId: 'defineInKernelFile' }],
+    },
+    {
+      code: "import { type CoderType, U32BE } from 'micro-packed';",
       errors: [{ messageId: 'defineInKernelFile' }],
     },
     {

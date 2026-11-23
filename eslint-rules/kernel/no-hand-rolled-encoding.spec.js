@@ -20,7 +20,7 @@ ruleTester.run('no-hand-rolled-encoding', noHandRolledEncodingRule, {
       errors: [
         {
           message:
-            'Do not use DataView here. Use uint(width, endian) or another @leather.io/kernel codec, defined in a *.kernel.ts file. See the kernel-formats skill.',
+            'Do not use DataView here. Use a micro-packed coder such as U32BE, defined in a *.kernel.ts file. See the kernel-formats skill.',
         },
       ],
     },
@@ -43,7 +43,7 @@ ruleTester.run('no-hand-rolled-encoding', noHandRolledEncodingRule, {
           messageId: 'useKernel',
           data: {
             name: 'concatBytes',
-            replacement: 'tuple(…) or another @leather.io/kernel codec',
+            replacement: 'tuple([…]) or struct({…}) from micro-packed',
           },
         },
       ],

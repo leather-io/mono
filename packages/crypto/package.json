@@ -28,7 +28,8 @@
     "@scure/base": "1.2.4",
     "@scure/bip32": "1.6.2",
     "@scure/bip39": "1.5.4",
-    "just-memoize": "2.2.0"
+    "just-memoize": "2.2.0",
+    "micro-packed": "0.7.3"
   },
   "devDependencies": {
     "@leather.io/prettier-config": "workspace:*",

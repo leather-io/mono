@@ -1,11 +1,10 @@
-import { bytes, text, tuple, uint } from '@leather.io/kernel';
+import * as P from 'micro-packed';
 
-const u32BigEndian = uint(4, 'big');
-const u64BigEndian = uint(8, 'big');
+import { strictText } from '@leather.io/kernel';
 
-export const proposalPreimageCodec = tuple(
-  text(u32BigEndian),
-  text(u32BigEndian),
-  bytes(u32BigEndian),
-  u64BigEndian
-);
+export const proposalPreimageCodec = P.tuple([
+  strictText(P.U32BE),
+  strictText(P.U32BE),
+  P.bytes(P.U32BE),
+  P.apply(P.U64BE, P.coders.numberBigint),
+]);

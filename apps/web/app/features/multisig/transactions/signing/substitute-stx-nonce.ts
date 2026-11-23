@@ -22,7 +22,7 @@ export function substituteStxNonce({
   rawPayload: string;
   nonce: number;
 }): string {
-  const [[versionAndChainId, authType, hashMode, signerHash], afterNonce] =
+  const [versionAndChainId, authType, hashMode, signerHash, , afterNonce] =
     transactionUpToNonce.decode(hexToBytes(rawPayload));
 
   if (authType !== standardAuthType)
@@ -31,9 +31,13 @@ export function substituteStxNonce({
     throw new Error('Unexpected hash mode; expected a P2SHNonSequential multisig transaction');
 
   return bytesToHex(
-    transactionUpToNonce.encode(
-      [versionAndChainId, authType, hashMode, signerHash, nonceCodec.encode(nonce)],
-      afterNonce
-    )
+    transactionUpToNonce.encode([
+      versionAndChainId,
+      authType,
+      hashMode,
+      signerHash,
+      nonceCodec.encode(nonce),
+      afterNonce,
+    ])
   );
 }

@@ -1,66 +1,38 @@
 # `@leather.io/kernel`
 
-Building blocks for byte and text formats, checked by property tests. Code assembled only from these blocks gets the properties below without tests of its own for them.
+Building blocks for text formats, strict text in bytes, amounts and origins, checked by property tests. Code assembled only from these blocks gets the properties below without tests of its own for them.
 
-## Codecs
+## Bytes
 
-A codec turns a value into bytes and reads it back. You describe one by combining blocks; you never write the byte handling yourself.
+Byte layouts are written with [`micro-packed`](https://github.com/paulmillr/micro-packed) directly, in a `*.kernel.ts` file. The kernel adds one block, for the one thing the library leaves loose:
 
-The byte handling itself is [`micro-packed`](https://github.com/paulmillr/micro-packed), with Bitcoin's compact size from `@scure/btc-signer`. This file adds only what those leave loose: strict UTF-8 for text, refusal of zero-size list items, and a fixed set of blocks.
+| Block                | Value    | Bytes                                                                             |
+| -------------------- | -------- | --------------------------------------------------------------------------------- |
+| `strictText(length)` | `string` | the UTF-8 byte length, then the UTF-8 bytes; with `null`, everything that is left |
 
 ```ts
-import { bytes, compactSize, list, text, tuple, uint } from '@leather.io/kernel';
+import * as P from 'micro-packed';
 
-const u32 = uint(4, 'big');
+import { strictText } from '@leather.io/kernel';
 
-const proposalPreimage = tuple(text(u32), text(u32), bytes(u32), uint(8, 'big'));
-const witnessStack = list(compactSize, bytes(compactSize));
-
-const encoded = proposalPreimage.encode([tag, address, payload, timestamp]);
-const items = witnessStack.decode(serializedWitness);
+export const proposalPreimage = P.tuple([
+  strictText(P.U32BE),
+  strictText(P.U32BE),
+  P.bytes(P.U32BE),
+  P.apply(P.U64BE, P.coders.numberBigint),
+]);
 ```
 
-| Block                 | Value        | Bytes                                                                    |
-| --------------------- | ------------ | ------------------------------------------------------------------------ |
-| `uint(width, endian)` | `number`     | `width` bytes (1 to 8), big- or little-endian                            |
-| `compactSize`         | `number`     | Bitcoin's variable-length integer, shortest form only                    |
-| `fixedBytes(length)`  | `Uint8Array` | exactly `length` bytes                                                   |
-| `bytes(length)`       | `Uint8Array` | the byte length, written with the integer block `length`, then the bytes |
-| `text(length)`        | `string`     | the UTF-8 byte length, then the UTF-8 bytes                              |
-| `constant(bytes)`     | `undefined`  | the given bytes, for a magic number or version tag                       |
-| `list(count, item)`   | array        | the item count, then each item                                           |
-| `tuple(a, b, …)`      | tuple        | two to six parts, one after another                                      |
+`micro-packed`'s own `string` and `cstring` turn invalid UTF-8 into U+FFFD, write lone surrogates and drop a leading byte order mark, so two different inputs can share a hash. `strictText` refuses all three. `src/text/strict-text.spec.ts` checks that text is written exactly when it has no lone surrogate, that bytes are read exactly when they are valid UTF-8, and that both directions round trip.
 
-A message can end with everything that is left, with no length in front: `thenRestAsBytes(head)` or `thenRestAsText(head)`. The result is a message codec, not a codec, so it cannot be nested inside a list or tuple.
+The library itself is trusted and not re-tested here. Two things it does not do for you:
 
-Numbers are non-negative safe integers. `encode` throws on a value its codec cannot hold, and `decode` throws on bytes that are not exactly what `encode` would write.
-
-### What is tested
-
-`src/codec/codec.spec.ts` checks these on every codec up to a small size and on random codecs, values and damaged bytes beyond that:
-
-| Property    | In plain words                                                                      |
-| ----------- | ----------------------------------------------------------------------------------- |
-| round trip  | Decoding what was encoded returns the same value.                                   |
-| canonical   | Decoding accepts only the bytes encoding would write.                               |
-| injective   | Two values share an encoding only when they are equal.                              |
-| prefix-free | No encoding is the start of another, and no encoding takes extra bytes.             |
-| layout      | Each block writes what its row in the table above says, checked block by block.     |
-| typed layer | `tuple`, `list` and the message codecs put their parts in order and read them back. |
-
-Messages that end with the rest of the bytes are checked the same way. Fixed examples in the same file pin exact bytes.
-
-These are tests, not proofs. A property holds for the inputs that were tried, not for all inputs.
-
-### What you do not get
-
-- Proof that a codec is the right one for your protocol. Field order and types are your choice.
-- Anything about code around the codec. A function that adds its own branching or byte handling before or after is outside the guarantee.
-- Injectivity across different codecs. Start a hashed or signed layout with a `text` or `constant` naming the protocol and version.
+- A list of items that take no bytes is not refused.
+- Start a hashed or signed layout with `magicBytes` or a `strictText` naming the protocol and version, since two different layouts can share an encoding.
 
 ## Text formats
 
-A format turns a value into text and reads it back, with `print` and `parse`. It works the same way as a codec.
+A format turns a value into text and reads it back, with `print` and `parse`. You describe one by combining blocks; you never write the text handling yourself.
 
 | Block                                          | Value                | Text                                                              |
 | ---------------------------------------------- | -------------------- | ----------------------------------------------------------------- |

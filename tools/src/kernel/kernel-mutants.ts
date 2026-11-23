@@ -1,7 +1,7 @@
 import type { Mutant } from './mutation-gate.js';
 
-const codecFile = 'src/codec/codec.ts';
-const codecSpec = 'src/codec/codec.spec.ts';
+const textFile = 'src/text/strict-text.ts';
+const textSpec = 'src/text/strict-text.spec.ts';
 const formatFile = 'src/format/format.ts';
 const formatSpec = 'src/format/format.spec.ts';
 const integerFile = 'src/integer/integer.ts';
@@ -15,137 +15,60 @@ const originSpec = 'src/origin/origin.spec.ts';
 
 export const kernelMutants: Mutant[] = [
   {
-    name: 'uint endianness swapped',
-    file: codecFile,
-    spec: codecSpec,
-    find: "P.bigint(width, endian === 'little')",
-    replace: "P.bigint(width, endian === 'big')",
-  },
-  {
-    name: 'uint accepts a width of nine bytes',
-    file: codecFile,
-    spec: codecSpec,
-    find: 'width > maxUintWidth',
-    replace: 'width > maxUintWidth + 1',
-  },
-  {
-    name: 'uint reports no minimum size',
-    file: codecFile,
-    spec: codecSpec,
-    find: 'P.coders.numberBigint), width);',
-    replace: 'P.coders.numberBigint), 0);',
-  },
-  {
-    name: 'compact size reports no minimum size',
-    file: codecFile,
-    spec: codecSpec,
-    find: 'const compactSizeMinimumSize = 1;',
-    replace: 'const compactSizeMinimumSize = 0;',
-  },
-  {
-    name: 'fixed bytes accept a negative length',
-    file: codecFile,
-    spec: codecSpec,
-    find: '!Number.isSafeInteger(length) || length < 0',
-    replace: '!Number.isSafeInteger(length)',
-  },
-  {
-    name: 'fixed bytes report no minimum size',
-    file: codecFile,
-    spec: codecSpec,
-    find: 'return new Codec(P.bytes(length), length);',
-    replace: 'return new Codec(P.bytes(length), 0);',
-  },
-  {
     name: 'text read without refusing invalid UTF-8',
-    file: codecFile,
-    spec: codecSpec,
+    file: textFile,
+    spec: textSpec,
     find: '{ fatal: true, ignoreBOM: true }',
     replace: '{ fatal: false, ignoreBOM: true }',
   },
   {
     name: 'text read drops a leading byte order mark',
-    file: codecFile,
-    spec: codecSpec,
+    file: textFile,
+    spec: textSpec,
     find: '{ fatal: true, ignoreBOM: true }',
     replace: '{ fatal: true, ignoreBOM: false }',
   },
   {
     name: 'text written with a lone surrogate',
-    file: codecFile,
-    spec: codecSpec,
+    file: textFile,
+    spec: textSpec,
     find: "    if (Array.from(text).some(isLoneSurrogate))\n      throw new RangeError('Text must not contain a lone surrogate.');\n",
     replace: '',
   },
   {
     name: 'lone surrogate range starts one late',
-    file: codecFile,
-    spec: codecSpec,
+    file: textFile,
+    spec: textSpec,
     find: 'codePoint >= firstSurrogate',
     replace: 'codePoint > firstSurrogate',
   },
   {
     name: 'lone surrogate range ends one early',
-    file: codecFile,
-    spec: codecSpec,
+    file: textFile,
+    spec: textSpec,
     find: 'codePoint <= lastSurrogate',
     replace: 'codePoint < lastSurrogate',
   },
   {
+    name: 'text accepts a value that is not a string',
+    file: textFile,
+    spec: textSpec,
+    find: "    if (typeof text !== 'string') throw new TypeError('Text must be a string.');\n",
+    replace: "    if (typeof text !== 'string') return new Uint8Array(0);\n",
+  },
+  {
     name: 'text uses the loose library string',
-    file: codecFile,
-    spec: codecSpec,
-    find: 'return new Codec(P.apply(P.bytes(length.coder), strictUtf8), length.minimumSize);',
-    replace: 'return new Codec(P.string(length.coder), length.minimumSize);',
+    file: textFile,
+    spec: textSpec,
+    find: 'return P.apply(P.bytes(length), strictUtf8);',
+    replace: 'return P.string(length);',
   },
   {
-    name: 'text rest uses the loose library string',
-    file: codecFile,
-    spec: codecSpec,
-    find: 'return new MessageCodec(head, P.apply(P.bytes(null), strictUtf8));',
-    replace: 'return new MessageCodec(head, P.string(null));',
-  },
-  {
-    name: "constant keeps the caller's array",
-    file: codecFile,
-    spec: codecSpec,
-    find: 'P.magicBytes(value.slice())',
-    replace: 'P.magicBytes(value)',
-  },
-  {
-    name: 'constant reports the wrong minimum size',
-    file: codecFile,
-    spec: codecSpec,
-    find: 'P.magicBytes(value.slice()), value.length)',
-    replace: 'P.magicBytes(value.slice()), 1)',
-  },
-  {
-    name: 'list allows items of no bytes',
-    file: codecFile,
-    spec: codecSpec,
-    find: "  if (item.minimumSize === 0) throw new RangeError('List items must take at least one byte.');\n",
-    replace: '',
-  },
-  {
-    name: 'tuple reports no minimum size',
-    file: codecFile,
-    spec: codecSpec,
-    find: 'parts.reduce((total, part) => total + part.minimumSize, 0)',
-    replace: '0',
-  },
-  {
-    name: 'tuple writes its parts in reverse',
-    file: codecFile,
-    spec: codecSpec,
-    find: 'P.tuple(parts.map(part => part.coder))',
-    replace: 'P.tuple(parts.map(part => part.coder).reverse())',
-  },
-  {
-    name: 'bytes written in reverse',
-    file: codecFile,
-    spec: codecSpec,
-    find: 'return new Codec(P.bytes(length.coder), length.minimumSize);',
-    replace: 'return new Codec(P.bytes(length.coder, true), length.minimumSize);',
+    name: 'text ignores its length',
+    file: textFile,
+    spec: textSpec,
+    find: 'return P.apply(P.bytes(length), strictUtf8);',
+    replace: 'return P.apply(P.bytes(null), strictUtf8);',
   },
   {
     name: 'leading zeros accepted',

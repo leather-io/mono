@@ -16,7 +16,6 @@ import { type BitcoinNetworkModes, type NetworkModes } from '@leather.io/models'
 
 import { getBtcSignerLibNetworkConfigByMode } from '../utils/bitcoin.network';
 import { deriveAddressIndexKeychainFromAccount } from '../utils/bitcoin.utils';
-import { witnessStackCodec } from '../utils/witness-stack.kernel';
 import { descriptorKeyPath } from './descriptor-key-path.kernel';
 
 const { Output, parseKeyExpression } = DescriptorsFactory(createBitcoinjsLib(ecc));
@@ -399,7 +398,7 @@ export function extractWshDescriptorPreimages(
 }
 
 function witnessStackToScriptWitness(stack: Uint8Array[]): Uint8Array {
-  return Buffer.from(witnessStackCodec.encode(stack));
+  return Buffer.from(btc.RawWitness.encode(stack));
 }
 
 function validateDescriptorSignature(

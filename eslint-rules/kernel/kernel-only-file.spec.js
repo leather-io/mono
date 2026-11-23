@@ -12,20 +12,27 @@ ruleTester.run('kernel-only-file', kernelOnlyFileRule, {
     },
     {
       code: `
-        import { bytes, compactSize, list } from '@leather.io/kernel';
-        export const witnessStackCodec = list(compactSize, bytes(compactSize));
+        import * as P from 'micro-packed';
+        import { strictText } from '@leather.io/kernel';
+        export const preimage = P.tuple([
+          strictText(P.U32BE),
+          P.bytes(P.U32BE),
+          P.apply(P.U64BE, P.coders.numberBigint),
+          P.bytes(null),
+        ]);
+        export const header = P.struct({ version: P.U8, tag: P.magicBytes(Uint8Array.of(1, 2)) });
       `,
     },
     {
       code: `
-        import { type Codec, constant, text, thenRestAsText, tuple, uint } from '@leather.io/kernel';
+        import { type CoderType, U32BE, bytes, magicBytes, tuple } from 'micro-packed';
+        import { strictText } from '@leather.io/kernel';
         import { hexToBytes } from '@noble/hashes/utils';
         import { segment } from './path.kernel';
-        const prefixWidth = 4;
-        const u32 = uint(prefixWidth, 'big');
-        export type Message = Codec<[undefined, string]>;
-        export const message = thenRestAsText(constant(hexToBytes('cafe')));
-        export const tagged = tuple(constant(Uint8Array.of(1, 2)), text(u32));
+        const tagLength = 4;
+        export type Message = CoderType<[undefined, string]>;
+        export const message = tuple([magicBytes(hexToBytes('cafe')), strictText(null)]);
+        export const tagged = tuple([bytes(tagLength), strictText(U32BE)]);
         export const again = segment;
       `,
     },
@@ -54,7 +61,7 @@ ruleTester.run('kernel-only-file', kernelOnlyFileRule, {
     {
       code: `
         import { sha256 } from '@noble/hashes/sha256';
-        import { constant } from '@leather.io/kernel';
+        import { numeral } from '@leather.io/kernel';
       `,
       errors: [{ messageId: 'onlyKernelImports' }],
     },
@@ -66,22 +73,22 @@ ruleTester.run('kernel-only-file', kernelOnlyFileRule, {
     },
     {
       code: `
-        import { uint } from '@leather.io/kernel';
-        export function encodeLength(value) { return uint(4, 'big').encode(value); }
+        import { U32BE } from 'micro-packed';
+        export function encodeLength(value) { return U32BE.encode(value); }
       `,
       errors: [{ messageId: 'onlyConstDefinitions' }],
     },
     {
       code: `
-        import { uint } from '@leather.io/kernel';
-        let width = uint(4, 'big');
+        import { numeral } from '@leather.io/kernel';
+        let width = numeral(10);
       `,
       errors: [{ messageId: 'onlyConstDefinitions' }],
     },
     {
       code: `
-        import { uint } from '@leather.io/kernel';
-        if (true) uint(4, 'big');
+        import { numeral } from '@leather.io/kernel';
+        if (true) numeral(10);
       `,
       errors: [{ messageId: 'onlyConstDefinitions' }],
     },
@@ -94,15 +101,15 @@ ruleTester.run('kernel-only-file', kernelOnlyFileRule, {
     },
     {
       code: `
-        import { text, uint } from '@leather.io/kernel';
-        export const field = text(uint(isWide ? 8 : 4, 'big'));
+        import * as P from 'micro-packed';
+        export const field = P.bytes(isWide ? 8 : 4);
       `,
       errors: [{ messageId: 'onlyKernelBlocks' }],
     },
     {
       code: `
-        import { constant } from '@leather.io/kernel';
-        export const tag = constant(makeTag('v1'));
+        import * as P from 'micro-packed';
+        export const tag = P.magicBytes(makeTag('v1'));
       `,
       errors: [{ messageId: 'onlyKernelBlocks' }],
     },
@@ -119,6 +126,33 @@ ruleTester.run('kernel-only-file', kernelOnlyFileRule, {
         export const format = prefixed(\`\${root}/\`, numeral(10));
       `,
       errors: [{ messageId: 'onlyKernelBlocks' }],
+    },
+    {
+      code: `
+        import * as P from 'micro-packed';
+        export const name = P.string(P.U32BE);
+      `,
+      errors: [{ messageId: 'useStrictText' }],
+    },
+    {
+      code: `
+        import { cstring } from 'micro-packed';
+        export const name = cstring;
+      `,
+      errors: [{ messageId: 'useStrictText' }, { messageId: 'onlyKernelBlocks' }],
+    },
+    {
+      code: `
+        import * as P from 'micro-packed';
+        export const encoded = P.U32BE.encode(5);
+      `,
+      errors: [{ messageId: 'onlyKernelBlocks' }],
+    },
+    {
+      code: `
+        import P from 'micro-packed';
+      `,
+      errors: [{ messageId: 'onlyKernelImports' }],
     },
   ],
 });
