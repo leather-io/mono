@@ -1,13 +1,18 @@
-import { type StacksTx } from '@leather.io/models';
+import {
+  type HiroPrincipalMempoolTransaction,
+  type HiroPrincipalTransaction,
+} from '../infrastructure/api/hiro/hiro-stacks-api.types';
 
-import { type HiroPrincipalMempoolTransaction } from '../infrastructure/api/hiro/hiro-stacks-api.types';
-
-export function filterOutConfirmedTransactions(confirmedTxs: StacksTx[]) {
+export function filterOutConfirmedTransactions(confirmedTxs: HiroPrincipalTransaction[]) {
   return (mempoolTx: HiroPrincipalMempoolTransaction) =>
     !confirmedTxs.some(confirmedTx => confirmedTx.tx_id === mempoolTx.tx_id);
 }
 
-export function filterOutStaleTransactions(confirmedTxs: StacksTx[]) {
+export function filterOutStaleTransactions(confirmedTxs: HiroPrincipalTransaction[]) {
   return (mempoolTx: HiroPrincipalMempoolTransaction) =>
-    !confirmedTxs.some(confirmedTx => confirmedTx.nonce === mempoolTx.sender.nonce);
+    !confirmedTxs.some(
+      confirmedTx =>
+        confirmedTx.sender.address === mempoolTx.sender.address &&
+        confirmedTx.sender.nonce === mempoolTx.sender.nonce
+    );
 }

@@ -66,7 +66,7 @@ export const pooledStackingProviders: Provider[] = [
     yield: '8.22% historical APR',
   },
   {
-    name: 'PlanBetter',
+    name: 'Planbetter',
     logo: '/marketing/home/provider-planbetter.png',
     yield: 'Operator BTC payouts',
   },
