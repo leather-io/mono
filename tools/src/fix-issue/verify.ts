@@ -1,7 +1,7 @@
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { type CommandRunner, runAndEcho, runCommand } from './exec.js';
+import { type CommandRunner, runAndEcho, runCommand } from '../ci/exec.js';
 import { allowedPathsDescription, changedPaths, refusedPaths, treeSnapshot } from './git.js';
 import { readStatus } from './status.js';
 
