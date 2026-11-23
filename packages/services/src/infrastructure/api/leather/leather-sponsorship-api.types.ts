@@ -22,7 +22,7 @@ export interface SbtcSponsorshipSubmitRequest {
 
 export const sbtcSponsorshipSubmitResponseSchema = z.object({
   txid: z.string(),
-  transaction: z.string(),
+  transaction: z.string().optional().catch(undefined),
 });
 
 export type SbtcSponsorshipSubmitResponse = z.infer<typeof sbtcSponsorshipSubmitResponseSchema>;

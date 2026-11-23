@@ -1,9 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { AuthType, type StacksTransactionWire } from '@stacks/transactions';
 
-import { getSbtcSponsorshipErrorCode } from '@leather.io/services';
+import { type SbtcSponsorshipErrorCode, getSbtcSponsorshipErrorCode } from '@leather.io/services';
 import { delay } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
@@ -30,6 +30,11 @@ import {
 const timeForApiToUpdate = 250;
 const fundingPendingRetryDelayMs = 3000;
 const fundingPendingMaxRetries = 5;
+const sponsorRejectionCodes: SbtcSponsorshipErrorCode[] = [
+  'stale_nonce',
+  'funding_pending',
+  'not_eligible',
+];
 
 async function retryWhileFundingPending<T>(submit: () => Promise<T>, retriesLeft: number) {
   try {
@@ -54,14 +59,15 @@ export function useSubmitSbtcSponsoredTransaction({
   onRequoted,
 }: UseSubmitSbtcSponsoredTransactionArgs) {
   const signStacksTransaction = useSignStacksTransaction();
-  const { submitSponsoredTransaction, isSubmitting } = useSubmitSbtcSponsoredTransactionMutation();
+  const { submitSponsoredTransaction } = useSubmitSbtcSponsoredTransactionMutation();
   const buildSponsoredTransfer = useBuildSbtcSponsoredTransfer({
     assetId: sponsorship.assetId,
     decimals,
   });
   const refreshAccountData = useRefreshAllAccountData();
   const navigate = useNavigate();
-  const [isRequoting, setIsRequoting] = useState(false);
+  const isSubmittingRef = useRef(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigateToError = useCallback(
     (message: string) => navigate(RouteUrls.BroadcastError, { state: { message } }),
@@ -69,7 +75,6 @@ export function useSubmitSbtcSponsoredTransaction({
   );
 
   const requote = useCallback(async () => {
-    setIsRequoting(true);
     try {
       onRequoted(
         await buildSponsoredTransfer({
@@ -81,8 +86,6 @@ export function useSubmitSbtcSponsoredTransaction({
     } catch (error) {
       logger.error('Failed to refresh the sBTC sponsorship quote', error);
       void navigateToError(getSbtcSponsorshipErrorMessage(error));
-    } finally {
-      setIsRequoting(false);
     }
   }, [
     buildSponsoredTransfer,
@@ -92,7 +95,7 @@ export function useSubmitSbtcSponsoredTransaction({
     sponsorship.stxFeeMicro,
   ]);
 
-  const submit = useCallback(
+  const submitUnguarded = useCallback(
     async (unsignedTx: StacksTransactionWire) => {
       if (unsignedTx.auth.authType !== AuthType.Sponsored) {
         logger.error('Refusing to submit a non-sponsored transaction to the sponsor');
@@ -129,7 +132,12 @@ export function useSubmitSbtcSponsoredTransaction({
         const code = getSbtcSponsorshipErrorCode(error);
         if (code === 'quote_expired') return requote();
         logger.error('Failed to submit the sponsored transaction', error);
-        void navigateToError(getSbtcSponsorshipErrorMessage(error));
+        if (code && sponsorRejectionCodes.includes(code)) {
+          void navigateToError(getSbtcSponsorshipErrorMessage(error));
+          return;
+        }
+        void refreshAccountData(timeForApiToUpdate);
+        void navigate(RouteUrls.BroadcastError, { state: { outcomeUnknown: true } });
       }
     },
     [
@@ -145,5 +153,20 @@ export function useSubmitSbtcSponsoredTransaction({
     ]
   );
 
-  return { submitSponsoredTransaction: submit, isSubmitting: isSubmitting || isRequoting };
+  const submit = useCallback(
+    async (unsignedTx: StacksTransactionWire) => {
+      if (isSubmittingRef.current) return;
+      isSubmittingRef.current = true;
+      setIsSubmitting(true);
+      try {
+        await submitUnguarded(unsignedTx);
+      } finally {
+        isSubmittingRef.current = false;
+        setIsSubmitting(false);
+      }
+    },
+    [submitUnguarded]
+  );
+
+  return { submitSponsoredTransaction: submit, isSubmitting };
 }
