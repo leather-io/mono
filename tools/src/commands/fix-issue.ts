@@ -1,16 +1,15 @@
 import type { Command } from 'commander';
 
 import {
-  appJwt,
-  createInstallationToken,
-  kmsSigner,
+  type TokenPermissions,
   revokeInstallationToken,
-} from '../fix-issue/app-token.js';
+  writeAppTokenOutput,
+} from '../ci/app-token.js';
+import { createGhCliClient, createGitHubClient } from '../ci/github.js';
+import { writeStepOutputs } from '../ci/outputs.js';
 import { briefIssues, dispatch } from '../fix-issue/dispatch.js';
 import { repoRoot } from '../fix-issue/git.js';
-import { createGhCliClient, createGitHubClient } from '../fix-issue/github.js';
 import { fetchIssue } from '../fix-issue/issue.js';
-import { writeStepOutputs } from '../fix-issue/outputs.js';
 import { fixIssuePaths } from '../fix-issue/paths.js';
 import { openPullRequest } from '../fix-issue/pull-request.js';
 import {
@@ -41,6 +40,12 @@ interface OpenPullRequestFlags {
   readonly parentSha: string;
   readonly coAuthor?: string;
 }
+
+const appTokenPermissions: TokenPermissions = {
+  contents: 'write',
+  pull_requests: 'write',
+  issues: 'write',
+};
 
 interface AppTokenFlags {
   readonly clientId: string;
@@ -266,21 +271,9 @@ export function registerFixIssueCommands(program: Command): void {
     .requiredOption('--client-id <id>', 'Client ID of the fix-issue App')
     .requiredOption('--kms-key-id <id>', 'KMS key ID, ARN or alias holding the App private key')
     .action(({ clientId, kmsKeyId }: AppTokenFlags) =>
-      guard('app-token', async () => {
-        const repo = requireEnv('GITHUB_REPOSITORY');
-        const apiUrl = process.env.GITHUB_API_URL;
-        const jwt = appJwt(clientId, kmsSigner(kmsKeyId), Date.now());
-        const token = await createInstallationToken({
-          appClient: createGitHubClient({ token: jwt, apiUrl }),
-          tokenClient(installationToken) {
-            return createGitHubClient({ token: installationToken, apiUrl });
-          },
-          repo,
-        });
-        console.log(`::add-mask::${token}`);
-        writeStepOutputs({ token });
-        console.log('app-token: created an installation token that expires within an hour');
-      })
+      guard('app-token', () =>
+        writeAppTokenOutput({ clientId, kmsKeyId, permissions: appTokenPermissions })
+      )
     );
   appToken
     .command('revoke')

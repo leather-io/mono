@@ -489,6 +489,23 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.120.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.119.4...@leather.io/ui-v1.120.0) (2026-11-19)
+
+
+### Features
+
+* **mobile:** token presets and a hidden tokens pill under the list ([#2859](https://github.com/leather-io/mono/issues/2859)) ([9e71d62](https://github.com/leather-io/mono/commit/9e71d6218aca02385ab98330c9ff90c8e85bd2fe))
+* **web:** add the Leather design toolkit pilot ([#2928](https://github.com/leather-io/mono/issues/2928)) ([5e54522](https://github.com/leather-io/mono/commit/5e545227629cf1135b0297d0e75978d83311d6a4))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.55.1
+  * devDependencies
+    * @leather.io/features bumped to 1.8.7
+
 ## [1.119.4](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.119.3...@leather.io/ui-v1.119.4) (2026-10-27)
 
 
