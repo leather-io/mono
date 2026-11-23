@@ -229,10 +229,31 @@ describe('matchBondTemplateDescriptor', () => {
     ).toBeNull();
   });
 
-  it('rejects ranged, change-branch, pathless and deep-path extended keys', () => {
+  it('rejects a hash split by whitespace that compiles to a different script', () => {
+    const splitHash = `${hash.slice(0, 32)} ${hash.slice(32)}`;
+    expect(matchBondTemplateDescriptor(bondDescriptor.replace(hash, splitHash))).toBeNull();
+    expect(matchBondDescriptor(bondDescriptor.replace(hash, splitHash))).toBeNull();
+  });
+
+  it('accepts change-branch keys and uppercase hardened origin markers', () => {
+    const changeBranch = bondDescriptor.replaceAll('/0/7', '/1/7');
+    expect(matchBondTemplateDescriptor(changeBranch)?.vault.keys).toEqual([
+      `${xpubA}/1/7`,
+      `${xpubB}/1/7`,
+      `${xpubC}/1/7`,
+    ]);
+    expect(matchBondDescriptor(changeBranch)).not.toBeNull();
+
+    const hardenedOrigin = makeBondDescriptor(
+      `sortedmulti(2,[aabbccdd/48H/0H/0H/2H]${xpubA}/0/7,${xpubB}/0/7)`
+    );
+    expect(matchBondDescriptor(hardenedOrigin)).not.toBeNull();
+  });
+
+  it('rejects ranged, pathless and deep-path extended keys', () => {
     const badVaultKeys = [
       `${xpubA}/0/*`,
-      `${xpubA}/1/7`,
+      `${xpubA}/2/7`,
       xpubA,
       `${xpubA}/0/7/0`,
       `${xpubA}/<0;1>/7`,
@@ -243,7 +264,7 @@ describe('matchBondTemplateDescriptor', () => {
         matchBondTemplateDescriptor(makeBondDescriptor(`sortedmulti(2,${vaultKey},${xpubB}/0/7)`))
       ).toBeNull();
     }
-    const badCounterparties = [`${xpubB}/0/*`, `${xpubB}/1/7`, xpubB, `${xpubB}/0/7/0`];
+    const badCounterparties = [`${xpubB}/0/*`, `${xpubB}/2/7`, xpubB, `${xpubB}/0/7/0`];
     for (const counterparty of badCounterparties) {
       expect(
         matchBondTemplateDescriptor(bondDescriptor.replace(counterpartyKey, counterparty))
@@ -433,7 +454,7 @@ describe('instantiateBondDescriptor', () => {
       })
     ).toThrow();
     expect(() =>
-      instantiateBondDescriptor({ ...validArgs, counterpartyKey: `${xpubB}/1/7` })
+      instantiateBondDescriptor({ ...validArgs, counterpartyKey: `${xpubB}/2/7` })
     ).toThrow();
     expect(() =>
       instantiateBondDescriptor({ ...validArgs, counterpartyKey: `${xpubB}/0/*` })
@@ -517,9 +538,21 @@ describe('bond template round trip', () => {
     }
   });
 
+  it('reconstructs and matches a bond for a change-branch policy with hardened origins', () => {
+    const changeBranchPolicy = `wsh(sortedmulti(2,[aabbccdd/48H/0H/0H/2H]${xpubA}/1/5,[11223344/48H/0H/0H/2H]${xpubB}/1/5))`;
+    const reconstructed = reconstructBondDescriptor({
+      unlockHeight,
+      hash,
+      covenantPubkey: makeNativeSegwitAddressPubkeyHex(9, 7),
+      ...getBondVaultKeys(changeBranchPolicy),
+    });
+    expect(matchBondDescriptor(reconstructed)?.unlockHeight).toBe(unlockHeight);
+    expect(() => compileWshDescriptor(reconstructed)).not.toThrow();
+  });
+
   it('refuses to emit vault keys the matcher would reject', () => {
     const badVaultKeys = [
-      `${xpubA}/1/7`,
+      `${xpubA}/2/7`,
       `${xpubA}/0/*`,
       xpubA,
       `${xpubA}/0/7/0`,

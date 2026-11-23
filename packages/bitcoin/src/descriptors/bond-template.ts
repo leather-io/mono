@@ -1,3 +1,4 @@
+import { bytesToHex } from '@noble/hashes/utils';
 import type { HDKey } from '@scure/bip32';
 
 import { minTimestampLockTime } from './bond-lock-script';
@@ -25,13 +26,12 @@ const bondDescriptorPattern =
 
 const compressedPubkeyHexPattern = /^0[23][0-9a-f]{64}$/;
 const compressedPubkeyAnyCaseHexPattern = /^0[23][0-9a-fA-F]{64}$/;
-const bondReceiveKeyExpressionPattern =
-  /^(?:\[[0-9a-fA-F]{8}(?:\/\d{1,10}['h]?){0,8}\])?[1-9A-HJ-NP-Za-km-z]{1,120}\/0\/\d{1,10}$/;
+const bondKeyExpressionPattern =
+  /^(?:\[[0-9a-fA-F]{8}(?:\/\d{1,10}['hH]?){0,8}\])?[1-9A-HJ-NP-Za-km-z]{1,120}\/[01]\/\d{1,10}$/;
 
 function isBondExtendedKeyExpression(keyExpression: string): boolean {
   return (
-    bondReceiveKeyExpressionPattern.test(keyExpression) &&
-    isExtendedPublicKeyExpression(keyExpression)
+    bondKeyExpressionPattern.test(keyExpression) && isExtendedPublicKeyExpression(keyExpression)
   );
 }
 
@@ -92,12 +92,29 @@ export interface BondDescriptorMatch extends BondDescriptorParams {
   multiExpression: string;
 }
 
+function compilesToSameScript(descriptor: string, compactDescriptor: string): boolean {
+  try {
+    return (
+      bytesToHex(compileWshDescriptor(descriptor).scriptPubKey) ===
+      bytesToHex(compileWshDescriptor(compactDescriptor).scriptPubKey)
+    );
+  } catch {
+    return false;
+  }
+}
+
 export function matchBondTemplateDescriptor(
   descriptor: string
 ): BondTemplateDescriptorMatch | null {
-  const compactDescriptor = stripDescriptorChecksum(descriptor).replace(/\s/g, '');
+  const descriptorWithoutChecksum = stripDescriptorChecksum(descriptor);
+  const compactDescriptor = descriptorWithoutChecksum.replace(/\s/g, '');
   const match = bondDescriptorPattern.exec(compactDescriptor);
   if (!match) return null;
+  if (
+    compactDescriptor !== descriptorWithoutChecksum &&
+    !compilesToSameScript(descriptor, compactDescriptor)
+  )
+    return null;
 
   const rawUnlockHeight = match[1];
   const hash = match[2];
@@ -147,7 +164,7 @@ function assertValidVaultKeyExpressions(keyExpressions: string[]): void {
   if (keyExpressions.length > maxMultisigKeys)
     throw new Error(`Bond vault supports at most ${maxMultisigKeys} keys`);
   if (!keyExpressions.every(isBondExtendedKeyExpression))
-    throw new Error('Bond vault keys must be xpub or tpub key expressions on a /0/N receive path');
+    throw new Error('Bond vault keys must be xpub or tpub key expressions on a /0/N or /1/N path');
 }
 
 function assertValidVaultThreshold(threshold: number, keyCount: number): void {
