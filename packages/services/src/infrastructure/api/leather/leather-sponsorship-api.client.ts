@@ -30,11 +30,6 @@ function getLeatherApiBaseUrl(env: Environment) {
   return env.leatherApiUrl ?? LEATHER_API_URL_STAGING;
 }
 
-function getSponsorshipApiBaseUrl(env: Environment) {
-  if (env.sponsorshipApiUrl) return env.sponsorshipApiUrl.replace(/\/+$/, '');
-  return `${getLeatherApiBaseUrl(env)}${leatherSponsorshipApiPath}`;
-}
-
 @injectable()
 export class LeatherSponsorshipApiClient {
   private readonly baseUrl: string;
@@ -45,7 +40,7 @@ export class LeatherSponsorshipApiClient {
     @inject(Types.SettingsService) private readonly settingsService: SettingsService,
     private readonly rateLimiter: RateLimiterService
   ) {
-    this.baseUrl = getSponsorshipApiBaseUrl(env);
+    this.baseUrl = `${getLeatherApiBaseUrl(env)}${leatherSponsorshipApiPath}`;
   }
 
   private getNetworkQuery() {

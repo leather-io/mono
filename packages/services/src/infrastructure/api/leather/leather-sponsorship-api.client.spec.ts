@@ -89,21 +89,6 @@ describe(LeatherSponsorshipApiClient.name, () => {
     expect(url).toBe(`${LEATHER_API_URL_STAGING}/v1/sponsorship/quote?network=mainnet`);
   });
 
-  test('treats an explicit sponsorship API URL as the base that serves quote and submit', async () => {
-    const fetchMock = vi.fn<(url: string) => Promise<Response>>(() =>
-      Promise.resolve(jsonResponse(quoteResponse))
-    );
-    vi.stubGlobal('fetch', fetchMock);
-
-    await createClient({
-      environment: 'production',
-      sponsorshipApiUrl: 'http://localhost:8791/',
-    }).fetchQuote();
-
-    const [url] = fetchMock.mock.calls[0];
-    expect(url).toBe('http://localhost:8791/quote?network=mainnet');
-  });
-
   test('sends the testnet network on a testnet chain', async () => {
     const fetchMock = vi.fn<(url: string) => Promise<Response>>(() =>
       Promise.resolve(jsonResponse(quoteResponse))
