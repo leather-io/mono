@@ -7,9 +7,9 @@ import { createGitHubClient, readRequiredEnv, writeSummary } from '../ci/github.
 import {
   describeGate,
   findApprovers,
+  findCoAuthors,
   findDispatchers,
   findFixIssueRun,
-  findReviseDispatchers,
   findSharedHeadPullRequests,
   isDispatcher,
 } from './approvals.js';
@@ -44,16 +44,14 @@ async function countApprovals(
   const { number } = pullRequest;
   const headSha = pullRequest.head.sha;
   const fixIssueRun = findFixIssueRun(pullRequest);
-  const [reviews, commitPullRequests, workflowRun, dispatches] = await Promise.all([
+  const [reviews, commitPullRequests, workflowRun, commits] = await Promise.all([
     github.listReviews(number),
     github.listCommitPullRequests(headSha),
     fixIssueRun ? github.getWorkflowRun(fixIssueRun.runId) : null,
-    fixIssueRun ? github.listFixIssueDispatches(pullRequest.created_at) : [],
+    fixIssueRun ? github.listCommits(number) : [],
   ]);
   const firstDispatchers = fixIssueRun ? findDispatchers(workflowRun, fixIssueRun.issue) : [];
-  const dispatchers = [
-    ...new Set([...firstDispatchers, ...findReviseDispatchers(dispatches, number)]),
-  ];
+  const dispatchers = [...new Set([...firstDispatchers, ...findCoAuthors(commits)])];
   const approvers = findApprovers(reviews, {
     headSha,
     author: pullRequest.user.login,

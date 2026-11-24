@@ -53,7 +53,10 @@ pull request's, the lines after `|||||||` are what both sides started from, and 
    one remains.
 2. Never edit `pnpm-lock.yaml` by hand. With conflicts the workflow has not installed or built
    anything on the merged tree: once every other file is resolved, run
-   `pnpm install --no-frozen-lockfile`, which also resolves the lockfile, then build the packages.
+   `pnpm install --ignore-scripts --no-frozen-lockfile`, which also resolves the lockfile, then
+   build the packages:
+   `pnpm turbo run build --filter='!@leather.io/extension' --filter='!@leather.io/web' --filter='!@leather.io/test-app'`
+   and `pnpm --filter @leather.io/extension --filter @leather.io/web run prepare:build`.
 3. A merge can break the change without any conflict: `dev` may have renamed, moved or removed
    something the pull request relies on. Run the verification and the tests of the packages the
    pull request touches, and fix what the merge broke.

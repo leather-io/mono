@@ -22,7 +22,6 @@ const reviewersTeamId = 19686212;
 interface FakePullRequest {
   readonly number: number;
   readonly state: string;
-  readonly created_at: string;
   readonly user: { readonly login: string; readonly type: string };
   readonly head: { readonly sha: string; readonly ref: string };
   readonly base: { readonly ref: string };
@@ -61,7 +60,7 @@ interface FakeGitHub {
   readonly statuses: Map<string, FakeStatus[]>;
   readonly commitPullRequests: Map<string, FakeCommitPullRequest[]>;
   readonly workflowRuns: Map<string, unknown>;
-  readonly dispatches: unknown[];
+  readonly commits: Map<number, unknown[]>;
   readonly calls: ApiCall[];
   override: Override;
 }
@@ -81,7 +80,6 @@ function pullRequest(number: number, overrides: Partial<FakePullRequest> = {}): 
   return {
     number,
     state: 'open',
-    created_at: '2026-11-20T10:00:00Z',
     user: { login: author, type: 'User' },
     head: { sha: headSha, ref: headRef },
     base: { ref: 'dev' },
@@ -96,11 +94,11 @@ function fixIssuePullRequest(number: number): FakePullRequest {
   });
 }
 
-function fixIssueRun(dispatcher: string, title = 'fix-issue: #12') {
+function fixIssueRun(dispatcher: string) {
   return {
     path: '.github/workflows/repo:fix-issue.yml',
     event: 'workflow_dispatch',
-    display_title: title,
+    display_title: 'fix-issue: #12',
     actor: { login: dispatcher },
     triggering_actor: { login: dispatcher },
   };
@@ -177,13 +175,9 @@ const routes: readonly FakeRoute[] = [
   },
   {
     method: 'GET',
-    pattern: /^\/actions\/workflows\/(repo:fix-issue\.yml)\/runs$/,
-    handle(github, _file, { url }) {
-      const since = url.searchParams.get('created') ?? '';
-      const first = Number(url.searchParams.get('page') ?? '1') === 1;
-      return json({
-        workflow_runs: first && since === '>=2026-11-20T10:00:00Z' ? github.dispatches : [],
-      });
+    pattern: /^\/pulls\/(\d+)\/commits$/,
+    handle(github, number, { url }) {
+      return list(url, github.commits.get(Number(number)) ?? []);
     },
   },
 ];
@@ -223,7 +217,7 @@ function stubGitHub(): FakeGitHub {
     statuses: new Map(),
     commitPullRequests: new Map(),
     workflowRuns: new Map(),
-    dispatches: [],
+    commits: new Map(),
     calls: [],
     override: () => undefined,
   };
@@ -376,10 +370,15 @@ describe('review-gate commands', () => {
       });
 
       test('never counts the approval of whoever dispatched a revise of it', async () => {
-        github.dispatches.push(
-          fixIssueRun(reviewer, 'fix-issue: revise #7'),
-          fixIssueRun('second-writer', 'fix-issue: revise #8')
-        );
+        github.commits.set(7, [
+          { commit: { message: 'fix(extension): keep the fee row visible' } },
+          {
+            commit: {
+              message:
+                'fix(extension): wrap the label\n\nCo-authored-by: Rev Iewer <42+reviewer@users.noreply.github.com>\n',
+            },
+          },
+        ]);
         github.reviews.set(7, [approval(reviewer), approval('second-writer')]);
 
         await run(['check', '--pr', '7']);

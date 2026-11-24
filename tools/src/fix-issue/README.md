@@ -268,8 +268,9 @@ started from; a merge, never a rebase):
 
 A merge is committed locally, conflict markers included, as the baseline: `HEAD` is that merge and
 the fixer's work is the diff against it. The baseline is never pushed. A conflict that leaves no
-markers (a file one side deleted, or one that is not text) fails the run in both jobs, because
-nothing could tell afterwards whether it was resolved; merge `dev` by hand first. After a merge
+markers (a file one side deleted, or one that is not text) fails the run at `revise prepare`,
+before the fixer starts, because nothing could tell afterwards whether it was resolved; merge `dev`
+by hand first. After a merge
 without conflicts the workflow reinstalls dependencies and builds the packages. With conflicts it
 does neither, since both would fail on the markers, and the fixer installs (which also resolves a
 conflicting `pnpm-lock.yaml`) and builds once it has resolved them.

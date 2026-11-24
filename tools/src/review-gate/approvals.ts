@@ -1,11 +1,19 @@
 import { botAccountType, fixIssueBranch } from '../fix-issue/revise-state.js';
-import type { CommitPullRequest, PullRequest, Review, WorkflowRun } from './schemas.js';
+import type {
+  CommitPullRequest,
+  PullRequest,
+  PullRequestCommit,
+  Review,
+  WorkflowRun,
+} from './schemas.js';
 
 const maxStatusDescriptionLength = 140;
 const humanAccountType = 'User';
 const decisiveReviewStates = new Set(['APPROVED', 'CHANGES_REQUESTED', 'DISMISSED']);
 const fixIssueWorkflowPath = '.github/workflows/repo:fix-issue.yml';
 const dispatchEvent = 'workflow_dispatch';
+const coAuthorPattern =
+  /^Co-authored-by: .*<(?:\d+\+)?([^@\s<>]+)@users\.noreply\.github\.com>\s*$/gim;
 
 interface ApproverContext {
   readonly headSha: string;
@@ -22,25 +30,25 @@ export function findFixIssueRun(pullRequest: Pick<PullRequest, 'user' | 'head'>)
   return pullRequest.user.type === botAccountType ? fixIssueBranch(pullRequest.head.ref) : null;
 }
 
-function dispatchersOf(runs: readonly WorkflowRun[], title: string): string[] {
-  const logins = runs
-    .filter(
-      run =>
-        run.path === fixIssueWorkflowPath &&
-        run.event === dispatchEvent &&
-        run.display_title === title
-    )
-    .flatMap(run => [run.actor, run.triggering_actor])
-    .flatMap(account => (account ? [account.login] : []));
+export function findDispatchers(run: WorkflowRun | null, issue: string): string[] {
+  if (
+    run?.path !== fixIssueWorkflowPath ||
+    run.event !== dispatchEvent ||
+    run.display_title !== `fix-issue: #${issue}`
+  ) {
+    return [];
+  }
+  const logins = [run.actor, run.triggering_actor].flatMap(account =>
+    account ? [account.login] : []
+  );
   return [...new Set(logins)];
 }
 
-export function findDispatchers(run: WorkflowRun | null, issue: string): string[] {
-  return dispatchersOf(run ? [run] : [], `fix-issue: #${issue}`);
-}
-
-export function findReviseDispatchers(runs: readonly WorkflowRun[], number: number): string[] {
-  return dispatchersOf(runs, `fix-issue: revise #${number}`);
+export function findCoAuthors(commits: readonly PullRequestCommit[]): string[] {
+  const logins = commits
+    .flatMap(({ commit }) => [...commit.message.matchAll(coAuthorPattern)])
+    .flatMap(([, login]) => (login ? [login] : []));
+  return [...new Set(logins)];
 }
 
 export function isDispatcher(login: string, dispatchers: readonly string[]): boolean {

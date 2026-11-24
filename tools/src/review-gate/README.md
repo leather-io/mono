@@ -38,8 +38,9 @@ answered for by whoever dispatched that run. The gate reads the run named in the
 approval of its actor or of whoever re-ran it never counts. When the run is missing, or is not a
 `workflow_dispatch` run of `repo:fix-issue` for that issue, the gate fails: a bot pull request
 nobody dispatched is blocked. Whoever dispatched a revise of the pull request answers for it too:
-the gate lists the `repo:fix-issue` dispatches since the pull request was opened, and the approval
-of the actor of any run named `fix-issue: revise #<pull request>` never counts either.
+each revise commit names its dispatcher in a `Co-authored-by` trailer, and the approval of anyone a
+commit of the pull request names that way never counts either. The gate reads the commits, not the
+revise runs, because a run can be deleted and a commit on the branch cannot.
 
 | Module         | Responsibility                                                  |
 | -------------- | --------------------------------------------------------------- |
