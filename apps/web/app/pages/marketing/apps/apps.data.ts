@@ -56,7 +56,7 @@ export const earningProviderLinks: Record<string, string | undefined> = {
   'Stacking DAO': 'https://app.stackingdao.com/',
   'Esbee DAO': 'https://www.esbee-dao.org',
   'Fast Pool': 'https://fastpool.org',
-  PlanBetter: 'https://planbetter.com',
+  Planbetter: 'https://planbetter.com',
   Zest: 'https://app.zestprotocol.com/',
   Bitflow: 'https://app.bitflow.finance/trade',
 };

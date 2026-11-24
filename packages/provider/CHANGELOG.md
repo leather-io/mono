@@ -350,6 +350,20 @@
     * @leather.io/rpc bumped to 2.20.16
     * @leather.io/utils bumped to 0.46.3
 
+## [1.7.7](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.7.6...@leather.io/provider-v1.7.7) (2026-11-19)
+
+
+### Bug Fixes
+
+* point docs links at docs.leather.io ([#2982](https://github.com/leather-io/mono/issues/2982)) ([ee55d71](https://github.com/leather-io/mono/commit/ee55d7154cef83f9d26164e0cf28f39bc0d4046f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/rpc bumped to 2.25.5
+
 ## [1.7.6](https://github.com/leather-io/mono/compare/@leather.io/provider-v1.7.5...@leather.io/provider-v1.7.6) (2026-10-27)
 
 

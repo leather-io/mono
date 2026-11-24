@@ -14,13 +14,11 @@ export type HttpCacheKey =
   | 'gamma-api-get-stacks-collection'
 
   // HiroStacksApiClient
-  | 'hiro-stacks-get-address-balances'
-  | 'hiro-stacks-get-address-stx-balance'
-  | 'hiro-stacks-get-address-ft-balances'
-  | 'hiro-stacks-get-address-transactions'
+  | 'hiro-stacks-get-principal-stx-balance'
+  | 'hiro-stacks-get-principal-ft-balances'
   | 'hiro-stacks-get-principal-transactions'
   | 'hiro-stacks-get-principal-balance-changes'
-  | 'hiro-stacks-get-transaction-events'
+  | 'hiro-stacks-get-principal-ft-transfers'
   | 'hiro-stacks-get-principal-mempool-transactions'
   | 'hiro-stacks-get-transaction-by-id'
   | 'hiro-stacks-get-raw-transaction-by-id'
@@ -110,13 +108,11 @@ export const httpCacheConfig: Record<HttpCacheKey, HttpCacheOptions> = {
   'gamma-api-get-stacks-nft': { ttl: weeksInMs(8) },
   'gamma-api-get-stacks-collection': { ttl: weeksInMs(8) },
 
-  'hiro-stacks-get-address-balances': { ttl: secondsInMs(10) },
-  'hiro-stacks-get-address-stx-balance': { ttl: secondsInMs(10) },
-  'hiro-stacks-get-address-ft-balances': { ttl: secondsInMs(10) },
-  'hiro-stacks-get-address-transactions': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-principal-stx-balance': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-principal-ft-balances': { ttl: secondsInMs(10) },
   'hiro-stacks-get-principal-transactions': { ttl: secondsInMs(10) },
   'hiro-stacks-get-principal-balance-changes': { ttl: secondsInMs(10) },
-  'hiro-stacks-get-transaction-events': { ttl: secondsInMs(10) },
+  'hiro-stacks-get-principal-ft-transfers': { ttl: secondsInMs(10) },
   'hiro-stacks-get-principal-mempool-transactions': { ttl: secondsInMs(10) },
   'hiro-stacks-get-transaction-by-id': { ttl: secondsInMs(10) },
   'hiro-stacks-get-raw-transaction-by-id': { ttl: secondsInMs(10) },

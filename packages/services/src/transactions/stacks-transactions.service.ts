@@ -9,6 +9,8 @@ import {
   filterOutStaleTransactions,
 } from './stacks-transactions.utils';
 
+const confirmedTransactionsLimit = 50;
+
 @injectable()
 export class StacksTransactionsService {
   constructor(private readonly stacksApiClient: HiroStacksApiClient) {}
@@ -27,11 +29,17 @@ export class StacksTransactionsService {
     address: string,
     signal?: AbortSignal
   ): Promise<HiroPrincipalMempoolTransaction[]> {
-    const [mempoolTransactionsResponse, addressTransactionsResponse] = await Promise.all([
+    const [mempoolTransactionsResponse, principalTransactionsResponse] = await Promise.all([
       this.stacksApiClient.getPrincipalMempoolTransactions(address, {}, { signal }),
-      this.stacksApiClient.getAddressTransactions(address, { pages: 1 }, { signal }),
+      this.stacksApiClient.getPrincipalTransactions(
+        address,
+        { limit: confirmedTransactionsLimit },
+        { signal }
+      ),
     ]);
-    const addressTransactions = addressTransactionsResponse.map(tx => tx.tx);
+    const addressTransactions = principalTransactionsResponse.results.map(
+      result => result.transaction
+    );
     return mempoolTransactionsResponse.results
       .filter(tx => tx.status === 'pending')
       .filter(filterOutConfirmedTransactions(addressTransactions))

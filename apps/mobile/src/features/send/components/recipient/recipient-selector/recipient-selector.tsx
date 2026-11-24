@@ -9,6 +9,7 @@ import { RecipientSelectorItem } from '@/features/send/components/recipient/reci
 import { RecipientSelectorSearchEmptyState } from '@/features/send/components/recipient/recipient-selector/recipient-selector-search-empty-state';
 import { RecipientSelectorSectionHeader } from '@/features/send/components/recipient/recipient-selector/recipient-selector-section-header';
 import {
+  type RecipientActivity,
   type RecipientSection,
   type RecipientSuggestionEntry,
 } from '@/features/send/components/recipient/recipient.types';
@@ -25,15 +26,11 @@ import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/core/macro';
 import { type ZodSchema } from 'zod';
 
-import {
-  type AccountId,
-  type FungibleCryptoAsset,
-  type SendAssetActivity,
-} from '@leather.io/models';
+import { type AccountId, type FungibleCryptoAsset } from '@leather.io/models';
 import { Box, IconButton, QrCodeIcon, Sheet } from '@leather.io/ui/native';
 
 interface RecipientSelectorProps {
-  activity: SendAssetActivity[];
+  activity: RecipientActivity[];
   recipientSchema: ZodSchema;
   asset: FungibleCryptoAsset;
   onSelectAddress(address: string): void;

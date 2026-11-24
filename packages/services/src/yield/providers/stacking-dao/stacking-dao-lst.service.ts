@@ -13,7 +13,7 @@ import { baseCurrencyAmountInQuote, createMoney } from '@leather.io/utils';
 import { FungibleAssetService } from '../../../assets/fungible-asset.service';
 import { HiroStacksApiClient } from '../../../infrastructure/api/hiro/hiro-stacks-api.client';
 import type {
-  HiroAddressFtBalancesResponse,
+  HiroPrincipalFtBalance,
   HiroPrincipalNftBalance,
 } from '../../../infrastructure/api/hiro/hiro-stacks-api.types';
 import { LeatherApiClient } from '../../../infrastructure/api/leather/leather-api.client';
@@ -76,10 +76,10 @@ export class StackingDaoLstService {
 
   public async getLstHolding(
     lst: 'ststx' | 'ststxbtc',
-    ftBalances: HiroAddressFtBalancesResponse,
+    ftBalances: HiroPrincipalFtBalance[],
     signal?: AbortSignal
   ): Promise<StackingDaoLstHolding | undefined> {
-    const ft = ftBalances.results.find(ft => ft.token === lstAssetIdentifierMap[lst]);
+    const ft = ftBalances.find(ft => ft.asset_identifier === lstAssetIdentifierMap[lst]);
     if (!ft) return;
 
     const [asset, stackingDaoRates, stxMarketData] = await Promise.all([

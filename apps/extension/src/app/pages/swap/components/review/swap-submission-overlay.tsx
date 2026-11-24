@@ -160,11 +160,6 @@ function SubmissionFailureMessage({ onReset }: SubmissionFailureMessageProps) {
 
 function getAttentionCopy({ reason, txid }: SwapAttention): { lead: string; tail: string } {
   switch (reason) {
-    case 'sbtc-notification-failed':
-      return {
-        lead: "Your Bitcoin was sent, but we couldn't notify the sBTC network to complete the swap. Please",
-        tail: 'for help completing it.',
-      };
     case 'broadcast-uncertain':
       return {
         lead: `We couldn't confirm whether your Bitcoin transaction ${truncateMiddle(txid)} was sent. Check your activity before trying again, or`,
