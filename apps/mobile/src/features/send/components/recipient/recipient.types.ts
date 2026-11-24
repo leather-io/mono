@@ -15,6 +15,12 @@ export interface ExternalRecipientSuggestionEntry {
   timestamp?: number;
 }
 
+export interface RecipientActivity {
+  txid: string;
+  timestamp: number;
+  receivers: string[];
+}
+
 export type RecipientSuggestionEntry =
   | InternalRecipientSuggestionEntry
   | ExternalRecipientSuggestionEntry;

@@ -3,24 +3,38 @@ import { Virtuoso } from 'react-virtuoso';
 
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
-import { type ActivityView } from '@leather.io/features';
+import { type BlockchainActivityView } from '@leather.io/features';
 import { LoadingSpinner } from '@leather.io/ui';
 
 import { ActivityItem } from './activity-item';
 
 interface ActivityListProps {
-  activity: ActivityView[];
+  activity: BlockchainActivityView[];
   isLoading: boolean;
   minWidth?: string | number;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
+  onLoadMore?(): void;
 }
 
-export function ActivityList({ activity, isLoading, minWidth = 400 }: ActivityListProps) {
+export function ActivityList({
+  activity,
+  isLoading,
+  minWidth = 400,
+  hasNextPage = false,
+  isFetchingNextPage = false,
+  onLoadMore,
+}: ActivityListProps) {
   const itemContent = useCallback(
-    (_: number, item: ActivityView) => <ActivityItem item={item} />,
+    (_: number, item: BlockchainActivityView) => <ActivityItem item={item} />,
     []
   );
 
-  const computeItemKey = useCallback((_: number, item: ActivityView) => item.key, []);
+  const computeItemKey = useCallback((_: number, item: BlockchainActivityView) => item.key, []);
+
+  const handleEndReached = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) onLoadMore?.();
+  }, [hasNextPage, isFetchingNextPage, onLoadMore]);
   if (isLoading) {
     return (
       <Stack flexGrow={1} position="relative">
@@ -48,7 +62,12 @@ export function ActivityList({ activity, isLoading, minWidth = 400 }: ActivityLi
 
   return (
     <Stack minWidth={minWidth} flexGrow={1} position="relative">
-      <Virtuoso data={activity} computeItemKey={computeItemKey} itemContent={itemContent} />
+      <Virtuoso
+        data={activity}
+        computeItemKey={computeItemKey}
+        itemContent={itemContent}
+        endReached={handleEndReached}
+      />
       <styled.div
         position="absolute"
         bottom="0"

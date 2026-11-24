@@ -1,6 +1,6 @@
 import { Screen } from '@/components/screen/screen';
 import { ActivityList } from '@/features/activity/activity-list';
-import { useActivity } from '@/queries/activity/activity.query';
+import { useActivityFeed } from '@/queries/activity/activity.query';
 import { ActivitySelectors } from '@/shared/selectors/activity.selectors';
 import { t } from '@lingui/core/macro';
 
@@ -12,12 +12,21 @@ interface ActivityScreenWithAccountProps {
 export default function ActivityScreenWithAccount({
   currentAccount,
 }: ActivityScreenWithAccountProps) {
-  const activity = useActivity(currentAccount.fingerprint, currentAccount.accountIndex);
+  const { activity, hasNextPage, isFetchingNextPage, fetchNextPage } = useActivityFeed(
+    currentAccount.fingerprint,
+    currentAccount.accountIndex
+  );
 
   return (
     <Screen testID={ActivitySelectors.ActivityScreen}>
       <Screen.Header leftElement={null} />
-      <ActivityList data={activity} header={<Screen.Title>{t`Activity`}</Screen.Title>} />
+      <ActivityList
+        data={activity}
+        header={<Screen.Title>{t`Activity`}</Screen.Title>}
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        onLoadMore={fetchNextPage}
+      />
     </Screen>
   );
 }
