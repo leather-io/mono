@@ -198,7 +198,6 @@ export function compileWshDescriptor(descriptor: string, index = 0): CompiledWsh
   };
 }
 
-const pkhFragmentPattern = /pk_?h\(/i;
 const pubkeyHashLength = 20;
 
 function isP2wpkhScriptCode(witnessScript: Uint8Array) {
@@ -215,7 +214,6 @@ function isP2wpkhScriptCode(witnessScript: Uint8Array) {
 }
 
 export function compilesToP2wpkhScriptCode(descriptor: string) {
-  if (!pkhFragmentPattern.test(descriptor)) return false;
   try {
     return isP2wpkhScriptCode(compileWshDescriptor(descriptor).witnessScript);
   } catch {

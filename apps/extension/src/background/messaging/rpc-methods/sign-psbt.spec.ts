@@ -144,8 +144,8 @@ describe('signPsbtHandler', () => {
 
     expect(mocks.sendMessage).toHaveBeenCalledWith(
       tabId,
-      expect.objectContaining({
-        error: expect.objectContaining({
+      objectContaining({
+        error: objectContaining({
           code: RpcErrorCode.INVALID_PARAMS,
           message: 'Descriptor is not supported for signing',
         }),

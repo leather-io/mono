@@ -728,6 +728,14 @@ describe('compilesToP2wpkhScriptCode', () => {
     expect(compilesToP2wpkhScriptCode(`${pkhDescriptor}#${checksum(pkhDescriptor)}`)).toBe(true);
   });
 
+  it('flags a p2wpkh scriptCode written as raw opcodes without a pkh() fragment', () => {
+    const rawOpcodeDescriptor = `wsh(c:pk_k(OP_DUP OP_HASH160 ${bytesToHex(pubkeyAHash160)} OP_EQUALVERIFY))`;
+    const { witnessScript } = compileWshDescriptor(rawOpcodeDescriptor);
+
+    expect(bytesToHex(witnessScript)).toBe(`76a914${bytesToHex(pubkeyAHash160)}88ac`);
+    expect(compilesToP2wpkhScriptCode(rawOpcodeDescriptor)).toBe(true);
+  });
+
   it('leaves a descriptor that does not compile to the signing flow', () => {
     expect(compilesToP2wpkhScriptCode(`wsh(pk(${xpubA}))`)).toBe(false);
     expect(compilesToP2wpkhScriptCode(`wsh(multi(2,${xpubA}/2/0,${xpubB}/2/0))`)).toBe(false);

@@ -899,7 +899,7 @@ test.describe('Sign PSBT', () => {
     test('that a pkh() descriptor forging a p2wpkh scriptCode is rejected with invalid params', async ({
       page,
     }) => {
-      const pkhDescriptor = `wsh(pkh(${bytesToHex(addressKeychain.publicKey!)}))`;
+      const pkhDescriptor = `wsh(pkh(${bytesToHex(addressPublicKey)}))`;
       const { scriptPubKey: pkhScriptPubKey } = compileWshDescriptor(pkhDescriptor);
 
       const psbt = new btc.Transaction();
