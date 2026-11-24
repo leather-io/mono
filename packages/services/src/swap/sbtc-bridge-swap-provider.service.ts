@@ -28,6 +28,7 @@ import {
   getRemainingSbtcSupply,
   getSbtcBridgeExecutionConstraints,
   getSbtcWithdrawalContractCallData,
+  getSbtcWithdrawalNetworkMode,
   sbtcStacksAddressMap,
   toXOnlyPublicKeyHex,
 } from './sbtc-bridge-swap-provider.utils';
@@ -210,8 +211,8 @@ export class SbtcBridgeSwapProviderService implements SwapProviderService {
       };
     }
 
-    const network = selectBitcoinNetworkMode(this.settingsService.getSettings());
-    if (network !== 'mainnet' && network !== 'testnet') {
+    const network = getSbtcWithdrawalNetworkMode(this.settingsService.getSettings().network);
+    if (!network) {
       throw new Error('sBTC withdrawals not supported for network');
     }
     const bitcoin = request.account.bitcoin;

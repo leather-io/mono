@@ -1399,8 +1399,8 @@ msgid "Pending"
 msgstr "Pending"
 
 #: src/utils/dapps.ts:40
-msgid "PlanBetter"
-msgstr "PlanBetter"
+msgid "Planbetter"
+msgstr "Planbetter"
 
 #: src/features/account/components/portfolio-header.tsx:14
 #: src/features/account/components/portfolio-header.tsx:27
