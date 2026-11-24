@@ -2,15 +2,18 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { type HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import { createMock } from '../test/create-mock';
-import { createTestPrincipalMempoolTokenTransferTx } from '../test/transactions-fixtures';
+import {
+  createTestPrincipalMempoolTokenTransferTx,
+  createTestPrincipalTokenTransferTx,
+} from '../test/transactions-fixtures';
 import { StacksTransactionsService } from './stacks-transactions.service';
 
 describe(StacksTransactionsService.name, () => {
   const getPrincipalMempoolTransactions = vi.fn().mockResolvedValue({ results: [] });
-  const getAddressTransactions = vi.fn().mockResolvedValue([]);
+  const getPrincipalTransactions = vi.fn().mockResolvedValue({ results: [] });
   const mockStacksApiClient = createMock<HiroStacksApiClient>({
     getPrincipalMempoolTransactions,
-    getAddressTransactions,
+    getPrincipalTransactions,
   });
 
   const stacksTransactionsService = new StacksTransactionsService(mockStacksApiClient);
@@ -29,7 +32,11 @@ describe(StacksTransactionsService.name, () => {
         {},
         { signal }
       );
-      expect(mockStacksApiClient.getAddressTransactions).toHaveBeenCalled();
+      expect(mockStacksApiClient.getPrincipalTransactions).toHaveBeenCalledWith(
+        stacksAddress,
+        { limit: 50 },
+        { signal }
+      );
     });
 
     it('filters out stale and confirmed txs from mempool txs', async () => {
@@ -50,10 +57,22 @@ describe(StacksTransactionsService.name, () => {
           txD,
         ],
       });
-      getAddressTransactions.mockResolvedValue([
-        { tx: { tx_id: 'txA', nonce: 1 } },
-        { tx: { tx_id: 'txB', nonce: 2 } },
-      ]);
+      getPrincipalTransactions.mockResolvedValue({
+        results: [
+          {
+            transaction: createTestPrincipalTokenTransferTx({
+              tx_id: 'txA',
+              sender: { address: stacksAddress, nonce: 1 },
+            }),
+          },
+          {
+            transaction: createTestPrincipalTokenTransferTx({
+              tx_id: 'txB',
+              sender: { address: stacksAddress, nonce: 2 },
+            }),
+          },
+        ],
+      });
       const pendingTxs = await stacksTransactionsService.getPendingTransactions(stacksAddress);
       expect(pendingTxs).toEqual([txD]);
     });
@@ -69,7 +88,7 @@ describe(StacksTransactionsService.name, () => {
           }),
         ],
       });
-      getAddressTransactions.mockResolvedValue([]);
+      getPrincipalTransactions.mockResolvedValue({ results: [] });
       const pendingTxs = await stacksTransactionsService.getPendingTransactions(stacksAddress);
       expect(pendingTxs).toEqual([pendingTx]);
     });

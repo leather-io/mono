@@ -2,8 +2,18 @@ import { Flex, styled } from 'leather-styles/jsx';
 import { Page } from '~/layouts/page/page';
 import { HelpCards } from '~/pages/marketing/shared/help-cards';
 
+import { Link } from '@leather.io/ui';
+
+interface NotFoundProps {
+  heading?: string;
+  recovery?: { href: string; label: string };
+}
+
 // Rendered by the `*` route and by ContentErrorBoundary for missing/retired content (404/410).
-export function NotFound() {
+export function NotFound({
+  heading = 'Oops! Seems like you took a wrong turn',
+  recovery = { href: '/', label: 'Go to homepage' },
+}: NotFoundProps) {
   return (
     <Page>
       <Page.Header />
@@ -24,8 +34,11 @@ export function NotFound() {
           _motionSafe={{ animation: 'marketingFlyIn 1s cubic-bezier(0.24, 0, 0.24, 1) both' }}
         />
         <styled.h1 textStyle="heading.04" fontWeight="400" mt="space.05" maxW="300px">
-          Oops! Seems like you took a wrong turn
+          {heading}
         </styled.h1>
+        <Link href={recovery.href} mt="space.04">
+          {recovery.label}
+        </Link>
       </Flex>
       <HelpCards mx={['-space.04', null, '0']} mb="space.09" />
     </Page>

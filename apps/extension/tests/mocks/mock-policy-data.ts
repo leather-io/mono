@@ -81,52 +81,6 @@ export async function mockPolicyStacksReceiveActivity(
       },
     })
   );
-
-  await page.route(`**/api.hiro.so/extended/v2/addresses/${address}/transactions*`, route =>
-    route.fulfill({
-      json: {
-        limit: 50,
-        offset: 0,
-        total: 1,
-        results: [
-          {
-            tx: {
-              tx_id: '0x9b709768122e6c62a37b087106cc9c23280ed6242b565484b6cc4e6a43ae1155',
-              nonce: 5,
-              fee_rate: '300',
-              sender_address: 'SPWECF3XYVRBRCN23CJJCX9XKSF8RFWQPAQMWXT',
-              sponsored: false,
-              post_condition_mode: 'allow',
-              post_conditions: [],
-              anchor_mode: 'any',
-              block_hash: '0x420f7e5227a366554d1c8032c0c7d8de730a45a8e662038d6eff43db6beaa0cc',
-              block_height: 150000,
-              block_time: 1714836180,
-              block_time_iso: '2024-05-04T15:23:00.000Z',
-              burn_block_time: 1714836115,
-              burn_block_height: 842073,
-              burn_block_time_iso: '2024-05-04T15:21:55.000Z',
-              canonical: true,
-              tx_index: 1,
-              tx_status: 'success',
-              tx_result: { hex: '0x0703', repr: '(ok true)' },
-              event_count: 0,
-              events: [],
-              tx_type: 'token_transfer',
-              token_transfer: {
-                recipient_address: address,
-                amount: '5000000',
-                memo: '0x00000000000000000000000000000000000000000000000000000000000000000000',
-              },
-            },
-            stx_sent: '0',
-            stx_received: '5000000',
-            events: [],
-          },
-        ],
-      },
-    })
-  );
 }
 
 export async function mockStacksPolicyData(page: Page | BrowserContext, address: string) {

@@ -5,7 +5,7 @@ import { assertExistence } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
 import { mockEmptyStacksBalancesRequest } from '../../mocks/mock-stacks-balances';
-import { mockEmptyStacksBalancesV2Request } from '../../mocks/mock-stacks-balances-v2';
+import { mockEmptyStacksPrincipalBalancesRequest } from '../../mocks/mock-stacks-principal-balances';
 import { CoreAssetSelectors, MockedTokensSelectors } from '../../selectors/mocked-tokens.selectors';
 import { TokenDetailsSelectors } from '../../selectors/token-details.selectors';
 
@@ -83,7 +83,7 @@ test.describe('Tokens tab', () => {
     test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
       await globalPage.setupAndUseApiCalls(extensionId);
       await mockEmptyStacksBalancesRequest(page);
-      await mockEmptyStacksBalancesV2Request(page);
+      await mockEmptyStacksPrincipalBalancesRequest(page);
       await mockMainnetTestAccountEmptyUtxosRequests(page);
       await onboardingPage.signInWithTestAccount(extensionId);
     });
