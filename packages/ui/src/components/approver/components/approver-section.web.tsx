@@ -1,6 +1,6 @@
-import { BoxProps, styled } from 'leather-styles/jsx';
+import { type BoxProps, styled } from 'leather-styles/jsx';
 
-import { HasChildren } from '../../../utils/has-children.shared';
+import { type HasChildren } from '../../../utils/has-children.shared';
 import { useRegisterApproverChild } from '../approver-context.shared';
 
 export function ApproverSection(props: HasChildren & BoxProps) {

@@ -1,6 +1,6 @@
-import { TypeEqual, expectType } from 'ts-expect';
+import { type TypeEqual, expectType } from 'ts-expect';
 
-import { RpcParams, RpcResult, endpoints, getAddresses } from '@leather.io/rpc';
+import { type RpcParams, type RpcResult, endpoints, type getAddresses } from '@leather.io/rpc';
 
 import { createLeatherClient } from './client';
 
@@ -56,13 +56,10 @@ describe('Leather SDK', () => {
     await client.supportedMethods({ doesntAcceptParams: true });
   });
 
-  test('Client should use friendly method names, so this should be `stxSignMessage`', async () => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const client = { stx_signMessage: () => {} } as unknown as ReturnType<
-      typeof createLeatherClient
-    >;
+  test('Client should use friendly method names, so this should be `stxSignMessage`', () => {
     // @ts-expect-error
-    await client.stx_signMessage({ message: 'hello', messageType: 'utf8' });
+    const stxSignMessage: unknown = client.stx_signMessage;
+    expect(stxSignMessage).toBeUndefined();
   });
 
   test('`getAddresses` params type check', () => {

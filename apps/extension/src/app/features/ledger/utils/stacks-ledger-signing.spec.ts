@@ -1,5 +1,5 @@
 import {
-  ClarityValue,
+  type ClarityValue,
   PostConditionMode,
   bufferCV,
   contractPrincipalCV,
@@ -14,8 +14,9 @@ import {
   tupleCV,
   uintCV,
 } from '@stacks/transactions';
-import StacksApp, { LedgerError, ResponseSign } from '@zondax/ledger-stacks';
+import { LedgerError, type ResponseSign } from '@zondax/ledger-stacks';
 
+import { makeFakeLedgerStacksApp } from './ledger-app.mocks';
 import {
   signLedgerStacksStructuredMessage,
   signLedgerStacksTransaction,
@@ -43,12 +44,16 @@ const signatureResponse: ResponseSign = {
   signatureDER: Buffer.alloc(70),
 };
 
+function stringContaining(expected: string): unknown {
+  return expect.stringContaining(expected);
+}
+
 function createApp() {
-  const app: StacksApp = Object.create(StacksApp.prototype);
-  app.sign = vi.fn().mockResolvedValue(signatureResponse);
-  app.sign_msg = vi.fn().mockResolvedValue(signatureResponse);
-  app.sign_structured_msg = vi.fn().mockResolvedValue(signatureResponse);
-  return app;
+  return makeFakeLedgerStacksApp({
+    sign: vi.fn().mockResolvedValue(signatureResponse),
+    sign_msg: vi.fn().mockResolvedValue(signatureResponse),
+    sign_structured_msg: vi.fn().mockResolvedValue(signatureResponse),
+  });
 }
 
 async function createContractCall(
@@ -69,7 +74,8 @@ async function createContractCall(
 
 describe(signLedgerStacksTransaction.name, () => {
   test('signs a Deny STX transfer without changing the transaction', async () => {
-    const app = createApp();
+    const ledgerApp = createApp();
+    const { app } = ledgerApp;
     const transaction = await makeUnsignedSTXTokenTransfer({
       recipient: address,
       amount: 1,
@@ -80,7 +86,9 @@ describe(signLedgerStacksTransaction.name, () => {
     const payload = Buffer.from(transaction.serialize(), 'hex');
 
     expect(transaction.postConditionMode).toBe(PostConditionMode.Deny);
-    expect(await signLedgerStacksTransaction(app)(payload, derivationPath)).toBe(signatureResponse);
+    expect(await signLedgerStacksTransaction(ledgerApp)(payload, derivationPath)).toBe(
+      signatureResponse
+    );
     expect(app.sign).toHaveBeenCalledOnce();
     expect(app.sign).toHaveBeenCalledWith(derivationPath, payload);
   });
@@ -88,12 +96,13 @@ describe(signLedgerStacksTransaction.name, () => {
   test.each([PostConditionMode.Allow, PostConditionMode.Originator])(
     'rejects post-condition mode %i without changing it or contacting Ledger',
     async mode => {
-      const app = createApp();
+      const ledgerApp = createApp();
+      const { app } = ledgerApp;
       const transaction = await createContractCall();
       transaction.postConditionMode = mode;
       const payload = Buffer.from(transaction.serialize(), 'hex');
 
-      expect(await signLedgerStacksTransaction(app)(payload, derivationPath)).toEqual({
+      expect(await signLedgerStacksTransaction(ledgerApp)(payload, derivationPath)).toEqual({
         error: 'Ledger transactions require Deny post-condition mode.',
       });
       expect(transaction.postConditionMode).toBe(mode);
@@ -104,11 +113,12 @@ describe(signLedgerStacksTransaction.name, () => {
   test.each([noneCV(), someCV(bufferCV(Buffer.alloc(34)))])(
     'signs an exact four-argument SIP-10 transfer with memo %j',
     async memo => {
-      const app = createApp();
+      const ledgerApp = createApp();
+      const { app } = ledgerApp;
       const transaction = await createContractCall([...transferArguments.slice(0, 3), memo]);
       const payload = Buffer.from(transaction.serialize(), 'hex');
 
-      expect(await signLedgerStacksTransaction(app)(payload, derivationPath)).toBe(
+      expect(await signLedgerStacksTransaction(ledgerApp)(payload, derivationPath)).toBe(
         signatureResponse
       );
       expect(app.sign).toHaveBeenCalledOnce();
@@ -117,7 +127,7 @@ describe(signLedgerStacksTransaction.name, () => {
   );
 
   test('accepts contract principals in SIP-10 transfers', async () => {
-    const app = createApp();
+    const ledgerApp = createApp();
     const transaction = await createContractCall([
       uintCV(1),
       contractPrincipalCV(address, 'sender'),
@@ -126,7 +136,7 @@ describe(signLedgerStacksTransaction.name, () => {
     ]);
 
     expect(
-      await signLedgerStacksTransaction(app)(
+      await signLedgerStacksTransaction(ledgerApp)(
         Buffer.from(transaction.serialize(), 'hex'),
         derivationPath
       )
@@ -136,15 +146,16 @@ describe(signLedgerStacksTransaction.name, () => {
   test.each(['approve', 'Transfer', 'transfer-extra'])(
     'blocks the function %s before Ledger',
     async functionName => {
-      const app = createApp();
+      const ledgerApp = createApp();
+      const { app } = ledgerApp;
       const transaction = await createContractCall(transferArguments, functionName);
 
       expect(
-        await signLedgerStacksTransaction(app)(
+        await signLedgerStacksTransaction(ledgerApp)(
           Buffer.from(transaction.serialize(), 'hex'),
           derivationPath
         )
-      ).toEqual({ error: expect.stringContaining('only SIP-10 transfers') });
+      ).toEqual({ error: stringContaining('only SIP-10 transfers') });
       expect(app.sign).not.toHaveBeenCalled();
     }
   );
@@ -159,24 +170,26 @@ describe(signLedgerStacksTransaction.name, () => {
     [...transferArguments.slice(0, 3), someCV(uintCV(1))],
     [...transferArguments.slice(0, 3), someCV(bufferCV(Buffer.alloc(35)))],
   ])('rejects a transfer with invalid arguments (case %#)', async (...functionArgs) => {
-    const app = createApp();
+    const ledgerApp = createApp();
+    const { app } = ledgerApp;
     const transaction = await createContractCall(functionArgs);
 
     expect(
-      await signLedgerStacksTransaction(app)(
+      await signLedgerStacksTransaction(ledgerApp)(
         Buffer.from(transaction.serialize(), 'hex'),
         derivationPath
       )
-    ).toEqual({ error: expect.stringContaining('only SIP-10 transfers') });
+    ).toEqual({ error: stringContaining('only SIP-10 transfers') });
     expect(app.sign).not.toHaveBeenCalled();
   });
 
   test.each([253, 254, 256])('blocks %i contract arguments before Ledger', async count => {
-    const app = createApp();
+    const ledgerApp = createApp();
+    const { app } = ledgerApp;
     const transaction = await createContractCall(Array.from({ length: count }, () => uintCV(1)));
 
     expect(
-      await signLedgerStacksTransaction(app)(
+      await signLedgerStacksTransaction(ledgerApp)(
         Buffer.from(transaction.serialize(), 'hex'),
         derivationPath
       )
@@ -185,34 +198,37 @@ describe(signLedgerStacksTransaction.name, () => {
   });
 
   test('still applies the transfer restriction below the argument-count limit', async () => {
-    const app = createApp();
+    const ledgerApp = createApp();
+    const { app } = ledgerApp;
     const transaction = await createContractCall(Array.from({ length: 252 }, () => uintCV(1)));
 
     expect(
-      await signLedgerStacksTransaction(app)(
+      await signLedgerStacksTransaction(ledgerApp)(
         Buffer.from(transaction.serialize(), 'hex'),
         derivationPath
       )
-    ).toEqual({ error: expect.stringContaining('only SIP-10 transfers') });
+    ).toEqual({ error: stringContaining('only SIP-10 transfers') });
     expect(app.sign).not.toHaveBeenCalled();
   });
 
   test('rejects malformed transactions', async () => {
-    const app = createApp();
+    const ledgerApp = createApp();
+    const { app } = ledgerApp;
 
     expect(
-      await signLedgerStacksTransaction(app)(Buffer.from('malformed'), derivationPath)
-    ).toEqual({ error: expect.stringContaining('encoding') });
+      await signLedgerStacksTransaction(ledgerApp)(Buffer.from('malformed'), derivationPath)
+    ).toEqual({ error: stringContaining('encoding') });
     expect(app.sign).not.toHaveBeenCalled();
   });
 
   test('rejects trailing bytes outside the parsed transaction', async () => {
-    const app = createApp();
+    const ledgerApp = createApp();
+    const { app } = ledgerApp;
     const transaction = await createContractCall();
     const payload = Buffer.concat([Buffer.from(transaction.serialize(), 'hex'), Buffer.from([0])]);
 
-    expect(await signLedgerStacksTransaction(app)(payload, derivationPath)).toEqual({
-      error: expect.stringContaining('encoding'),
+    expect(await signLedgerStacksTransaction(ledgerApp)(payload, derivationPath)).toEqual({
+      error: stringContaining('encoding'),
     });
     expect(app.sign).not.toHaveBeenCalled();
   });
@@ -222,10 +238,11 @@ describe(signLedgerStacksUtf8Message.name, () => {
   test.each(['a'.repeat(270), 'é'.repeat(135), '🙂'.repeat(67) + 'ab'])(
     'signs a 270-byte message using its UTF-8 byte length',
     async payload => {
-      const app = createApp();
+      const ledgerApp = createApp();
+      const { app } = ledgerApp;
 
       expect(Buffer.byteLength(payload, 'utf8')).toBe(270);
-      expect(await signLedgerStacksUtf8Message(app)(payload, derivationPath)).toBe(
+      expect(await signLedgerStacksUtf8Message(ledgerApp)(payload, derivationPath)).toBe(
         signatureResponse
       );
       expect(app.sign).toHaveBeenCalledOnce();
@@ -244,9 +261,10 @@ describe(signLedgerStacksUtf8Message.name, () => {
   test.each(['a'.repeat(271), 'é'.repeat(136), '🙂'.repeat(68)])(
     'rejects messages exceeding 270 UTF-8 bytes',
     async payload => {
-      const app = createApp();
+      const ledgerApp = createApp();
+      const { app } = ledgerApp;
 
-      expect(await signLedgerStacksUtf8Message(app)(payload, derivationPath)).toEqual({
+      expect(await signLedgerStacksUtf8Message(ledgerApp)(payload, derivationPath)).toEqual({
         error: 'Ledger messages must be 270 bytes or fewer.',
       });
       expect(app.sign).not.toHaveBeenCalled();
@@ -259,14 +277,15 @@ describe(signLedgerStacksUtf8Message.name, () => {
       Array.from({ length: 33 }, (_, code) => code + 0x7f)
     )
   )('rejects control character %i anywhere in a message', async code => {
-    const app = createApp();
+    const ledgerApp = createApp();
+    const { app } = ledgerApp;
 
     expect(
-      await signLedgerStacksUtf8Message(app)(
+      await signLedgerStacksUtf8Message(ledgerApp)(
         `Visible${String.fromCharCode(code)}hidden`,
         derivationPath
       )
-    ).toEqual({ error: expect.stringContaining('control characters') });
+    ).toEqual({ error: stringContaining('control characters') });
     expect(app.sign).not.toHaveBeenCalled();
     expect(app.sign_msg).not.toHaveBeenCalled();
   });
@@ -274,29 +293,34 @@ describe(signLedgerStacksUtf8Message.name, () => {
 
 describe(signLedgerStacksStructuredMessage.name, () => {
   test('signs exactly 65,535 combined encoded bytes unchanged', async () => {
-    const app = createApp();
+    const ledgerApp = createApp();
+    const { app } = ledgerApp;
     const payload = serializeCV(bufferCV(Buffer.alloc(65_535 - domain.length / 2 - 5)));
 
     expect((domain.length + payload.length) / 2).toBe(65_535);
-    expect(await signLedgerStacksStructuredMessage(app)(domain, payload, derivationPath)).toBe(
-      signatureResponse
-    );
+    expect(
+      await signLedgerStacksStructuredMessage(ledgerApp)(domain, payload, derivationPath)
+    ).toBe(signatureResponse);
     expect(app.sign_structured_msg).toHaveBeenCalledOnce();
     expect(app.sign_structured_msg).toHaveBeenCalledWith(derivationPath, domain, payload);
   });
 
   test.each([65_536, 70_000])('rejects %i combined encoded bytes', async size => {
-    const app = createApp();
+    const ledgerApp = createApp();
+    const { app } = ledgerApp;
     const payload = serializeCV(bufferCV(Buffer.alloc(size - domain.length / 2 - 5)));
 
-    expect(await signLedgerStacksStructuredMessage(app)(domain, payload, derivationPath)).toEqual({
-      error: expect.stringContaining('65,535 encoded bytes'),
+    expect(
+      await signLedgerStacksStructuredMessage(ledgerApp)(domain, payload, derivationPath)
+    ).toEqual({
+      error: stringContaining('65,535 encoded bytes'),
     });
     expect(app.sign_structured_msg).not.toHaveBeenCalled();
   });
 
   test('includes the domain when enforcing the encoded byte limit', async () => {
-    const app = createApp();
+    const ledgerApp = createApp();
+    const { app } = ledgerApp;
     const oversizedDomain = serializeCV(
       tupleCV({
         name: stringAsciiCV('a'.repeat(65_535)),
@@ -306,26 +330,27 @@ describe(signLedgerStacksStructuredMessage.name, () => {
     );
 
     expect(
-      await signLedgerStacksStructuredMessage(app)(
+      await signLedgerStacksStructuredMessage(ledgerApp)(
         oversizedDomain,
         serializeCV(uintCV(1)),
         derivationPath
       )
-    ).toEqual({ error: expect.stringContaining('65,535 encoded bytes') });
+    ).toEqual({ error: stringContaining('65,535 encoded bytes') });
     expect(app.sign_structured_msg).not.toHaveBeenCalled();
   });
 
   test.each(['0', 'zz', '00zz', ''])(
     'rejects malformed hex %j in either encoded component',
     async invalidHex => {
-      const app = createApp();
-      const sign = signLedgerStacksStructuredMessage(app);
+      const ledgerApp = createApp();
+      const { app } = ledgerApp;
+      const sign = signLedgerStacksStructuredMessage(ledgerApp);
 
       expect(await sign(domain, invalidHex, derivationPath)).toEqual({
-        error: expect.stringContaining('encoding'),
+        error: stringContaining('encoding'),
       });
       expect(await sign(invalidHex, serializeCV(uintCV(1)), derivationPath)).toEqual({
-        error: expect.stringContaining('encoding'),
+        error: stringContaining('encoding'),
       });
       expect(app.sign_structured_msg).not.toHaveBeenCalled();
     }

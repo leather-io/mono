@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router';
+import { Outlet } from 'react-router';
 
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '~/constants/query-client';
@@ -17,23 +17,22 @@ declare global {
   }
 }
 
-export default function App() {
-  const navigate = useNavigate();
+async function importAndInitAppServices() {
+  const { initAppServices } = await import('~/services/init-app-services');
+  return initAppServices();
+}
 
+export default function App() {
   useDetectLeatherProvider();
 
   useEffect(() => {
     // Required async import otherwise Buffer is undefined
-    import('~/services/init-app-services')
-      .then(({ initAppServices }) => initAppServices())
+    importAndInitAppServices()
       // eslint-disable-next-line no-console
       .catch(console.error);
   }, []);
 
   useOnRouteChange(() => analytics.page());
-  useOnRouteChange(
-    location => location.pathname === '/' && navigate('/staking', { replace: true })
-  );
 
   return (
     <QueryClientProvider client={queryClient}>

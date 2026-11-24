@@ -19,7 +19,7 @@ export function getRawPsbt(psbt: string | Uint8Array): ReturnType<typeof RawPSBT
     try {
       return RawPSBTV2.decode(bytes);
     } catch (e2) {
-      throw new Error(`Unable to decode PSBT, ${e1 ?? e2}`);
+      throw new Error(`Unable to decode PSBT, ${String(e1 ?? e2)}`);
     }
   }
 }

@@ -10,8 +10,8 @@ import { useAccounts } from '@/store/accounts/accounts.read';
 import { analytics } from '@/utils/analytics';
 import { t } from '@lingui/core/macro';
 
-import { FungibleCryptoAsset } from '@leather.io/models';
-import { SheetInstance } from '@leather.io/ui/native';
+import { type FungibleCryptoAsset } from '@leather.io/models';
+import { type SheetInstance } from '@leather.io/ui/native';
 
 import { FormLayout } from './form.layout';
 

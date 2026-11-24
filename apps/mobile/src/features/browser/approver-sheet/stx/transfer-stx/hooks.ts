@@ -1,12 +1,12 @@
 import { useCallback } from 'react';
 
-import { getDefaultFee } from '@/features/approver/utils';
+import { getApproverFee } from '@/features/approver/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
 import { bytesToHex } from '@stacks/common';
-import { StacksNetwork } from '@stacks/network';
+import { type StacksNetwork } from '@stacks/network';
 
-import { RpcRequest, stxTransferStx } from '@leather.io/rpc';
+import { type RpcRequest, type stxTransferStx } from '@leather.io/rpc';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import { useOnMount } from '@leather.io/ui/native';
 import { createMoney } from '@leather.io/utils';
@@ -28,7 +28,7 @@ export function useTransferStxTxHex({
 }: UseTransferStxTxHex) {
   const { fromAccountId } = useStacksSigners();
   const signer = fromAccountId(accountId)[0];
-  const fee = getDefaultFee();
+  const fee = getApproverFee(request.params.sponsored);
   assertStacksSigner(signer);
 
   const getTxHex = useCallback(
@@ -45,12 +45,17 @@ export function useTransferStxTxHex({
         fee,
         nonce,
         network,
+        sponsored: request.params.sponsored,
       });
       return tx.serialize();
     },
     [fromAccountId, request.params, nonce, fee, accountId, network]
   );
+  async function loadTxHex() {
+    setTxHex(await getTxHex());
+  }
+
   useOnMount(() => {
-    void getTxHex().then(txHex => setTxHex(txHex));
+    void loadTxHex();
   });
 }

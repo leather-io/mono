@@ -11,7 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Svg, { G, Mask, Path, Rect } from 'react-native-svg';
 
-import { Box, Theme, useTheme } from '@leather.io/ui/native';
+import { Box, type Theme, useTheme } from '@leather.io/ui/native';
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 const AnimatedPath = Animated.createAnimatedComponent(Path);

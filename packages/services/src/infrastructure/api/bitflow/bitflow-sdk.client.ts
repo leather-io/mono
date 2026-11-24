@@ -27,33 +27,35 @@ export class BitflowSdkClient {
     @inject(Types.Environment) env: Environment,
     @inject(Types.CacheService) private readonly cacheService: HttpCacheService
   ) {
-    try {
-      this.bitflow = new BitflowSDK({
-        BITFLOW_API_HOST: env.bitflow?.bitflowApiHost,
-        BITFLOW_API_KEY: env.bitflow?.bitflowApiKey,
-        READONLY_CALL_API_HOST: HIRO_API_BASE_URL_MAINNET,
-        KEEPER_API_KEY: env.bitflow?.keeperApiKey,
-        KEEPER_API_HOST: env.bitflow?.keeperApiHost,
-        BITFLOW_PROVIDER_ADDRESS: env.bitflow?.bitflowProviderAddress,
-      });
-    } catch {
+    if (!env.bitflow?.bitflowApiHost) {
       this.bitflow = null;
+      return;
     }
+    this.bitflow = new BitflowSDK({
+      BITFLOW_API_HOST: env.bitflow.bitflowApiHost,
+      BITFLOW_API_KEY: env.bitflow.bitflowApiKey,
+      READONLY_CALL_API_HOST: HIRO_API_BASE_URL_MAINNET,
+      KEEPER_API_KEY: env.bitflow.keeperApiKey,
+      KEEPER_API_HOST: env.bitflow.keeperApiHost,
+      BITFLOW_PROVIDER_ADDRESS: env.bitflow.bitflowProviderAddress,
+    });
   }
 
   public async getAvailableTokens(): Promise<BitflowSdkToken[]> {
-    if (!this.bitflow) return [];
+    const bitflow = this.bitflow;
+    if (!bitflow) return [];
     return await this.cacheService.fetchWithCache(
       ['bitflow-sdk-available-tokens'],
-      async () => await this.bitflow!.getAvailableTokens()
+      async () => await bitflow.getAvailableTokens()
     );
   }
 
   public async getAllPossibleTokenY(tokenXId: string): Promise<string[]> {
-    if (!this.bitflow) return [];
+    const bitflow = this.bitflow;
+    if (!bitflow) return [];
     return await this.cacheService.fetchWithCache(
       ['bitflow-sdk-all-possible-token-y', tokenXId],
-      async () => await this.bitflow!.getAllPossibleTokenY(tokenXId)
+      async () => await bitflow.getAllPossibleTokenY(tokenXId)
     );
   }
 
@@ -62,10 +64,11 @@ export class BitflowSdkClient {
     tokenYId: string,
     amount: number
   ): Promise<BitflowSdkQuoteResult | null> {
-    if (!this.bitflow) return null;
+    const bitflow = this.bitflow;
+    if (!bitflow) return null;
     return await this.cacheService.fetchWithCache(
       ['bitflow-sdk-get-quote-for-route', tokenXId, tokenYId, amount],
-      async () => await this.bitflow!.getQuoteForRoute(tokenXId, tokenYId, amount)
+      async () => await bitflow.getQuoteForRoute(tokenXId, tokenYId, amount)
     );
   }
 

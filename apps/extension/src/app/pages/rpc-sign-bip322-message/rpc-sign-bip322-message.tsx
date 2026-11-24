@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react';
-import { Outlet, useLocation } from 'react-router';
-
 import { ChainId } from '@stacks/network';
 
 import { truncateMiddle } from '@leather.io/utils';
@@ -8,6 +5,7 @@ import { truncateMiddle } from '@leather.io/utils';
 import { closeWindow } from '@shared/utils';
 
 import { Disclaimer } from '@app/components/disclaimer';
+import { GenericError } from '@app/components/generic-error/generic-error';
 import { NoFeesWarningRow } from '@app/components/no-fees-warning-row';
 import { PopupHeader } from '@app/features/container/headers/popup.header';
 import { MessagePreviewBox } from '@app/features/message-signer/message-preview-box';
@@ -28,38 +26,41 @@ export function RpcSignBip322MessageRoute() {
   );
 }
 
+const paymentTypeLabels: Record<string, string> = {
+  p2tr: 'Taproot',
+  p2wpkh: 'Native SegWit',
+};
+
 function RpcSignBip322Message() {
   const {
     origin,
     message,
     address,
     networkMode,
-    isLoading: signBip322MessageIsLoading,
+    isLoading,
+    paymentType,
+    onSignerUnavailable,
     onUserApproveBip322MessageSigningRequest,
     onUserRejectBip322MessageSigningRequest,
   } = useSignBip322Message();
-
-  const location = useLocation();
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  // if user has wentBack need to stop button loading so they can retry
-  useEffect(() => {
-    if (location?.state?.wentBack) {
-      setIsLoading(false);
-    } else {
-      setIsLoading(signBip322MessageIsLoading);
-    }
-  }, [location, signBip322MessageIsLoading, isLoading, setIsLoading]);
 
   if (origin === null) {
     closeWindow();
     throw new Error('Origin is null');
   }
 
+  if (!address) {
+    return (
+      <GenericError
+        title="Unable to sign message"
+        body={`The current account has no ${paymentTypeLabels[paymentType] ?? paymentType} address to sign this message with.`}
+        onClose={onSignerUnavailable}
+      />
+    );
+  }
+
   return (
     <>
-      <Outlet />
       <PopupHeader showSwitchAccount balance="all" />
       <MessageSigningRequestLayout>
         <MessageSigningHeader
@@ -70,7 +71,7 @@ function RpcSignBip322Message() {
         <NoFeesWarningRow chainId={networkMode === 'mainnet' ? ChainId.Mainnet : ChainId.Testnet} />
         <SignMessageActions
           isLoading={isLoading}
-          onSignMessage={() => onUserApproveBip322MessageSigningRequest()}
+          onSignMessage={() => void onUserApproveBip322MessageSigningRequest()}
           onSignMessageCancel={() => onUserRejectBip322MessageSigningRequest()}
         />
         <hr />

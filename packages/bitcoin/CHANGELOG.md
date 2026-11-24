@@ -939,6 +939,111 @@
     * @leather.io/prettier-config bumped to 0.9.0
     * @leather.io/rpc bumped to 2.20.17
 
+## [0.42.2](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.42.1...@leather.io/bitcoin-v0.42.2) (2026-11-19)
+
+
+### Bug Fixes
+
+* bitcoinjs-lib audit ([#2959](https://github.com/leather-io/mono/issues/2959)) ([47f9582](https://github.com/leather-io/mono/commit/47f95825a09be6f4ae695e0a2c62bf3268febb30))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.41.1
+    * @leather.io/crypto bumped to 1.13.12
+    * @leather.io/utils bumped to 0.55.1
+  * devDependencies
+    * @leather.io/rpc bumped to 2.25.5
+
+## [0.42.1](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.42.0...@leather.io/bitcoin-v0.42.1) (2026-10-27)
+
+
+### Bug Fixes
+
+* body-parser and undici audit ([#2912](https://github.com/leather-io/mono/issues/2912)) ([2bee4e7](https://github.com/leather-io/mono/commit/2bee4e772dd95fff8406822a62225854fb708fbd))
+* enforce runtime circular dependency detection ([#2852](https://github.com/leather-io/mono/issues/2852)) ([857e0f7](https://github.com/leather-io/mono/commit/857e0f79d75025cc0da9f31a78c875fa64ed5eba))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.41.0
+    * @leather.io/crypto bumped to 1.13.11
+    * @leather.io/models bumped to 0.63.1
+    * @leather.io/utils bumped to 0.55.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.25.4
+
+## [0.42.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.41.0...@leather.io/bitcoin-v0.42.0) (2026-10-06)
+
+
+### Features
+
+* spending sources foundation + btc send flow ([#2820](https://github.com/leather-io/mono/issues/2820)) ([181c4f7](https://github.com/leather-io/mono/commit/181c4f71366f1cb4a744ae04d261f1fa63d75f30))
+
+## [0.41.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.40.2...@leather.io/bitcoin-v0.41.0) (2026-09-29)
+
+
+### Features
+
+* fully move to dmk btc/stx dmk packages ([#2763](https://github.com/leather-io/mono/issues/2763)) ([c4bb5f3](https://github.com/leather-io/mono/commit/c4bb5f39ed9f2ff88ce59c325e86dda0cb87568b))
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.40.0
+    * @leather.io/crypto bumped to 1.13.10
+    * @leather.io/models bumped to 0.63.0
+    * @leather.io/utils bumped to 0.54.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/rpc bumped to 2.25.3
+    * @leather.io/test-config bumped to 0.1.4
+    * @leather.io/tsconfig-config bumped to 0.11.2
+
+## [0.40.2](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.40.1...@leather.io/bitcoin-v0.40.2) (2026-09-14)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.4
+    * @leather.io/crypto bumped to 1.13.9
+    * @leather.io/utils bumped to 0.53.1
+  * devDependencies
+    * @leather.io/rpc bumped to 2.25.2
+
+## [0.40.1](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.40.0...@leather.io/bitcoin-v0.40.1) (2026-09-10)
+
+
+### Bug Fixes
+
+* **bitcoin:** verify psbt consistency in wsh descriptor finalization ([#2701](https://github.com/leather-io/mono/issues/2701)) ([68e36b4](https://github.com/leather-io/mono/commit/68e36b4e1e43a96e1343d1506e3c279829c5d6eb))
+* **extension:** block psbt signing with disallowed sighash types ([#2667](https://github.com/leather-io/mono/issues/2667)) ([9b4d0f4](https://github.com/leather-io/mono/commit/9b4d0f46d6e77cbbda5da1b519ae853514fd1c30))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.3
+    * @leather.io/crypto bumped to 1.13.8
+    * @leather.io/models bumped to 0.62.0
+    * @leather.io/utils bumped to 0.53.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.25.1
+
 ## [0.40.0](https://github.com/leather-io/mono/compare/@leather.io/bitcoin-v0.39.6...@leather.io/bitcoin-v0.40.0) (2026-08-27)
 
 

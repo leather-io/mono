@@ -4,12 +4,14 @@ on:
   pull_request:
     paths:
       - '.github/workflows/**'
+      - '.github/scripts/**'
   push:
     branches:
       - main
       - dev
     paths:
       - '.github/workflows/**'
+      - '.github/scripts/**'
 
 # GITHUB_TOKEN only needs to read the repository for checkout.
 permissions:
@@ -24,7 +26,7 @@ jobs:
     name: validate-workflow-names
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -35,7 +37,7 @@ jobs:
     name: validate-job-names
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -46,7 +48,7 @@ jobs:
     name: validate-step-names
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -57,7 +59,7 @@ jobs:
     name: validate-filenames
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -68,7 +70,7 @@ jobs:
     name: lint-workflows
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: install-actionlint
@@ -79,7 +81,26 @@ jobs:
         env:
           ACTIONLINT: ${{ steps.get_actionlint.outputs.executable }}
         run: |
-          "$ACTIONLINT" -color
+          # actionlint does not yet understand GitHub's `$/` self-repository `uses:` syntax.
+          # Drop the -ignore flag once https://github.com/rhysd/actionlint/pull/732 is merged and released.
+          "$ACTIONLINT" -color \
+            -ignore 'specifying action "\$/[^"]*" in invalid format because ref is missing' \
+            -ignore 'unexpected key "cache-mode" for "(workflow|job)" section'
+
+  test-scripts:
+    name: test-scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: test-workflow-scripts
+        run: node --test '.github/scripts/*.spec.mjs'
 
   audit-workflow-security:
     name: audit-workflow-security
@@ -88,11 +109,11 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: zizmor-audit
-        uses: zizmorcore/zizmor-action@b1d7e1fb5de872772f31590499237e7cce841e8e # v0.5.3
+        uses: zizmorcore/zizmor-action@45d7276c9ca790aabd705e31ca99c6185c3e76dd # v0.8.1
         with:
           persona: auditor
           min-severity: informational

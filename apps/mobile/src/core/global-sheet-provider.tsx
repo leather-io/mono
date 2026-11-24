@@ -1,19 +1,19 @@
 import { createContext, useContext, useRef } from 'react';
 
 import {
-  ApproverSheetInstance,
+  type ApproverSheetInstance,
   type ApproverSheetRef,
 } from '@/features/browser/approver-sheet/approver-sheet';
-import { RampSheetInstance, RampSheetRef } from '@/features/ramp/ramp-sheet';
-import { ReceiveSheetInstance, ReceiveSheetRef } from '@/features/receive/receive-sheet';
-import { SendSheetInstance, SendSheetRef } from '@/features/send/send-sheet';
+import { type RampSheetInstance, type RampSheetRef } from '@/features/ramp/ramp-sheet';
+import { type ReceiveSheetInstance, type ReceiveSheetRef } from '@/features/receive/receive-sheet';
+import { type SendSheetInstance, type SendSheetRef } from '@/features/send/send-sheet';
 import {
-  DescriptionSheetInstance,
-  DescriptionSheetRef,
+  type DescriptionSheetInstance,
+  type DescriptionSheetRef,
 } from '@/features/settings/description-sheet';
-import { SwapSheetInstance, SwapSheetRef } from '@/features/swap/swap-sheet';
+import { type SwapSheetInstance, type SwapSheetRef } from '@/features/swap/swap-sheet';
 
-import { HasChildren, SheetInstance, SheetRef } from '@leather.io/ui/native';
+import { type HasChildren, type SheetInstance, type SheetRef } from '@leather.io/ui/native';
 
 interface GlobalSheetContextValue {
   sendSheetRef: SendSheetRef;

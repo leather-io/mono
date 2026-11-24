@@ -1,4 +1,4 @@
-import { HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { type HTMLStyledProps, styled } from 'leather-styles/jsx';
 
 export function SignIcon(props: HTMLStyledProps<'svg'>) {
   return (

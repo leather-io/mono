@@ -1,12 +1,13 @@
+import { type RecipientActivity } from '@/features/send/components/recipient/recipient.types';
 import {
   isNewAddress,
   recipientSchemaResultContainsError,
 } from '@/features/send/components/recipient/recipient.utils';
 import { useAccountHelpers } from '@/features/send/components/recipient/use-account-helpers';
 import { t } from '@lingui/core/macro';
-import { ZodSchema } from 'zod';
+import { type ZodSchema } from 'zod';
 
-import { FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
+import { type FungibleCryptoAsset } from '@leather.io/models';
 
 type GuardReason =
   | 'newRecipient'
@@ -104,7 +105,7 @@ function createRecipientEvaluator({
 interface UseRecipientEvaluatorParams {
   asset: FungibleCryptoAsset;
   recipientSchema: ZodSchema;
-  activity?: SendAssetActivity[];
+  activity?: RecipientActivity[];
 }
 
 export function useRecipientEvaluator({
@@ -117,8 +118,7 @@ export function useRecipientEvaluator({
   const evaluateRecipient = createRecipientEvaluator({
     schema: recipientSchema,
     canSelfSend: asset.chain === 'bitcoin',
-    isNewAddress: (address: string) =>
-      isNewAddress({ address, findAccountByAddress, activity: activity }),
+    isNewAddress: (address: string) => isNewAddress({ address, findAccountByAddress, activity }),
   });
 
   return { evaluateRecipient };

@@ -2,9 +2,13 @@ import { PostConditionPrincipalId, addressToString } from '@stacks/transactions'
 
 import type { Sip10Asset } from '@leather.io/models';
 import { formatContractId } from '@leather.io/stacks';
-import { truncateMiddle } from '@leather.io/utils';
+import {
+  convertAmountToBaseUnit,
+  initBigNumber,
+  isDefined,
+  truncateMiddle,
+} from '@leather.io/utils';
 
-import { ftDecimals } from '@app/common/stacks-utils';
 import {
   type NonPoxPostConditionWire,
   type PostConditionVerb,
@@ -16,6 +20,12 @@ import {
   getSymbolFromPostCondition,
 } from '@app/common/transactions/stacks/post-condition.utils';
 import type { StacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.models';
+
+function ftDecimals(value: number | string, decimals: number) {
+  return convertAmountToBaseUnit(initBigNumber(value), decimals)
+    .toNumber()
+    .toLocaleString('en-US', { maximumFractionDigits: decimals });
+}
 
 interface FormatPostConditionMessageArgs {
   account?: StacksAccount;
@@ -46,15 +56,12 @@ export function formatPostConditionMessage({
     'asset' in pc
       ? formatContractId(addressToString(pc.asset.address), pc.asset.contractName.content)
       : '';
-  const amount = asset?.decimals ? ftDecimals(pcAmount, asset.decimals) : pcAmount;
+  const amount =
+    asset?.decimals && isDefined(pcAmount) ? ftDecimals(pcAmount, asset.decimals) : pcAmount;
   const ticker = asset?.symbol || pcTicker;
 
   const message = pc.conditionCode
-    ? `${getPostConditionCodeMessage(
-        pc.conditionCode,
-        isSending,
-        context
-      )} ${amount} ${ticker} or the transaction will abort.`
+    ? `${[getPostConditionCodeMessage(pc.conditionCode, isSending, context), amount, ticker].join(' ')} or the transaction will abort.`
     : undefined;
 
   function getPrincipalPrefix() {
@@ -71,6 +78,6 @@ export function formatPostConditionMessage({
     message,
     name: asset?.name || pcName,
     ticker,
-    title: `${getPrincipalPrefix()} ${pcTitle}`,
+    title: [getPrincipalPrefix(), pcTitle].join(' '),
   };
 }

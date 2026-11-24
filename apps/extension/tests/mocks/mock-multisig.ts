@@ -1,4 +1,4 @@
-import { BrowserContext, Page } from '@playwright/test';
+import { type BrowserContext, type Page } from '@playwright/test';
 
 // Only `id` is load-bearing for the dApp result (it becomes `proposalId`).
 export const exampleMultisigTransactionId = 'multisig-tx-e2e-123';
@@ -26,33 +26,17 @@ export async function mockProposeMultisigTransaction(
 // pass the available-balance check. Registered after the default mocks so the
 // address-specific route takes precedence over the wildcard.
 export async function mockFundedStacksAddress(target: Page | BrowserContext, address: string) {
-  await target.route(`**hiro.so/extended/v2/addresses/${address}/balances/stx`, route =>
+  await target.route(`**hiro.so/extended/v3/principals/${address}/balances/stx`, route =>
     route.fulfill({
-      json: {
-        balance: '100000000',
-        total_miner_rewards_received: '0',
-        lock_tx_id: '',
-        locked: '0',
-        lock_height: 0,
-        burnchain_lock_height: 0,
-        burnchain_unlock_height: 0,
-      },
+      json: { balance: '100000000', available: '100000000', locked: null, mempool: null },
     })
   );
 }
 
 export async function mockUnfundedStacksAddress(target: Page | BrowserContext, address: string) {
-  await target.route(`**hiro.so/extended/v2/addresses/${address}/balances/stx`, route =>
+  await target.route(`**hiro.so/extended/v3/principals/${address}/balances/stx`, route =>
     route.fulfill({
-      json: {
-        balance: '0',
-        total_miner_rewards_received: '0',
-        lock_tx_id: '',
-        locked: '0',
-        lock_height: 0,
-        burnchain_lock_height: 0,
-        burnchain_unlock_height: 0,
-      },
+      json: { balance: '0', available: '0', locked: null, mempool: null },
     })
   );
 }

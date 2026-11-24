@@ -30,7 +30,7 @@ export function FeedbackButton() {
           : undefined
       }
       zIndex={9}
-      onClick={openFeedbackSheet}
+      onClick={() => void openFeedbackSheet()}
     >
       <Flex>
         <Box mr="space.01" mt="2px">

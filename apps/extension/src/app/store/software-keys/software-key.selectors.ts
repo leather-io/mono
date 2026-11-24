@@ -7,7 +7,7 @@ import { initBigNumber } from '@leather.io/utils';
 import { assumedZeroFingerprint } from '@shared/utils';
 
 import { initialSearchParams } from '@app/common/initial-search-params';
-import { RootState } from '@app/store';
+import { type RootState } from '@app/store/store';
 
 import { selectActiveAccount } from '../active/active.selectors';
 import { selectHasSwitched } from '../ui/ui.selectors';
@@ -58,3 +58,7 @@ export function useActiveSoftwareKey() {
 const selectors = keyAdapter.getSelectors<RootState>(selectKeysSlice);
 
 export const selectSoftwareKeys = selectors.selectAll;
+
+export function useHasSoftwareWallets() {
+  return useSelector(selectSoftwareKeys).length > 0;
+}

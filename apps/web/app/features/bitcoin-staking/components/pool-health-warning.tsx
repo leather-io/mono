@@ -24,7 +24,7 @@ export function PoolHealthWarning({ totalStakedMicroStx }: PoolHealthWarningProp
     >
       <Flag img={<ErrorCircleIcon />} align="top">
         <Stack gap="space.01">
-          <styled.p textStyle="caption.01" color="ink.text-subdued">
+          <styled.p textStyle="caption.01" color="ink.text-secondary">
             {bitcoinStakingContent.poolHealthWarning}
           </styled.p>
         </Stack>

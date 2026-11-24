@@ -38,7 +38,8 @@ async function enableApiMocking() {
   });
 }
 
-void enableApiMocking().then(() =>
+async function startApp() {
+  await enableApiMocking();
   startTransition(() => {
     hydrateRoot(
       document,
@@ -46,5 +47,7 @@ void enableApiMocking().then(() =>
         <HydratedRouter />
       </StrictMode>
     );
-  })
-);
+  });
+}
+
+void startApp();

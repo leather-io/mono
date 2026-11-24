@@ -16,10 +16,10 @@ export const bitcoinStakingContent = {
   heroYieldLabel: `Variable yield, paid in sBTC`,
   providerDescription: `Providers are external parties that operate PoX-5 staking pools through their own signer-manager contracts. Leather is not liable for the conduct of third parties.`,
   chooseDuration: {
-    inputLabel: `Cycles before renewal (1–96)`,
-    renewalPrefix: `Renews ~`,
-    exitTitle: `Exit any time`,
-    exitDescription: `This isn’t a lock. Unstake whenever you want and your STX unlocks when the current cycle ends. A cycle is about two weeks.`,
+    inputLabel: `Staking duration (1–96 cycles)`,
+    renewalPrefix: `Scheduled end ~`,
+    exitTitle: `Unstake early`,
+    exitDescription: `You can request to unstake before the scheduled end, except during the cycle's closing window. Once confirmed, your STX unlocks at the end of that cycle. A cycle is about two weeks.`,
   },
   learnMore: {
     label: `Read more about Bitcoin Staking on stacks.co`,
@@ -51,9 +51,42 @@ export const bitcoinStakingContent = {
   selfClaim: {
     explanation: `This pool takes no cut from your rewards. In exchange it never claims for you: rewards accrue each cycle and only you can claim them, through the pool's signer-manager contract.`,
   },
+  operatorPayout: {
+    badge: `Custodial BTC payout`,
+    explanation(poolName: string) {
+      return `${poolName} collects the pool's sBTC rewards and pays members in native BTC off chain, on its own schedule. There is no on-chain claim and no on-chain recourse; payment status lives with ${poolName}.`;
+    },
+    rewardsTokenCaption(poolName: string) {
+      return `Paid off chain by ${poolName}`;
+    },
+    rewardsTokenExplanation(poolName: string, cadence: string) {
+      return `Rewards reach you as native BTC at the payout address you register, sent by ${poolName} ${cadence}. The pool's sBTC rewards are collected by ${poolName} and distributed off chain, so there is no on-chain claim.`;
+    },
+    feeCaption(poolName: string) {
+      return `${poolName} policy`;
+    },
+    feeExplanation(poolName: string) {
+      return `The fee ${poolName} publishes on its own site and applies when it distributes rewards off chain. It is operator policy rather than a value enforced by the contract, so it can change without a contract change.`;
+    },
+    minStakeNote(poolName: string, minStx: string) {
+      return `${poolName} requires at least ${minStx} STX. The contract rejects anything smaller.`;
+    },
+    activeCard: {
+      title: `Rewards payout`,
+      paidBy(poolName: string) {
+        return `Native BTC, paid by ${poolName}`;
+      },
+      description(poolName: string, cadence: string) {
+        return `${poolName} pays your share ${cadence} to this address, after its fee. Payments are made off chain, so there is nothing to claim here and payment status lives with ${poolName}.`;
+      },
+      linkLabel(poolName: string) {
+        return `Visit ${poolName}`;
+      },
+    },
+  },
   poolOverviewInfo: {
     rewardsToken: `Rewards accrue as sBTC on Stacks each cycle and are claimed through the pool's signer-manager contract. Yield is variable: it depends on network-wide staking participation and the protocol reward waterfall.`,
-    fee: `The share of your rewards this pool keeps. Each pool sets its own fee in its signer-manager contract, so check the pool's terms before staking.`,
+    fee: `The share of your rewards this pool keeps. Each pool sets its own fee in its signer-manager contract, so review the pool's fee before staking.`,
     totalStaked: `The STX delegated to this pool for the current cycle, summed across all of the pool's signer-manager contracts. Pools need at least 50,000 STX staked to earn rewards for a cycle.`,
     nextCycle: `Your stake starts earning when the next cycle begins. A cycle lasts about two weeks.`,
   },
@@ -111,8 +144,8 @@ export const bitcoinStakingContent = {
     },
   },
   dualStackingTransition: {
-    title: `Dual Stacking is winding down`,
-    description: `It transitions to Bitcoin Staking on August 24, 2026 and keeps paying out until then. Stake your STX with a pool above to keep earning after that date.`,
+    title: `Looking for Dual Stacking?`,
+    description: `Basic sBTC rewards enrollment ended on August 27, 2026. Explore the STX staking pools above and review their current reward and payout terms.`,
     linkLabel: `Learn about Bitcoin Staking`,
     url: `https://www.stacks.co/bitcoin-staking`,
   },
@@ -123,6 +156,13 @@ export const bitcoinStakingContent = {
     sbtcHelper: `Paid to your wallet once a cycle concludes — your pool usually claims for you.`,
     btcHelper: `Withdrawn from sBTC to your Bitcoin address, which costs a network fee.`,
     sbtcOnlyHelper: `This pool pays out in sBTC only, once a cycle concludes.`,
+    btcOnlyLabel: `BTC payout address`,
+    btcOnlyHelper(poolName: string, cadence: string) {
+      return `Required. ${poolName} pays your rewards in native BTC to this address ${cadence}, off chain and after its fee. There is no sBTC option for this pool.`;
+    },
+    registeredAddressChanged(poolName: string) {
+      return `Changing this address redirects every future payout from ${poolName}. The address currently registered stops receiving rewards.`;
+    },
     maxFeeNote: `Taken out of each payout to pay for the Bitcoin transaction. Rewards can't be paid out until they've grown past it, so a higher max fee means fewer, bigger payouts.`,
     minClaimNote(smallestValidSats: string | null) {
       const base = `Optional. Below this amount only you can trigger a payout, so nobody else can spend your max fee on a trivial payout.`;
@@ -132,9 +172,30 @@ export const bitcoinStakingContent = {
     updateHelper: `This setting applies to every future claim.`,
     loadError: `We couldn't load your current payout preference, which is needed before your stake can be updated.`,
   },
+  acknowledgment: {
+    lockTitle: `When STX unlocks`,
+    lockDescription: `Your STX stays locked until the scheduled end unless you unstake earlier. You can request to unstake outside the cycle's closing window. Once confirmed, your STX unlocks at the end of that cycle.`,
+    payoutTitle: `How rewards reach you`,
+    contractPayout(poolName: string) {
+      return `Rewards are claimed through ${poolName}'s contract, using your selected payout settings. Leather does not operate the pool. You agree Leather is not liable for the performance of the pool.`;
+    },
+    selfClaimPayout(poolName: string) {
+      return `You must claim your sBTC rewards through ${poolName}'s contract. The pool does not claim them for you. You agree Leather is not liable for the performance of the pool.`;
+    },
+    operatorPayout(poolName: string, cadence: string) {
+      return `${poolName} collects the sBTC rewards and pays you BTC ${cadence}. You rely on the operator to make these payments off chain. You agree Leather is not liable for the performance of the pool.`;
+    },
+    customPayout: `This is a custom signer-manager contract. Rewards and payouts depend on its policies. Verify who operates it before staking. You agree Leather is not liable for the performance of the pool.`,
+    label: `I understand the lock and payout details above. Rewards aren't guaranteed, and Leather doesn't hold my funds or pay my rewards.`,
+    termsLabel: `Leather terms`,
+    termsAccessibleLabel: `Leather terms (opens in a new tab)`,
+    requiredMessage: `Check the box above to continue.`,
+    scheduledEnd: `Scheduled end`,
+    confirmStake: `Confirm and start staking`,
+  },
   switchSignerManager: {
     sectionLabel: `Signer manager`,
-    helper: `Picking a different pool moves your whole position at the start of the next cycle. You'll accept the new pool's terms before confirming.`,
+    helper: `Picking a different pool moves your whole position at the start of the next cycle. Review and acknowledge the staking details before confirming.`,
     customOptionName: `Custom signer manager`,
     customOptionNameWhenCurrentCustom: `Different custom contract`,
     customOptionMeta: `Enter a contract address`,
@@ -142,10 +203,6 @@ export const bitcoinStakingContent = {
     validateLabel: `Validate contract`,
     validatingLabel: `Validating…`,
     contractValidLabel: `Contract valid`,
-    poolTerms(poolName: string) {
-      return `I have read and accepted ${poolName}'s terms and conditions`;
-    },
-    customAcknowledgment: `I understand this is a custom signer-manager contract and rewards depend on its policies`,
     confirmSwitch: `Confirm switch`,
     confirmUpdate: `Confirm update`,
     validateFirst: `Validate contract first`,
@@ -157,7 +214,7 @@ export const bitcoinStakingContent = {
       rewardsToken: `Rewards token`,
       amountStaked: `Amount staked`,
       movesInFullSuffix: `, moves in full`,
-      lockedUntil: `Locked until`,
+      lockedUntil: `Scheduled end`,
       effective: `Effective`,
       effectiveCaption: `One transaction, no unstaking needed`,
       customRewardsValue: `Set by the custom contract`,
@@ -175,7 +232,7 @@ export const bitcoinStakingContent = {
   },
   transactionStatus: {
     headerTitle: `Your staking`,
-    pendingDescription: `Keep this page open. Confirmation usually takes a few seconds.`,
+    pendingDescription: `Keep this page open while the network confirms your transaction.`,
     byKind: {
       stake: {
         pendingTitle: `Confirming your stake`,

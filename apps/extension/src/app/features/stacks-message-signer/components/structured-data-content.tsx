@@ -1,11 +1,11 @@
 import { ChainId } from '@stacks/network';
 
-import { UnsignedMessage } from '@shared/signature/signature-types';
+import { type UnsignedMessage } from '@shared/signature/signature-types';
 
 import { NoFeesWarningRow } from '@app/components/no-fees-warning-row';
 import { SignMessageActions } from '@app/features/message-signer/stacks-sign-message-action';
 
-import { StructuredPayload } from '../stacks-message-signing';
+import type { StructuredPayload } from '../stacks-message-signing';
 import { StacksMessageSigningDisclaimer } from './message-signing-disclaimer';
 import { StructuredDataBox } from './structured-data-box';
 

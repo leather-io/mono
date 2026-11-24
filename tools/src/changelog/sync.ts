@@ -1,11 +1,11 @@
 import fs from 'node:fs';
 
 import { getAppPaths } from '../utils/paths.js';
+import { readPackageVersion } from '../utils/version.js';
 import { aggregateEntriesSinceVersion, generateUnpublishedSection } from './generator.js';
 import { parseChangelog } from './parser.js';
-import type { AppName } from './types.js';
 
-function validateApp(app: string): app is AppName {
+function validateApp(app: string) {
   return app === 'mobile' || app === 'extension';
 }
 
@@ -17,8 +17,7 @@ function readPublishedVersion(publishedVersionPath: string): string | null {
 }
 
 function readCurrentVersion(packageJsonPath: string): string {
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8')) as { version: string };
-  return packageJson.version;
+  return readPackageVersion(packageJsonPath);
 }
 
 export function syncUnpublished(options: { app: string }): void {

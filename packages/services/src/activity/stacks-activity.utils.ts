@@ -1,30 +1,28 @@
+import type BigNumber from 'bignumber.js';
 import { entries, filter, groupBy, isNonNull, mapValues, pipe } from 'remeda';
 
 import { stxAsset } from '@leather.io/constants';
-import type {
-  BlockchainActivity,
-  BlockchainActivityBalanceChange,
-  CryptoAssetId,
-  Money,
-  OnChainActivityStatus,
-  StacksProtocolAction,
-  StacksProtocolId,
-  StacksTx,
+import {
+  type BlockchainActivity,
+  type BlockchainActivityBalanceChange,
+  type CryptoAssetId,
+  type Money,
+  type OnChainActivityStatus,
+  type StacksProtocolAction,
+  type StacksProtocolId,
+  type StacksTransaction,
+  isStacksMempoolTransaction,
 } from '@leather.io/models';
 import { assertUnreachable, createMoney, initBigNumber } from '@leather.io/utils';
 
 import type {
   HiroBalanceChangeResultItem,
+  HiroPrincipalMempoolTransaction,
   HiroPrincipalTransaction,
   HiroPrincipalTransactionsResultItem,
   HiroPrincipalTxStatus,
 } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import type { ActivitySourceItem } from './activity-paginator';
-import {
-  isMempoolTx,
-  mapStacksTxBlockHeight,
-  mapStacksTxBlockTime,
-} from './stacks-tx-activity.utils';
 
 type StacksActivityResultItem = HiroPrincipalTransactionsResultItem & {
   readonly transaction: Extract<
@@ -33,11 +31,18 @@ type StacksActivityResultItem = HiroPrincipalTransactionsResultItem & {
   >;
 };
 
-export function isStacksActivityResultItem(
+export function toStacksActivityResultItem(
   item: HiroPrincipalTransactionsResultItem
-): item is StacksActivityResultItem {
-  const { type } = item.transaction;
-  return type === 'token_transfer' || type === 'contract_call' || type === 'smart_contract';
+): StacksActivityResultItem | undefined {
+  const { transaction } = item;
+  if (
+    transaction.type === 'token_transfer' ||
+    transaction.type === 'contract_call' ||
+    transaction.type === 'smart_contract'
+  ) {
+    return { ...item, transaction };
+  }
+  return undefined;
 }
 
 export function mapStacksActivityStatus(status: HiroPrincipalTxStatus): OnChainActivityStatus {
@@ -142,8 +147,11 @@ export type FtBalanceChangeRow = HiroBalanceChangeResultItem & {
   readonly asset: { readonly type: 'ft'; readonly identifier: string };
 };
 
-export function isFtBalanceChangeRow(row: HiroBalanceChangeResultItem): row is FtBalanceChangeRow {
-  return row.asset.type === 'ft';
+export function toFtBalanceChangeRow(
+  row: HiroBalanceChangeResultItem
+): FtBalanceChangeRow | undefined {
+  const { asset } = row;
+  return asset.type === 'ft' ? { ...row, asset } : undefined;
 }
 
 // Superset pre-filter from the raw affected_balances flags: false means the tx certainly
@@ -182,24 +190,70 @@ export function groupFtChangesByTxId(
   );
 }
 
+type StacksPostCondition = NonNullable<StacksTransaction['post_conditions']>[number];
+
+export type PendingOutflow =
+  | { readonly type: 'stx'; readonly amount: string }
+  | { readonly type: 'ft'; readonly identifier: string; readonly amount: string };
+
+const stxOutflowKey = 'stx';
+
+function isSenderPostConditionPrincipal(
+  principal: StacksPostCondition['principal'],
+  senderAddress: string
+) {
+  if (principal.type_id === 'principal_origin') return true;
+  return principal.type_id === 'principal_standard' && principal.address === senderAddress;
+}
+
+function getPostConditionOutflowKey(postCondition: StacksPostCondition) {
+  if (postCondition.type === 'stx') return stxOutflowKey;
+  if (postCondition.type !== 'fungible') return undefined;
+  const { contract_address, contract_name, asset_name } = postCondition.asset;
+  return `${contract_address}.${contract_name}::${asset_name}`;
+}
+
+export function getPendingOutflowsFromPostConditions(
+  postConditions: StacksPostCondition[],
+  senderAddress: string
+): PendingOutflow[] {
+  const exactAmounts = new Map<string, BigNumber[]>();
+  for (const postCondition of postConditions) {
+    if (postCondition.type !== 'stx' && postCondition.type !== 'fungible') continue;
+    if (postCondition.condition_code !== 'sent_equal_to') continue;
+    if (!isSenderPostConditionPrincipal(postCondition.principal, senderAddress)) continue;
+    const key = getPostConditionOutflowKey(postCondition);
+    if (key === undefined) continue;
+    exactAmounts.set(key, [...(exactAmounts.get(key) ?? []), initBigNumber(postCondition.amount)]);
+  }
+  return [...exactAmounts].flatMap(([key, amounts]): PendingOutflow[] => {
+    const [amount] = amounts;
+    if (!amount.isGreaterThan(0)) return [];
+    if (!amounts.every(other => other.isEqualTo(amount))) return [];
+    if (key === stxOutflowKey) return [{ type: 'stx', amount: amount.toString() }];
+    return [{ type: 'ft', identifier: key, amount: amount.toString() }];
+  });
+}
+
 export function buildPendingStacksActivity(
-  tx: StacksTx,
+  tx: HiroPrincipalMempoolTransaction,
   stxAddress: string,
-  classified?: ClassifiedContractCall
+  classified?: ClassifiedContractCall,
+  contractCallBalanceChanges: BlockchainActivityBalanceChange[] = []
 ): BlockchainActivity | null {
-  const initiatedByUser = tx.sender_address === stxAddress;
+  const initiatedByUser = tx.sender.address === stxAddress;
   // A sponsored tx's fee is paid by the sponsor, not the sender — attach no fee then.
-  const paidFee = initiatedByUser && !tx.sponsored;
+  const paidFee = initiatedByUser && tx.sponsor === null;
   const common = {
-    timestamp: 'receipt_time' in tx ? tx.receipt_time : 0,
+    timestamp: tx.receipt_time,
     txid: tx.tx_id,
     status: 'pending' as const,
     initiatedByUser,
-    nonce: tx.nonce,
+    nonce: tx.sender.nonce,
     ...(paidFee ? { fee: createMoney(initBigNumber(tx.fee_rate), 'STX') } : {}),
   };
 
-  switch (tx.tx_type) {
+  switch (tx.type) {
     case 'token_transfer': {
       const stxChange = buildStxBalanceChange(
         initiatedByUser ? `-${tx.token_transfer.amount}` : tx.token_transfer.amount
@@ -208,8 +262,8 @@ export function buildPendingStacksActivity(
         common,
         core: {
           kind: 'token_transfer',
-          recipient: tx.token_transfer.recipient_address,
-          sender: tx.sender_address,
+          recipient: tx.token_transfer.recipient,
+          sender: tx.sender.address,
         },
         action: initiatedByUser ? 'send' : 'receive',
         balanceChanges: stxChange === null ? [] : [stxChange],
@@ -223,7 +277,12 @@ export function buildPendingStacksActivity(
         balanceChanges: [],
       });
     case 'contract_call': {
-      const { action, protocol, protocolName } = classified ?? { action: 'contract-execution' };
+      const { action, protocol, protocolName } = reclassifySip10Transfer(
+        classified ?? { action: 'contract-execution' },
+        tx.contract_call.function_name,
+        contractCallBalanceChanges,
+        tx.sender.address
+      );
       return buildStacksActivity({
         common,
         core: {
@@ -234,7 +293,7 @@ export function buildPendingStacksActivity(
         action,
         protocol,
         protocolName,
-        balanceChanges: [],
+        balanceChanges: contractCallBalanceChanges,
       });
     }
     default:
@@ -247,8 +306,9 @@ export function buildConfirmedStacksActivity(
   ftChanges: BlockchainActivityBalanceChange[],
   classified?: ClassifiedContractCall
 ): BlockchainActivity | null {
-  if (!isStacksActivityResultItem(result)) return null;
-  const tx = result.transaction;
+  const stacksActivityItem = toStacksActivityResultItem(result);
+  if (!stacksActivityItem) return null;
+  const tx = stacksActivityItem.transaction;
   const initiatedByUser = result.involvement === 'sender';
   // v3's balance_changes.stx.net is fee-inclusive for the fee payer, so the fee is netted
   // back out — but only when this account actually paid it: a sponsored tx's fee comes out
@@ -315,28 +375,37 @@ export function buildConfirmedStacksActivity(
   }
 }
 
-function mapStacksTxActivityStatus(tx: StacksTx): OnChainActivityStatus {
-  if (isMempoolTx(tx)) return 'pending';
-  return tx.tx_status === 'success' ? 'success' : 'failed';
+function mapStacksTransactionActivityStatus(tx: StacksTransaction): OnChainActivityStatus {
+  if (tx.status === 'pending') return 'pending';
+  if (tx.status === 'success') return 'success';
+  return 'failed';
+}
+
+function mapStacksTransactionTimestamp(tx: StacksTransaction) {
+  return isStacksMempoolTransaction(tx) ? tx.receipt_time : tx.block.time;
+}
+
+function mapStacksTransactionBlockHeight(tx: StacksTransaction) {
+  return isStacksMempoolTransaction(tx) ? undefined : tx.block.height;
 }
 
 // Single-tx sibling of buildPendingStacksActivity reading the v1 tx shape from get-tx-by-id.
 export function buildOnchainStacksActivity(
-  tx: StacksTx,
+  tx: StacksTransaction,
   stxAddress: string,
   balanceChanges: { stxNet: string; ftChanges: BlockchainActivityBalanceChange[] },
   classified?: ClassifiedContractCall
 ): BlockchainActivity | null {
-  const initiatedByUser = tx.sender_address === stxAddress;
-  const paidFee = initiatedByUser && !tx.sponsored;
-  const blockHeight = mapStacksTxBlockHeight(tx);
-  const status = mapStacksTxActivityStatus(tx);
+  const initiatedByUser = tx.sender.address === stxAddress;
+  const paidFee = initiatedByUser && tx.sponsor === null;
+  const blockHeight = mapStacksTransactionBlockHeight(tx);
+  const status = mapStacksTransactionActivityStatus(tx);
   const common = {
-    timestamp: mapStacksTxBlockTime(tx),
+    timestamp: mapStacksTransactionTimestamp(tx),
     txid: tx.tx_id,
     status,
     initiatedByUser,
-    nonce: tx.nonce,
+    nonce: tx.sender.nonce,
     ...(blockHeight !== undefined ? { blockHeight } : {}),
     ...(paidFee ? { fee: createMoney(initBigNumber(tx.fee_rate), 'STX') } : {}),
   };
@@ -346,9 +415,9 @@ export function buildOnchainStacksActivity(
   const hasAssetChange =
     !initBigNumber(balanceChanges.stxNet).isZero() || balanceChanges.ftChanges.length > 0;
 
-  switch (tx.tx_type) {
+  switch (tx.type) {
     case 'token_transfer': {
-      const isRecipient = tx.token_transfer.recipient_address === stxAddress;
+      const isRecipient = tx.token_transfer.recipient === stxAddress;
       if (!initiatedByUser && !isRecipient) return null;
       const stxChange =
         status === 'failed'
@@ -360,8 +429,8 @@ export function buildOnchainStacksActivity(
         common,
         core: {
           kind: 'token_transfer',
-          recipient: tx.token_transfer.recipient_address,
-          sender: tx.sender_address,
+          recipient: tx.token_transfer.recipient,
+          sender: tx.sender.address,
         },
         action: initiatedByUser ? 'send' : 'receive',
         balanceChanges: stxChange === null ? [] : [stxChange],
@@ -385,7 +454,7 @@ export function buildOnchainStacksActivity(
         classified ?? { action: 'contract-execution' },
         tx.contract_call.function_name,
         allChanges,
-        tx.sender_address
+        tx.sender.address
       );
       return buildStacksActivity({
         common,

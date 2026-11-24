@@ -7,7 +7,7 @@ const isMockMode = getLeatherMockMode();
 const provider = isMockMode ? mockLeatherProvider : {};
 
 if (isMockMode && isBrowser()) {
-  (window as any).LeatherProvider = mockWalletProvider;
+  Object.assign(window, { LeatherProvider: mockWalletProvider });
 }
 
 export const leather = createLeatherClient(provider);

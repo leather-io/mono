@@ -19,35 +19,34 @@ import {
   createGetPox5StakerInfoQueryOptions,
 } from '~/features/bitcoin-staking/queries/create-get-pox5-staker-info-query-options';
 import { createGetPox5TransactionQueryOptions } from '~/features/bitcoin-staking/queries/create-get-pox5-transaction-query-options';
-import type { PendingPox5Tx } from '~/features/bitcoin-staking/queries/get-pending-pox5-txs';
+import { createGetStxAddressBalanceQueryOptions } from '~/features/bitcoin-staking/queries/create-get-stx-address-balance-query-options';
+import {
+  type PendingPox5Tx,
+  createPox5PendingTxQueryKey,
+} from '~/features/bitcoin-staking/queries/get-pending-pox5-txs';
 import type { Pox5PayoutPreference } from '~/features/bitcoin-staking/transactions/pox5-signer-calldata';
 import type { Pox5TxOutcome } from '~/features/bitcoin-staking/transactions/pox5-tx-status';
 import { parseContractId } from '~/features/bitcoin-staking/utils/contract-id';
 import type { Pox5PoolFee } from '~/features/bitcoin-staking/utils/pool-fee';
 import { getPox5ContractId } from '~/features/bitcoin-staking/utils/pox5-contracts';
-import { createMockGetAddressesResponse } from '~/mocks/extension/get-addresses/get-addresses.mock';
-import { MEAN_BURN_BLOCK_SECONDS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
-import { fetchFn } from '~/utils/hiro-wrapped-fetch';
-
 import {
   createGetCoreInfoQueryOptions,
   createGetPoxInfoQueryOptions,
   createGetSecondsUntilNextCycleQueryOptions,
-  createGetStxAddressBalanceQueryOptions,
-  stacksClient,
-} from '@leather.io/query';
+} from '~/features/stacking/queries/create-stacking-client-query-options';
+import { createMockGetAddressesResponse } from '~/mocks/extension/get-addresses/get-addresses.mock';
+import { MEAN_BURN_BLOCK_SECONDS } from '~/pages/bitcoin-staking/bitcoin-staking.constants';
+import { fetchFn } from '~/utils/hiro-wrapped-fetch';
+import { createStacksApiClient } from '~/utils/stacks-api-client';
 
-export const mockAddresses = createMockGetAddressesResponse('playground').result.addresses;
+const mockGetAddressesResponse = createMockGetAddressesResponse('playground');
+
+export const mockAddresses =
+  'result' in mockGetAddressesResponse ? mockGetAddressesResponse.result.addresses : [];
 
 const mockStacksAddress = mockAddresses.find(address => address.symbol === 'STX')?.address ?? '';
 
 const pox5ContractId = getPox5ContractId(pox5NetworkConfig.contractNetworkMode);
-
-const mockStackingClient = new StackingClient({
-  address: mockStacksAddress,
-  network: pox5NetworkConfig.stacksNetworkName,
-  client: { baseUrl: pox5NetworkConfig.apiUrl, fetch: fetchFn },
-});
 
 const mockChainStackingClient = new StackingClient({
   address: parseContractId(pox5ContractId).contractAddress,
@@ -55,7 +54,7 @@ const mockChainStackingClient = new StackingClient({
   client: { baseUrl: pox5NetworkConfig.apiUrl, fetch: fetchFn },
 });
 
-const mockStacksClient = stacksClient(pox5NetworkConfig.apiUrl);
+const mockStacksClient = createStacksApiClient(pox5NetworkConfig.apiUrl);
 
 const firstBurnchainBlockHeight = 666_050;
 const rewardCycleLength = 2_100;
@@ -123,12 +122,8 @@ function createCoreInfo(position: CyclePosition) {
 function createStxBalance(availableMicroStx: bigint, lockedMicroStx: bigint) {
   return {
     balance: (availableMicroStx + lockedMicroStx).toString(),
-    total_miner_rewards_received: '0',
-    lock_tx_id: '',
-    locked: lockedMicroStx.toString(),
-    lock_height: 0,
-    burnchain_lock_height: 0,
-    burnchain_unlock_height: 0,
+    available: availableMicroStx.toString(),
+    locked: lockedMicroStx > 0n ? { amount: lockedMicroStx.toString() } : null,
   };
 }
 
@@ -137,6 +132,9 @@ export const listedSignerManagerContractId =
 
 export const stackingDaoSignerManagerContractId =
   getPrimarySignerManagerContract('stackingDao', pox5NetworkConfig.contractNetworkMode) ?? '';
+
+export const planbetterSignerManagerContractId =
+  getPrimarySignerManagerContract('planbetter', pox5NetworkConfig.contractNetworkMode) ?? '';
 
 export const byosmContractIds = {
   valid: 'SP1H1733V5MZ3SZ9XRW9FKYGEZT0JDGEB8Y634C7R.community-signer-manager',
@@ -182,9 +180,19 @@ export const mockBtcPayoutPreference: Pox5PayoutPreference = {
   minClaimSats: 5_000n,
 };
 
+export const mockOperatorPayoutPreference: Pox5PayoutPreference = {
+  btcRewardAddress: 'bc1qyf4a3taahvv2sfs0zz0mtq2lxdsthmf3wcjjxq',
+};
+
 const mockTxId = '0x9f3b1d2c4e5a6b7c8d9e0f1a2b3c4d5e6f70819a2b3c4d5e6f708192a3b4c5d6';
 
-const mockPendingStakeTx: PendingPox5Tx = { kind: 'stake', txId: mockTxId };
+const mockPendingStakeTx: PendingPox5Tx = {
+  kind: 'stake',
+  txId: mockTxId,
+  amountMicroStx: 12_500_000_000n,
+  numCycles: 12,
+  signerManagerContractId: listedSignerManagerContractId,
+};
 
 export const mockTrackedTx: Pox5TrackedTx = {
   kind: 'stake',
@@ -195,14 +203,17 @@ export const mockTrackedTx: Pox5TrackedTx = {
 
 const mockFeeByProvider: Record<string, Pox5PoolFee> = {
   fastPool: { activeFeeBips: 0, pendingFeeBips: 450, pendingActivationCycle: 142 },
+  asymmetricResearch: { activeFeeBips: 0, pendingFeeBips: null, pendingActivationCycle: null },
   xversePool: { activeFeeBips: 700, pendingFeeBips: null, pendingActivationCycle: null },
   special: { activeFeeBips: 300, pendingFeeBips: null, pendingActivationCycle: null },
 };
 
 const mockTotalStakedByProvider: Record<string, bigint> = {
   fastPool: 41_800_000_000_000n,
+  asymmetricResearch: 8_700_000_000_000n,
   xversePool: 12_400_000_000_000n,
   stackingDao: 128_600_000_000_000n,
+  planbetter: 6_300_000_000_000n,
   special: 900_000_000_000n,
 };
 
@@ -328,7 +339,11 @@ export function createSeededQueryClient(seed: StakingSurfaceSeed = {}) {
   );
 
   queryClient.setQueryData(
-    ['pox5-pending-tx', mockStacksAddress, pox5ContractId, mockStackingClient, mockStacksClient],
+    createPox5PendingTxQueryKey({
+      address: mockStacksAddress,
+      pox5ContractId,
+      stacksClient: mockStacksClient,
+    }),
     pendingTx
   );
 
@@ -342,6 +357,16 @@ export function createSeededQueryClient(seed: StakingSurfaceSeed = {}) {
     { preference: null, supportsMinClaim: true }
   );
 
+  queryClient.setQueryData(
+    createGetPox5PayoutPreferenceQueryOptions({
+      address: mockStacksAddress,
+      signerManagerContractId: planbetterSignerManagerContractId,
+      networkName: pox5NetworkConfig.stacksNetworkName,
+      client: mockStacksClient,
+    }).queryKey,
+    { preference: null, supportsMinClaim: false }
+  );
+
   if (stakerInfo) {
     queryClient.setQueryData(
       createGetPox5PayoutPreferenceQueryOptions({
@@ -350,7 +375,10 @@ export function createSeededQueryClient(seed: StakingSurfaceSeed = {}) {
         networkName: pox5NetworkConfig.stacksNetworkName,
         client: mockStacksClient,
       }).queryKey,
-      { preference: payoutPreference, supportsMinClaim: true }
+      {
+        preference: payoutPreference,
+        supportsMinClaim: stakerInfo.signerManagerContractId !== planbetterSignerManagerContractId,
+      }
     );
 
     earnedRewards.forEach(rewards => {
@@ -359,6 +387,7 @@ export function createSeededQueryClient(seed: StakingSurfaceSeed = {}) {
           address: mockStacksAddress,
           signerManagerContractId: stakerInfo.signerManagerContractId,
           cycle: rewards.cycle,
+          pox5ContractId,
           client: mockStacksClient,
         }).queryKey,
         rewards

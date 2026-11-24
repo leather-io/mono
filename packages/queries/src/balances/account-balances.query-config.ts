@@ -22,7 +22,7 @@ export function createAccountTotalBalanceQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getAccountBalancesService().getTotalBalance(request, signal),
     ...balanceQueryOptions,
-  } satisfies UseQueryOptions<Money, Error>;
+  } satisfies UseQueryOptions<Money>;
 }
 
 export function createAccountAvailableBalanceQueryKey(
@@ -44,7 +44,25 @@ export function createAccountAvailableBalanceQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getAccountBalancesService().getAvailableBalance(request, signal),
     ...balanceQueryOptions,
-  } satisfies UseQueryOptions<Money, Error>;
+  } satisfies UseQueryOptions<Money>;
+}
+
+export function createAccountLockedBalanceQueryKey(
+  request: AccountRequest,
+  settings: UserSettings
+) {
+  return createServiceQueryKey('account-balances-service--get-locked-balance', [request], settings);
+}
+export function createAccountLockedBalanceQueryConfig(
+  request: AccountRequest,
+  settings: UserSettings
+) {
+  return {
+    queryKey: createAccountLockedBalanceQueryKey(request, settings),
+    queryFn: ({ signal }: QueryFunctionContext) =>
+      getAccountBalancesService().getLockedBalance(request, signal),
+    ...balanceQueryOptions,
+  } satisfies UseQueryOptions<Money>;
 }
 
 export function createAccountUnlockedBalanceQueryKey(
@@ -66,5 +84,5 @@ export function createAccountUnlockedBalanceQueryConfig(
     queryFn: ({ signal }: QueryFunctionContext) =>
       getAccountBalancesService().getUnlockedBalance(request, signal),
     ...balanceQueryOptions,
-  } satisfies UseQueryOptions<Money, Error>;
+  } satisfies UseQueryOptions<Money>;
 }

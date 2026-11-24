@@ -1,4 +1,4 @@
-import { type ChangeEvent, type ReactNode } from 'react';
+import { type ChangeEvent, type ReactNode, useId } from 'react';
 
 import { Flex, styled } from 'leather-styles/jsx';
 
@@ -11,6 +11,7 @@ interface TextFieldProps {
   help?: ReactNode;
   mono?: boolean;
   invalid?: boolean;
+  inputMode?: 'text' | 'decimal';
 }
 
 // Minimal labelled text input shared by the multisig forms. A design-only
@@ -24,15 +25,22 @@ export function TextField({
   help,
   mono,
   invalid,
+  inputMode,
 }: TextFieldProps) {
+  const id = useId();
+  const helpId = `${id}-help`;
   return (
     <Flex direction="column" gap="space.02">
       {label && (
-        <styled.label textStyle="label.03" color="ink.text-subdued">
+        <styled.label htmlFor={id} textStyle="label.03" color="ink.text-subdued">
           {label}
         </styled.label>
       )}
       <styled.input
+        id={id}
+        inputMode={inputMode}
+        aria-invalid={invalid || undefined}
+        aria-describedby={help ? helpId : undefined}
         value={value}
         placeholder={placeholder}
         onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
@@ -49,7 +57,7 @@ export function TextField({
         _focusVisible={{ outline: 'none', borderColor: 'ink.action-primary-default' }}
       />
       {help && (
-        <styled.span textStyle="caption.01" color="ink.text-subdued">
+        <styled.span id={helpId} textStyle="caption.01" color="ink.text-subdued">
           {help}
         </styled.span>
       )}

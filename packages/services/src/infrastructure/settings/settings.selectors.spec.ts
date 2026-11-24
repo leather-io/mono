@@ -1,5 +1,5 @@
 import {
-  BitcoinNetwork,
+  type BitcoinNetwork,
   HIRO_API_BASE_URL_MAINNET,
   defaultNetworksKeyedById,
 } from '@leather.io/models';
@@ -9,8 +9,10 @@ import {
   selectBitcoinApiUrl,
   selectBitcoinNetworkMode,
   selectStacksApiUrl,
+  selectStacksNetworkMode,
+  selectStakingChainId,
 } from './settings.selectors';
-import { UserSettings } from './settings.service';
+import { type UserSettings } from './settings.service';
 
 const userSettings: UserSettings = {
   quoteCurrency: 'USD',
@@ -47,5 +49,37 @@ describe(selectBitcoinApiUrl.name, () => {
   it('should select the Bitcoin API url from settings', () => {
     const bitcoinApiUrl = selectBitcoinApiUrl(userSettings);
     expect(bitcoinApiUrl).toEqual(defaultNetworksKeyedById.mainnet.chain.bitcoin.bitcoinUrl);
+  });
+});
+
+describe(selectStakingChainId.name, () => {
+  it('maps mainnet to the mainnet staking chain', () => {
+    expect(selectStakingChainId(userSettings)).toEqual('mainnet');
+  });
+
+  it('maps the staking testnet network to the staking-testnet chain', () => {
+    const settings = { ...userSettings, network: defaultNetworksKeyedById.stakingTestnet };
+    expect(selectStakingChainId(settings)).toEqual('staking-testnet');
+  });
+
+  it('returns null for networks the staking index does not cover', () => {
+    expect(
+      selectStakingChainId({ ...userSettings, network: defaultNetworksKeyedById.testnet })
+    ).toBeNull();
+    expect(
+      selectStakingChainId({ ...userSettings, network: defaultNetworksKeyedById.testnet4 })
+    ).toBeNull();
+  });
+});
+
+describe(selectStacksNetworkMode.name, () => {
+  it('maps mainnet to mainnet', () => {
+    expect(selectStacksNetworkMode(userSettings)).toEqual('mainnet');
+  });
+
+  it('maps testnet to testnet', () => {
+    expect(
+      selectStacksNetworkMode({ ...userSettings, network: defaultNetworksKeyedById.testnet })
+    ).toEqual('testnet');
   });
 });

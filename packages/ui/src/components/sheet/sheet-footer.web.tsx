@@ -1,4 +1,4 @@
-import { Flex, FlexProps } from 'leather-styles/jsx';
+import { Flex, type FlexProps } from 'leather-styles/jsx';
 
 interface SheetFooterProps extends FlexProps {
   children: React.ReactNode;

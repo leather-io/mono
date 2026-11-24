@@ -40,6 +40,246 @@
 
 ---
 
+## [6.116.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.115.0...@leather.io/extension-v6.116.0) (2026-11-19)
+
+
+### Features
+
+* **repo:** add the fix-issue skill and workflow to fix issues with review rounds and screenshots ([#2951](https://github.com/leather-io/mono/issues/2951)) ([b01d587](https://github.com/leather-io/mono/commit/b01d58734226e9ab11f6a1a3199de0af5274b429))
+* **web:** add the Leather design toolkit pilot ([#2928](https://github.com/leather-io/mono/issues/2928)) ([5e54522](https://github.com/leather-io/mono/commit/5e545227629cf1135b0297d0e75978d83311d6a4))
+* **web:** move leather.io into the web app with a rebuilt homepage ([#2931](https://github.com/leather-io/mono/issues/2931)) ([6c2d33f](https://github.com/leather-io/mono/commit/6c2d33fb8b458073b6ac3d380e8f08bc10494d4d))
+
+
+### Bug Fixes
+
+* bitcoinjs-lib audit ([#2959](https://github.com/leather-io/mono/issues/2959)) ([47f9582](https://github.com/leather-io/mono/commit/47f95825a09be6f4ae695e0a2c62bf3268febb30))
+* **extension:** correct nfts typo in receive caption ([#2941](https://github.com/leather-io/mono/issues/2941)) ([d15b9ae](https://github.com/leather-io/mono/commit/d15b9aee3278af9cab5318bc713b3cfb35211a64))
+* **extension:** hash structured message bytes for ledger display ([#2949](https://github.com/leather-io/mono/issues/2949)) ([34cb2d8](https://github.com/leather-io/mono/commit/34cb2d886d442ccde2150a6bd126544f90eedce1))
+* point docs links at docs.leather.io ([#2982](https://github.com/leather-io/mono/issues/2982)) ([ee55d71](https://github.com/leather-io/mono/commit/ee55d7154cef83f9d26164e0cf28f39bc0d4046f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.27.0
+    * @leather.io/bitcoin bumped to 0.42.2
+    * @leather.io/cms bumped to 1.7.0
+    * @leather.io/constants bumped to 0.41.1
+    * @leather.io/crypto bumped to 1.13.12
+    * @leather.io/features bumped to 1.8.7
+    * @leather.io/provider bumped to 1.7.7
+    * @leather.io/queries bumped to 0.18.0
+    * @leather.io/rpc bumped to 2.25.5
+    * @leather.io/services bumped to 1.67.0
+    * @leather.io/stacks bumped to 1.22.10
+    * @leather.io/ui bumped to 1.120.0
+    * @leather.io/utils bumped to 0.55.1
+
+## [6.115.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.114.0...@leather.io/extension-v6.115.0) (2026-10-27)
+
+
+### Features
+
+* **extension:** show spending sources on rpc send transfer approval ([#2836](https://github.com/leather-io/mono/issues/2836)) ([6b51080](https://github.com/leather-io/mono/commit/6b51080ab45d5bcaef6bf39f6e57dc93b7e71f12))
+* new test app ([#2694](https://github.com/leather-io/mono/issues/2694)) ([a39e946](https://github.com/leather-io/mono/commit/a39e94664c02b7986960251bda8b9991a9588e2e))
+* pin sBTC and USDCx after BTC and STX in token lists ([#2858](https://github.com/leather-io/mono/issues/2858)) ([12d4c39](https://github.com/leather-io/mono/commit/12d4c398445f690c714d16e4198b8a4ec47f9566))
+* **tokens:** add ink.text-secondary and use it for decision-critical copy ([#2853](https://github.com/leather-io/mono/issues/2853)) ([9b5ff8f](https://github.com/leather-io/mono/commit/9b5ff8fafad7c678cca5d7e25ef15115ea186fac))
+* **tools:** add the extension feature map with generator, rot check and skill ([#2907](https://github.com/leather-io/mono/issues/2907)) ([be5696e](https://github.com/leather-io/mono/commit/be5696ec09e73b0c70bfa34d53334bd9a208d78a))
+
+
+### Bug Fixes
+
+* body-parser and undici audit ([#2912](https://github.com/leather-io/mono/issues/2912)) ([2bee4e7](https://github.com/leather-io/mono/commit/2bee4e772dd95fff8406822a62225854fb708fbd))
+* enforce runtime circular dependency detection ([#2852](https://github.com/leather-io/mono/issues/2852)) ([857e0f7](https://github.com/leather-io/mono/commit/857e0f79d75025cc0da9f31a78c875fa64ed5eba))
+* **extension:** align swap popup gutters, headings and dividers ([#2856](https://github.com/leather-io/mono/issues/2856)) ([1a0fd0e](https://github.com/leather-io/mono/commit/1a0fd0ea75ef8dac05126321a92e071a1d25e149))
+* **extension:** clear the lint baseline ([#2860](https://github.com/leather-io/mono/issues/2860)) ([9e61b58](https://github.com/leather-io/mono/commit/9e61b58ad9dc2f068b650fe759fa6b4f87f1b4e7))
+* **extension:** keep update notice readable and add toast countdown ring ([#2861](https://github.com/leather-io/mono/issues/2861)) ([aa8c75a](https://github.com/leather-io/mono/commit/aa8c75a6fa6a0b87a720b3fbb0ed596af0aeef56))
+* faster integration tests ([#2892](https://github.com/leather-io/mono/issues/2892)) ([c7f0371](https://github.com/leather-io/mono/commit/c7f03715845889e62bcd52d88caa792400915ed1))
+* refactor ledger flow dialog ([#2772](https://github.com/leather-io/mono/issues/2772)) ([03eb4b9](https://github.com/leather-io/mono/commit/03eb4b9bec1d94fa8b718154129eaaeb0e700f26))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.26.1
+    * @leather.io/bitcoin bumped to 0.42.1
+    * @leather.io/cms bumped to 1.6.4
+    * @leather.io/constants bumped to 0.41.0
+    * @leather.io/crypto bumped to 1.13.11
+    * @leather.io/features bumped to 1.8.6
+    * @leather.io/models bumped to 0.63.1
+    * @leather.io/provider bumped to 1.7.6
+    * @leather.io/queries bumped to 0.17.3
+    * @leather.io/query bumped to 2.52.2
+    * @leather.io/rpc bumped to 2.25.4
+    * @leather.io/services bumped to 1.66.3
+    * @leather.io/stacks bumped to 1.22.9
+    * @leather.io/tokens bumped to 0.28.0
+    * @leather.io/ui bumped to 1.119.4
+    * @leather.io/utils bumped to 0.55.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.16.6
+
+## [6.114.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.113.1...@leather.io/extension-v6.114.0) (2026-10-06)
+
+
+### Features
+
+* spending sources foundation + btc send flow ([#2820](https://github.com/leather-io/mono/issues/2820)) ([181c4f7](https://github.com/leather-io/mono/commit/181c4f71366f1cb4a744ae04d261f1fa63d75f30))
+* web staging custom domain ([#2817](https://github.com/leather-io/mono/issues/2817)) ([75f6225](https://github.com/leather-io/mono/commit/75f6225ef5761febb89de502425b1ceaa8dff71e))
+
+
+### Bug Fixes
+
+* ledger popup pairing ([#2822](https://github.com/leather-io/mono/issues/2822)) ([b59d93a](https://github.com/leather-io/mono/commit/b59d93a4e93887cd6101f8a3da092466735941e2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.42.0
+    * @leather.io/features bumped to 1.8.5
+    * @leather.io/queries bumped to 0.17.2
+    * @leather.io/services bumped to 1.66.2
+    * @leather.io/ui bumped to 1.119.3
+
+## [6.113.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.113.0...@leather.io/extension-v6.113.1) (2026-10-01)
+
+
+### Bug Fixes
+
+* axios audit ([#2815](https://github.com/leather-io/mono/issues/2815)) ([480ceda](https://github.com/leather-io/mono/commit/480ceda66cf6537701f7c3571a1fb6c08fc5f127))
+* **extension:** import ledger lottie json as default export ([#2810](https://github.com/leather-io/mono/issues/2810)) ([ff279c2](https://github.com/leather-io/mono/commit/ff279c26a1f3f5d98662a6aeea9c867a8749651c))
+* **extension:** skip sunset callout for fixed-address accounts ([#2809](https://github.com/leather-io/mono/issues/2809)) ([68f29a8](https://github.com/leather-io/mono/commit/68f29a83dddd5aea241a195073d708def985c4bd))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/features bumped to 1.8.4
+    * @leather.io/queries bumped to 0.17.1
+    * @leather.io/query bumped to 2.52.1
+    * @leather.io/services bumped to 1.66.1
+    * @leather.io/ui bumped to 1.119.2
+
+## [6.113.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.112.1...@leather.io/extension-v6.113.0) (2026-09-29)
+
+
+### Features
+
+* add BNS testnet support ([#2733](https://github.com/leather-io/mono/issues/2733)) ([8f92aa3](https://github.com/leather-io/mono/commit/8f92aa3b6d0f87f765f7de98eeecfe24e2bd2939))
+* **extension:** migrate from webpack to vite ([#2703](https://github.com/leather-io/mono/issues/2703)) ([f364905](https://github.com/leather-io/mono/commit/f364905b60510fedd4cb2284f55821c00f047952))
+* **extension:** new swaps flow with sBTC bridging ([#2554](https://github.com/leather-io/mono/issues/2554)) ([65c8518](https://github.com/leather-io/mono/commit/65c85186c847b2e99fd062d00997c81932268bc5))
+* **extension:** tell users when a new version is available ([#2793](https://github.com/leather-io/mono/issues/2793)) ([6ef500a](https://github.com/leather-io/mono/commit/6ef500afb68f502e3de3873d55397ca9ed4bd45e))
+* fully move to dmk btc/stx dmk packages ([#2763](https://github.com/leather-io/mono/issues/2763)) ([c4bb5f3](https://github.com/leather-io/mono/commit/c4bb5f39ed9f2ff88ce59c325e86dda0cb87568b))
+* ledger dmk transport (hid instead of usb) (1/2) ([#2759](https://github.com/leather-io/mono/issues/2759)) ([462ddbc](https://github.com/leather-io/mono/commit/462ddbcffe12dd4955535f3f913816acb41b5b7d))
+* token price history graph ([#2764](https://github.com/leather-io/mono/issues/2764)) ([b7c56bc](https://github.com/leather-io/mono/commit/b7c56bc7eb49b3a38ea7f40c6332e6c5ce390f93))
+
+
+### Bug Fixes
+
+* bring back ordinal banners and make those dismissable ([#2615](https://github.com/leather-io/mono/issues/2615)) ([c085334](https://github.com/leather-io/mono/commit/c08533430f9b6bfd7c18f8e03b4151e2ec13cd91))
+* **extension:** open send form directly from token details ([#2781](https://github.com/leather-io/mono/issues/2781)) ([ff99d19](https://github.com/leather-io/mono/commit/ff99d19ce1cdb087f3a4e4e7c43361aff98b2399))
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+* staking testnet network ([#2801](https://github.com/leather-io/mono/issues/2801)) ([20fe188](https://github.com/leather-io/mono/commit/20fe1889a867e9ecffb7c20ef7b5a2364e53b43b))
+* swaps ui improvements ([#2758](https://github.com/leather-io/mono/issues/2758)) ([be4e2cf](https://github.com/leather-io/mono/commit/be4e2cfa261d803c24eb504f675713f5e2235673))
+* token details activity loading ([#2782](https://github.com/leather-io/mono/issues/2782)) ([a505cac](https://github.com/leather-io/mono/commit/a505cac16639b0e15437f46d14f0093784045dab))
+* **ui:** repair default callout contrast and link underline and focus states ([#2800](https://github.com/leather-io/mono/issues/2800)) ([32d87f8](https://github.com/leather-io/mono/commit/32d87f8973cb71e06ebe7fc55c7a47fa94a6557f))
+* update supportedMethods docs urls and add stx methods ([#2795](https://github.com/leather-io/mono/issues/2795)) ([ae34f69](https://github.com/leather-io/mono/commit/ae34f694fe0d373fcf96fc0e9c157e5ff93a9417))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.26.0
+    * @leather.io/bitcoin bumped to 0.41.0
+    * @leather.io/cms bumped to 1.6.3
+    * @leather.io/constants bumped to 0.40.0
+    * @leather.io/crypto bumped to 1.13.10
+    * @leather.io/features bumped to 1.8.3
+    * @leather.io/models bumped to 0.63.0
+    * @leather.io/provider bumped to 1.7.5
+    * @leather.io/queries bumped to 0.17.0
+    * @leather.io/query bumped to 2.52.0
+    * @leather.io/rpc bumped to 2.25.3
+    * @leather.io/services bumped to 1.66.0
+    * @leather.io/stacks bumped to 1.22.8
+    * @leather.io/tokens bumped to 0.27.2
+    * @leather.io/ui bumped to 1.119.1
+    * @leather.io/utils bumped to 0.54.0
+  * devDependencies
+    * @leather.io/panda-preset bumped to 0.16.5
+    * @leather.io/prettier-config bumped to 0.9.1
+
+## [6.112.1](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.112.0...@leather.io/extension-v6.112.1) (2026-09-14)
+
+
+### Bug Fixes
+
+* bump ledger stacks app minimum version ([#2720](https://github.com/leather-io/mono/issues/2720)) ([300ea15](https://github.com/leather-io/mono/commit/300ea1523f9c6be02d08debc74dc47f375f507ea))
+* **web:** unblock footer links under the connect overlay and retire Advanced Earn ([#2731](https://github.com/leather-io/mono/issues/2731)) ([7c4ac69](https://github.com/leather-io/mono/commit/7c4ac6979a7f9f656bc7caf709fd61c521f504b8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.40.2
+    * @leather.io/constants bumped to 0.39.4
+    * @leather.io/crypto bumped to 1.13.9
+    * @leather.io/features bumped to 1.8.2
+    * @leather.io/provider bumped to 1.7.4
+    * @leather.io/queries bumped to 0.16.1
+    * @leather.io/query bumped to 2.51.9
+    * @leather.io/rpc bumped to 2.25.2
+    * @leather.io/services bumped to 1.65.1
+    * @leather.io/stacks bumped to 1.22.7
+    * @leather.io/ui bumped to 1.119.0
+    * @leather.io/utils bumped to 0.53.1
+
+## [6.112.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.111.0...@leather.io/extension-v6.112.0) (2026-09-10)
+
+
+### Features
+
+* **extension:** bitcoin staking balances and positions UI ([#2715](https://github.com/leather-io/mono/issues/2715)) ([0af16a8](https://github.com/leather-io/mono/commit/0af16a8f1ac9509cf94a351f8f667ba5c2b85a83))
+* multisig production cutover ([#2704](https://github.com/leather-io/mono/issues/2704)) ([8950cac](https://github.com/leather-io/mono/commit/8950cac2a3228a1621272f377796cdb3f0e7c264))
+
+
+### Bug Fixes
+
+* **auth:** bind sign-in message to requesting domain ([#2690](https://github.com/leather-io/mono/issues/2690)) ([dfb58cb](https://github.com/leather-io/mono/commit/dfb58cb5e85b2a10f89d830c5e3269c458dc6564))
+* **extension:** block psbt signing with disallowed sighash types ([#2667](https://github.com/leather-io/mono/issues/2667)) ([9b4d0f4](https://github.com/leather-io/mono/commit/9b4d0f46d6e77cbbda5da1b519ae853514fd1c30))
+* **extension:** cross-origin iframe callout ([#2647](https://github.com/leather-io/mono/issues/2647)) ([aedf524](https://github.com/leather-io/mono/commit/aedf5248eb67d2c24acd106f9439cf8fd7e364f3))
+* **extension:** render sip10 avatars in rpc approver post conditions ([#2706](https://github.com/leather-io/mono/issues/2706)) ([b3e5f61](https://github.com/leather-io/mono/commit/b3e5f61c5af226d2aa14b75e6ff5274d5cd32b3d))
+* **web:** private network resolution, regtest explorer links, activity polling ([#2663](https://github.com/leather-io/mono/issues/2663)) ([243071c](https://github.com/leather-io/mono/commit/243071c811e4966f52cef00f67c0a5cba21ec3ad))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.25.1
+    * @leather.io/bitcoin bumped to 0.40.1
+    * @leather.io/cms bumped to 1.6.2
+    * @leather.io/constants bumped to 0.39.3
+    * @leather.io/crypto bumped to 1.13.8
+    * @leather.io/features bumped to 1.8.1
+    * @leather.io/models bumped to 0.62.0
+    * @leather.io/provider bumped to 1.7.3
+    * @leather.io/queries bumped to 0.16.0
+    * @leather.io/query bumped to 2.51.8
+    * @leather.io/rpc bumped to 2.25.1
+    * @leather.io/services bumped to 1.65.0
+    * @leather.io/stacks bumped to 1.22.6
+    * @leather.io/ui bumped to 1.118.0
+    * @leather.io/utils bumped to 0.53.0
+
 ## [6.111.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.110.0...@leather.io/extension-v6.111.0) (2026-08-27)
 
 

@@ -7,13 +7,13 @@ import { RouteUrls } from '@shared/route-urls';
 
 import { whenPageMode } from '@app/common/utils';
 import { ActivityList } from '@app/features/activity-list/activity-list';
+import { BondCallout } from '@app/features/bonds/components/bond-callout';
 import { Collectibles } from '@app/features/collectibles/collectibles';
 import { MultiWalletIntroducer } from '@app/features/feature-introducer/implementations';
 import { FeedbackButton } from '@app/features/feedback-button/feedback-button';
 import { PromoBanner } from '@app/features/promo-banner/promo-banner';
 import { NotFoundContent } from '@app/pages/not-found/not-found';
 import { useAccountCollectibles } from '@app/query/collectibles/account-collectibles.query';
-import { homePageModalRoutes } from '@app/routes/app-routes';
 import { ModalBackgroundWrapper } from '@app/routes/components/modal-background-wrapper';
 import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
@@ -25,7 +25,7 @@ import { Tokens } from './components/tokens';
 
 function HomeNotFound() {
   const navigate = useNavigate();
-  return <NotFoundContent onGoHome={() => navigate(RouteUrls.Home)} />;
+  return <NotFoundContent onGoHome={() => void navigate(RouteUrls.Home)} />;
 }
 
 const animationState = { hasPlayed: false };
@@ -57,6 +57,7 @@ export function Home({ isBackground }: HomeProps) {
     >
       <Flex px={['space.05', 0]} pb="space.05" gap="space.05" direction="column">
         <AccountCard />
+        <BondCallout />
         <AccountActions />
         <PromoBanner />
         <MultiWalletIntroducer />
@@ -67,7 +68,6 @@ export function Home({ isBackground }: HomeProps) {
           <Route index element={<Tokens />} />
           <Route path={RouteUrls.Activity} element={<ActivityList />} />
           <Route path={RouteUrls.Collectibles} element={<Collectibles />} />
-          {homePageModalRoutes}
           <Route path="*" element={<HomeNotFound />} />
         </ModalBackgroundWrapper>
       </HomeTabs>

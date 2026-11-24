@@ -48,7 +48,8 @@ export function ConnectLedgerErrorLayout(props: ConnectLedgerErrorLayoutProps) {
         <PossibleReasonUnableToConnect text="Check if Ledger Live is open. Close it and try again" />
         <PossibleReasonUnableToConnect text="Ensure you only have one instance of Leather open" />
         <PossibleReasonUnableToConnect text={`Verify the ${appName} app is installed and open`} />
-        <PossibleReasonUnableToConnect text="Check you've approved the browser USB pop up" />
+        <PossibleReasonUnableToConnect text="Check you've approved the browser's device access pop up and selected your Ledger" />
+        <PossibleReasonUnableToConnect text="On Linux, make sure Ledger's udev rules are installed" />
       </Stack>
       <Button width="100%" onClick={onTryAgain}>
         Try again
@@ -57,10 +58,7 @@ export function ConnectLedgerErrorLayout(props: ConnectLedgerErrorLayoutProps) {
         <styled.span color="ink.text-subdued" textStyle="label.03">
           If the problem persists, check our
         </styled.span>
-        <Link
-          href="https://leather.gitbook.io/guides/securing-the-wallet/using-ledger-with-leather"
-          size="sm"
-        >
+        <Link href="https://docs.leather.io/get-started/connect-ledger" size="sm">
           Support Page
         </Link>
       </HStack>

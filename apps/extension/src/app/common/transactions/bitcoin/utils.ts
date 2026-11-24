@@ -1,8 +1,8 @@
 import type { BitcoinTx } from '@leather.io/models';
 import { satToBtc, sumNumbers, truncateMiddle } from '@leather.io/utils';
 
-export function getBitcoinTxCaption(transaction?: BitcoinTx) {
-  return transaction ? truncateMiddle(transaction.txid, 4) : '';
+export function getBitcoinTxCaption(transaction: BitcoinTx) {
+  return truncateMiddle(transaction.txid, 4);
 }
 
 type IsCorrespondingAddressFn = (address: string) => boolean;
@@ -42,9 +42,8 @@ export function isBitcoinTxInbound(
 
 export function getBitcoinTxValue(
   isCorrespondingAddressFn: IsCorrespondingAddressFn,
-  transaction?: BitcoinTx
+  transaction: BitcoinTx
 ) {
-  if (!transaction) return '';
   const inputs = transactionsSentByAddress(isCorrespondingAddressFn, transaction);
   const outputs = transactionsReceivedByAddress(isCorrespondingAddressFn, transaction);
   const vinPrevoutValues = inputs.map(vin => vin.prevout.value);

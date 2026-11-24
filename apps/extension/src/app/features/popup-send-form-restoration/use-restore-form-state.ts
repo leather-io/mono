@@ -1,8 +1,11 @@
 import { useNavigate } from 'react-router';
 
+import { z } from 'zod';
+
+import { useOnMount } from '@leather.io/ui';
+
 import { getActiveTab } from '@shared/utils/get-active-tab';
 
-import { useOnMount } from '@app/common/hooks/use-on-mount';
 import { isPopupMode } from '@app/common/utils';
 
 // Would rather use the `useAsync` hook to call this promise, however this is
@@ -19,6 +22,10 @@ async function run() {
 }
 void run();
 
+const persistedFormStateSchema = z.looseObject({
+  symbol: z.string().min(1),
+});
+
 export function useRestoreFormState() {
   const navigate = useNavigate();
 
@@ -26,8 +33,9 @@ export function useRestoreFormState() {
     if (!isPopupMode() || !currentTabId || !chrome.storage.session) return;
     const key = 'form-state-' + currentTabId.toString();
     const state = await chrome.storage.session.get('form-state-' + currentTabId.toString());
-    const persistedState = state[key];
-    if (!persistedState || !persistedState.symbol) return;
+    const parsedState = persistedFormStateSchema.safeParse(state[key]);
+    if (!parsedState.success) return;
+    const persistedState = parsedState.data;
     void navigate('send/' + persistedState.symbol, { state: persistedState });
   });
 }

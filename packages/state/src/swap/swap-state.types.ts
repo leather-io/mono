@@ -3,18 +3,18 @@ import { type StacksNetwork } from '@stacks/network';
 import { type StacksTransactionWire, type TxBroadcastResultOk } from '@stacks/transactions';
 import { type UseQueryResult } from '@tanstack/react-query';
 import type BigNumber from 'bignumber.js';
-import type { SbtcApiClient } from 'sbtc';
 
 import { type configureAnalyticsClient } from '@leather.io/analytics';
 import { type BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import {
   type AccountAddresses,
-  CryptoAssetId,
+  type CryptoAssetId,
   type ExecutionConstraint,
   type InputCurrencyMode,
   type MarketData,
   type Money,
   type NetworkConfiguration,
+  type NextNonce,
   type QuoteCurrency,
   type StacksProtocol,
   type SwapExecutionData,
@@ -24,7 +24,6 @@ import {
   type TransactionFeeQuote,
   type TransactionFeeTier,
 } from '@leather.io/models';
-import { type NextNonce } from '@leather.io/query';
 import {
   type AccountSwapAsset,
   type BitcoinCoinSelectionService,
@@ -36,6 +35,29 @@ import {
 import { type StacksSigner } from '@leather.io/stacks';
 
 import { type ValidationResult } from './validation/swap-validation.types';
+
+export type SwapServiceClient = Pick<
+  SwapService,
+  | 'getAccountBaseSwapAssets'
+  | 'getAccountTargetSwapAssets'
+  | 'getSwapQuotes'
+  | 'getSwapExecutionData'
+  | 'getSbtcSignersPublicKey'
+  | 'notifySbtcDeposit'
+>;
+export type MarketDataServiceClient = Pick<MarketDataService, 'getMarketData'>;
+export type BitcoinTransactionFeesServiceClient = Pick<
+  BitcoinTransactionFeesService,
+  'getBitcoinTransactionFees'
+>;
+export type BitcoinCoinSelectionServiceClient = Pick<
+  BitcoinCoinSelectionService,
+  'performCoinSelection' | 'calculateMaxSpend'
+>;
+export type StacksTransactionFeesServiceClient = Pick<
+  StacksTransactionFeesService,
+  'getStacksTransactionFees'
+>;
 
 export type TrackEvent = ReturnType<typeof configureAnalyticsClient>['track'];
 
@@ -50,20 +72,21 @@ export interface SwapDependencies {
     }): Promise<TxBroadcastResultOk>;
     nextNonce: NextNonce | undefined;
   };
-  bitcoin: {
+  bitcoin?: {
     bitcoinPayer: BitcoinNativeSegwitPayer;
     network: NetworkConfiguration;
-    sbtcClient: SbtcApiClient;
     signBitcoinPsbt(psbt: Uint8Array): Promise<btc.Transaction>;
-    broadcast(tx: string): Promise<string | undefined>;
+    broadcast(txHex: string): Promise<BitcoinBroadcastResult>;
   };
   services: {
-    marketDataService: MarketDataService;
-    bitcoinTransactionFeesService: BitcoinTransactionFeesService;
-    bitcoinCoinSelectionService: BitcoinCoinSelectionService;
-    stacksTransactionFeesService: StacksTransactionFeesService;
-    swapService: SwapService;
+    marketDataService: MarketDataServiceClient;
+    bitcoinTransactionFeesService: BitcoinTransactionFeesServiceClient;
+    bitcoinCoinSelectionService: BitcoinCoinSelectionServiceClient;
+    stacksTransactionFeesService: StacksTransactionFeesServiceClient;
+    swapService: SwapServiceClient;
   };
+  onSwapSubmitted?(result: SwapSubmissionResult): void;
+  isSigningCancelledError?(error: unknown): boolean;
 }
 
 export interface SwapExecutionDependencies extends SwapDependencies {
@@ -204,18 +227,27 @@ export interface SwapActions {
   setCustomFee(fee: number): void;
 }
 
+export type BitcoinBroadcastResult =
+  | { status: 'accepted' }
+  | { status: 'rejected'; errorMessage: string }
+  | { status: 'unknown'; errorMessage: string };
+
+export type SwapSubmissionResult =
+  | { status: 'submitted'; txid: string }
+  | { status: 'broadcast-uncertain'; txid: string; errorMessage: string };
+
 export interface UseSwapStateResult {
   state: SwapState;
   actions: SwapActions;
   validation: ValidationResult;
-  baseAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
-  targetAssetsQuery: UseQueryResult<AccountSwapAsset[], Error>;
-  baseMarketDataQuery: UseQueryResult<MarketData, Error>;
-  targetMarketDataQuery: UseQueryResult<MarketData, Error>;
-  networkFeeAssetMarkedDataQuery: UseQueryResult<MarketData, Error>;
-  spendableAmountQuery: UseQueryResult<Money | null, Error>;
-  quoteQuery: UseQueryResult<SwapQuoteSelectionResult, Error>;
-  networkFeeQuery: UseQueryResult<NetworkFee, Error>;
+  baseAssetsQuery: UseQueryResult<AccountSwapAsset[]>;
+  targetAssetsQuery: UseQueryResult<AccountSwapAsset[]>;
+  baseMarketDataQuery: UseQueryResult<MarketData>;
+  targetMarketDataQuery: UseQueryResult<MarketData>;
+  networkFeeAssetMarkedDataQuery: UseQueryResult<MarketData>;
+  spendableAmountQuery: UseQueryResult<Money | null>;
+  quoteQuery: UseQueryResult<SwapQuoteSelectionResult>;
+  networkFeeQuery: UseQueryResult<NetworkFee>;
   canSubmit: boolean;
-  submit(): Promise<void>;
+  submit(): Promise<SwapSubmissionResult>;
 }

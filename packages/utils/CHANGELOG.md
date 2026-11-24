@@ -368,6 +368,84 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.55.1](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.55.0...@leather.io/utils-v0.55.1) (2026-11-19)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.41.1
+
+## [0.55.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.54.0...@leather.io/utils-v0.55.0) (2026-10-27)
+
+
+### Features
+
+* pin sBTC and USDCx after BTC and STX in token lists ([#2858](https://github.com/leather-io/mono/issues/2858)) ([12d4c39](https://github.com/leather-io/mono/commit/12d4c398445f690c714d16e4198b8a4ec47f9566))
+
+
+### Bug Fixes
+
+* enforce runtime circular dependency detection ([#2852](https://github.com/leather-io/mono/issues/2852)) ([857e0f7](https://github.com/leather-io/mono/commit/857e0f79d75025cc0da9f31a78c875fa64ed5eba))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.41.0
+    * @leather.io/models bumped to 0.63.1
+
+## [0.54.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.53.1...@leather.io/utils-v0.54.0) (2026-09-29)
+
+
+### Features
+
+* **extension:** new swaps flow with sBTC bridging ([#2554](https://github.com/leather-io/mono/issues/2554)) ([65c8518](https://github.com/leather-io/mono/commit/65c85186c847b2e99fd062d00997c81932268bc5))
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+* swaps performance ([#2761](https://github.com/leather-io/mono/issues/2761)) ([797e1d1](https://github.com/leather-io/mono/commit/797e1d1b449f9f24fe8a1d2b7077f7afd19a7bb8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.40.0
+    * @leather.io/models bumped to 0.63.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/test-config bumped to 0.1.4
+    * @leather.io/tsconfig-config bumped to 0.11.2
+
+## [0.53.1](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.53.0...@leather.io/utils-v0.53.1) (2026-09-14)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.4
+
+## [0.53.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.52.7...@leather.io/utils-v0.53.0) (2026-09-10)
+
+
+### Features
+
+* **services:** bitcoin staking balances and positions service ([#2714](https://github.com/leather-io/mono/issues/2714)) ([695400d](https://github.com/leather-io/mono/commit/695400d198c48641ec00395ffe33562cafd35f66))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.39.3
+    * @leather.io/models bumped to 0.62.0
+
 ## [0.52.7](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.52.6...@leather.io/utils-v0.52.7) (2026-08-27)
 
 

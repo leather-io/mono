@@ -1,16 +1,16 @@
 import { inject, injectable } from 'inversify';
 
 import { stxAsset } from '@leather.io/constants';
-import { StxBalance } from '@leather.io/models';
+import { Money, StxBalance } from '@leather.io/models';
 import {
   aggregateStxBalances,
   baseCurrencyAmountInQuote,
   createMoney,
   createStxBalance,
-  hasStacksAddress,
 } from '@leather.io/utils';
 
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { HiroPrincipalStxBalanceResponse } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import {
   readStxLockedBalance,
   readStxTotalBalance,
@@ -18,6 +18,7 @@ import {
 import type { SettingsService } from '../infrastructure/settings/settings.service';
 import { Types } from '../inversify.types';
 import { MarketDataService } from '../market/market-data.service';
+import { estimateBurnHeightDate } from '../staking/bitcoin-staking.utils';
 import { StacksTransactionsService } from '../transactions/stacks-transactions.service';
 import { AccountRequest } from '../types';
 import { calculateInboundStxBalance, calculateOutboundStxBalance } from './stx-balances.utils';
@@ -27,8 +28,14 @@ export interface QuotedStxBalance {
   quote: StxBalance;
 }
 
+export interface StxLockInfo {
+  unlockBurnHeight: number;
+  estimatedUnlockAt: Date;
+}
+
 export interface AddressQuotedStxBalance extends QuotedStxBalance {
   address?: string;
+  lock?: StxLockInfo;
 }
 
 const stxAssetZeroBalance = createStxBalance(createMoney(0, 'STX'));
@@ -75,7 +82,7 @@ export class StxBalancesService {
     request: AccountRequest,
     signal?: AbortSignal
   ): Promise<AddressQuotedStxBalance> {
-    if (!hasStacksAddress(request.account)) {
+    if (!request.account.stacks) {
       return {
         stx: stxAssetZeroBalance,
         quote: createStxBalance(createMoney(0, this.settingsService.getSettings().quoteCurrency)),
@@ -89,7 +96,7 @@ export class StxBalancesService {
     signal?: AbortSignal
   ): Promise<AddressQuotedStxBalance> {
     const [addressStxBalanceResponse, pendingTransactions, stxMarketData] = await Promise.all([
-      this.stacksApiClient.getAddressStxBalance(address, { signal }),
+      this.stacksApiClient.getPrincipalStxBalance(address, { signal }),
       this.stacksTransactionsService.getPendingTransactions(address, signal),
       this.marketDataService.getMarketData(stxAsset, signal),
     ]);
@@ -98,9 +105,11 @@ export class StxBalancesService {
     const lockedBalanceStx = createMoney(readStxLockedBalance(addressStxBalanceResponse), 'STX');
     const inboundBalanceStx = calculateInboundStxBalance(address, pendingTransactions);
     const outboundBalanceStx = calculateOutboundStxBalance(address, pendingTransactions);
+    const lock = await this.getStxLockInfo(addressStxBalanceResponse, lockedBalanceStx, signal);
 
     return {
       address,
+      lock,
       stx: createStxBalance(
         totalBalanceStx,
         inboundBalanceStx,
@@ -114,5 +123,29 @@ export class StxBalancesService {
         baseCurrencyAmountInQuote(lockedBalanceStx, stxMarketData)
       ),
     };
+  }
+
+  private async getStxLockInfo(
+    response: HiroPrincipalStxBalanceResponse,
+    lockedBalance: Money,
+    signal?: AbortSignal
+  ): Promise<StxLockInfo | undefined> {
+    const unlockBurnHeight = response.locked?.burn_unlock_height;
+    if (!lockedBalance.amount.isGreaterThan(0) || !unlockBurnHeight) {
+      return undefined;
+    }
+    try {
+      const poxInfo = await this.stacksApiClient.getPoxInfo({ signal });
+      return {
+        unlockBurnHeight,
+        estimatedUnlockAt: estimateBurnHeightDate(
+          unlockBurnHeight,
+          poxInfo.current_burnchain_block_height,
+          new Date()
+        ),
+      };
+    } catch {
+      return undefined;
+    }
   }
 }

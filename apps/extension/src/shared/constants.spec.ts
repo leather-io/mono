@@ -7,10 +7,29 @@ describe(isWhitelistedOrigin.name, () => {
     expect(isWhitelistedOrigin('https://app.leather.io')).toBe(true);
   });
 
-  test('accepts the multisig onboarding origin', () => {
-    expect(
-      isWhitelistedOrigin('https://dev-leather-web.wallet-6d1.workers.dev/multisig/onboarding')
-    ).toBe(true);
+  test('accepts the staging origin', () => {
+    expect(isWhitelistedOrigin('https://staging.app.leather.io/multisig/onboarding')).toBe(true);
+  });
+
+  test('accepts the apex origin', () => {
+    expect(isWhitelistedOrigin('https://leather.io')).toBe(true);
+    expect(isWhitelistedOrigin('https://leather.io/multisig/onboarding')).toBe(true);
+  });
+
+  test('rejects an http variant of the apex origin', () => {
+    expect(isWhitelistedOrigin('http://leather.io')).toBe(false);
+  });
+
+  test('rejects the www origin', () => {
+    expect(isWhitelistedOrigin('https://www.leather.io')).toBe(false);
+  });
+
+  test('rejects a look-alike of the apex origin', () => {
+    expect(isWhitelistedOrigin('https://leather.io.evil.com')).toBe(false);
+  });
+
+  test('rejects the legacy workers.dev staging origin', () => {
+    expect(isWhitelistedOrigin('https://dev-leather-web.wallet-6d1.workers.dev')).toBe(false);
   });
 
   test('rejects a localhost origin when not in development', () => {
@@ -68,11 +87,45 @@ describe(`${isWhitelistedOrigin.name} in development`, () => {
   test('still accepts the production whitelist', async () => {
     const isWhitelisted = await loadInDevMode();
     expect(isWhitelisted('https://app.leather.io')).toBe(true);
+    expect(isWhitelisted('https://leather.io')).toBe(true);
   });
 
   test('still rejects a non-localhost, non-whitelisted origin', async () => {
     const isWhitelisted = await loadInDevMode();
     expect(isWhitelisted('https://evil.com')).toBe(false);
     expect(isWhitelisted('https://localhost.evil.com')).toBe(false);
+  });
+});
+
+describe(`${isWhitelistedOrigin.name} in production`, () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  });
+
+  async function loadInProductionMode() {
+    vi.stubEnv('WALLET_ENVIRONMENT', 'production');
+    vi.resetModules();
+    return (await import('./constants')).isWhitelistedOrigin;
+  }
+
+  test('accepts the staging origin', async () => {
+    const isWhitelisted = await loadInProductionMode();
+    expect(isWhitelisted('https://staging.app.leather.io')).toBe(true);
+  });
+
+  test('rejects localhost origins', async () => {
+    const isWhitelisted = await loadInProductionMode();
+    expect(isWhitelisted('http://localhost:3000')).toBe(false);
+  });
+
+  test('still accepts the production origin', async () => {
+    const isWhitelisted = await loadInProductionMode();
+    expect(isWhitelisted('https://app.leather.io')).toBe(true);
+  });
+
+  test('accepts the apex origin', async () => {
+    const isWhitelisted = await loadInProductionMode();
+    expect(isWhitelisted('https://leather.io')).toBe(true);
   });
 });

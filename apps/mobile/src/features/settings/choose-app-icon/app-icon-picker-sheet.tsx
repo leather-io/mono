@@ -8,9 +8,9 @@ import { t } from '@lingui/core/macro';
 import { setAlternateAppIcon } from 'expo-alternate-app-icons';
 import { isError } from 'remeda';
 
-import { SheetRef } from '@leather.io/ui/native';
+import { type SheetRef } from '@leather.io/ui/native';
 
-import { AppIcon, appIcons, defaultAppIcon } from './app-icon.utils';
+import { type AppIcon, appIcons, defaultAppIcon } from './app-icon.utils';
 import { AppIcons } from './app-icons';
 
 interface AppIconPickerSheetProps {
@@ -68,7 +68,11 @@ export function AppIconPickerSheet({ sheetRef }: AppIconPickerSheetProps) {
 
   return (
     <SettingsSheetLayout sheetRef={sheetRef} title={t`App Icon`} onChange={handleSheetChange}>
-      <AppIcons currentIcon={currentIcon} setNewIcon={handleIconSelect} availableIcons={appIcons} />
+      <AppIcons
+        currentIcon={currentIcon}
+        setNewIcon={icon => void handleIconSelect(icon)}
+        availableIcons={appIcons}
+      />
     </SettingsSheetLayout>
   );
 }

@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { FlexProps, styled } from 'leather-styles/jsx';
+import { type FlexProps, styled } from 'leather-styles/jsx';
 
 import { closeWindow } from '@shared/utils';
 

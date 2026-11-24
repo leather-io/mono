@@ -1,10 +1,13 @@
 import { useNavigate } from 'react-router';
 
 import { AllBalancesSelectors } from '@tests/selectors/all-balances.selectors';
+import { BondsSelectors } from '@tests/selectors/bonds.selectors';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
-import { BtcAvatarIcon, StxAvatarIcon, isSbtcAsset } from '@leather.io/ui';
-import { createMoney, sumMoney } from '@leather.io/utils';
+import { stxAsset } from '@leather.io/constants';
+import type { Money } from '@leather.io/models';
+import { BtcAvatarIcon, Hr, StxAvatarIcon, isSbtcAsset } from '@leather.io/ui';
+import { baseCurrencyAmountInQuote, createMoney, sumMoney } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -12,11 +15,13 @@ import { formatCurrency } from '@app/common/currency-formatter';
 import { useViewportMinWidth } from '@app/common/hooks/use-media-query';
 import { emptyAmountPlaceholder } from '@app/components/balance/constants';
 import { Content } from '@app/components/layout';
-import { Divider } from '@app/components/layout/divider';
 import { Header } from '@app/components/layout/headers/header';
 import { HeaderBackButton } from '@app/components/layout/headers/header-back-button';
 import { HeaderGrid } from '@app/components/layout/headers/header-grid';
+import { subtractMoneyFloor, sumBondStx } from '@app/features/bonds/bond-position.utils';
 import { useBtcAccountBalance } from '@app/query/bitcoin/balance/btc-balance.hooks';
+import { useCurrentBtcStakingPositions } from '@app/query/bitcoin/staking/bitcoin-staking.hooks';
+import { useMarketData } from '@app/query/common/market-data/market-data.query';
 import { useStxAccountBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { useSip10AccountBalance } from '@app/query/stacks/sip10/sip10-balance.hooks';
 import { useCurrentAccountId } from '@app/store/accounts/account';
@@ -37,10 +42,11 @@ export function AllBalancesPage() {
   const navigate = useNavigate();
   const accountId = useCurrentAccountId();
   const isMd = useViewportMinWidth('md');
-
   const btcBalance = useBtcAccountBalance(accountId);
   const stxBalance = useStxAccountBalance(accountId);
   const sip10Balance = useSip10AccountBalance(accountId);
+  const positions = useCurrentBtcStakingPositions();
+  const stxMarketData = useMarketData(stxAsset);
 
   const btc = btcBalance.state === 'success' ? btcBalance.value : undefined;
   const stx = stxBalance.state === 'success' ? stxBalance.value : undefined;
@@ -55,6 +61,20 @@ export function AllBalancesPage() {
 
   const sbtcToken = sip10?.sip10s.find(token => isSbtcAsset(token.asset.contractId));
   const otherSip10Tokens = sip10?.sip10s.filter(token => !isSbtcAsset(token.asset.contractId));
+
+  // The STX side of the bond is a slice of "locked"; the rest is other stacking
+  const bondStx = positions.state === 'success' ? sumBondStx(positions.value) : undefined;
+  const hasBondStx = !!bondStx && bondStx.amount.isGreaterThan(0);
+  const otherLockedStx =
+    stx && hasBondStx ? subtractMoneyFloor(stx.stx.lockedBalance, bondStx) : stx?.stx.lockedBalance;
+
+  function toStxQuote(money?: Money): Money | undefined {
+    if (!money || stxMarketData.state !== 'success') return undefined;
+    return baseCurrencyAmountInQuote(money, stxMarketData.value);
+  }
+
+  const otherLockedStxQuote = hasBondStx ? toStxQuote(otherLockedStx) : stx?.quote.lockedBalance;
+  const showOtherLockedStx = !hasBondStx || (otherLockedStx?.amount.isGreaterThan(0) ?? false);
 
   const totalFiatBalance =
     btc && stx && sip10
@@ -82,9 +102,13 @@ export function AllBalancesPage() {
 
   const endToEndDivider = (
     <Box mx={isMd ? 'space.00' : '-space.05'}>
-      <Divider />
+      <Hr />
     </Box>
   );
+
+  function goToBond() {
+    void navigate(RouteUrls.AllBalancesDetail.replace(':category', 'bonded'));
+  }
 
   return (
     <Flex height="100vh" direction="column" data-testid={AllBalancesSelectors.AllBalancesPage}>
@@ -126,7 +150,7 @@ export function AllBalancesPage() {
                   dataTestId={dataTestId}
                   tooltipText={tooltipText}
                   onClick={() =>
-                    navigate(RouteUrls.AllBalancesDetail.replace(':category', category))
+                    void navigate(RouteUrls.AllBalancesDetail.replace(':category', category))
                   }
                 />
               );
@@ -150,14 +174,27 @@ export function AllBalancesPage() {
               dataTestId={AllBalancesSelectors.BalanceRowStxAvailable}
               tooltipText={tooltipTextMap.stxAvailable}
             />
-            <BalanceRow
-              label="STX locked"
-              fiatValue={formatBalance(stx?.quote.lockedBalance)}
-              cryptoValue={formatBalance(stx?.stx.lockedBalance)}
-              isLoading={isStxLoading}
-              dataTestId={AllBalancesSelectors.BalanceRowStxLocked}
-              tooltipText={tooltipTextMap.stxLocked}
-            />
+            {hasBondStx && (
+              <BalanceRow
+                label="In a bond"
+                fiatValue={formatBalance(toStxQuote(bondStx))}
+                cryptoValue={formatBalance(bondStx)}
+                isLoading={isStxLoading}
+                dataTestId={BondsSelectors.BalanceRowStxInBond}
+                tooltipText={tooltipTextMap.stxBonded}
+                onClick={goToBond}
+              />
+            )}
+            {showOtherLockedStx && (
+              <BalanceRow
+                label="STX locked"
+                fiatValue={formatBalance(otherLockedStxQuote)}
+                cryptoValue={formatBalance(otherLockedStx)}
+                isLoading={isStxLoading}
+                dataTestId={AllBalancesSelectors.BalanceRowStxLocked}
+                tooltipText={tooltipTextMap.stxLocked}
+              />
+            )}
             <BalanceRow
               label="STX pending"
               fiatValue={formatBalance(stx?.quote.inboundBalance)}

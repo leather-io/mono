@@ -1,7 +1,7 @@
 import {
   ClarityType,
-  ClarityValue,
-  ContractCallPayload,
+  type ClarityValue,
+  type ContractCallPayload,
   PayloadType,
   PostConditionMode,
   deserializeTransaction,

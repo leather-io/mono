@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { typedKeys } from '~/utils/typed-keys';
 
 // Providers are partner entities that offer yeild based services
 const providers = {
@@ -24,8 +25,13 @@ const providers = {
   },
   planbetter: {
     providerId: 'planbetter',
-    name: 'PlanBetter',
+    name: 'Planbetter',
     url: 'https://planbetter.com',
+  },
+  asymmetricResearch: {
+    providerId: 'asymmetricResearch',
+    name: 'Asymmetric Research',
+    url: 'https://www.asymmetric.re',
   },
   restake: {
     providerId: 'restake',
@@ -50,7 +56,7 @@ const providers = {
 } as const;
 
 export type ProviderId = keyof typeof providers;
-export const providerIdSchema = z.enum(Object.keys(providers) as [ProviderId, ...ProviderId[]]);
+export const providerIdSchema = z.enum(typedKeys(providers));
 
 export interface LiquidStackingPool {
   providerId: ProviderId;
@@ -65,15 +71,15 @@ const liquidStackingPoolData = {
   stackingDao: {
     ...providers.stackingDao,
     slug: 'stacking-dao',
-    estApr: '5%',
-    fee: '10%',
+    estApr: 'Not available',
+    fee: 'See provider',
     payout: 'stSTX',
   },
   lisa: {
     ...providers.lisa,
     slug: 'lisa',
-    estApr: '10%',
-    fee: '0.00%',
+    estApr: 'Not available',
+    fee: 'See provider',
     payout: 'LiSTX',
   },
 } as const satisfies Record<string, LiquidStackingPool>;

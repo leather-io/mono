@@ -1,15 +1,12 @@
 import {
-  BuildRecipientSuggestionsParams,
+  type BuildRecipientSuggestionsParams,
   buildRecipientSuggestions,
 } from '@/features/send/components/recipient/build-recipient-suggestions';
-import { Account, deserializeAccountId } from '@/store/accounts/accounts';
-import BigNumber from 'bignumber.js';
+import { type RecipientActivity } from '@/features/send/components/recipient/recipient.types';
+import { type Account, deserializeAccountId } from '@/store/accounts/accounts';
 import dayjs from 'dayjs';
 import { isShallowEqual } from 'remeda';
 import { assert, describe, expect, it, vi } from 'vitest';
-
-import { btcAsset } from '@leather.io/constants';
-import { SendAssetActivity } from '@leather.io/models';
 
 function createAccount(id: string, name: string): Account {
   return {
@@ -24,28 +21,20 @@ function createAccount(id: string, name: string): Account {
 interface CreateActivityParams {
   id: string;
   receiver: string;
-  accountId?: string;
   timestamp?: [number, dayjs.ManipulateType];
 }
 
 function createActivityItem({
   id,
-  accountId = 'fp1/0',
   receiver,
   timestamp = [1, 'day'],
-}: CreateActivityParams): SendAssetActivity {
+}: CreateActivityParams): RecipientActivity {
   return {
-    type: 'sendAsset',
     txid: id,
-    asset: btcAsset,
     receivers: [receiver],
     timestamp: dayjs()
       .subtract(...timestamp)
       .unix(),
-    amount: BigNumber(3),
-    status: 'success',
-    level: 'account',
-    account: deserializeAccountId(accountId),
   };
 }
 
@@ -70,7 +59,7 @@ function invokeWithDefaults(overrides: Partial<BuildRecipientSuggestionsParams> 
   return buildRecipientSuggestions({
     searchTerm: '',
     accounts: testAccounts,
-    currentAccount: currentAccount,
+    currentAccount,
     activity: testActivity,
     canSelfSend: true,
     findAccountByAddress: callbackReturns(null),
@@ -190,7 +179,7 @@ describe('with search term', () => {
     expect(sections[0].data).toHaveLength(1);
     expect(sections[0].data).toContainEqual({
       type: 'external',
-      address: address,
+      address,
       id: address,
     });
   });
@@ -229,7 +218,7 @@ describe('with search term', () => {
         return sampleAddress;
       }
 
-      return '';
+      return null;
     }
     const sections = await invokeWithDefaults({
       searchTerm: sampleAddress,
@@ -287,7 +276,7 @@ describe('with search term', () => {
       type: 'external',
       id: resolvedAddress,
       address: resolvedAddress,
-      bnsName: bnsName,
+      bnsName,
     });
   });
 });

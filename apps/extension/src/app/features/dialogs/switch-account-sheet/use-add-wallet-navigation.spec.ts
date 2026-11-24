@@ -2,7 +2,7 @@
 import { act, createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { type Mock, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { RouteUrls } from '@shared/route-urls';
 
@@ -10,13 +10,27 @@ import { useAddWalletNavigation } from './use-add-wallet-navigation';
 
 Reflect.set(globalThis, 'IS_REACT_ACT_ENVIRONMENT', true);
 
-const h = vi.hoisted(() => ({
-  navigate: vi.fn(),
-  openInNewTab: vi.fn(),
-  closeWindow: vi.fn(),
-  pageMode: 'full' as 'full' | 'popup',
-  webUsbSupported: true,
-}));
+interface HoistedMocks {
+  navigate: Mock;
+  openInNewTab: Mock;
+  closeWindow: Mock;
+  openLedgerFlow: Mock;
+  handOffLedgerFlow: Mock;
+  pageMode: 'full' | 'popup';
+  webHidSupported: boolean;
+}
+
+const h = vi.hoisted(
+  (): HoistedMocks => ({
+    navigate: vi.fn(),
+    openInNewTab: vi.fn(),
+    closeWindow: vi.fn(),
+    openLedgerFlow: vi.fn(),
+    handOffLedgerFlow: vi.fn(),
+    pageMode: 'full',
+    webHidSupported: true,
+  })
+);
 
 vi.mock('react-router', () => ({ useNavigate: () => h.navigate }));
 
@@ -26,9 +40,17 @@ vi.mock('@app/common/utils/open-in-new-tab', () => ({
 
 vi.mock('@shared/utils', () => ({ closeWindow: h.closeWindow }));
 
+vi.mock('@app/features/ledger/flow/ledger-flow.context', () => ({
+  useLedgerFlow: () => ({ open: h.openLedgerFlow }),
+}));
+
+vi.mock('@app/features/ledger/flow/ledger-flow-handoff', () => ({
+  handOffLedgerFlowToFullPage: h.handOffLedgerFlow,
+}));
+
 vi.mock('@app/common/utils', () => ({
   whenPageMode: (map: Record<'full' | 'popup', unknown>) => map[h.pageMode],
-  doesBrowserSupportWebUsbApi: () => h.webUsbSupported,
+  doesBrowserSupportWebHidApi: () => h.webHidSupported,
 }));
 
 function renderHookValue<T>(useHook: () => T) {
@@ -53,7 +75,7 @@ describe('useAddWalletNavigation', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     h.pageMode = 'full';
-    h.webUsbSupported = true;
+    h.webHidSupported = true;
   });
 
   test('onCreateNewWallet closes the sheets before navigating to create wallet', () => {
@@ -76,41 +98,45 @@ describe('useAddWalletNavigation', () => {
     expect(h.navigate).toHaveBeenCalledWith(RouteUrls.AddWallet);
   });
 
-  test('onConnectLedger closes the sheets before navigating in full-page mode', () => {
+  test('onConnectLedger closes the sheets before opening the ledger flow in full-page mode', () => {
     h.pageMode = 'full';
-    h.webUsbSupported = true;
+    h.webHidSupported = true;
     const closeSheets = vi.fn();
     const { getValue } = renderHookValue(() => useAddWalletNavigation({ closeSheets }));
 
     act(() => getValue().onConnectLedger());
 
     expect(closeSheets).toHaveBeenCalledOnce();
-    expect(h.navigate).toHaveBeenCalledWith(RouteUrls.ConnectLedgerStart);
+    expect(h.openLedgerFlow).toHaveBeenCalledWith({ kind: 'connect-start' });
+    expect(h.navigate).not.toHaveBeenCalled();
   });
 
-  test('onConnectLedger routes to the unsupported-browser page when WebUSB is unavailable', () => {
+  test('onConnectLedger opens the unsupported-browser flow when WebHID is unavailable', () => {
     h.pageMode = 'full';
-    h.webUsbSupported = false;
+    h.webHidSupported = false;
     const closeSheets = vi.fn();
     const { getValue } = renderHookValue(() => useAddWalletNavigation({ closeSheets }));
 
     act(() => getValue().onConnectLedger());
 
     expect(closeSheets).toHaveBeenCalledOnce();
-    expect(h.navigate).toHaveBeenCalledWith(RouteUrls.LedgerUnsupportedBrowser);
+    expect(h.openLedgerFlow).toHaveBeenCalledWith({ kind: 'unsupported-browser' });
   });
 
-  test('onConnectLedger opens a new tab and closes the window in popup mode', () => {
+  test('onConnectLedger hands the flow off to a full page in popup mode', () => {
     h.pageMode = 'popup';
-    h.webUsbSupported = true;
+    h.webHidSupported = true;
     const closeSheets = vi.fn();
     const { getValue } = renderHookValue(() => useAddWalletNavigation({ closeSheets }));
 
     act(() => getValue().onConnectLedger());
 
     expect(closeSheets).toHaveBeenCalledOnce();
-    expect(h.openInNewTab).toHaveBeenCalledWith(RouteUrls.ConnectLedgerStart);
-    expect(h.closeWindow).toHaveBeenCalledOnce();
+    expect(h.handOffLedgerFlow).toHaveBeenCalledWith(
+      { kind: 'connect-start' },
+      { closeCurrentWindow: true }
+    );
+    expect(h.openLedgerFlow).not.toHaveBeenCalled();
     expect(h.navigate).not.toHaveBeenCalled();
   });
 

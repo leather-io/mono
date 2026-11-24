@@ -1,8 +1,8 @@
 import { Flex, styled } from 'leather-styles/jsx';
 
-import { Flag, InfoCircleIcon } from '@leather.io/ui';
+import { Flag } from '@leather.io/ui';
 
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
+import { InfoTooltip } from '@app/ui/components/tooltip/info-tooltip';
 
 import { BalanceAmount } from './balance-amount';
 
@@ -23,17 +23,11 @@ export function TotalBalanceHeader({
 }: TotalBalanceHeaderProps) {
   return (
     <Flex direction="column" gap="space.02" py="space.03" data-testid={dataTestId}>
-      <BasicTooltip label={tooltipText} side="bottom">
-        <Flag
-          reverse
-          spacing="space.01"
-          img={<InfoCircleIcon color="ink.text-subdued" display="inline" variant="small" />}
-        >
-          <styled.h2 textStyle="label.02" color="ink.text-subdued">
-            {label}
-          </styled.h2>
-        </Flag>
-      </BasicTooltip>
+      <Flag reverse spacing="space.01" img={<InfoTooltip label={tooltipText} />}>
+        <styled.h2 textStyle="label.02" color="ink.text-subdued">
+          {label}
+        </styled.h2>
+      </Flag>
       <BalanceAmount
         textStyle="heading.02"
         value={totalFiatBalance}

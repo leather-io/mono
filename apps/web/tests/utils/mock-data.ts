@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { type Page } from '@playwright/test';
 
 // Setup mocks for XSS protection test
 export async function setupXssMocks(page: Page) {

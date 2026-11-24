@@ -10,7 +10,7 @@ import { BitcoinDepositTokenCell } from '@/features/balances/bitcoin/bitcoin-dep
 import { ManageTokensSheet } from '@/features/balances/manage-tokens.sheet';
 import { StacksDepositTokenCell } from '@/features/balances/stacks/stacks-deposit-token-cell';
 import { CollectiblesList } from '@/features/token/collectibles-list';
-import { useActivity } from '@/queries/activity/activity.query';
+import { useActivityFeed } from '@/queries/activity/activity.query';
 import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
@@ -20,15 +20,16 @@ import {
   useCollectiblesAnalytics,
 } from '@/utils/analytics-hooks';
 
-import { AccountId } from '@leather.io/models';
-import { SheetInstance } from '@leather.io/ui/native';
+import { type AccountId } from '@leather.io/models';
+import { type SheetInstance } from '@leather.io/ui/native';
 
 import { AccountScreenHeader } from './account-screen-header';
 import { AssetTabs } from './components/asset-tabs';
 import { FirstTokenBanner } from './components/first-token-banner';
 import { LearnSection } from './components/learn-section';
+import { ManageTokensFooter } from './components/manage-tokens-footer';
 import { TrendingTokens } from './components/trending-tokens';
-import { ListTab } from './constants';
+import { type ListTab } from './constants';
 
 interface HomeScreenWithAccountProps {
   currentAccount: AccountId;
@@ -42,13 +43,8 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
   const accountSelectorSheetRef = useRef<SheetInstance>(null);
   const sip10Data = useSip10AccountBalance(fingerprint, accountIndex);
 
-  const allSip10Data = useSip10AccountBalance(fingerprint, accountIndex, {
-    includeHiddenAssets: true,
-  });
-
-  const hasAssets = !!allSip10Data.value?.sip10s.length;
-  const activityState = useActivity(fingerprint, accountIndex);
-  const hasActivity = !!activityState.value?.length;
+  const { activity: activityState } = useActivityFeed(fingerprint, accountIndex);
+  const hasActivity = activityState.state === 'success' && activityState.value.length > 0;
   const displayLearningSections = activityState.state === 'success' && !hasActivity;
 
   function onOpenAccountSelector() {
@@ -75,7 +71,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
 
       {listTab === 'tokens' && (
         <AssetsList
-          account={currentAccount}
           header={
             <>
               {/* TODO: research better way of switching between flashlists */}
@@ -88,7 +83,6 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
                   onOpenManageTokens={() => {
                     manageTokensSheetRef.current?.present();
                   }}
-                  hasAssets={hasAssets}
                 />
               )}
               <BitcoinDepositTokenCell fingerprint={fingerprint} accountIndex={accountIndex} />
@@ -97,6 +91,12 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
           }
           footer={
             <>
+              <ManageTokensFooter
+                account={currentAccount}
+                onPress={() => {
+                  manageTokensSheetRef.current?.present();
+                }}
+              />
               <TrendingTokens />
               {displayLearningSections ? <LearnSection /> : undefined}
             </>

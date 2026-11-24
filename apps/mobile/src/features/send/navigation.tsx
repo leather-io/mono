@@ -1,9 +1,14 @@
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
-import { NavigationProp, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import {
+  type NavigationProp,
+  type RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { FungibleCryptoAsset } from '@leather.io/models';
-import { HasChildren, useTheme } from '@leather.io/ui/native';
+import { type FungibleCryptoAsset } from '@leather.io/models';
+import { type HasChildren, useTheme } from '@leather.io/ui/native';
 
 // Required to use a type alias: https://reactnavigation.org/docs/typescript#typechecking-the-navigator
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions

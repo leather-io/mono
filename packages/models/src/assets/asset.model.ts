@@ -1,4 +1,4 @@
-import { Sip9Asset } from './sip9-asset.model';
+import type { Sip9Asset } from './sip9-asset.model';
 
 export const CryptoAssetChains = {
   bitcoin: 'bitcoin',

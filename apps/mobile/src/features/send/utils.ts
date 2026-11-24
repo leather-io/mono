@@ -1,10 +1,10 @@
 import { type BtcFormSchema } from '@/features/send/forms/btc/btc-form-schema';
 import { type StxFormSchema } from '@/features/send/forms/stx/stx-form-schema';
-import { PayerLookupFn } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
+import { type PayerLookupFn } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { analytics } from '@/utils/analytics';
 import { bytesToHex } from '@noble/hashes/utils';
 import { type PublicKey } from '@stacks/common';
-import { StacksNetwork } from '@stacks/network';
+import { type StacksNetwork } from '@stacks/network';
 import BigNumber from 'bignumber.js';
 import memoize from 'p-memoize';
 
@@ -14,8 +14,7 @@ import {
   generateBitcoinUnsignedTransaction,
   getBtcSignerLibNetworkConfigByMode,
 } from '@leather.io/bitcoin';
-import { type BitcoinNetworkModes, OwnedUtxo } from '@leather.io/models';
-import { defaultStacksFees } from '@leather.io/query';
+import { type BitcoinNetworkModes, type OwnedUtxo } from '@leather.io/models';
 import { getComplianceService } from '@leather.io/services';
 import { TransactionTypes, generateStacksUnsignedTransaction } from '@leather.io/stacks';
 import {
@@ -25,10 +24,10 @@ import {
   isError,
 } from '@leather.io/utils';
 
+const defaultStacksFeeMicroStx = 3000;
+
 export function calculateDefaultStacksFee() {
-  const defaultFeeFallback = 2500;
-  const defaultFeeFallbackAsMoney = createMoney(defaultFeeFallback, 'STX');
-  return convertAmountToBaseUnit(defaultStacksFees.estimates[1]?.fee ?? defaultFeeFallbackAsMoney);
+  return convertAmountToBaseUnit(createMoney(defaultStacksFeeMicroStx, 'STX'));
 }
 
 export function isUserInputEffectivelyZero(input: string) {

@@ -1,8 +1,8 @@
-import { Flex, FlexProps, styled } from 'leather-styles/jsx';
+import { Flex, type FlexProps, styled } from 'leather-styles/jsx';
 
 import { isEven } from '@leather.io/utils';
 
-import { AddressDisplayerBaseProps } from './address-displayer.types.shared';
+import { type AddressDisplayerBaseProps } from './address-displayer.types.shared';
 import { groupByFour } from './address-displayer.utils.shared';
 
 export type AddressDisplayerProps = AddressDisplayerBaseProps & FlexProps;

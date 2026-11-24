@@ -156,7 +156,7 @@ describe('`sendTransfer` method', () => {
 
   test('that it supports regtest addresses', () => {
     const result = rpcSendTransferParamsSchema.safeParse({
-      network: 'sbtcTestnet',
+      network: 'primaryTestnet',
       account: 0,
       recipients: [
         {

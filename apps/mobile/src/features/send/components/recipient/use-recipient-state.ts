@@ -2,14 +2,18 @@ import { useRef, useState } from 'react';
 import { Keyboard } from 'react-native';
 
 import {
-  GuardResult,
+  type GuardResult,
   useRecipientEvaluator,
 } from '@/features/send/components/recipient/use-recipient-evaluator';
 import { useRelevantActivity } from '@/features/send/components/recipient/use-relevant-activity';
 import type { ZodSchema } from 'zod';
 
-import { AccountId, FungibleCryptoAsset, SupportedBlockchains } from '@leather.io/models';
-import { SheetInstance } from '@leather.io/ui/native';
+import {
+  type AccountId,
+  type FungibleCryptoAsset,
+  type SupportedBlockchains,
+} from '@leather.io/models';
+import { type SheetInstance } from '@leather.io/ui/native';
 
 interface UseRecipientStateParams {
   recipientSchema: ZodSchema;

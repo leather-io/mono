@@ -215,6 +215,70 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.41.1](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.41.0...@leather.io/constants-v0.41.1) (2026-11-19)
+
+
+### Bug Fixes
+
+* point docs links at docs.leather.io ([#2982](https://github.com/leather-io/mono/issues/2982)) ([ee55d71](https://github.com/leather-io/mono/commit/ee55d7154cef83f9d26164e0cf28f39bc0d4046f))
+
+## [0.41.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.40.0...@leather.io/constants-v0.41.0) (2026-10-27)
+
+
+### Features
+
+* pin sBTC and USDCx after BTC and STX in token lists ([#2858](https://github.com/leather-io/mono/issues/2858)) ([12d4c39](https://github.com/leather-io/mono/commit/12d4c398445f690c714d16e4198b8a4ec47f9566))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.63.1
+
+## [0.40.0](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.39.4...@leather.io/constants-v0.40.0) (2026-09-29)
+
+
+### Features
+
+* **extension:** new swaps flow with sBTC bridging ([#2554](https://github.com/leather-io/mono/issues/2554)) ([65c8518](https://github.com/leather-io/mono/commit/65c85186c847b2e99fd062d00997c81932268bc5))
+
+
+### Bug Fixes
+
+* remove senseinode temporarily ([#2765](https://github.com/leather-io/mono/issues/2765)) ([6035d9b](https://github.com/leather-io/mono/commit/6035d9b5d68bcfd91959b671c6551b34c490ef4d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.63.0
+  * devDependencies
+    * @leather.io/prettier-config bumped to 0.9.1
+    * @leather.io/tsconfig-config bumped to 0.11.2
+
+## [0.39.4](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.39.3...@leather.io/constants-v0.39.4) (2026-09-14)
+
+
+### Bug Fixes
+
+* **web:** unblock footer links under the connect overlay and retire Advanced Earn ([#2731](https://github.com/leather-io/mono/issues/2731)) ([7c4ac69](https://github.com/leather-io/mono/commit/7c4ac6979a7f9f656bc7caf709fd61c521f504b8))
+
+## [0.39.3](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.39.2...@leather.io/constants-v0.39.3) (2026-09-10)
+
+
+### Bug Fixes
+
+* **auth:** bind sign-in message to requesting domain ([#2690](https://github.com/leather-io/mono/issues/2690)) ([dfb58cb](https://github.com/leather-io/mono/commit/dfb58cb5e85b2a10f89d830c5e3269c458dc6564))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/models bumped to 0.62.0
+
 ## [0.39.2](https://github.com/leather-io/mono/compare/@leather.io/constants-v0.39.1...@leather.io/constants-v0.39.2) (2026-08-27)
 
 

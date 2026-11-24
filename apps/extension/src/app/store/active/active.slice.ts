@@ -1,6 +1,6 @@
 import { createAction, createSlice } from '@reduxjs/toolkit';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import { resetWallet } from '@leather.io/state';
 import { fingerprintMigration, userRemovesWallet } from '@leather.io/state/wallet';
 

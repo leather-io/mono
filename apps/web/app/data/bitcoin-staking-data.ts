@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { pox5NetworkConfig } from '~/data/pox5-network-config';
-import { NetworkMode } from '~/features/stacking/utils/stacking-network-types';
+import { type NetworkMode } from '~/features/stacking/utils/stacking-network-types';
+import { typedKeys } from '~/utils/typed-keys';
 
 // PoX-5 pool registry. Deliberately separate from stackingPoolData: under pox-5
 // a pool's identity is its signer-manager contract, and per-pool wrapper
@@ -14,6 +15,7 @@ export type BitcoinStakingProviderId =
   | 'special'
   | 'fastPool'
   | 'planbetter'
+  | 'asymmetricResearch'
   | 'restake'
   | 'xversePool'
   | 'stackingDao'
@@ -37,6 +39,13 @@ export interface BitcoinStakingPool {
   supportsBtcPayout: boolean;
   fixedFeeBips?: number;
   requiresSelfClaim?: boolean;
+  operatorBtcPayout?: OperatorBtcPayout;
+  minStakeMicroStx?: bigint;
+}
+
+export interface OperatorBtcPayout {
+  cadence: string;
+  termsUrl: string;
 }
 
 const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPool> = {
@@ -68,11 +77,31 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
   },
   planbetter: {
     providerId: 'planbetter',
-    name: 'PlanBetter',
+    name: 'Planbetter',
     url: 'https://planbetter.com',
-    description: 'Earn non-custodial Bitcoin yield. No wrapped tokens.',
-    signerManagerContracts: {},
-    supportsBtcPayout: false,
+    description:
+      'Rewards are paid in native BTC to your Bitcoin address, roughly monthly. Planbetter collects the pool’s sBTC rewards and pays members off chain, so this pool is custodial: there is no on-chain claim and no on-chain recourse.',
+    signerManagerContracts: {
+      mainnet: ['SP3ZA8J49HPS7M3KD7EB01Y0ZAJS7VJS2NG87MDGN.planbetter-signer-manager'],
+    },
+    supportsBtcPayout: true,
+    fixedFeeBips: 500,
+    operatorBtcPayout: {
+      cadence: 'every 2 cycles, roughly monthly',
+      termsUrl: 'https://planbetter.com/#faq',
+    },
+    minStakeMicroStx: 1_000_000_000n,
+  },
+  asymmetricResearch: {
+    providerId: 'asymmetricResearch',
+    name: 'Asymmetric Research',
+    url: 'https://www.asymmetric.re',
+    description:
+      'Stack with Asymmetric Research, a security engineering firm and Stacks signer. Rewards accrue as sBTC each cycle and can be claimed once the cycle concludes.',
+    signerManagerContracts: {
+      mainnet: ['SPZACCJ8XPZ14P7K7NGFMT1BWQYF2JA9DFA2ZR8A.signer-manager'],
+    },
+    supportsBtcPayout: true,
   },
   restake: {
     providerId: 'restake',
@@ -135,7 +164,7 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
     url: 'https://senseinode.com',
     description: '',
     signerManagerContracts: {
-      mainnet: ['SP20XZGWBWSMRE94WDJ6YJ1EKPJ55RGRGK4JDJHNK.signer-manager-pox5'],
+      mainnet: ['SP20XZGWBWSMRE94WDJ6YJ1EKPJ55RGRGK4JDJHNK.signer-manager-senseinode'],
     },
     supportsBtcPayout: true,
   },
@@ -156,6 +185,7 @@ const stakingPoolSlugMap = {
   special: 'special',
   'fast-pool': 'fastPool',
   planbetter: 'planbetter',
+  'asymmetric-research': 'asymmetricResearch',
   restake: 'restake',
   'xverse-pool': 'xversePool',
   'stacking-dao': 'stackingDao',
@@ -165,9 +195,7 @@ const stakingPoolSlugMap = {
 
 export type StakingPoolSlug = keyof typeof stakingPoolSlugMap;
 
-export const stakingPoolSlugSchema = z.enum(
-  Object.keys(stakingPoolSlugMap) as [StakingPoolSlug, ...StakingPoolSlug[]]
-);
+export const stakingPoolSlugSchema = z.enum(typedKeys(stakingPoolSlugMap));
 
 export function getStakingPoolFromSlug(slug: StakingPoolSlug): BitcoinStakingPool {
   return bitcoinStakingPoolData[stakingPoolSlugMap[slug]];

@@ -83,13 +83,16 @@ test.describe('Multiwallet management', () => {
     await expect(switchAccountPage.accountName(3)).toHaveText('Account 4');
   });
 
-  test('that a user can view a wallet secret key', async ({ switchAccountPage, page }) => {
+  test('that a user can view a wallet secret key', async ({
+    homePage,
+    switchAccountPage,
+    page,
+  }) => {
     await switchAccountPage.open();
     await switchAccountPage.enterManageMode();
     await switchAccountPage.viewSecretKey(0);
 
-    await page.getByTestId(SettingsSelectors.EnterPasswordInput).fill(TEST_PASSWORD);
-    await page.getByTestId(SettingsSelectors.UnlockWalletBtn).click();
+    await homePage.unlock();
     await page.getByTestId(SettingsSelectors.ShowSecretKeyBtn).click();
 
     await expect(page.getByText('approve')).toBeVisible();

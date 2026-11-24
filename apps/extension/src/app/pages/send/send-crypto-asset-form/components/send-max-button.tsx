@@ -25,7 +25,7 @@ export function SendMaxButton({ balance, sendMaxBalance, ...props }: SendMaxButt
       toast.error('Zero balance');
       return;
     }
-    return amountFieldHelpers.setValue(sendMaxBalance);
+    void amountFieldHelpers.setValue(sendMaxBalance);
   }, [amountFieldHelpers, balance.amount, sendMaxBalance, toast]);
 
   // Hide send max button if lowest fee calc is greater

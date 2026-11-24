@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
-import { getStacksExplorerLink } from '@leather.io/features';
-import { ChainId } from '@leather.io/models';
+import { getStacksExplorerApiUrl, getStacksExplorerLink } from '@leather.io/features';
+import { stacksChainIdToCoreNetworkMode } from '@leather.io/stacks';
 
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 
@@ -18,15 +18,16 @@ export function useStacksExplorerLink() {
     ({ searchParams, txid }: HandleOpenStacksTxLinkArgs) => {
       openInNewTab(
         getStacksExplorerLink({
-          mode: chain.stacks.chainId === ChainId.Mainnet ? 'mainnet' : 'testnet',
+          mode: stacksChainIdToCoreNetworkMode(chain.stacks.chainId),
           type: 'txid',
           value: txid,
           searchParams,
           isNakamoto: isNakamotoTestnet,
+          apiUrl: getStacksExplorerApiUrl(chain.stacks.url),
         })
       );
     },
-    [chain.stacks.chainId, isNakamotoTestnet]
+    [chain.stacks.chainId, chain.stacks.url, isNakamotoTestnet]
   );
 
   return { handleOpenStacksTxLink };

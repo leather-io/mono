@@ -1,4 +1,4 @@
-import Animated, { LayoutAnimation, withSpring, withTiming } from 'react-native-reanimated';
+import Animated, { type LayoutAnimation, withSpring, withTiming } from 'react-native-reanimated';
 
 import {
   AmountField as RawAmountField,

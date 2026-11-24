@@ -1,13 +1,6 @@
-import { useMemo } from 'react';
-import { useLocation } from 'react-router';
-
-import get from 'lodash.get';
+import { useLedgerStep } from '../flow/ledger-flow.context';
 
 export function useHasApprovedOperation() {
-  const location = useLocation();
-
-  return useMemo(() => {
-    const state = location.state;
-    return get(state, 'hasApprovedOperation', false) as boolean;
-  }, [location.state]);
+  const step = useLedgerStep();
+  return step.name === 'awaiting-device-operation' && step.hasApprovedOperation;
 }

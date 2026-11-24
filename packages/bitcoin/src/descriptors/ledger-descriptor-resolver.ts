@@ -1,4 +1,4 @@
-import { type KeyInfo } from '@bitcoinerlab/descriptors';
+import { type KeyInfo } from '@bitcoinerlab/descriptors-core';
 import { sha256 } from '@noble/hashes/sha256';
 import { bytesToHex } from '@noble/hashes/utils';
 import { createBase58check } from '@scure/base';
@@ -26,12 +26,18 @@ export interface ResolveLedgerSignableDescriptorArgs {
   accountKey: AccountDescriptorKey['key'];
 }
 
+function assertRawPublicKey(key: KeyInfo): asserts key is RawPublicKey {
+  if (!key.pubkey) throw new Error('Descriptor key has no public key');
+}
+
 function getForeignRawPublicKeys(keys: KeyInfo[], accountKey: RawPublicKey): RawPublicKey[] {
   const accountPublicKey = bytesToHex(accountKey.pubkey);
-  return keys.filter(
-    (key): key is RawPublicKey =>
-      !key.bip32 && !!key.pubkey && bytesToHex(key.pubkey) !== accountPublicKey
-  );
+  return keys
+    .filter(key => !key.bip32 && !!key.pubkey && bytesToHex(key.pubkey) !== accountPublicKey)
+    .map(key => {
+      assertRawPublicKey(key);
+      return key;
+    });
 }
 
 function resolveKeyExpression(

@@ -1,7 +1,7 @@
 import { ActionButtons } from '@/components/action-buttons';
 import { Balance } from '@/components/balance/balance';
 import { PriceChange } from '@/components/balance/price-change';
-import { FetchState } from '@/components/loading';
+import { type FetchState } from '@/components/loading';
 import { Screen } from '@/components/screen/screen';
 import { HeaderTitle } from '@/components/screen/screen-header/components/header-title';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
@@ -10,8 +10,8 @@ import { TokenActivity } from '@/features/token/components/token-activity';
 import { TokenDetailsTable } from '@/features/token/components/token-details-table';
 import { TokenOverview } from '@/features/token/components/token-overview';
 
-import { type ActivityView, type TokenBalance } from '@leather.io/features';
-import { FungibleCryptoAsset, isSwappableAsset } from '@leather.io/models';
+import { type BlockchainActivityItem, type TokenBalance } from '@leather.io/features';
+import { type FungibleCryptoAsset, isSwappableAsset } from '@leather.io/models';
 import { Box, SkeletonLoader, Text } from '@leather.io/ui/native';
 
 import { getReceiveType } from '../receive/utils/get-receive-type';
@@ -20,7 +20,7 @@ import { useGetTokenDetails } from './use-get-token-details';
 import { getAvailableBalance, getQuoteBalance } from './utils/get-balance';
 
 interface TokenProps {
-  activity: FetchState<ActivityView[]>;
+  activity: FetchState<BlockchainActivityItem[]>;
   asset: FungibleCryptoAsset;
   balance: FetchState<TokenBalance>;
   canSend?: boolean;

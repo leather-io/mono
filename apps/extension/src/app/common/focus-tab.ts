@@ -1,5 +1,6 @@
 export function focusTabAndWindow(tabId: number | null) {
-  chrome.tabs.update(tabId ?? 0, { active: true }, tab => {
+  if (tabId === null) return;
+  chrome.tabs.update(tabId, { active: true }, tab => {
     if (!tab) return;
     void chrome.windows.update(tab.windowId, { focused: true });
   });

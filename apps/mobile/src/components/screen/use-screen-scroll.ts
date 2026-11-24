@@ -6,9 +6,8 @@
  * Copyright (c) 2022 WorkOS
  * https://github.com/codeherence/react-native-header/blob/main/LICENSE
  * */
-import { NativeScrollEvent } from 'react-native';
+import { type NativeScrollEvent } from 'react-native';
 import {
-  AnimatedRef,
   runOnUI,
   scrollTo,
   useAnimatedScrollHandler,
@@ -17,11 +16,12 @@ import {
   withTiming,
 } from 'react-native-reanimated';
 
+import { type ScreenScrollRef } from '@/components/screen/screen-scroll-ref';
 import { useDebouncedCallback } from 'use-debounce';
 
 interface UseScrollContainerLogicProps {
   enableHeaderAnimation?: boolean;
-  scrollRef: AnimatedRef<any>;
+  scrollRef: ScreenScrollRef;
   // A hack to ensure that the larger repositions itself correctly.
   adjustmentOffset?: number;
   disableAutoFixScroll?: boolean;

@@ -3,8 +3,8 @@ import z from 'zod';
 
 import { logger } from '@shared/logger';
 
-import { store } from '@app/store';
 import { selectSoftwareKeys } from '@app/store/software-keys/software-key.selectors';
+import { store } from '@app/store/store';
 
 import * as inMemoryStore from './in-memory-key/in-memory-storage';
 

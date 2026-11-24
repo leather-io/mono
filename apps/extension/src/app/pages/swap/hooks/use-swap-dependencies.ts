@@ -6,7 +6,6 @@ import {
   type TxBroadcastResultOk,
   broadcastTransaction,
 } from '@stacks/transactions';
-import { SbtcApiClientMainnet, SbtcApiClientTestnet } from 'sbtc';
 
 import { type BitcoinNativeSegwitPayer } from '@leather.io/bitcoin';
 import { type NetworkModes, bitcoinNetworkToNetworkMode } from '@leather.io/models';
@@ -14,30 +13,39 @@ import {
   getBitcoinCoinSelectionService,
   getBitcoinTransactionFeesService,
   getMarketDataService,
+  getMempoolApiClient,
   getStacksTransactionFeesService,
   getSwapService,
 } from '@leather.io/services';
 import { type StacksSigner } from '@leather.io/stacks';
-import { type SwapDependencies } from '@leather.io/state/swap';
+import {
+  type SwapDependencies,
+  SwapSigningCancelledError,
+  broadcastBitcoinTransaction,
+} from '@leather.io/state/swap';
 import { assertExistence } from '@leather.io/utils';
 
-import { useBitcoinClient } from '@app/query/bitcoin/clients/bitcoin-client';
+import { useRefreshAllAccountData } from '@app/common/hooks/account/use-refresh-all-account-data';
 import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { hiroFetchWrapper } from '@app/query/stacks/stacks-client';
 import { useAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useSignBitcoinTx } from '@app/store/accounts/blockchain/bitcoin/bitcoin.hooks';
 import { useCurrentAccountNativeSegwitIndexZeroPayerNullable } from '@app/store/accounts/blockchain/bitcoin/native-segwit-account.hooks';
-import { useCurrentStacksAccount } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
+import {
+  useCurrentStacksAccount,
+  useCurrentStacksAccountAddress,
+} from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 import { useCurrentStacksNetworkState } from '@app/store/networks/networks.hooks';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
 
+import { isSigningCancelledError } from '../swap-utils';
+
 // This file is mostly vibed to be able to plug useSwapState and move forward with the UI work
 // TODO: Needs a careful rewrite.
 
-const sbtcClientMainnet = new SbtcApiClientMainnet({});
-const sbtcClientTestnet = new SbtcApiClientTestnet({});
+const accountDataRefreshDelayMs = 250;
 
 interface BroadcastStacksTransactionParams {
   tx: StacksTransactionWire;
@@ -71,24 +79,21 @@ export function useSwapDependencies(): SwapDependencies {
   const stacksAccount = useCurrentStacksAccount();
   const stacksNetwork = useCurrentStacksNetworkState();
   const network = useCurrentNetwork();
-  const signStacksTx = useSignStacksTransaction();
-  const { data: nextNonce } = useNextNonce(stacksAccount?.address ?? '');
+  const signStacksTx = useSignStacksTransaction({ settleOnRejection: true });
+  const stxAddress = useCurrentStacksAccountAddress();
+  const { data: nextNonce } = useNextNonce(stxAddress);
   const nativeSegwitSigner = useCurrentAccountNativeSegwitIndexZeroPayerNullable();
-  const bitcoinClient = useBitcoinClient();
-  const signBitcoinTx = useSignBitcoinTx();
+  const signBitcoinTx = useSignBitcoinTx({ settleOnRejection: true });
+  const refreshAllAccountData = useRefreshAllAccountData();
 
   const bitcoinNetworkMode = bitcoinNetworkToNetworkMode(network.chain.bitcoin.bitcoinNetwork);
   const stacksNetworkMode: NetworkModes = bitcoinNetworkMode === 'mainnet' ? 'mainnet' : 'testnet';
-
-  const sbtcClient =
-    network.chain.bitcoin.mode === 'mainnet' ? sbtcClientMainnet : sbtcClientTestnet;
 
   assertExistence(stacksAccount, 'Stacks account missing during swap initialization');
   assertExistence(
     currentAccountId.fingerprint,
     'Wallet fingerprint missing during swap initialization'
   );
-  assertExistence(nativeSegwitSigner, 'Bitcoin signer missing during swap initialization');
 
   const stacksSigner: StacksSigner = useMemo(() => {
     return {
@@ -102,7 +107,7 @@ export function useSwapDependencies(): SwapDependencies {
       async sign(tx: StacksTransactionWire) {
         const result = signStacksTx(tx);
         const signed = await Promise.resolve(result);
-        if (!signed) throw new Error('Signing cancelled');
+        if (!signed) throw new SwapSigningCancelledError();
         return signed;
       },
       signMessage() {
@@ -114,7 +119,8 @@ export function useSwapDependencies(): SwapDependencies {
     };
   }, [stacksAccount, currentAccountId, stacksNetworkMode, signStacksTx]);
 
-  const bitcoinPayer: BitcoinNativeSegwitPayer = useMemo(() => {
+  const bitcoinPayer: BitcoinNativeSegwitPayer | undefined = useMemo(() => {
+    if (!nativeSegwitSigner) return undefined;
     return {
       paymentType: 'p2wpkh',
       network: bitcoinNetworkMode,
@@ -125,17 +131,6 @@ export function useSwapDependencies(): SwapDependencies {
       payment: nativeSegwitSigner.payment,
     };
   }, [nativeSegwitSigner, bitcoinNetworkMode, currentAccountId.fingerprint]);
-
-  const broadcastBitcoinTransaction = useMemo(() => {
-    return async (tx: string) => {
-      const response = await bitcoinClient.transactionsApi.broadcastTransaction(tx);
-      if (!response.ok) {
-        const message = await response.text();
-        throw new Error(message || `Broadcast failed: ${response.status}`);
-      }
-      return response.text();
-    };
-  }, [bitcoinClient]);
 
   return {
     accountRequest: { account: accountAddresses },
@@ -152,15 +147,21 @@ export function useSwapDependencies(): SwapDependencies {
       broadcast: broadcastStacksTx,
       nextNonce,
     },
-    bitcoin: {
-      network,
-      bitcoinPayer,
-      sbtcClient,
-      signBitcoinPsbt: async (psbt: Uint8Array) => {
-        const result = signBitcoinTx(psbt);
-        return Promise.resolve(result);
-      },
-      broadcast: broadcastBitcoinTransaction,
+    bitcoin: bitcoinPayer
+      ? {
+          network,
+          bitcoinPayer,
+          async signBitcoinPsbt(psbt: Uint8Array) {
+            const signed = await Promise.resolve(signBitcoinTx(psbt));
+            if (!signed) throw new SwapSigningCancelledError();
+            return signed;
+          },
+          broadcast: (txHex: string) => broadcastBitcoinTransaction(getMempoolApiClient(), txHex),
+        }
+      : undefined,
+    onSwapSubmitted() {
+      void refreshAllAccountData(accountDataRefreshDelayMs);
     },
+    isSigningCancelledError,
   };
 }

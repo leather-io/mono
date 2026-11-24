@@ -1,6 +1,6 @@
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 
-import { ByosmSignerManagerState } from './use-byosm-signer-manager';
+import { type ByosmSignerManagerState } from './use-byosm-signer-manager';
 
 const byosmContent = bitcoinStakingContent.byosm;
 

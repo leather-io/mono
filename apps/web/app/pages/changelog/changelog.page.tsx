@@ -1,4 +1,4 @@
-import { Route } from './+types/changelog.route';
+import { type Route } from './+types/changelog.route';
 import { ChangelogEntry } from './components/changelog-entry';
 import { ChangelogEntryLayout, ChangelogPageLayout } from './components/changelog-page-layout';
 
@@ -9,7 +9,7 @@ export function ChangelogPage({ entries }: ChangelogPageProps) {
   return (
     <ChangelogPageLayout>
       {entries.map((entry, index) => (
-        <ChangelogEntry entry={entry} key={entry._id}>
+        <ChangelogEntry entry={entry} key={entry.slug}>
           <ChangelogEntryLayout
             leftColumn={
               <>

@@ -1,7 +1,10 @@
 import { type BrowserContext, type Page, expect } from '@playwright/test';
-import { overrideLaunchDarklyFlags } from '@tests/mocks/mock-launchdarkly';
 import { exampleStacksMultisigPublicKeys, exampleWshDescriptor } from '@tests/mocks/mock-policies';
 import { testFingerprint } from '@tests/page-object-models/onboarding.page';
+import { readPersistedStore } from '@tests/persisted-store';
+import { z } from 'zod';
+
+import { assertExistence } from '@leather.io/utils';
 
 import { test } from '../../fixtures/fixtures';
 
@@ -14,10 +17,10 @@ const cosignerPublicKey = exampleStacksMultisigPublicKeys[1];
 const strangerPublicKey = '030347be500a8b2707a00e7576c0c527a247cddc6e8363ee51147b8e43b590baa9';
 
 async function initiateRequest(page: Page, method: string, params: unknown) {
-  return page.evaluate(
-    ({ method, params }) => (window as any).LeatherProvider?.request(method, params),
-    { method, params }
-  );
+  return page.evaluate(({ method, params }) => window.LeatherProvider?.request(method, params), {
+    method,
+    params,
+  });
 }
 
 async function waitForPopup(context: BrowserContext) {
@@ -31,18 +34,13 @@ async function waitForPopup(context: BrowserContext) {
 async function getPersistedPolicyIds(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/index.html`);
   await page.waitForFunction(() => typeof window.debug?.getPersistedStore === 'function');
-  return page.evaluate(async () => {
-    const store = await window.debug.getPersistedStore();
-    return (store as { policy?: { ids?: string[] } } | undefined)?.policy?.ids ?? [];
-  });
+  const store = await readPersistedStore(page);
+  return store?.policy?.ids ?? [];
 }
 
 test.describe('Rpc: add account in verify mode (non-whitelisted origin)', () => {
-  test.beforeEach(async ({ extensionId, globalPage, onboardingPage, context }) => {
+  test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    // The add-account approver is gated behind `releaseAddAccount`; enable it so
-    // the popup renders instead of rejecting as unsupported.
-    await overrideLaunchDarklyFlags(context, { releaseAddAccount: true });
     await onboardingPage.signInWithTestAccount(extensionId);
   });
 
@@ -66,14 +64,15 @@ test.describe('Rpc: add account in verify mode (non-whitelisted origin)', () => 
     await verifyButton.click();
 
     const result = await requestPromise;
+    assertExistence(result, 'Expected result');
     expect(result.result).toMatchObject({
       added: false,
       role: 'signer',
       threshold: 2,
       publicKeys: [testAccountStxPublicKey, cosignerPublicKey],
     });
-    expect(typeof result.result.address).toBe('string');
-    expect(result.result.accountId).toBeUndefined();
+    expect(typeof result.result?.address).toBe('string');
+    expect(result.result?.accountId).toBeUndefined();
 
     // Verify mode must not write anything to the wallet
     expect(await getPersistedPolicyIds(page, extensionId)).toEqual([]);
@@ -114,13 +113,14 @@ test.describe('Rpc: add account in verify mode (non-whitelisted origin)', () => 
     await verifyButton.click();
 
     const result = await requestPromise;
+    assertExistence(result, 'Expected result');
     expect(result.result).toMatchObject({
       added: false,
       role: 'signer',
       descriptor: exampleWshDescriptor,
     });
-    expect(result.result.address).toMatch(/^bc1q/);
-    expect(result.result.accountId).toBeUndefined();
+    expect(result.result?.address).toMatch(/^bc1q/);
+    expect(result.result?.accountId).toBeUndefined();
 
     expect(await getPersistedPolicyIds(page, extensionId)).toEqual([]);
   });
@@ -140,22 +140,17 @@ async function stubWhitelistedOriginPage(context: BrowserContext) {
 }
 
 async function waitForProvider(page: Page) {
-  await page.waitForFunction(() =>
-    Boolean((window as { LeatherProvider?: unknown }).LeatherProvider)
-  );
+  await page.waitForFunction(() => Boolean(window.LeatherProvider));
 }
 
 async function readPersistedPolicyIds(page: Page) {
-  return page.evaluate(async () => {
-    const store = await window.debug.getPersistedStore();
-    return (store as { policy?: { ids?: string[] } } | undefined)?.policy?.ids ?? [];
-  });
+  const store = await readPersistedStore(page);
+  return store?.policy?.ids ?? [];
 }
 
 test.describe('Rpc: add account in add mode (whitelisted origin)', () => {
   test.beforeEach(async ({ extensionId, globalPage, onboardingPage, context }) => {
     await globalPage.setupAndUseApiCalls(extensionId);
-    await overrideLaunchDarklyFlags(context, { releaseAddAccount: true });
     await stubWhitelistedOriginPage(context);
     await onboardingPage.signInWithTestAccount(extensionId);
   });
@@ -178,33 +173,17 @@ test.describe('Rpc: add account in add mode (whitelisted origin)', () => {
     await confirmButton.click();
 
     const result = await requestPromise;
+    assertExistence(result, 'Expected result');
     expect(result.result).toMatchObject({
       added: true,
       role: 'signer',
       descriptor: exampleWshDescriptor,
     });
-    expect(result.result.address).toMatch(/^bc1q/);
-    expect(result.result.accountId).toBe(result.result.address);
+    expect(result.result?.address).toMatch(/^bc1q/);
+    expect(result.result?.accountId).toBe(result.result?.address);
 
-    const expectedPolicyId = `${testFingerprint}/0/${result.result.address}/mainnet`;
+    const address = z.string().parse(result.result?.address);
+    const expectedPolicyId = `${testFingerprint}/0/${address}/mainnet`;
     await expect.poll(() => readPersistedPolicyIds(page)).toEqual([expectedPolicyId]);
-  });
-});
-
-test.describe('Rpc: add account when the feature is disabled', () => {
-  test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
-    await globalPage.setupAndUseApiCalls(extensionId);
-    await onboardingPage.signInWithTestAccount(extensionId);
-  });
-
-  test('rejects stx_addAccount as unsupported', async ({ page }) => {
-    await page.goto('localhost:3000');
-    const requestPromise = initiateRequest(page, 'stx_addAccount', {
-      name: 'Shared treasury',
-      publicKeys: [testAccountStxPublicKey, cosignerPublicKey],
-      threshold: 2,
-    });
-
-    await expect(requestPromise).rejects.toThrow();
   });
 });

@@ -2,17 +2,17 @@ import type React from 'react';
 
 import { Box } from 'leather-styles/jsx';
 
-import type { Blockchain, Currency } from '@leather.io/models';
+import type { Currency, SupportedBlockchains } from '@leather.io/models';
 import { ItemLayout } from '@leather.io/ui';
+import { capitalize } from '@leather.io/utils';
 
-import { capitalize } from '@app/common/utils';
 import { useCheckLedgerBlockchainAvailable } from '@app/store/accounts/blockchain/utils';
 
 import type { TokenListVariant } from '../token-list';
 import { ConnectLedgerButton } from './connect-ledger-asset-button';
 
 interface ConnectLedgerAssetItemFallbackProps {
-  chain: Blockchain;
+  chain: SupportedBlockchains;
   icon: React.ReactNode;
   symbol: Currency;
   variant: TokenListVariant;

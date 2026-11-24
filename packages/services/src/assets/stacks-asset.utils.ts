@@ -2,11 +2,11 @@ import {
   CryptoAssetCategories,
   CryptoAssetChains,
   CryptoAssetProtocols,
-  Sip10Asset,
+  type Sip10Asset,
 } from '@leather.io/models';
 import { getSip10TokenNameWithOverrides, getTicker, isUndefined } from '@leather.io/utils';
 
-import { LeatherApiSip10Token } from '../infrastructure/api/leather/leather-api.client';
+import { type LeatherApiSip10Token } from '../infrastructure/api/leather/leather-api.client';
 
 export function isTransferableSip10Token(token: LeatherApiSip10Token) {
   return !isUndefined(token.decimals) && !isUndefined(token.name) && !isUndefined(token.symbol);
@@ -23,21 +23,6 @@ export function getContractPrincipalFromAssetIdentifier(assetIdentifier: string)
 export function getAddressFromAssetIdentifier(assetIdentifier: string) {
   const principal = getContractPrincipalFromAssetIdentifier(assetIdentifier);
   return principal.split('.')[0];
-}
-
-export function getAssetIdentifierFromContract(
-  contractAddress: string,
-  contractName: string,
-  assetName: string
-) {
-  return `${contractAddress}.${contractName}::${assetName}`;
-}
-
-export function getContractPrincipalFromAddressAndName(
-  contractAddress: string,
-  contractName: string
-) {
-  return `${contractAddress}.${contractName}`;
 }
 
 export function createSip10Asset(sip10Token: LeatherApiSip10Token): Sip10Asset {

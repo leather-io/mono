@@ -1,11 +1,13 @@
-import { store } from '@/store';
 import {
   selectAssetVisibility,
   selectCurrencyPreference,
   selectNetworkPreference,
+  selectTokenPreset,
 } from '@/store/settings/settings.read';
+import { getDefaultAssetVisibilityPolicy } from '@/store/settings/token-preset';
+import { store } from '@/store/store';
 
-import { SettingsService } from '@leather.io/services';
+import { type SettingsService } from '@leather.io/services';
 
 export class MobileSettingsService implements SettingsService {
   getSettings() {
@@ -13,6 +15,7 @@ export class MobileSettingsService implements SettingsService {
       quoteCurrency: selectCurrencyPreference(store.getState()),
       network: selectNetworkPreference(store.getState()),
       assetVisibility: selectAssetVisibility(store.getState()),
+      defaultAssetVisibility: getDefaultAssetVisibilityPolicy(selectTokenPreset(store.getState())),
     };
   }
 }

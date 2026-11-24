@@ -1,4 +1,4 @@
-import { JSXElementConstructor, ReactElement, ReactNode, cloneElement } from 'react';
+import { type ReactElement, type ReactNode, cloneElement } from 'react';
 
 import { type CssFunction, css } from 'leather-styles/css';
 import { Box } from 'leather-styles/jsx';
@@ -20,7 +20,7 @@ interface RadixDialogProps extends SheetProps {
   description?: string;
   children: ReactNode;
   footer?: ReactNode;
-  header?: ReactElement<any, string | JSXElementConstructor<any>>;
+  header?: ReactElement<Pick<SheetProps, 'onClose'>>;
   onGoBack?(): void;
   wrapChildren?: boolean;
   variant?: SheetVariant;
@@ -126,7 +126,8 @@ export function Sheet({
                 style={{
                   height: '100%',
                   maxHeight: contentMaxHeight,
-                  marginBottom: footer ? token('sizes.footerHeight') : token('spacing.space.04'),
+                  minHeight: 0,
+                  marginBottom: footer ? 0 : token('spacing.space.04'),
                   overflowY: 'auto',
                 }}
               >
@@ -135,7 +136,11 @@ export function Sheet({
             ) : (
               children
             )}
-            {footer && <SheetFooter>{footer}</SheetFooter>}
+            {footer && (
+              <SheetFooter position="static" flexShrink={0}>
+                {footer}
+              </SheetFooter>
+            )}
           </RadixDialog.Content>
         </RadixDialog.Overlay>
       </RadixDialog.Portal>

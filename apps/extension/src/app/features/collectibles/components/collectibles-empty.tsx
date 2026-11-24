@@ -1,3 +1,4 @@
+import { CollectiblesSelectors } from '@tests/selectors/collectibles.selectors';
 import { Stack, styled } from 'leather-styles/jsx';
 
 import { BNS_REGISTRATION_URL } from '@leather.io/constants';
@@ -42,7 +43,7 @@ export function CollectiblesEmpty() {
   ];
 
   return (
-    <Stack gap="space.00" data-testid="collectibles-empty">
+    <Stack gap="space.00" data-testid={CollectiblesSelectors.CollectiblesEmpty}>
       <Stack gap="space.01" pb="space.04">
         <styled.h3 textStyle="label.01" margin="0">
           Get your first NFT

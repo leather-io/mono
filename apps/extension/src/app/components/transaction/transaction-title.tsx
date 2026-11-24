@@ -1,10 +1,9 @@
 import { useRef, useState } from 'react';
 
-import { Title } from '@leather.io/ui';
+import { BasicTooltip, Title } from '@leather.io/ui';
 
 import { useOnResizeListener } from '@app/common/hooks/use-on-resize-listener';
 import { useSpamFilterWithWhitelist } from '@app/common/spam-filter/use-spam-filter';
-import { BasicTooltip } from '@app/ui/components/tooltip/basic-tooltip';
 
 interface TransactionTitleProps {
   title: string;
@@ -12,12 +11,12 @@ interface TransactionTitleProps {
 export function TransactionTitle(props: TransactionTitleProps) {
   const { title } = props;
   const ref = useRef<HTMLDivElement | null>(null);
-  const element = ref.current!;
+  const element = ref.current;
   const [isEllipsisActive, setIsEllipsisActive] = useState(
-    element?.scrollWidth > element?.clientWidth
+    !!element && element.scrollWidth > element.clientWidth
   );
   function onResize() {
-    setIsEllipsisActive(element?.scrollWidth > element?.clientWidth);
+    setIsEllipsisActive(!!element && element.scrollWidth > element.clientWidth);
   }
 
   const spamFilter = useSpamFilterWithWhitelist();

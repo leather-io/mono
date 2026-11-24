@@ -1,18 +1,14 @@
-import { FetchState, toFetchState } from '@/components/loading/fetch-state';
-import { useAccountAddresses } from '@/hooks/use-account-addresses';
-import { useSettings } from '@/store/settings/settings';
-import { useQuery } from '@tanstack/react-query';
-import { filter, isDefined, isShallowEqual, pipe } from 'remeda';
+import { type FetchState, toFetchState } from '@/components/loading/fetch-state';
+import { type RecipientActivity } from '@/features/send/components/recipient/recipient.types';
+import { useActivityByAssetIdQuery } from '@/queries/activity/activity.query';
+import { filter, isDefined, map, pipe } from 'remeda';
 
 import {
-  AccountId,
-  Activity,
-  FungibleCryptoAsset,
-  QuoteCurrency,
-  SendAssetActivity,
+  type AccountId,
+  type BlockchainActivity,
+  type FungibleCryptoAsset,
 } from '@leather.io/models';
-import { createActivityQueryConfig } from '@leather.io/queries';
-import { UserSettings } from '@leather.io/services';
+import { getAssetId } from '@leather.io/utils';
 
 interface UseRelevantActivityProps {
   asset: FungibleCryptoAsset;
@@ -20,45 +16,42 @@ interface UseRelevantActivityProps {
 }
 
 export function useRelevantActivity({ asset, currentAccount }: UseRelevantActivityProps) {
-  const { fiatCurrencyPreference, networkPreference, assetVisibility } = useSettings();
   const { fingerprint, accountIndex } = currentAccount;
-  const accountAddresses = useAccountAddresses(fingerprint, accountIndex);
-  const settings: UserSettings = {
-    network: networkPreference,
-    quoteCurrency: fiatCurrencyPreference as QuoteCurrency,
-    assetVisibility,
-  };
-  const baseConfig = createActivityQueryConfig(accountAddresses, settings);
-  const queryKeyWithCurrency = [...(baseConfig.queryKey ?? []), fiatCurrencyPreference];
-
   return toFetchState(
-    useQuery<Activity[], Error, SendAssetActivity[]>({
-      ...baseConfig,
-      queryKey: queryKeyWithCurrency,
-      select: data =>
-        pipe(data, filter(isValidSendActivity), filter(isRelevantSendActivity(asset))),
-    })
+    useActivityByAssetIdQuery(
+      fingerprint,
+      accountIndex,
+      getAssetId(asset),
+      selectRelevantSendActivity
+    )
   );
 }
 
-function isValidSendActivity(activity: Activity): activity is SendAssetActivity {
-  return (
-    activity.type === 'sendAsset' &&
-    // Items from the API response sometimes erroneously contain no receivers or empty strings
-    isDefined(activity.receivers[0]) &&
-    activity.receivers[0].length !== 0
-  );
+function selectRelevantSendActivity(activities: BlockchainActivity[]) {
+  return pipe(activities, filter(isSendActivity), map(toRecipientActivity), filter(hasReceivers));
 }
 
-function isRelevantSendActivity(asset: FungibleCryptoAsset) {
-  return (activity: SendAssetActivity) => isShallowEqual(activity.asset, asset);
+function isSendActivity(activity: BlockchainActivity) {
+  return activity.action === 'send';
+}
+
+function toRecipientActivity(activity: BlockchainActivity): RecipientActivity {
+  return {
+    txid: activity.txid,
+    timestamp: activity.timestamp,
+    receivers: activity.counterparty ? [activity.counterparty] : [],
+  };
+}
+
+function hasReceivers(activity: RecipientActivity) {
+  return isDefined(activity.receivers[0]) && activity.receivers[0].length !== 0;
 }
 
 interface MatchRelevantActivityResult {
-  result: FetchState<SendAssetActivity[]>;
+  result: FetchState<RecipientActivity[]>;
   loading: React.ReactNode;
   error(error: string): React.ReactNode;
-  success(data: SendAssetActivity[]): React.ReactNode;
+  success(data: RecipientActivity[]): React.ReactNode;
 }
 
 export function matchRelevantActivityResult({

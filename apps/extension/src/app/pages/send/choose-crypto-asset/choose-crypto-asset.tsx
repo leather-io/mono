@@ -1,30 +1,13 @@
-import { useNavigate } from 'react-router';
-
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { Box, styled } from 'leather-styles/jsx';
 
-import { assetIdToSendPath } from '@leather.io/features';
-import { CryptoAssetProtocols } from '@leather.io/models';
-import { type SerializedCryptoAssetId, deserializeAssetId } from '@leather.io/utils';
-
-import { RouteUrls } from '@shared/route-urls';
-
+import { useNavigateToSendForm } from '@app/common/hooks/use-navigate-to-send-form';
 import { Card, Content, Page } from '@app/components/layout';
 import { TokenList } from '@app/features/asset-list/token-list';
 import { PageHeader } from '@app/features/container/headers/page.header';
-import { useConfigBitcoinSendEnabled } from '@app/query/common/remote-config/remote-config.query';
 
 export function ChooseCryptoAsset() {
-  const navigate = useNavigate();
-  const isBitcoinSendEnabled = useConfigBitcoinSendEnabled();
-
-  function navigateToSendForm(assetId: SerializedCryptoAssetId) {
-    const { protocol } = deserializeAssetId(assetId);
-    if (protocol === CryptoAssetProtocols.nativeBtc && !isBitcoinSendEnabled) {
-      return navigate(RouteUrls.SendBtcDisabled);
-    }
-    return navigate(`${RouteUrls.SendCryptoAsset}/${assetIdToSendPath(assetId)}`);
-  }
+  const navigateToSendForm = useNavigateToSendForm();
 
   return (
     <>
@@ -44,7 +27,7 @@ export function ChooseCryptoAsset() {
           >
             <Box pb="space.04" px="space.05">
               <TokenList
-                onSelectAsset={navigateToSendForm}
+                onSelectAsset={assetId => void navigateToSendForm(assetId)}
                 variant="interactive"
                 filter="enabled"
               />

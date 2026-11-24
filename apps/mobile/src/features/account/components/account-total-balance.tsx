@@ -5,7 +5,7 @@ import { useAccountTotalBalance } from '@/queries/balance/account-balance.query'
 import { useWallets } from '@/store/wallets/wallets.read';
 import { t } from '@lingui/core/macro';
 
-import { AccountId } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 import { Box, Pressable, QuestionCircleIcon, SkeletonLoader, Text } from '@leather.io/ui/native';
 
 interface AccountTotalBalanceProps {

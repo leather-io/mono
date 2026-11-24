@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 import { AllBalancesSelectors } from '@tests/selectors/all-balances.selectors';
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
@@ -49,6 +49,10 @@ test.describe('All balances', () => {
     await expect(availableRow).toContainText('Available to transfer');
     await expect(availableRow).toContainText('$450.00');
     await expect(availableRow).toContainText('0.01');
+
+    const bondedRow = page.getByTestId(AllBalancesSelectors.BalanceRowBonded);
+    await expect(bondedRow).toContainText('In a bond');
+    await expect(bondedRow).toContainText('$0.00');
 
     await expect(page.getByTestId(AllBalancesSelectors.BalanceRowPending)).toContainText('$0.00');
     await expect(page.getByTestId(AllBalancesSelectors.BalanceRowSending)).toContainText('$0.00');
@@ -128,6 +132,8 @@ test.describe('All balances', () => {
       await goBack(page);
       await page.getByTestId(AllBalancesSelectors.AllBalancesPage).waitFor();
     }
+
+    await expect(page.getByTestId(AllBalancesSelectors.AllBalancesPage)).toBeVisible();
   });
 
   test('that an unknown category redirects to the all balances page', async ({

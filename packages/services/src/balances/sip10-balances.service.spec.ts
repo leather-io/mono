@@ -1,15 +1,16 @@
-import { Sip10Asset } from '@leather.io/models';
+import { type Sip10Asset } from '@leather.io/models';
 import { initBigNumber } from '@leather.io/utils';
 
-import { Sip10AssetService } from '../assets/sip10-asset.service';
+import { type Sip10AssetService } from '../assets/sip10-asset.service';
 import {
   getAssetNameFromIdentifier,
   getContractPrincipalFromAssetIdentifier,
 } from '../assets/stacks-asset.utils';
-import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
-import { SettingsService } from '../infrastructure/settings/settings.service';
-import { MarketDataService } from '../market/market-data.service';
-import { AccountRequest } from '../types';
+import { type HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
+import { type SettingsService } from '../infrastructure/settings/settings.service';
+import { type MarketDataService } from '../market/market-data.service';
+import { createTestAccountRequest } from '../test/balances-account-request';
+import { createMock } from '../test/create-mock';
 import { Sip10BalancesService } from './sip10-balances.service';
 
 describe(Sip10BalancesService.name, () => {
@@ -18,51 +19,48 @@ describe(Sip10BalancesService.name, () => {
   const assetId1Balance = 12000000;
   const assetId2Balance = 20000000;
 
-  const mockStacksApiClient = {
-    getAddressFtBalances: vi.fn().mockResolvedValue({
-      results: [
-        { token: assetId1, balance: assetId1Balance },
-        { token: assetId2, balance: assetId2Balance },
-      ],
-    }),
-  } as unknown as HiroStacksApiClient;
+  const getPrincipalFtBalances = vi.fn().mockResolvedValue([
+    { asset_identifier: assetId1, balance: String(assetId1Balance) },
+    { asset_identifier: assetId2, balance: String(assetId2Balance) },
+  ]);
+  const mockStacksApiClient = createMock<HiroStacksApiClient>({ getPrincipalFtBalances });
 
-  const mockMarketDataService = {
-    getMarketData: vi.fn().mockImplementation((asset: Sip10Asset) => {
-      if (asset.symbol === 'MOCK1') {
-        return {
-          pair: { base: asset.symbol, quote: 'USD' },
-          price: { amount: initBigNumber(50.0), symbol: 'USD', decimals: 2 },
-        };
-      } else if (asset.symbol === 'MOCK2') {
-        return {
-          pair: { base: asset.symbol, quote: 'USD' },
-          price: { amount: initBigNumber(100.0), symbol: 'USD', decimals: 2 },
-        };
-      } else {
-        throw new Error('Unrecognized asset symbol');
-      }
-    }),
-  } as unknown as MarketDataService;
+  function mockGetMarketData(asset: Sip10Asset) {
+    if (asset.symbol === 'MOCK1') {
+      return {
+        pair: { base: asset.symbol, quote: 'USD' },
+        price: { amount: initBigNumber(50.0), symbol: 'USD', decimals: 2 },
+      };
+    } else if (asset.symbol === 'MOCK2') {
+      return {
+        pair: { base: asset.symbol, quote: 'USD' },
+        price: { amount: initBigNumber(100.0), symbol: 'USD', decimals: 2 },
+      };
+    } else {
+      throw new Error('Unrecognized asset symbol');
+    }
+  }
+  const getMarketData = vi.fn().mockImplementation(mockGetMarketData);
+  const mockMarketDataService = createMock<MarketDataService>({ getMarketData });
 
-  const mockSip10AssetService = {
-    getAsset: vi.fn().mockImplementation(assetId =>
-      assetId.startsWith('SM123MOCK')
-        ? Promise.resolve({
-            decimals: 6,
-            assetId,
-            contractId: getContractPrincipalFromAssetIdentifier(assetId),
-            symbol: getAssetNameFromIdentifier(assetId).toLocaleUpperCase(),
-          })
-        : Promise.reject(new Error())
-    ),
-  } as unknown as Sip10AssetService;
+  function mockGetAsset(assetId: string) {
+    return assetId.startsWith('SM123MOCK')
+      ? Promise.resolve({
+          decimals: 6,
+          assetId,
+          contractId: getContractPrincipalFromAssetIdentifier(assetId),
+          symbol: getAssetNameFromIdentifier(assetId).toLocaleUpperCase(),
+        })
+      : Promise.reject(new Error());
+  }
+  const getAsset = vi.fn().mockImplementation(mockGetAsset);
+  const mockSip10AssetService = createMock<Sip10AssetService>({ getAsset });
 
-  const mockSettingsService = {
+  const mockSettingsService: SettingsService = {
     getSettings: vi.fn().mockReturnValue({
       quoteCurrency: 'USD',
     }),
-  } as unknown as SettingsService;
+  };
 
   const sip10BalancesService = new Sip10BalancesService(
     mockSettingsService,
@@ -72,29 +70,15 @@ describe(Sip10BalancesService.name, () => {
   );
 
   describe('getSip10AggregateBalanceByAssetId', () => {
-    const request1 = {
-      account: {
-        stacks: {
-          stxAddress: 'STACKS_ADDRESS1',
-        },
-      },
-      assets: {
-        includeHiddenAssets: true,
-      },
-    } as AccountRequest;
-    const request2 = {
-      account: {
-        stacks: {
-          stxAddress: 'STACKS_ADDRESS2',
-        },
-      },
-      assets: {
-        includeHiddenAssets: true,
-      },
-    } as AccountRequest;
-    const request3 = {
-      account: {},
-    } as AccountRequest;
+    const request1 = createTestAccountRequest({
+      stxAddress: 'STACKS_ADDRESS1',
+      includeHiddenAssets: true,
+    });
+    const request2 = createTestAccountRequest({
+      stxAddress: 'STACKS_ADDRESS2',
+      includeHiddenAssets: true,
+    });
+    const request3 = createTestAccountRequest();
 
     beforeEach(() => {
       vi.clearAllMocks();
@@ -111,16 +95,10 @@ describe(Sip10BalancesService.name, () => {
   });
 
   describe('getSip10BalanceByAssetId', () => {
-    const request = {
-      account: {
-        stacks: {
-          stxAddress: 'STACKS_ADDRESS',
-        },
-      },
-      assets: {
-        includeHiddenAssets: true,
-      },
-    } as AccountRequest;
+    const request = createTestAccountRequest({
+      stxAddress: 'STACKS_ADDRESS',
+      includeHiddenAssets: true,
+    });
 
     beforeEach(() => {
       vi.clearAllMocks();
@@ -151,16 +129,10 @@ describe(Sip10BalancesService.name, () => {
 
   describe('getSip10AccountBalance', () => {
     const stacksAddress = 'STACKS_ADDRESS';
-    const request = {
-      account: {
-        stacks: {
-          stxAddress: stacksAddress,
-        },
-      },
-      assets: {
-        includeHiddenAssets: true,
-      },
-    } as AccountRequest;
+    const request = createTestAccountRequest({
+      stxAddress: stacksAddress,
+      includeHiddenAssets: true,
+    });
 
     beforeEach(() => {
       vi.clearAllMocks();
@@ -169,7 +141,7 @@ describe(Sip10BalancesService.name, () => {
     it('retrieves sip10 token balances using hiro stacks API, market data, and token info', async () => {
       const signal = new AbortController().signal;
       const addressBalance = await sip10BalancesService.getSip10AccountBalance(request, signal);
-      expect(mockStacksApiClient.getAddressFtBalances).toHaveBeenCalledWith(stacksAddress, {
+      expect(mockStacksApiClient.getPrincipalFtBalances).toHaveBeenCalledWith(stacksAddress, {
         signal,
       });
       expect(mockMarketDataService.getMarketData).toHaveBeenCalledTimes(2);
@@ -194,23 +166,14 @@ describe(Sip10BalancesService.name, () => {
     });
 
     it('sums the total usd balance of each sip10 token for an address', async () => {
-      const balance = await sip10BalancesService.getSip10AccountBalance({
-        account: {
-          stacks: {
-            stxAddress: 'STACKS_ADDRESS',
-          },
-        },
-        assets: {
-          includeHiddenAssets: true,
-        },
-      } as AccountRequest);
+      const balance = await sip10BalancesService.getSip10AccountBalance(
+        createTestAccountRequest({ stxAddress: 'STACKS_ADDRESS', includeHiddenAssets: true })
+      );
       expect(balance.quote.availableBalance.amount).toEqual(initBigNumber(2600));
     });
 
     it('returns an empty balance if the account has no stacks address', async () => {
-      const balance = await sip10BalancesService.getSip10AccountBalance({
-        account: {},
-      } as AccountRequest);
+      const balance = await sip10BalancesService.getSip10AccountBalance(createTestAccountRequest());
       expect(balance.sip10s.length).toEqual(0);
       expect(balance.address).toBeUndefined();
       expect(balance.quote.availableBalance.amount).toEqual(initBigNumber(0));
@@ -221,36 +184,18 @@ describe(Sip10BalancesService.name, () => {
     const stacksAddress1 = 'STACKS_ADDRESS1';
     const stacksAddress2 = 'STACKS_ADDRESS2';
     const stacksAddress3 = 'STACKS_ADDRESS3';
-    const request1 = {
-      account: {
-        stacks: {
-          stxAddress: stacksAddress1,
-        },
-      },
-      assets: {
-        includeHiddenAssets: true,
-      },
-    } as AccountRequest;
-    const request2 = {
-      account: {
-        stacks: {
-          stxAddress: stacksAddress2,
-        },
-      },
-      assets: {
-        includeHiddenAssets: true,
-      },
-    } as AccountRequest;
-    const request3 = {
-      account: {
-        stacks: {
-          stxAddress: stacksAddress3,
-        },
-      },
-      assets: {
-        includeHiddenAssets: true,
-      },
-    } as AccountRequest;
+    const request1 = createTestAccountRequest({
+      stxAddress: stacksAddress1,
+      includeHiddenAssets: true,
+    });
+    const request2 = createTestAccountRequest({
+      stxAddress: stacksAddress2,
+      includeHiddenAssets: true,
+    });
+    const request3 = createTestAccountRequest({
+      stxAddress: stacksAddress3,
+      includeHiddenAssets: true,
+    });
 
     beforeEach(() => {
       vi.clearAllMocks();
@@ -262,7 +207,7 @@ describe(Sip10BalancesService.name, () => {
         request2,
         request3,
       ]);
-      expect(mockStacksApiClient.getAddressFtBalances).toHaveBeenCalledTimes(3);
+      expect(mockStacksApiClient.getPrincipalFtBalances).toHaveBeenCalledTimes(3);
       expect(mockMarketDataService.getMarketData).toHaveBeenCalledTimes(6);
       expect(mockSip10AssetService.getAsset).toHaveBeenCalledTimes(6);
       expect(aggregateBalance.sip10s.length).toEqual(2);
@@ -280,23 +225,18 @@ describe(Sip10BalancesService.name, () => {
   });
 
   describe('when market data is unavailable', () => {
-    const request = {
-      account: { stacks: { stxAddress: 'STACKS_ADDRESS' } },
-      assets: { includeHiddenAssets: true },
-    } as AccountRequest;
-
-    const originalGetMarketData = vi
-      .mocked(mockMarketDataService.getMarketData)
-      .getMockImplementation();
-    const originalGetAsset = vi.mocked(mockSip10AssetService.getAsset).getMockImplementation();
+    const request = createTestAccountRequest({
+      stxAddress: 'STACKS_ADDRESS',
+      includeHiddenAssets: true,
+    });
 
     beforeEach(() => {
       vi.clearAllMocks();
     });
 
     afterEach(() => {
-      vi.mocked(mockMarketDataService.getMarketData).mockImplementation(originalGetMarketData!);
-      vi.mocked(mockSip10AssetService.getAsset).mockImplementation(originalGetAsset!);
+      getMarketData.mockImplementation(mockGetMarketData);
+      getAsset.mockImplementation(mockGetAsset);
     });
 
     it('keeps the token in the list with its crypto balance intact', async () => {

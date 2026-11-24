@@ -6,11 +6,16 @@ import {
   estimateStacksTransactionByteLength,
   getSerializedUnsignedStacksTxPayload,
 } from '@leather.io/stacks';
+import { createMoney } from '@leather.io/utils';
 
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
-import { AppConfigService } from '../infrastructure/app-config/app-config.service';
+import {
+  AppConfigService,
+  type StacksFeeConfig,
+} from '../infrastructure/app-config/app-config.service';
 import {
   createStacksTransactionFeeQuote,
+  getStacksMinimumFeeAmount,
   getStacksTxFeeBoundedEstimates,
   getStacksTxFeeDefaultAmounts,
 } from './stacks-transaction-fees.utils';
@@ -28,9 +33,12 @@ export class StacksTransactionFeesService {
     signal?: AbortSignal
   ): Promise<StacksTransactionFees> {
     const estimatedTxSize = estimateStacksTransactionByteLength(unsignedTx, signerCount);
-    const fees = await this.getTieredFeeAmounts(unsignedTx, estimatedTxSize, signal);
+    const config = await this.appConfigService.getStacksTransactionFeeConfig(signal);
+    const fees = await this.getTieredFeeAmounts(unsignedTx, estimatedTxSize, config, signal);
     return {
       chain: 'stacks',
+      minimumFee: createMoney(getStacksMinimumFeeAmount(estimatedTxSize, config), 'STX'),
+      highFeeThreshold: createMoney(config.globalMaximumFee, 'STX'),
       options: {
         low: createStacksTransactionFeeQuote(fees.low, estimatedTxSize),
         standard: createStacksTransactionFeeQuote(fees.standard, estimatedTxSize),
@@ -42,9 +50,9 @@ export class StacksTransactionFeesService {
   private async getTieredFeeAmounts(
     unsignedTx: StacksTransactionWire,
     estimatedTxSize: number,
+    config: StacksFeeConfig,
     signal?: AbortSignal
   ): Promise<Record<TransactionFeeTier, number>> {
-    const config = await this.appConfigService.getStacksTransactionFeeConfig();
     try {
       const apiEstimates = await this.stacksApiClient.getTransactionFeeEstimate(
         getSerializedUnsignedStacksTxPayload(unsignedTx),
@@ -53,7 +61,7 @@ export class StacksTransactionFeesService {
       );
       return getStacksTxFeeBoundedEstimates(apiEstimates, estimatedTxSize, unsignedTx, config);
     } catch {
-      return getStacksTxFeeDefaultAmounts(unsignedTx, config);
+      return getStacksTxFeeDefaultAmounts(unsignedTx, config, estimatedTxSize);
     }
   }
 }

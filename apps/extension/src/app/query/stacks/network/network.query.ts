@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { createGetNetworkStatusQueryOptions } from '@leather.io/query';
+import { createStacksNetworkStatusQueryConfig } from '@leather.io/queries';
 
-import { useStacksClient } from '../stacks-client';
+import { useUserSettings } from '@app/hooks/use-user-settings';
 
 export function useGetStacksNetworkStatusQuery(url: string) {
-  const client = useStacksClient();
-  return useQuery(createGetNetworkStatusQueryOptions({ client, url }));
+  const settings = useUserSettings();
+  return useQuery(createStacksNetworkStatusQueryConfig(url, settings));
 }

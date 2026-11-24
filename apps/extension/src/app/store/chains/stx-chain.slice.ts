@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import type { AccountId } from '@leather.io/models';
 import { resetWallet } from '@leather.io/state';

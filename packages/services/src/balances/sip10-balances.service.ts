@@ -7,7 +7,6 @@ import {
   baseCurrencyAmountInQuote,
   createBaseCryptoAssetBalance,
   createMoney,
-  hasStacksAddress,
 } from '@leather.io/utils';
 
 import { Sip10AssetService } from '../assets/sip10-asset.service';
@@ -131,7 +130,7 @@ export class Sip10BalancesService {
     request: AccountRequest,
     signal?: AbortSignal
   ): Promise<Sip10AddressBalance> {
-    if (!hasStacksAddress(request.account)) {
+    if (!request.account.stacks) {
       return {
         quote: createBaseCryptoAssetBalance(
           createMoney(0, this.settingsService.getSettings().quoteCurrency)
@@ -154,18 +153,21 @@ export class Sip10BalancesService {
     includeHiddenAssets = false,
     signal?: AbortSignal
   ): Promise<Sip10AddressBalance> {
-    const ftBalances = (
-      await this.stacksApiClient.getAddressFtBalances(address, {
-        signal,
-      })
-    ).results;
+    const ftBalances = await this.stacksApiClient.getPrincipalFtBalances(address, {
+      signal,
+    });
 
     const sip10Balances = (
       await Promise.allSettled(
         ftBalances
-          .filter(ft => Number(ft.balance ?? 0) !== 0)
+          .filter(ft => Number(ft.balance) !== 0)
           .map(ft =>
-            this.createSip10Balance(ft.token, Number(ft.balance ?? 0), includeHiddenAssets, signal)
+            this.createSip10Balance(
+              ft.asset_identifier,
+              Number(ft.balance),
+              includeHiddenAssets,
+              signal
+            )
           )
       )
     )

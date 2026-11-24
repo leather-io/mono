@@ -1,8 +1,9 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { styled } from 'leather-styles/jsx';
+import { SITE_HOSTNAMES } from '~/constants/constants';
 
 import { Link } from '@leather.io/ui';
 
@@ -155,7 +156,7 @@ interface CodeProps extends ContentComponentsProps {
 }
 
 function Code({ children, className }: CodeProps) {
-  const match = /language-(\w+)/.exec(className || '');
+  const match = className ? /language-(\w+)/.exec(className) : null;
   const language = match ? match[1] : '';
 
   if (language && typeof children === 'string') {
@@ -284,7 +285,7 @@ function A({ children, href }: AnchorProps) {
     // Use the URL constructor for absolute URLs. For relative URLs, fallback to default behavior.
     const url = href.startsWith('http://') || href.startsWith('https://') ? new URL(href) : null;
     // Check if the host is 'leather.io' or a valid subdomain (e.g. www.leather.io)
-    if (url && (url.hostname === 'leather.io' || url.hostname.endsWith('.leather.io'))) {
+    if (url && SITE_HOSTNAMES.includes(url.hostname)) {
       isLeatherLink = true;
       normalizedHref = url.pathname + url.search + url.hash;
     }
@@ -330,7 +331,7 @@ interface VideoProps {
   height?: string | number;
 }
 
-function getYouTubeEmbedUrl(url: string): string | null {
+function getYouTubeEmbedUrl(url: string | undefined): string | null {
   if (!url) return null;
 
   const youtubeRegex = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/;
@@ -344,7 +345,7 @@ function getYouTubeEmbedUrl(url: string): string | null {
 }
 
 function Video({ src, poster, controls = true, autoPlay, loop, muted, width, height }: VideoProps) {
-  const youtubeEmbedUrl = getYouTubeEmbedUrl(src || '');
+  const youtubeEmbedUrl = getYouTubeEmbedUrl(src);
 
   if (youtubeEmbedUrl) {
     return (

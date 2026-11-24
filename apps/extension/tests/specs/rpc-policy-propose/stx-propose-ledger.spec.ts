@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { type Page } from '@playwright/test';
 import {
   type ClarityValue,
   bufferCVFromString,
@@ -6,6 +6,7 @@ import {
   serializeCV,
   standardPrincipalCV,
 } from '@stacks/transactions';
+import type { TestRpcResponse } from '@tests/leather-provider';
 import { TEST_ACCOUNT_1_STX_ADDRESS } from '@tests/mocks/constants';
 import { mockFundedStacksAddress } from '@tests/mocks/mock-multisig';
 import {
@@ -52,8 +53,8 @@ function makeCallContractParams(recipient: string) {
 function openStxCallContract(page: Page, recipient: string) {
   return page.evaluate(
     ({ params }) =>
-      void (window as any).LeatherProvider?.request('stx_callContract', params).catch(
-        (e: unknown) => e
+      void window.LeatherProvider?.request('stx_callContract', params).catch(
+        (e: TestRpcResponse) => e
       ),
     { params: makeCallContractParams(recipient) }
   );
@@ -68,7 +69,7 @@ test.describe('RPC: stx_callContract propose from a Ledger policy account', () =
       ...getConnectedTestAppPermissionsState({ policyId: stacksPolicy.id }),
       ...policyStateOverrides({ policies: [stacksPolicy] }),
     });
-    await page.goto('localhost:3000', { waitUntil: 'networkidle' });
+    await page.goto('localhost:3000');
   });
 
   test('propose opens the ledger signing flow and cancelling returns to the approver', async ({
@@ -81,7 +82,6 @@ test.describe('RPC: stx_callContract propose from a Ledger policy account', () =
       context.waitForEvent('page'),
       openStxCallContract(page, TEST_ACCOUNT_1_STX_ADDRESS),
     ]);
-    await popup.waitForTimeout(1500);
 
     // The approve action must not be gated for Ledger wallets
     const proposeButton = popup.getByRole('button', { name: 'Propose transaction' });

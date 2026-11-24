@@ -24,4 +24,8 @@ describe('urlPathToAssetId', () => {
   it('throws error for invalid path without slash', () => {
     expect(() => urlPathToAssetId('invalid')).toThrow('Invalid asset URL path: invalid');
   });
+
+  it('throws error for an unknown protocol', () => {
+    expect(() => urlPathToAssetId('erc20/0xabc')).toThrow('Invalid asset URL path: erc20/0xabc');
+  });
 });

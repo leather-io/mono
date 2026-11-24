@@ -1,5 +1,8 @@
 import { buildRecipientSuggestions } from '@/features/send/components/recipient/build-recipient-suggestions';
-import { RecipientSection } from '@/features/send/components/recipient/recipient.types';
+import {
+  type RecipientActivity,
+  type RecipientSection,
+} from '@/features/send/components/recipient/recipient.types';
 import {
   getLookupHelperByChain,
   recipientSchemaResultContainsError,
@@ -7,19 +10,19 @@ import {
 import { useAccountHelpers } from '@/features/send/components/recipient/use-account-helpers';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import {
-  QueryFunctionContext,
-  UseQueryResult,
+  type QueryFunctionContext,
+  type UseQueryResult,
   keepPreviousData,
   useQuery,
 } from '@tanstack/react-query';
-import { ZodSchema } from 'zod';
+import { type ZodSchema } from 'zod';
 
-import { AccountId, FungibleCryptoAsset, SendAssetActivity } from '@leather.io/models';
+import { type AccountId, type FungibleCryptoAsset } from '@leather.io/models';
 import { useDebouncedValue } from '@leather.io/ui/native';
 
 interface UseRecipientSuggestionsParams {
   searchTerm: string;
-  activity: SendAssetActivity[];
+  activity: RecipientActivity[];
   recipientSchema: ZodSchema;
   asset: FungibleCryptoAsset;
   currentAccount: AccountId;
@@ -51,16 +54,16 @@ export function useRecipientSuggestions({
         findAccountByAddress,
         canSelfSend: asset.chain === 'bitcoin',
         performBnsLookup: (name: string) => bnsLookupHelper(name.toLowerCase(), signal),
-        validateAddress: (value: string) =>
-          recipientSchema
-            .safeParseAsync(value)
-            .then(result => !recipientSchemaResultContainsError(result, 'invalidAddress')),
+        async validateAddress(value: string) {
+          const result = await recipientSchema.safeParseAsync(value);
+          return !recipientSchemaResultContainsError(result, 'invalidAddress');
+        },
       }),
   });
 }
 
 interface MatchSuggestionsResultParams {
-  query: UseQueryResult<RecipientSection[], Error>;
+  query: UseQueryResult<RecipientSection[]>;
   pending: React.ReactElement;
   fetching?: React.ReactElement;
   error?(error: unknown): React.ReactElement;

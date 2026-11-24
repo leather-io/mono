@@ -1,10 +1,11 @@
 import BigNumber from 'bignumber.js';
 
-import { AverageBitcoinFeeRates } from '@leather.io/models';
+import { type AverageBitcoinFeeRates } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
-import { CoinSelectionRecipient } from '../coin-selection/coin-selection';
+import { type CoinSelectionRecipient } from '../coin-selection/coin-selection';
 import { recipientAddress, taprootAddress } from '../mocks/mocks';
+import { expectDefined } from '../test-utils/expect-defined';
 import { getBitcoinFees, getBitcoinTransactionFee } from './bitcoin-fees';
 
 describe('getBitcoinTransactionFee', () => {
@@ -74,7 +75,9 @@ describe('getBitcoinTransactionFee with taproot', () => {
 
     expect(segwitFee).not.toBeNull();
     expect(taprootFee).not.toBeNull();
-    expect(taprootFee!.amount.toNumber()).toBeLessThan(segwitFee!.amount.toNumber());
+    expect(expectDefined(taprootFee).amount.toNumber()).toBeLessThan(
+      expectDefined(segwitFee).amount.toNumber()
+    );
   });
 
   it('should return a lower fee for taproot max send than native segwit', () => {
@@ -95,7 +98,9 @@ describe('getBitcoinTransactionFee with taproot', () => {
 
     expect(segwitFee).not.toBeNull();
     expect(taprootFee).not.toBeNull();
-    expect(taprootFee!.amount.toNumber()).toBeLessThan(segwitFee!.amount.toNumber());
+    expect(expectDefined(taprootFee).amount.toNumber()).toBeLessThan(
+      expectDefined(segwitFee).amount.toNumber()
+    );
   });
 
   it('should return a lower fee for mixed UTXOs than all native segwit', () => {
@@ -120,7 +125,9 @@ describe('getBitcoinTransactionFee with taproot', () => {
 
     expect(allSegwitFee).not.toBeNull();
     expect(mixedFee).not.toBeNull();
-    expect(mixedFee!.amount.toNumber()).toBeLessThan(allSegwitFee!.amount.toNumber());
+    expect(expectDefined(mixedFee).amount.toNumber()).toBeLessThan(
+      expectDefined(allSegwitFee).amount.toNumber()
+    );
   });
 });
 

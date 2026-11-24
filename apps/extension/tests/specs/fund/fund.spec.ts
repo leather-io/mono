@@ -4,20 +4,19 @@ import { mockTestAccountStacksTxsRequestsWithPendingTx } from '@tests/mocks/mock
 import { mockMainnetTestAccountEmptyUtxosRequests } from '@tests/mocks/mock-utxos';
 
 import { test } from '../../fixtures/fixtures';
-import { mockEmptyStacksBalancesRequest } from '../../mocks/mock-stacks-balances';
-import { mockEmptyStacksBalancesV2Request } from '../../mocks/mock-stacks-balances-v2';
+import { mockEmptyStacksPrincipalBalancesRequest } from '../../mocks/mock-stacks-principal-balances';
 import { CoreAssetSelectors } from '../../selectors/mocked-tokens.selectors';
 
 test.describe('Fund', () => {
   test.describe('wallet with activity', () => {
     test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
       await globalPage.setupAndUseApiCalls(extensionId);
-      await mockEmptyStacksBalancesRequest(page);
-      await mockEmptyStacksBalancesV2Request(page);
+      await mockEmptyStacksPrincipalBalancesRequest(page);
       await mockTestAccountStacksTxsRequestsWithPendingTx(page);
       await mockEmptyLeatherApiUtxosRequest(page);
       await onboardingPage.signInWithTestAccount(extensionId);
     });
+
     test('that STX asset shows $0.00 if STX has activity', async ({ homePage }) => {
       const btcAsset = homePage.assetList.getByTestId(CoreAssetSelectors.BtcAsset);
       const stxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.StxAsset);
@@ -26,11 +25,11 @@ test.describe('Fund', () => {
       await expect(stxAsset).toContainText('$0.00');
     });
   });
+
   test.describe('empty wallet', () => {
     test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
       await globalPage.setupAndUseApiCalls(extensionId);
-      await mockEmptyStacksBalancesRequest(page);
-      await mockEmptyStacksBalancesV2Request(page);
+      await mockEmptyStacksPrincipalBalancesRequest(page);
       await mockMainnetTestAccountEmptyUtxosRequests(page);
       await onboardingPage.signInWithTestAccount(extensionId);
     });
@@ -45,6 +44,7 @@ test.describe('Fund', () => {
 
       await expect(page).toHaveURL(/fund\/stacks/);
     });
+
     test('that BTC asset shows a buy button that forwards to fund page', async ({
       homePage,
       page,

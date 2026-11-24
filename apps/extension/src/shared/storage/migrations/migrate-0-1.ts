@@ -22,9 +22,9 @@ const legacyPersistConfig: PersistConfig<RootState> = {
 };
 
 export async function migrateToUsingNoSerialization() {
-  const storageVal = (await new Promise(resolve =>
-    chrome.storage.local.get(['persist:root'], resolve)
-  )) as any;
+  const storageVal = await new Promise<Record<string, unknown> | undefined>(resolve =>
+    chrome.storage.local.get<Record<string, unknown>>(['persist:root'], resolve)
+  );
 
   if (!storageVal) return undefined;
 

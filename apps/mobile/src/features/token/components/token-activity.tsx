@@ -1,26 +1,26 @@
 import { useCallback } from 'react';
 
-import { FetchState } from '@/components/loading';
+import { type FetchState } from '@/components/loading';
 import { LoadingItem } from '@/components/loading/loading-item';
 import { Screen } from '@/components/screen/screen';
 import { ActivityItem } from '@/features/activity/activity-item';
 import { t } from '@lingui/core/macro';
 
-import { type ActivityView } from '@leather.io/features';
+import { type BlockchainActivityItem } from '@leather.io/features';
 import { Box, Text } from '@leather.io/ui/native';
 
 interface TokenActivityProps {
-  activity: FetchState<ActivityView[]>;
+  activity: FetchState<BlockchainActivityItem[]>;
   ListHeader: React.ReactNode;
 }
 
 export function TokenActivity({ activity, ListHeader }: TokenActivityProps) {
   const renderItem = useCallback(
-    ({ item }: { item: ActivityView }) => <ActivityItem item={item} />,
+    ({ item }: { item: BlockchainActivityItem }) => <ActivityItem item={item} />,
     []
   );
 
-  const keyExtractor = useCallback((item: ActivityView) => item.key, []);
+  const keyExtractor = useCallback((item: BlockchainActivityItem) => item.view.key, []);
 
   const isLoading = activity.state === 'loading';
   const hasActivity = activity.state === 'success' && activity.value.length > 0;

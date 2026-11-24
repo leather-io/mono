@@ -1,10 +1,16 @@
 import { describe, expect, test } from 'vitest';
 
 import { assumedZeroFingerprint } from '@shared/utils';
-
-import type { RootState } from '@app/store';
+import { isRecord } from '@shared/utils/is-record';
 
 import { migrateMultiWalletSupport } from './migrate-2-3';
+
+function readPath(value: unknown, ...path: string[]): unknown {
+  return path.reduce<unknown>((current, key) => {
+    if (!isRecord(current)) throw new Error(`Cannot read "${key}" of a non-object value`);
+    return current[key];
+  }, value);
+}
 
 const softwareWalletFingerprint = 'a1b2c3d4';
 const ledgerBitcoinFingerprint = 'e5f6a7b8';
@@ -31,35 +37,35 @@ describe(migrateMultiWalletSupport.name, () => {
             },
           },
         },
-      } as unknown as RootState;
+      };
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect(result.softwareKeys.salt).toEqual('test-salt-123');
-      expect(result.softwareKeys.entities.default).toBeUndefined();
-      expect(result.softwareKeys.entities[softwareWalletFingerprint]).toBeDefined();
-      expect(result.softwareKeys.entities[softwareWalletFingerprint].id).toEqual(
+      expect(readPath(result, 'softwareKeys', 'salt')).toEqual('test-salt-123');
+      expect(readPath(result, 'softwareKeys', 'entities', 'default')).toBeUndefined();
+      expect(readPath(result, 'softwareKeys', 'entities', softwareWalletFingerprint)).toBeDefined();
+      expect(readPath(result, 'softwareKeys', 'entities', softwareWalletFingerprint, 'id')).toEqual(
         softwareWalletFingerprint
       );
-      expect(result.softwareKeys.ids).toEqual([softwareWalletFingerprint]);
+      expect(readPath(result, 'softwareKeys', 'ids')).toEqual([softwareWalletFingerprint]);
 
-      expect(result.active).toEqual({
+      expect(readPath(result, 'active')).toEqual({
         account: {
           fingerprint: softwareWalletFingerprint,
           accountIndex: 2,
         },
       });
 
-      expect(result.wallets.entities[softwareWalletFingerprint]).toEqual({
+      expect(readPath(result, 'wallets', 'entities', softwareWalletFingerprint)).toEqual({
         fingerprint: softwareWalletFingerprint,
         name: 'Wallet 1',
         type: 'software',
         createdOn: null,
       });
-      expect(result.wallets.ids).toEqual([softwareWalletFingerprint]);
+      expect(readPath(result, 'wallets', 'ids')).toEqual([softwareWalletFingerprint]);
 
-      expect(result.chains.stx[softwareWalletFingerprint]).toBeDefined();
-      expect(result.chains.stx.default).toBeUndefined();
+      expect(readPath(result, 'chains', 'stx', softwareWalletFingerprint)).toBeDefined();
+      expect(readPath(result, 'chains', 'stx', 'default')).toBeUndefined();
     });
 
     test('migrates software wallet with default account index', () => {
@@ -81,11 +87,11 @@ describe(migrateMultiWalletSupport.name, () => {
             },
           },
         },
-      } as unknown as RootState;
+      };
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect(result.active?.account?.accountIndex).toEqual(0);
+      expect(readPath(result, 'active', 'account', 'accountIndex')).toEqual(0);
     });
   });
 
@@ -122,32 +128,32 @@ describe(migrateMultiWalletSupport.name, () => {
             },
           },
         },
-      } as unknown as RootState;
+      };
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect(result.active).toEqual({
+      expect(readPath(result, 'active')).toEqual({
         account: {
           fingerprint: ledgerBitcoinFingerprint,
           accountIndex: 1,
         },
       });
 
-      expect(result.wallets.entities[ledgerBitcoinFingerprint]).toEqual({
+      expect(readPath(result, 'wallets', 'entities', ledgerBitcoinFingerprint)).toEqual({
         fingerprint: ledgerBitcoinFingerprint,
         name: 'My Ledger',
         type: 'ledger',
         createdOn: null,
       });
-      expect(result.wallets.ids).toEqual([ledgerBitcoinFingerprint]);
+      expect(readPath(result, 'wallets', 'ids')).toEqual([ledgerBitcoinFingerprint]);
 
       // Check that ledger slice has been removed
-      expect(result.ledger).toBeUndefined();
+      expect(readPath(result, 'ledger')).toBeUndefined();
 
       // Check that keys were migrated to keychains
       const bitcoinKeyOrigin = `${ledgerBitcoinFingerprint}/84'/0'/0'`;
-      expect(result.keychains.ids).toContain(bitcoinKeyOrigin);
-      expect(result.keychains.entities[bitcoinKeyOrigin]).toEqual({
+      expect(readPath(result, 'keychains', 'ids')).toContain(bitcoinKeyOrigin);
+      expect(readPath(result, 'keychains', 'entities', bitcoinKeyOrigin)).toEqual({
         chain: 'bitcoin',
         descriptor: `[${ledgerBitcoinFingerprint}/84'/0'/0']xpub123`,
       });
@@ -180,13 +186,15 @@ describe(migrateMultiWalletSupport.name, () => {
             entities: {},
           },
         },
-      } as unknown as RootState;
+      };
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect(result.active?.account?.fingerprint).toEqual(ledgerBitcoinFingerprint);
+      expect(readPath(result, 'active', 'account', 'fingerprint')).toEqual(
+        ledgerBitcoinFingerprint
+      );
 
-      expect(result.wallets.entities[ledgerBitcoinFingerprint]).toEqual({
+      expect(readPath(result, 'wallets', 'entities', ledgerBitcoinFingerprint)).toEqual({
         fingerprint: ledgerBitcoinFingerprint,
         name: 'My Ledger',
         type: 'ledger',
@@ -194,21 +202,21 @@ describe(migrateMultiWalletSupport.name, () => {
       });
 
       // Check that ledger slice has been removed
-      expect(result.ledger).toBeUndefined();
+      expect(readPath(result, 'ledger')).toBeUndefined();
 
       // Check that keys were migrated to keychains
       const nativeSegwitKeyOrigin = `${ledgerBitcoinFingerprint}/84'/0'/0'`;
       const taprootKeyOrigin = `${ledgerBitcoinFingerprint}/86'/0'/1'`;
 
-      expect(result.keychains.ids).toContain(nativeSegwitKeyOrigin);
-      expect(result.keychains.ids).toContain(taprootKeyOrigin);
+      expect(readPath(result, 'keychains', 'ids')).toContain(nativeSegwitKeyOrigin);
+      expect(readPath(result, 'keychains', 'ids')).toContain(taprootKeyOrigin);
 
-      expect(result.keychains.entities[nativeSegwitKeyOrigin]).toEqual({
+      expect(readPath(result, 'keychains', 'entities', nativeSegwitKeyOrigin)).toEqual({
         chain: 'bitcoin',
         descriptor: `[${ledgerBitcoinFingerprint}/84'/0'/0']xpub456`,
       });
 
-      expect(result.keychains.entities[taprootKeyOrigin]).toEqual({
+      expect(readPath(result, 'keychains', 'entities', taprootKeyOrigin)).toEqual({
         chain: 'bitcoin',
         descriptor: `[${ledgerBitcoinFingerprint}/86'/0'/1']xpub789`,
       });
@@ -250,13 +258,13 @@ describe(migrateMultiWalletSupport.name, () => {
             },
           },
         },
-      } as unknown as RootState;
+      };
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect(result.active?.account?.fingerprint).toEqual(assumedZeroFingerprint);
+      expect(readPath(result, 'active', 'account', 'fingerprint')).toEqual(assumedZeroFingerprint);
 
-      expect(result.wallets.entities[assumedZeroFingerprint]).toEqual({
+      expect(readPath(result, 'wallets', 'entities', assumedZeroFingerprint)).toEqual({
         fingerprint: assumedZeroFingerprint,
         name: 'My Ledger',
         type: 'ledger',
@@ -264,27 +272,27 @@ describe(migrateMultiWalletSupport.name, () => {
       });
 
       // Check that ledger slice has been removed
-      expect(result.ledger).toBeUndefined();
+      expect(readPath(result, 'ledger')).toBeUndefined();
 
       // Check that Stacks keys were migrated to keychains
       const stacksKeyOrigin0 = `${assumedZeroFingerprint}/44'/5757'/0'/0/0`;
       const stacksKeyOrigin1 = `${assumedZeroFingerprint}/44'/5757'/0'/0/1`;
 
-      expect(result.keychains.ids).toContain(stacksKeyOrigin0);
-      expect(result.keychains.ids).toContain(stacksKeyOrigin1);
+      expect(readPath(result, 'keychains', 'ids')).toContain(stacksKeyOrigin0);
+      expect(readPath(result, 'keychains', 'ids')).toContain(stacksKeyOrigin1);
 
-      expect(result.keychains.entities[stacksKeyOrigin0]).toEqual({
+      expect(readPath(result, 'keychains', 'entities', stacksKeyOrigin0)).toEqual({
         chain: 'stacks',
         descriptor: `[${assumedZeroFingerprint}/44'/5757'/0'/0/0]02abc123`,
       });
 
-      expect(result.keychains.entities[stacksKeyOrigin1]).toEqual({
+      expect(readPath(result, 'keychains', 'entities', stacksKeyOrigin1)).toEqual({
         chain: 'stacks',
         descriptor: `[${assumedZeroFingerprint}/44'/5757'/0'/0/1]02def456`,
       });
 
-      expect(result.chains.stx[assumedZeroFingerprint]).toBeDefined();
-      expect(result.chains.stx.default).toBeUndefined();
+      expect(readPath(result, 'chains', 'stx', assumedZeroFingerprint)).toBeDefined();
+      expect(readPath(result, 'chains', 'stx', 'default')).toBeUndefined();
     });
 
     test('migrates chains.stx.default to assumedZeroFingerprint for ledger stacks-only wallet', () => {
@@ -316,33 +324,33 @@ describe(migrateMultiWalletSupport.name, () => {
             },
           },
         },
-      } as unknown as RootState;
+      };
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect(result.chains.stx[assumedZeroFingerprint]).toEqual({
+      expect(readPath(result, 'chains', 'stx', assumedZeroFingerprint)).toEqual({
         currentAccountIndex: 0,
         currentAccountStacksDescriptor: '',
         highestAccountIndex: 0,
       });
-      expect(result.chains.stx.default).toBeUndefined();
+      expect(readPath(result, 'chains', 'stx', 'default')).toBeUndefined();
     });
   });
 
   describe('default state with no keys', () => {
     test('migrates empty state with no keys', () => {
-      const inputState = {} as unknown as RootState;
+      const inputState = {};
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect(result.active).toEqual({
+      expect(readPath(result, 'active')).toEqual({
         account: {
           fingerprint: assumedZeroFingerprint,
           accountIndex: 0,
         },
       });
 
-      expect(result.wallets).toEqual({
+      expect(readPath(result, 'wallets')).toEqual({
         ids: [],
         entities: {},
       });
@@ -360,18 +368,18 @@ describe(migrateMultiWalletSupport.name, () => {
             entities: {},
           },
         },
-      } as unknown as RootState;
+      };
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect(result.active).toEqual({
+      expect(readPath(result, 'active')).toEqual({
         account: {
           fingerprint: assumedZeroFingerprint,
           accountIndex: 0,
         },
       });
 
-      expect(result.wallets).toEqual({
+      expect(readPath(result, 'wallets')).toEqual({
         ids: [],
         entities: {},
       });
@@ -402,23 +410,23 @@ describe(migrateMultiWalletSupport.name, () => {
           ids: [],
           entities: {},
         },
-      } as unknown as RootState;
+      };
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect(result.active).toEqual({
+      expect(readPath(result, 'active')).toEqual({
         account: {
           fingerprint: assumedZeroFingerprint,
           accountIndex: 0,
         },
       });
 
-      expect(result.wallets).toEqual({
+      expect(readPath(result, 'wallets')).toEqual({
         ids: [],
         entities: {},
       });
 
-      expect(result.chains.stx).toEqual({});
+      expect(readPath(result, 'chains', 'stx')).toEqual({});
     });
   });
 
@@ -455,16 +463,16 @@ describe(migrateMultiWalletSupport.name, () => {
             },
           },
         },
-      } as unknown as RootState;
+      };
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect(result.appPermissions.entities['https://example.com'].fingerprint).toEqual(
-        softwareWalletFingerprint
-      );
-      expect(result.appPermissions.entities['https://test.com'].fingerprint).toEqual(
-        softwareWalletFingerprint
-      );
+      expect(
+        readPath(result, 'appPermissions', 'entities', 'https://example.com', 'fingerprint')
+      ).toEqual(softwareWalletFingerprint);
+      expect(
+        readPath(result, 'appPermissions', 'entities', 'https://test.com', 'fingerprint')
+      ).toEqual(softwareWalletFingerprint);
     });
   });
 
@@ -489,16 +497,16 @@ describe(migrateMultiWalletSupport.name, () => {
             entities: {},
           },
         },
-      } as unknown as RootState;
+      };
 
       const result = migrateMultiWalletSupport(inputState);
 
       // Check that ledger slice has been removed
-      expect(result.ledger).toBeUndefined();
+      expect(readPath(result, 'ledger')).toBeUndefined();
 
       // Check that Bitcoin key was migrated to keychains
       const bitcoinKeyOrigin = `${ledgerBitcoinFingerprint}/84'/0'/0'`;
-      expect(result.keychains.entities[bitcoinKeyOrigin]).toEqual({
+      expect(readPath(result, 'keychains', 'entities', bitcoinKeyOrigin)).toEqual({
         chain: 'bitcoin',
         descriptor: `[${ledgerBitcoinFingerprint}/84'/0'/0']xpub123`,
       });
@@ -525,16 +533,16 @@ describe(migrateMultiWalletSupport.name, () => {
             },
           },
         },
-      } as unknown as RootState;
+      };
 
       const result = migrateMultiWalletSupport(inputState);
 
       // Check that ledger slice has been removed
-      expect(result.ledger).toBeUndefined();
+      expect(readPath(result, 'ledger')).toBeUndefined();
 
       // Check that Stacks key was migrated to keychains
       const stacksKeyOrigin = `${assumedZeroFingerprint}/44'/5757'/0'/0/0`;
-      expect(result.keychains.entities[stacksKeyOrigin]).toEqual({
+      expect(readPath(result, 'keychains', 'entities', stacksKeyOrigin)).toEqual({
         chain: 'stacks',
         descriptor: `[${assumedZeroFingerprint}/44'/5757'/0'/0/0]02abc123`,
       });
@@ -565,11 +573,11 @@ describe(migrateMultiWalletSupport.name, () => {
             },
           },
         },
-      } as unknown as RootState;
+      };
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect(result.onboarding).toBeUndefined();
+      expect(readPath(result, 'onboarding')).toBeUndefined();
     });
 
     test('removes ordinals slice from state', () => {
@@ -595,11 +603,11 @@ describe(migrateMultiWalletSupport.name, () => {
             },
           },
         },
-      } as unknown as RootState;
+      };
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect(result.ordinals).toBeUndefined();
+      expect(readPath(result, 'ordinals')).toBeUndefined();
     });
 
     test('removes both onboarding and ordinals slices from state', () => {
@@ -629,12 +637,12 @@ describe(migrateMultiWalletSupport.name, () => {
             },
           },
         },
-      } as unknown as RootState;
+      };
 
       const result = migrateMultiWalletSupport(inputState);
 
-      expect(result.onboarding).toBeUndefined();
-      expect(result.ordinals).toBeUndefined();
+      expect(readPath(result, 'onboarding')).toBeUndefined();
+      expect(readPath(result, 'ordinals')).toBeUndefined();
     });
   });
 });

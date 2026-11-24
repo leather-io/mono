@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { AuthNetworkId, AuthSession } from '@leather.io/models';
 
+import { createMock } from '../../../test/create-mock';
 import type { AuthSessionService } from '../../auth/auth-session.service';
 import type { Environment } from '../../environment';
 import type { RateLimiterService } from '../../rate-limiter/rate-limiter.service';
@@ -51,7 +52,7 @@ function createHarness({ session = null }: HarnessOptions = {}) {
     getActiveNetworks: vi.fn(() => (current ? [network] : [])),
     onTokenRefreshed: vi.fn(),
     onAuthFailure: vi.fn(),
-  };
+  } satisfies AuthSessionService;
 
   const queues: Record<'auth' | 'refresh' | 'me', Responder[]> = {
     auth: [],
@@ -69,20 +70,16 @@ function createHarness({ session = null }: HarnessOptions = {}) {
   });
   vi.stubGlobal('fetch', fetchMock);
 
-  const env = {
+  const env: Environment = {
     environment: 'staging',
     leatherApiUrl: 'https://api.test',
-  } as unknown as Environment;
+  };
 
-  const rateLimiter = {
-    add: (_type: unknown, fn: () => unknown) => fn(),
-  } as unknown as RateLimiterService;
+  const rateLimiter = createMock<RateLimiterService>({
+    add: (_type, fn) => fn(),
+  });
 
-  const client = new LeatherAuthApiClient(
-    sessions as unknown as AuthSessionService,
-    env,
-    rateLimiter
-  );
+  const client = new LeatherAuthApiClient(sessions, env, rateLimiter);
 
   return {
     client,

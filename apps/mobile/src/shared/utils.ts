@@ -1,8 +1,8 @@
 import { useNetworkPreferenceStacksNetwork, useSettings } from '@/store/settings/settings';
 import { getStacksNetworkFromName } from '@/store/settings/settings.read';
-import { StacksNetwork, StacksNetworks } from '@stacks/network';
+import { type StacksNetwork, StacksNetworks } from '@stacks/network';
 
-import { NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
+import { type NetworkConfiguration, defaultNetworksKeyedById } from '@leather.io/models';
 
 interface GetBtcNetworkFromRequestParams {
   paramsNetwork: string | undefined;
@@ -16,9 +16,10 @@ function getBtcNetworkFromRequestParams({
   if (paramsNetwork) {
     // default to testnet4 if rpc request specifies "testnet"
     if (paramsNetwork === 'testnet') return defaultNetworksKeyedById.testnet4;
-    const foundNetwork = Object.values(defaultNetworksKeyedById).find(network => {
-      return network.chain.bitcoin.bitcoinNetwork === paramsNetwork;
-    });
+    const networks = Object.values(defaultNetworksKeyedById);
+    const foundNetwork =
+      networks.find(network => network.id === paramsNetwork) ??
+      networks.find(network => network.chain.bitcoin.bitcoinNetwork === paramsNetwork);
 
     if (foundNetwork) {
       return foundNetwork;
