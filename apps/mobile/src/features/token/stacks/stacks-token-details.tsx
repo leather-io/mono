@@ -1,4 +1,4 @@
-import { useActivityByAsset } from '@/queries/activity/activity.query';
+import { useActivityByAssetId } from '@/queries/activity/activity.query';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/core/macro';
 import { capitalize } from 'remeda';
@@ -6,6 +6,7 @@ import { capitalize } from 'remeda';
 import { stxAsset } from '@leather.io/constants';
 import { type AccountId } from '@leather.io/models';
 import { StxAvatarIcon } from '@leather.io/ui/native';
+import { getAssetId } from '@leather.io/utils';
 
 import { Token } from '../token';
 
@@ -15,7 +16,7 @@ interface StacksTokenDetailsProps {
 export function StacksTokenDetails({ account }: StacksTokenDetailsProps) {
   const { fingerprint, accountIndex } = account;
   const balance = useStxAccountBalance(fingerprint, accountIndex);
-  const activity = useActivityByAsset(fingerprint, accountIndex, stxAsset);
+  const activity = useActivityByAssetId(fingerprint, accountIndex, getAssetId(stxAsset));
 
   const chain = capitalize(stxAsset.chain);
   const name = `${chain} (${stxAsset.symbol})`;

@@ -1,6 +1,6 @@
 {
   "name": "@leather.io/mobile",
-  "version": "2.116.0",
+  "version": "2.117.0",
   "type": "module",
   "scripts": {
     "1password:env:dev": "op read \"op://leather-cli/env-content/dev\" > .env",
@@ -67,13 +67,12 @@
     "@shopify/restyle": "2.4.2",
     "@stacks/common": "7.0.2",
     "@stacks/network": "7.0.2",
-    "@stacks/stacks-blockchain-api-types": "7.14.1",
     "@stacks/transactions": "7.5.0",
     "@tanstack/react-query": "5.85.5",
     "@types/react-dom": "19.1.11",
     "axios": "1.20.0",
     "bignumber.js": "9.1.2",
-    "bitcoinjs-lib": "7.0.1",
+    "bitcoinjs-lib": "7.0.5",
     "buffer": "6.0.3",
     "dayjs": "1.11.13",
     "expo": "54.0.32",

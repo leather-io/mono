@@ -1,6 +1,7 @@
 import { defineConfig } from '@pandacss/dev';
 
 import { globalLoaderCss } from './app/layouts/nav/global-loader.styles';
+import { marketingKeyframes } from './app/pages/marketing/shared/motion.styles';
 
 const navbar = { navbar: { value: '164px' } };
 
@@ -12,6 +13,10 @@ export default defineConfig({
   globalCss: {
     ...globalLoaderCss,
     'button:not(:disabled)': { cursor: 'pointer' },
+    '[data-frame], [data-frame] *': {
+      scrollbarWidth: 'none',
+      '&::-webkit-scrollbar': { display: 'none', width: 0 },
+    },
     ':root': {
       '--multisig-collecting-wash':
         'linear-gradient(90deg, rgb(from token(colors.orange.action-primary-default) r g b / 0.16), rgb(from token(colors.orange.action-primary-default) r g b / 0.025))',
@@ -34,6 +39,7 @@ export default defineConfig({
     },
     extend: {
       keyframes: {
+        ...marketingKeyframes,
         stakingIconAttention: {
           '0%': {
             transform: 'scale(1)',

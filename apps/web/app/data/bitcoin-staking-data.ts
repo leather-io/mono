@@ -77,10 +77,10 @@ const bitcoinStakingPoolData: Record<BitcoinStakingProviderId, BitcoinStakingPoo
   },
   planbetter: {
     providerId: 'planbetter',
-    name: 'PlanBetter',
+    name: 'Planbetter',
     url: 'https://planbetter.com',
     description:
-      'Rewards are paid in native BTC to your Bitcoin address, roughly monthly. PlanBetter collects the pool’s sBTC rewards and pays members off chain, so this pool is custodial: there is no on-chain claim and no on-chain recourse.',
+      'Rewards are paid in native BTC to your Bitcoin address, roughly monthly. Planbetter collects the pool’s sBTC rewards and pays members off chain, so this pool is custodial: there is no on-chain claim and no on-chain recourse.',
     signerManagerContracts: {
       mainnet: ['SP3ZA8J49HPS7M3KD7EB01Y0ZAJS7VJS2NG87MDGN.planbetter-signer-manager'],
     },
