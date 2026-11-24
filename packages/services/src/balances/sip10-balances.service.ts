@@ -153,18 +153,21 @@ export class Sip10BalancesService {
     includeHiddenAssets = false,
     signal?: AbortSignal
   ): Promise<Sip10AddressBalance> {
-    const ftBalances = (
-      await this.stacksApiClient.getAddressFtBalances(address, {
-        signal,
-      })
-    ).results;
+    const ftBalances = await this.stacksApiClient.getPrincipalFtBalances(address, {
+      signal,
+    });
 
     const sip10Balances = (
       await Promise.allSettled(
         ftBalances
           .filter(ft => Number(ft.balance) !== 0)
           .map(ft =>
-            this.createSip10Balance(ft.token, Number(ft.balance), includeHiddenAssets, signal)
+            this.createSip10Balance(
+              ft.asset_identifier,
+              Number(ft.balance),
+              includeHiddenAssets,
+              signal
+            )
           )
       )
     )

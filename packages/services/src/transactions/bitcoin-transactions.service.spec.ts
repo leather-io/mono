@@ -105,7 +105,7 @@ describe(BitcoinTransactionsService.name, () => {
       const service = new BitcoinTransactionsService(
         createMock<LeatherApiClient>({}),
         mockMempoolApiClient,
-        createTestSettingsService(defaultNetworksKeyedById['private-1'])
+        createTestSettingsService(defaultNetworksKeyedById.primaryTestnet)
       );
       const mockAccount: AccountAddresses = {
         id: { fingerprint: 'multisig-fp', accountIndex: 0 },

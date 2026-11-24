@@ -1,6 +1,7 @@
 import {
   type ExternalRecipientSuggestionEntry,
   type InternalRecipientSuggestionEntry,
+  type RecipientActivity,
   type RecipientSection,
   type RecipientSectionId,
   type RecipientSuggestionEntry,
@@ -13,13 +14,13 @@ import { type Account } from '@/store/accounts/accounts';
 import { filter, map, pipe, prop, sortBy, take, uniqueBy } from 'remeda';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
-import { type AccountId, type SendAssetActivity } from '@leather.io/models';
+import { type AccountId } from '@leather.io/models';
 
 export interface BuildRecipientSuggestionsParams {
   searchTerm: string;
   accounts: Account[];
   canSelfSend: boolean;
-  activity: SendAssetActivity[];
+  activity: RecipientActivity[];
   findAccountByAddress(address: string): Account | null;
   getAddressByAccount(fingerprint: string, accountIndex: number): string | null;
   performBnsLookup(name: string): Promise<string | null>;
@@ -99,7 +100,7 @@ async function performSearch({
 }
 
 interface GetRecentsParams {
-  activity: SendAssetActivity[];
+  activity: RecipientActivity[];
   findAccountByAddress(address: string): Account | null;
 }
 

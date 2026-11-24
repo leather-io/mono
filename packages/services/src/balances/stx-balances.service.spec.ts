@@ -20,15 +20,24 @@ describe(StxBalancesService.name, () => {
     }),
   };
 
-  const getAddressStxBalance = vi.fn().mockResolvedValue({
+  const getPrincipalStxBalance = vi.fn().mockResolvedValue({
     balance: '5000000',
-    locked: '1000000',
+    available: '4000000',
+    locked: {
+      amount: '1000000',
+      pox_version: 4,
+      lock_tx_id: '0x01',
+      stacks_lock_height: 100,
+      burn_lock_height: 898000,
+      burn_unlock_height: 0,
+    },
+    mempool: null,
   });
   const getPoxInfo = vi.fn().mockResolvedValue({
     current_burnchain_block_height: 900000,
   });
   const mockStacksApiClient = createMock<HiroStacksApiClient>({
-    getAddressStxBalance,
+    getPrincipalStxBalance,
     getPoxInfo,
   });
 
@@ -70,7 +79,7 @@ describe(StxBalancesService.name, () => {
     it('retrieves stx balance using stacks api account balance and pending transactions', async () => {
       const signal = new AbortController().signal;
       const balance = await stxBalancesService.getStxAccountBalance(request, signal);
-      expect(mockStacksApiClient.getAddressStxBalance).toHaveBeenCalledWith(stacksAddress1, {
+      expect(mockStacksApiClient.getPrincipalStxBalance).toHaveBeenCalledWith(stacksAddress1, {
         signal,
       });
       expect(mockStacksTransactionsService.getPendingTransactions).toHaveBeenCalledWith(
@@ -96,14 +105,18 @@ describe(StxBalancesService.name, () => {
     it('estimates the unlock date from the burnchain unlock height and current burn tip', async () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date('2026-09-18T12:00:00Z'));
-      vi.mocked(mockStacksApiClient.getAddressStxBalance).mockResolvedValueOnce({
+      vi.mocked(mockStacksApiClient.getPrincipalStxBalance).mockResolvedValueOnce({
         balance: '5000000',
-        total_miner_rewards_received: '0',
-        lock_tx_id: '0x01',
-        locked: '1000000',
-        lock_height: 100,
-        burnchain_lock_height: 898000,
-        burnchain_unlock_height: 900144,
+        available: '4000000',
+        locked: {
+          amount: '1000000',
+          pox_version: 4,
+          lock_tx_id: '0x01',
+          stacks_lock_height: 100,
+          burn_lock_height: 898000,
+          burn_unlock_height: 900144,
+        },
+        mempool: null,
       });
       const balance = await stxBalancesService.getStxAccountBalance(request);
       expect(mockStacksApiClient.getPoxInfo).toHaveBeenCalled();
@@ -113,19 +126,37 @@ describe(StxBalancesService.name, () => {
     });
 
     it('still returns the balance when the pox info request fails', async () => {
-      vi.mocked(mockStacksApiClient.getAddressStxBalance).mockResolvedValueOnce({
+      vi.mocked(mockStacksApiClient.getPrincipalStxBalance).mockResolvedValueOnce({
         balance: '5000000',
-        total_miner_rewards_received: '0',
-        lock_tx_id: '0x01',
-        locked: '1000000',
-        lock_height: 100,
-        burnchain_lock_height: 898000,
-        burnchain_unlock_height: 900144,
+        available: '4000000',
+        locked: {
+          amount: '1000000',
+          pox_version: 4,
+          lock_tx_id: '0x01',
+          stacks_lock_height: 100,
+          burn_lock_height: 898000,
+          burn_unlock_height: 900144,
+        },
+        mempool: null,
       });
       vi.mocked(mockStacksApiClient.getPoxInfo).mockRejectedValueOnce(new Error('pox down'));
       const balance = await stxBalancesService.getStxAccountBalance(request);
       expect(balance.lock).toBeUndefined();
       expect(balance.stx.lockedBalance.amount).toEqual(initBigNumber(1000000));
+    });
+
+    it('reads a missing lock as a zero locked balance', async () => {
+      vi.mocked(mockStacksApiClient.getPrincipalStxBalance).mockResolvedValueOnce({
+        balance: '5000000',
+        available: '5000000',
+        locked: null,
+        mempool: null,
+      });
+      const balance = await stxBalancesService.getStxAccountBalance(request);
+      expect(mockStacksApiClient.getPoxInfo).not.toHaveBeenCalled();
+      expect(balance.lock).toBeUndefined();
+      expect(balance.stx.lockedBalance.amount).toEqual(initBigNumber(0));
+      expect(balance.stx.unlockedBalance.amount).toEqual(initBigNumber(5000000));
     });
 
     it('uses market data to calculate usd-denominated balances', async () => {
