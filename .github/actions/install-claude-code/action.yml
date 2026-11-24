@@ -1,5 +1,5 @@
 name: install-claude-code
-description: Install the pinned Claude Code CLI binary for the review gate and Claude review
+description: Install the pinned Claude Code CLI binary for the review gate
 
 outputs:
   path:

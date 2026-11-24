@@ -2,8 +2,8 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
 
-import { classifierPromptPath } from '../review-gate/classifier.js';
-import { tierJsonSchema } from '../review-gate/decision.js';
+import { classifierPromptPath } from './classifier.js';
+import { tierJsonSchema } from './decision.js';
 
 const containerTypes = new Set(['object', 'array']);
 

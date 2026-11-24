@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { claudeModel } from '../ci/claude.js';
-import { describeError, describeZodError, neutraliseMentions } from '../ci/github.js';
+import { describeZodError, neutraliseMentions } from '../ci/github.js';
 import type { CommitStatus, IssueComment } from './schemas.js';
 
 export const decisionContext = 'review-gate/decision';
@@ -11,7 +11,6 @@ const truncationMarker = '...';
 const fallbackMarker = ' (fallback)';
 
 const confidences = ['low', 'medium', 'high'] as const;
-const sources = ['rules', 'model', 'fallback'] as const;
 
 export const tierJsonSchema = {
   type: 'object',
@@ -33,59 +32,33 @@ const tierSchema = z.object({
 });
 export type Tier = z.infer<typeof tierSchema>;
 
-const decisionSchema = tierSchema.extend({ source: z.enum(sources) });
-type DecisionSource = (typeof sources)[number];
-export type Decision = z.infer<typeof decisionSchema>;
-
-export function parseTier(value: unknown): Tier {
-  const parsed = tierSchema.safeParse(typeof value === 'string' ? JSON.parse(value) : value);
-  if (!parsed.success) throw new Error(describeZodError(parsed.error));
-  return parsed.data;
-}
+type DecisionSource = 'rules' | 'model' | 'fallback';
+export type Decision = Tier & { readonly source: DecisionSource };
 
 function failClosed(reason: string): Decision {
   return { reviews: 2, confidence: 'high', reason, summary: reason, source: 'fallback' };
 }
 
 interface ResolveDecisionInput {
-  readonly ruleDecision?: string;
-  readonly structuredOutput?: string;
+  readonly ruleDecision?: Tier | null;
+  readonly structuredOutput?: unknown;
 }
 
 export function resolveDecision({
   ruleDecision,
   structuredOutput,
 }: ResolveDecisionInput): Decision {
-  if (ruleDecision) {
-    try {
-      return { ...parseTier(ruleDecision), source: 'rules' };
-    } catch (error) {
-      return failClosed(
-        `The path rule decision was invalid (${describeError(error)}), so 2 reviews are required.`
-      );
-    }
+  if (ruleDecision) return { ...ruleDecision, source: 'rules' };
+  if (structuredOutput === undefined) {
+    return failClosed('Claude returned no answer, so 2 reviews are required.');
   }
-  if (!structuredOutput) return failClosed('Claude returned no answer, so 2 reviews are required.');
-  try {
-    return { ...parseTier(structuredOutput), source: 'model' };
-  } catch (error) {
+  const parsed = tierSchema.safeParse(structuredOutput);
+  if (!parsed.success) {
     return failClosed(
-      `Claude's answer was invalid (${describeError(error)}), so 2 reviews are required.`
+      `Claude's answer was invalid (${describeZodError(parsed.error)}), so 2 reviews are required.`
     );
   }
-}
-
-export function parseDecision(value: string | undefined): Decision {
-  if (!value) return failClosed('Classification did not finish, so 2 reviews are required.');
-  try {
-    const parsed = decisionSchema.safeParse(JSON.parse(value));
-    if (!parsed.success) throw new Error(describeZodError(parsed.error));
-    return parsed.data;
-  } catch (error) {
-    return failClosed(
-      `The decision was invalid (${describeError(error)}), so 2 reviews are required.`
-    );
-  }
+  return { ...parsed.data, source: 'model' };
 }
 
 export function formatReviewCount(reviews: number): string {

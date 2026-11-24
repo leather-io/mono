@@ -13,17 +13,9 @@ const resultSchema = z.object({
 interface ClaudeArgsOptions {
   readonly systemPromptPath: string;
   readonly schema: Record<string, unknown>;
-  readonly tools?: readonly string[];
-  readonly addDirs?: readonly string[];
 }
 
-export function buildClaudeArgs({
-  systemPromptPath,
-  schema,
-  tools = [],
-  addDirs = [],
-}: ClaudeArgsOptions): string[] {
-  const toolList = tools.join(',');
+export function buildClaudeArgs({ systemPromptPath, schema }: ClaudeArgsOptions): string[] {
   return [
     '--print',
     '--output-format',
@@ -33,13 +25,11 @@ export function buildClaudeArgs({
     '--effort',
     claudeEffort,
     '--tools',
-    toolList,
-    ...(tools.length > 0 ? ['--allowedTools', toolList] : []),
+    '',
     '--setting-sources',
     '',
     '--strict-mcp-config',
     '--no-session-persistence',
-    ...addDirs.flatMap(dir => ['--add-dir', dir]),
     '--system-prompt-file',
     systemPromptPath,
     '--json-schema',

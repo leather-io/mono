@@ -53,7 +53,7 @@ nobody dispatched is blocked.
 | -------------------- | --------------------------------------------------------------- |
 | `rules.ts`           | size limits, hidden diffs, the classifier prompt                |
 | `sensitive-paths.ts` | reading and matching the sensitive path list                    |
-| `classifier.ts`      | the classifier's Claude arguments                               |
+| `classifier.ts`      | the classifier's prompt path and Claude arguments               |
 | `decision.ts`        | the tier schema, fail-closed decisions, status and comment text |
 | `approvals.ts`       | approvers, fix-issue dispatchers, shared heads, the gate status |
 | `client.ts`          | the GitHub calls, each response checked with `schemas.ts`       |
@@ -61,8 +61,8 @@ nobody dispatched is blocked.
 
 `../ci/` holds the shared pieces: the GitHub REST and GraphQL client and Actions helpers
 (`github.ts`), command running (`exec.ts`), step outputs (`outputs.ts`), the App token signed
-through KMS (`app-token.ts`), the pinned Claude invocation (`claude.ts`) and the prompt loader
-(`prompts.ts`). `client.ts` scopes the shared client to the repository.
+through KMS (`app-token.ts`) and the pinned Claude invocation (`claude.ts`). `client.ts` scopes the
+shared client to the repository.
 
 ## Prompts
 

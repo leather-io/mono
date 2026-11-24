@@ -9,8 +9,6 @@ import {
   findDecisionComment,
   formatDecisionComment,
   hasAnsweredDecision,
-  parseDecision,
-  parseTier,
   requiredApprovals,
   resolveDecision,
 } from './decision.js';
@@ -28,70 +26,33 @@ function status(description: string, overrides: Partial<CommitStatus> = {}): Com
   };
 }
 
-describe('parseTier', () => {
-  it('accepts a valid answer', () => {
-    expect(
-      parseTier('{"reviews":1,"confidence":"low","reason":"copy only","summary":"copy"}')
-    ).toEqual({ reviews: 1, confidence: 'low', reason: 'copy only', summary: 'copy' });
-  });
-
-  it('rejects an answer without a summary', () => {
-    expect(() => parseTier('{"reviews":1,"confidence":"low","reason":"copy only"}')).toThrow();
-  });
-
-  it('rejects an out-of-range review count', () => {
-    expect(() => parseTier('{"reviews":0,"confidence":"low","reason":"x"}')).toThrow();
-  });
-});
-
 describe('resolveDecision', () => {
+  const copyOnly = { reviews: 1, confidence: 'high', reason: 'copy', summary: 'copy' };
+
   it('prefers the rule decision', () => {
     const decision = resolveDecision({
-      ruleDecision: '{"reviews":2,"confidence":"high","reason":"lockfile","summary":"lockfile"}',
-      structuredOutput: '{"reviews":1,"confidence":"high","reason":"copy","summary":"copy"}',
+      ruleDecision: { reviews: 2, confidence: 'high', reason: 'lockfile', summary: 'lockfile' },
+      structuredOutput: copyOnly,
     });
     expect([decision.reviews, decision.source]).toEqual([2, 'rules']);
   });
 
-  it('requires 2 reviews when the rule decision is invalid', () => {
-    const decision = resolveDecision({ ruleDecision: '{"reviews":1}' });
-    expect([decision.reviews, decision.source]).toEqual([2, 'fallback']);
-  });
-
   it('returns the model answer', () => {
-    const decision = resolveDecision({
-      structuredOutput: '{"reviews":1,"confidence":"high","reason":"copy","summary":"copy"}',
-    });
+    const decision = resolveDecision({ structuredOutput: copyOnly });
     expect([decision.reviews, decision.source]).toEqual([1, 'model']);
   });
 
   it('requires 2 reviews when Claude did not answer', () => {
-    const decision = resolveDecision({ structuredOutput: '' });
+    const decision = resolveDecision({});
     expect([decision.reviews, decision.source]).toEqual([2, 'fallback']);
   });
 
-  it('requires 2 reviews when the answer is invalid', () => {
-    const decision = resolveDecision({ structuredOutput: '{"reviews":3}' });
-    expect([decision.reviews, decision.source]).toEqual([2, 'fallback']);
-  });
-});
-
-describe('parseDecision', () => {
-  it('requires 2 reviews when classification did not run', () => {
-    expect(parseDecision(undefined).reviews).toBe(2);
-  });
-
-  it('keeps a valid decision', () => {
-    const decision = parseDecision(
-      '{"reviews":1,"confidence":"medium","reason":"copy","summary":"copy","source":"model"}'
-    );
-    expect([decision.reviews, decision.source]).toEqual([1, 'model']);
-  });
-
-  it('requires 2 reviews for an unknown source', () => {
-    const decision = parseDecision(
-      '{"reviews":1,"confidence":"medium","reason":"copy","summary":"copy","source":"author"}'
-    );
+  it.each([
+    ['has an out-of-range review count', { ...copyOnly, reviews: 3 }],
+    ['has no summary', { reviews: 1, confidence: 'low', reason: 'copy only' }],
+    ['is not an object', 'one review'],
+  ])('requires 2 reviews when the answer %s', (_, structuredOutput) => {
+    const decision = resolveDecision({ structuredOutput });
     expect([decision.reviews, decision.source]).toEqual([2, 'fallback']);
   });
 });

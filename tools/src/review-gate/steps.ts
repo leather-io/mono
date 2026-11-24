@@ -61,14 +61,13 @@ function createTokenClient() {
   });
 }
 
-function askClaude(prompt: string): string | undefined {
+function askClaude(prompt: string): unknown {
   try {
-    const answer = runClaude({
+    return runClaude({
       args: buildClassifierArgs(),
       prompt,
       cwd: mkdtempSync(path.join(readRequiredEnv('RUNNER_TEMP'), 'review-gate-')),
     });
-    return JSON.stringify(answer);
   } catch (error) {
     console.log(`::warning::Claude did not answer: ${describeError(error)}`);
     return undefined;
@@ -80,10 +79,8 @@ async function classify(github: GateClient, pullRequest: PullRequest): Promise<D
   const current = await github.getPullRequest(pullRequest.number);
   if (current.head.sha !== pullRequest.head.sha) {
     return resolveDecision({
-      ruleDecision: JSON.stringify(
-        requireTwoReviews(
-          `The head moved from ${pullRequest.head.sha} to ${current.head.sha} during classification.`
-        )
+      ruleDecision: requireTwoReviews(
+        `The head moved from ${pullRequest.head.sha} to ${current.head.sha} during classification.`
       ),
     });
   }
@@ -92,7 +89,7 @@ async function classify(github: GateClient, pullRequest: PullRequest): Promise<D
     : undefined;
   const sensitiveFiles = findSensitiveFiles(files, readSensitiveGlobs());
   const ruleDecision = decideByRules(pullRequest, files, { baseBlobs, sensitiveFiles });
-  if (ruleDecision) return resolveDecision({ ruleDecision: JSON.stringify(ruleDecision) });
+  if (ruleDecision) return resolveDecision({ ruleDecision });
   return resolveDecision({ structuredOutput: askClaude(buildPrompt(pullRequest, files)) });
 }
 

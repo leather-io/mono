@@ -18,18 +18,6 @@ describe('buildClaudeArgs', () => {
     expect(args).toContain('--no-session-persistence');
     expect(valueAfter(args, '--model')).toBe(claudeModel);
     expect(valueAfter(args, '--output-format')).toBe('json');
-  });
-
-  it('allows the given tools and extra directories', () => {
-    const args = buildClaudeArgs({
-      systemPromptPath: '/tmp/system.md',
-      schema,
-      tools: ['Read', 'Grep'],
-      addDirs: ['/tmp/context'],
-    });
-    expect(valueAfter(args, '--tools')).toBe('Read,Grep');
-    expect(valueAfter(args, '--allowedTools')).toBe('Read,Grep');
-    expect(valueAfter(args, '--add-dir')).toBe('/tmp/context');
     expect(valueAfter(args, '--json-schema')).toBe('{"type":"object"}');
   });
 });
