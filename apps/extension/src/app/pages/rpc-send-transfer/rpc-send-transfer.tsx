@@ -22,6 +22,7 @@ import { SpendSourcesApproverRows } from '@app/components/spend-sources/spend-so
 import { SpendSourcesTaprootCallout } from '@app/components/spend-sources/spend-sources-taproot-callout';
 import { FeeEditor } from '@app/features/fee-editor/fee-editor';
 import { useFeeEditorContext } from '@app/features/fee-editor/fee-editor.context';
+import { LedgerInputLimitWarningLabel } from '@app/features/ledger/components/ledger-input-limit-warning-label';
 import { SigningAccountCard } from '@app/features/rpc-stacks-transaction-request/signing-account-card/signing-account-card';
 import { useBreakOnNonCompliantEntity } from '@app/query/common/compliance-checker/compliance-checker.query';
 import { useCurrentAccountId } from '@app/store/accounts/account';
@@ -49,7 +50,8 @@ export function RpcSendTransfer() {
   const isSignOnly = !broadcast && !isBitcoinPolicy;
   const generatedTx = useRpcSendTransferTx();
   const unsignedTx = generatedTx.tx;
-  const { approverActions, isBroadcasting, isSubmitted } = useRpcSendTransferActions(generatedTx);
+  const { approverActions, isBroadcasting, isSubmitted, ledgerInputLimit } =
+    useRpcSendTransferActions(generatedTx);
   const showOverlay = isBroadcasting || isSubmitted;
 
   const spendSources = useMemo(() => {
@@ -106,6 +108,12 @@ export function RpcSendTransfer() {
           />
         </Box>
         <Approver.Actions actions={approverActions}>
+          {ledgerInputLimit.exceedsLimit && ledgerInputLimit.inputCount !== null && (
+            <LedgerInputLimitWarningLabel
+              inputCount={ledgerInputLimit.inputCount}
+              maxAmount={ledgerInputLimit.maxAmountWithinLimit ?? undefined}
+            />
+          )}
           <TransactionActionsTitle amount={totalFiatValue} isLoading={isLoadingBalance} />
           {spendSources && <SpendSourcesApproverRows breakdown={spendSources.breakdown} />}
           <TransactionError
