@@ -1,6 +1,7 @@
 import { ConnectSelectors } from '@tests/selectors/connect.selectors';
 import { styled } from 'leather-styles/jsx';
 import { RotatedArrow } from '~/components/icons/rotated-icon';
+import { InstallModal } from '~/pages/marketing/shared/install-modal';
 import { useLeatherConnect } from '~/store/addresses';
 import { leather } from '~/utils/leather-sdk';
 
@@ -67,7 +68,7 @@ export function SignInButton() {
 
   return (
     <>
-      {status === 'missing' && <InstallLeatherButton />}
+      {status === 'missing' && <InstallModal section="header" trigger={<InstallLeatherButton />} />}
       {status === 'detected' && <ConnectLeatherButton />}
       {status === 'connected' && <ActiveAccountButton />}
       <NoStacksAccountsWarningDialog />

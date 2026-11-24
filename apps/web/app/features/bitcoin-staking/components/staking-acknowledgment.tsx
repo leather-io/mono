@@ -95,7 +95,7 @@ export function StakingAcknowledgment({
           </styled.label>{' '}
           See{' '}
           <Link
-            href="https://leather.io/terms"
+            href="/terms"
             target="_blank"
             rel="noopener noreferrer"
             textStyle="body.02"

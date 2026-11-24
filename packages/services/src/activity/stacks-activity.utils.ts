@@ -1,3 +1,4 @@
+import type BigNumber from 'bignumber.js';
 import { entries, filter, groupBy, isNonNull, mapValues, pipe } from 'remeda';
 
 import { stxAsset } from '@leather.io/constants';
@@ -189,10 +190,56 @@ export function groupFtChangesByTxId(
   );
 }
 
+type StacksPostCondition = NonNullable<StacksTransaction['post_conditions']>[number];
+
+export type PendingOutflow =
+  | { readonly type: 'stx'; readonly amount: string }
+  | { readonly type: 'ft'; readonly identifier: string; readonly amount: string };
+
+const stxOutflowKey = 'stx';
+
+function isSenderPostConditionPrincipal(
+  principal: StacksPostCondition['principal'],
+  senderAddress: string
+) {
+  if (principal.type_id === 'principal_origin') return true;
+  return principal.type_id === 'principal_standard' && principal.address === senderAddress;
+}
+
+function getPostConditionOutflowKey(postCondition: StacksPostCondition) {
+  if (postCondition.type === 'stx') return stxOutflowKey;
+  if (postCondition.type !== 'fungible') return undefined;
+  const { contract_address, contract_name, asset_name } = postCondition.asset;
+  return `${contract_address}.${contract_name}::${asset_name}`;
+}
+
+export function getPendingOutflowsFromPostConditions(
+  postConditions: StacksPostCondition[],
+  senderAddress: string
+): PendingOutflow[] {
+  const exactAmounts = new Map<string, BigNumber[]>();
+  for (const postCondition of postConditions) {
+    if (postCondition.type !== 'stx' && postCondition.type !== 'fungible') continue;
+    if (postCondition.condition_code !== 'sent_equal_to') continue;
+    if (!isSenderPostConditionPrincipal(postCondition.principal, senderAddress)) continue;
+    const key = getPostConditionOutflowKey(postCondition);
+    if (key === undefined) continue;
+    exactAmounts.set(key, [...(exactAmounts.get(key) ?? []), initBigNumber(postCondition.amount)]);
+  }
+  return [...exactAmounts].flatMap(([key, amounts]): PendingOutflow[] => {
+    const [amount] = amounts;
+    if (!amount.isGreaterThan(0)) return [];
+    if (!amounts.every(other => other.isEqualTo(amount))) return [];
+    if (key === stxOutflowKey) return [{ type: 'stx', amount: amount.toString() }];
+    return [{ type: 'ft', identifier: key, amount: amount.toString() }];
+  });
+}
+
 export function buildPendingStacksActivity(
   tx: HiroPrincipalMempoolTransaction,
   stxAddress: string,
-  classified?: ClassifiedContractCall
+  classified?: ClassifiedContractCall,
+  contractCallBalanceChanges: BlockchainActivityBalanceChange[] = []
 ): BlockchainActivity | null {
   const initiatedByUser = tx.sender.address === stxAddress;
   // A sponsored tx's fee is paid by the sponsor, not the sender — attach no fee then.
@@ -230,7 +277,12 @@ export function buildPendingStacksActivity(
         balanceChanges: [],
       });
     case 'contract_call': {
-      const { action, protocol, protocolName } = classified ?? { action: 'contract-execution' };
+      const { action, protocol, protocolName } = reclassifySip10Transfer(
+        classified ?? { action: 'contract-execution' },
+        tx.contract_call.function_name,
+        contractCallBalanceChanges,
+        tx.sender.address
+      );
       return buildStacksActivity({
         common,
         core: {
@@ -241,7 +293,7 @@ export function buildPendingStacksActivity(
         action,
         protocol,
         protocolName,
-        balanceChanges: [],
+        balanceChanges: contractCallBalanceChanges,
       });
     }
     default:

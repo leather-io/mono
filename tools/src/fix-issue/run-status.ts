@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import type { GitHubClient } from './github.js';
+import type { GitHubClient } from '../ci/github.js';
 
 const workflowFile = 'repo:fix-issue.yml';
 const runsPageSize = 100;

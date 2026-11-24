@@ -14,6 +14,7 @@ import {
 import { assertUnreachable, createMoney, initBigNumber, isDefined } from '@leather.io/utils';
 
 import { Sip10AssetService } from '../assets/sip10-asset.service';
+import { fetchHiroCursorPages } from '../infrastructure/api/hiro/hiro-multi-page';
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
 import type {
   HiroBalanceChangeResultItem,
@@ -40,9 +41,12 @@ import { mapBitcoinActivity } from './bitcoin-activity.utils';
 import {
   type ClassifiedContractCall,
   type FtBalanceChangeRow,
+  type PendingOutflow,
   buildConfirmedStacksActivity,
   buildOnchainStacksActivity,
   buildPendingStacksActivity,
+  buildStxBalanceChange,
+  getPendingOutflowsFromPostConditions,
   groupFtChangesByTxId,
   mayTouchStacksAsset,
   toFtBalanceChangeRow,
@@ -71,9 +75,14 @@ const maxActivityPageFetches = 5;
 // Hiro v3 caps /balance-changes at 20 tx_ids per call, so ft lookups are chunked.
 const balanceChangesBatchSize = 20;
 const activityByAssetScanPages = 20;
+const sip10TransferRecipientPages = 5;
 // BTC is fetched wholesale in a single request; this depth IS the BTC visibility horizon —
 // older BTC activity is silently absent (the server imposes no page-size maximum).
 const btcTxHorizonPageRequest = { page: 1, pageSize: 1000 };
+
+function isMissingRecipient(activity: BlockchainActivity) {
+  return activity.action === 'send' && activity.counterparty === undefined;
+}
 
 @injectable()
 export class BlockchainActivityService {
@@ -256,7 +265,16 @@ export class BlockchainActivityService {
       activity => !scannedTxids.has(activity.txid) && activityTouchesAsset(activity, assetId)
     );
     const confirmed = confirmedAll.filter(activity => activityTouchesAsset(activity, assetId));
-    return this.enrichWithMarketData([...pending, ...confirmed], signal);
+    const activities =
+      assetId.protocol === 'sip10' && account.stacks
+        ? await this.fillSip10SendRecipients(
+            account.stacks.stxAddress,
+            assetId.id,
+            confirmed,
+            signal
+          )
+        : confirmed;
+    return this.enrichWithMarketData([...pending, ...activities], signal);
   }
 
   private async getRecentStacksSourceItems(
@@ -348,7 +366,11 @@ export class BlockchainActivityService {
             signal
           )
         : undefined;
-    return buildPendingStacksActivity(tx, stxAddress, classified);
+    const balanceChanges =
+      tx.type === 'contract_call' && tx.sender.address === stxAddress
+        ? await this.fetchPendingContractCallBalanceChanges(tx.tx_id, stxAddress, signal)
+        : [];
+    return buildPendingStacksActivity(tx, stxAddress, classified, balanceChanges);
   }
 
   private async mapSourceItem(
@@ -451,6 +473,78 @@ export class BlockchainActivityService {
       cursor = res.cursor.next;
     } while (cursor !== null);
     return rows;
+  }
+
+  private async fetchPendingContractCallBalanceChanges(
+    txid: string,
+    stxAddress: string,
+    signal?: AbortSignal
+  ): Promise<BlockchainActivityBalanceChange[]> {
+    try {
+      const tx = await this.hiroStacksApiClient.getTransactionById(txid, {
+        include: ['post_conditions'],
+        signal,
+      });
+      const outflows = getPendingOutflowsFromPostConditions(tx?.post_conditions ?? [], stxAddress);
+      const changes = await Promise.all(
+        outflows.map(outflow => this.mapPendingOutflow(outflow, signal))
+      );
+      return changes.filter(change => change !== null);
+    } catch (error) {
+      if (signal?.aborted) throw error;
+      return [];
+    }
+  }
+
+  private async mapPendingOutflow(
+    outflow: PendingOutflow,
+    signal?: AbortSignal
+  ): Promise<BlockchainActivityBalanceChange | null> {
+    if (outflow.type === 'stx') return buildStxBalanceChange(`-${outflow.amount}`);
+    return this.mapBalanceChange(
+      {
+        tx_id: '',
+        asset: { type: 'ft', identifier: outflow.identifier },
+        balance_change: { sent: outflow.amount, received: '0', net: `-${outflow.amount}` },
+      },
+      signal
+    );
+  }
+
+  private async fillSip10SendRecipients(
+    stxAddress: string,
+    assetIdentifier: string,
+    activities: BlockchainActivity[],
+    signal?: AbortSignal
+  ): Promise<BlockchainActivity[]> {
+    if (!activities.some(isMissingRecipient)) return activities;
+    try {
+      const transfers = await fetchHiroCursorPages(
+        cursor =>
+          this.hiroStacksApiClient.getPrincipalFtTransfers(
+            stxAddress,
+            assetIdentifier,
+            { cursor, limit: stacksTxPageSize },
+            { signal }
+          ),
+        { maxPages: sip10TransferRecipientPages }
+      );
+      const recipientByTxId = new Map<string, string>();
+      for (const transfer of transfers) {
+        if (transfer.sender === stxAddress && transfer.recipient) {
+          recipientByTxId.set(transfer.transaction.tx_id, transfer.recipient);
+        }
+      }
+      return activities.map(activity => {
+        const recipient = isMissingRecipient(activity)
+          ? recipientByTxId.get(activity.txid)
+          : undefined;
+        return recipient ? { ...activity, counterparty: recipient } : activity;
+      });
+    } catch (error) {
+      if (signal?.aborted) throw error;
+      return activities;
+    }
   }
 
   private async mapBalanceChange(

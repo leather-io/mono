@@ -19,6 +19,7 @@ import { Nav } from './layouts/nav/nav';
 import { NetworkGate } from './layouts/network-gate/network-gate';
 import { ErrorPage } from './layouts/page/error';
 import { isBareCanvasPath } from './pages/playground/playground.constants';
+import { useHideChrome } from './utils/route-handle';
 
 // Polyfill global Buffer
 // @ts-expect-error safe-buffer typings are too old
@@ -42,7 +43,10 @@ const maxWidthCss = css({
 
 export function Layout({ children }: HasChildren) {
   const location = useLocation();
-  const bareCanvas = isBareCanvasPath(location.pathname);
+  // Routes can opt out of the nav + footer with `export const handle = { chrome: 'none' }`
+  // (e.g. /explorer, which the mobile app loads in its in-app browser)
+  const hideChrome = useHideChrome();
+  const bareCanvas = isBareCanvasPath(location.pathname) || hideChrome;
 
   return (
     <html lang="en">
