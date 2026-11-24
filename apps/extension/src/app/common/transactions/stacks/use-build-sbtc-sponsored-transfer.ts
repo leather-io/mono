@@ -11,9 +11,7 @@ import {
   getStacksAssetStringParts,
   sbtcTransferManyFunctionName,
 } from '@leather.io/stacks';
-import { createMoney, unitToFractionalUnit } from '@leather.io/utils';
-
-import type { StacksSendFormValues } from '@shared/models/form.model';
+import { createMoney } from '@leather.io/utils';
 
 import type { SbtcSponsorshipRouteState } from '@app/pages/send/send-crypto-asset-form/hooks/use-send-form-navigate';
 import { useFetchSbtcSponsorshipQuote } from '@app/query/sbtc/sbtc-sponsorship.hooks';
@@ -27,46 +25,42 @@ export interface SbtcSponsoredTransfer {
   sponsorship: SbtcSponsorshipRouteState;
 }
 
-interface UseBuildSbtcSponsoredTransferArgs {
-  assetId: string;
-  decimals: number;
-}
-
 interface BuildSbtcSponsoredTransferArgs {
-  formValues: StacksSendFormValues;
+  recipient: string;
+  amount: bigint;
+  memo?: string;
+  nonce?: number;
   stxFeeMicro: number;
   fresh?: boolean;
 }
 
-export function useBuildSbtcSponsoredTransfer({
-  assetId,
-  decimals,
-}: UseBuildSbtcSponsoredTransferArgs) {
+export function useBuildSbtcSponsoredTransfer(contractId: string) {
   const fetchSbtcSponsorshipQuote = useFetchSbtcSponsorshipQuote();
   const account = useCurrentStacksAccount();
   const network = useCurrentStacksNetworkState();
-  const { contractAddress, contractName } = getStacksAssetStringParts(assetId);
+  const { contractAddress, contractName } = getStacksAssetStringParts(contractId);
 
   return useCallback(
     async ({
-      formValues,
+      recipient,
+      amount,
+      memo,
+      nonce,
       stxFeeMicro,
       fresh = false,
     }: BuildSbtcSponsoredTransferArgs): Promise<SbtcSponsoredTransfer> => {
       if (!account) throw new Error('No Stacks account selected');
-      const { quote, nonce } = await fetchSbtcSponsorshipQuote({ fresh });
-      const values = fresh ? { ...formValues, nonce } : formValues;
-      const hasExplicitNonce = values.nonce !== undefined && values.nonce !== '';
+      const { quote, nonce: nextNonce } = await fetchSbtcSponsorshipQuote({ fresh });
 
       const params: SbtcSponsoredTransferParams = {
         contractAddress,
         contractName,
         sender: account.address,
-        recipient: values.recipient,
+        recipient,
         feeRecipient: quote.feeRecipientPrincipal,
-        amount: BigInt(unitToFractionalUnit(decimals)(values.amount).toString(10)),
+        amount,
         feeAmount: BigInt(getSbtcSponsorshipFeeSats(stxFeeMicro, quote)),
-        memo: values.memo !== '' ? values.memo : undefined,
+        memo,
       };
 
       const tx = await generateStacksUnsignedTransaction({
@@ -81,20 +75,14 @@ export function useBuildSbtcSponsoredTransfer({
         publicKey: account.stxPublicKey,
         sponsored: true,
         fee: createMoney(0, 'STX'),
-        nonce: hasExplicitNonce ? Number(values.nonce) : nonce,
+        nonce: nonce ?? nextNonce,
       });
 
       return {
         tx,
-        sponsorship: {
-          quoteId: quote.quoteId,
-          stxFeeMicro,
-          expiresAt: quote.expiresAt,
-          assetId,
-          formValues: values,
-        },
+        sponsorship: { quoteId: quote.quoteId, stxFeeMicro, expiresAt: quote.expiresAt },
       };
     },
-    [account, assetId, contractAddress, contractName, decimals, fetchSbtcSponsorshipQuote, network]
+    [account, contractAddress, contractName, fetchSbtcSponsorshipQuote, network]
   );
 }

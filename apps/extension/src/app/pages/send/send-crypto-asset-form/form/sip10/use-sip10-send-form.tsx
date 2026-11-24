@@ -6,7 +6,12 @@ import { z } from 'zod';
 
 import type { CryptoAssetBalance, Money, Sip10Asset } from '@leather.io/models';
 import { getSbtcSponsorshipNetwork } from '@leather.io/services';
-import { convertAmountToBaseUnit, isDefined, subtractMoney } from '@leather.io/utils';
+import {
+  convertAmountToBaseUnit,
+  isDefined,
+  subtractMoney,
+  unitToFractionalUnit,
+} from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
 import { type StacksSendFormValues } from '@shared/models/form.model';
@@ -20,7 +25,7 @@ import {
 import { useBuildSbtcSponsoredTransfer } from '@app/common/transactions/stacks/use-build-sbtc-sponsored-transfer';
 import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
 import { stacksFungibleTokenAmountValidator } from '@app/common/validation/forms/amount-validators';
-import { stxFeeCurrency } from '@app/components/fees-row/fees-row.constants';
+import { stxFeeCurrency } from '@app/components/fees-row/fees-row';
 import { useToast } from '@app/features/toasts/use-toast';
 import { useStxAddressBalance } from '@app/query/stacks/balance/stx-balance.hooks';
 import { useStacksTransactionFees } from '@app/query/stacks/fees/stacks-transaction-fees.hooks';
@@ -35,7 +40,6 @@ import {
 import { useStacksCommonSendForm } from '../../family/stacks/use-stacks-common-send-form';
 import { useSendFormNavigate } from '../../hooks/use-send-form-navigate';
 
-const releaseSbtcSponsorship = true;
 const stxFeeEstimateUnavailableMessage = 'The STX fee estimate is not available yet. Try again.';
 
 interface UseSip10SendFormArgs {
@@ -44,10 +48,7 @@ interface UseSip10SendFormArgs {
 }
 export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
   const generateTx = useGenerateFtTokenTransferUnsignedTx(info);
-  const buildSponsoredTransfer = useBuildSbtcSponsoredTransfer({
-    assetId: info.assetId,
-    decimals: info.decimals,
-  });
+  const buildSponsoredTransfer = useBuildSbtcSponsoredTransfer(info.contractId);
   const policy = useCurrentPolicy();
   const currentNetwork = useCurrentNetwork();
   const toast = useToast();
@@ -68,10 +69,7 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
     getSbtcSponsorshipNetwork(currentNetwork.chain.stacks.chainId)
   );
   const canPayFeeInSbtc =
-    releaseSbtcSponsorship &&
-    hasSponsorshipService &&
-    isSbtcContractPrincipal(info.contractId) &&
-    !isStacksPolicy;
+    hasSponsorshipService && isSbtcContractPrincipal(info.contractId) && !isStacksPolicy;
 
   const availableTokenBalance = balance.availableBalance;
 
@@ -115,8 +113,12 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
       return;
     }
     try {
+      const hasExplicitNonce = isDefined(values.nonce) && values.nonce !== '';
       const { tx, sponsorship } = await buildSponsoredTransfer({
-        formValues: values,
+        recipient: values.recipient,
+        amount: BigInt(unitToFractionalUnit(info.decimals)(values.amount).toString(10)),
+        memo: values.memo !== '' ? values.memo : undefined,
+        nonce: hasExplicitNonce ? Number(values.nonce) : undefined,
         stxFeeMicro: stxFee.amount.toNumber(),
       });
       void sendFormNavigate.toConfirmAndSignStacksSip10Transaction({

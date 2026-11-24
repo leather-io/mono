@@ -5,28 +5,12 @@ import { type StacksTransactionWire } from '@stacks/transactions';
 import { AxiosError } from 'axios';
 import { z } from 'zod';
 
-import type { StacksSendFormValues } from '@shared/models/form.model';
 import { RouteUrls } from '@shared/route-urls';
-
-const stacksSendFormValuesSchema = z.object({
-  amount: z.union([z.number(), z.string()]),
-  assetId: z.string().optional(),
-  fee: z.union([z.number(), z.string()]),
-  feeCurrency: z.string(),
-  feeType: z.string(),
-  memo: z.string(),
-  nonce: z.union([z.number(), z.string()]).optional(),
-  recipient: z.string(),
-  recipientBnsName: z.string(),
-  symbol: z.string().optional(),
-}) satisfies z.ZodType<StacksSendFormValues>;
 
 const sbtcSponsorshipRouteStateSchema = z.object({
   quoteId: z.string(),
   stxFeeMicro: z.number(),
   expiresAt: z.string(),
-  assetId: z.string(),
-  formValues: stacksSendFormValuesSchema,
 });
 
 export type SbtcSponsorshipRouteState = z.infer<typeof sbtcSponsorshipRouteStateSchema>;

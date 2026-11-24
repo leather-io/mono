@@ -3,7 +3,12 @@ import { useNavigate } from 'react-router';
 
 import { AuthType, type StacksTransactionWire } from '@stacks/transactions';
 
-import { type SbtcSponsorshipErrorCode, getSbtcSponsorshipErrorCode } from '@leather.io/services';
+import {
+  type SbtcSponsorshipErrorCode,
+  getLeatherApiClient,
+  getSbtcSponsorshipErrorCode,
+} from '@leather.io/services';
+import type { SbtcSponsoredTransferDetails } from '@leather.io/stacks';
 import { delay } from '@leather.io/utils';
 
 import { logger } from '@shared/logger';
@@ -12,10 +17,7 @@ import { analytics } from '@shared/utils/analytics';
 
 import { useRefreshAllAccountData } from '@app/common/hooks/account/use-refresh-all-account-data';
 import type { SbtcSponsorshipRouteState } from '@app/pages/send/send-crypto-asset-form/hooks/use-send-form-navigate';
-import {
-  isSbtcSponsorshipQuoteExpired,
-  useSubmitSbtcSponsoredTransactionMutation,
-} from '@app/query/sbtc/sbtc-sponsorship.hooks';
+import { isSbtcSponsorshipQuoteExpired } from '@app/query/sbtc/sbtc-sponsorship.hooks';
 import { useSignStacksTransaction } from '@app/store/transactions/transaction.hooks';
 
 import {
@@ -48,22 +50,18 @@ async function retryWhileFundingPending<T>(submit: () => Promise<T>, retriesLeft
 
 interface UseSubmitSbtcSponsoredTransactionArgs {
   token: string;
-  decimals: number;
+  details: SbtcSponsoredTransferDetails;
   sponsorship: SbtcSponsorshipRouteState;
   onRequoted(next: SbtcSponsoredTransfer): void;
 }
 export function useSubmitSbtcSponsoredTransaction({
   token,
-  decimals,
+  details,
   sponsorship,
   onRequoted,
 }: UseSubmitSbtcSponsoredTransactionArgs) {
   const signStacksTransaction = useSignStacksTransaction();
-  const { submitSponsoredTransaction } = useSubmitSbtcSponsoredTransactionMutation();
-  const buildSponsoredTransfer = useBuildSbtcSponsoredTransfer({
-    assetId: sponsorship.assetId,
-    decimals,
-  });
+  const buildSponsoredTransfer = useBuildSbtcSponsoredTransfer(details.contractId);
   const refreshAccountData = useRefreshAllAccountData();
   const navigate = useNavigate();
   const isSubmittingRef = useRef(false);
@@ -78,7 +76,9 @@ export function useSubmitSbtcSponsoredTransaction({
     try {
       onRequoted(
         await buildSponsoredTransfer({
-          formValues: sponsorship.formValues,
+          recipient: details.recipient,
+          amount: details.amount,
+          memo: details.memo,
           stxFeeMicro: sponsorship.stxFeeMicro,
           fresh: true,
         })
@@ -89,9 +89,11 @@ export function useSubmitSbtcSponsoredTransaction({
     }
   }, [
     buildSponsoredTransfer,
+    details.amount,
+    details.memo,
+    details.recipient,
     navigateToError,
     onRequoted,
-    sponsorship.formValues,
     sponsorship.stxFeeMicro,
   ]);
 
@@ -116,7 +118,7 @@ export function useSubmitSbtcSponsoredTransaction({
       try {
         const request = { quoteId: sponsorship.quoteId, transaction: signedTx.serialize() };
         const result = await retryWhileFundingPending(
-          () => submitSponsoredTransaction(request),
+          () => getLeatherApiClient().submitSbtcSponsoredTransaction(request),
           fundingPendingMaxRetries
         );
         analytics.track('broadcast_transaction', { symbol: 'stx' });
@@ -148,7 +150,6 @@ export function useSubmitSbtcSponsoredTransaction({
       signStacksTransaction,
       sponsorship.expiresAt,
       sponsorship.quoteId,
-      submitSponsoredTransaction,
       token,
     ]
   );

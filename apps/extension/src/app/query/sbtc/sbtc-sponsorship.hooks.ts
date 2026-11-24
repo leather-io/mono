@@ -1,11 +1,8 @@
 import { useCallback } from 'react';
 
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import {
-  createSbtcSponsorshipQuoteQueryConfig,
-  createSubmitSbtcSponsoredTransactionMutationConfig,
-} from '@leather.io/queries';
+import { createSbtcSponsorshipQuoteQueryConfig } from '@leather.io/queries';
 import type { SbtcSponsorshipQuoteResponse } from '@leather.io/services';
 
 import { useUserSettings } from '@app/hooks/use-user-settings';
@@ -54,12 +51,4 @@ export function useFetchSbtcSponsorshipQuote() {
     },
     [nextNonce?.nonce, queryClient, refetchNextNonce, settings]
   );
-}
-
-export function useSubmitSbtcSponsoredTransactionMutation() {
-  const mutation = useMutation(createSubmitSbtcSponsoredTransactionMutationConfig());
-  return {
-    submitSponsoredTransaction: mutation.mutateAsync,
-    isSubmitting: mutation.isPending,
-  };
 }

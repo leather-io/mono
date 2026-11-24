@@ -24,7 +24,8 @@ import { CustomFeeField } from './components/custom-fee-field';
 import { FeeEstimateSelect } from './components/fee-estimate-select';
 import { FeesRowLayout } from './components/fees-row.layout';
 import { TransactionFee } from './components/transaction-fee';
-import { stxFeeCurrency } from './fees-row.constants';
+
+export const stxFeeCurrency = 'STX';
 
 type FeeRowQuote = StacksTransactionFeeQuote | FlatTransactionFeeQuote;
 

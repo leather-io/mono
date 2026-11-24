@@ -21,8 +21,7 @@ import {
   isSbtcSponsorshipFeeType,
 } from '@app/common/transactions/stacks/sbtc-sponsorship.utils';
 import { SponsoredFeeBadge } from '@app/components/fees-row/components/sponsored-fee-badge';
-import { FeesRow } from '@app/components/fees-row/fees-row';
-import { stxFeeCurrency } from '@app/components/fees-row/fees-row.constants';
+import { FeesRow, stxFeeCurrency } from '@app/components/fees-row/fees-row';
 import {
   isSbtcSponsorshipQuoteExpired,
   useSbtcSponsorshipQuote,

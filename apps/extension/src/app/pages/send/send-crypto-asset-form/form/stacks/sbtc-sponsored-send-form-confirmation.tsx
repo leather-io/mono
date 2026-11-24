@@ -51,7 +51,7 @@ export function SbtcSponsoredSendFormConfirmation({
 
   const { submitSponsoredTransaction, isSubmitting } = useSubmitSbtcSponsoredTransaction({
     token: symbol,
-    decimals,
+    details,
     sponsorship,
     onRequoted,
   });

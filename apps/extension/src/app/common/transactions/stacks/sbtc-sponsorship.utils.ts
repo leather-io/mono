@@ -25,15 +25,13 @@ export const sponsoredTransactionBroadcastRefusedMessage =
 
 const unknownSbtcSponsorshipErrorMessage = 'Something went wrong';
 
-const sbtcSponsorshipErrorMessages: Record<SbtcSponsorshipErrorCode, string> = {
+const notEligibleMessage = "This transfer isn't eligible for sBTC fee payment";
+
+const sbtcSponsorshipErrorMessages: Partial<Record<SbtcSponsorshipErrorCode, string>> = {
   quote_expired: 'The sBTC fee quote expired. Review the updated fee and confirm again.',
   stale_nonce: 'This account has a pending transaction. Wait for it to confirm, then send again.',
   funding_pending:
     'The sponsor is still preparing the transaction. Your sBTC has not moved. Try again in a moment.',
-  not_eligible: "This transfer isn't eligible for sBTC fee payment",
-  broadcast_failed:
-    'The transaction may already have been sent. Check your activity before trying again.',
-  upstream_unavailable: "The sponsor couldn't be reached. Check your activity before trying again.",
 };
 
 const sbtcSponsorshipIneligibilityMessages: Partial<Record<string, string>> = {
@@ -48,13 +46,14 @@ export function getSbtcSponsorshipErrorMessage(error: unknown): string {
   const code = getSbtcSponsorshipErrorCode(error);
   if (code === 'not_eligible') {
     const reason = getSbtcSponsorshipIneligibilityReason(error);
-    const message = sbtcSponsorshipErrorMessages[code];
-    if (!reason) return message;
+    if (!reason) return notEligibleMessage;
     const reasonMessage = sbtcSponsorshipIneligibilityMessages[reason];
-    return reasonMessage ? `${message}. ${reasonMessage}` : `${message} (${reason})`;
+    return reasonMessage
+      ? `${notEligibleMessage}. ${reasonMessage}`
+      : `${notEligibleMessage} (${reason})`;
   }
-  if (code) return sbtcSponsorshipErrorMessages[code];
-  return getErrorDetail(error) ?? unknownSbtcSponsorshipErrorMessage;
+  const message = code ? sbtcSponsorshipErrorMessages[code] : undefined;
+  return message ?? getErrorDetail(error) ?? unknownSbtcSponsorshipErrorMessage;
 }
 
 const defaultSbtcSponsorshipFeeTier: TransactionFeeTier = 'standard';

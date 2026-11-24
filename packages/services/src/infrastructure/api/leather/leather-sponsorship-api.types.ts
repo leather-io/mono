@@ -3,31 +3,12 @@ import { z } from 'zod';
 import { ChainId } from '@leather.io/models';
 
 import { LeatherApiError } from './leather-api.error';
+import type { paths } from './leather-api.types';
 
-export const sbtcSponsorshipQuoteResponseSchema = z.object({
-  quoteId: z.string(),
-  feeRecipientPrincipal: z.string(),
-  expiresAt: z.string(),
-  satsPerStx: z.string(),
-  minFeeSats: z.number().int().nonnegative(),
-  maxFeeSats: z.number().int().nonnegative(),
-});
+export type SbtcSponsorshipQuoteResponse =
+  paths['/v1/sponsorship/quote']['post']['responses'][200]['content']['application/json'];
 
-export type SbtcSponsorshipQuoteResponse = z.infer<typeof sbtcSponsorshipQuoteResponseSchema>;
-
-export interface SbtcSponsorshipSubmitRequest {
-  quoteId: string;
-  transaction: string;
-}
-
-export const sbtcSponsorshipSubmitResponseSchema = z.object({
-  txid: z.string(),
-  transaction: z.string().optional().catch(undefined),
-});
-
-export type SbtcSponsorshipSubmitResponse = z.infer<typeof sbtcSponsorshipSubmitResponseSchema>;
-
-export const sbtcSponsorshipErrorCodeSchema = z.enum([
+const sbtcSponsorshipErrorCodeSchema = z.enum([
   'quote_expired',
   'not_eligible',
   'stale_nonce',
