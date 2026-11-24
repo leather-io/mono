@@ -55,7 +55,9 @@ jobs:
 
       - name: enforce-cocoapods-version
         working-directory: apps/mobile
-        run: bash scripts/enforce-cocoapods-version.sh
+        env:
+          BUNDLE_GEMFILE: ${{ github.workspace }}/apps/mobile/fastlane/Gemfile
+        run: bundle exec bash scripts/enforce-cocoapods-version.sh
 
       - name: build-archive
         working-directory: apps/mobile
