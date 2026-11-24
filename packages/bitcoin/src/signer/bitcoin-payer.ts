@@ -7,6 +7,7 @@ import type * as bitcoin from 'bitcoinjs-lib';
 import {
   DerivationPathDepth,
   appendAddressIndexToPath,
+  createKeyOriginPathFromSegments,
   decomposeDescriptor,
   deriveKeychainFromXpub,
   extractAddressIndexFromPath,
@@ -228,8 +229,10 @@ export function extractPayerInfoFromDerivationPath(path: string) {
  * ```
  */
 export function serializeKeyOrigin({ fingerprint, path }: BtcSignerDerivationPath) {
-  const values = path.map(num => (num >= HARDENED_OFFSET ? num - HARDENED_OFFSET + "'" : num));
-  return `${fingerprintAsNumberToHex(fingerprint)}/${values.join('/')}`;
+  return createKeyOriginPathFromSegments(
+    fingerprintAsNumberToHex(fingerprint),
+    path.map(num => (num >= HARDENED_OFFSET ? [num - HARDENED_OFFSET, true] : [num, false]))
+  );
 }
 
 /**

@@ -1,4 +1,16 @@
-import { isHexString } from '@leather.io/utils';
+import {
+  accountDerivationPath,
+  accountKeyOriginPath,
+  accountLevelPath,
+  derivationPath,
+  descriptorText,
+  keyOriginPathFromSegments,
+  keyOriginPathOfAnyDepth,
+  pathToAccount,
+  pathToAddressIndex,
+  pathToChange,
+  pathToPurpose,
+} from './derivation-path.kernel';
 
 export const DerivationPathDepth = {
   Root: 0,
@@ -11,37 +23,36 @@ export const DerivationPathDepth = {
 } as const;
 export type DerivationPathDepth = (typeof DerivationPathDepth)[keyof typeof DerivationPathDepth];
 
-type DerivationPathDepthName = keyof typeof DerivationPathDepth;
-
-function extractSectionFromDerivationPath(depthName: DerivationPathDepthName) {
-  return (path: string) => {
-    const segments = path.split('/');
-    const segment = segments[DerivationPathDepth[depthName]];
-    if (!segment) throw new Error(`Cannot parse ${depthName} from path`);
-    const accountNum = parseInt(segment.replaceAll("'", ''), 10);
-    if (isNaN(accountNum)) throw new Error(`Cannot parse ${depthName} from path`);
-    return accountNum;
-  };
+export function extractPurposeFromPath(path: string) {
+  const [purpose] = pathToPurpose.parse(path).purpose;
+  return purpose;
 }
 
-export const extractPurposeFromPath = extractSectionFromDerivationPath('Purpose');
+export function extractAccountIndexFromPath(path: string) {
+  const [accountIndex] = pathToAccount.parse(path).account;
+  return accountIndex;
+}
 
-export const extractAccountIndexFromPath = extractSectionFromDerivationPath('Account');
+export function extractChangeIndexFromPath(path: string) {
+  const [changeIndex] = pathToChange.parse(path).change;
+  return changeIndex;
+}
 
-export const extractChangeIndexFromPath = extractSectionFromDerivationPath('Change');
-
-export const extractAddressIndexFromPath = extractSectionFromDerivationPath('AddressIndex');
+export function extractAddressIndexFromPath(path: string) {
+  const [addressIndex] = pathToAddressIndex.parse(path).addressIndex;
+  return addressIndex;
+}
 
 export function appendAddressIndexToPath(path: string, change: number, addressIndex: number) {
-  const accountIndex = extractAccountIndexFromPath(path);
-  if (!Number.isInteger(accountIndex)) throw new Error('Invalid path, must have account index');
-  return `${path}/${change}/${addressIndex}`;
+  const parts = pathToAccount.parse(path);
+  return pathToAccount.print({
+    ...parts,
+    rest: [...parts.rest, [change, false], [addressIndex, false]],
+  });
 }
 
 export function extractFingerprintFromKeyOriginPath(keyOriginPath: string) {
-  const fingerprint = keyOriginPath.split('/')[0];
-  if (!isHexString(fingerprint)) throw new Error('Fingerprint must be a hexadecimal string');
-  return fingerprint;
+  return keyOriginPathOfAnyDepth.parse(keyOriginPath).fingerprint;
 }
 
 /**
@@ -53,23 +64,18 @@ export function extractFingerprintFromKeyOriginPath(keyOriginPath: string) {
  * @example `0a3fd8ef/84'/0'/0'`
  */
 export function createKeyOriginPath(fingerprint: string, path: string) {
-  if (!isHexString(fingerprint)) throw new Error('Fingerprint must be a hexadecimal string');
-  return `${fingerprint}/${path.replace('m/', '')}`;
+  return keyOriginPathOfAnyDepth.print({ fingerprint, path: derivationPath.parse(path) });
+}
+
+export function createKeyOriginPathFromSegments(
+  fingerprint: string,
+  segments: [index: number, hardened: boolean][]
+) {
+  return keyOriginPathFromSegments.print({ fingerprint, segments });
 }
 
 export function validateKeyOriginPath(keyOriginPath: string) {
-  if (keyOriginPath.includes('[') || keyOriginPath.includes(']'))
-    throw new Error('Key origin path should not contain square brackets');
-
-  if (!keyOriginPath.includes('/'))
-    throw new Error('Key origin path must contain a fingerprint and derivation path');
-
-  if (!isHexString(extractFingerprintFromKeyOriginPath(keyOriginPath)))
-    throw new Error('Fingerprint must be a hexadecimal string');
-
-  if (keyOriginPath.split('/').length < 4)
-    throw new Error('Key origin path is too short. Should describe at least to the account level');
-
+  accountKeyOriginPath.parse(keyOriginPath);
   return true;
 }
 
@@ -79,59 +85,55 @@ export function validateKeyOriginPath(keyOriginPath: string) {
  * @returns `[0a3fd8ef/84'/0'/0']xpuba1b…2c3`
  */
 export function createDescriptor(keyOriginPath: string, key: string) {
-  validateKeyOriginPath(keyOriginPath);
-  return `[${keyOriginPath}]${key}`;
+  return descriptorText.print({ keyOrigin: accountKeyOriginPath.parse(keyOriginPath), key });
 }
 
 /**
  * @example `[0a3fd8ef/84'/0'/0']xpuba1b…2c3` -> `0a3fd8ef/84'/0'/0'`
  */
 export function extractKeyOriginPathFromDescriptor(descriptor: string) {
-  const keyOriginPath = descriptor.split(']')[0].replace('[', '');
-  validateKeyOriginPath(keyOriginPath);
-  return keyOriginPath;
+  return accountKeyOriginPath.print(descriptorText.parse(descriptor).keyOrigin);
 }
 
 /**
  * @example `[0a3fd8ef/84'/0'/0']xpuba1b…2c3` -> `m/84'/0'/0'`
  */
 export function extractDerivationPathFromDescriptor(descriptor: string) {
-  const keyOriginPath = extractKeyOriginPathFromDescriptor(descriptor);
-  return 'm/' + keyOriginPath.split('/').slice(1).join('/');
+  return accountDerivationPath.print(descriptorText.parse(descriptor).keyOrigin.path);
 }
 
 /**
  * @example `[0a3fd8ef/84'/0'/0']xpuba1b…2c3` -> `0a3fd8ef`
  */
 export function extractFingerprintFromDescriptor(descriptor: string) {
-  return extractFingerprintFromKeyOriginPath(extractKeyOriginPathFromDescriptor(descriptor));
+  return descriptorText.parse(descriptor).keyOrigin.fingerprint;
 }
 
 /**
  * @example `[0a3fd8ef/84'/0'/6']xpuba1b…2c3` -> `6`
  */
 export function extractAccountIndexFromDescriptor(descriptor: string) {
-  return extractAccountIndexFromPath(extractKeyOriginPathFromDescriptor(descriptor));
+  const [accountIndex] = descriptorText.parse(descriptor).keyOrigin.path.account;
+  return accountIndex;
 }
 
 /**
  * @example `[0a3fd8ef/84'/0'/6']xpuba1b…2c3` -> `xpuba1b…2c3`
  */
 export function extractKeyFromDescriptor(descriptor: string) {
-  return descriptor.split(']')[1];
+  return descriptorText.parse(descriptor).key;
 }
 
 /**
  * @example `0a3fd8ef/84'/0'/0/0/0` -> `0a3fd8ef/84'/0'/0`
  */
 export function extractAccountPathFromFullPath(path: string) {
-  const segments = path.split('/');
-  return segments.slice(0, 4).join('/');
+  const { root, purpose, coinType, account } = pathToAccount.parse(path);
+  return accountLevelPath.print({ root, purpose, coinType, account });
 }
 
 export function keyOriginToDerivationPath(keyOrigin: string) {
-  const [_fingerprint, ...remainingPath] = keyOrigin.split('/');
-  return `m/${remainingPath.join('/')}`;
+  return derivationPath.print(keyOriginPathOfAnyDepth.parse(keyOrigin).path);
 }
 
 export function decomposeDescriptor(descriptor: string) {

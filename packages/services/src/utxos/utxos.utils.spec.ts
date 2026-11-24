@@ -330,21 +330,21 @@ describe(getOutboundUtxos.name, () => {
     value: '10000',
     address: 'bc1q123',
     owned: true,
-    path: 'bc1q123-path',
+    path: "m/84'/0'/0'/0/1",
   };
   const externalVin = {
     txid: '2',
     n: 1,
     value: '20000',
     address: 'bc1q246',
-    path: 'bc1q246-path',
+    path: "m/84'/0'/0'/0/2",
   };
   const ownedVout = {
     n: 0,
     value: '30000',
     address: 'bc1q369',
     owned: true,
-    path: 'bc1q369-path',
+    path: "m/84'/0'/0'/0/3",
   };
   const txs: LeatherApiBitcoinTransaction[] = [
     {
@@ -372,7 +372,7 @@ describe(getOutboundUtxos.name, () => {
   ];
 
   it('maps owned vins of unconfirmed, outbound transactions to UTXOs', () => {
-    const outboundUtxos = getOutboundUtxos(txs, 'fingerprint');
+    const outboundUtxos = getOutboundUtxos(txs, 'deadbeef');
 
     expect(outboundUtxos.length).toEqual(1);
     expect(outboundUtxos[0].txid).toEqual(ownedVin.txid);
@@ -380,12 +380,12 @@ describe(getOutboundUtxos.name, () => {
     expect(outboundUtxos[0].address).toEqual(ownedVin.address);
     expect(outboundUtxos[0].path).toEqual(ownedVin.path);
     expect(outboundUtxos[0].value).toEqual(Number(ownedVin.value));
-    expect(outboundUtxos[0].keyOrigin).toEqual('fingerprint/bc1q123-path');
+    expect(outboundUtxos[0].keyOrigin).toEqual("deadbeef/84'/0'/0'/0/1");
   });
 
   it('reads the original tx height if available, otherwise falls back to a default', () => {
-    const originalHeightUtxos = getOutboundUtxos(txs, 'fingerprint');
-    const defaultHeightUtxos = getOutboundUtxos(txs.slice(0, 1), 'fingerprint');
+    const originalHeightUtxos = getOutboundUtxos(txs, 'deadbeef');
+    const defaultHeightUtxos = getOutboundUtxos(txs.slice(0, 1), 'deadbeef');
 
     expect(originalHeightUtxos[0].height).toEqual(ORIGINAL_TX_HEIGHT);
     expect(defaultHeightUtxos[0].height).toEqual(fallbackUtxoHeight);
@@ -402,7 +402,7 @@ describe(getOutboundUtxos.name, () => {
               value: '10000',
               address: 'bc1q123',
               owned: true,
-              path: 'bc1q123-path',
+              path: "m/84'/0'/0'/0/1",
             },
           ],
           vout: [],
@@ -423,7 +423,7 @@ describe(createOwnedUtxoFromLeather.name, () => {
       vout: 0,
       value: '100000',
       address: 'bc1q123',
-      path: 'bc1q123-path',
+      path: "m/84'/0'/0'/0/1",
     };
     const ownedUtxo = createOwnedUtxoFromLeather(utxo, fingerprint);
     expect(ownedUtxo.txid).toEqual(utxo.txid);
@@ -431,7 +431,7 @@ describe(createOwnedUtxoFromLeather.name, () => {
     expect(ownedUtxo.value).toEqual(100000);
     expect(ownedUtxo.address).toEqual(utxo.address);
     expect(ownedUtxo.path).toEqual(utxo.path);
-    expect(ownedUtxo.keyOrigin).toEqual('deadbeef/bc1q123-path');
+    expect(ownedUtxo.keyOrigin).toEqual("deadbeef/84'/0'/0'/0/1");
   });
 });
 
@@ -441,6 +441,11 @@ describe(getKeyOrigin.name, () => {
     const path = "m/84'/0'/0'/0/0";
     const keyOrigin = getKeyOrigin(fingerprint, path);
     expect(keyOrigin).toEqual("deadbeef/84'/0'/0'/0/0");
+  });
+
+  it('returns no key origin for a path that is not a derivation path', () => {
+    expect(getKeyOrigin('deadbeef', '')).toBeUndefined();
+    expect(getKeyOrigin('deadbeef', 'bc1q123-path')).toBeUndefined();
   });
 });
 

@@ -1,0 +1,40 @@
+name: packages:kernel-checks
+
+on:
+  pull_request:
+    paths:
+      - 'packages/utils/src/kernel/**'
+      - 'eslint-rules/kernel/**'
+      - 'tools/src/kernel/**'
+      - '.github/workflows/packages:kernel-checks.yml'
+  merge_group:
+
+# GITHUB_TOKEN only needs to read the repository for checkout.
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  kernel-checks:
+    name: kernel-checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: $/.github/actions/provision
+
+      - name: test-kernel-lint-rules
+        run: pnpm kernel:test-rules
+
+      - name: build-kernel-dependencies
+        run: pnpm turbo run build --filter="@leather.io/utils^..."
+
+      # Breaks the TypeScript kernel on purpose in each listed way and fails
+      # unless the tests notice, so the tests cannot go blind.
+      - name: check-tests-notice-deliberate-breakages
+        run: pnpm lt kernel mutation-gate

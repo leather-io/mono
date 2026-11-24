@@ -201,6 +201,10 @@ describe('wsh-descriptor', () => {
     );
   });
 
+  it('rejects a key path index written with a leading zero', () => {
+    expect(() => compileWshDescriptor(`wsh(multi(2,${xpubA}/0/07,${xpubB}/0/07))`)).toThrow();
+  });
+
   it('rejects a descriptor with a pathless extended key', () => {
     expect(() => compileWshDescriptor(`wsh(pk(${xpubA}))`)).toThrow('/0/N or /1/N');
   });
@@ -643,6 +647,9 @@ describe('wsh-descriptor', () => {
     );
     expect(ledgerDescriptor).toContain(`[${keyOrigin}]${tpub}`);
     expect(ledgerDescriptor).not.toBe(tpubDescriptor);
+    expect(bytesToHex(compileWshDescriptor(ledgerDescriptor).scriptPubKey)).toBe(
+      bytesToHex(compileWshDescriptor(tpubDescriptor).scriptPubKey)
+    );
   });
 
   it('throws when the account key cannot be located in the descriptor (no silent no-op)', () => {

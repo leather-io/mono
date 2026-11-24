@@ -24,6 +24,7 @@
   },
   "exports": {
     ".": "./dist/index.js",
+    "./kernel": "./dist/kernel.js",
     "./sanitize-content": "./dist/index.js"
   },
   "bugs": "https://github.com/leather-io/mono/issues",
@@ -32,6 +33,7 @@
     "@leather.io/models": "workspace:*",
     "bignumber.js": "9.1.2",
     "dompurify": "3.2.4",
+    "micro-packed": "0.7.3",
     "remeda": "2.21.2"
   },
   "devDependencies": {
@@ -39,6 +41,7 @@
     "@leather.io/test-config": "workspace:*",
     "@leather.io/tsconfig-config": "workspace:*",
     "@types/dompurify": "3.0.5",
+    "fast-check": "4.10.2",
     "prettier": "3.5.1",
     "tsdown": "0.16.5",
     "typescript": "5.9.3",

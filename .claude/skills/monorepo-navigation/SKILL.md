@@ -66,6 +66,7 @@ App-specific state:
 | `@leather.io/utils` | `packages/utils/` | Generic utilities (money, formatting, guards) |
 | `@leather.io/constants` | `packages/constants/` | Shared constants, currency decimals |
 | `@leather.io/crypto` | `packages/crypto/` | Cryptographic primitives, key derivation |
+| `@leather.io/utils/kernel` | `packages/utils/src/kernel/` | Property-tested building blocks for byte and text formats; use them for anything hashed, signed or parsed |
 | `@leather.io/tokens` | `packages/tokens/` | Token metadata |
 | `@leather.io/analytics` | `packages/analytics/` | Mixpanel analytics |
 

@@ -131,7 +131,7 @@ describe(stacksDerivationPathTypeFromPath.name, () => {
 
   test('that truncated paths throw the parse error rather than a TypeError', () => {
     expect(() => stacksDerivationPathTypeFromPath(`e87a850b/44'/5757'/0'`)).toThrowError(
-      'Cannot parse AddressIndex from path'
+      'Text is not valid for this format.'
     );
   });
 });

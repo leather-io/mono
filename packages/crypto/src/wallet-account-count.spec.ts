@@ -167,4 +167,34 @@ describe(countWalletAccounts.name, () => {
       ).toBe(2);
     });
   });
+  describe('hardware wallets, further cases', () => {
+    test('counts a Bitcoin account once however many keychains it has', () => {
+      expect(
+        countWalletAccounts({
+          walletType: 'ledger',
+          fingerprint,
+          keychains: [
+            bitcoinKeychain(0),
+            bitcoinKeychain(0),
+            bitcoinKeychain(1),
+            bitcoinKeychain(1),
+          ],
+        })
+      ).toBe(2);
+    });
+
+    test('counts keychains for any wallet type other than software', () => {
+      expect(
+        countWalletAccounts({ walletType: 'other', fingerprint, highestAccountIndex: 5 })
+      ).toBe(0);
+      expect(
+        countWalletAccounts({
+          walletType: 'other',
+          fingerprint,
+          highestAccountIndex: 5,
+          keychains: [bitcoinKeychain(0)],
+        })
+      ).toBe(1);
+    });
+  });
 });

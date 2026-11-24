@@ -41,7 +41,7 @@ const realFingerprint = 'a1b2c3d4';
 const otherDeviceFingerprint = 'eeee9999';
 
 function stacksKeychain(fingerprint: string, accountIndex: number, publicKey: string): Keychain {
-  const keyOrigin = createKeyOriginPath(fingerprint, `44'/5757'/0'/0/${accountIndex}`);
+  const keyOrigin = createKeyOriginPath(fingerprint, `m/44'/5757'/0'/0/${accountIndex}`);
   return { chain: 'stacks', descriptor: createDescriptor(keyOrigin, publicKey) };
 }
 

@@ -112,7 +112,7 @@ msgstr "20–30 seconds"
 msgid "24 Hour Change"
 msgstr "24 Hour Change"
 
-#: src/store/accounts/accounts.read.ts:26
+#: src/store/accounts/accounts.read.ts:25
 msgid "Account {displayIndex}"
 msgstr "Account {displayIndex}"
 

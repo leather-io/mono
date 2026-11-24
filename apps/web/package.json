@@ -62,6 +62,7 @@
     "isbot": "5.1.29",
     "jotai": "2.12.5",
     "lottie-web": "5.13.0",
+    "micro-packed": "0.7.3",
     "mixpanel-browser": "2.71.1",
     "nprogress": "0.2.0",
     "p-queue": "8.1.1",

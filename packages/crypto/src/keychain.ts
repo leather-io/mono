@@ -16,6 +16,7 @@ import {
   createKeyOriginPath,
   keyOriginToDerivationPath,
 } from './derivation-path-utils';
+import { accountIdentifier, fingerprintHex } from './keychain.kernel';
 
 export function generateMnemonic() {
   return scureGenerateMnemonic(wordlist, 256);
@@ -61,7 +62,7 @@ export const deriveKeychainFromXpub = memoize((xpub: string) =>
 );
 
 export function fingerprintAsNumberToHex(fingerprint: number) {
-  return fingerprint.toString(16).padStart(8, '0');
+  return fingerprintHex.print(fingerprint);
 }
 
 export function safelyReadPaddedFingerprint(fingerprintHex: string) {
@@ -107,5 +108,9 @@ export function isValidMnemonic(mnemonic: string): boolean {
  * Create a unique accountId using wallet's fingerprint and accountIndex
  */
 export function makeAccountIdentifer(fingerprint: string, accountIndex: number) {
-  return [fingerprint, accountIndex].join('/');
+  return accountIdentifier.print({ fingerprint, accountIndex });
+}
+
+export function parseAccountIdentifier(accountId: string) {
+  return accountIdentifier.parse(accountId);
 }
