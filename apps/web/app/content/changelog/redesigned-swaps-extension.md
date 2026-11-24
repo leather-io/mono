@@ -1,7 +1,7 @@
 ---
 title: 'Redesigned swaps in the extension'
 slug: redesigned-swaps-extension
-publishedAt: 2026-09-15T12:00:00.000Z
+publishedAt: 2026-10-01T12:03:00.000Z
 tags: ['extension']
 cover: /marketing/changelog/redesigned-swaps-extension.webp
 ---

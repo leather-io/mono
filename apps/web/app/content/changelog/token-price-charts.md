@@ -1,7 +1,7 @@
 ---
 title: 'Price charts on token details'
 slug: token-price-charts
-publishedAt: 2026-09-21T12:00:00.000Z
+publishedAt: 2026-10-01T12:02:00.000Z
 tags: ['extension']
 cover: /marketing/changelog/token-price-charts.webp
 ---
