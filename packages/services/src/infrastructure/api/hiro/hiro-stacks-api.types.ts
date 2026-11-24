@@ -1,30 +1,9 @@
 import { type FtMetadataResponse, type Metadata } from '@hirosystems/token-metadata-api-client';
 import {
-  type AddressAssetsListResponse,
-  type AddressTransactionWithTransfers,
-  type AddressTransactionsWithTransfersListResponse,
-  type MempoolTransaction,
   type ServerStatusResponse,
-  type Transaction,
-  type TransactionEvent,
   type TransactionFeeEstimateResponse,
 } from '@stacks/stacks-blockchain-api-types';
 import { type ClarityValue } from '@stacks/transactions';
-
-export interface HiroPageRequest {
-  limit: number;
-  offset: number;
-}
-export interface HiroPageResponse<T> {
-  limit: number;
-  offset: number;
-  total: number;
-  results: T[];
-}
-
-export type HiroAddressTransactionsResponse = AddressTransactionsWithTransfersListResponse;
-export type HiroAddressTransactionWithTransfers = AddressTransactionWithTransfers;
-export type HiroAddressTransaction = AddressTransactionWithTransfers;
 
 // Hiro v3 `/extended/v3/principals/{principal}/transactions` — slim, cursor-paged tx data.
 export type HiroPrincipalTxStatus = 'success' | 'abort_by_response' | 'abort_by_post_condition';
@@ -201,6 +180,15 @@ export interface HiroBalanceChangesResponse {
   };
   readonly results: HiroBalanceChangeResultItem[];
 }
+interface HiroPrincipalFtTransfer {
+  readonly sender: string | null;
+  readonly recipient: string | null;
+  readonly amount: string;
+  readonly transaction: { readonly tx_id: string; readonly event_index: number };
+}
+
+export type HiroPrincipalFtTransfersResponse = HiroCursorPageResponse<HiroPrincipalFtTransfer>;
+
 export type HiroTransactionIncludeField =
   | 'function_args'
   | 'source_code'
@@ -208,10 +196,6 @@ export type HiroTransactionIncludeField =
   | 'result';
 export type HiroMetadata = Metadata;
 export type HiroFtMetadata = FtMetadataResponse;
-export type HiroTransactionEvent = TransactionEvent;
-export type HiroTransactionEventsResponse = AddressAssetsListResponse;
-export type HiroStacksTransaction = Transaction;
-export type HiroStacksMempoolTransaction = MempoolTransaction;
 export type HiroReadOnlyFunctionResponse =
   | { okay: true; result: string }
   | { okay: false; cause: string };

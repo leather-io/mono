@@ -10,7 +10,7 @@ import { TokenDetailsTable } from '@/features/token/components/token-details-tab
 import { TokenOverview } from '@/features/token/components/token-overview';
 import { type FetchState } from '@/queries/fetch-state';
 
-import { type ActivityView, type TokenBalance } from '@leather.io/features';
+import { type BlockchainActivityItem, type TokenBalance } from '@leather.io/features';
 import { type FungibleCryptoAsset, isSwappableAsset } from '@leather.io/models';
 import { Box, SkeletonLoader, Text } from '@leather.io/ui/native';
 
@@ -20,7 +20,7 @@ import { useGetTokenDetails } from './use-get-token-details';
 import { getAvailableBalance, getQuoteBalance } from './utils/get-balance';
 
 interface TokenProps {
-  activity: FetchState<ActivityView[]>;
+  activity: FetchState<BlockchainActivityItem[]>;
   asset: FungibleCryptoAsset;
   balance: FetchState<TokenBalance>;
   canSend?: boolean;
