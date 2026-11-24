@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { type CommandRunner, runCommand } from './exec.js';
 
 export type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
@@ -93,4 +95,24 @@ export async function paginate(client: GitHubClient, path: string): Promise<unkn
     if (entries.length < pageSize) break;
   }
   return items;
+}
+
+const graphqlResponseSchema = z.object({
+  data: z.unknown().optional(),
+  errors: z.array(z.object({ message: z.string() })).optional(),
+});
+
+export async function graphqlData<Schema extends z.ZodType>(
+  client: GitHubClient,
+  schema: Schema,
+  query: string,
+  variables: Readonly<Record<string, unknown>>
+): Promise<z.infer<Schema>> {
+  const response = graphqlResponseSchema.parse(await client.graphql(query, variables));
+  if (response.errors && response.errors.length > 0) {
+    throw new Error(
+      `GraphQL request failed: ${response.errors.map(error => error.message).join('; ')}`
+    );
+  }
+  return schema.parse(response.data);
 }

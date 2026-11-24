@@ -17,6 +17,7 @@ const appTokenPermissions: Readonly<Record<string, 'write'>> = {
 };
 
 const installationSchema = z.object({ id: z.number() });
+const appSchema = z.object({ slug: z.string().min(1) });
 const accessTokenSchema = z.object({
   token: z.string().min(1),
   permissions: z.record(z.string(), z.string()),
@@ -72,6 +73,11 @@ interface InstallationTokenOptions {
   readonly appClient: GitHubClient;
   tokenClient(token: string): GitHubClient;
   readonly repo: string;
+}
+
+export async function appBotLogin(appClient: GitHubClient): Promise<string> {
+  const { slug } = appSchema.parse(await appClient.request('GET', 'app'));
+  return `${slug}[bot]`;
 }
 
 export async function revokeInstallationToken(client: GitHubClient): Promise<void> {

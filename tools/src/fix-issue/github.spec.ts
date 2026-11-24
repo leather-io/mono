@@ -1,7 +1,15 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
+import { z } from 'zod';
 
 import type { CommandRunner } from './exec.js';
-import { GitHubError, createGhCliClient, createGitHubClient, paginate } from './github.js';
+import {
+  GitHubError,
+  createGhCliClient,
+  createGitHubClient,
+  graphqlData,
+  paginate,
+} from './github.js';
+import { fakeGitHub } from './test/fake-github.js';
 
 interface Sent {
   readonly url: string;
@@ -127,5 +135,31 @@ describe('createGhCliClient', () => {
     await expect(createGhCliClient('/repo', gh.run).request('GET', 'repos/o/r')).rejects.toThrow(
       'gh api GET repos/o/r failed: HTTP 404: Not Found'
     );
+  });
+});
+
+describe('graphqlData', () => {
+  const schema = z.object({ viewer: z.object({ login: z.string() }) });
+
+  test('returns the data of a response in the shape it expects', async () => {
+    const client = fakeGitHub(undefined, () => ({ data: { viewer: { login: 'me' } } }));
+    await expect(graphqlData(client, schema, 'query { viewer { login } }', {})).resolves.toEqual({
+      viewer: { login: 'me' },
+    });
+  });
+
+  test('fails on the errors GitHub returns with a successful status', async () => {
+    const client = fakeGitHub(undefined, () => ({
+      data: null,
+      errors: [{ message: 'Resource not accessible by integration' }, { message: 'Second' }],
+    }));
+    await expect(graphqlData(client, schema, 'query', {})).rejects.toThrow(
+      'GraphQL request failed: Resource not accessible by integration; Second'
+    );
+  });
+
+  test('fails on data in another shape', async () => {
+    const client = fakeGitHub(undefined, () => ({ data: { viewer: null } }));
+    await expect(graphqlData(client, schema, 'query', {})).rejects.toThrow();
   });
 });

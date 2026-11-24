@@ -63,7 +63,22 @@ access.
    earlier blocking finding again only if it is still not fixed. Report a new blocking finding only
    if it is `critical`, a scope gap or a doubt found by steps 3 to 5, or the fixes since the earlier
    review introduced it; do not move the goalposts on code an earlier review already passed.
-8. Note anything smaller (style, naming, simplification, missing edge-case tests that are not part
+8. When `tmp/fix-issue/feedback.md` exists, this run revises an open pull request: `HEAD` is the
+   pull request branch, `git diff HEAD` is only what the revise changed, and
+   `tmp/fix-issue/pull-request.diff` is what the pull request changed before it. Steps 3 to 5
+   still cover the whole pull request as it now stands. On top of them:
+   - Check every item of `feedback.md` against its entry under `feedback` in the status. An item
+     marked `"addressed": true` that the change does not deliver, or delivers only in part, is a
+     `blocker`, and so is a reply that says something the code does not do. An item marked
+     `"addressed": false` needs a reason that holds; an item refused without one is a `blocker`.
+   - Feedback that contradicts a `Settled:` line must not be applied; applying it is a `blocker`.
+   - A change no feedback item asks for is a `blocker`, as in step 2.
+   - With a `merge` item, `HEAD` is a merge of `dev` and the listed files conflicted. Read each
+     one: a resolution that drops what `dev` changed is a `regression`, one that drops what the
+     pull request is for is a `blocker`, and a conflict marker left in a file is `critical`. Then
+     look for what the merge broke without a conflict: code on `dev` that the pull request relies
+     on and that was renamed, moved or removed.
+9. Note anything smaller (style, naming, simplification, missing edge-case tests that are not part
    of the brief) as `minor`. Minor findings never send the change back for another round; the last
    round's appear under `## Follow-ups` in the pull request, so write each one as a self-contained
    line a maintainer can turn into an issue.

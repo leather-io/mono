@@ -87,7 +87,10 @@ describe('fix-issue commands', () => {
       'screenshots',
       'app-token',
       'open-pull-request',
+      'revise',
     ]);
+    const revise = fixIssue?.commands.find(command => command.name() === 'revise');
+    expect(revise?.commands.map(command => command.name())).toEqual(['prepare']);
     const appToken = fixIssue?.commands.find(command => command.name() === 'app-token');
     expect(appToken?.commands.map(command => command.name())).toEqual(['create', 'revoke']);
     const round = fixIssue?.commands.find(command => command.name() === 'round');
@@ -263,8 +266,9 @@ describe('fix-issue command actions', () => {
   describe('app-token', () => {
     test('create masks the token before writing it to the step output', async () => {
       fakeBinary('aws', `echo ${Buffer.from('signature').toString('base64')}`);
-      const calls = stubGitHubApi((method, url) =>
-        method === 'GET' && url.endsWith(`/repos/${repoName}/installation`)
+      const calls = stubGitHubApi((method, url) => {
+        if (method === 'GET' && url.endsWith('/app')) return json({ slug: 'leather-fix-issue' });
+        return method === 'GET' && url.endsWith(`/repos/${repoName}/installation`)
           ? json({ id: 42 })
           : json({
               token: 'ghs_installation_token',
@@ -274,18 +278,22 @@ describe('fix-issue command actions', () => {
                 issues: 'write',
                 metadata: 'read',
               },
-            })
-      );
+            });
+      });
       await run(['app-token', 'create', '--client-id', 'Iv23client', '--kms-key-id', 'alias/app']);
       expect(errors).toEqual([]);
       expect(logs).toEqual([
         '::add-mask::ghs_installation_token',
         'app-token: created an installation token that expires within an hour',
       ]);
-      expect(stepOutputs()).toEqual(['token=ghs_installation_token']);
+      expect(stepOutputs()).toEqual([
+        'token=ghs_installation_token',
+        'app-login=leather-fix-issue[bot]',
+      ]);
       expect(calls.map(call => `${call.method} ${call.url}`)).toEqual([
         `GET ${apiUrl}/repos/${repoName}/installation`,
         `POST ${apiUrl}/app/installations/42/access_tokens`,
+        `GET ${apiUrl}/app`,
       ]);
       const signature = Buffer.from('signature').toString('base64url');
       for (const call of calls) {
@@ -360,6 +368,144 @@ describe('fix-issue command actions', () => {
     });
   });
 
+  describe('revise', () => {
+    const pullRequestHead = 'bot/fix-issue-12-777';
+
+    function prepare(clientId: string) {
+      return run([
+        'revise',
+        'prepare',
+        '--pull-request',
+        '7',
+        '--dev-sha',
+        repo.head,
+        '--base',
+        'dev',
+        '--merge',
+        'false',
+        '--requested-by',
+        'alice',
+        '--workflow-app-client-id',
+        clientId,
+      ]);
+    }
+
+    function branchHead(): string {
+      repo.git(['checkout', '-q', '-b', pullRequestHead]);
+      repo.write('apps/extension/fee-row.tsx', 'export const feeRow = 2;\n');
+      repo.git(['commit', '-q', '-a', '-m', 'fix']);
+      const head = repo.git(['rev-parse', 'HEAD']);
+      repo.git(['checkout', '-q', 'dev']);
+      return head;
+    }
+
+    test('prepare gathers the feedback and leaves the tree on the pull request head', async () => {
+      const head = branchHead();
+      vi.stubEnv('FIX_ISSUE_NOTES', 'wrap the label');
+      const calls = stubGitHubApi((_method, url) => {
+        if (url.endsWith('/pulls/7')) {
+          return json({
+            state: 'open',
+            draft: false,
+            title: 'fix(extension): keep the fee row visible',
+            body: 'Closes #12',
+            html_url: 'https://github.com/leather-io/mono/pull/7',
+            user: { login: 'leather-fix-issue[bot]', type: 'Bot' },
+            head: { ref: pullRequestHead, sha: head, repo: { full_name: repoName } },
+            base: { ref: 'dev' },
+          });
+        }
+        if (url.endsWith('/issues/12')) {
+          return json({
+            title: 'Fee row wraps out of view',
+            html_url: 'https://github.com/leather-io/mono/issues/12',
+            state: 'open',
+            body: 'The fee row wraps below 360px.',
+            created_at: '2026-11-01T00:00:00Z',
+            user: { login: 'alice' },
+            labels: [],
+          });
+        }
+        if (url.endsWith('/graphql')) {
+          return json({
+            data: {
+              repository: {
+                pullRequest: {
+                  reviewThreads: { pageInfo: { hasNextPage: false, endCursor: null }, nodes: [] },
+                },
+              },
+            },
+          });
+        }
+        if (url.includes('/comments') || url.includes('/reviews')) return json([]);
+        return json({ permission: 'write' });
+      });
+      await prepare('Iv23client');
+      expect(errors).toEqual([]);
+      expect(stepOutputs()).toEqual(['merged=false']);
+      expect(logs).toEqual([`revise-prepare: revise 1 of #7 at ${head} with 1 feedback items`]);
+      expect(calls.map(call => call.authorization)).toEqual(
+        calls.map(() => 'Bearer ghs_job_token')
+      );
+      expect(readFileSync(repo.paths.feedbackFile, 'utf8')).toContain('wrap the label');
+      expect(repo.git(['rev-parse', 'HEAD'])).toBe(head);
+      expect(existsSync(repo.paths.pullRequestDiff)).toBe(true);
+    });
+
+    test('prepare fails the run, with the reason, when the pull request may not be revised', async () => {
+      const calls = stubGitHubApi(() => json({}));
+      await prepare('');
+      expect(errors).toEqual(['revise-prepare: the client ID of the fix-issue App is not set']);
+      expect(stepOutputs()).toEqual([]);
+      expect(calls).toEqual([]);
+      expect(process.exitCode).toBe(1);
+      expect(repo.git(['rev-parse', 'HEAD'])).toBe(repo.head);
+    });
+
+    test('open-pull-request revises a pull request when it is given one', async () => {
+      repo.writeStatus(doneStatus);
+      const calls = stubGitHubApi(() => json({}));
+      await run([
+        'open-pull-request',
+        '--issue',
+        '',
+        '--branch',
+        'bot/fix-issue--777',
+        '--base',
+        'dev',
+        '--parent-sha',
+        repo.head,
+        '--pull-request',
+        '7',
+        '--merge',
+        'false',
+        '--app-login',
+        'leather-fix-issue[bot]',
+      ]);
+      expect(calls.map(call => `${call.method} ${call.url}`)).toEqual([
+        `GET ${apiUrl}/repos/${repoName}/pulls/7`,
+      ]);
+      expect(errors).toHaveLength(1);
+      expect(process.exitCode).toBe(1);
+    });
+
+    test('open-pull-request needs the login of the App to revise', async () => {
+      repo.writeStatus(doneStatus);
+      const calls = stubGitHubApi(() => json({}));
+      await run([
+        'open-pull-request',
+        '--base',
+        'dev',
+        '--parent-sha',
+        repo.head,
+        '--pull-request',
+        '7',
+      ]);
+      expect(errors).toEqual(['open-pull-request: --app-login is required']);
+      expect(calls).toEqual([]);
+    });
+  });
+
   describe('through the gh login', () => {
     test('dispatch sends the brief to the workflow on dev and prints what gh printed', async () => {
       const argsFile = path.join(scratch, 'gh-args');
@@ -375,6 +521,27 @@ describe('fix-issue command actions', () => {
       expect(readFileSync(argsFile, 'utf8').trim()).toBe(
         `workflow run repo:fix-issue.yml --repo ${repoName} --ref dev -f issue=12 -F notes=@${brief}`
       );
+    });
+
+    test('dispatch with a pull request starts a revise of it', async () => {
+      const argsFile = path.join(scratch, 'gh-args');
+      const notesFile = path.join(scratch, 'notes.md');
+      writeFileSync(notesFile, 'Wrap the label.\n');
+      fakeBinary(
+        'gh',
+        `echo "$@" > "${argsFile}"\necho https://github.com/leather-io/mono/actions/runs/888`
+      );
+      await run(['dispatch', '--pull-request', '7', '--merge', '--notes-file', notesFile]);
+      expect(logs).toEqual(['https://github.com/leather-io/mono/actions/runs/888']);
+      expect(readFileSync(argsFile, 'utf8').trim()).toBe(
+        `workflow run repo:fix-issue.yml --repo ${repoName} --ref dev -f pull_request=7 -f merge=true -F notes=@${notesFile}`
+      );
+    });
+
+    test('dispatch needs a run directory and an issue when it is not a revise', async () => {
+      await run(['dispatch', '--issue', '12']);
+      expect(errors).toEqual(['fix-issue-dispatch: --run-dir is required']);
+      expect(process.exitCode).toBe(1);
     });
 
     test('status prints the latest run of each issue and fails when one failed', async () => {

@@ -42,6 +42,7 @@ export const doneStatus: FixStatus = {
   screenshots: [],
   handoff: [],
   followUps: [],
+  feedback: [],
 };
 
 export const blockedStatus: FixStatus = {
@@ -99,6 +100,29 @@ export function createTestRepo(): TestRepo {
       rmSync(root, { recursive: true, force: true });
     },
   };
+}
+
+interface PullRequestBranch {
+  readonly head: string;
+  readonly dev: string;
+}
+
+export const pullRequestBranch = 'bot/fix-issue-12-777';
+export const conflictingFile = 'apps/extension/fee-row.tsx';
+
+export function createPullRequestBranch(
+  repo: TestRepo,
+  { conflict }: { readonly conflict: boolean }
+): PullRequestBranch {
+  repo.git(['checkout', '-q', '-b', pullRequestBranch]);
+  repo.write(conflictingFile, 'export const feeRow = 2;\n');
+  repo.git(['commit', '-q', '-a', '-m', 'fix(extension): keep the fee row visible']);
+  const head = repo.git(['rev-parse', 'HEAD']);
+  repo.git(['checkout', '-q', 'dev']);
+  if (conflict) repo.write(conflictingFile, 'export const feeRow = 3;\n');
+  else repo.write('README.md', 'newer readme\n');
+  repo.git(['commit', '-q', '-a', '-m', 'dev moves on']);
+  return { head, dev: repo.git(['rev-parse', 'HEAD']) };
 }
 
 export interface FakePnpm {

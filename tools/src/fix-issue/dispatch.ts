@@ -62,3 +62,52 @@ export function dispatch({ runDir, issue, repo, run = runCommand }: DispatchOpti
   }
   return `${result.stdout}${result.stderr}`.trim();
 }
+
+interface DispatchReviseOptions {
+  readonly pullRequest: number;
+  readonly notesFile?: string;
+  readonly merge: boolean;
+  readonly repo: string;
+  readonly cwd: string;
+  readonly run?: CommandRunner;
+}
+
+export function dispatchRevise({
+  pullRequest,
+  notesFile,
+  merge,
+  repo,
+  cwd,
+  run = runCommand,
+}: DispatchReviseOptions): string {
+  if (notesFile !== undefined) {
+    if (!existsSync(notesFile)) throw new Error(`no notes at ${notesFile}`);
+    const bytes = statSync(notesFile).size;
+    if (bytes > maxBriefBytes) {
+      throw new Error(
+        `${notesFile} is ${bytes} bytes, over the ${maxBriefBytes} byte limit; trim it`
+      );
+    }
+  }
+  const args = [
+    'workflow',
+    'run',
+    workflowFile,
+    '--repo',
+    repo,
+    '--ref',
+    'dev',
+    '-f',
+    `pull_request=${pullRequest}`,
+    '-f',
+    `merge=${merge}`,
+    ...(notesFile === undefined ? [] : ['-F', `notes=@${notesFile}`]),
+  ];
+  const result = run('gh', args, { cwd });
+  if (result.status !== 0) {
+    throw new Error(
+      `GitHub refused the dispatch: ${result.stderr.trim()}\nSomeone with write access to ${repo} can run:\ngh ${args.join(' ')}`
+    );
+  }
+  return `${result.stdout}${result.stderr}`.trim();
+}

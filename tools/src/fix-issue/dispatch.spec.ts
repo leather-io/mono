@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
-import { briefIssues, dispatch } from './dispatch.js';
+import { briefIssues, dispatch, dispatchRevise } from './dispatch.js';
 import type { CommandRunner } from './exec.js';
 
 describe('dispatch', () => {
@@ -90,5 +90,65 @@ describe('dispatch', () => {
 
   test('fails when a run has no briefs', () => {
     expect(() => briefIssues(runDir)).toThrow(/holds no fix-issue-<n>\.md briefs/);
+  });
+
+  describe('dispatchRevise', () => {
+    function revise(gh: ReturnType<typeof fakeGh>, notesFile?: string, merge = false) {
+      return dispatchRevise({
+        pullRequest: 7,
+        notesFile,
+        merge,
+        repo: 'leather-io/mono',
+        cwd: runDir,
+        run: gh.run,
+      });
+    }
+
+    test('dispatches the same workflow for a pull request, with the notes read from a file', () => {
+      const notes = path.join(runDir, 'notes.md');
+      writeFileSync(notes, 'Wrap the label.\n');
+      const gh = fakeGh();
+      expect(revise(gh, notes, true)).toBe('Created workflow_dispatch event');
+      expect(gh.calls).toEqual([
+        [
+          'gh',
+          'workflow',
+          'run',
+          'repo:fix-issue.yml',
+          '--repo',
+          'leather-io/mono',
+          '--ref',
+          'dev',
+          '-f',
+          'pull_request=7',
+          '-f',
+          'merge=true',
+          '-F',
+          `notes=@${notes}`,
+        ],
+      ]);
+    });
+
+    test('dispatches without notes to have the open review threads addressed', () => {
+      const gh = fakeGh();
+      revise(gh);
+      expect(gh.calls[0]?.slice(-4)).toEqual(['-f', 'pull_request=7', '-f', 'merge=false']);
+    });
+
+    test('refuses notes that are missing or too large, before calling gh', () => {
+      const gh = fakeGh();
+      const missing = path.join(runDir, 'missing.md');
+      expect(() => revise(gh, missing)).toThrow(`no notes at ${missing}`);
+      const large = path.join(runDir, 'large.md');
+      writeFileSync(large, 'x'.repeat(60_001));
+      expect(() => revise(gh, large)).toThrow('over the 60000 byte limit');
+      expect(gh.calls).toEqual([]);
+    });
+
+    test('prints the command for someone with write access when GitHub refuses', () => {
+      expect(() => revise(fakeGh(1))).toThrow(
+        /GitHub refused the dispatch: HTTP 403\nSomeone with write access to leather-io\/mono can run:\ngh workflow run repo:fix-issue\.yml .* -f pull_request=7 -f merge=false/
+      );
+    });
   });
 });

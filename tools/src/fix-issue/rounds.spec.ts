@@ -71,6 +71,36 @@ describe('rounds', () => {
     expect(existsSync(repo.paths.reviewFile)).toBe(false);
   });
 
+  test('a revise that only answers the feedback ends clean without a gate or a review', () => {
+    repo.write(
+      'tmp/fix-issue/revise.json',
+      JSON.stringify({
+        pullRequest: 7,
+        issue: 12,
+        branch: 'bot/fix-issue-12-777',
+        head: repo.head,
+        dev: repo.head,
+        ordinal: 1,
+        merge: false,
+        conflicts: [],
+        items: [{ id: 'thread-11', kind: 'thread' }],
+      })
+    );
+    repo.writeStatus({
+      ...doneStatus,
+      feedback: [{ id: 'thread-11', addressed: true, reply: 'It already wraps; see line 4.' }],
+    });
+    const pnpm = fakePnpm(repo);
+    expect(verifyRound(repo.paths, 1, pnpm.run)).toBe(false);
+    expect(pnpm.calls).toEqual([]);
+    expect(endRound(repo.paths, 1)).toEqual({
+      outcome: 'clean',
+      continue: false,
+      summary: 'Round 1: the revise changed nothing and only answers the feedback',
+    });
+    expect(finishRounds(repo.paths)).toBe('clean');
+  });
+
   test('a round number must be 1 to 9', () => {
     expect(parseRound('3')).toBe(3);
     expect(() => parseRound('x')).toThrow("'x' is not a round number from 1 to 9");

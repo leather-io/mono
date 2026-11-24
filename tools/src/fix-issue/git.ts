@@ -76,3 +76,45 @@ export function treeSnapshot(root: string): string {
   ).map(file => `${file} ${sha1(readFileSync(path.join(root, file)))}`);
   return [status, sha1(diff), ...untracked].join('\n');
 }
+
+interface IndexChange {
+  readonly path: string;
+  readonly mode: string | null;
+  readonly sha: string | null;
+  readonly previousMode: string;
+}
+
+const absentSha = /^0+$/;
+
+export function indexChanges(root: string, base: string): IndexChange[] {
+  runOrThrow('git', ['add', '-A'], { cwd: root });
+  const fields = splitNul(
+    runOrThrow('git', ['diff', '--cached', '--raw', '--no-abbrev', '--no-renames', '-z', base], {
+      cwd: root,
+    })
+  );
+  const changes: IndexChange[] = [];
+  for (let index = 0; index + 1 < fields.length; index += 2) {
+    const [previousMode = '', mode = '', , sha = ''] = (fields[index] ?? '').slice(1).split(' ');
+    const file = fields[index + 1] ?? '';
+    const deleted = absentSha.test(mode);
+    changes.push({
+      path: file,
+      mode: deleted ? null : mode,
+      sha: deleted ? null : sha,
+      previousMode,
+    });
+  }
+  return changes;
+}
+
+interface TreeEntry {
+  readonly mode: string;
+  readonly sha: string;
+}
+
+export function treeEntry(root: string, commit: string, file: string): TreeEntry | null {
+  const line = runCommand('git', ['ls-tree', commit, '--', file], { cwd: root }).stdout.trim();
+  const [mode, , sha] = line.split('\t')[0]?.split(' ') ?? [];
+  return mode && sha ? { mode, sha } : null;
+}

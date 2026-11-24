@@ -1,25 +1,35 @@
 name: repo:fix-issue
-run-name: 'fix-issue: #${{ inputs.issue }}'
+run-name: "${{ inputs.pull_request != '' && format('fix-issue: revise #{0}', inputs.pull_request) || format('fix-issue: #{0}', inputs.issue) }}"
 
 on:
   workflow_dispatch:
     inputs:
       issue:
-        description: The issue to fix; a grouped brief lists the others
+        description: The issue to fix; a grouped brief lists the others. Leave empty to revise a pull request
         type: number
-        required: true
+        required: false
       notes:
-        description: The brief from the fix-issue skill, or a sentence of guidance
+        description: The brief from the fix-issue skill, or a sentence of guidance. For a revise, what to change
         type: string
         required: false
         default: ''
+      pull_request:
+        description: To revise instead of fix, the open bot pull request to change on its own branch
+        type: string
+        required: false
+        default: ''
+      merge:
+        description: For a revise, merge dev into the pull request branch first
+        type: boolean
+        required: false
+        default: false
 
 # GITHUB_TOKEN default permissions disabled; jobs declare their own.
 permissions: {}
 
 concurrency:
-  group: fix-issue-${{ inputs.issue }}
-  cancel-in-progress: true
+  group: ${{ inputs.pull_request != '' && format('fix-issue-revise-{0}', inputs.pull_request) || format('fix-issue-{0}', inputs.issue) }}
+  cancel-in-progress: ${{ inputs.pull_request == '' }}
 
 jobs:
   fix-issue:
@@ -31,9 +41,11 @@ jobs:
     permissions:
       contents: read # checkout only; this job runs the fixer and its code and never writes to the repository
       issues: read # read the issue and its comments for the fixer
+      pull-requests: read # for a revise, read the pull request, its reviews and its review threads
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: ${{ inputs.pull_request != '' && '0' || '1' }}
           persist-credentials: false
 
       - uses: $/.github/actions/provision
@@ -41,12 +53,8 @@ jobs:
           TURBO_CACHE: 'false'
           PNPM_CACHE: 'false'
 
-      - name: build-packages
-        run: |
-          pnpm turbo run build --filter='!@leather.io/extension' --filter='!@leather.io/web' --filter='!@leather.io/test-app'
-          pnpm --filter @leather.io/extension --filter @leather.io/web run prepare:build
-
       - name: fetch-issue
+        if: inputs.pull_request == ''
         env:
           GH_TOKEN: ${{ github.token }}
           ISSUE: ${{ inputs.issue }}
@@ -54,9 +62,37 @@ jobs:
         run: pnpm lt fix-issue fetch-issue --issue "$ISSUE" --workflow-app-client-id "$APP_CLIENT_ID"
 
       - name: write-notes
+        if: inputs.pull_request == ''
         env:
           NOTES: ${{ inputs.notes }}
         run: printf '%s\n' "$NOTES" > tmp/fix-issue/notes.md
+
+      - name: prepare-revise
+        id: prepare-revise
+        if: inputs.pull_request != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PULL_REQUEST: ${{ inputs.pull_request }}
+          MERGE: ${{ inputs.merge }}
+          DEV_SHA: ${{ github.sha }}
+          REQUESTED_BY: ${{ github.triggering_actor }}
+          APP_CLIENT_ID: ${{ vars.FIX_ISSUE_APP_CLIENT_ID }}
+          FIX_ISSUE_NOTES: ${{ inputs.notes }}
+        run: >-
+          pnpm lt fix-issue revise prepare --pull-request "$PULL_REQUEST" --dev-sha "$DEV_SHA"
+          --base dev --merge "$MERGE" --requested-by "$REQUESTED_BY"
+          --workflow-app-client-id "$APP_CLIENT_ID"
+
+      - name: install-pull-request-dependencies
+        if: inputs.pull_request != ''
+        env:
+          LOCKFILE: ${{ steps.prepare-revise.outputs.merged == 'true' && '--no-frozen-lockfile' || '--frozen-lockfile' }}
+        run: pnpm install --ignore-scripts "$LOCKFILE"
+
+      - name: build-packages
+        run: |
+          pnpm turbo run build --filter='!@leather.io/extension' --filter='!@leather.io/web' --filter='!@leather.io/test-app'
+          pnpm --filter @leather.io/extension --filter @leather.io/web run prepare:build
 
       - name: write-extension-env
         env:
@@ -136,6 +172,7 @@ jobs:
         run: pnpm lt fix-issue strip-forbidden
 
       - name: capture-screenshots
+        if: inputs.pull_request == ''
         run: pnpm lt fix-issue screenshots capture
 
       - name: package-fix
@@ -150,6 +187,7 @@ jobs:
           path: |
             tmp/fix-issue/status.json
             tmp/fix-issue/fix.patch
+            tmp/fix-issue/revise.json
             tmp/fix-issue/rounds/
             tmp/fix-issue/screenshots/before/
             tmp/fix-issue/screenshots/after/
@@ -170,6 +208,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: ${{ inputs.pull_request != '' && '0' || '1' }}
           persist-credentials: false
 
       - uses: $/.github/actions/provision
@@ -206,9 +245,14 @@ jobs:
           BRANCH: bot/fix-issue-${{ inputs.issue }}-${{ github.run_id }}
           PARENT_SHA: ${{ github.sha }}
           CO_AUTHOR: ${{ github.triggering_actor }}
+          PULL_REQUEST: ${{ inputs.pull_request }}
+          MERGE: ${{ inputs.merge }}
+          APP_LOGIN: ${{ steps.app-token.outputs.app-login }}
+          FIX_ISSUE_NOTES: ${{ inputs.notes }}
         run: >-
           pnpm lt fix-issue open-pull-request --issue "$ISSUE" --branch "$BRANCH" --base dev
-          --parent-sha "$PARENT_SHA" --co-author "$CO_AUTHOR"
+          --parent-sha "$PARENT_SHA" --co-author "$CO_AUTHOR" --pull-request "$PULL_REQUEST"
+          --merge "$MERGE" --app-login "$APP_LOGIN"
 
       - name: revoke-app-token
         if: always() && steps.app-token.outputs.token != ''

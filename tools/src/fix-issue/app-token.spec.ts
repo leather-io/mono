@@ -2,6 +2,7 @@ import { constants, createHash, generateKeyPairSync, privateEncrypt, verify } fr
 import { describe, expect, test } from 'vitest';
 
 import {
+  appBotLogin,
   appJwt,
   createInstallationToken,
   kmsSigner,
@@ -185,5 +186,14 @@ describe('revokeInstallationToken', () => {
     expect(github.calls).toEqual([
       { method: 'DELETE', path: 'installation/token', body: undefined },
     ]);
+  });
+});
+
+describe('appBotLogin', () => {
+  test('is the login the App writes under, from the App itself', async () => {
+    const github = fakeGitHub((method, path) =>
+      method === 'GET' && path === 'app' ? { slug: 'leather-fix-issue' } : undefined
+    );
+    await expect(appBotLogin(github)).resolves.toBe('leather-fix-issue[bot]');
   });
 });

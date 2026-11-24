@@ -8,7 +8,7 @@ import type { FixIssuePaths } from './paths.js';
 import { type Review, readReview } from './review.js';
 import { maxFollowUps, readState, readStatus, writeStatus } from './status.js';
 import { resetStopGuards } from './stop-guard.js';
-import { verifyFix } from './verify.js';
+import { reviseCheck, verifyFix } from './verify.js';
 
 const outcomeSchema = z.enum(['clean', 'failed', 'blocked']);
 type RoundOutcome = z.infer<typeof outcomeSchema>;
@@ -64,6 +64,7 @@ export function verifyRound(paths: FixIssuePaths, round: number, run?: CommandRu
     statusFile: paths.statusFile,
     reportFile: paths.verifyReport,
     run,
+    revise: reviseCheck(paths.reviseFile),
   });
   if (result.passed) rmSync(paths.verifyReport, { force: true });
   const verified = result.passed && !result.skipped;
@@ -116,6 +117,12 @@ function decideOutcome(
   if (readState(paths.statusFile) === 'blocked') {
     const stopped = `Round ${round}: the fixer stopped as blocked`;
     return { outcome: 'blocked', summary: checks ? `${stopped}; ${checks}` : stopped };
+  }
+  if (checks === null && existsSync(paths.reviseFile)) {
+    return {
+      outcome: 'clean',
+      summary: `Round ${round}: the revise changed nothing and only answers the feedback`,
+    };
   }
   if (checks === null) {
     throw new Error(`round ${round} has neither a verify report nor a review`);

@@ -3,13 +3,23 @@ import path from 'node:path';
 
 import { type CommandRunner, runAndEcho, runCommand } from './exec.js';
 import { allowedPathsDescription, changedPaths, refusedPaths, treeSnapshot } from './git.js';
-import { readStatus } from './status.js';
+import { filesWithConflictMarkers } from './merge.js';
+import { readReviseState } from './revise-state.js';
+import { type FixStatus, readStatus } from './status.js';
+
+interface ReviseCheck {
+  readonly since: string;
+  readonly itemIds: readonly string[];
+  readonly conflicts: readonly string[];
+  readonly merged: boolean;
+}
 
 interface VerifyOptions {
   readonly root: string;
   readonly statusFile: string;
   readonly reportFile?: string;
   readonly run?: CommandRunner;
+  readonly revise?: ReviseCheck;
   log?(line: string): void;
 }
 
@@ -18,17 +28,21 @@ type VerifyResult =
   | { readonly passed: false; readonly message: string; readonly details: string };
 
 const formatCommand: readonly string[] = ['format'];
-const gateCommands: readonly (readonly string[])[] = [
-  ['syncpack:lint'],
-  ['lint:filenames'],
-  ['lint'],
-  ['typecheck'],
-  ['knip'],
-  ['--filter', '@leather.io/extension', 'lint:unused-exports'],
-  ['turbo', 'run', 'build', '--filter={./packages/*}[HEAD]'],
-  ['lint:deps'],
-  ['turbo', 'run', 'test:unit', '--filter=...[HEAD]'],
-];
+const uncommittedChanges = 'HEAD';
+
+function gateCommands(since: string): readonly (readonly string[])[] {
+  return [
+    ['syncpack:lint'],
+    ['lint:filenames'],
+    ['lint'],
+    ['typecheck'],
+    ['knip'],
+    ['--filter', '@leather.io/extension', 'lint:unused-exports'],
+    ['turbo', 'run', 'build', `--filter={./packages/*}[${since}]`],
+    ['lint:deps'],
+    ['turbo', 'run', 'test:unit', `--filter=...[${since}]`],
+  ];
+}
 const reportTailLines = 150;
 
 function tail(text: string): string {
@@ -84,7 +98,12 @@ function cleanInstall(root: string, run: CommandRunner): VerifyResult | null {
   };
 }
 
-function checkGate(root: string, run: CommandRunner, dependenciesChanged: boolean): VerifyResult {
+function checkGate(
+  root: string,
+  run: CommandRunner,
+  dependenciesChanged: boolean,
+  since: string
+): VerifyResult {
   if (dependenciesChanged) {
     const failed = cleanInstall(root, run);
     if (failed) return failed;
@@ -106,7 +125,7 @@ function checkGate(root: string, run: CommandRunner, dependenciesChanged: boolea
       details: status,
     };
   }
-  for (const args of gateCommands) {
+  for (const args of gateCommands(since)) {
     const result = run('pnpm', args, { cwd: root });
     if (result.status !== 0) {
       return {
@@ -119,14 +138,56 @@ function checkGate(root: string, run: CommandRunner, dependenciesChanged: boolea
   return { passed: true, message: 'the verification gate passed' };
 }
 
+export function reviseCheck(reviseFile: string): ReviseCheck | undefined {
+  const state = readReviseState(reviseFile);
+  if (state === null) return undefined;
+  return {
+    since: state.since ?? uncommittedChanges,
+    itemIds: state.items.map(item => item.id),
+    conflicts: state.conflicts,
+    merged: state.merge,
+  };
+}
+
+function feedbackProblems(status: FixStatus, itemIds: readonly string[]): string[] {
+  const answered = status.feedback.map(entry => entry.id);
+  const missing = itemIds.filter(id => !answered.includes(id));
+  const unknown = answered.filter(id => !itemIds.includes(id));
+  return [
+    ...missing.map(id => `feedback: no entry for ${id}`),
+    ...unknown.map(id => `feedback: ${id} is not an item of the feedback file`),
+  ];
+}
+
+function reviseProblem(root: string, status: FixStatus, revise: ReviseCheck): VerifyResult | null {
+  const problems = feedbackProblems(status, revise.itemIds);
+  if (problems.length > 0) {
+    return {
+      passed: false,
+      message: 'the status does not answer the feedback items one for one',
+      details: problems.join('\n'),
+    };
+  }
+  const marked = status.state === 'done' ? filesWithConflictMarkers(root, revise.conflicts) : [];
+  if (marked.length > 0) {
+    return {
+      passed: false,
+      message: 'conflict markers from the merge of dev remain',
+      details: marked.join('\n'),
+    };
+  }
+  return null;
+}
+
 export function verifyFix({
   root,
   statusFile,
   reportFile,
   run = runAndEcho,
+  revise,
   log = console.log,
 }: VerifyOptions): VerifyResult {
-  const result = evaluate(root, statusFile, run);
+  const result = evaluate(root, statusFile, run, revise);
   if (reportFile && !result.passed) {
     mkdirSync(path.dirname(reportFile), { recursive: true });
     writeFileSync(reportFile, formatVerifyReport(result));
@@ -135,7 +196,12 @@ export function verifyFix({
   return result;
 }
 
-function evaluate(root: string, statusFile: string, run: CommandRunner): VerifyResult {
+function evaluate(
+  root: string,
+  statusFile: string,
+  run: CommandRunner,
+  revise: ReviseCheck | undefined
+): VerifyResult {
   const status = readStatus(statusFile);
   if (!status.ok) {
     return {
@@ -153,8 +219,11 @@ function evaluate(root: string, statusFile: string, run: CommandRunner): VerifyR
       details: `Only ${allowedPathsDescription} may change:\n${refused.join('\n')}`,
     };
   }
+  const untouchedMerge =
+    revise?.merged === true && filesWithConflictMarkers(root, revise.conflicts).length === 0;
   if (
     changes.length === 0 &&
+    !untouchedMerge &&
     (status.status.state === 'blocked' || status.status.handoff.length > 0)
   ) {
     return {
@@ -163,10 +232,24 @@ function evaluate(root: string, statusFile: string, run: CommandRunner): VerifyR
       message: 'the fixer changed nothing it may change; skipping the verification gate',
     };
   }
-  if (changes.length === 0) {
+  const failed = revise ? reviseProblem(root, status.status, revise) : null;
+  if (failed) return failed;
+  if (changes.length === 0 && revise && !revise.merged) {
+    return {
+      passed: true,
+      skipped: true,
+      message: 'the revise changed nothing and only answers the feedback; skipping the gate',
+    };
+  }
+  if (changes.length === 0 && !revise) {
     return { passed: false, message: 'state is done but nothing changed', details: '' };
   }
-  const gate = checkGate(root, run, changesDependencies(changes.map(change => change.path)));
+  const gate = checkGate(
+    root,
+    run,
+    changesDependencies(changes.map(change => change.path)),
+    revise?.since ?? uncommittedChanges
+  );
   return gate.passed
     ? { passed: true, message: `${changes.length} changed files pass the verification gate` }
     : gate;
