@@ -20,7 +20,7 @@ function defaultNetworkIdToBitcoinNetworkMode(networkId: string): BitcoinNetwork
     case 'testnet':
     case 'testnet4':
       return 'testnet';
-    case 'sbtcTestnet':
+    case 'primaryTestnet':
     case 'sbtcDevenv':
     case 'devnet':
       return 'regtest';
