@@ -7,7 +7,6 @@ import {
 } from '@stacks/transactions';
 import { requestLeatherProvider } from '@tests/leather-provider';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
-import { mockEmptyStacksBalancesRequest } from '@tests/mocks/mock-stacks-balances';
 import { mockEmptyStacksPrincipalBalancesRequest } from '@tests/mocks/mock-stacks-principal-balances';
 import { mockStacksBroadcastTransaction } from '@tests/mocks/mock-stacks-txs';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
@@ -166,7 +165,6 @@ test.describe('RPC: stx_transferStx', () => {
     page,
     context,
   }) => {
-    await mockEmptyStacksBalancesRequest(context);
     await mockEmptyStacksPrincipalBalancesRequest(context);
 
     async function expectInsufficientBalanceAndClose() {
