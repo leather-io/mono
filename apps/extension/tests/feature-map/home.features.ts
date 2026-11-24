@@ -174,7 +174,7 @@ export const homeFeatures = [
       'apps/extension/tests/specs/tokens/tokens-tab.spec.ts',
     ],
     description:
-      'Toggle list of the tokens shown on the home Tokens tab. Core assets (BTC, STX, USDCx) cannot be toggled and are absent from the list; each manageable SIP-10 token has a switch whose data-testid is the token id, and toggling one off removes it from the asset list until toggled back on. An account with nothing manageable shows "No tokens found"; manage-tokens.spec.ts reaches that state by registering mockEmptyStacksBalancesRequest, mockEmptyStacksPrincipalBalancesRequest and mockEmptyLeatherApiUtxosRequest before sign-in. The header back button goes to the previous page (navigate(-1)), which is home when opened from the Tokens tab.',
+      'Toggle list of the tokens shown on the home Tokens tab. Core assets (BTC, STX, USDCx) cannot be toggled and are absent from the list; each manageable SIP-10 token has a switch whose data-testid is the token id, and toggling one off removes it from the asset list until toggled back on. An account with nothing manageable shows "No tokens found"; manage-tokens.spec.ts reaches that state by registering mockEmptyStacksPrincipalBalancesRequest and mockEmptyLeatherApiUtxosRequest before sign-in. The header back button goes to the previous page (navigate(-1)), which is home when opened from the Tokens tab.',
   },
   {
     id: 'receive-dialog',
