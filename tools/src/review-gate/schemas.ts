@@ -36,13 +36,6 @@ export const commitStatusSchema = z.object({
 });
 export type CommitStatus = z.infer<typeof commitStatusSchema>;
 
-export const issueCommentSchema = z.object({
-  id: z.number(),
-  user: loginSchema.nullable(),
-  body: z.string().optional(),
-});
-export type IssueComment = z.infer<typeof issueCommentSchema>;
-
 export const treeSchema = z.object({
   truncated: z.boolean(),
   tree: z.array(z.object({ path: z.string(), type: z.string(), sha: z.string() })),

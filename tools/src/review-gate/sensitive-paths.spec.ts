@@ -130,7 +130,6 @@ describe('sensitive-paths.yml', () => {
       'tools/src/lt.ts',
       'tools/bin/lt.js',
       'tools/src/ci/github.ts',
-      'tools/src/claude-review/prompts.ts',
       'apps/web/wrangler.toml',
       '.github/workflows/repo:code-checks.yml',
       '.claude/skills/pr-review/SKILL.md',

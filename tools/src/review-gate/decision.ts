@@ -1,11 +1,10 @@
 import { z } from 'zod';
 
 import { claudeModel } from '../ci/claude.js';
-import { describeZodError, neutraliseMentions } from '../ci/github.js';
-import type { CommitStatus, IssueComment } from './schemas.js';
+import { describeZodError } from '../ci/github.js';
+import type { CommitStatus } from './schemas.js';
 
 export const decisionContext = 'review-gate/decision';
-export const decisionCommentHeading = '### Review gate';
 const maxStatusDescriptionLength = 140;
 const truncationMarker = '...';
 const fallbackMarker = ' (fallback)';
@@ -58,7 +57,16 @@ export function resolveDecision({
       `Claude's answer was invalid (${describeZodError(parsed.error)}), so 2 reviews are required.`
     );
   }
-  return { ...parsed.data, source: 'model' };
+  const tier = parsed.data;
+  if (tier.reviews === 1 && tier.confidence === 'low') {
+    return {
+      ...tier,
+      reviews: 2,
+      reason: `Claude was not confident that 1 review is enough, so 2 reviews are required. ${tier.reason}`,
+      source: 'model',
+    };
+  }
+  return { ...tier, source: 'model' };
 }
 
 export function formatReviewCount(reviews: number): string {
@@ -126,31 +134,4 @@ const sourceLabels: Record<DecisionSource, string> = {
 
 export function describeSource(source: DecisionSource): string {
   return sourceLabels[source];
-}
-
-interface DecisionCommentContext {
-  readonly headSha: string;
-  readonly runUrl: string;
-}
-
-export function formatDecisionComment(
-  decision: Decision,
-  { headSha, runUrl }: DecisionCommentContext
-): string {
-  return neutraliseMentions(
-    `${decisionCommentHeading}: ${formatReviewCount(decision.reviews)}\n\n${decision.reason}\n\n` +
-      `Decided by ${describeSource(decision.source)} with ${decision.confidence} confidence for ${headSha}. ` +
-      `[Run](${runUrl})`
-  );
-}
-
-export function findDecisionComment(
-  comments: readonly IssueComment[],
-  trustedCreator: string
-): IssueComment | undefined {
-  return comments.find(
-    comment =>
-      comment.user?.login === trustedCreator &&
-      comment.body?.startsWith(`${decisionCommentHeading}:`)
-  );
 }

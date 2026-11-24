@@ -114,17 +114,6 @@ export async function paginate(client: GitHubClient, path: string): Promise<unkn
   return items;
 }
 
-const codePattern = /(```[\s\S]*?```|`[^`\n]*`)/;
-
-export function neutraliseMentions(text: string): string {
-  return text
-    .split(codePattern)
-    .map((part, index) =>
-      index % 2 === 1 ? part : part.replace(/@(?=[\w-])(?![\w-]*\.[\w.-]*\/)/g, '@​')
-    )
-    .join('');
-}
-
 export function readRequiredEnv(name: string): string {
   const value = process.env[name];
   if (!value) throw new Error(`${name} is not set`);
@@ -137,9 +126,9 @@ export function writeSummary(markdown: string): void {
   console.log(markdown);
 }
 
-export function describeError(error: unknown, maxLength = maxErrorLength): string {
+export function describeError(error: unknown): string {
   const message = error instanceof Error ? error.message : String(error);
-  return message.slice(0, maxLength);
+  return message.slice(0, maxErrorLength);
 }
 
 export function describeZodError(error: z.ZodError): string {

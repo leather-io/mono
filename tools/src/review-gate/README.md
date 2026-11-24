@@ -20,14 +20,14 @@ pull_request, pull_request_review  ─▶ repo:review-gate-dispatch ─▶ workf
 | Command            | Does                                                                           |
 | ------------------ | ------------------------------------------------------------------------------ |
 | `check`            | classifies the head unless it already has an answer, records                   |
-|                    | `review-gate/decision` and the sticky comment, then counts approvals and posts |
-|                    | the `review-gate` status                                                       |
+|                    | `review-gate/decision`, then counts approvals and posts the `review-gate`      |
+|                    | status                                                                         |
 | `app-token create` | signs the App JWT with KMS and writes an installation token to the step output |
 | `app-token revoke` | revokes the token in `GITHUB_TOKEN` when the job ends                          |
 
 Classifying applies the path rules (`rules.ts`) first and asks Claude, with no tools and the tier
-schema, only when none decides. Anything invalid fails closed to 2 reviews, and a fallback is
-retried on the next check. The decision is read back from the `review-gate/decision` status, and
+schema, only when none decides. An answer of 1 review with low confidence counts as 2. Anything
+invalid fails closed to 2 reviews, and a fallback is retried on the next check. The decision is read back from the `review-gate/decision` status, and
 only one the gate App posted counts.
 
 Sensitive paths live in `.github/review-gate/sensitive-paths.yml` and are matched with `minimatch`,
@@ -54,7 +54,7 @@ nobody dispatched is blocked.
 | `rules.ts`           | size limits, hidden diffs, the classifier prompt                |
 | `sensitive-paths.ts` | reading and matching the sensitive path list                    |
 | `classifier.ts`      | the classifier's prompt path and Claude arguments               |
-| `decision.ts`        | the tier schema, fail-closed decisions, status and comment text |
+| `decision.ts`        | the tier schema, fail-closed decisions, the status text         |
 | `approvals.ts`       | approvers, fix-issue dispatchers, shared heads, the gate status |
 | `client.ts`          | the GitHub calls, each response checked with `schemas.ts`       |
 | `steps.ts`           | the `check` and `app-token` commands                            |
@@ -90,7 +90,7 @@ another job saved runs next to the App token.
 The App's private key never reaches the runner. It lives in AWS KMS: the `aws-credentials` step
 logs in to AWS through GitHub's OIDC token, then `pnpm lt review-gate app-token create` has KMS sign
 the App's JWT and exchanges it for an installation token limited to this repository and to actions,
-contents and members read and pull requests and statuses write. A token that comes back with any other
+contents, members and pull requests read and statuses write. A token that comes back with any other
 permission is revoked and the step fails. The job revokes the token when it ends, so a leaked token
 stops working with the run, and within an hour at most. Nobody can copy the key, and every
 signature is logged in CloudTrail.
@@ -98,7 +98,7 @@ signature is logged in CloudTrail.
 **App setup, once per repository:**
 
 1. Create a GitHub App (webhook off; repository permissions Actions read, Contents read, Commit
-   statuses read and write, Pull requests read and write, Metadata read; organization permission Members read) and install it
+   statuses read and write, Pull requests read, Metadata read; organization permission Members read) and install it
    on the repository only. Set the repository variable `REVIEW_GATE_APP_CLIENT_ID`.
 2. Create the environment `environment/mono-review-gate`, limited to the `dev` branch, with the variables
    `AWS_ROLE_ARN`, `AWS_REGION` and `REVIEW_GATE_APP_KMS_KEY_ID`. It holds no secrets.

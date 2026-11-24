@@ -1,13 +1,7 @@
 import { afterEach, describe, expect, test, vi } from 'vitest';
 
 import type { CommandRunner } from './exec.js';
-import {
-  GitHubError,
-  createGhCliClient,
-  createGitHubClient,
-  neutraliseMentions,
-  paginate,
-} from './github.js';
+import { GitHubError, createGhCliClient, createGitHubClient, paginate } from './github.js';
 
 interface Sent {
   readonly url: string;
@@ -158,23 +152,5 @@ describe('createGhCliClient', () => {
     await expect(createGhCliClient('/repo', gh.run).request('GET', 'repos/o/r')).rejects.toThrow(
       'gh api GET repos/o/r failed: HTTP 404: Not Found'
     );
-  });
-});
-
-describe('neutraliseMentions', () => {
-  it('defuses user and team mentions', () => {
-    expect(neutraliseMentions('ping @alice')).not.toMatch(/@alice/);
-    expect(neutraliseMentions('ask @leather-io/reviewers')).not.toMatch(/@leather-io/);
-  });
-
-  it('keeps package names with a dotted scope intact', () => {
-    expect(neutraliseMentions('import from @leather.io/utils')).toBe(
-      'import from @leather.io/utils'
-    );
-  });
-
-  it('leaves inline code and code blocks untouched', () => {
-    expect(neutraliseMentions('use `@stacks/transactions`')).toBe('use `@stacks/transactions`');
-    expect(neutraliseMentions('```\n@alice\n```')).toBe('```\n@alice\n```');
   });
 });

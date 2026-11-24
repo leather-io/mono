@@ -45,12 +45,6 @@ interface FakePullRequest {
   readonly base: { readonly sha: string; readonly ref: string };
 }
 
-interface FakeComment {
-  readonly id: number;
-  readonly user: { readonly login: string } | null;
-  body: string;
-}
-
 interface FakeReview {
   readonly user: { readonly login: string; readonly type: string } | null;
   readonly state: string;
@@ -82,7 +76,6 @@ type Override = (method: string, path: string) => Response | undefined;
 interface FakeGitHub {
   readonly pullRequests: Map<number, FakePullRequest>;
   readonly files: Map<number, FakeFile[]>;
-  readonly comments: Map<number, FakeComment[]>;
   readonly reviews: Map<number, FakeReview[]>;
   readonly statuses: Map<string, FakeStatus[]>;
   readonly commitPullRequests: Map<string, FakeCommitPullRequest[]>;
@@ -98,7 +91,6 @@ const newStatusSchema = z.object({
   description: z.string(),
   target_url: z.string(),
 });
-const commentBodySchema = z.object({ body: z.string() });
 const graphqlBodySchema = z.object({ query: z.string() });
 
 function json(value: unknown, status = 200): Response {
@@ -233,39 +225,6 @@ const routes: readonly FakeRoute[] = [
   },
   {
     method: 'GET',
-    pattern: /^\/issues\/(\d+)\/comments$/,
-    handle(github, number, { url }) {
-      return list(url, github.comments.get(Number(number)) ?? []);
-    },
-  },
-  {
-    method: 'POST',
-    pattern: /^\/issues\/(\d+)\/comments$/,
-    handle(github, number, { body }) {
-      const existing = github.comments.get(Number(number)) ?? [];
-      github.comments.set(Number(number), [
-        ...existing,
-        {
-          id: 1000 + existing.length,
-          user: { login: gateBot },
-          body: commentBodySchema.parse(body).body,
-        },
-      ]);
-      return json({});
-    },
-  },
-  {
-    method: 'PATCH',
-    pattern: /^\/issues\/comments\/(\d+)$/,
-    handle(github, id, { body }) {
-      const comment = [...github.comments.values()].flat().find(item => item.id === Number(id));
-      if (!comment) return notFound();
-      comment.body = commentBodySchema.parse(body).body;
-      return json({});
-    },
-  },
-  {
-    method: 'GET',
     pattern: /^\/actions\/runs\/(\d+)$/,
     handle(github, id) {
       const found = github.workflowRuns.get(id);
@@ -311,7 +270,6 @@ function stubGitHub(): FakeGitHub {
   const github: FakeGitHub = {
     pullRequests: new Map(),
     files: new Map(),
-    comments: new Map(),
     reviews: new Map(),
     statuses: new Map(),
     commitPullRequests: new Map(),
@@ -558,8 +516,26 @@ describe('review-gate commands', () => {
         expect(latestStatus(headSha, 'review-gate')).toEqual(
           gateStatus('review-gate', 'success', '1 of 1 required approvals')
         );
-        expect(github.comments.get(7)?.[0]?.body).toContain('### Review gate: 1 review required');
         expect(readFileSync(claudeLog, 'utf8')).toContain(plainFile);
+      });
+
+      test('requires two reviews when Claude is not confident that one is enough', async () => {
+        github.pullRequests.set(7, pullRequest(7));
+        github.files.set(7, [changedFile(plainFile)]);
+        github.reviews.set(7, [approval(reviewer)]);
+        claudeAnswers({
+          reviews: 1,
+          confidence: 'low',
+          reason: 'Probably copy only.',
+          summary: 'Footer copy',
+        });
+
+        await run(['check', '--pr', '7']);
+
+        expect(latestStatus(headSha, 'review-gate/decision')).toEqual(
+          decision('2 reviews required: Footer copy')
+        );
+        expect(latestStatus(headSha, 'review-gate')?.description).toBe('1 of 2 required approvals');
       });
 
       test('requires two reviews for a sensitive path without asking Claude', async () => {
@@ -719,7 +695,7 @@ describe('review-gate commands', () => {
         actions: 'read',
         contents: 'read',
         members: 'read',
-        pull_requests: 'write',
+        pull_requests: 'read',
         statuses: 'write',
         metadata: 'read',
       });
@@ -743,7 +719,7 @@ describe('review-gate commands', () => {
             actions: 'read',
             contents: 'read',
             members: 'read',
-            pull_requests: 'write',
+            pull_requests: 'read',
             statuses: 'write',
           },
         },

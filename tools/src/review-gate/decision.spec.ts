@@ -1,13 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  type Decision,
-  decisionCommentHeading,
   decisionContext,
   describeDecision,
   describeSource,
-  findDecisionComment,
-  formatDecisionComment,
   hasAnsweredDecision,
   requiredApprovals,
   resolveDecision,
@@ -40,6 +36,12 @@ describe('resolveDecision', () => {
   it('returns the model answer', () => {
     const decision = resolveDecision({ structuredOutput: copyOnly });
     expect([decision.reviews, decision.source]).toEqual([1, 'model']);
+  });
+
+  it('requires 2 reviews when Claude is not confident that 1 is enough', () => {
+    const decision = resolveDecision({ structuredOutput: { ...copyOnly, confidence: 'low' } });
+    expect([decision.reviews, decision.source]).toEqual([2, 'model']);
+    expect(decision.reason).toMatch(/^Claude was not confident/);
   });
 
   it('requires 2 reviews when Claude did not answer', () => {
@@ -144,47 +146,6 @@ describe('hasAnsweredDecision', () => {
     const forged = status('1 review required: x', { creator: { login: 'author' } });
     expect(hasAnsweredDecision([answer], trustedCreator)).toBe(true);
     expect(hasAnsweredDecision([fallback, forged], trustedCreator)).toBe(false);
-  });
-});
-
-describe('formatDecisionComment', () => {
-  const decision: Decision = {
-    reviews: 2,
-    confidence: 'high',
-    reason: 'Touches signing, cc @alice.',
-    summary: 'signing',
-    source: 'model',
-  };
-
-  it('starts with the heading the comment is found by', () => {
-    const body = formatDecisionComment(decision, { headSha: 'abc', runUrl: 'https://run' });
-    expect(body.startsWith(`${decisionCommentHeading}: 2 reviews required`)).toBe(true);
-    expect(body).toMatch(
-      /Decided by Claude \(claude-opus-5-5\) with high confidence for abc\. \[Run\]\(https:\/\/run\)/
-    );
-  });
-
-  it('defuses mentions in the reason', () => {
-    const body = formatDecisionComment(decision, { headSha: 'abc', runUrl: 'https://run' });
-    expect(body).not.toMatch(/@alice/);
-  });
-});
-
-describe('findDecisionComment', () => {
-  const heading = `${decisionCommentHeading}: 1 review required`;
-
-  it('finds the workflow comment', () => {
-    const comments = [
-      { id: 1, user: { login: 'alice' }, body: 'Looks good' },
-      { id: 2, user: { login: trustedCreator }, body: heading },
-    ];
-    expect(findDecisionComment(comments, trustedCreator)?.id).toBe(2);
-  });
-
-  it('ignores the same heading from anyone else', () => {
-    expect(
-      findDecisionComment([{ id: 1, user: { login: 'alice' }, body: heading }], trustedCreator)
-    ).toBeUndefined();
   });
 });
 

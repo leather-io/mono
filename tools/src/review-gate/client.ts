@@ -5,7 +5,6 @@ import {
   type Review,
   commitPullRequestSchema,
   commitStatusSchema,
-  issueCommentSchema,
   pullRequestFileSchema,
   pullRequestSchema,
   reviewsPageSchema,
@@ -89,15 +88,6 @@ export function createGateClient(github: GitHubClient, repository: string) {
     },
     listCommitPullRequests(sha: string) {
       return listAll(`/commits/${sha}/pulls`, commitPullRequestSchema);
-    },
-    listComments(number: number) {
-      return listAll(`/issues/${number}/comments`, issueCommentSchema);
-    },
-    async createComment(number: number, body: string): Promise<void> {
-      await request(`/issues/${number}/comments`, 'POST', { body });
-    },
-    async updateComment(id: number, body: string): Promise<void> {
-      await request(`/issues/comments/${id}`, 'PATCH', { body });
     },
     async createStatus(sha: string, status: NewStatus): Promise<void> {
       await request(`/statuses/${sha}`, 'POST', status);

@@ -23,8 +23,6 @@ import {
   decisionContext,
   describeDecision,
   describeSource,
-  findDecisionComment,
-  formatDecisionComment,
   formatReviewCount,
   hasAnsweredDecision,
   requiredApprovals,
@@ -41,7 +39,7 @@ const appTokenPermissions: TokenPermissions = {
   actions: 'read',
   contents: 'read',
   members: 'read',
-  pull_requests: 'write',
+  pull_requests: 'read',
   statuses: 'write',
 };
 
@@ -94,7 +92,7 @@ async function classify(github: GateClient, pullRequest: PullRequest): Promise<D
 }
 
 async function recordDecision(
-  { github, runUrl, trustedCreator }: GateRun,
+  { github, runUrl }: GateRun,
   pullRequest: PullRequest,
   decision: Decision
 ): Promise<void> {
@@ -110,20 +108,6 @@ async function recordDecision(
     `### #${pullRequest.number}: ${formatReviewCount(decision.reviews)}\n\n` +
       `${decision.reason}\n\nDecided by ${describeSource(decision.source)}, confidence: ${decision.confidence}.`
   );
-  try {
-    const body = formatDecisionComment(decision, { headSha, runUrl });
-    const existing = findDecisionComment(
-      await github.listComments(pullRequest.number),
-      trustedCreator
-    );
-    if (existing) {
-      await github.updateComment(existing.id, body);
-    } else {
-      await github.createComment(pullRequest.number, body);
-    }
-  } catch (error) {
-    console.log(`::warning::Could not update the review gate comment: ${describeError(error)}`);
-  }
 }
 
 async function countApprovals(
