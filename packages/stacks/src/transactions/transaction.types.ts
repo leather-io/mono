@@ -47,7 +47,7 @@ export type StacksUnsignedContractCallOptions =
   | StacksUnsignedMultiSigContractCallOptions;
 
 export type StacksUnsignedSingleSigContractDeployOptions = ReplaceTypes<
-  UnsignedContractDeployOptions,
+  Omit<UnsignedContractDeployOptions, 'clarityVersion'>,
   {
     fee: Money;
     nonce: number | string;
@@ -55,7 +55,7 @@ export type StacksUnsignedSingleSigContractDeployOptions = ReplaceTypes<
 > & { txType: typeof TransactionTypes.ContractDeploy };
 
 export type StacksUnsignedMultiSigContractDeployOptions = ReplaceTypes<
-  UnsignedMultiSigContractDeployOptions,
+  Omit<UnsignedMultiSigContractDeployOptions, 'clarityVersion'>,
   {
     fee: Money;
     nonce: number | string;

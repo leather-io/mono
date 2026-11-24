@@ -9,6 +9,7 @@ import { useAccounts } from '@/store/accounts/accounts.read';
 import { type App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { assertStacksSigner } from '@/store/keychains/stacks/utils';
+import { t } from '@lingui/core/macro';
 import { AuthType, deserializeTransaction } from '@stacks/transactions';
 
 import {
@@ -17,6 +18,8 @@ import {
   createRpcSuccessResponse,
   type stxDeployContract,
 } from '@leather.io/rpc';
+import { Callout } from '@leather.io/ui/native';
+import { isDefined } from '@leather.io/utils';
 
 import { getStxRequestParams } from '../utils';
 import { useDeployContractTxHex } from './hooks';
@@ -97,6 +100,13 @@ export function DeployContractApprover({
       onBack={closeApprover}
       onCloseApprover={closeApprover}
       origin={app.origin}
+      notice={
+        isDefined(request.params.clarityVersion) && (
+          <Callout variant="warning">
+            {t`This app asked for a specific Clarity version. Leather no longer supports that, so the contract will deploy with the latest Clarity version.`}
+          </Callout>
+        )
+      }
       setTxHex={setTxHex}
       txHex={txHex}
       txOptions={txOptions}

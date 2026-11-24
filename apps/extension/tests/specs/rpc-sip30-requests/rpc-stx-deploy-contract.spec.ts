@@ -18,10 +18,19 @@ test.describe('RPC: stx_deployContract', () => {
     await page.goto('localhost:3000');
   });
 
+  const clarityVersionDeprecationNotice =
+    'This app asked for a specific Clarity version. Leather no longer supports that, so the contract will deploy with the latest Clarity version.';
+
   function checkVisibleContent(context: BrowserContext) {
-    return async (buttonToPress: 'Cancel' | 'Confirm') => {
+    return async (buttonToPress: 'Cancel' | 'Confirm', expectClarityVersionNotice: boolean) => {
       const popup = await context.waitForEvent('page');
       await test.expect(popup.getByText('mock-contract-name', { exact: true })).toBeVisible();
+      const notice = popup.getByText(clarityVersionDeprecationNotice, { exact: true });
+      if (expectClarityVersionNotice) {
+        await test.expect(notice).toBeVisible();
+      } else {
+        await test.expect(notice).toHaveCount(0);
+      }
       await test
         .expect(
           popup.getByText(
@@ -60,9 +69,32 @@ test.describe('RPC: stx_deployContract', () => {
       initiateSip30RpcDeployContract(page)({
         name: `mock-contract-name`,
         clarityCode: mockStacksTokenContract,
-        clarityVersion: ClarityVersion.Clarity3,
       }),
-      checkVisibleContent(context)('Cancel'),
+      checkVisibleContent(context)('Cancel', false),
+    ]);
+
+    delete result.id;
+
+    test.expect(result).toEqual({
+      jsonrpc: '2.0',
+      error: {
+        code: 4001,
+        message: RpcErrorMessage.UserRejectedOperation,
+      },
+    });
+  });
+
+  test('SIP-30 deploy contract shows a notice when a Clarity version is requested', async ({
+    page,
+    context,
+  }) => {
+    const [result] = await Promise.all([
+      initiateSip30RpcDeployContract(page)({
+        name: `mock-contract-name`,
+        clarityCode: mockStacksTokenContract,
+        clarityVersion: ClarityVersion.Clarity2,
+      }),
+      checkVisibleContent(context)('Cancel', true),
     ]);
 
     delete result.id;

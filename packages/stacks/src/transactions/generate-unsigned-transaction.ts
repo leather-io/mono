@@ -1,6 +1,5 @@
 import { hexToBytes } from '@noble/hashes/utils';
 import {
-  ClarityVersion,
   createSmartContractPayload,
   deserializeCV,
   makeUnsignedContractCall,
@@ -43,6 +42,7 @@ export function getUnsignedContractDeployParsedOptions(
 ): Parameters<typeof makeUnsignedContractDeploy>[0] {
   return {
     ...options,
+    clarityVersion: undefined,
     fee: options.fee.amount.toString(),
     nonce: initNonce(options.nonce).toString(),
     postConditions: getPostConditions(
@@ -51,18 +51,13 @@ export function getUnsignedContractDeployParsedOptions(
   };
 }
 
-function shouldUseNodeDefaultClarityVersion(clarityVersion?: ClarityVersion) {
-  return clarityVersion === undefined || clarityVersion === ClarityVersion.Clarity6;
-}
-
 async function generateUnsignedContractDeployTransaction(
   options: StacksUnsignedContractDeployOptions
 ) {
   const transaction = await makeUnsignedContractDeploy(
     getUnsignedContractDeployParsedOptions(options)
   );
-  if (shouldUseNodeDefaultClarityVersion(options.clarityVersion))
-    transaction.payload = createSmartContractPayload(options.contractName, options.codeBody);
+  transaction.payload = createSmartContractPayload(options.contractName, options.codeBody);
   return transaction;
 }
 
