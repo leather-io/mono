@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const loginSchema = z.object({ login: z.string() });
 
-export const pullRequestFileSchema = z.object({
+const pullRequestFileSchema = z.object({
   filename: z.string(),
   previous_filename: z.string().optional(),
   status: z.string(),
@@ -12,6 +12,8 @@ export const pullRequestFileSchema = z.object({
   sha: z.string().nullish(),
 });
 export type PullRequestFile = z.infer<typeof pullRequestFileSchema>;
+
+export const comparisonSchema = z.object({ files: z.array(pullRequestFileSchema) });
 
 export const pullRequestSchema = z.object({
   number: z.number(),

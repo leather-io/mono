@@ -25,10 +25,12 @@ const plainFile = 'apps/web/app/components/footer.tsx';
 
 interface FakeFile {
   readonly filename: string;
+  readonly previous_filename?: string;
   readonly status: string;
   readonly additions: number;
   readonly deletions: number;
   readonly patch?: string;
+  readonly sha?: string;
 }
 
 interface FakePullRequest {
@@ -218,9 +220,12 @@ const routes: readonly FakeRoute[] = [
   },
   {
     method: 'GET',
-    pattern: /^\/pulls\/(\d+)\/files$/,
-    handle(github, number, { url }) {
-      return list(url, github.files.get(Number(number)) ?? []);
+    pattern: /^\/compare\/(.+)$/,
+    handle(github, range) {
+      const compared = [...github.pullRequests.values()].find(
+        ({ base, head }) => range === `${base.sha}...${head.sha}`
+      );
+      return compared ? json({ files: github.files.get(compared.number) ?? [] }) : notFound();
     },
   },
   {
@@ -304,7 +309,7 @@ let prompt = '';
 process.stdin.setEncoding('utf8');
 process.stdin.on('data', chunk => { prompt += chunk; });
 process.stdin.on('end', () => {
-  fs.writeFileSync(process.env.FAKE_CLAUDE_LOG, JSON.stringify({ args: process.argv.slice(2), prompt }));
+  fs.writeFileSync(process.env.FAKE_CLAUDE_LOG, JSON.stringify({ args: process.argv.slice(2), prompt, githubToken: process.env.GITHUB_TOKEN ?? null }));
   process.stdout.write(process.env.FAKE_CLAUDE_OUTPUT ?? '');
   process.exit(Number(process.env.FAKE_CLAUDE_EXIT ?? '0'));
 });
@@ -517,6 +522,36 @@ describe('review-gate commands', () => {
           gateStatus('review-gate', 'success', '1 of 1 required approvals')
         );
         expect(readFileSync(claudeLog, 'utf8')).toContain(plainFile);
+        expect(readFileSync(claudeLog, 'utf8')).toContain('"githubToken":null');
+        expect(github.calls).toContainEqual({
+          method: 'GET',
+          path: `/compare/${baseSha}...${headSha}`,
+        });
+      });
+
+      test('requires two reviews for a rename it cannot compare with the base', async () => {
+        github.pullRequests.set(7, pullRequest(7));
+        github.files.set(7, [
+          {
+            filename: 'apps/web/app/pages/home/renamed.tsx',
+            previous_filename: plainFile,
+            status: 'renamed',
+            additions: 0,
+            deletions: 0,
+            sha: 'blob-sha',
+          },
+        ]);
+        github.override = (method, requestPath) =>
+          method === 'GET' && requestPath.startsWith('/git/trees/')
+            ? json({ truncated: true, tree: [] })
+            : undefined;
+
+        await run(['check', '--pr', '7']);
+
+        expect(existsSync(claudeLog)).toBe(false);
+        expect(latestStatus(headSha, 'review-gate/decision')?.description).toContain(
+          '2 reviews required: GitHub omits the diff'
+        );
       });
 
       test('requires two reviews when Claude is not confident that one is enough', async () => {

@@ -79,6 +79,26 @@ describe('runClaude', () => {
     expect(stderr).toHaveBeenCalledWith('progress\n');
   });
 
+  it('keeps the job credentials away from Claude and limits how long it runs', () => {
+    vi.stubEnv('GITHUB_TOKEN', 'ghs_app');
+    vi.stubEnv('AWS_SESSION_TOKEN', 'aws');
+    vi.stubEnv('ACTIONS_ID_TOKEN_REQUEST_TOKEN', 'oidc');
+    vi.stubEnv('CLAUDE_CODE_OAUTH_TOKEN', 'oauth');
+    vi.spyOn(process.stderr, 'write').mockReturnValue(true);
+    const options: Parameters<CommandRunner>[2][] = [];
+
+    runClaude({ args: [], prompt: '', cwd: '/tmp' }, (_command, _args, runOptions) => {
+      options.push(runOptions);
+      return { status: 0, stdout: answer, stderr: '' };
+    });
+
+    expect(options[0]?.timeoutMs).toBeGreaterThan(0);
+    expect(options[0]?.env).toMatchObject({ CLAUDE_CODE_OAUTH_TOKEN: 'oauth' });
+    expect(options[0]?.env).not.toHaveProperty('GITHUB_TOKEN');
+    expect(options[0]?.env).not.toHaveProperty('AWS_SESSION_TOKEN');
+    expect(options[0]?.env).not.toHaveProperty('ACTIONS_ID_TOKEN_REQUEST_TOKEN');
+  });
+
   it('falls back to claude on the PATH when no binary is pinned', () => {
     vi.stubEnv('CLAUDE_BIN', '');
     vi.spyOn(process.stderr, 'write').mockReturnValue(true);

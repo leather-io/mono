@@ -28,7 +28,7 @@ import {
   requiredApprovals,
   resolveDecision,
 } from './decision.js';
-import { buildPrompt, decideByRules, needsBaseBlob, requireTwoReviews } from './rules.js';
+import { buildPrompt, decideByRules, needsBaseBlob } from './rules.js';
 import type { PullRequest } from './schemas.js';
 import { findSensitiveFiles, readSensitiveGlobs } from './sensitive-paths.js';
 
@@ -47,7 +47,6 @@ type GateClient = ReturnType<typeof createGateClient>;
 
 interface GateRun {
   readonly github: GateClient;
-  readonly repository: string;
   readonly runUrl: string;
   readonly trustedCreator: string;
 }
@@ -73,15 +72,7 @@ function askClaude(prompt: string): unknown {
 }
 
 async function classify(github: GateClient, pullRequest: PullRequest): Promise<Decision> {
-  const files = await github.listFiles(pullRequest.number);
-  const current = await github.getPullRequest(pullRequest.number);
-  if (current.head.sha !== pullRequest.head.sha) {
-    return resolveDecision({
-      ruleDecision: requireTwoReviews(
-        `The head moved from ${pullRequest.head.sha} to ${current.head.sha} during classification.`
-      ),
-    });
-  }
+  const files = await github.listFiles(pullRequest.base.sha, pullRequest.head.sha);
   const baseBlobs = files.some(needsBaseBlob)
     ? await github.listBaseBlobs(pullRequest.base.sha)
     : undefined;
@@ -172,7 +163,6 @@ export async function runCheck({ pr }: CheckOptions): Promise<void> {
   try {
     const run: GateRun = {
       github,
-      repository,
       runUrl,
       trustedCreator: await github.getAppBotLogin(),
     };

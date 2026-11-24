@@ -5,7 +5,7 @@ import {
   type Review,
   commitPullRequestSchema,
   commitStatusSchema,
-  pullRequestFileSchema,
+  comparisonSchema,
   pullRequestSchema,
   reviewsPageSchema,
   treeSchema,
@@ -80,8 +80,8 @@ export function createGateClient(github: GitHubClient, repository: string) {
         tree.tree.filter(entry => entry.type === 'blob').map(entry => [entry.path, entry.sha])
       );
     },
-    listFiles(number: number) {
-      return listAll(`/pulls/${number}/files`, pullRequestFileSchema);
+    async listFiles(baseSha: string, headSha: string) {
+      return comparisonSchema.parse(await request(`/compare/${baseSha}...${headSha}`)).files;
     },
     listStatuses(sha: string) {
       return listAll(`/commits/${sha}/statuses`, commitStatusSchema);

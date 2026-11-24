@@ -25,7 +25,9 @@ pull_request, pull_request_review  ─▶ repo:review-gate-dispatch ─▶ workf
 | `app-token create` | signs the App JWT with KMS and writes an installation token to the step output |
 | `app-token revoke` | revokes the token in `GITHUB_TOKEN` when the job ends                          |
 
-Classifying applies the path rules (`rules.ts`) first and asks Claude, with no tools and the tier
+Classifying reads the diff between the base and head commits the check started with
+(`compare/<base>...<head>`), so changing the base or the head while it runs cannot change what is
+classified. It applies the path rules (`rules.ts`) first and asks Claude, with no tools and the tier
 schema, only when none decides. An answer of 1 review with low confidence counts as 2. Anything
 invalid fails closed to 2 reviews, and a fallback is retried on the next check. The decision is read back from the `review-gate/decision` status, and
 only one the gate App posted counts.
@@ -81,7 +83,8 @@ request stays blocked.
 
 The gate never checks out or runs pull request code. It reads the pull request and its reviews
 through the API and parses every response against a schema before anything acts on it. Claude only
-ever sees the pull request as data, and its answer is parsed against a schema too. A pull request
+ever sees the pull request as data, runs without the App token and the AWS and Actions credentials
+of the job, and its answer is parsed against a schema too. A pull request
 that changes `tools/`, `.github/` or the sensitive path list needs 2 approvals, because it changes
 the gate itself. The job has
 no access to the Actions cache (`cache-mode: none`, pnpm cache off in `setup-tools`), so nothing
@@ -101,10 +104,12 @@ signature is logged in CloudTrail.
    statuses read and write, Pull requests read, Metadata read; organization permission Members read) and install it
    on the repository only. Set the repository variable `REVIEW_GATE_APP_CLIENT_ID`.
 2. Create the environment `environment/mono-review-gate`, limited to the `dev` branch, with the variables
-   `AWS_ROLE_ARN`, `AWS_REGION` and `REVIEW_GATE_APP_KMS_KEY_ID`. It holds no secrets.
+   `AWS_ROLE_ARN`, `AWS_REGION` and `REVIEW_GATE_APP_KMS_KEY_ID`. It holds no secrets; the
+   classifier uses the repository secret `CLAUDE_CODE_OAUTH_TOKEN`.
 3. In AWS, import a private key generated for the App into an asymmetric KMS key (`RSA_2048`,
    `SIGN_VERIFY`), then delete the downloaded `.pem` and every other key on the App's settings page.
    The role in `AWS_ROLE_ARN` trusts only GitHub's OIDC subject
    `repo:leather-io/mono:environment:environment/mono-review-gate` and may only call `kms:Sign` on
    that key.
-4. In the `dev` ruleset, require the `review-gate` status from this App.
+4. In the `dev` ruleset, require the `review-gate` status from this App. A 1 review decision only
+   takes effect once the ruleset's own minimum is 1 approval; the gate then enforces the second.

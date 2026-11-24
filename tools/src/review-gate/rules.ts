@@ -68,7 +68,7 @@ export function buildPrompt(
   return `Classify this pull request. It is given as JSON.\n\n${JSON.stringify(payload, null, 2)}`;
 }
 
-export function requireTwoReviews(reason: string): Tier {
+function requireTwoReviews(reason: string): Tier {
   return { reviews: 2, confidence: 'high', reason, summary: reason };
 }
 

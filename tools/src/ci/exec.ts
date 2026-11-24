@@ -10,6 +10,7 @@ interface RunOptions {
   readonly cwd: string;
   readonly input?: string;
   readonly env?: NodeJS.ProcessEnv;
+  readonly timeoutMs?: number;
 }
 
 export type CommandRunner = (
@@ -23,12 +24,13 @@ const maxOutputBytes = 512 * 1024 * 1024;
 export function runCommand(
   command: string,
   args: readonly string[],
-  { cwd, input, env }: RunOptions
+  { cwd, input, env, timeoutMs }: RunOptions
 ): CommandResult {
   const result = spawnSync(command, args, {
     cwd,
     input,
     env: env ?? process.env,
+    timeout: timeoutMs,
     encoding: 'utf8',
     maxBuffer: maxOutputBytes,
   });
