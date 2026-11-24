@@ -8,7 +8,7 @@
 # `sudo gem install cocoapods -v 1.16.2`
 
 # Define required version
-REQUIRED_VERSION="1.16.2"
+REQUIRED_VERSION="1.17.0"
 
 # Check if pod is installed
 if ! command -v pod &>/dev/null; then
@@ -29,6 +29,6 @@ else
   echo "Required version: $REQUIRED_VERSION"
   echo "Gemfile is currently not supported by Expo."
   echo "To update your cocoapods, run:"
-  echo "\"sudo gem install cocoapods -v 1.16.2\""
+  echo "\"sudo gem install cocoapods -v 1.17.0\""
   exit 1
 fi

@@ -40,6 +40,42 @@
 
 ---
 
+## [6.116.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.115.0...@leather.io/extension-v6.116.0) (2026-11-19)
+
+
+### Features
+
+* **repo:** add the fix-issue skill and workflow to fix issues with review rounds and screenshots ([#2951](https://github.com/leather-io/mono/issues/2951)) ([b01d587](https://github.com/leather-io/mono/commit/b01d58734226e9ab11f6a1a3199de0af5274b429))
+* **web:** add the Leather design toolkit pilot ([#2928](https://github.com/leather-io/mono/issues/2928)) ([5e54522](https://github.com/leather-io/mono/commit/5e545227629cf1135b0297d0e75978d83311d6a4))
+* **web:** move leather.io into the web app with a rebuilt homepage ([#2931](https://github.com/leather-io/mono/issues/2931)) ([6c2d33f](https://github.com/leather-io/mono/commit/6c2d33fb8b458073b6ac3d380e8f08bc10494d4d))
+
+
+### Bug Fixes
+
+* bitcoinjs-lib audit ([#2959](https://github.com/leather-io/mono/issues/2959)) ([47f9582](https://github.com/leather-io/mono/commit/47f95825a09be6f4ae695e0a2c62bf3268febb30))
+* **extension:** correct nfts typo in receive caption ([#2941](https://github.com/leather-io/mono/issues/2941)) ([d15b9ae](https://github.com/leather-io/mono/commit/d15b9aee3278af9cab5318bc713b3cfb35211a64))
+* **extension:** hash structured message bytes for ledger display ([#2949](https://github.com/leather-io/mono/issues/2949)) ([34cb2d8](https://github.com/leather-io/mono/commit/34cb2d886d442ccde2150a6bd126544f90eedce1))
+* point docs links at docs.leather.io ([#2982](https://github.com/leather-io/mono/issues/2982)) ([ee55d71](https://github.com/leather-io/mono/commit/ee55d7154cef83f9d26164e0cf28f39bc0d4046f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.27.0
+    * @leather.io/bitcoin bumped to 0.42.2
+    * @leather.io/cms bumped to 1.7.0
+    * @leather.io/constants bumped to 0.41.1
+    * @leather.io/crypto bumped to 1.13.12
+    * @leather.io/features bumped to 1.8.7
+    * @leather.io/provider bumped to 1.7.7
+    * @leather.io/queries bumped to 0.18.0
+    * @leather.io/rpc bumped to 2.25.5
+    * @leather.io/services bumped to 1.67.0
+    * @leather.io/stacks bumped to 1.22.10
+    * @leather.io/ui bumped to 1.120.0
+    * @leather.io/utils bumped to 0.55.1
+
 ## [6.115.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.114.0...@leather.io/extension-v6.115.0) (2026-10-27)
 
 

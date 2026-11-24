@@ -20,6 +20,7 @@ import {
   createBlockchainActivityByTxIdQueryConfig,
   createBlockchainActivityInfiniteQueryConfig,
   createBlockchainActivityQueryConfig,
+  isActivityFeedTailEmpty,
 } from '@leather.io/queries';
 import type { ActivityResponse, UserSettings } from '@leather.io/services';
 import type { FormatAmountOptions } from '@leather.io/utils';
@@ -48,10 +49,13 @@ function selectBlockchainActivityViews(response: ActivityResponse) {
 }
 
 function selectBlockchainActivityFeedViews(data: InfiniteData<ActivityResponse>) {
-  return createBlockchainActivityViews(
-    data.pages.flatMap(page => page.items),
-    activityViewDeps
-  );
+  return {
+    views: createBlockchainActivityViews(
+      data.pages.flatMap(page => page.items),
+      activityViewDeps
+    ),
+    isTailEmpty: isActivityFeedTailEmpty(data),
+  };
 }
 
 function selectBlockchainActivityDetail(

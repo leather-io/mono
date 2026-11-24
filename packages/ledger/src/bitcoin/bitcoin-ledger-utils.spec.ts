@@ -1,16 +1,26 @@
+import { DeviceManagementKitBuilder } from '@ledgerhq/device-management-kit';
 import { DefaultDescriptorTemplate, DefaultWallet } from '@ledgerhq/device-signer-kit-bitcoin';
 import { HDKey } from '@scure/bip32';
 import * as btc from '@scure/btc-signer';
 import { Psbt } from 'bitcoinjs-lib';
 
+import { fakeLedgerSessionId } from '../app/ledger-app.test-utils';
+import type * as LedgerDeviceConnection from '../dmk/ledger-device-connection';
+import { connectLedgerDeviceToApp } from '../dmk/ledger-device-connection';
 import {
   addNativeSegwitSignaturesToPsbt,
   addTaprootInputSignaturesToPsbt,
+  connectLedgerBitcoinApp,
   createNativeSegwitWalletPolicyKey,
   createTaprootWalletPolicyKey,
   makeNativeSegwitDefaultWallet,
   makeTaprootDefaultWallet,
 } from './bitcoin-ledger-utils';
+
+vi.mock('../dmk/ledger-device-connection', async importOriginal => ({
+  ...(await importOriginal<typeof LedgerDeviceConnection>()),
+  connectLedgerDeviceToApp: vi.fn(() => Promise.resolve(fakeLedgerSessionId)),
+}));
 
 const masterFingerprint = '844b93a0';
 
@@ -136,5 +146,24 @@ describe(addTaprootInputSignaturesToPsbt.name, () => {
 
     expect(psbt.data.inputs[0].tapKeySig).toEqual(signature);
     expect(psbt.data.inputs[1].tapKeySig).toBeUndefined();
+  });
+});
+
+describe(connectLedgerBitcoinApp.name, () => {
+  test.each([
+    ['mainnet', 'Bitcoin'],
+    ['testnet', 'Bitcoin Test'],
+    ['regtest', 'Bitcoin Test'],
+    ['signet', 'Bitcoin Test'],
+  ] as const)('opens the %s bitcoin app as %s', async (network, appName) => {
+    const dmk = new DeviceManagementKitBuilder().build();
+
+    await connectLedgerBitcoinApp(dmk, network)();
+
+    expect(vi.mocked(connectLedgerDeviceToApp)).toHaveBeenLastCalledWith(
+      dmk,
+      appName,
+      expect.anything()
+    );
   });
 });

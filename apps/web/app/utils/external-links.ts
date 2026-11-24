@@ -4,9 +4,18 @@ import { analytics } from '~/utils/analytics/analytics';
 
 import { HIRO_EXPLORER_URL } from '@leather.io/constants';
 
+/** Reports an external link click; use for plain `<a target="_blank">` links too. */
+export function trackExternalLinkClick(url: string, properties?: Record<string, string>) {
+  analytics.untypedTrack('external_link_clicked', {
+    url,
+    location: window.location.href,
+    ...properties,
+  });
+}
+
 export function openExternalLink(url: string) {
   if (!isWebUri(url)) return;
-  analytics.untypedTrack('external_link_clicked', { url, location: window.location.href });
+  trackExternalLinkClick(url);
   return window.open(url, '_blank', 'noopener,noreferrer');
 }
 

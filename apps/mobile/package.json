@@ -1,6 +1,6 @@
 {
   "name": "@leather.io/mobile",
-  "version": "2.116.0",
+  "version": "2.117.0",
   "type": "module",
   "scripts": {
     "1password:env:dev": "op read \"op://leather-cli/env-content/dev\" > .env",
@@ -67,7 +67,6 @@
     "@shopify/restyle": "2.4.2",
     "@stacks/common": "7.0.2",
     "@stacks/network": "7.0.2",
-    "@stacks/stacks-blockchain-api-types": "7.14.1",
     "@stacks/transactions": "7.5.0",
     "@tanstack/react-query": "5.85.5",
     "@types/react-dom": "19.1.11",
