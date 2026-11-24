@@ -6,15 +6,14 @@ import {
 } from '@leather.io/models';
 
 export interface ConfirmedTransactionNonce {
-  nonce: number;
-  sender_address: string;
+  sender: { address: string; nonce: number };
 }
 
 function confirmedTxsNoncesIncludesPossibleClientFallbackNonce(
   clientFallbackNonce: number,
   confirmedTransactions: ConfirmedTransactionNonce[]
 ) {
-  return confirmedTransactions.find(tx => tx.nonce === clientFallbackNonce);
+  return confirmedTransactions.find(tx => tx.sender.nonce === clientFallbackNonce);
 }
 
 function apiSuggestsImpossibleZeroNonceWithConfirmedTxs(
@@ -92,8 +91,8 @@ export function parseAccountNoncesResponse({
     ?.map(tx => tx.sender.nonce);
   const lastPendingTxNonce = pendingTxsNonces[0];
   const confirmedTxsNonces = confirmedTransactions
-    .filter(tx => tx.sender_address === senderAddress)
-    ?.map(tx => tx.nonce);
+    .filter(tx => tx.sender.address === senderAddress)
+    ?.map(tx => tx.sender.nonce);
   const lastConfirmedTxNonceIncremented = confirmedTxsNonces.length && confirmedTxsNonces[0] + 1;
   const lastPendingTxNonceIncremented = lastPendingTxNonce + 1;
   const pendingTxsNoncesIncludesApiPossibleNextNonce = pendingTxsNonces.includes(possibleNextNonce);

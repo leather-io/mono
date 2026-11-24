@@ -1,6 +1,5 @@
 import { Container, type Newable } from 'inversify';
 
-import { ActivityService } from './activity/activity.service';
 import { BlockchainActivityService } from './activity/blockchain-activity.service';
 import { AssetListService } from './asset-list/asset-list.service';
 import { FungibleAssetInfoService } from './assets/fungible-asset-info.service';
@@ -121,9 +120,6 @@ export function getStacksTransactionsService() {
 }
 export function getBitcoinTransactionsService() {
   return getServicesContainer().get(BitcoinTransactionsService);
-}
-export function getActivityService() {
-  return getServicesContainer().get(ActivityService);
 }
 export function getBlockchainActivityService() {
   return getServicesContainer().get(BlockchainActivityService);

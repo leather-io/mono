@@ -58,10 +58,7 @@ export function ConnectLedgerErrorLayout(props: ConnectLedgerErrorLayoutProps) {
         <styled.span color="ink.text-subdued" textStyle="label.03">
           If the problem persists, check our
         </styled.span>
-        <Link
-          href="https://leather.gitbook.io/guides/securing-the-wallet/using-ledger-with-leather"
-          size="sm"
-        >
+        <Link href="https://docs.leather.io/get-started/connect-ledger" size="sm">
           Support Page
         </Link>
       </HStack>

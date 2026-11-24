@@ -1,6 +1,11 @@
 import { contractPrincipalCV, noneCV, serializeCV, uintCV } from '@stacks/transactions';
+import { createStacksApiClient } from '~/utils/stacks-api-client';
 
-import { convertPox5Transaction, isPox5MutationCall } from './get-pending-pox5-txs';
+import {
+  convertPox5Transaction,
+  createPox5PendingTxQueryKey,
+  isPox5MutationCall,
+} from './get-pending-pox5-txs';
 
 const pox5ContractId = 'SP000000000000000000002Q6VF78.pox-5';
 const signerManagerContractId = 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.signer-manager';
@@ -187,5 +192,19 @@ describe(convertPox5Transaction.name, () => {
 
   test('throws on unexpected function names', () => {
     expect(() => convertPox5Transaction(delegateStxTx)).toThrowError();
+  });
+});
+
+describe(createPox5PendingTxQueryKey.name, () => {
+  test('keys the pending tx query by address, pox-5 contract and stacks client only', () => {
+    const stacksClient = createStacksApiClient('https://api.mainnet.hiro.so');
+    const address = 'SP32YZPY7SEF52D2R4AD103SCDP4E7ATVBF1CTEST';
+
+    expect(createPox5PendingTxQueryKey({ address, pox5ContractId, stacksClient })).toEqual([
+      'pox5-pending-tx',
+      address,
+      pox5ContractId,
+      stacksClient,
+    ]);
   });
 });

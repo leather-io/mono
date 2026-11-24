@@ -1,29 +1,20 @@
-import { useLoaderData } from 'react-router';
-
 import { styled } from 'leather-styles/jsx';
-import { type loader } from '~/pages/sbtc/sbtc.route';
+import { sbtcFaq } from '~/pages/sbtc/sbtc.data';
 import { getPostHref } from '~/utils/post-link';
 import { sanitizeContent } from '~/utils/sanitize-content';
 
 import { Accordion, Link } from '@leather.io/ui';
 
 export function SbtcRewardsFaq() {
-  const { sbtcFaq } = useLoaderData<typeof loader>();
-
-  if (!sbtcFaq) {
-    return null;
-  }
-
-  const { faqBuilder } = sbtcFaq;
   return (
     <styled.div mb="space.07">
       <Accordion.Root
         type="single"
-        defaultValue={faqBuilder.length ? faqBuilder[0]._id : undefined}
+        defaultValue={sbtcFaq.length ? sbtcFaq[0].slug : undefined}
         collapsible
       >
-        {faqBuilder.map(post => (
-          <Accordion.Item value={post._id} key={post._id}>
+        {sbtcFaq.map(post => (
+          <Accordion.Item value={post.slug} key={post.slug}>
             <Accordion.Trigger>{sanitizeContent(post.question)}</Accordion.Trigger>
             <Accordion.Content>
               <styled.div
@@ -35,7 +26,7 @@ export function SbtcRewardsFaq() {
                 <br />
                 <br />
                 <Link
-                  href={getPostHref(post.legacyPost?.slug.current)}
+                  href={getPostHref(post.slug)}
                   style={{ fontSize: 'inherit', whiteSpace: 'nowrap' }}
                 >
                   Learn more
