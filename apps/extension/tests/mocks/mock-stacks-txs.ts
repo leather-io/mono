@@ -114,9 +114,6 @@ export async function mockWildcardStacksTxsRequests(page: Page | BrowserContext)
     page.route('**hiro.so/extended/v3/principals/*/mempool/transactions**', route =>
       route.fulfill({ json: emptyPrincipalTxsResponse })
     ),
-    page.route('**hiro.so/extended/v1/address/*/assets**', route =>
-      route.fulfill({ json: { limit: 100, offset: 0, total: 0, results: [] } })
-    ),
     page.route('**hiro.so/extended/v3/principals/*/transactions**', route =>
       route.fulfill({ json: emptyPrincipalTxsResponse })
     ),

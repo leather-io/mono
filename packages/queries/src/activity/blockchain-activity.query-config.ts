@@ -1,4 +1,5 @@
 import {
+  type InfiniteData,
   type QueryFunctionContext,
   type UseQueryOptions,
   infiniteQueryOptions,
@@ -88,4 +89,9 @@ export function createBlockchainActivityInfiniteQueryConfig(
     getNextPageParam: (lastPage: ActivityResponse) => lastPage.nextCursor,
     ...activityQueryOptions,
   });
+}
+
+export function isActivityFeedTailEmpty(data: InfiniteData<ActivityResponse>) {
+  const lastPage = data.pages.at(-1);
+  return lastPage !== undefined && lastPage.items.length === 0 && lastPage.hasMore;
 }

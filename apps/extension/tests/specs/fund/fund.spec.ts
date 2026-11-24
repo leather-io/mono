@@ -8,7 +8,6 @@ import { mockTestAccountStacksTxsRequestsWithPendingTx } from '@tests/mocks/mock
 import { mockMainnetTestAccountEmptyUtxosRequests } from '@tests/mocks/mock-utxos';
 
 import { test } from '../../fixtures/fixtures';
-import { mockEmptyStacksBalancesRequest } from '../../mocks/mock-stacks-balances';
 import { mockEmptyStacksPrincipalBalancesRequest } from '../../mocks/mock-stacks-principal-balances';
 import { HomePageSelectors } from '../../selectors/home.selectors';
 import { CoreAssetSelectors } from '../../selectors/mocked-tokens.selectors';
@@ -36,7 +35,6 @@ test.describe('Fund', () => {
   test.describe('wallet with activity', () => {
     test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
       await globalPage.setupAndUseApiCalls(extensionId);
-      await mockEmptyStacksBalancesRequest(page);
       await mockEmptyStacksPrincipalBalancesRequest(page);
       await mockTestAccountStacksTxsRequestsWithPendingTx(page);
       await mockEmptyLeatherApiUtxosRequest(page);
@@ -55,7 +53,6 @@ test.describe('Fund', () => {
   test.describe('empty wallet', () => {
     test.beforeEach(async ({ extensionId, globalPage, onboardingPage, page }) => {
       await globalPage.setupAndUseApiCalls(extensionId);
-      await mockEmptyStacksBalancesRequest(page);
       await mockEmptyStacksPrincipalBalancesRequest(page);
       await mockMainnetTestAccountEmptyUtxosRequests(page);
       await onboardingPage.signInWithTestAccount(extensionId);
