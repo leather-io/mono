@@ -1,13 +1,5 @@
 import { Command } from 'commander';
-import {
-  chmodSync,
-  existsSync,
-  mkdtempSync,
-  readFileSync,
-  realpathSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs';
+import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
@@ -18,9 +10,7 @@ import { registerReviewGateCommands } from './review-gate.js';
 const apiUrl = 'https://api.github.com';
 const repoName = 'leather-io/mono';
 const runUrl = 'https://github.com/leather-io/mono/actions/runs/1';
-const gateBot = 'review-gate-app[bot]';
 const headSha = 'head-sha';
-const baseSha = 'base-sha';
 const author = 'author';
 const reviewer = 'reviewer';
 const headRef = 'fix/footer-copy';
@@ -28,6 +18,8 @@ const fixIssueBot = 'leather-fix-issue[bot]';
 const fixIssueRunId = '987';
 const dispatcher = 'dispatcher';
 const reviewersTeamId = 19686212;
+const gateBot = 'review-gate-app[bot]';
+const baseSha = 'base-sha';
 const sensitiveFile = 'packages/crypto/src/derive.ts';
 const plainFile = 'apps/web/app/components/footer.tsx';
 
@@ -37,8 +29,6 @@ interface FakeFile {
   readonly additions: number;
   readonly deletions: number;
   readonly patch?: string;
-  readonly previous_filename?: string;
-  readonly sha?: string;
 }
 
 interface FakePullRequest {
@@ -55,24 +45,25 @@ interface FakePullRequest {
   readonly base: { readonly sha: string; readonly ref: string };
 }
 
-interface FakeReview {
+interface FakeComment {
   readonly id: number;
+  readonly user: { readonly login: string } | null;
+  body: string;
+}
+
+interface FakeReview {
   readonly user: { readonly login: string; readonly type: string } | null;
   readonly state: string;
   readonly commit_id: string | null;
+  readonly teams: readonly number[];
 }
 
 interface FakeStatus {
   readonly context: string;
   readonly state: string;
-  readonly description: string | null;
-  readonly creator: { readonly login: string } | null;
-}
-
-interface FakeComment {
-  readonly id: number;
-  readonly user: { readonly login: string } | null;
-  body: string;
+  readonly description: string;
+  readonly target_url: string;
+  readonly creator: { readonly login: string };
 }
 
 interface FakeCommitPullRequest {
@@ -91,17 +82,13 @@ type Override = (method: string, path: string) => Response | undefined;
 interface FakeGitHub {
   readonly pullRequests: Map<number, FakePullRequest>;
   readonly files: Map<number, FakeFile[]>;
+  readonly comments: Map<number, FakeComment[]>;
   readonly reviews: Map<number, FakeReview[]>;
   readonly statuses: Map<string, FakeStatus[]>;
-  readonly comments: Map<number, FakeComment[]>;
   readonly commitPullRequests: Map<string, FakeCommitPullRequest[]>;
-  readonly permissions: Map<string, string>;
-  readonly baseBlobs: Map<string, string>;
   readonly workflowRuns: Map<string, unknown>;
-  readonly requiredTeams: number[];
-  readonly teamReviews: Map<number, number[]>;
   readonly calls: ApiCall[];
-  readonly targetUrls: string[];
+  appLogin: string;
   override: Override;
 }
 
@@ -112,6 +99,7 @@ const newStatusSchema = z.object({
   target_url: z.string(),
 });
 const commentBodySchema = z.object({ body: z.string() });
+const graphqlBodySchema = z.object({ query: z.string() });
 
 function json(value: unknown, status = 200): Response {
   return new Response(JSON.stringify(value), { status });
@@ -130,15 +118,25 @@ function pullRequest(number: number, overrides: Partial<FakePullRequest> = {}): 
   };
 }
 
-function forkPullRequest(number: number, sha: string): FakePullRequest {
-  return pullRequest(number, { head: { sha, ref: headRef, repo: { full_name: 'someone/mono' } } });
-}
-
 function fixIssuePullRequest(number: number): FakePullRequest {
   return pullRequest(number, {
     user: { login: fixIssueBot, type: 'Bot' },
-    head: { sha: headSha, ref: `bot/fix-issue-12-${fixIssueRunId}`, repo: { full_name: repoName } },
+    head: {
+      sha: headSha,
+      ref: `bot/fix-issue-12-${fixIssueRunId}`,
+      repo: { full_name: repoName },
+    },
   });
+}
+
+function changedFile(filename: string): FakeFile {
+  return {
+    filename,
+    status: 'modified',
+    additions: 1,
+    deletions: 1,
+    patch: '@@ -1 +1 @@\n-old\n+new',
+  };
 }
 
 function fixIssueRun(dispatcher: string) {
@@ -146,38 +144,27 @@ function fixIssueRun(dispatcher: string) {
     path: '.github/workflows/repo:fix-issue.yml',
     event: 'workflow_dispatch',
     display_title: 'fix-issue: #12',
-    html_url: `https://github.com/${repoName}/actions/runs/${fixIssueRunId}`,
     actor: { login: dispatcher },
     triggering_actor: { login: dispatcher },
   };
 }
 
-function changedFile(filename: string, overrides: Partial<FakeFile> = {}): FakeFile {
-  return {
-    filename,
-    status: 'modified',
-    additions: 1,
-    deletions: 1,
-    patch: '@@ -1 +1 @@\n-old\n+new',
-    ...overrides,
-  };
-}
-
-let nextReviewId = 1;
-
 function approval(login: string, overrides: Partial<FakeReview> = {}): FakeReview {
-  nextReviewId += 1;
   return {
-    id: nextReviewId,
     user: { login, type: 'User' },
     state: 'APPROVED',
     commit_id: headSha,
+    teams: [reviewersTeamId],
     ...overrides,
   };
 }
 
 function gateStatus(context: string, state: string, description: string): FakeStatus {
-  return { context, state, description, creator: { login: gateBot } };
+  return { context, state, description, target_url: runUrl, creator: { login: gateBot } };
+}
+
+function decision(description: string): FakeStatus {
+  return gateStatus('review-gate/decision', 'success', description);
 }
 
 function readBody(init: RequestInit | undefined): unknown {
@@ -214,29 +201,20 @@ const routes: readonly FakeRoute[] = [
   },
   {
     method: 'GET',
-    pattern: /^\/(pulls)$/,
-    handle(github, _param, { url }) {
-      const base = url.searchParams.get('base');
-      return list(
-        url,
-        [...github.pullRequests.values()].filter(
-          item => item.state === 'open' && item.base.ref === base
-        )
-      );
+    pattern: /^\/commits\/([^/]+)\/pulls$/,
+    handle(github, sha, { url }) {
+      return list(url, github.commitPullRequests.get(sha) ?? []);
     },
   },
   {
-    method: 'GET',
-    pattern: /^\/pulls\/(\d+)\/files$/,
-    handle(github, number, { url }) {
-      return list(url, github.files.get(Number(number)) ?? []);
-    },
-  },
-  {
-    method: 'GET',
-    pattern: /^\/pulls\/(\d+)\/reviews$/,
-    handle(github, number, { url }) {
-      return list(url, github.reviews.get(Number(number)) ?? []);
+    method: 'POST',
+    pattern: /^\/statuses\/([^/]+)$/,
+    handle(github, sha, { body }) {
+      github.statuses.set(sha, [
+        { ...newStatusSchema.parse(body), creator: { login: gateBot } },
+        ...(github.statuses.get(sha) ?? []),
+      ]);
+      return json({});
     },
   },
   {
@@ -248,22 +226,9 @@ const routes: readonly FakeRoute[] = [
   },
   {
     method: 'GET',
-    pattern: /^\/commits\/([^/]+)\/pulls$/,
-    handle(github, sha, { url }) {
-      return list(url, github.commitPullRequests.get(sha) ?? []);
-    },
-  },
-  {
-    method: 'POST',
-    pattern: /^\/statuses\/([^/]+)$/,
-    handle(github, sha, { body }) {
-      const { context, state, description, target_url } = newStatusSchema.parse(body);
-      github.targetUrls.push(target_url);
-      github.statuses.set(sha, [
-        { context, state, description, creator: { login: gateBot } },
-        ...(github.statuses.get(sha) ?? []),
-      ]);
-      return json({});
+    pattern: /^\/pulls\/(\d+)\/files$/,
+    handle(github, number, { url }) {
+      return list(url, github.files.get(Number(number)) ?? []);
     },
   },
   {
@@ -278,10 +243,13 @@ const routes: readonly FakeRoute[] = [
     pattern: /^\/issues\/(\d+)\/comments$/,
     handle(github, number, { body }) {
       const existing = github.comments.get(Number(number)) ?? [];
-      const comment = commentBodySchema.parse(body);
       github.comments.set(Number(number), [
         ...existing,
-        { id: 1000 + existing.length, user: { login: gateBot }, body: comment.body },
+        {
+          id: 1000 + existing.length,
+          user: { login: gateBot },
+          body: commentBodySchema.parse(body).body,
+        },
       ]);
       return json({});
     },
@@ -298,58 +266,20 @@ const routes: readonly FakeRoute[] = [
   },
   {
     method: 'GET',
-    pattern: /^\/collaborators\/([^/]+)\/permission$/,
-    handle(github, login) {
-      return json({ permission: github.permissions.get(decodeURIComponent(login)) ?? 'read' });
-    },
-  },
-  {
-    method: 'GET',
     pattern: /^\/actions\/runs\/(\d+)$/,
     handle(github, id) {
       const found = github.workflowRuns.get(id);
       return found ? json(found) : notFound();
     },
   },
-  {
-    method: 'GET',
-    pattern: /^\/rules\/branches\/(.+)$/,
-    handle(github) {
-      return json([
-        { type: 'deletion', parameters: null },
-        {
-          type: 'pull_request',
-          parameters: {
-            required_reviewers: github.requiredTeams.map(id => ({
-              minimum_approvals: 2,
-              reviewer: { id, type: 'Team' },
-            })),
-          },
-        },
-      ]);
-    },
-  },
-  {
-    method: 'GET',
-    pattern: /^\/git\/trees\/([^/]+)$/,
-    handle(github, sha) {
-      if (sha !== baseSha) return notFound();
-      return json({
-        truncated: false,
-        tree: [...github.baseBlobs].map(([blobPath, blobSha]) => ({
-          path: blobPath,
-          type: 'blob',
-          sha: blobSha,
-        })),
-      });
-    },
-  },
 ];
 
-function teamReviews(github: FakeGitHub): Response {
-  const nodes = [...github.teamReviews].map(([databaseId, teams]) => ({
-    databaseId,
-    onBehalfOf: { nodes: teams.map(team => ({ databaseId: team })) },
+function reviews(github: FakeGitHub): Response {
+  const nodes = [...github.reviews.values()].flat().map(review => ({
+    state: review.state,
+    author: review.user && { login: review.user.login, __typename: review.user.type },
+    commit: review.commit_id === null ? null : { oid: review.commit_id },
+    onBehalfOf: { nodes: review.teams.map(team => ({ databaseId: team })) },
   }));
   return json({
     data: {
@@ -361,7 +291,12 @@ function teamReviews(github: FakeGitHub): Response {
 }
 
 function route(github: FakeGitHub, method: string, url: URL, init?: RequestInit): Response {
-  if (method === 'POST' && url.pathname === '/graphql') return teamReviews(github);
+  if (method === 'POST' && url.pathname === '/graphql') {
+    const { query } = graphqlBodySchema.parse(readBody(init));
+    return query.includes('viewer')
+      ? json({ data: { viewer: { login: github.appLogin } } })
+      : reviews(github);
+  }
   const prefix = `/repos/${repoName}`;
   const repoPath = url.pathname.startsWith(prefix) ? url.pathname.slice(prefix.length) : '';
   for (const fakeRoute of routes) {
@@ -376,17 +311,13 @@ function stubGitHub(): FakeGitHub {
   const github: FakeGitHub = {
     pullRequests: new Map(),
     files: new Map(),
+    comments: new Map(),
     reviews: new Map(),
     statuses: new Map(),
-    comments: new Map(),
     commitPullRequests: new Map(),
-    permissions: new Map([[reviewer, 'write']]),
-    baseBlobs: new Map(),
     workflowRuns: new Map(),
-    requiredTeams: [],
-    teamReviews: new Map(),
+    appLogin: gateBot,
     calls: [],
-    targetUrls: [],
     override: () => undefined,
   };
   vi.stubGlobal('fetch', (input: string, init?: RequestInit) => {
@@ -415,17 +346,11 @@ let prompt = '';
 process.stdin.setEncoding('utf8');
 process.stdin.on('data', chunk => { prompt += chunk; });
 process.stdin.on('end', () => {
-  fs.writeFileSync(process.env.FAKE_CLAUDE_LOG, JSON.stringify({ args: process.argv.slice(2), prompt, cwd: process.cwd() }));
+  fs.writeFileSync(process.env.FAKE_CLAUDE_LOG, JSON.stringify({ args: process.argv.slice(2), prompt }));
   process.stdout.write(process.env.FAKE_CLAUDE_OUTPUT ?? '');
   process.exit(Number(process.env.FAKE_CLAUDE_EXIT ?? '0'));
 });
 `;
-
-const claudeCallSchema = z.object({
-  args: z.array(z.string()),
-  prompt: z.string(),
-  cwd: z.string(),
-});
 
 function claudeAnswers(answer: unknown) {
   vi.stubEnv('FAKE_CLAUDE_OUTPUT', JSON.stringify({ is_error: false, structured_output: answer }));
@@ -445,14 +370,6 @@ describe('review-gate commands', () => {
     const claudeBin = path.join(scratch, 'claude');
     writeFileSync(claudeBin, fakeClaudeScript);
     chmodSync(claudeBin, 0o755);
-    logs = [];
-    vi.spyOn(console, 'log').mockImplementation((line: string) => logs.push(line));
-    vi.stubEnv('GITHUB_API_URL', apiUrl);
-    vi.stubEnv('GITHUB_TOKEN', 'ghs_gate_token');
-    vi.stubEnv('GITHUB_REPOSITORY', repoName);
-    vi.stubEnv('GITHUB_STEP_SUMMARY', summaryFile);
-    vi.stubEnv('GATE_APP_SLUG', 'review-gate-app');
-    vi.stubEnv('RUN_URL', runUrl);
     vi.stubEnv('RUNNER_TEMP', scratch);
     vi.stubEnv('CLAUDE_BIN', claudeBin);
     vi.stubEnv('FAKE_CLAUDE_LOG', claudeLog);
@@ -463,6 +380,13 @@ describe('review-gate commands', () => {
       reason: 'Copy change in the web footer.',
       summary: 'Footer copy',
     });
+    logs = [];
+    vi.spyOn(console, 'log').mockImplementation((line: string) => logs.push(line));
+    vi.stubEnv('GITHUB_API_URL', apiUrl);
+    vi.stubEnv('GITHUB_TOKEN', 'ghs_gate_token');
+    vi.stubEnv('GITHUB_REPOSITORY', repoName);
+    vi.stubEnv('GITHUB_STEP_SUMMARY', summaryFile);
+    vi.stubEnv('RUN_URL', runUrl);
     github = stubGitHub();
   });
 
@@ -473,25 +397,19 @@ describe('review-gate commands', () => {
     vi.restoreAllMocks();
   });
 
-  function statusesOn(sha: string, context: string): FakeStatus[] {
-    return (github.statuses.get(sha) ?? []).filter(status => status.context === context);
-  }
-
   function latestStatus(sha: string, context: string): FakeStatus | undefined {
-    return statusesOn(sha, context)[0];
-  }
-
-  function readClaudeCall() {
-    return claudeCallSchema.parse(JSON.parse(readFileSync(claudeLog, 'utf8')));
+    return github.statuses.get(sha)?.find(status => status.context === context);
   }
 
   function summary(): string {
     return readFileSync(summaryFile, 'utf8');
   }
 
-  test('registers the check and sweep steps', () => {
+  test('registers the check and app token steps', () => {
     const gate = program().commands.find(command => command.name() === 'review-gate');
-    expect(gate?.commands.map(command => command.name())).toEqual(['check', 'sweep']);
+    expect(gate?.commands.map(command => command.name())).toEqual(['check', 'app-token']);
+    const appToken = gate?.commands.find(command => command.name() === 'app-token');
+    expect(appToken?.commands.map(command => command.name())).toEqual(['create', 'revoke']);
   });
 
   describe('check', () => {
@@ -515,235 +433,19 @@ describe('review-gate commands', () => {
       expect(summary()).toContain('#8: skipped, it is open and targets main.');
     });
 
-    test('lets Claude decide a small change, then passes with one approval from a writer', async () => {
+    test('counts only the latest approvals of reviewers on the head who are not the author', async () => {
       github.pullRequests.set(7, pullRequest(7));
-      github.files.set(7, [changedFile(plainFile)]);
-      github.reviews.set(7, [approval(reviewer)]);
-
-      await run(['check', '--pr', '7']);
-
-      const call = readClaudeCall();
-      expect(call.prompt).toContain('Tweak the footer copy');
-      expect(call.prompt).toContain(plainFile);
-      expect(call.args).toContain('--system-prompt-file');
-      expect(call.cwd.startsWith(realpathSync(scratch))).toBe(true);
-      expect(latestStatus(headSha, 'review-gate/decision')).toEqual(
-        gateStatus('review-gate/decision', 'success', '1 review required: Footer copy')
-      );
-      expect(statusesOn(headSha, 'review-gate').map(status => status.state)).toEqual([
-        'success',
-        'pending',
-      ]);
-      expect(latestStatus(headSha, 'review-gate')?.description).toBe('1 of 1 required approvals');
-      expect(github.comments.get(7)?.map(comment => comment.body)).toEqual([
-        expect.stringMatching(
-          /^### Review gate: 1 review required\n\nCopy change in the web footer\./
-        ),
-      ]);
-      expect(github.comments.get(7)?.[0]?.body).toContain(`for ${headSha}. [Run](${runUrl})`);
-      expect(new Set(github.targetUrls)).toEqual(new Set([runUrl]));
-    });
-
-    test('requires two reviews by path rule for a sensitive file without asking Claude', async () => {
-      github.pullRequests.set(7, pullRequest(7));
-      github.files.set(7, [changedFile(sensitiveFile)]);
-      github.reviews.set(7, [approval(reviewer)]);
-
-      await run(['check', '--pr', '7']);
-
-      expect(existsSync(claudeLog)).toBe(false);
-      expect(latestStatus(headSha, 'review-gate/decision')?.description).toBe(
-        `2 reviews required: Touches sensitive paths: ${sensitiveFile}.`
-      );
-      expect(latestStatus(headSha, 'review-gate')).toEqual(
-        gateStatus('review-gate', 'failure', '1 of 2 required approvals')
-      );
-      expect(github.comments.get(7)?.[0]?.body).toContain('Decided by path rules');
-    });
-
-    test('looks up the base tree when a rename hides its diff', async () => {
-      github.pullRequests.set(7, pullRequest(7));
-      github.files.set(7, [
-        changedFile('apps/web/app/components/new-footer.tsx', {
-          status: 'renamed',
-          previous_filename: plainFile,
-          additions: 0,
-          deletions: 0,
-          patch: undefined,
-          sha: 'renamed-blob',
-        }),
-      ]);
-      github.baseBlobs.set(plainFile, 'different-blob');
-
-      await run(['check', '--pr', '7']);
-
-      expect(github.calls).toContainEqual({ method: 'GET', path: `/git/trees/${baseSha}` });
-      expect(existsSync(claudeLog)).toBe(false);
-      expect(latestStatus(headSha, 'review-gate/decision')?.description).toBe(
-        '2 reviews required: GitHub omits the diff for apps/web/app/components/new-footer.tsx.'
-      );
-    });
-
-    test('fails closed to two reviews when Claude exits without an answer', async () => {
-      vi.stubEnv('FAKE_CLAUDE_EXIT', '1');
-      vi.stubEnv('FAKE_CLAUDE_OUTPUT', 'not json');
-      github.pullRequests.set(7, pullRequest(7));
-      github.files.set(7, [changedFile(plainFile)]);
-
-      await run(['check', '--pr', '7']);
-
-      expect(logs).toContainEqual(expect.stringMatching(/^::warning::Claude did not answer/));
-      expect(latestStatus(headSha, 'review-gate/decision')?.description).toBe(
-        '2 reviews required (fallback): Claude returned no answer, so 2 reviews are required.'
-      );
-      expect(latestStatus(headSha, 'review-gate')?.description).toBe('0 of 2 required approvals');
-    });
-
-    test('fails closed to two reviews when Claude answers outside the schema', async () => {
-      claudeAnswers({ reviews: 0, confidence: 'high', reason: 'none', summary: 'none' });
-      github.pullRequests.set(7, pullRequest(7));
-      github.files.set(7, [changedFile(plainFile)]);
-
-      await run(['check', '--pr', '7']);
-
-      expect(latestStatus(headSha, 'review-gate/decision')?.description).toMatch(
-        /^2 reviews required \(fallback\): Claude's answer was invalid/
-      );
-    });
-
-    test('requires two reviews when the head moves during classification', async () => {
-      github.pullRequests.set(7, pullRequest(7));
-      github.files.set(7, [changedFile(plainFile)]);
-      let reads = 0;
-      github.override = (method, requestPath) => {
-        if (method !== 'GET' || requestPath !== '/pulls/7') return undefined;
-        reads += 1;
-        return reads > 1
-          ? json(
-              pullRequest(7, {
-                head: { sha: 'newer-sha', ref: headRef, repo: { full_name: repoName } },
-              })
-            )
-          : undefined;
-      };
-
-      await run(['check', '--pr', '7']);
-
-      expect(existsSync(claudeLog)).toBe(false);
-      expect(latestStatus(headSha, 'review-gate/decision')?.description).toBe(
-        `2 reviews required: The head moved from ${headSha} to newer-sha during classification.`
-      );
-    });
-
-    test('reuses an answered decision on the head instead of classifying again', async () => {
-      github.pullRequests.set(7, pullRequest(7));
-      github.statuses.set(headSha, [
-        gateStatus('review-gate/decision', 'success', '1 review required: Footer copy'),
-      ]);
-      github.reviews.set(7, [approval(reviewer)]);
-
-      await run(['check', '--pr', '7']);
-
-      expect(github.calls).not.toContainEqual({ method: 'GET', path: '/pulls/7/files' });
-      expect(existsSync(claudeLog)).toBe(false);
-      expect(statusesOn(headSha, 'review-gate/decision')).toHaveLength(1);
-      expect(latestStatus(headSha, 'review-gate')?.description).toBe('1 of 1 required approvals');
-    });
-
-    test('classifies again when the earlier decision was a fallback', async () => {
-      github.pullRequests.set(7, pullRequest(7));
-      github.files.set(7, [changedFile(plainFile)]);
-      github.statuses.set(headSha, [
-        gateStatus(
-          'review-gate/decision',
-          'success',
-          '2 reviews required (fallback): Claude returned no answer, so 2 reviews are required.'
-        ),
-      ]);
-
-      await run(['check', '--pr', '7']);
-
-      expect(existsSync(claudeLog)).toBe(true);
-      expect(latestStatus(headSha, 'review-gate/decision')?.description).toBe(
-        '1 review required: Footer copy'
-      );
-    });
-
-    test('ignores a one-review decision that someone other than the gate app posted', async () => {
-      github.pullRequests.set(7, pullRequest(7));
-      github.files.set(7, [changedFile(sensitiveFile)]);
-      github.statuses.set(headSha, [
-        {
-          context: 'review-gate/decision',
-          state: 'success',
-          description: '1 review required: trust me',
-          creator: { login: 'mallory' },
-        },
-      ]);
-      github.reviews.set(7, [approval(reviewer)]);
-
-      await run(['check', '--pr', '7']);
-
-      expect(latestStatus(headSha, 'review-gate/decision')?.description).toMatch(
-        /^2 reviews required: Touches sensitive paths/
-      );
-      expect(latestStatus(headSha, 'review-gate')?.description).toBe('1 of 2 required approvals');
-    });
-
-    test('updates its own decision comment and leaves look-alikes from others alone', async () => {
-      github.pullRequests.set(7, pullRequest(7));
-      github.files.set(7, [changedFile(plainFile)]);
-      github.comments.set(7, [
-        { id: 1, user: { login: 'mallory' }, body: '### Review gate: 1 review required' },
-        { id: 2, user: { login: gateBot }, body: '### Review gate: 2 reviews required\n\nold' },
-      ]);
-
-      await run(['check', '--pr', '7']);
-
-      expect(github.calls).toContainEqual({ method: 'PATCH', path: '/issues/comments/2' });
-      expect(github.calls).not.toContainEqual({ method: 'POST', path: '/issues/7/comments' });
-      expect(github.comments.get(7)?.map(comment => comment.body)).toEqual([
-        '### Review gate: 1 review required',
-        expect.stringMatching(/^### Review gate: 1 review required\n\nCopy change/),
-      ]);
-    });
-
-    test('still counts approvals when the decision comment cannot be written', async () => {
-      github.pullRequests.set(7, pullRequest(7));
-      github.files.set(7, [changedFile(plainFile)]);
-      github.reviews.set(7, [approval(reviewer)]);
-      github.override = (method, requestPath) =>
-        method === 'POST' && requestPath === '/issues/7/comments'
-          ? json({ message: 'Forbidden' }, 403)
-          : undefined;
-
-      await run(['check', '--pr', '7']);
-
-      expect(logs).toContainEqual(
-        expect.stringMatching(/^::warning::Could not update the review gate comment/)
-      );
-      expect(latestStatus(headSha, 'review-gate')?.state).toBe('success');
-    });
-
-    test('counts only the latest approvals of human writers on the head who are not the author', async () => {
-      github.pullRequests.set(7, pullRequest(7));
-      github.statuses.set(headSha, [
-        gateStatus('review-gate/decision', 'success', '2 reviews required: Big change'),
-      ]);
-      github.permissions.set('second-writer', 'admin');
-      github.permissions.set('reader', 'read');
+      github.statuses.set(headSha, [decision('2 reviews required: Big change')]);
       github.reviews.set(7, [
         approval(author),
         approval('stale', { commit_id: 'old-sha' }),
         approval('helper-bot[bot]', { user: { login: 'helper-bot[bot]', type: 'Bot' } }),
-        approval('reader'),
+        approval('reader', { teams: [] }),
         approval('changed-mind'),
         approval('changed-mind', { state: 'CHANGES_REQUESTED' }),
         approval(reviewer),
         approval(reviewer, { state: 'COMMENTED' }),
       ]);
-      github.permissions.set('stale', 'write');
-      github.permissions.set('changed-mind', 'write');
 
       await run(['check', '--pr', '7']);
       expect(latestStatus(headSha, 'review-gate')).toEqual(
@@ -759,9 +461,7 @@ describe('review-gate commands', () => {
 
     test('fails while another open pull request shares the head commit', async () => {
       github.pullRequests.set(7, pullRequest(7));
-      github.statuses.set(headSha, [
-        gateStatus('review-gate/decision', 'success', '1 review required: Footer copy'),
-      ]);
+      github.statuses.set(headSha, [decision('1 review required: Footer copy')]);
       github.reviews.set(7, [approval(reviewer)]);
       github.commitPullRequests.set(headSha, [
         { number: 7, state: 'open', head: { sha: headSha } },
@@ -783,11 +483,22 @@ describe('review-gate commands', () => {
     describe('a fix-issue bot pull request', () => {
       beforeEach(() => {
         github.pullRequests.set(7, fixIssuePullRequest(7));
-        github.statuses.set(headSha, [
-          gateStatus('review-gate/decision', 'success', '1 review required: Footer copy'),
-        ]);
+        github.statuses.set(headSha, [decision('2 reviews required: Big change')]);
         github.workflowRuns.set(fixIssueRunId, fixIssueRun(dispatcher));
-        github.permissions.set(dispatcher, 'admin');
+      });
+
+      test('still leaves the dispatcher out when one review is enough', async () => {
+        github.statuses.set(headSha, [decision('1 review required: Footer copy')]);
+        github.reviews.set(7, [approval(dispatcher)]);
+
+        await run(['check', '--pr', '7']);
+        expect(latestStatus(headSha, 'review-gate')?.description).toBe(
+          '0 of 1 required approvals; dispatcher dispatched the fix, so cannot approve it'
+        );
+
+        github.reviews.set(7, [approval(dispatcher), approval(reviewer)]);
+        await run(['check', '--pr', '7']);
+        expect(latestStatus(headSha, 'review-gate')?.state).toBe('success');
       });
 
       test('never counts the approval of whoever dispatched the fix', async () => {
@@ -799,14 +510,18 @@ describe('review-gate commands', () => {
           gateStatus(
             'review-gate',
             'failure',
-            '0 of 1 required approvals; dispatcher dispatched the fix, so cannot approve it'
+            '0 of 2 required approvals; dispatcher dispatched the fix, so cannot approve it'
           )
         );
         expect(summary()).toContain('Dispatched by dispatcher.');
       });
 
-      test('passes on the approval of someone else', async () => {
-        github.reviews.set(7, [approval(dispatcher), approval(reviewer)]);
+      test('passes on the approvals of two other people', async () => {
+        github.reviews.set(7, [
+          approval(dispatcher),
+          approval(reviewer),
+          approval('second-writer'),
+        ]);
 
         await run(['check', '--pr', '7']);
 
@@ -829,63 +544,131 @@ describe('review-gate commands', () => {
       });
     });
 
-    describe('when dev requires approvals from a reviewers team', () => {
-      beforeEach(() => {
-        github.requiredTeams.push(reviewersTeamId);
+    describe('deciding how many reviews are needed', () => {
+      test('lets Claude decide a small change, then passes with one team approval', async () => {
         github.pullRequests.set(7, pullRequest(7));
-        github.statuses.set(headSha, [
-          gateStatus('review-gate/decision', 'success', '2 reviews required: Big change'),
-        ]);
-        github.permissions.set('second-writer', 'write');
-      });
-
-      test('counts only approvals GitHub attributes to that team', async () => {
-        const fromTeam = approval(reviewer);
-        github.reviews.set(7, [fromTeam, approval('second-writer')]);
-        github.teamReviews.set(fromTeam.id, [reviewersTeamId]);
+        github.files.set(7, [changedFile(plainFile)]);
+        github.reviews.set(7, [approval(reviewer)]);
 
         await run(['check', '--pr', '7']);
 
-        expect(latestStatus(headSha, 'review-gate')).toEqual(
-          gateStatus('review-gate', 'failure', '1 of 2 required approvals')
+        expect(latestStatus(headSha, 'review-gate/decision')).toEqual(
+          decision('1 review required: Footer copy')
         );
-        expect(github.calls.some(call => call.path.includes('/collaborators/'))).toBe(false);
+        expect(latestStatus(headSha, 'review-gate')).toEqual(
+          gateStatus('review-gate', 'success', '1 of 1 required approvals')
+        );
+        expect(github.comments.get(7)?.[0]?.body).toContain('### Review gate: 1 review required');
+        expect(readFileSync(claudeLog, 'utf8')).toContain(plainFile);
       });
 
-      test('passes once enough team approvals are in', async () => {
-        const first = approval(reviewer);
-        const second = approval('second-writer');
-        github.reviews.set(7, [first, second]);
-        github.teamReviews.set(first.id, [reviewersTeamId]);
-        github.teamReviews.set(second.id, [reviewersTeamId]);
+      test('requires two reviews for a sensitive path without asking Claude', async () => {
+        github.pullRequests.set(7, pullRequest(7));
+        github.files.set(7, [changedFile(sensitiveFile)]);
+        github.reviews.set(7, [approval(reviewer)]);
 
         await run(['check', '--pr', '7']);
 
-        expect(latestStatus(headSha, 'review-gate')?.state).toBe('success');
+        expect(existsSync(claudeLog)).toBe(false);
+        expect(latestStatus(headSha, 'review-gate/decision')?.description).toContain(
+          '2 reviews required: Touches sensitive paths'
+        );
+        expect(latestStatus(headSha, 'review-gate')?.description).toBe('1 of 2 required approvals');
+      });
+
+      test('does not classify a head that already has an answer', async () => {
+        github.pullRequests.set(7, pullRequest(7));
+        github.files.set(7, [changedFile(plainFile)]);
+        github.statuses.set(headSha, [decision('2 reviews required: Big change')]);
+
+        await run(['check', '--pr', '7']);
+
+        expect(existsSync(claudeLog)).toBe(false);
+        expect(latestStatus(headSha, 'review-gate')?.description).toBe('0 of 2 required approvals');
+      });
+
+      test('falls back to two reviews when Claude gives no answer, and asks again next time', async () => {
+        github.pullRequests.set(7, pullRequest(7));
+        github.files.set(7, [changedFile(plainFile)]);
+        github.reviews.set(7, [approval(reviewer)]);
+        vi.stubEnv('FAKE_CLAUDE_EXIT', '1');
+
+        await run(['check', '--pr', '7']);
+        expect(latestStatus(headSha, 'review-gate/decision')?.description).toContain(
+          '2 reviews required (fallback)'
+        );
+        expect(latestStatus(headSha, 'review-gate')?.state).toBe('failure');
+
+        vi.stubEnv('FAKE_CLAUDE_EXIT', '0');
+        await run(['check', '--pr', '7']);
+        expect(latestStatus(headSha, 'review-gate')).toEqual(
+          gateStatus('review-gate', 'success', '1 of 1 required approvals')
+        );
+      });
+
+      test('recognises its own decision when GitHub names the App without the bot suffix', async () => {
+        github.appLogin = 'review-gate-app';
+        github.pullRequests.set(7, pullRequest(7));
+        github.statuses.set(headSha, [decision('1 review required: Footer copy')]);
+        github.reviews.set(7, [approval(reviewer)]);
+
+        await run(['check', '--pr', '7']);
+
+        expect(existsSync(claudeLog)).toBe(false);
+        expect(latestStatus(headSha, 'review-gate')?.description).toBe('1 of 1 required approvals');
+      });
+
+      test('ignores a decision status the gate App did not post', async () => {
+        github.pullRequests.set(7, pullRequest(7));
+        github.files.set(7, [changedFile(sensitiveFile)]);
+        github.statuses.set(headSha, [
+          { ...decision('1 review required: Trust me'), creator: { login: 'mallory' } },
+        ]);
+        github.reviews.set(7, [approval(reviewer)]);
+
+        await run(['check', '--pr', '7']);
+
+        expect(latestStatus(headSha, 'review-gate')?.description).toBe('1 of 2 required approvals');
+      });
+
+      test('never classifies a fork pull request and always requires two approvals', async () => {
+        github.pullRequests.set(
+          7,
+          pullRequest(7, {
+            head: { sha: headSha, ref: headRef, repo: { full_name: 'someone/mono' } },
+          })
+        );
+        github.files.set(7, [changedFile(plainFile)]);
+        github.reviews.set(7, [approval(reviewer)]);
+
+        await run(['check', '--pr', '7']);
+
+        expect(existsSync(claudeLog)).toBe(false);
+        expect(latestStatus(headSha, 'review-gate/decision')).toBeUndefined();
+        expect(latestStatus(headSha, 'review-gate')?.description).toBe('1 of 2 required approvals');
       });
     });
 
-    test('never classifies a fork pull request and always requires two approvals', async () => {
-      github.pullRequests.set(7, forkPullRequest(7, headSha));
-      github.files.set(7, [changedFile(plainFile)]);
-      github.reviews.set(7, [approval(reviewer)]);
+    test('counts only approvals GitHub credits to the reviewers team', async () => {
+      github.pullRequests.set(7, pullRequest(7));
+      github.statuses.set(headSha, [decision('2 reviews required: Big change')]);
+      github.reviews.set(7, [
+        approval(reviewer),
+        approval('writer-outside-team', { teams: [] }),
+        approval('other-team-member', { teams: [reviewersTeamId + 1] }),
+      ]);
 
       await run(['check', '--pr', '7']);
 
-      expect(existsSync(claudeLog)).toBe(false);
-      expect(statusesOn(headSha, 'review-gate/decision')).toEqual([]);
-      expect(latestStatus(headSha, 'review-gate')?.description).toBe(
-        '1 of 2 required approvals (fork pull request)'
+      expect(latestStatus(headSha, 'review-gate')).toEqual(
+        gateStatus('review-gate', 'failure', '1 of 2 required approvals')
       );
     });
 
     test('reports an error status and fails when GitHub refuses a read', async () => {
       github.pullRequests.set(7, pullRequest(7));
-      github.statuses.set(headSha, [
-        gateStatus('review-gate/decision', 'success', '1 review required: Footer copy'),
-      ]);
       github.override = (method, requestPath) =>
-        method === 'GET' && requestPath === '/pulls/7/reviews'
+        method === 'POST' && requestPath === '/graphql'
           ? json({ message: 'Server Error' }, 500)
           : undefined;
 
@@ -901,72 +684,102 @@ describe('review-gate commands', () => {
     });
   });
 
-  describe('sweep', () => {
-    test('re-counts approvals on fork pull requests only, without a pending status', async () => {
-      github.pullRequests.set(7, pullRequest(7));
-      github.pullRequests.set(8, forkPullRequest(8, 'fork-sha'));
-      github.pullRequests.set(9, { ...forkPullRequest(9, 'closed-fork-sha'), state: 'closed' });
-      github.reviews.set(8, [
-        approval(reviewer, { commit_id: 'fork-sha' }),
-        approval('second-writer', { commit_id: 'fork-sha' }),
-      ]);
-      github.permissions.set('second-writer', 'write');
+  describe('app-token', () => {
+    const signature = Buffer.from('signature').toString('base64');
+    let outputFile: string;
 
-      await run(['sweep']);
+    function fakeAws(script: string) {
+      const bin = mkdtempSync(path.join(scratch, 'bin-'));
+      writeFileSync(path.join(bin, 'aws'), `#!/usr/bin/env node\n${script}\n`);
+      chmodSync(path.join(bin, 'aws'), 0o755);
+      vi.stubEnv('PATH', `${bin}${path.delimiter}${process.env.PATH ?? ''}`);
+    }
 
-      expect(github.statuses.get(headSha)).toBeUndefined();
-      expect(github.statuses.get('closed-fork-sha')).toBeUndefined();
-      expect(statusesOn('fork-sha', 'review-gate')).toEqual([
-        gateStatus('review-gate', 'success', '2 of 2 required approvals (fork pull request)'),
-      ]);
-      expect(existsSync(claudeLog)).toBe(false);
-      expect(summary()).toContain('Checked 1 fork pull requests into dev.');
+    function routeInstallation(granted: Record<string, string>) {
+      github.override = (method, requestPath) => {
+        if (method === 'GET' && requestPath === '/installation') return json({ id: 42 });
+        if (method === 'POST' && requestPath === '/app/installations/42/access_tokens') {
+          return json({ token: 'ghs_gate_installation', permissions: granted });
+        }
+        if (method === 'DELETE' && requestPath === '/installation/token') {
+          return new Response(null, { status: 204 });
+        }
+        return undefined;
+      };
+    }
+
+    beforeEach(() => {
+      outputFile = path.join(scratch, 'github-output');
+      vi.stubEnv('GITHUB_OUTPUT', outputFile);
     });
 
-    test('leaves an unchanged gate status alone', async () => {
-      github.pullRequests.set(8, forkPullRequest(8, 'fork-sha'));
-      github.statuses.set('fork-sha', [
-        gateStatus('review-gate', 'failure', '0 of 2 required approvals (fork pull request)'),
-      ]);
+    test('create signs with KMS and asks only for the gate permissions', async () => {
+      fakeAws(`process.stdout.write('${signature}')`);
+      routeInstallation({
+        actions: 'read',
+        contents: 'read',
+        members: 'read',
+        pull_requests: 'write',
+        statuses: 'write',
+        metadata: 'read',
+      });
+      const bodies: unknown[] = [];
+      vi.stubGlobal('fetch', (input: string, init?: RequestInit) => {
+        const url = new URL(input);
+        const requestPath = url.pathname.replace(`/repos/${repoName}`, '');
+        github.calls.push({ method: init?.method ?? 'GET', path: requestPath });
+        if (typeof init?.body === 'string') bodies.push(JSON.parse(init.body));
+        return Promise.resolve(
+          github.override(init?.method ?? 'GET', requestPath) ?? json({}, 404)
+        );
+      });
 
-      await run(['sweep']);
+      await run(['app-token', 'create', '--client-id', 'Iv23gate', '--kms-key-id', 'alias/gate']);
 
-      expect(github.calls).not.toContainEqual({ method: 'POST', path: '/statuses/fork-sha' });
-    });
-
-    test('rewrites a matching status that someone other than the gate app posted', async () => {
-      github.pullRequests.set(8, forkPullRequest(8, 'fork-sha'));
-      github.statuses.set('fork-sha', [
+      expect(bodies).toEqual([
         {
-          context: 'review-gate',
-          state: 'success',
-          description: '0 of 2 required approvals (fork pull request)',
-          creator: { login: 'mallory' },
+          repositories: ['mono'],
+          permissions: {
+            actions: 'read',
+            contents: 'read',
+            members: 'read',
+            pull_requests: 'write',
+            statuses: 'write',
+          },
         },
       ]);
-
-      await run(['sweep']);
-
-      expect(latestStatus('fork-sha', 'review-gate')).toEqual(
-        gateStatus('review-gate', 'failure', '0 of 2 required approvals (fork pull request)')
-      );
+      expect(logs).toContain('::add-mask::ghs_gate_installation');
+      expect(readFileSync(outputFile, 'utf8')).toBe('token=ghs_gate_installation\n');
     });
 
-    test('keeps going past a failing pull request and fails at the end naming it', async () => {
-      github.pullRequests.set(8, forkPullRequest(8, 'broken-sha'));
-      github.pullRequests.set(9, forkPullRequest(9, 'fork-sha'));
-      github.override = (method, requestPath) =>
-        method === 'GET' && requestPath === '/pulls/8/reviews'
-          ? json({ message: 'Server Error' }, 500)
-          : undefined;
+    test('create revokes and refuses a token with more permissions than the gate asked for', async () => {
+      fakeAws(`process.stdout.write('${signature}')`);
+      routeInstallation({ pull_requests: 'write', issues: 'write', statuses: 'write' });
 
-      await expect(run(['sweep'])).rejects.toThrow('The gate failed for #8.');
+      await expect(
+        run(['app-token', 'create', '--client-id', 'Iv23gate', '--kms-key-id', 'alias/gate'])
+      ).rejects.toThrow('permissions it was not asked for: issues; it was revoked');
 
-      expect(logs).toContainEqual(expect.stringMatching(/^::error::#8: /));
-      expect(latestStatus('broken-sha', 'review-gate')?.state).toBe('error');
-      expect(latestStatus('fork-sha', 'review-gate')?.description).toBe(
-        '0 of 2 required approvals (fork pull request)'
-      );
+      expect(github.calls).toContainEqual({ method: 'DELETE', path: '/installation/token' });
+    });
+
+    test('create fails before calling GitHub when KMS refuses to sign', async () => {
+      fakeAws("process.stderr.write('AccessDenied'); process.exit(254)");
+
+      await expect(
+        run(['app-token', 'create', '--client-id', 'Iv23gate', '--kms-key-id', 'alias/gate'])
+      ).rejects.toThrow('aws kms sign failed: AccessDenied');
+
+      expect(github.calls).toEqual([]);
+    });
+
+    test('revoke deletes the token the job holds', async () => {
+      routeInstallation({});
+
+      await run(['app-token', 'revoke']);
+
+      expect(github.calls).toEqual([{ method: 'DELETE', path: '/installation/token' }]);
+      expect(logs).toContain('app-token: revoked the installation token');
     });
   });
 });

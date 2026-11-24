@@ -10,12 +10,24 @@ export function registerReviewGateCommands(program: Command): void {
   gate
     .command('check')
     .description(
-      'Decide how many reviews a pull request needs, then count approvals and report the gate'
+      'Decide how many reviews a pull request needs, then count independent approvals and report the gate'
     )
     .requiredOption('--pr <number>', 'the pull request to check')
     .action(reviewGate.runCheck);
-  gate
-    .command('sweep')
-    .description('Re-count approvals on every open fork pull request into dev')
-    .action(reviewGate.runSweep);
+
+  const appToken = gate
+    .command('app-token')
+    .description('Installation token of the review gate App, whose private key stays in AWS KMS');
+  appToken
+    .command('create')
+    .description(
+      'Sign the App JWT with KMS, then write a token limited to this repository and the gate permissions to the step output'
+    )
+    .requiredOption('--client-id <id>', 'Client ID of the review gate App')
+    .requiredOption('--kms-key-id <id>', 'KMS key ID, ARN or alias holding the App private key')
+    .action(reviewGate.createAppToken);
+  appToken
+    .command('revoke')
+    .description('Revoke the installation token in GITHUB_TOKEN')
+    .action(reviewGate.revokeAppToken);
 }

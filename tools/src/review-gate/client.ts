@@ -2,30 +2,36 @@ import { z } from 'zod';
 
 import { type GitHubClient, GitHubError, type HttpMethod, paginate } from '../ci/github.js';
 import {
-  branchRulesSchema,
+  type Review,
   commitPullRequestSchema,
   commitStatusSchema,
   issueCommentSchema,
-  permissionSchema,
   pullRequestFileSchema,
   pullRequestSchema,
-  reviewSchema,
-  teamReviewsSchema,
+  reviewsPageSchema,
   treeSchema,
+  viewerSchema,
   workflowRunSchema,
 } from './schemas.js';
 
 const notFoundStatus = 404;
-const pullRequestRuleType = 'pull_request';
-const teamReviewerType = 'Team';
 const maxReviewPages = 30;
-const teamReviewsQuery = `
+const viewerQuery = 'query { viewer { login } }';
+const botLoginSuffix = '[bot]';
+const reviewsQuery = `
   query ($owner: String!, $name: String!, $number: Int!, $after: String) {
     repository(owner: $owner, name: $name) {
       pullRequest(number: $number) {
         reviews(first: 100, after: $after) {
           nodes {
-            databaseId
+            state
+            author {
+              login
+              __typename
+            }
+            commit {
+              oid
+            }
             onBehalfOf(first: 20) {
               nodes {
                 databaseId
@@ -61,14 +67,12 @@ export function createGateClient(github: GitHubClient, repository: string) {
   }
 
   return {
+    async getAppBotLogin(): Promise<string> {
+      const { login } = viewerSchema.parse(await github.graphql(viewerQuery, {})).viewer;
+      return login.endsWith(botLoginSuffix) ? login : `${login}${botLoginSuffix}`;
+    },
     async getPullRequest(number: number) {
       return pullRequestSchema.parse(await request(`/pulls/${number}`));
-    },
-    listOpenPullRequests(base: string) {
-      return listAll(
-        `/pulls?state=open&base=${encodeURIComponent(base)}&sort=updated&direction=desc`,
-        pullRequestSchema
-      );
     },
     async listBaseBlobs(sha: string): Promise<Map<string, string>> {
       const tree = treeSchema.parse(await request(`/git/trees/${sha}?recursive=1`));
@@ -80,17 +84,11 @@ export function createGateClient(github: GitHubClient, repository: string) {
     listFiles(number: number) {
       return listAll(`/pulls/${number}/files`, pullRequestFileSchema);
     },
-    listReviews(number: number) {
-      return listAll(`/pulls/${number}/reviews`, reviewSchema);
-    },
     listStatuses(sha: string) {
       return listAll(`/commits/${sha}/statuses`, commitStatusSchema);
     },
     listCommitPullRequests(sha: string) {
       return listAll(`/commits/${sha}/pulls`, commitPullRequestSchema);
-    },
-    async createStatus(sha: string, status: NewStatus): Promise<void> {
-      await request(`/statuses/${sha}`, 'POST', status);
     },
     listComments(number: number) {
       return listAll(`/issues/${number}/comments`, issueCommentSchema);
@@ -101,6 +99,9 @@ export function createGateClient(github: GitHubClient, repository: string) {
     async updateComment(id: number, body: string): Promise<void> {
       await request(`/issues/comments/${id}`, 'PATCH', { body });
     },
+    async createStatus(sha: string, status: NewStatus): Promise<void> {
+      await request(`/statuses/${sha}`, 'POST', status);
+    },
     async getWorkflowRun(id: string) {
       try {
         return workflowRunSchema.parse(await request(`/actions/runs/${id}`));
@@ -109,44 +110,18 @@ export function createGateClient(github: GitHubClient, repository: string) {
         throw error;
       }
     },
-    async listRequiredReviewerTeams(branch: string): Promise<Set<number>> {
-      const rules = branchRulesSchema.parse(await request(`/rules/branches/${branch}`));
-      return new Set(
-        rules
-          .filter(rule => rule.type === pullRequestRuleType)
-          .flatMap(rule => rule.parameters?.required_reviewers ?? [])
-          .filter(({ reviewer }) => reviewer.type === teamReviewerType)
-          .map(({ reviewer }) => reviewer.id)
-      );
-    },
-    async listTeamReviewIds(number: number, teams: ReadonlySet<number>): Promise<Set<number>> {
+    async listReviews(number: number): Promise<Review[]> {
       const [owner, name] = repository.split('/');
-      const reviewIds = new Set<number>();
+      const reviews: Review[] = [];
       let after: string | null = null;
       for (let page = 1; page <= maxReviewPages; page += 1) {
-        const data: unknown = await github.graphql(teamReviewsQuery, {
-          owner,
-          name,
-          number,
-          after,
-        });
-        const { nodes, pageInfo } = teamReviewsSchema.parse(data).repository.pullRequest.reviews;
-        for (const review of nodes) {
-          const forRequiredTeam = review.onBehalfOf.nodes.some(
-            team => team?.databaseId != null && teams.has(team.databaseId)
-          );
-          if (review.databaseId !== null && forRequiredTeam) reviewIds.add(review.databaseId);
-        }
+        const data: unknown = await github.graphql(reviewsQuery, { owner, name, number, after });
+        const { nodes, pageInfo } = reviewsPageSchema.parse(data).repository.pullRequest.reviews;
+        reviews.push(...nodes);
         if (!pageInfo.hasNextPage) break;
         after = pageInfo.endCursor;
       }
-      return reviewIds;
-    },
-    async getPermission(login: string) {
-      const parsed = permissionSchema.safeParse(
-        await request(`/collaborators/${encodeURIComponent(login)}/permission`)
-      );
-      return parsed.success ? parsed.data : null;
+      return reviews;
     },
   };
 }

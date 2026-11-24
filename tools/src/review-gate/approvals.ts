@@ -1,7 +1,6 @@
-import type { CommitPullRequest, Permission, PullRequest, Review, WorkflowRun } from './schemas.js';
+import type { CommitPullRequest, PullRequest, Review, WorkflowRun } from './schemas.js';
 
 const maxStatusDescriptionLength = 140;
-const writePermissions = new Set(['admin', 'write']);
 const humanAccountType = 'User';
 const botAccountType = 'Bot';
 const decisiveReviewStates = new Set(['APPROVED', 'CHANGES_REQUESTED', 'DISMISSED']);
@@ -12,11 +11,12 @@ const dispatchEvent = 'workflow_dispatch';
 interface ApproverContext {
   readonly headSha: string;
   readonly author: string;
+  readonly teamId: number;
 }
 
 interface Approver {
   readonly login: string;
-  readonly reviewId: number;
+  readonly forTeam: boolean;
 }
 
 interface FixIssueRun {
@@ -45,7 +45,7 @@ export function findDispatchers(run: WorkflowRun | null, issue: string): string[
   const logins = [run.actor, run.triggering_actor].flatMap(account =>
     account ? [account.login] : []
   );
-  return logins.filter((login, index) => !isDispatcher(login, logins.slice(0, index)));
+  return [...new Set(logins)];
 }
 
 export function isDispatcher(login: string, dispatchers: readonly string[]): boolean {
@@ -54,34 +54,26 @@ export function isDispatcher(login: string, dispatchers: readonly string[]): boo
 
 export function findApprovers(
   reviews: readonly Review[],
-  { headSha, author }: ApproverContext
+  { headSha, author, teamId }: ApproverContext
 ): Approver[] {
-  const latestByReviewer = new Map<string, Review & { user: NonNullable<Review['user']> }>();
+  const latestByReviewer = new Map<string, Review & { author: NonNullable<Review['author']> }>();
   for (const review of reviews) {
-    const { user } = review;
-    if (!user || !decisiveReviewStates.has(review.state)) continue;
-    latestByReviewer.set(user.login, { ...review, user });
+    const reviewer = review.author;
+    if (!reviewer || !decisiveReviewStates.has(review.state)) continue;
+    latestByReviewer.set(reviewer.login, { ...review, author: reviewer });
   }
   return [...latestByReviewer.values()]
     .filter(
       review =>
         review.state === 'APPROVED' &&
-        review.commit_id === headSha &&
-        review.user.login !== author &&
-        review.user.type === humanAccountType
+        review.commit?.oid === headSha &&
+        review.author.login !== author &&
+        review.author.__typename === humanAccountType
     )
-    .map(review => ({ login: review.user.login, reviewId: review.id }));
-}
-
-export function isForkPullRequest(
-  pullRequest: Pick<PullRequest, 'head'>,
-  repository: string
-): boolean {
-  return pullRequest.head.repo?.full_name !== repository;
-}
-
-export function hasWriteAccess(permission: Permission | null): boolean {
-  return permission !== null && writePermissions.has(permission.permission);
+    .map(review => ({
+      login: review.author.login,
+      forTeam: review.onBehalfOf.nodes.some(team => team?.databaseId === teamId),
+    }));
 }
 
 interface SharedHeadContext {
@@ -106,10 +98,9 @@ export function findSharedHeadPullRequests(
 interface GateInput {
   readonly approvals: number;
   readonly required: number;
-  readonly sharedWith?: readonly number[];
-  readonly fromFork?: boolean;
-  readonly undispatched?: boolean;
-  readonly dispatcherApprovals?: readonly string[];
+  readonly sharedWith: readonly number[];
+  readonly undispatched: boolean;
+  readonly dispatcherApprovals: readonly string[];
 }
 
 interface GateStatus {
@@ -120,10 +111,9 @@ interface GateStatus {
 export function describeGate({
   approvals,
   required,
-  sharedWith = [],
-  fromFork = false,
-  undispatched = false,
-  dispatcherApprovals = [],
+  sharedWith,
+  undispatched,
+  dispatcherApprovals,
 }: GateInput): GateStatus {
   if (undispatched) {
     return {
@@ -136,7 +126,7 @@ export function describeGate({
     const description = `Head commit is also the head of ${others}. Push a commit unique to this pull request.`;
     return { state: 'failure', description: description.slice(0, maxStatusDescriptionLength) };
   }
-  const count = `${approvals} of ${required} required approvals${fromFork ? ' (fork pull request)' : ''}`;
+  const count = `${approvals} of ${required} required approvals`;
   const ignored =
     dispatcherApprovals.length > 0
       ? `; ${dispatcherApprovals.join(', ')} dispatched the fix, so cannot approve it`

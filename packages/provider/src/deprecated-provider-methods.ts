@@ -1,5 +1,5 @@
 const deprecationError =
-  'This legacy method is no longer supported. Upgrade to the LeatherProvider.request() RPC API, see https://leather.gitbook.io/developers';
+  'This legacy method is no longer supported. Upgrade to the LeatherProvider.request() RPC API, see https://docs.leather.io/developers';
 
 export function deprecatedProviderMethods() {
   return {

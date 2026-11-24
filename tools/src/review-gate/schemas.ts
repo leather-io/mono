@@ -28,14 +28,6 @@ export const pullRequestSchema = z.object({
 });
 export type PullRequest = z.infer<typeof pullRequestSchema>;
 
-export const reviewSchema = z.object({
-  id: z.number(),
-  user: z.object({ login: z.string(), type: z.string() }).nullable(),
-  state: z.string(),
-  commit_id: z.string().nullable(),
-});
-export type Review = z.infer<typeof reviewSchema>;
-
 export const commitStatusSchema = z.object({
   context: z.string(),
   state: z.string(),
@@ -44,13 +36,6 @@ export const commitStatusSchema = z.object({
 });
 export type CommitStatus = z.infer<typeof commitStatusSchema>;
 
-export const commitPullRequestSchema = z.object({
-  number: z.number(),
-  state: z.string(),
-  head: z.object({ sha: z.string() }),
-});
-export type CommitPullRequest = z.infer<typeof commitPullRequestSchema>;
-
 export const issueCommentSchema = z.object({
   id: z.number(),
   user: loginSchema.nullable(),
@@ -58,51 +43,46 @@ export const issueCommentSchema = z.object({
 });
 export type IssueComment = z.infer<typeof issueCommentSchema>;
 
-export const permissionSchema = z.object({ permission: z.string() });
-export type Permission = z.infer<typeof permissionSchema>;
+export const treeSchema = z.object({
+  truncated: z.boolean(),
+  tree: z.array(z.object({ path: z.string(), type: z.string(), sha: z.string() })),
+});
+
+export const viewerSchema = z.object({ viewer: z.object({ login: z.string() }) });
+
+const reviewSchema = z.object({
+  state: z.string(),
+  author: z.object({ login: z.string(), __typename: z.string() }).nullable(),
+  commit: z.object({ oid: z.string() }).nullable(),
+  onBehalfOf: z.object({
+    nodes: z.array(z.object({ databaseId: z.number().nullable() }).nullable()),
+  }),
+});
+export type Review = z.infer<typeof reviewSchema>;
+
+export const commitPullRequestSchema = z.object({
+  number: z.number(),
+  state: z.string(),
+  head: z.object({ sha: z.string() }),
+});
+export type CommitPullRequest = z.infer<typeof commitPullRequestSchema>;
 
 export const workflowRunSchema = z.object({
   path: z.string(),
   event: z.string(),
   display_title: z.string(),
-  html_url: z.string(),
   actor: loginSchema.nullish(),
   triggering_actor: loginSchema.nullish(),
 });
 export type WorkflowRun = z.infer<typeof workflowRunSchema>;
 
-export const branchRulesSchema = z.array(
-  z.object({
-    type: z.string(),
-    parameters: z
-      .object({
-        required_reviewers: z
-          .array(z.object({ reviewer: z.object({ id: z.number(), type: z.string() }) }))
-          .optional(),
-      })
-      .nullish(),
-  })
-);
-
-export const teamReviewsSchema = z.object({
+export const reviewsPageSchema = z.object({
   repository: z.object({
     pullRequest: z.object({
       reviews: z.object({
-        nodes: z.array(
-          z.object({
-            databaseId: z.number().nullable(),
-            onBehalfOf: z.object({
-              nodes: z.array(z.object({ databaseId: z.number().nullable() }).nullable()),
-            }),
-          })
-        ),
+        nodes: z.array(reviewSchema),
         pageInfo: z.object({ hasNextPage: z.boolean(), endCursor: z.string().nullable() }),
       }),
     }),
   }),
-});
-
-export const treeSchema = z.object({
-  truncated: z.boolean(),
-  tree: z.array(z.object({ path: z.string(), type: z.string(), sha: z.string() })),
 });

@@ -7,6 +7,7 @@ export const GITHUB_REPO = 'mono';
 // btc_addAccount / stx_addAccount. Any other origin can still open the approver,
 // but only to let the user verify the derived address — nothing is registered.
 const POLICY_ALLOWED_ORIGINS: readonly string[] = [
+  'https://leather.io',
   'https://app.leather.io',
   'https://staging.app.leather.io',
 ];
