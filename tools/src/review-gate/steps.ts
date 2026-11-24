@@ -9,6 +9,7 @@ import {
   findApprovers,
   findDispatchers,
   findFixIssueRun,
+  findReviseDispatchers,
   findSharedHeadPullRequests,
   isDispatcher,
 } from './approvals.js';
@@ -43,12 +44,16 @@ async function countApprovals(
   const { number } = pullRequest;
   const headSha = pullRequest.head.sha;
   const fixIssueRun = findFixIssueRun(pullRequest);
-  const [reviews, commitPullRequests, workflowRun] = await Promise.all([
+  const [reviews, commitPullRequests, workflowRun, dispatches] = await Promise.all([
     github.listReviews(number),
     github.listCommitPullRequests(headSha),
     fixIssueRun ? github.getWorkflowRun(fixIssueRun.runId) : null,
+    fixIssueRun ? github.listFixIssueDispatches(pullRequest.created_at) : [],
   ]);
-  const dispatchers = fixIssueRun ? findDispatchers(workflowRun, fixIssueRun.issue) : [];
+  const firstDispatchers = fixIssueRun ? findDispatchers(workflowRun, fixIssueRun.issue) : [];
+  const dispatchers = [
+    ...new Set([...firstDispatchers, ...findReviseDispatchers(dispatches, number)]),
+  ];
   const approvers = findApprovers(reviews, {
     headSha,
     author: pullRequest.user.login,
@@ -61,7 +66,7 @@ async function countApprovals(
     approvals,
     required: requiredApprovals,
     sharedWith,
-    undispatched: fixIssueRun !== null && dispatchers.length === 0,
+    undispatched: fixIssueRun !== null && firstDispatchers.length === 0,
     dispatcherApprovals: approvers
       .filter(({ login }) => isDispatcher(login, dispatchers))
       .map(({ login }) => login),

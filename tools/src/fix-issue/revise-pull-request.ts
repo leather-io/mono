@@ -10,6 +10,7 @@ import {
   maxRevises,
   readReviseState,
   reviseMarker,
+  revisePullSchema,
 } from './revise-state.js';
 import type { FixStatus } from './status.js';
 
@@ -66,21 +67,6 @@ interface SummaryOptions {
   readonly runUrl: string | null;
 }
 
-const pullSchema = z.object({
-  number: z.number(),
-  state: z.string(),
-  draft: z.boolean(),
-  node_id: z.string(),
-  html_url: z.string(),
-  body: z.string().nullable(),
-  user: z.object({ login: z.string() }).nullable(),
-  head: z.object({
-    ref: z.string(),
-    sha: z.string(),
-    repo: z.object({ full_name: z.string() }).nullable(),
-  }),
-  base: z.object({ ref: z.string() }),
-});
 const commentAuthorsSchema = z.array(
   z.object({ body: z.string().nullable(), user: z.object({ login: z.string() }).nullable() })
 );
@@ -125,7 +111,9 @@ export async function readReviseTarget({
   mergeRequested,
   appLogin,
 }: ReviseTargetOptions): Promise<ReviseTarget> {
-  const pull = pullSchema.parse(await client.request('GET', `repos/${repo}/pulls/${pullRequest}`));
+  const pull = revisePullSchema.parse(
+    await client.request('GET', `repos/${repo}/pulls/${pullRequest}`)
+  );
   if (pull.state !== 'open') throw new Error(`#${pullRequest} is no longer open`);
   if (pull.head.repo?.full_name !== repo || pull.base.ref !== baseBranch) {
     throw new Error(`#${pullRequest} is not a pull request of ${repo} into ${baseBranch}`);

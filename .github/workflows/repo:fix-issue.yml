@@ -84,12 +84,13 @@ jobs:
           --workflow-app-client-id "$APP_CLIENT_ID"
 
       - name: install-pull-request-dependencies
-        if: inputs.pull_request != ''
+        if: inputs.pull_request != '' && steps.prepare-revise.outputs.conflicted != 'true'
         env:
           LOCKFILE: ${{ steps.prepare-revise.outputs.merged == 'true' && '--no-frozen-lockfile' || '--frozen-lockfile' }}
         run: pnpm install --ignore-scripts "$LOCKFILE"
 
       - name: build-packages
+        if: steps.prepare-revise.outputs.conflicted != 'true'
         run: |
           pnpm turbo run build --filter='!@leather.io/extension' --filter='!@leather.io/web' --filter='!@leather.io/test-app'
           pnpm --filter @leather.io/extension --filter @leather.io/web run prepare:build

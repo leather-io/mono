@@ -128,6 +128,7 @@ describe('openPullRequest for a revise', () => {
             state: 'open',
             draft: false,
             node_id: 'PR_node',
+            title: 'fix(extension): keep the fee row visible',
             html_url: 'https://github.com/leather-io/mono/pull/7',
             body: 'Closes #12\n\n## Screenshots\n\n| State | Before | After |\n| --- | --- | --- |\n| Narrow | — | ![After](a.png) |\n',
             user: { login: appLogin },

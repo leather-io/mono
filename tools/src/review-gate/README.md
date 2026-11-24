@@ -37,7 +37,9 @@ A pull request the fix-issue workflow opened (a bot author on `bot/fix-issue-<is
 answered for by whoever dispatched that run. The gate reads the run named in the branch, and the
 approval of its actor or of whoever re-ran it never counts. When the run is missing, or is not a
 `workflow_dispatch` run of `repo:fix-issue` for that issue, the gate fails: a bot pull request
-nobody dispatched is blocked.
+nobody dispatched is blocked. Whoever dispatched a revise of the pull request answers for it too:
+the gate lists the `repo:fix-issue` dispatches since the pull request was opened, and the approval
+of the actor of any run named `fix-issue: revise #<pull request>` never counts either.
 
 | Module         | Responsibility                                                  |
 | -------------- | --------------------------------------------------------------- |

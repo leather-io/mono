@@ -5,7 +5,7 @@ import {
   revokeInstallationToken,
   writeAppTokenOutput,
 } from '../ci/app-token.js';
-import { createGhCliClient, createGitHubClient } from '../ci/github.js';
+import { createGhCliClient, createGitHubClient, readRequiredEnv } from '../ci/github.js';
 import { writeStepOutputs } from '../ci/outputs.js';
 import { briefIssues, dispatch, dispatchRevise } from '../fix-issue/dispatch.js';
 import { repoRoot } from '../fix-issue/git.js';
@@ -91,12 +91,6 @@ function paths() {
   return fixIssuePaths(repoRoot(process.cwd()));
 }
 
-function requireEnv(name: string): string {
-  const value = process.env[name];
-  if (!value) throw new Error(`${name} is not set`);
-  return value;
-}
-
 function parseNumber(value: string, what: string): number {
   if (!/^[1-9]\d*$/.test(value)) throw new Error(`'${value}' is not ${what}`);
   return Number(value);
@@ -120,7 +114,10 @@ function notes(): string | undefined {
 }
 
 function github() {
-  return createGitHubClient({ token: requireEnv('GH_TOKEN'), apiUrl: process.env.GITHUB_API_URL });
+  return createGitHubClient({
+    token: readRequiredEnv('GH_TOKEN'),
+    apiUrl: process.env.GITHUB_API_URL,
+  });
 }
 
 async function guard(step: string, action: () => Promise<void> | void): Promise<void> {
@@ -153,7 +150,7 @@ export function registerFixIssueCommands(program: Command): void {
           const target = paths();
           const fetched = await fetchIssue({
             client: github(),
-            repo: requireEnv('GITHUB_REPOSITORY'),
+            repo: readRequiredEnv('GITHUB_REPOSITORY'),
             issue: parseIssue(issue),
             outFile: target.issueFile,
             workflowAppClientId,
@@ -364,7 +361,7 @@ export function registerFixIssueCommands(program: Command): void {
         const shared = {
           client: github(),
           paths: paths(),
-          repo: requireEnv('GITHUB_REPOSITORY'),
+          repo: readRequiredEnv('GITHUB_REPOSITORY'),
           baseBranch: flags.base,
           parentSha: flags.parentSha,
           coAuthor: flags.coAuthor,
@@ -408,7 +405,7 @@ export function registerFixIssueCommands(program: Command): void {
         const target = paths();
         await gateRevise({
           client: github(),
-          repo: requireEnv('GITHUB_REPOSITORY'),
+          repo: readRequiredEnv('GITHUB_REPOSITORY'),
           paths: target,
           pullRequest: parsePullRequest(flags.pullRequest),
           devSha: flags.devSha,
@@ -419,7 +416,7 @@ export function registerFixIssueCommands(program: Command): void {
           workflowAppClientId: flags.workflowAppClientId,
         });
         const state = startRevise(target);
-        writeStepOutputs({ merged: state.merge });
+        writeStepOutputs({ merged: state.merge, conflicted: state.conflicts.length > 0 });
         console.log(
           `revise-prepare: revise ${state.ordinal} of #${state.pullRequest} at ${state.head} with ${state.items.length} feedback items${state.merge ? `, on a merge of ${state.dev} with ${state.conflicts.length} conflicting files` : ''}`
         );

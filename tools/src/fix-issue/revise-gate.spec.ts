@@ -72,6 +72,8 @@ describe('gateRevise', () => {
       (_method, path) => {
         if (path === `repos/${repoName}/pulls/7`) {
           return {
+            number: 7,
+            node_id: 'PR_node',
             state: 'open',
             draft: false,
             title: 'fix(extension): keep the fee row visible',

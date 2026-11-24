@@ -103,6 +103,13 @@ export function mergeDev(root: string, dev: string): MergeResult {
   if (merge.status !== cleanMerge && conflicts.length === 0) {
     throw new Error(`git merge ${dev} failed: ${`${merge.stdout}${merge.stderr}`.trim()}`);
   }
+  const marked = filesWithConflictMarkers(root, conflicts);
+  const unmarked = conflicts.filter(file => !marked.includes(file));
+  if (unmarked.length > 0) {
+    throw new Error(
+      `${dev} conflicts with the branch in ${unmarked.join(', ')} without leaving conflict markers (a file one side deleted, or one that is not text); merge it into the branch by hand first`
+    );
+  }
   runOrThrow('git', ['add', '-A'], { cwd: root });
   runOrThrow(
     'git',

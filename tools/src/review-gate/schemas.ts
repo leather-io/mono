@@ -5,6 +5,7 @@ const loginSchema = z.object({ login: z.string() });
 export const pullRequestSchema = z.object({
   number: z.number(),
   state: z.string(),
+  created_at: z.string(),
   user: z.object({ login: z.string(), type: z.string() }),
   head: z.object({ sha: z.string(), ref: z.string() }),
   base: z.object({ ref: z.string() }),
@@ -36,6 +37,8 @@ export const workflowRunSchema = z.object({
   triggering_actor: loginSchema.nullish(),
 });
 export type WorkflowRun = z.infer<typeof workflowRunSchema>;
+
+export const workflowRunsPageSchema = z.object({ workflow_runs: z.array(workflowRunSchema) });
 
 export const reviewsPageSchema = z.object({
   repository: z.object({

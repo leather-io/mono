@@ -3,14 +3,19 @@ import { z } from 'zod';
 import { type GitHubClient, GitHubError, type HttpMethod, paginate } from '../ci/github.js';
 import {
   type Review,
+  type WorkflowRun,
   commitPullRequestSchema,
   pullRequestSchema,
   reviewsPageSchema,
   workflowRunSchema,
+  workflowRunsPageSchema,
 } from './schemas.js';
 
 const notFoundStatus = 404;
 const maxReviewPages = 30;
+const fixIssueWorkflowFile = 'repo:fix-issue.yml';
+const runsPageSize = 100;
+const maxRunPages = 10;
 const reviewsQuery = `
   query ($owner: String!, $name: String!, $number: Int!, $after: String) {
     repository(owner: $owner, name: $name) {
@@ -73,6 +78,18 @@ export function createGateClient(github: GitHubClient, repository: string) {
         if (error instanceof GitHubError && error.status === notFoundStatus) return null;
         throw error;
       }
+    },
+    async listFixIssueDispatches(since: string): Promise<WorkflowRun[]> {
+      const runs: WorkflowRun[] = [];
+      for (let page = 1; page <= maxRunPages; page += 1) {
+        const query = `event=workflow_dispatch&created=${encodeURIComponent(`>=${since}`)}&per_page=${runsPageSize}&page=${page}`;
+        const { workflow_runs: entries } = workflowRunsPageSchema.parse(
+          await request(`/actions/workflows/${fixIssueWorkflowFile}/runs?${query}`)
+        );
+        runs.push(...entries);
+        if (entries.length < runsPageSize) return runs;
+      }
+      throw new Error(`more than ${maxRunPages * runsPageSize} fix-issue runs since ${since}`);
     },
     async listReviews(number: number): Promise<Review[]> {
       const [owner, name] = repository.split('/');

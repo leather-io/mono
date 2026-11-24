@@ -405,6 +405,8 @@ describe('fix-issue command actions', () => {
       const calls = stubGitHubApi((_method, url) => {
         if (url.endsWith('/pulls/7')) {
           return json({
+            number: 7,
+            node_id: 'PR_node',
             state: 'open',
             draft: false,
             title: 'fix(extension): keep the fee row visible',
@@ -442,7 +444,7 @@ describe('fix-issue command actions', () => {
       });
       await prepare('Iv23client');
       expect(errors).toEqual([]);
-      expect(stepOutputs()).toEqual(['merged=false']);
+      expect(stepOutputs()).toEqual(['merged=false', 'conflicted=false']);
       expect(logs).toEqual([`revise-prepare: revise 1 of #7 at ${head} with 1 feedback items`]);
       expect(calls.map(call => call.authorization)).toEqual(
         calls.map(() => 'Bearer ghs_job_token')

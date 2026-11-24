@@ -11,9 +11,11 @@ import type { FixIssuePaths } from './paths.js';
 import {
   type ReviseItem,
   type ReviseState,
+  botAccountType,
   isReviseSummary,
   issueOfBranch,
   maxRevises,
+  revisePullSchema,
   writeReviseState,
 } from './revise-state.js';
 
@@ -30,25 +32,9 @@ interface GateOptions {
   readonly workflowAppClientId?: string;
 }
 
-const botType = 'Bot';
 const maxListedConflicts = 10;
 
-const pullSchema = z.object({
-  state: z.string(),
-  draft: z.boolean(),
-  title: z.string(),
-  body: z.string().nullable(),
-  html_url: z.string(),
-  user: z.object({ login: z.string(), type: z.string().optional() }).nullable(),
-  head: z.object({
-    ref: z.string(),
-    sha: z.string(),
-    repo: z.object({ full_name: z.string() }).nullable(),
-  }),
-  base: z.object({ ref: z.string() }),
-});
-
-type Pull = z.infer<typeof pullSchema>;
+type Pull = z.infer<typeof revisePullSchema>;
 
 function renderPullRequest(pull: Pull): string {
   const body = (pull.body ?? '').trim();
@@ -69,7 +55,7 @@ function pullProblem(pull: Pull, repo: string, baseBranch: string): string | nul
   if (pull.head.repo?.full_name !== repo) return 'it comes from another repository';
   if (pull.base.ref !== baseBranch) return `it does not target ${baseBranch}`;
   if (issueOfBranch(pull.head.ref) === null) return `${pull.head.ref} is not a fix-issue branch`;
-  if (pull.user?.type !== botType) return 'it was not opened by the fix-issue App';
+  if (pull.user?.type !== botAccountType) return 'it was not opened by the fix-issue App';
   return null;
 }
 
@@ -92,7 +78,9 @@ export async function gateRevise({
   workflowAppClientId,
 }: GateOptions): Promise<ReviseState> {
   if (!workflowAppClientId) throw new Error('the client ID of the fix-issue App is not set');
-  const pull = pullSchema.parse(await client.request('GET', `repos/${repo}/pulls/${pullRequest}`));
+  const pull = revisePullSchema.parse(
+    await client.request('GET', `repos/${repo}/pulls/${pullRequest}`)
+  );
   const problem = pullProblem(pull, repo, baseBranch);
   const issue = issueOfBranch(pull.head.ref);
   if (problem !== null || issue === null) {

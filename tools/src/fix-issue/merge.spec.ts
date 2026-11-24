@@ -138,6 +138,18 @@ describe('merge helpers', () => {
     expect(repo.git(['rev-parse', 'HEAD^2'])).toBe(dev);
   });
 
+  test('refuses a conflict that leaves no markers, like a file dev deleted', () => {
+    const { head } = createPullRequestBranch(repo, { conflict: false });
+    repo.git(['rm', '-q', conflictingFile]);
+    repo.git(['commit', '-q', '-m', 'dev drops the fee row']);
+    const dev = repo.git(['rev-parse', 'HEAD']);
+    checkOut(head);
+    expect(() => mergeDev(repo.root, dev)).toThrow(
+      `conflicts with the branch in ${conflictingFile} without leaving conflict markers`
+    );
+    expect(repo.git(['rev-parse', 'HEAD'])).toBe(head);
+  });
+
   test('refuses to merge a dev that is already part of the branch', () => {
     const { head } = createPullRequestBranch(repo, { conflict: false });
     checkOut(head);

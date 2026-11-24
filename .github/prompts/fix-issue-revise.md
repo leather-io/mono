@@ -51,18 +51,16 @@ pull request's, the lines after `|||||||` are what both sides started from, and 
    brief and its `Settled:` lines) and the newer code on `dev`. Never take one side wholesale to
    make the markers go away, and leave no marker behind; the workflow refuses a `done` status while
    one remains.
-2. A listed file with no markers was changed on one side and deleted or replaced on the other, or
-   is not text. Read `git log -3 --format=%s <dev sha> -- <path>` and the pull request's diff, and
-   keep, delete or rewrite it as both sides intend.
-3. Never edit `pnpm-lock.yaml` by hand. The workflow already ran `pnpm install` on the merged tree;
-   if the lockfile still holds markers, run `pnpm install --no-frozen-lockfile`.
-4. A merge can break the change without any conflict: `dev` may have renamed, moved or removed
+2. Never edit `pnpm-lock.yaml` by hand. With conflicts the workflow has not installed or built
+   anything on the merged tree: once every other file is resolved, run
+   `pnpm install --no-frozen-lockfile`, which also resolves the lockfile, then build the packages.
+3. A merge can break the change without any conflict: `dev` may have renamed, moved or removed
    something the pull request relies on. Run the verification and the tests of the packages the
    pull request touches, and fix what the merge broke.
-5. When both sides changed the same behavior and nothing in the brief or the issue says which one
+4. When both sides changed the same behavior and nothing in the brief or the issue says which one
    should win, do not guess. Leave that file, set `"state": "blocked"` and add a question that
    names the file, what each side does and the options.
-6. When `merge` is the only item, do only this: resolve the conflicts and fix what the merge broke.
+5. When `merge` is the only item, do only this: resolve the conflicts and fix what the merge broke.
 
 ## Status file
 
