@@ -1,6 +1,5 @@
 export * from './asset-list/asset-list.service';
 export * from './asset-list/asset-list.types';
-export * from './activity/activity.service';
 export * from './activity/blockchain-activity.service';
 export * from './assets/sip10-asset.service';
 export { getAddressFromAssetIdentifier } from './assets/stacks-asset.utils';
@@ -23,6 +22,7 @@ export type {
   HiroFtMetadata,
   HiroPrincipalMempoolTransaction,
   HiroPrincipalMempoolTransactionsResponse,
+  HiroPrincipalTransaction,
 } from './infrastructure/api/hiro/hiro-stacks-api.types';
 export * from './infrastructure/cache/http-cache.config';
 export * from './infrastructure/cache/http-cache.service';
