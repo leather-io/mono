@@ -14,12 +14,11 @@ import {
 import { type TestRepo, binaryContent, createTestRepo } from './test/test-repo.js';
 
 describe('refusedPaths', () => {
-  test('allows apps, packages, tools and the lockfile and refuses everything else', () => {
+  test('allows apps, packages and the lockfile and refuses everything else', () => {
     expect(
       refusedPaths([
         'apps/extension/a.ts',
         'packages/utils/b.ts',
-        'tools/src/c.ts',
         'pnpm-lock.yaml',
         '.github/workflows/x.yml',
         'knip.json',
@@ -27,6 +26,17 @@ describe('refusedPaths', () => {
         'packages/utils/pnpm-lock.yaml',
       ])
     ).toEqual(['.github/workflows/x.yml', 'knip.json', 'appsfake/a.ts']);
+  });
+
+  test('refuses the tools package, which holds the checks the workflow runs on a fix', () => {
+    const files = [
+      'tools/src/fix-issue/git.ts',
+      'tools/src/commands/fix-issue.ts',
+      'tools/src/lt.ts',
+      'tools/bin/lt.js',
+      'tools/package.json',
+    ];
+    expect(refusedPaths(files)).toEqual(files);
   });
 });
 

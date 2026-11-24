@@ -2,18 +2,18 @@ import { createHash } from 'node:crypto';
 import { lstatSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { runCommand, runOrThrow } from './exec.js';
+import { runCommand, runOrThrow } from '../ci/exec.js';
 
 interface ChangedPath {
   readonly path: string;
   readonly present: boolean;
 }
 
-const allowedPrefixes = ['apps/', 'packages/', 'tools/'];
+const allowedPrefixes = ['apps/', 'packages/'];
 const allowedFiles = ['pnpm-lock.yaml'];
 
 export const allowedPathsDescription =
-  'apps/, packages/, tools/ and pnpm-lock.yaml (.github/ is never allowed)';
+  'apps/, packages/ and pnpm-lock.yaml (.github/ and tools/ are never allowed)';
 
 function isAllowedPath(file: string): boolean {
   return allowedFiles.includes(file) || allowedPrefixes.some(prefix => file.startsWith(prefix));

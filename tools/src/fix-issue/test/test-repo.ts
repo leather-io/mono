@@ -10,7 +10,7 @@ import {
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import { type CommandRunner, runOrThrow } from '../exec.js';
+import { type CommandRunner, runOrThrow } from '../../ci/exec.js';
 import { type FixIssuePaths, fixIssuePaths } from '../paths.js';
 import type { FixStatus } from '../status.js';
 

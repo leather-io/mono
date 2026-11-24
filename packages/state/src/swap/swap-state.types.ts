@@ -234,18 +234,7 @@ export type BitcoinBroadcastResult =
 
 export type SwapSubmissionResult =
   | { status: 'submitted'; txid: string }
-  | {
-      status: 'sbtc-notification-failed';
-      txid: string;
-      errorMessage: string;
-      httpStatus?: number;
-    }
-  | {
-      status: 'broadcast-uncertain';
-      txid: string;
-      errorMessage: string;
-      notified: boolean;
-    };
+  | { status: 'broadcast-uncertain'; txid: string; errorMessage: string };
 
 export interface UseSwapStateResult {
   state: SwapState;

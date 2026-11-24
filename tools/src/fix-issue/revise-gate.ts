@@ -1,10 +1,10 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { z } from 'zod';
 
+import { type GitHubClient, paginate } from '../ci/github.js';
 import { extractBrief, isBriefComment } from './brief.js';
 import { fetchFeedback, instructionsItemId, mergeItemId, renderFeedback } from './feedback.js';
 import { refusedPaths } from './git.js';
-import { type GitHubClient, paginate } from './github.js';
 import { commentSchema, fetchIssue, isWorkflowAppComment } from './issue.js';
 import { ensureCommit, planMerge } from './merge.js';
 import type { FixIssuePaths } from './paths.js';

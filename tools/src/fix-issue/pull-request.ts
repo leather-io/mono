@@ -2,8 +2,9 @@ import { existsSync, readFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { z } from 'zod';
 
+import { runCommand, runOrThrow } from '../ci/exec.js';
+import { type GitHubClient, paginate } from '../ci/github.js';
 import { isBriefComment, renderBriefComment } from './brief.js';
-import { runCommand, runOrThrow } from './exec.js';
 import {
   allowedPathsDescription,
   changedPaths,
@@ -13,7 +14,6 @@ import {
   refusedPaths,
   treeEntry,
 } from './git.js';
-import { type GitHubClient, graphqlData, paginate } from './github.js';
 import { filesWithConflictMarkers, mergeDev } from './merge.js';
 import type { FixIssuePaths } from './paths.js';
 import {
@@ -199,7 +199,7 @@ function applyPatch(paths: FixIssuePaths): void {
         `refusing to apply the patch; only ${allowedPathsDescription} may change:\n  ${refused.join('\n  ')}`
       );
     }
-    runOrThrow('git', ['apply', '--binary', paths.patchFile], { cwd: paths.applyDir });
+    runOrThrow('git', ['apply', '--index', '--binary', paths.patchFile], { cwd: paths.applyDir });
   }
 }
 
@@ -586,13 +586,15 @@ async function publishRevise(
     ),
   });
   if (draft !== target.draft) {
-    await graphqlData(client, z.unknown(), draft ? draftMutation : readyMutation, {
-      id: target.nodeId,
-    }).catch((error: unknown) => {
-      log(
-        `open-pull-request: could not make #${target.number} ${draft ? 'a draft' : 'ready'}: ${errorMessage(error)}`
-      );
-    });
+    await client
+      .graphql(draft ? draftMutation : readyMutation, {
+        id: target.nodeId,
+      })
+      .catch((error: unknown) => {
+        log(
+          `open-pull-request: could not make #${target.number} ${draft ? 'a draft' : 'ready'}: ${errorMessage(error)}`
+        );
+      });
   }
 
   const answers = await answerFeedback({

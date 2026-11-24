@@ -1,5 +1,5 @@
+import { type GitHubClient, GitHubError, type HttpMethod, graphqlData } from '../../ci/github.js';
 import { gitBlobSha } from '../git.js';
-import { type GitHubClient, GitHubError, type HttpMethod } from '../github.js';
 
 interface GitHubCall {
   readonly method: HttpMethod | 'GRAPHQL';
@@ -67,7 +67,7 @@ export function fakeGitHub(
     graphql(query, variables) {
       calls.push({ method: 'GRAPHQL', path: query, body: variables });
       return new Promise(resolve => {
-        resolve(graphqlRoute(query, variables) ?? { data: {} });
+        resolve(graphqlData(graphqlRoute(query, variables) ?? { data: {} }));
       });
     },
   };

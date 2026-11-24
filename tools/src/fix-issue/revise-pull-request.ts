@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
+import { type GitHubClient, paginate } from '../ci/github.js';
 import { fetchFeedback, instructionsItemId, mergeItemId } from './feedback.js';
-import { type GitHubClient, graphqlData, paginate } from './github.js';
 import { ensureCommit, planMerge } from './merge.js';
 import type { FixIssuePaths } from './paths.js';
 import {
@@ -84,7 +84,6 @@ const pullSchema = z.object({
 const commentAuthorsSchema = z.array(
   z.object({ body: z.string().nullable(), user: z.object({ login: z.string() }).nullable() })
 );
-const mutationSchema = z.unknown();
 
 const shortShaLength = 12;
 const screenshotsHeading = '## Screenshots';
@@ -200,13 +199,10 @@ export async function answerFeedback({
   let resolved = 0;
   for (const { thread, answer } of answers) {
     try {
-      await graphqlData(client, mutationSchema, replyMutation, {
-        thread: thread.nodeId,
-        body: answer.reply,
-      });
+      await client.graphql(replyMutation, { thread: thread.nodeId, body: answer.reply });
       answered += 1;
       if (resolve && answer.addressed) {
-        await graphqlData(client, mutationSchema, resolveMutation, { thread: thread.nodeId });
+        await client.graphql(resolveMutation, { thread: thread.nodeId });
         resolved += 1;
       }
     } catch (error) {

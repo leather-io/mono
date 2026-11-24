@@ -1,6 +1,6 @@
 import { writeFileSync } from 'node:fs';
 
-import { runOrThrow } from './exec.js';
+import { runOrThrow } from '../ci/exec.js';
 import { ensureCommit, mergeBase, mergeDev } from './merge.js';
 import type { FixIssuePaths } from './paths.js';
 import { type ReviseState, readReviseState, writeReviseState } from './revise-state.js';

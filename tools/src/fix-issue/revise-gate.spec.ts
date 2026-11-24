@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
-import { GitHubError } from './github.js';
+import { GitHubError } from '../ci/github.js';
 import { gateRevise } from './revise-gate.js';
 import { readReviseState } from './revise-state.js';
 import { fakeGitHub, reviewThread, threadsPage } from './test/fake-github.js';

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { type GitHubClient, graphqlData, paginate } from './github.js';
+import { type GitHubClient, paginate } from '../ci/github.js';
 import { trustedAuthors } from './issue.js';
 import { maxRevises } from './revise-state.js';
 
@@ -149,11 +149,8 @@ export async function fetchOpenThreads(
   const threads: OpenThread[] = [];
   let cursor: string | null = null;
   for (let page = 0; page < maxThreadPages; page += 1) {
-    const data: z.infer<typeof threadsSchema> = await graphqlData(
-      client,
-      threadsSchema,
-      threadsQuery,
-      { owner, name, number: pullRequest, cursor }
+    const data: z.infer<typeof threadsSchema> = threadsSchema.parse(
+      await client.graphql(threadsQuery, { owner, name, number: pullRequest, cursor })
     );
     const { nodes, pageInfo } = data.repository.pullRequest.reviewThreads;
     for (const thread of nodes) {

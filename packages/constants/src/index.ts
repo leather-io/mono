@@ -25,7 +25,7 @@ export const STACKS_BRIDGE_URL = 'https://bridge.stacks.co/';
 export const HIGH_FEE_AMOUNT_STX = 5;
 export const HIGH_FEE_WARNING_LEARN_MORE_URL_BTC = 'https://bitcoinfees.earn.com/';
 export const HIGH_FEE_WARNING_LEARN_MORE_URL_STX =
-  'https://leather.gitbook.io/guides/transactions/fees';
+  'https://docs.leather.io/transactions/configure-transaction-fees';
 
 export const DEFAULT_FEE_RATE = 400;
 
@@ -96,7 +96,7 @@ export const BTC_US_URL = 'https://btc.us/';
 
 export const LEATHER_LEARN_URL = 'https://leather.io/learn';
 
-export const LEATHER_GITBOOK_DEVS = 'https://leather.gitbook.io/developers';
+export const LEATHER_GITBOOK_DEVS = 'https://docs.leather.io/developers';
 
 export const LEATHER_EXTENSION_CHROME_STORE_URL =
   'https://chromewebstore.google.com/detail/leather/ldinpeekobnhjjdofggfgjlcehhmanlj?hl=en';
@@ -203,7 +203,7 @@ export const SBTC_ASSET_ID_MAINNET =
   'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token';
 
 export const SBTC_ASSET_ID_TESTNET =
-  'SNGWPN3XDAQE673MXYXF81016M50NHF5X5PWWM70.sbtc-token::sbtc-token';
+  'SN3VMHXEN64ZZF71JQ5VESXDWTR301XTTXGF4J8F1.sbtc-token::sbtc-token';
 
 export const AEUSDC_ASSET_PRINCIPAL = 'SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc';
 

@@ -2,9 +2,9 @@ import { existsSync, writeFileSync } from 'node:fs';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { z } from 'zod';
 
-import { runOrThrow } from './exec.js';
+import { runOrThrow } from '../ci/exec.js';
+import { GitHubError } from '../ci/github.js';
 import { gitBlobSha } from './git.js';
-import { GitHubError } from './github.js';
 import { mergeDev } from './merge.js';
 import { openPullRequest } from './pull-request.js';
 import { carriedScreenshots } from './revise-pull-request.js';
@@ -451,8 +451,8 @@ describe('openPullRequest for a revise', () => {
     expect(callsTo(client, 'POST', '/git/commits')).toHaveLength(1);
     expect(summaryOf(client)).toContain('**Revise 2 of 5**');
     expect(lines).toEqual([
-      'open-pull-request: could not make #7 ready: GraphQL request failed: Resource not accessible by integration',
-      'open-pull-request: could not answer the review threads: GraphQL request failed: Resource not accessible by integration',
+      'open-pull-request: could not make #7 ready: GitHub GraphQL failed: [{"message":"Resource not accessible by integration"}]',
+      'open-pull-request: could not answer the review threads: GitHub GraphQL failed: [{"message":"Resource not accessible by integration"}]',
     ]);
   });
 

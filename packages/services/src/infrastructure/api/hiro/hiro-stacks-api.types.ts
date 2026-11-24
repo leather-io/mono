@@ -1,7 +1,6 @@
 import { type FtMetadataResponse, type Metadata } from '@hirosystems/token-metadata-api-client';
 import {
   type AddressAssetsListResponse,
-  type AddressBalanceResponse,
   type AddressTransactionWithTransfers,
   type AddressTransactionsWithTransfersListResponse,
   type MempoolTransaction,
@@ -207,7 +206,6 @@ export type HiroTransactionIncludeField =
   | 'source_code'
   | 'post_conditions'
   | 'result';
-export type HiroAddressBalanceResponse = AddressBalanceResponse;
 export type HiroMetadata = Metadata;
 export type HiroFtMetadata = FtMetadataResponse;
 export type HiroTransactionEvent = TransactionEvent;
@@ -220,22 +218,32 @@ export type HiroReadOnlyFunctionResponse =
 export type HiroTransactionFeeEstimateResponse = TransactionFeeEstimateResponse;
 export type HiroServerStatusResponse = ServerStatusResponse;
 
-export interface HiroAddressStxBalanceResponse {
-  balance: string;
-  total_miner_rewards_received: string;
-  lock_tx_id: string;
-  locked: string;
-  lock_height: number;
-  burnchain_lock_height: number;
-  burnchain_unlock_height: number;
+interface HiroStxLock {
+  readonly amount: string;
+  readonly pox_version: number;
+  readonly lock_tx_id: string;
+  readonly stacks_lock_height: number;
+  readonly burn_lock_height: number;
+  readonly burn_unlock_height: number;
 }
 
-interface HiroAddressFtBalanceResult {
-  token: string;
-  balance: string;
+interface HiroStxMempoolBalance {
+  readonly estimated_balance: string;
+  readonly inbound: string;
+  readonly outbound: string;
 }
 
-export type HiroAddressFtBalancesResponse = HiroPageResponse<HiroAddressFtBalanceResult>;
+export interface HiroPrincipalStxBalanceResponse {
+  readonly balance: string;
+  readonly available: string;
+  readonly locked: HiroStxLock | null;
+  readonly mempool: HiroStxMempoolBalance | null;
+}
+
+export interface HiroPrincipalFtBalance {
+  readonly asset_identifier: string;
+  readonly balance: string;
+}
 
 export interface CallReadOnlyFunctionArgs {
   contractAddress: string;
@@ -259,6 +267,8 @@ export interface HiroPrincipalNftBalance {
 }
 
 export type HiroPrincipalNftBalancesResponse = HiroCursorPageResponse<HiroPrincipalNftBalance>;
+
+export type HiroPrincipalFtBalancesResponse = HiroCursorPageResponse<HiroPrincipalFtBalance>;
 
 type HiroStakingBondStatus = 'upcoming' | 'active' | 'unlocked';
 

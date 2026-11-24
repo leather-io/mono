@@ -11,8 +11,10 @@ import type { SettingsService } from '../../settings/settings.service';
 import { hiroApiRequestsPriorityLevels } from './hiro-request-priorities';
 import { HiroStacksApiClient } from './hiro-stacks-api.client';
 import type {
+  HiroPrincipalFtBalancesResponse,
   HiroPrincipalMempoolTransactionsResponse,
   HiroPrincipalNftBalancesResponse,
+  HiroPrincipalStxBalanceResponse,
 } from './hiro-stacks-api.types';
 
 const principal = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE';
@@ -131,6 +133,102 @@ describe(HiroStacksApiClient.name, () => {
       expect(get).toHaveBeenCalledTimes(1);
     });
   });
+  describe('getPrincipalStxBalance', () => {
+    const stxBalance: HiroPrincipalStxBalanceResponse = {
+      balance: '5000000',
+      available: '4000000',
+      locked: {
+        amount: '1000000',
+        pox_version: 4,
+        lock_tx_id: txid,
+        stacks_lock_height: 100,
+        burn_lock_height: 898000,
+        burn_unlock_height: 900144,
+      },
+      mempool: null,
+    };
+
+    it('fetches the v3 principal STX balance endpoint', async () => {
+      get.mockResolvedValueOnce({ data: stxBalance });
+      const signal = new AbortController().signal;
+
+      const balance = await makeClient().getPrincipalStxBalance(principal, { signal });
+
+      expect(balance).toEqual(stxBalance);
+      expect(get).toHaveBeenCalledWith(
+        `${mainnet.chain.stacks.url}/extended/v3/principals/${principal}/balances/stx`,
+        { signal }
+      );
+      expect(add).toHaveBeenCalledWith(RateLimiterType.HiroStacks, {
+        priority: hiroApiRequestsPriorityLevels.getAccountBalance,
+        signal,
+        throwOnTimeout: true,
+      });
+      expect(fetchWithCache).toHaveBeenCalledWith(
+        ['hiro-stacks-get-principal-stx-balance', principal, mainnet.chain.stacks.chainId],
+        expect.any(Function),
+        { skipCache: undefined }
+      );
+    });
+  });
+
+  describe('getPrincipalFtBalances', () => {
+    const sbtc = 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token';
+    const alex = 'SP3K8BC0PPEVCV7NZ6QSRWPQ2JE9E5B6N3PA0KBR9.age000-governance-token::alex';
+    const firstPage: HiroPrincipalFtBalancesResponse = {
+      total: 2,
+      limit: 200,
+      cursor: { next: `100:${alex}`, previous: null, current: `500:${sbtc}` },
+      results: [{ asset_identifier: sbtc, balance: '500' }],
+    };
+    const secondPage: HiroPrincipalFtBalancesResponse = {
+      total: 2,
+      limit: 200,
+      cursor: { next: null, previous: `500:${sbtc}`, current: `100:${alex}` },
+      results: [{ asset_identifier: alex, balance: '100' }],
+    };
+
+    it('follows the cursor across pages of the v3 principal FT balances endpoint', async () => {
+      get.mockResolvedValueOnce({ data: firstPage }).mockResolvedValueOnce({ data: secondPage });
+      const signal = new AbortController().signal;
+
+      const balances = await makeClient().getPrincipalFtBalances(principal, { signal });
+
+      expect(balances).toEqual([...firstPage.results, ...secondPage.results]);
+      expect(get).toHaveBeenNthCalledWith(
+        1,
+        `${mainnet.chain.stacks.url}/extended/v3/principals/${principal}/balances/ft?limit=200`,
+        { signal }
+      );
+      expect(get).toHaveBeenNthCalledWith(
+        2,
+        `${mainnet.chain.stacks.url}/extended/v3/principals/${principal}/balances/ft?limit=200&cursor=${encodeURIComponent(`100:${alex}`)}`,
+        { signal }
+      );
+      expect(fetchWithCache).toHaveBeenNthCalledWith(
+        2,
+        [
+          'hiro-stacks-get-principal-ft-balances',
+          principal,
+          `100:${alex}`,
+          200,
+          mainnet.chain.stacks.chainId,
+        ],
+        expect.any(Function),
+        { skipCache: undefined }
+      );
+    });
+
+    it('stops after five pages', async () => {
+      get.mockResolvedValue({ data: firstPage });
+
+      const balances = await makeClient().getPrincipalFtBalances(principal);
+
+      expect(get).toHaveBeenCalledTimes(5);
+      expect(balances).toHaveLength(5);
+    });
+  });
+
   describe('getPrincipalNftBalances', () => {
     const assetIdentifier =
       'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173.the-explorer-guild::The-Explorer-Guild';

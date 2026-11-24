@@ -62,30 +62,32 @@ open-pull-request --pull-request ─▶ signed commit on top of the branch head,
 
 ## Modules
 
-| Module                              | Responsibility                                                                                           |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `status.ts`                         | the fixer status schema and its rules (subject, required entries, screenshots)                           |
-| `review.ts`                         | the review schema                                                                                        |
-| `git.ts`                            | changed paths, allowed paths, tree snapshots, blob hashes                                                |
-| `verify.ts`                         | the verification gate                                                                                    |
-| `strip.ts`                          | removing changes outside the allowed paths, with a blocking question                                     |
-| `rounds.ts`                         | round verify (clears the last round, snapshots for the review), review check, end and finish             |
-| `screenshots.ts`                    | capture before and after, PNG checks                                                                     |
-| `issue.ts`                          | fetch and render the issue                                                                               |
-| `pull-request.ts`                   | patch in a separate worktree, signed commit, screenshots, pull request or questions comment, superseding |
-| `brief.ts`                          | the brief as a comment on the pull request, and reading it back                                          |
-| `revise-gate.ts`                    | whether a pull request may be revised, and what the revise has to address                                |
-| `feedback.ts`                       | unresolved review threads and review summaries by people with write access, rendered as `feedback.md`    |
-| `merge.ts`                          | when a revise merges dev, the merge itself (the same in both jobs), leftover conflict markers            |
-| `revise.ts`                         | moving the fixer job from dev to the pull request head: the checkout, the merge, the diff                |
-| `revise-pull-request.ts`            | what `open-pull-request` adds for a revise: its target, thread replies, the comment that records it      |
-| `revise-state.ts`                   | `revise.json`, the branch name pattern, the marker that counts revises                                   |
-| `app-token.ts`                      | the App JWT signed through KMS, the installation token and its revoke                                    |
-| `stop-guard.ts`                     | the Stop hook that keeps an agent working until its output file is valid                                 |
-| `dispatch.ts`                       | dispatching one brief of a run directory, or the revise of a pull request                                |
-| `run-status.ts`                     | the latest run and pull request per issue, and the questions of blocked drafts                           |
-| `github.ts`                         | the GitHub REST and GraphQL client, over a token or the `gh` CLI                                         |
-| `exec.ts`, `outputs.ts`, `paths.ts` | running commands, step outputs, the paths under `tmp/fix-issue/`                                         |
+| Module                   | Responsibility                                                                                           |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `status.ts`              | the fixer status schema and its rules (subject, required entries, screenshots)                           |
+| `review.ts`              | the review schema                                                                                        |
+| `git.ts`                 | changed paths, allowed paths, tree snapshots, blob hashes                                                |
+| `verify.ts`              | the verification gate                                                                                    |
+| `strip.ts`               | removing changes outside the allowed paths, with a blocking question                                     |
+| `rounds.ts`              | round verify (clears the last round, snapshots for the review), review check, end and finish             |
+| `screenshots.ts`         | capture before and after, PNG checks                                                                     |
+| `issue.ts`               | fetch and render the issue                                                                               |
+| `pull-request.ts`        | patch in a separate worktree, signed commit, screenshots, pull request or questions comment, superseding |
+| `brief.ts`               | the brief as a comment on the pull request, and reading it back                                          |
+| `revise-gate.ts`         | whether a pull request may be revised, and what the revise has to address                                |
+| `feedback.ts`            | unresolved review threads and review summaries by people with write access, rendered as `feedback.md`    |
+| `merge.ts`               | when a revise merges dev, the merge itself (the same in both jobs), leftover conflict markers            |
+| `revise.ts`              | moving the fixer job from dev to the pull request head: the checkout, the merge, the diff                |
+| `revise-pull-request.ts` | what `open-pull-request` adds for a revise: its target, thread replies, the comment that records it      |
+| `revise-state.ts`        | `revise.json`, the branch name pattern, the marker that counts revises                                   |
+| `stop-guard.ts`          | the Stop hook that keeps an agent working until its output file is valid                                 |
+| `dispatch.ts`            | dispatching one brief of a run directory, or the revise of a pull request                                |
+| `run-status.ts`          | the latest run and pull request per issue, and the questions of blocked drafts                           |
+| `paths.ts`               | the paths under `tmp/fix-issue/`                                                                         |
+
+The GitHub REST and GraphQL client (over a token or the `gh` CLI), command running, step outputs
+and the App token signed through KMS live in `../ci/` (`github.ts`, `exec.ts`, `outputs.ts`,
+`app-token.ts`), shared with the review gate.
 
 Specs sit next to each module and use the helpers in `test/`: `test-repo.ts` (a throwaway git repository) and
 `fake-github.ts` (a recording GitHub client) instead of real tools.
@@ -182,7 +184,7 @@ pull request opens without the table; screenshots never cost the fix. Delete a
 
 Job `open-pull-request` builds `tools` from `dev`, gets only the run's artifact (the patch, the
 status file, the round records and the screenshots), applies
-the patch in a separate git worktree, refuses any path outside `apps/`, `packages/`, `tools/` and
+the patch in a separate git worktree, refuses any path outside `apps/`, `packages/` and
 `pnpm-lock.yaml`, and writes the signed commit to a new `bot/fix-issue-<n>-<run id>` (`pnpm lt fix-issue
 open-pull-request`). The commit carries a `Co-authored-by:` trailer for the person who dispatched
 the run (`github.triggering_actor`, with their public name and GitHub no-reply email; bots are
@@ -340,7 +342,9 @@ write job runs.
 
 `open-pull-request` is the boundary: a fresh runner that builds `tools` from `dev` before reading
 the artifact, runs no code from the patch, applies it in a separate worktree, refuses anything
-outside `apps/`, `packages/`, `tools/` and `pnpm-lock.yaml`, and holds the only write token. It has
+outside `apps/`, `packages/` and `pnpm-lock.yaml`, and holds the only write token. `tools/` is off
+limits as a whole: this job runs `lt`, which loads every module of the package, so a fix that
+changed any of them would, once merged, run next to that token and could loosen these checks. It has
 no access to the Actions cache either (`cache-mode: none`, turbo and pnpm caches off), so nothing
 another job saved runs next to that token. For a revise it takes what it acts on from the dispatch
 (the pull request, whether to merge, the notes) and from GitHub (the head commit, the open threads,
@@ -371,15 +375,14 @@ stolen token away from everything but bot branches. Keep them as follows:
 - `dev` keeps two approvals from the reviewers team and approval of the most recent push by someone
   other than its pusher, so the App's own approval never counts.
 
-The App can still push anything except workflow files to a `bot/` branch, and CI runs it there. Any
-job that runs on pull requests or on pushes to any branch must therefore skip `bot/` branches
-before it gets a secret, an environment or `contents` or `id-token` write, or calls a reusable
-workflow: `if: ${{ !startsWith(github.head_ref || github.ref_name, 'bot/') }}` on the job, or on
-each step that uses a secret when secrets in steps are all the job gets. `pnpm lt
-bot-branch-secret-guard check` (part of `pnpm lint`, so it runs locally and in CI) fails a job
-without it, apart from the jobs listed in `.github/bot-branch-secret-guard-baseline.json`, whose
-secrets are low-risk; that list only shrinks, and an entry that is no longer needed fails the check
-too.
+The App can still push anything except workflow files to a `bot/` branch, and CI runs it there
+before anyone has reviewed it. Three jobs on pull requests and branch pushes hold a secret today
+(`staging` in `web:staging-build`, `test-coverage` in `repo:code-checks` and `review` in
+`repo:claude-code-review`), and their secrets are low-risk, so they run on bot branches like on any
+other. Nothing checks this for you: a new job of that kind that gets a secret worth protecting, an
+environment or `contents` or `id-token` write must either skip bot branches with
+`if: ${{ !startsWith(github.head_ref || github.ref_name, 'bot/') }}` or take the secret from an
+environment whose rules keep it away from them.
 
 **App setup, once per repository:**
 

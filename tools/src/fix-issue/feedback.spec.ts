@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
+import { GitHubError } from '../ci/github.js';
 import { fetchFeedback, fetchOpenThreads, renderFeedback } from './feedback.js';
-import { GitHubError } from './github.js';
 import { type GraphqlRoute, fakeGitHub, reviewThread, threadsPage } from './test/fake-github.js';
 
 const repo = 'leather-io/mono';
@@ -64,7 +64,7 @@ describe('fetchOpenThreads', () => {
   test('fails when GitHub answers with an error', async () => {
     const client = fakeGitHub(undefined, () => ({ errors: [{ message: 'Not found' }] }));
     await expect(fetchOpenThreads(client, repo, 7)).rejects.toThrow(
-      'GraphQL request failed: Not found'
+      'GitHub GraphQL failed: [{"message":"Not found"}]'
     );
   });
 });
