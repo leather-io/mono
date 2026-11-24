@@ -1,42 +1,53 @@
 import { memo } from 'react';
 
 import { Balance } from '@/components/balance/balance';
-import { t } from '@lingui/core/macro';
+import { useSettings } from '@/store/settings/settings';
 
-import { type ActivityView } from '@leather.io/features';
-import { ActivityAvatarIcon, Cell } from '@leather.io/ui/native';
+import { btcAsset, stxAsset } from '@leather.io/constants';
+import {
+  type BlockchainActivityDirection,
+  type BlockchainActivityIndicator,
+  type BlockchainActivityItem,
+  formatBlockchainActivityCaption,
+  makeActivityLink,
+} from '@leather.io/features';
+import {
+  BlockchainActivityAvatarIcon,
+  BlockchainActivityIndicatorIcon,
+  Cell,
+} from '@leather.io/ui/native';
+import { minusSign } from '@leather.io/utils';
 
 import { useOpenUrl } from '../browser/browser/use-open-url';
-import { translateActivityStatus } from './translate-activity-status';
+
+const indicatorSize = 16;
 
 interface ActivityItemProps {
-  item: ActivityView;
+  item: BlockchainActivityItem;
+}
+
+function resolveValueColor(
+  indicator: BlockchainActivityIndicator,
+  direction: BlockchainActivityDirection
+) {
+  if (indicator === 'pending' || indicator === 'failed' || indicator === 'cancelled')
+    return 'ink.text-subdued';
+  if (direction === 'received') return 'green.action-primary-default';
+  return 'ink.text-primary';
 }
 
 function ActivityItemComponent({ item }: ActivityItemProps) {
-  const { balances, statusLabel, title, caption, activityLink, activityAvatar, statusIndicator } =
-    item;
+  const { view } = item;
+  const { networkPreference } = useSettings();
   const { openUrl } = useOpenUrl();
 
-  const titleText = statusLabel ? translateActivityStatus(statusLabel) : null;
-  const timestampText =
-    statusLabel && caption.startsWith(statusLabel)
-      ? caption.slice(statusLabel.length).trim()
-      : caption;
-
-  function getSwapStatusText(status: string) {
-    if (status === 'pending') {
-      return t`Swapping`;
-    } else if (status === 'failed') {
-      return t`Swap failed`;
-    } else {
-      return t`Swapped`;
-    }
-  }
-  const swapStatusText = getSwapStatusText(statusIndicator);
-
-  const secondaryText =
-    activityAvatar === 'swap' ? `${swapStatusText} ${timestampText}` : timestampText;
+  const activityLink = makeActivityLink({
+    txid: view.txid,
+    networkPreference,
+    asset: view.chain === 'bitcoin' ? btcAsset : stxAsset,
+  });
+  const { amount } = view;
+  const valueColor = amount ? resolveValueColor(view.indicator, amount.direction) : undefined;
 
   return (
     <Cell.Root
@@ -44,40 +55,49 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
       onPress={activityLink ? () => openUrl(activityLink) : undefined}
     >
       <Cell.Icon>
-        <ActivityAvatarIcon activity={item} />
+        <BlockchainActivityAvatarIcon
+          avatar={view.avatar}
+          indicator={
+            <BlockchainActivityIndicatorIcon indicator={view.indicator} size={indicatorSize} />
+          }
+        />
       </Cell.Icon>
       <Cell.Content>
-        <Cell.Label variant="primary" fontSize={15}>
-          {titleText || title}
+        <Cell.Label
+          variant="primary"
+          fontSize={15}
+          color={view.status === 'success' ? 'ink.text-primary' : 'ink.text-subdued'}
+        >
+          {view.title || view.subtitle || '—'}
         </Cell.Label>
         <Cell.Label variant="secondary" fontSize={15}>
-          {secondaryText}
+          {formatBlockchainActivityCaption(view)}
         </Cell.Label>
       </Cell.Content>
-      <Cell.Aside>
-        {balances.quote ? (
-          <Cell.Label variant="primary" color="ink.text-subdued" lineHeight={16} fontSize={13}>
+      {amount ? (
+        <Cell.Aside>
+          <Cell.Label variant="primary" lineHeight={16} fontSize={13}>
             <Balance
-              operator={balances.operator}
-              balance={balances.quote}
-              color={balances.color}
+              balance={amount.crypto ?? amount.quote}
+              operator={amount.direction === 'received' ? '+' : minusSign}
+              formattingOptions={amount.crypto ? { showCurrency: false } : undefined}
+              color={valueColor}
               fontSize={15}
             />
           </Cell.Label>
-        ) : undefined}
-        {balances.crypto ? (
-          <Cell.Label variant="secondary" color="ink.text-subdued" lineHeight={16} fontSize={13}>
-            <Balance
-              formattingOptions={{ showCurrency: false }}
-              balance={balances.crypto}
-              variant="caption01"
-              color="ink.text-subdued"
-              lineHeight={16}
-              fontSize={13}
-            />
-          </Cell.Label>
-        ) : undefined}
-      </Cell.Aside>
+          {amount.crypto ? (
+            <Cell.Label variant="secondary" color="ink.text-subdued" lineHeight={16} fontSize={13}>
+              <Balance
+                balance={amount.quote}
+                variant="caption01"
+                color="ink.text-subdued"
+                lineHeight={16}
+                fontSize={13}
+              />
+            </Cell.Label>
+          ) : undefined}
+        </Cell.Aside>
+      ) : undefined}
     </Cell.Root>
   );
 }

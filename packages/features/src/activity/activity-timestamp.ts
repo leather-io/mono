@@ -31,3 +31,16 @@ export function formatActivityCaption({ timestamp }: Pick<Activity, 'timestamp'>
   const years = now.diff(then, 'year');
   return `${years}y ago`;
 }
+
+interface BlockchainActivityCaptionParams {
+  subtitle: string;
+  timestamp: number;
+}
+
+export function formatBlockchainActivityCaption({
+  subtitle,
+  timestamp,
+}: BlockchainActivityCaptionParams) {
+  const relativeTime = formatActivityCaption({ timestamp });
+  return subtitle ? `${subtitle} · ${relativeTime}` : relativeTime;
+}

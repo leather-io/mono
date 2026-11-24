@@ -32,7 +32,7 @@ export function useVaultAccountActivityFeed(
     enabled: Boolean(account),
   });
 
-  const onchain = feedQuery.data ?? [];
+  const onchain = feedQuery.data?.views ?? [];
   const onchainItems = account
     ? onchain.map(view => ({ view, vaultId: account.vaultId, vaultAccountId: account.id }))
     : [];

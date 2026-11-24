@@ -4,12 +4,12 @@ import { useQuery } from '@tanstack/react-query';
 import { createStacksAccountNoncesQueryConfig } from '@leather.io/queries';
 import { parseAccountNoncesResponse } from '@leather.io/stacks';
 
-import { useStacksConfirmedTransactions } from '../use-stacks-confirmed-transactions';
 import { useStacksPendingTransactions } from '../use-stacks-pending-transactions';
+import { useGetAccountTransactionsWithTransfersQueries } from '../use-transactions-with-transfers.query';
 
 export function useNextNonce(address: string) {
   const settings = useUserSettings();
-  const confirmedTransactions = useStacksConfirmedTransactions([address]);
+  const confirmedTransactions = useGetAccountTransactionsWithTransfersQueries([address]).totalData;
   const { transactions: pendingTransactions } = useStacksPendingTransactions([address]);
 
   return useQuery({
