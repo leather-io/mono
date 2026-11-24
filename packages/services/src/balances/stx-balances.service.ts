@@ -10,7 +10,7 @@ import {
 } from '@leather.io/utils';
 
 import { HiroStacksApiClient } from '../infrastructure/api/hiro/hiro-stacks-api.client';
-import { HiroAddressStxBalanceResponse } from '../infrastructure/api/hiro/hiro-stacks-api.types';
+import { HiroPrincipalStxBalanceResponse } from '../infrastructure/api/hiro/hiro-stacks-api.types';
 import {
   readStxLockedBalance,
   readStxTotalBalance,
@@ -96,7 +96,7 @@ export class StxBalancesService {
     signal?: AbortSignal
   ): Promise<AddressQuotedStxBalance> {
     const [addressStxBalanceResponse, pendingTransactions, stxMarketData] = await Promise.all([
-      this.stacksApiClient.getAddressStxBalance(address, { signal }),
+      this.stacksApiClient.getPrincipalStxBalance(address, { signal }),
       this.stacksTransactionsService.getPendingTransactions(address, signal),
       this.marketDataService.getMarketData(stxAsset, signal),
     ]);
@@ -126,19 +126,20 @@ export class StxBalancesService {
   }
 
   private async getStxLockInfo(
-    response: HiroAddressStxBalanceResponse,
+    response: HiroPrincipalStxBalanceResponse,
     lockedBalance: Money,
     signal?: AbortSignal
   ): Promise<StxLockInfo | undefined> {
-    if (!lockedBalance.amount.isGreaterThan(0) || !response.burnchain_unlock_height) {
+    const unlockBurnHeight = response.locked?.burn_unlock_height;
+    if (!lockedBalance.amount.isGreaterThan(0) || !unlockBurnHeight) {
       return undefined;
     }
     try {
       const poxInfo = await this.stacksApiClient.getPoxInfo({ signal });
       return {
-        unlockBurnHeight: response.burnchain_unlock_height,
+        unlockBurnHeight,
         estimatedUnlockAt: estimateBurnHeightDate(
-          response.burnchain_unlock_height,
+          unlockBurnHeight,
           poxInfo.current_burnchain_block_height,
           new Date()
         ),

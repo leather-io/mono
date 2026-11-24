@@ -662,9 +662,6 @@ importers:
       '@stacks/network':
         specifier: 7.0.2
         version: 7.0.2(encoding@0.1.13)
-      '@stacks/stacks-blockchain-api-types':
-        specifier: 7.14.1
-        version: 7.14.1
       '@stacks/transactions':
         specifier: 7.5.0
         version: 7.5.0(encoding@0.1.13)
@@ -1689,9 +1686,6 @@ importers:
       '@leather.io/utils':
         specifier: workspace:*
         version: link:../utils
-      '@stacks/stacks-blockchain-api-types':
-        specifier: 7.14.1
-        version: 7.14.1
       '@stacks/transactions':
         specifier: 7.5.0
         version: 7.5.0(encoding@0.1.13)

@@ -4,14 +4,13 @@ import { SettingsSelectors } from '@tests/selectors/settings.selectors';
 
 import { test } from '../../fixtures/fixtures';
 
-const zeroStxBalance = {
-  balance: '0',
-  total_miner_rewards_received: '0',
-  lock_tx_id: '',
-  locked: '0',
-  lock_height: 0,
-  burnchain_lock_height: 0,
-  burnchain_unlock_height: 0,
+const zeroStxBalance = { balance: '0', available: '0', locked: null, mempool: null };
+
+const emptyFtBalances = {
+  limit: 200,
+  total: 0,
+  cursor: { next: null, previous: null, current: null },
+  results: [],
 };
 
 test.describe('Recreate wallet after sign out', () => {
@@ -25,11 +24,11 @@ test.describe('Recreate wallet after sign out', () => {
     test.slow();
 
     await globalPage.setupAndUseApiCalls(extensionId);
-    await page.route('**hiro.so/extended/v2/addresses/**/balances/stx', route =>
+    await page.route('**hiro.so/extended/v3/principals/**/balances/stx', route =>
       route.fulfill({ json: zeroStxBalance })
     );
-    await page.route('**hiro.so/extended/v2/addresses/**/balances/ft', route =>
-      route.fulfill({ json: { limit: 100, offset: 0, total: 0, results: [] } })
+    await page.route('**hiro.so/extended/v3/principals/**/balances/ft**', route =>
+      route.fulfill({ json: emptyFtBalances })
     );
     await globalPage.page.evaluate(async () => {
       await chrome.storage.local.clear();
