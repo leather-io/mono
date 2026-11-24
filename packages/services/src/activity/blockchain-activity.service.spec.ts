@@ -16,7 +16,10 @@ import type {
 import { type MarketDataService } from '../market/market-data.service';
 import { type StacksProtocolService } from '../protocols/stacks-protocol.service';
 import { createMock } from '../test/create-mock';
-import { createTestPrincipalMempoolTokenTransferTx } from '../test/transactions-fixtures';
+import {
+  createTestPrincipalMempoolContractCallTx,
+  createTestPrincipalMempoolTokenTransferTx,
+} from '../test/transactions-fixtures';
 import { type BitcoinTransactionsService } from '../transactions/bitcoin-transactions.service';
 import { type StacksTransactionsService } from '../transactions/stacks-transactions.service';
 import { BlockchainActivityService } from './blockchain-activity.service';
@@ -82,6 +85,8 @@ const account: AccountAddresses = {
 describe(BlockchainActivityService.name, () => {
   const getPrincipalTransactions = vi.fn();
   const getPrincipalBalanceChanges = vi.fn();
+  const getPrincipalFtTransfers = vi.fn();
+  const getHiroTransactionById = vi.fn();
   const getPendingTransactions = vi.fn();
   const getTransactionById = vi.fn();
   const getAccountTransactions = vi.fn();
@@ -93,6 +98,8 @@ describe(BlockchainActivityService.name, () => {
   const mockHiro = createMock<HiroStacksApiClient>({
     getPrincipalTransactions,
     getPrincipalBalanceChanges,
+    getPrincipalFtTransfers,
+    getTransactionById: getHiroTransactionById,
   });
   const mockStacksTx = createMock<StacksTransactionsService>({
     getPendingTransactions,
@@ -133,6 +140,10 @@ describe(BlockchainActivityService.name, () => {
     getProtocolByAddress.mockReset().mockResolvedValue(null);
     getTransactionByTxId.mockReset().mockResolvedValue(null);
     getTransactionById.mockReset().mockResolvedValue(null);
+    getHiroTransactionById.mockReset().mockResolvedValue(null);
+    getPrincipalFtTransfers
+      .mockReset()
+      .mockResolvedValue({ total: 0, limit: 50, cursor: emptyCursor, results: [] });
   });
 
   describe('getActivityByAssetId', () => {
@@ -374,6 +385,105 @@ describe(BlockchainActivityService.name, () => {
         contractId: 'SP.token',
         functionName: 'transfer',
       });
+    });
+  });
+
+  describe('getActivityByAssetId SIP-10 sends', () => {
+    const tokenAssetId: CryptoAssetId = { protocol: 'sip10', id: 'SP.token::tok' };
+
+    function mockConfirmedSip10Send() {
+      getPrincipalTransactions.mockResolvedValue({
+        total: 1,
+        limit: 50,
+        cursor: emptyCursor,
+        results: [
+          stxResult(
+            {
+              ...baseTx(),
+              tx_id: '0xsend',
+              type: 'contract_call',
+              contract_call: { contract_id: 'SP.token', function_name: 'transfer' },
+            },
+            { affected_balances: { stx: false, ft: true, nft: false } }
+          ),
+        ],
+      });
+      getPrincipalBalanceChanges.mockResolvedValue({
+        total: 1,
+        limit: 50,
+        cursor: emptyCursor,
+        results: [
+          {
+            tx_id: '0xsend',
+            asset: { type: 'ft', identifier: 'SP.token::tok' },
+            balance_change: { sent: '500', received: '0', net: '-500' },
+          },
+        ],
+      });
+    }
+
+    it('fills the recipient of a SIP-10 send from the principal ft transfers', async () => {
+      mockConfirmedSip10Send();
+      getPrincipalFtTransfers.mockResolvedValue({
+        total: 1,
+        limit: 50,
+        cursor: emptyCursor,
+        results: [
+          {
+            sender: 'SP1',
+            recipient: 'SP9',
+            amount: '500',
+            transaction: { tx_id: '0xsend', event_index: 0 },
+          },
+        ],
+      });
+      const result = await service.getActivityByAssetId(account, tokenAssetId);
+      expect(getPrincipalFtTransfers).toHaveBeenCalledWith(
+        'SP1',
+        'SP.token::tok',
+        expect.objectContaining({ cursor: null }),
+        expect.anything()
+      );
+      expect(result[0].action).toBe('send');
+      expect(result[0].counterparty).toBe('SP9');
+    });
+
+    it('keeps the send without a recipient when the transfers lookup fails', async () => {
+      mockConfirmedSip10Send();
+      getPrincipalFtTransfers.mockRejectedValue(new Error('unavailable'));
+      const result = await service.getActivityByAssetId(account, tokenAssetId);
+      expect(result).toHaveLength(1);
+      expect(result[0].counterparty).toBeUndefined();
+    });
+
+    it('includes a pending SIP-10 send using its post-condition outflow', async () => {
+      getPendingTransactions.mockResolvedValue([
+        createTestPrincipalMempoolContractCallTx({
+          tx_id: '0xpending',
+          sender: { address: 'SP1', nonce: 1 },
+          contract_call: { contract_id: 'SP.token', function_name: 'transfer' },
+        }),
+      ]);
+      getHiroTransactionById.mockResolvedValue({
+        post_conditions: [
+          {
+            principal: { type_id: 'principal_origin' },
+            condition_code: 'sent_equal_to',
+            amount: '700',
+            type: 'fungible',
+            asset: { contract_address: 'SP', contract_name: 'token', asset_name: 'tok' },
+          },
+        ],
+      });
+      const result = await service.getActivityByAssetId(account, tokenAssetId);
+      expect(getHiroTransactionById).toHaveBeenCalledWith(
+        '0xpending',
+        expect.objectContaining({ include: ['post_conditions'] })
+      );
+      expect(result).toHaveLength(1);
+      expect(result[0]).toMatchObject({ txid: '0xpending', status: 'pending', action: 'send' });
+      expect(result[0].balanceChanges[0]).toMatchObject({ direction: 'sent', asset: sip10Asset });
+      expect(result[0].balanceChanges[0].amount.crypto.amount.toString()).toBe('700');
     });
   });
 

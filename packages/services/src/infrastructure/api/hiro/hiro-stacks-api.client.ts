@@ -16,19 +16,17 @@ import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-lim
 import { selectStacksApiUrl, selectStacksChainId } from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
 import { ApiRequestOptions } from '../types';
-import { HiroMultiPageRequest, fetchHiroCursorPages, fetchHiroPages } from './hiro-multi-page';
+import { fetchHiroCursorPages } from './hiro-multi-page';
 import { hiroApiRequestsPriorityLevels } from './hiro-request-priorities';
 import {
   CallReadOnlyFunctionArgs,
-  HiroAddressTransaction,
-  HiroAddressTransactionsResponse,
   HiroBalanceChangesResponse,
   HiroFtMetadata,
   HiroMetadata,
-  HiroPageRequest,
   HiroPoxInfoResponse,
   HiroPrincipalFtBalance,
   HiroPrincipalFtBalancesResponse,
+  HiroPrincipalFtTransfersResponse,
   HiroPrincipalMempoolTransactionsResponse,
   HiroPrincipalNftBalance,
   HiroPrincipalNftBalancesResponse,
@@ -39,12 +37,9 @@ import {
   HiroServerStatusResponse,
   HiroStakingBondDetail,
   HiroStakingBondsResponse,
-  HiroTransactionEvent,
-  HiroTransactionEventsResponse,
   HiroTransactionFeeEstimateResponse,
   HiroTransactionIncludeField,
 } from './hiro-stacks-api.types';
-import { filterVerboseUnusedTransactionWithTransfersData } from './hiro-stacks-api.utils';
 
 function isNotFoundOrUnprocessableRequest(request: unknown) {
   if (typeof request !== 'object' || request === null || !('status' in request)) return false;
@@ -186,6 +181,44 @@ export class HiroStacksApiClient {
     );
   }
 
+  public async getPrincipalFtTransfers(
+    principal: string,
+    assetIdentifier: string,
+    { cursor, limit = DEFAULT_LIST_LIMIT }: { cursor?: string | null; limit?: number } = {},
+    { signal, skipCache }: ApiRequestOptions = {}
+  ): Promise<HiroPrincipalFtTransfersResponse> {
+    const fetchFn = async () => {
+      const params = new URLSearchParams({ limit: String(limit) });
+      if (cursor) params.set('cursor', cursor);
+      const res = await this.limiter.add(
+        RateLimiterType.HiroStacks,
+        () =>
+          this._axios.get<HiroPrincipalFtTransfersResponse>(
+            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v3/principals/${principal}/transfers/ft/${encodeURIComponent(assetIdentifier)}?${params.toString()}`,
+            { signal }
+          ),
+        {
+          priority: hiroApiRequestsPriorityLevels.getAccountTransactions,
+          signal,
+          throwOnTimeout: true,
+        }
+      );
+      return res.data;
+    };
+    return await this.cache.fetchWithCache(
+      [
+        'hiro-stacks-get-principal-ft-transfers',
+        principal,
+        assetIdentifier,
+        cursor ?? 'start',
+        limit,
+        selectStacksChainId(this.settings.getSettings()),
+      ],
+      fetchFn,
+      { skipCache }
+    );
+  }
+
   private async getPrincipalFtBalancesPage(
     principal: string,
     cursor: string | null,
@@ -229,112 +262,6 @@ export class HiroStacksApiClient {
     return fetchHiroCursorPages(
       cursor => this.getPrincipalFtBalancesPage(principal, cursor, { signal, skipCache }),
       { maxPages: principalFtBalancesMaxPages }
-    );
-  }
-
-  private async getAddressTransactionsPage(
-    address: string,
-    page: HiroPageRequest,
-    { signal, skipCache }: ApiRequestOptions = {}
-  ): Promise<HiroAddressTransactionsResponse> {
-    const pageParams = new URLSearchParams({
-      limit: page.limit.toString(),
-      offset: page.offset.toString(),
-      exclude_function_args: 'true',
-    });
-    const fetchFn = async () => {
-      const res = await this.limiter.add(
-        RateLimiterType.HiroStacks,
-        () =>
-          this._axios.get<HiroAddressTransactionsResponse>(
-            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v2/addresses/${address}/transactions?${pageParams.toString()}`,
-            { signal }
-          ),
-        {
-          priority: hiroApiRequestsPriorityLevels.getAccountTransactions,
-          signal,
-          throwOnTimeout: true,
-        }
-      );
-      return {
-        ...res.data,
-        results: res.data.results.map(filterVerboseUnusedTransactionWithTransfersData),
-      };
-    };
-    return await this.cache.fetchWithCache(
-      [
-        'hiro-stacks-get-address-transactions',
-        selectStacksChainId(this.settings.getSettings()),
-        address,
-        pageParams.toString(),
-      ],
-      fetchFn,
-      { skipCache }
-    );
-  }
-
-  public async getAddressTransactions(
-    address: string,
-    pages: HiroMultiPageRequest,
-    { signal }: ApiRequestOptions = {}
-  ): Promise<HiroAddressTransaction[]> {
-    return fetchHiroPages<HiroAddressTransaction>(
-      page => this.getAddressTransactionsPage(address, page, { signal }),
-      {
-        limit: 50,
-        pagesRequest: pages,
-      }
-    );
-  }
-
-  private async getTransactionEventsPage(
-    address: string,
-    page: HiroPageRequest,
-    { signal, skipCache }: ApiRequestOptions = {}
-  ): Promise<HiroTransactionEventsResponse> {
-    const pageParams = new URLSearchParams({
-      limit: page.limit.toString(),
-      offset: page.offset.toString(),
-    });
-    const fetchFn = async () => {
-      const res = await this.limiter.add(
-        RateLimiterType.HiroStacks,
-        () =>
-          this._axios.get<HiroTransactionEventsResponse>(
-            `${selectStacksApiUrl(this.settings.getSettings())}/extended/v1/address/${address}/assets?${pageParams.toString()}`,
-            { signal }
-          ),
-        {
-          priority: hiroApiRequestsPriorityLevels.getAccountTransactions,
-          signal,
-          throwOnTimeout: true,
-        }
-      );
-      return res.data;
-    };
-    return await this.cache.fetchWithCache(
-      [
-        'hiro-stacks-get-transaction-events',
-        selectStacksChainId(this.settings.getSettings()),
-        address,
-        pageParams.toString(),
-      ],
-      fetchFn,
-      { skipCache }
-    );
-  }
-
-  public async getTransactionEvents(
-    address: string,
-    pages: HiroMultiPageRequest,
-    { signal }: ApiRequestOptions = {}
-  ): Promise<HiroTransactionEvent[]> {
-    return fetchHiroPages<HiroTransactionEvent>(
-      page => this.getTransactionEventsPage(address, page, { signal }),
-      {
-        limit: 100,
-        pagesRequest: pages,
-      }
     );
   }
 
