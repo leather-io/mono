@@ -1,9 +1,10 @@
+import { type RecipientActivity } from '@/features/send/components/recipient/recipient.types';
 import { getErrorMessages } from '@/features/send/error-messages';
 import { type Account } from '@/store/accounts/accounts';
 import { isDefined } from 'remeda';
 import { type ZodSafeParseResult } from 'zod';
 
-import { type FungibleCryptoAsset, type SendAssetActivity } from '@leather.io/models';
+import { type FungibleCryptoAsset } from '@leather.io/models';
 import { getBnsService } from '@leather.io/services';
 
 export function recipientSchemaResultContainsError(
@@ -41,7 +42,7 @@ export function normalizeSearchTerm(input: string) {
   return input.trim();
 }
 
-function activityContainsRecipient(activity: SendAssetActivity[], recipientAddress: string) {
+function activityContainsRecipient(activity: RecipientActivity[], recipientAddress: string) {
   return activity.some(
     activity => isDefined(activity.receivers[0]) && activity.receivers[0] === recipientAddress
   );
@@ -50,7 +51,7 @@ function activityContainsRecipient(activity: SendAssetActivity[], recipientAddre
 interface IsNewAddressParams {
   address: string;
   findAccountByAddress(address: string): Account | null;
-  activity?: SendAssetActivity[];
+  activity?: RecipientActivity[];
 }
 
 export function isNewAddress({ address, activity = [], findAccountByAddress }: IsNewAddressParams) {

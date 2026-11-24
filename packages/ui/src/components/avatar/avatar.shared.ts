@@ -30,7 +30,7 @@ export const badgeSizeMap: Record<AvatarSize, { size: number; offset: number }> 
 
 const sbtcContractIds = [
   'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token',
-  'SNGWPN3XDAQE673MXYXF81016M50NHF5X5PWWM70.sbtc-token',
+  'SN3VMHXEN64ZZF71JQ5VESXDWTR301XTTXGF4J8F1.sbtc-token',
 ];
 
 const usdcxContractIds = [

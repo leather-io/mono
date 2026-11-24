@@ -39,7 +39,7 @@ interface AccountDiscoveryClients {
   >;
   hiroClient: Pick<
     ReturnType<typeof getHiroStacksApiClient>,
-    'getAddressStxBalance' | 'getAddressTransactions'
+    'getPrincipalStxBalance' | 'getPrincipalTransactions'
   >;
   bnsClient: Pick<ReturnType<typeof getBnsV2ApiClient>, 'fetchAddressBnsNames'>;
 }
@@ -71,7 +71,7 @@ function createAccountActivityChecker({
   const deriveTaprootAddress = getTaprootMainnetAddressFromRootKeychain(rootKeychain);
 
   async function doesStacksAddressHaveBalance(address: string, signal: AbortSignal) {
-    const resp = await hiroClient.getAddressStxBalance(address, { signal });
+    const resp = await hiroClient.getPrincipalStxBalance(address, { signal });
     return Number(resp.balance) > 0;
   }
 
@@ -81,8 +81,8 @@ function createAccountActivityChecker({
   }
 
   async function doesStacksAddressHaveTransactionHistory(address: string, signal: AbortSignal) {
-    const resp = await hiroClient.getAddressTransactions(address, { pages: 1 }, { signal });
-    return resp.length > 0;
+    const resp = await hiroClient.getPrincipalTransactions(address, { limit: 1 }, { signal });
+    return resp.results.length > 0;
   }
 
   async function doesBitcoinAddressHaveBalance(address: string, signal: AbortSignal) {

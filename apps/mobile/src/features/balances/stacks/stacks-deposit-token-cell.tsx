@@ -1,21 +1,22 @@
 import { DepositTokenCell } from '@/features/token/components/deposit-token-cell';
-import { useActivityByAsset } from '@/queries/activity/activity.query';
+import { useActivityByAssetId } from '@/queries/activity/activity.query';
 import { useStxAccountBalance } from '@/queries/balance/stx-balance.query';
 import { t } from '@lingui/core/macro';
 
 import { stxAsset } from '@leather.io/constants';
 import { type AccountId } from '@leather.io/models';
 import { StacksFilledCircleIcon, StxAvatarIcon } from '@leather.io/ui/native';
+import { getAssetId } from '@leather.io/utils';
 
 export function StacksDepositTokenCell({ accountIndex, fingerprint }: AccountId) {
   const { state: balanceState, value: balanceValue } = useStxAccountBalance(
     fingerprint,
     accountIndex
   );
-  const { state: activityState, value: activityValue } = useActivityByAsset(
+  const { state: activityState, value: activityValue } = useActivityByAssetId(
     fingerprint,
     accountIndex,
-    stxAsset
+    getAssetId(stxAsset)
   );
 
   return (
