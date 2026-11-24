@@ -6,11 +6,11 @@ import { parseAccountNoncesResponse } from '@leather.io/stacks';
 import { useUserSettings } from '@app/hooks/use-user-settings';
 
 import { useStacksPendingTransactions } from '../mempool/mempool.hooks';
-import { useStacksConfirmedTransactions } from '../transactions/transactions-with-transfers.hooks';
+import { useGetAccountTransactionsWithTransfersQuery } from '../transactions/transactions-with-transfers.query';
 
 export function useNextNonce(address: string) {
   const settings = useUserSettings();
-  const confirmedTransactions = useStacksConfirmedTransactions(address);
+  const confirmedTransactions = useGetAccountTransactionsWithTransfersQuery(address).data ?? [];
   const { transactions: pendingTransactions } = useStacksPendingTransactions(address);
 
   return useQuery({

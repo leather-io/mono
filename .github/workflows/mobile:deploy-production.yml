@@ -2,6 +2,7 @@ name: mobile:deploy-production
 
 permissions:
   contents: read
+cache-mode: none
 defaults:
   run:
     shell: bash
@@ -46,7 +47,7 @@ jobs:
         run: pnpm expo:prebuild
 
       - name: setup-ruby
-        uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1.334.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
           ruby-version: '3.3'
           bundler-cache: true
@@ -54,14 +55,9 @@ jobs:
 
       - name: enforce-cocoapods-version
         working-directory: apps/mobile
-        run: bash scripts/enforce-cocoapods-version.sh
-
-      - name: cache-pods
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: apps/mobile/ios/Pods
-          key: pods-${{ hashFiles('apps/mobile/ios/Podfile.lock') }}
-          restore-keys: pods-
+        env:
+          BUNDLE_GEMFILE: ${{ github.workspace }}/apps/mobile/fastlane/Gemfile
+        run: bundle exec bash scripts/enforce-cocoapods-version.sh
 
       - name: build-archive
         working-directory: apps/mobile
@@ -106,7 +102,7 @@ jobs:
         run: pnpm expo:prebuild
 
       - name: setup-ruby
-        uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1.334.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
           ruby-version: '3.3'
           bundler-cache: true
@@ -158,26 +154,17 @@ jobs:
         run: pnpm expo:prebuild
 
       - name: setup-java
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
         with:
           distribution: temurin
           java-version: '17'
 
       - name: setup-ruby
-        uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1.334.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
           ruby-version: '3.3'
           bundler-cache: true
           working-directory: apps/mobile/fastlane
-
-      - name: cache-gradle
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ hashFiles('apps/mobile/android/**/*.gradle*', 'apps/mobile/android/gradle.properties') }}
-          restore-keys: gradle-
 
       - name: gcp-auth
         id: gcp-auth
@@ -218,13 +205,13 @@ jobs:
           persist-credentials: false
 
       - name: setup-java
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
         with:
           distribution: temurin
           java-version: '17'
 
       - name: setup-ruby
-        uses: ruby/setup-ruby@26e5b7d197ebf60545ee9667bcbace0be11ccaec # v1.334.0
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
         with:
           ruby-version: '3.3'
           bundler-cache: true

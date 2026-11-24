@@ -1,3 +1,4 @@
+// /posts/:slug 301s to wherever the post now lives
 export function getPostHref(slug?: string) {
   if (slug === undefined || slug === null) {
     slug = 'undefined';
@@ -9,9 +10,5 @@ export function getPostHref(slug?: string) {
     return trimmedSlug;
   }
 
-  if (import.meta.env.DEV) {
-    return `https://prosperous-combination-099461.framer.app/posts/${trimmedSlug}`;
-  }
-
-  return `https://leather.io/posts/${trimmedSlug}`;
+  return `/posts/${trimmedSlug}`;
 }
