@@ -1,4 +1,4 @@
-import { type Locator, expect } from '@playwright/test';
+import { type Locator, type Page, expect } from '@playwright/test';
 import { type TokenTransferOptions, makeUnsignedSTXTokenTransfer } from '@stacks/transactions';
 
 import { SharedComponentsSelectors } from './selectors/shared-component.selectors';
@@ -31,7 +31,7 @@ export function createTestSelector<T extends string>(name: T): `[data-testid="${
   return `[data-testid="${name}"]`;
 }
 
-export async function getDisplayerAddress(locator: Locator) {
+export async function getDisplayerAddress(locator: Locator | Page) {
   const displayerAddress = await locator
     .getByTestId(SharedComponentsSelectors.AddressDisplayer)
     .innerText();

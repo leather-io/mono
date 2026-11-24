@@ -1,4 +1,4 @@
-import { btcAddAccount } from './btc-add-account';
+import { btcAddAccount, maxBtcDescriptorLength } from './btc-add-account';
 
 describe('btcAddAccount', () => {
   const validParams = {
@@ -25,6 +25,21 @@ describe('btcAddAccount', () => {
     expect(btcAddAccount.params.safeParse({ descriptor: validParams.descriptor }).success).toEqual(
       false
     );
+  });
+
+  test('accepts a descriptor at the length cap and rejects one over it', () => {
+    expect(
+      btcAddAccount.params.safeParse({
+        ...validParams,
+        descriptor: 'a'.repeat(maxBtcDescriptorLength),
+      }).success
+    ).toEqual(true);
+    expect(
+      btcAddAccount.params.safeParse({
+        ...validParams,
+        descriptor: 'a'.repeat(maxBtcDescriptorLength + 1),
+      }).success
+    ).toEqual(false);
   });
 
   test('accepts a name longer than the account name cap', () => {

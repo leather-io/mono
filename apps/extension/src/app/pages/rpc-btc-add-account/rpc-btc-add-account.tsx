@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 
 import { ConnectAccountSelectors } from '@tests/selectors/requests.selectors';
+import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { styled } from 'leather-styles/jsx';
 
 import { AddressDisplayer, Approver, Button, Callout } from '@leather.io/ui';
@@ -8,13 +9,32 @@ import { AddressDisplayer, Approver, Button, Callout } from '@leather.io/ui';
 import { closeWindow } from '@shared/utils';
 
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
+import {
+  BondSpendingConditions,
+  type BondSpendingDetails,
+} from '@app/components/bond-spending-conditions';
 import { CrossOriginFrameCallout } from '@app/components/cross-origin-frame-callout';
 import { CurrentAccountDisplayer } from '@app/features/current-account/current-account-displayer';
 import { useLedgerFlow } from '@app/features/ledger/flow/ledger-flow.context';
+import { ledgerRawKeyUnsupportedMessage } from '@app/features/ledger/utils/ledger-descriptor-address';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
 
-import { policyCallout, verifyModeCalloutMessage } from '../policy-match';
+import {
+  policyCallout,
+  timelockedVerifyCalloutMessage,
+  verifyModeCalloutMessage,
+} from '../policy-match';
 import { useBtcAddAccount } from './use-btc-add-account';
+
+function getApproverTitle(isTimelocked: boolean, isVerifyMode: boolean) {
+  if (isTimelocked) return 'Verify timelocked address';
+  return isVerifyMode ? 'Verify multisig address' : 'Add multisig account';
+}
+
+function getApprovalSubject(timelock: BondSpendingDetails | null) {
+  if (!timelock) return 'this multisig account';
+  return timelock.vaultKind === 'pk' ? 'this timelocked address' : 'this vault';
+}
 
 export function RpcBtcAddAccount() {
   const {
@@ -22,9 +42,12 @@ export function RpcBtcAddAccount() {
     name,
     descriptor,
     address,
+    kind,
+    timelock,
     matchStatus,
     mode,
     walletType,
+    isLedgerVerifyUnsupported,
     canApprove,
     focusInitiatingTab,
     finalize,
@@ -64,32 +87,46 @@ export function RpcBtcAddAccount() {
   }
 
   const isVerifyMode = mode === 'verify';
+  const isTimelocked = kind === 'timelocked';
+  const subject = getApprovalSubject(timelock);
   const confirmLabel = `${isVerifyMode ? 'Verify' : 'Confirm'}${walletType === 'ledger' ? ' on Ledger' : ''}`;
-  const callout = policyCallout(matchStatus, 'Bitcoin');
+  const callout = policyCallout(matchStatus, 'Bitcoin', subject);
 
   return (
     <Approver requester={origin} width="100%">
       <CrossOriginFrameCallout mb="space.03" width="100%" />
       <Approver.Header
-        title={isVerifyMode ? 'Verify multisig address' : 'Add multisig account'}
+        title={getApproverTitle(isTimelocked, isVerifyMode)}
         onPressRequestedByLink={focusInitiatingTab}
       />
       {isVerifyMode && (
         <Approver.Section>
+          <Callout variant={isTimelocked ? 'info' : 'warning'} mt="space.03">
+            {isTimelocked ? timelockedVerifyCalloutMessage : verifyModeCalloutMessage}
+          </Callout>
+        </Approver.Section>
+      )}
+      {isLedgerVerifyUnsupported && (
+        <Approver.Section>
           <Callout variant="warning" mt="space.03">
-            {verifyModeCalloutMessage}
+            {ledgerRawKeyUnsupportedMessage}
           </Callout>
         </Approver.Section>
       )}
       <Approver.Section>
-        <Approver.Subheader>Multisig address</Approver.Subheader>
+        <Approver.Subheader>
+          {isTimelocked ? 'Timelocked address' : 'Multisig address'}
+        </Approver.Subheader>
         {address ? (
           <styled.div pb="space.03">
-            <AddressDisplayer address={address} />
+            <AddressDisplayer
+              data-testid={SharedComponentsSelectors.AddressDisplayer}
+              address={address}
+            />
           </styled.div>
         ) : (
           <Callout variant="error" mt="space.03" mb="space.03">
-            Could not derive the address for this multisig account.
+            Could not derive the address for {subject}.
           </Callout>
         )}
       </Approver.Section>
@@ -100,12 +137,22 @@ export function RpcBtcAddAccount() {
           {callout.message}
         </Callout>
       </Approver.Section>
-      <Approver.Section>
-        <Approver.Subheader>Account name</Approver.Subheader>
-        <styled.p textStyle="caption.01" pb="space.03">
-          {name}
-        </styled.p>
-      </Approver.Section>
+      {timelock && (
+        <Approver.Section>
+          <Approver.Subheader>Spending conditions</Approver.Subheader>
+          <styled.div pb="space.03">
+            <BondSpendingConditions details={timelock} />
+          </styled.div>
+        </Approver.Section>
+      )}
+      {!isTimelocked && (
+        <Approver.Section>
+          <Approver.Subheader>Account name</Approver.Subheader>
+          <styled.p textStyle="caption.01" pb="space.03">
+            {name}
+          </styled.p>
+        </Approver.Section>
+      )}
       <Approver.Section>
         <Approver.Subheader>Bitcoin descriptor</Approver.Subheader>
         <styled.p textStyle="caption.01" wordBreak="break-all" pb="space.03">

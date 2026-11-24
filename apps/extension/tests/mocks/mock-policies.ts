@@ -11,8 +11,10 @@ const testPolicyParentAccountId = `${testFingerprint}/0`;
 // manage / getAddresses) never re-derive or re-verify a stored policy, so the
 // address below is a static, valid mainnet P2WSH address rather than one derived
 // from this descriptor.
-export const exampleWshDescriptor =
-  'wsh(sortedmulti(2,xpub6BuKrNqTrGfsy8VAAdUW2KCxbHywuSKjg7hZuAXERXDv7GfuxUgUWdVRKNsgujcwdjEHCjaXWouPKi1m5gMgdWX8JpRcyMkrSxPe4Da3Lx8/0/0,xpub6C4MQD2bVDTfdnVe5AYKB6gE7BE4yQeKBRgukQ4Hi3phDB5fCYKEAdViQ2n7kZQ1t728QV4wKGgiR5qGigjNNrm5DCGWYUZDRVNWYb8ZWGK/0/0))';
+export const testAccountNativeSegwitXpub =
+  'xpub6BuKrNqTrGfsy8VAAdUW2KCxbHywuSKjg7hZuAXERXDv7GfuxUgUWdVRKNsgujcwdjEHCjaXWouPKi1m5gMgdWX8JpRcyMkrSxPe4Da3Lx8';
+
+export const exampleWshDescriptor = `wsh(sortedmulti(2,${testAccountNativeSegwitXpub}/0/0,xpub6C4MQD2bVDTfdnVe5AYKB6gE7BE4yQeKBRgukQ4Hi3phDB5fCYKEAdViQ2n7kZQ1t728QV4wKGgiR5qGigjNNrm5DCGWYUZDRVNWYb8ZWGK/0/0))`;
 
 const exampleBitcoinMultisigAddress =
   'bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3';
