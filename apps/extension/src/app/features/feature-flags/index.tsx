@@ -32,11 +32,7 @@ export function createLaunchDarklyProvider() {
 }
 
 interface FeatureFlags {
-  releaseOnramperBuy: boolean;
-  releaseOnramperSell: boolean;
-  assetsRevamp: boolean;
   swapSbtcBridging: boolean;
-  releaseTrendingTokens: boolean;
 }
 
 export function useFlags() {
