@@ -19,7 +19,7 @@ import { analytics } from '@shared/utils/analytics';
 import { useLedgerStep, useLedgerSteps } from '@app/features/ledger/flow/ledger-flow.context';
 import { useLedgerRequestKeysContext } from '@app/features/ledger/generic-flows/request-keys/ledger-request-keys.context';
 
-const accountDiscoveryUrl = 'https://app.leather.io/posts/wallet-derivation-paths';
+const accountDiscoveryUrl = 'https://docs.leather.io/wallet-and-security/wallet-derivation-paths';
 
 const stacksDerivationTooltip = `m/44'/5757'/0'/0/2`;
 

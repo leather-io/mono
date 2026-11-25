@@ -204,7 +204,7 @@ export const rpcStacksFeatures = [
     description:
       'Approver titled "Send token" for a dApp-initiated STX transfer: the signing account, the recipient and amount, the memo ("No memo" when empty) and fee and nonce rows. The fee editor lists the slow, standard and fast estimates plus a custom item (default-fees-list.tsx) and the chosen fee is what gets broadcast. ' +
       broadcastNote +
-      ' The spec registers mockStacksBroadcastTransaction on the context in its approve tests; its insufficient-balance test registers mockEmptyStacksBalancesRequest plus mockEmptyStacksPrincipalBalancesRequest, which show "Available balance insufficient" in place of the "Cancel" and "Approve" buttons (get-transaction-actions.tsx). On a Ledger wallet whose device is not connected, "Approve" opens the Ledger flow: "Connect Stacks" then "Open Leather in full screen" opens a full-screen tab (#/?ledgerHandoff=…), the popup closes and the request ends with 4001 (ledger-rpc-pairing.spec.ts). ' +
+      ' The spec registers mockStacksBroadcastTransaction on the context in its approve tests; its insufficient-balance test registers mockEmptyStacksPrincipalBalancesRequest, which shows "Available balance insufficient" in place of the "Cancel" and "Approve" buttons (get-transaction-actions.tsx). On a Ledger wallet whose device is not connected, "Approve" opens the Ledger flow: "Connect Stacks" then "Open Leather in full screen" opens a full-screen tab (#/?ledgerHandoff=…), the popup closes and the request ends with 4001 (ledger-rpc-pairing.spec.ts). ' +
       ledgerIndicatorNote +
       ' ' +
       connectedOriginNote,

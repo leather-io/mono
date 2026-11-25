@@ -71,10 +71,6 @@ type HiroPrincipalMempoolContractCallTransaction = Extract<
   HiroPrincipalMempoolTransaction,
   { type: 'contract_call' }
 >;
-type HiroPrincipalMempoolSmartContractTransaction = Extract<
-  HiroPrincipalMempoolTransaction,
-  { type: 'smart_contract' }
->;
 
 function createTestPrincipalMempoolFields(): Omit<
   HiroPrincipalMempoolTokenTransferTransaction,
@@ -113,17 +109,6 @@ export function createTestPrincipalMempoolContractCallTx(
       contract_id: 'SP000000000000000000002Q6VF78.pox-4',
       function_name: 'stack-stx',
     },
-    ...overrides,
-  };
-}
-
-export function createTestPrincipalMempoolSmartContractTx(
-  overrides: Partial<HiroPrincipalMempoolSmartContractTransaction> = {}
-): HiroPrincipalMempoolSmartContractTransaction {
-  return {
-    ...createTestPrincipalMempoolFields(),
-    type: 'smart_contract',
-    smart_contract: { contract_id: 'SP000000000000000000002Q6VF78.contract', clarity_version: 3 },
     ...overrides,
   };
 }

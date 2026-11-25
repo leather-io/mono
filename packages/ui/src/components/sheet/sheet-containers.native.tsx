@@ -1,5 +1,5 @@
 import { type ComponentProps } from 'react';
-import { StyleSheet, type ViewStyle } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
@@ -49,11 +49,8 @@ export function SheetScrollView({
   const styles = useSheetStyles();
   return (
     <BottomSheetScrollView
-      style={StyleSheet.flatten<ViewStyle>([styles.root, style])}
-      contentContainerStyle={StyleSheet.flatten<ViewStyle>([
-        styles.contentContainer,
-        contentContainerStyle,
-      ])}
+      style={[styles.root, style]}
+      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
       {...props}
     />
   );
@@ -67,11 +64,8 @@ export function SheetSectionList({
   const styles = useSheetStyles();
   return (
     <BottomSheetSectionList
-      style={StyleSheet.flatten<ViewStyle>([styles.root, style])}
-      contentContainerStyle={StyleSheet.flatten<ViewStyle>([
-        styles.contentContainer,
-        contentContainerStyle,
-      ])}
+      style={[styles.root, style]}
+      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
       {...props}
     />
   );
@@ -85,11 +79,8 @@ export function SheetVirtualizedList({
   const styles = useSheetStyles();
   return (
     <BottomSheetVirtualizedList
-      style={StyleSheet.flatten<ViewStyle>([styles.root, style])}
-      contentContainerStyle={StyleSheet.flatten<ViewStyle>([
-        styles.contentContainer,
-        contentContainerStyle,
-      ])}
+      style={[styles.root, style]}
+      contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
       {...props}
     />
   );

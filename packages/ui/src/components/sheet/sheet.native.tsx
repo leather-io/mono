@@ -68,6 +68,7 @@ export function Sheet({
       handleStyle={[styles.handleContainer, handleStyle]}
       handleIndicatorStyle={[styles.handleIndicator, handleIndicatorStyle]}
       stackBehavior="push"
+      accessible={false}
       {...props}
     />
   );
@@ -90,6 +91,7 @@ export function PermanentSheet({
   return (
     <BottomSheet
       backdropComponent={undefined}
+      accessible={false}
       backgroundStyle={[styles.background, backgroundStyle]}
       handleStyle={[styles.handleContainer, handleStyle]}
       handleIndicatorStyle={[styles.handleIndicator, handleIndicatorStyle]}

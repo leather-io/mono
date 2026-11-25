@@ -1,5 +1,5 @@
 import { type RefObject, useRef } from 'react';
-import { Keyboard, type TextInput as RNTextInput } from 'react-native';
+import { Keyboard, type TextInputInstance } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { default as WebView, WebViewNavigation } from 'react-native-webview';
 
@@ -42,7 +42,7 @@ export function SearchBar({
   goToUrl,
 }: SearchBarProps) {
   const theme = useTheme();
-  const textInputRef = useRef<RNTextInput>(null);
+  const textInputRef = useRef<TextInputInstance>(null);
 
   const router = useRouter();
   const { keyboardAvoidingStyle, searchBarStyle } = useSearchBarAnimatedStyles();

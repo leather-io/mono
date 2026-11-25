@@ -7,7 +7,6 @@ export function StatusBar() {
 
   return (
     <NativeStatusBar
-      translucent
       barStyle={whenTheme({
         dark: 'light-content',
         light: 'dark-content',

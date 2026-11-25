@@ -4,8 +4,7 @@ import { useAnimatedRef } from 'react-native-reanimated';
 import { type ScreenScrollRef } from '@/components/screen/screen-scroll-ref';
 import { useScreenScroll } from '@/components/screen/use-screen-scroll';
 import { TabLayoutContext } from '@/features/navigation/tab-layout-context';
-import { useIsFocused } from '@react-navigation/native';
-import { usePathname } from 'expo-router';
+import { useIsFocused, usePathname } from 'expo-router';
 
 type ScreenScrollContextValue = ReturnType<typeof useScreenScroll> & {
   scrollRef: ScreenScrollRef;
