@@ -6,9 +6,7 @@ import { Button, Callout, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { LedgerTitle } from '../../components/ledger-title';
 import { LedgerWrapper } from '../../components/ledger-wrapper';
-import { connectLedgerDeviceToApp } from '../../dmk/ledger-device-connection';
-import { useLedgerDmk } from '../../dmk/ledger-dmk.context';
-import { closeLedgerSession } from '../../dmk/ledger-session';
+import { useHardwareWalletConnector } from '../../hardware-wallet/hardware-wallet.context';
 
 type PairingStatus = 'idle' | 'connecting' | 'failed' | 'connected';
 
@@ -16,15 +14,14 @@ interface LedgerPairDeviceProps {
   onClose(): void;
 }
 export function LedgerPairDevice({ onClose }: LedgerPairDeviceProps) {
-  const dmk = useLedgerDmk();
+  const connector = useHardwareWalletConnector();
   const [status, setStatus] = useState<PairingStatus>('idle');
   const isConnected = status === 'connected';
 
   async function pairDevice() {
     setStatus('connecting');
     try {
-      const sessionId = await connectLedgerDeviceToApp(dmk, null);
-      await closeLedgerSession(dmk, sessionId);
+      await connector.pair({});
       setStatus('connected');
     } catch {
       setStatus('failed');

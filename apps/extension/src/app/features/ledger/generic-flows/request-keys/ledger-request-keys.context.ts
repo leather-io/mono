@@ -3,7 +3,7 @@ import { createContext, useContext } from 'react';
 import type { SupportedBlockchains } from '@leather.io/models';
 import type { StacksDerivationPathType } from '@leather.io/stacks';
 
-import { type BaseLedgerOperationContext } from '../../utils/generic-ledger-utils';
+import type { BaseLedgerOperationContext } from '../../utils/generic-ledger-utils';
 
 export interface LedgerRequestKeysContext extends BaseLedgerOperationContext {
   chain: SupportedBlockchains;

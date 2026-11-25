@@ -13,7 +13,7 @@ import {
   getStacksContractAssetName,
   getStacksContractName,
   inferStacksDerivationPathType,
-  makeLedgerLiveStxDerivationPath,
+  makeBip44StxDerivationPath,
   makeStxDerivationPath,
   makeStxDerivationPathForType,
   stacksChainIdToCoreNetworkMode,
@@ -69,19 +69,17 @@ describe(stacksChainIdToCoreNetworkMode.name, () => {
   });
 });
 
-describe(makeLedgerLiveStxDerivationPath.name, () => {
+describe(makeBip44StxDerivationPath.name, () => {
   test('that it increments the hardened account level', () => {
-    expect(makeLedgerLiveStxDerivationPath(0)).toEqual(`m/44'/5757'/0'/0/0`);
-    expect(makeLedgerLiveStxDerivationPath(3)).toEqual(`m/44'/5757'/3'/0/0`);
+    expect(makeBip44StxDerivationPath(0)).toEqual(`m/44'/5757'/0'/0/0`);
+    expect(makeBip44StxDerivationPath(3)).toEqual(`m/44'/5757'/3'/0/0`);
   });
 });
 
 describe(makeStxDerivationPathForType.name, () => {
   test('that it delegates to the matching path factory', () => {
     expect(makeStxDerivationPathForType('stacks', 4)).toEqual(makeStxDerivationPath(4));
-    expect(makeStxDerivationPathForType('ledgerLive', 4)).toEqual(
-      makeLedgerLiveStxDerivationPath(4)
-    );
+    expect(makeStxDerivationPathForType('bip44', 4)).toEqual(makeBip44StxDerivationPath(4));
   });
 });
 
@@ -98,7 +96,7 @@ describe(extractStacksDerivationPathAccountIndex.name, () => {
     ).toEqual(7);
   });
 
-  test('that it extracts the account level for ledger live inputs', () => {
+  test('that it extracts the account level for bip44 inputs', () => {
     expect(extractStacksDerivationPathAccountIndex(`m/44'/5757'/7'/0/0`)).toEqual(7);
     expect(extractStacksDerivationPathAccountIndex(`24682ead/44'/5757'/7'/0/0`)).toEqual(7);
     expect(
@@ -121,8 +119,8 @@ describe(stacksDerivationPathTypeFromPath.name, () => {
     expect(stacksDerivationPathTypeFromPath(`m/44'/5757'/0'/0/2`)).toEqual('stacks');
   });
 
-  test('that it classifies ledger live paths', () => {
-    expect(stacksDerivationPathTypeFromPath(`m/44'/5757'/2'/0/0`)).toEqual('ledgerLive');
+  test('that it classifies bip44 paths', () => {
+    expect(stacksDerivationPathTypeFromPath(`m/44'/5757'/2'/0/0`)).toEqual('bip44');
   });
 
   test('that account zero is ambiguous', () => {
@@ -141,7 +139,7 @@ describe(inferStacksDerivationPathType.name, () => {
     `[24682ead/44'/5757'/0'/0/0]025b2c58`,
     `[24682ead/44'/5757'/0'/0/1]03a1b2c3`,
   ];
-  const ledgerLiveDescriptors = [
+  const bip44Descriptors = [
     `[24682ead/44'/5757'/0'/0/0]025b2c58`,
     `[24682ead/44'/5757'/1'/0/0]03d4e5f6`,
   ];
@@ -150,8 +148,8 @@ describe(inferStacksDerivationPathType.name, () => {
     expect(inferStacksDerivationPathType(stacksDescriptors)).toEqual('stacks');
   });
 
-  test('that it infers the ledger live scheme', () => {
-    expect(inferStacksDerivationPathType(ledgerLiveDescriptors)).toEqual('ledgerLive');
+  test('that it infers the bip44 scheme', () => {
+    expect(inferStacksDerivationPathType(bip44Descriptors)).toEqual('bip44');
   });
 
   test('that account zero alone is ambiguous', () => {
@@ -163,7 +161,7 @@ describe(inferStacksDerivationPathType.name, () => {
   });
 
   test('that mixed descriptors resolve to the stacks standard', () => {
-    expect(inferStacksDerivationPathType([...ledgerLiveDescriptors, ...stacksDescriptors])).toEqual(
+    expect(inferStacksDerivationPathType([...bip44Descriptors, ...stacksDescriptors])).toEqual(
       'stacks'
     );
   });

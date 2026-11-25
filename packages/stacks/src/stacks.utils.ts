@@ -21,12 +21,12 @@ import { assertIsTruthy, isString, toHexString } from '@leather.io/utils';
 
 export const stxDerivationWithAccount = `m/44'/5757'/0'/0/{account}`;
 
-export const stxLedgerLiveDerivationWithAccount = `m/44'/5757'/{account}'/0/0`;
+export const stxBip44DerivationWithAccount = `m/44'/5757'/{account}'/0/0`;
 
-export type StacksDerivationPathType = 'stacks' | 'ledgerLive';
+export type StacksDerivationPathType = 'stacks' | 'bip44';
 
 export function isStacksDerivationPathType(value: unknown) {
-  return value === 'stacks' || value === 'ledgerLive';
+  return value === 'stacks' || value === 'bip44';
 }
 
 export function makeAccountIndexDerivationPathFactory(derivationPath: string) {
@@ -35,15 +35,14 @@ export function makeAccountIndexDerivationPathFactory(derivationPath: string) {
 
 export function extractStacksDerivationPathAccountIndex(path: string) {
   if (!path.includes('5757')) throw new Error('Not a valid Stacks derivation path: ' + path);
-  if (stacksDerivationPathTypeFromPath(path) === 'ledgerLive')
-    return extractAccountIndexFromPath(path);
+  if (stacksDerivationPathTypeFromPath(path) === 'bip44') return extractAccountIndexFromPath(path);
   return extractAddressIndexFromPath(path);
 }
 
 export function stacksDerivationPathTypeFromPath(path: string): StacksDerivationPathType | null {
   if (!path.includes('5757')) throw new Error('Not a valid Stacks derivation path: ' + path);
   if (extractAddressIndexFromPath(path) > 0) return 'stacks';
-  if (extractAccountIndexFromPath(path) > 0) return 'ledgerLive';
+  if (extractAccountIndexFromPath(path) > 0) return 'bip44';
   return null;
 }
 
@@ -52,7 +51,7 @@ export function inferStacksDerivationPathType(
 ): StacksDerivationPathType | null {
   const types = descriptors.map(stacksDerivationPathTypeFromPath);
   if (types.includes('stacks')) return 'stacks';
-  if (types.includes('ledgerLive')) return 'ledgerLive';
+  if (types.includes('bip44')) return 'bip44';
   return null;
 }
 
@@ -62,13 +61,13 @@ export function inferStacksDerivationPathType(
 export const makeStxDerivationPath =
   makeAccountIndexDerivationPathFactory(stxDerivationWithAccount);
 
-export const makeLedgerLiveStxDerivationPath = makeAccountIndexDerivationPathFactory(
-  stxLedgerLiveDerivationWithAccount
+export const makeBip44StxDerivationPath = makeAccountIndexDerivationPathFactory(
+  stxBip44DerivationWithAccount
 );
 
 export function makeStxDerivationPathForType(type: StacksDerivationPathType, accountIndex: number) {
-  return type === 'ledgerLive'
-    ? makeLedgerLiveStxDerivationPath(accountIndex)
+  return type === 'bip44'
+    ? makeBip44StxDerivationPath(accountIndex)
     : makeStxDerivationPath(accountIndex);
 }
 

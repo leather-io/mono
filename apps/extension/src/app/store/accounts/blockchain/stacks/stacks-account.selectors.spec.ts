@@ -86,17 +86,17 @@ describe('selectLedgerAccounts', () => {
 
   test('excludes a keychain whose fingerprint/accountIndex collides with an earlier keychain', () => {
     const fingerprint = 'deadbeef';
-    const ledgerLivePath = makeStxDerivationPathForType('ledgerLive', 1);
+    const bip44Path = makeStxDerivationPathForType('bip44', 1);
     const standardPath = makeStxDerivationPathForType('stacks', 1);
     const keychains = [
-      makeStacksLedgerKeychainForPath(fingerprint, ledgerLivePath),
+      makeStacksLedgerKeychainForPath(fingerprint, bip44Path),
       makeStacksLedgerKeychainForPath(fingerprint, standardPath),
     ];
 
     const accounts = getLedgerAccounts(keychains);
 
     expect(accounts).toHaveLength(1);
-    expect(accounts[0]?.derivationPath).toBe(ledgerLivePath);
+    expect(accounts[0]?.derivationPath).toBe(bip44Path);
     expect(accounts[0]?.accountIndex).toBe(1);
   });
 });
@@ -124,11 +124,11 @@ describe('selectLedgerStacksAccountLookup', () => {
     expect(lookup({ fingerprint: 'e87a850b', accountIndex: 1 }, 'mainnet')).toBeUndefined();
   });
 
-  test('keys ledgerLive descriptors by their hardened account-level index', () => {
+  test('keys bip44 descriptors by their hardened account-level index', () => {
     const fingerprint = 'deadbeef';
     const lookup = getLedgerAccountLookup([
-      makeStacksLedgerKeychainForPath(fingerprint, makeStxDerivationPathForType('ledgerLive', 0)),
-      makeStacksLedgerKeychainForPath(fingerprint, makeStxDerivationPathForType('ledgerLive', 1)),
+      makeStacksLedgerKeychainForPath(fingerprint, makeStxDerivationPathForType('bip44', 0)),
+      makeStacksLedgerKeychainForPath(fingerprint, makeStxDerivationPathForType('bip44', 1)),
     ]);
 
     const account = lookup({ fingerprint, accountIndex: 1 }, 'mainnet');
@@ -138,17 +138,17 @@ describe('selectLedgerStacksAccountLookup', () => {
     expect(account?.derivationPath).toBe(`m/44'/5757'/1'/0/0`);
   });
 
-  test('resolved ledgerLive account yields its stored path for device signing', () => {
+  test('resolved bip44 account yields its stored path for device signing', () => {
     const fingerprint = 'deadbeef';
-    const ledgerLivePath = makeStxDerivationPathForType('ledgerLive', 2);
+    const bip44Path = makeStxDerivationPathForType('bip44', 2);
     const lookup = getLedgerAccountLookup([
-      makeStacksLedgerKeychainForPath(fingerprint, ledgerLivePath),
+      makeStacksLedgerKeychainForPath(fingerprint, bip44Path),
     ]);
 
     const account = lookup({ fingerprint, accountIndex: 2 }, 'mainnet');
 
     expect(account).toBeDefined();
-    expect(account?.derivationPath).toBe(ledgerLivePath);
+    expect(account?.derivationPath).toBe(bip44Path);
     expect(account?.derivationPath).not.toBe(makeStxDerivationPathForType('stacks', 2));
   });
 

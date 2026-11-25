@@ -4,7 +4,7 @@ import { noop } from '@leather.io/utils';
 
 import { type UnsignedMessage } from '@shared/signature/signature-types';
 
-import { type BaseLedgerOperationContext } from '../../utils/generic-ledger-utils';
+import type { BaseLedgerOperationContext } from '@app/features/ledger/utils/generic-ledger-utils';
 
 export interface LedgerMessageSigningContext extends BaseLedgerOperationContext {
   message: UnsignedMessage | undefined;

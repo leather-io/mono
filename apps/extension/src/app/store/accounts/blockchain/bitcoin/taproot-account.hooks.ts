@@ -3,18 +3,13 @@ import { useSelector } from 'react-redux';
 
 import { createSelector } from '@reduxjs/toolkit';
 import { type HDKey } from '@scure/bip32';
-import { type Psbt } from 'bitcoinjs-lib';
 
 import {
   deriveTaprootAccount,
   deriveTaprootReceiveAddressIndexZero,
-  ecdsaPublicKeyToSchnorr,
   getTaprootPaymentFromAddressIndex,
 } from '@leather.io/bitcoin';
-import { extractAddressIndexFromPath, extractChangeIndexFromPath } from '@leather.io/crypto';
 import { type AccountId } from '@leather.io/models';
-
-import { type BitcoinInputSigningConfig } from '@shared/crypto/bitcoin/signer-config';
 
 import { useInMemoryKeys } from '@app/store/in-memory-key/use-in-memory-keys';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
@@ -96,31 +91,4 @@ export function useCurrentAccountTaprootIndexZeroPayer() {
     if (!payer) throw new Error('No payer');
     return payer({ changeIndex: 0, addressIndex: 0 });
   }, [payer]);
-}
-
-export function useUpdateLedgerSpecificTaprootInputPropsForAdddressIndexZero() {
-  const createTaprootPayer = useCurrentAccountTaprootPayer();
-
-  return (tx: Psbt, fingerprint: string, inputsToUpdate: BitcoinInputSigningConfig[] = []) => {
-    inputsToUpdate.forEach(({ index, derivationPath }) => {
-      const taprootAddressIndexPayer = createTaprootPayer?.({
-        changeIndex: extractChangeIndexFromPath(derivationPath),
-        addressIndex: extractAddressIndexFromPath(derivationPath),
-      });
-
-      if (!taprootAddressIndexPayer)
-        throw new Error(`Unable to update taproot input for path ${derivationPath}}`);
-
-      tx.updateInput(index, {
-        tapBip32Derivation: [
-          {
-            masterFingerprint: Buffer.from(fingerprint, 'hex'),
-            pubkey: Buffer.from(ecdsaPublicKeyToSchnorr(taprootAddressIndexPayer.publicKey)),
-            path: derivationPath,
-            leafHashes: [],
-          },
-        ],
-      });
-    });
-  };
 }
