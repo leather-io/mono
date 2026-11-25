@@ -4,14 +4,14 @@ import { useController } from 'react-hook-form';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 
-import type { CryptoCurrency, StacksTransactionFeeQuote } from '@leather.io/models';
+import type { BaseTransactionFeeQuote, CryptoCurrency } from '@leather.io/models';
 import { stxToMicroStx } from '@leather.io/utils';
 
 import { SendFormWarningMessages } from '@app/common/warning-messages';
 
 interface CustomFeeFieldProps {
   feeCurrencySymbol: CryptoCurrency;
-  lowFeeQuote: StacksTransactionFeeQuote;
+  lowFeeQuote: BaseTransactionFeeQuote;
   setFieldWarning(value: string): void;
   disableFeeSelection?: boolean;
 }

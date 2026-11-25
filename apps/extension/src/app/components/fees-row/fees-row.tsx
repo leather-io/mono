@@ -3,14 +3,17 @@ import { useFormContext } from 'react-hook-form';
 
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 import BigNumber from 'bignumber.js';
-import { Box } from 'leather-styles/jsx';
+import { HStack } from 'leather-styles/jsx';
 
 import { STX_DECIMALS } from '@leather.io/constants';
 import {
   type CryptoCurrency,
   FeeTypes,
+  type FlatTransactionFeeQuote,
+  type Money,
   type StacksFeeEstimate,
-  type StacksTransactionFees,
+  type StacksTransactionFeeQuote,
+  type TransactionFees,
 } from '@leather.io/models';
 import { SkeletonLoader } from '@leather.io/ui';
 import { convertAmountToBaseUnit, createMoney, isNumber, isString } from '@leather.io/utils';
@@ -22,7 +25,11 @@ import { FeeEstimateSelect } from './components/fee-estimate-select';
 import { FeesRowLayout } from './components/fees-row.layout';
 import { TransactionFee } from './components/transaction-fee';
 
-function toEstimate(quote: StacksTransactionFees['options']['low']): StacksFeeEstimate {
+export const stxFeeCurrency = 'STX';
+
+type FeeRowQuote = StacksTransactionFeeQuote | FlatTransactionFeeQuote;
+
+function toEstimate(quote: FeeRowQuote): StacksFeeEstimate {
   return {
     fee: quote.value,
     feeRate: quote.type === 'stacksFeeRate' ? quote.rate : 0,
@@ -37,7 +44,7 @@ function toDisplayableFee(value: unknown) {
   return undefined;
 }
 
-function transactionFeesToEstimates(txFees: StacksTransactionFees): StacksFeeEstimate[] {
+function transactionFeesToEstimates(txFees: TransactionFees<FeeRowQuote>): StacksFeeEstimate[] {
   const { low, standard, high } = txFees.options;
   return [toEstimate(low), toEstimate(standard), toEstimate(high)];
 }
@@ -49,11 +56,13 @@ interface FeeRowFormValues {
 }
 
 interface FeeRowProps {
-  fees?: StacksTransactionFees;
+  fees?: TransactionFees<FeeRowQuote>;
   allowCustom?: boolean;
   isSponsored: boolean;
   defaultFeeValue?: number;
   disableFeeSelection?: boolean;
+  feeBadge?: React.ReactNode;
+  feeFiatValue?: Money | null;
 }
 export function FeesRow({
   fees,
@@ -61,6 +70,8 @@ export function FeesRow({
   allowCustom = true,
   defaultFeeValue,
   disableFeeSelection,
+  feeBadge,
+  feeFiatValue,
 }: FeeRowProps) {
   const { setValue, watch } = useFormContext<FeeRowFormValues>();
   const feeValue = watch('fee');
@@ -75,13 +86,17 @@ export function FeesRow({
   const estimates = useMemo(() => (fees ? transactionFeesToEstimates(fees) : []), [fees]);
   const hasFeeEstimates = estimates.length > 0;
 
-  const convertCryptoCurrencyToUsd = useConvertCryptoCurrencyToFiatAmount(feeCurrencySymbol);
+  const hasFeeFiatValue = feeFiatValue !== undefined;
+  const convertCryptoCurrencyToUsd = useConvertCryptoCurrencyToFiatAmount(
+    hasFeeFiatValue ? stxFeeCurrency : feeCurrencySymbol
+  );
 
   const feeInUsd = useMemo(() => {
+    if (hasFeeFiatValue) return feeFiatValue;
     if ((!isNumber(feeValue) && !isString(feeValue)) || !feeCurrencySymbol) return null;
     const feeAsMoney = createMoney(new BigNumber(feeValue), feeCurrencySymbol);
     return convertCryptoCurrencyToUsd(feeAsMoney);
-  }, [convertCryptoCurrencyToUsd, feeCurrencySymbol, feeValue]);
+  }, [convertCryptoCurrencyToUsd, feeCurrencySymbol, feeValue, feeFiatValue, hasFeeFiatValue]);
 
   useEffect(() => {
     if (defaultFeeValue) {
@@ -141,17 +156,21 @@ export function FeesRow({
             setFieldWarning={(value: string) => setFieldWarning(value)}
           />
         ) : (
-          <Box
-            onClick={() => handleSelectFeeEstimateOrCustomField(FeeTypes.Custom)}
-            textAlign="right"
+          <HStack
+            gap="space.02"
+            justifyContent="flex-end"
+            onClick={
+              allowCustom ? () => handleSelectFeeEstimateOrCustomField(FeeTypes.Custom) : undefined
+            }
             width="100%"
           >
+            {feeBadge}
             <TransactionFee
               fee={toDisplayableFee(feeValue)}
               feeCurrencySymbol={feeCurrencySymbol}
               usdAmount={feeInUsd}
             />
-          </Box>
+          </HStack>
         )
       }
       fieldWarning={fieldWarning}

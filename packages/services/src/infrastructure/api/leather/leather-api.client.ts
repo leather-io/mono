@@ -10,7 +10,11 @@ import { HttpCacheService } from '../../cache/http-cache.service';
 import type { Environment } from '../../environment';
 import { leatherApiPriorities } from '../../rate-limiter/leather-rate-limiter';
 import { RateLimiterService, RateLimiterType } from '../../rate-limiter/rate-limiter.service';
-import { selectBitcoinNetwork, selectStakingChainId } from '../../settings/settings.selectors';
+import {
+  selectBitcoinNetwork,
+  selectStacksChainId,
+  selectStakingChainId,
+} from '../../settings/settings.selectors';
 import type { SettingsService } from '../../settings/settings.service';
 import { ApiRequestOptions } from '../types';
 import {
@@ -20,6 +24,7 @@ import {
 } from './leather-api.error';
 import { LeatherApiPageRequest, getPageRequestQueryParams } from './leather-api.pagination';
 import { paths } from './leather-api.types';
+import { getSbtcSponsorshipNetwork } from './leather-sponsorship-api.types';
 
 export type LeatherApiBitcoinTransaction =
   paths['/v1/transactions/{descriptor}']['get']['responses'][200]['content']['application/json']['data'][number];
@@ -1061,6 +1066,48 @@ export class LeatherApiClient {
       () => client.POST('/v1/multisig-ext/propose', { body, signal }),
       {
         priority: leatherApiPriorities.proposeMultisigTransaction,
+        signal,
+      }
+    );
+    return assertLeatherApiData(data);
+  }
+
+  private getSbtcSponsorshipNetwork() {
+    const network = getSbtcSponsorshipNetwork(
+      selectStacksChainId(this.settingsService.getSettings())
+    );
+    if (!network) throw new Error('sBTC fee sponsorship is not available on this network');
+    return network;
+  }
+
+  async fetchSbtcSponsorshipQuote({ signal }: ApiRequestOptions = {}) {
+    const network = this.getSbtcSponsorshipNetwork();
+    const { data } = await this.rateLimiter.add(
+      RateLimiterType.Leather,
+      () => this.client.POST('/v1/sponsorship/quote', { params: { query: { network } }, signal }),
+      {
+        priority: leatherApiPriorities.sbtcSponsorshipQuote,
+        signal,
+      }
+    );
+    return assertLeatherApiData(data);
+  }
+
+  async submitSbtcSponsoredTransaction(
+    body: { quoteId: string; transaction: string },
+    { signal }: ApiRequestOptions = {}
+  ) {
+    const network = this.getSbtcSponsorshipNetwork();
+    const { data } = await this.rateLimiter.add(
+      RateLimiterType.Leather,
+      () =>
+        this.client.POST('/v1/sponsorship/submit', {
+          params: { query: { network } },
+          body,
+          signal,
+        }),
+      {
+        priority: leatherApiPriorities.sbtcSponsorshipSubmit,
         signal,
       }
     );

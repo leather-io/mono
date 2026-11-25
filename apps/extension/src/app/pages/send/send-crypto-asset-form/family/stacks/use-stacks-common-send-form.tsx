@@ -1,3 +1,5 @@
+import { type UseFormSetError } from 'react-hook-form';
+
 import { FeeTypes, type Money } from '@leather.io/models';
 
 import { FormErrorMessages } from '@shared/error-messages';
@@ -6,6 +8,7 @@ import { type StacksSendFormValues } from '@shared/models/form.model';
 import { stxMemoValidator } from '@app/common/validation/forms/memo-validators';
 import { stxRecipientValidator } from '@app/common/validation/forms/recipient-validators';
 import { nonceValidator } from '@app/common/validation/nonce-validators';
+import { stxFeeCurrency } from '@app/components/fees-row/fees-row';
 import { useStacksHighFeeWarningContext } from '@app/features/stacks-high-fee-warning/stacks-high-fee-warning-container';
 import { useNextNonce } from '@app/query/stacks/nonce/account-nonces.hooks';
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
@@ -35,7 +38,7 @@ export function useStacksCommonSendForm({
     hasDismissedHighFeeWarning: false,
     isShowingHighFeeDiaglog: false,
     fee: '',
-    feeCurrency: 'STX',
+    feeCurrency: stxFeeCurrency,
     feeType: FeeTypes[FeeTypes.Unknown],
     memo: '',
     nonce: isStacksPolicy ? 0 : nextNonce?.nonce,
@@ -44,8 +47,18 @@ export function useStacksCommonSendForm({
     ...routeState,
   });
 
-  function checkFormValidation(values: StacksSendFormValues) {
-    if (shouldWarnAboutHighFee(values.fee)) {
+  function checkFormValidation(
+    values: StacksSendFormValues,
+    setError: UseFormSetError<StacksSendFormValues>
+  ) {
+    if (!values.recipient) {
+      setError('recipient', { message: FormErrorMessages.AddressRequired });
+      setError('recipientBnsName', { message: FormErrorMessages.AddressRequired });
+      return false;
+    }
+
+    const isStxFee = values.feeCurrency === stxFeeCurrency;
+    if (isStxFee && shouldWarnAboutHighFee(values.fee)) {
       setShowHighFeeWarningSheet(true);
       return false;
     }

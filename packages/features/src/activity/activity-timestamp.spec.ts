@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { formatActivityCaption } from './activity-timestamp';
+import { formatActivityCaption, formatBlockchainActivityCaption } from './activity-timestamp';
 
 function createTimestamp(minutesAgo: number) {
   return Math.floor((Date.now() - minutesAgo * 60 * 1000) / 1000);
@@ -90,5 +90,32 @@ describe('activity-timestamp', () => {
 
       vi.useRealTimers();
     });
+  });
+});
+
+describe(formatBlockchainActivityCaption.name, () => {
+  it('appends the relative time to the subtitle', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2024-01-01T12:00:00.000Z'));
+
+    expect(
+      formatBlockchainActivityCaption({
+        subtitle: 'Sent to SP1…ABC',
+        timestamp: createTimestamp(5),
+      })
+    ).toBe('Sent to SP1…ABC · 5m ago');
+
+    vi.useRealTimers();
+  });
+
+  it('falls back to the relative time when there is no subtitle', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2024-01-01T12:00:00.000Z'));
+
+    expect(formatBlockchainActivityCaption({ subtitle: '', timestamp: createTimestamp(5) })).toBe(
+      '5m ago'
+    );
+
+    vi.useRealTimers();
   });
 });

@@ -1,4 +1,4 @@
-import { FormProvider, type Resolver, useForm } from 'react-hook-form';
+import { FormProvider, type Resolver, type UseFormSetError, useForm } from 'react-hook-form';
 import { Outlet, useNavigate } from 'react-router';
 
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
@@ -26,13 +26,17 @@ import { StacksRecipientField } from '../../family/stacks/components/stacks-reci
 import { sendFormOptions } from '../../send-form.utils';
 
 interface StacksCommonSendFormProps {
-  onSubmit(values: StacksSendFormValues): Promise<void>;
+  onSubmit(
+    values: StacksSendFormValues,
+    setError: UseFormSetError<StacksSendFormValues>
+  ): Promise<void>;
   initialValues: StacksSendFormValues;
   resolver: Resolver<StacksSendFormValues>;
   amountField: React.JSX.Element;
   selectedAssetField: React.JSX.Element;
   availableTokenBalance: Money;
   fees?: StacksTransactionFees;
+  feesRow?: React.JSX.Element;
 }
 
 export function StacksCommonSendForm({
@@ -42,6 +46,7 @@ export function StacksCommonSendForm({
   amountField,
   selectedAssetField,
   fees,
+  feesRow,
   availableTokenBalance,
 }: StacksCommonSendFormProps) {
   const navigate = useNavigate();
@@ -54,7 +59,9 @@ export function StacksCommonSendForm({
     resolver,
     ...sendFormOptions,
   });
-  const submitForm = useLatestCallback(onSubmit);
+  const submitForm = useLatestCallback((values: StacksSendFormValues) =>
+    onSubmit(values, form.setError)
+  );
   onFormStateChange(form.watch());
   return (
     <Page>
@@ -86,7 +93,7 @@ export function StacksCommonSendForm({
               <StacksRecipientField />
               <MemoField />
               <Box mt="space.04" width="100%">
-                <FeesRow fees={fees} isSponsored={false} />
+                {feesRow ?? <FeesRow fees={fees} isSponsored={false} />}
               </Box>
               {!isStacksPolicy && (
                 <Link

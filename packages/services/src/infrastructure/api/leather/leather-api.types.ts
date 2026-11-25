@@ -1501,7 +1501,11 @@ export interface paths {
                 result: 'pass' | 'fail' | 'error';
                 provider?: string;
                 /** @enum {string} */
-                errorReason?: 'rate_limited' | 'upstream_error' | 'unexpected_response_shape';
+                errorReason?:
+                  | 'rate_limited'
+                  | 'upstream_error'
+                  | 'proxy_error'
+                  | 'unexpected_response_shape';
                 providerContext?: {
                   [key: string]: unknown;
                 };
@@ -6889,6 +6893,122 @@ export interface paths {
         };
       };
     };
+    trace?: never;
+  };
+  '/v1/sponsorship/quote': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Quote the sBTC fee range for a sponsored sBTC transfer */
+    post: {
+      parameters: {
+        query: {
+          network: 'mainnet' | 'testnet';
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              quoteId: string;
+              feeRecipientPrincipal: string;
+              /** Format: date-time */
+              expiresAt: string;
+              satsPerStx: string;
+              minFeeSats: number;
+              maxFeeSats: number;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/sponsorship/submit': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Co-sign an origin-signed sponsored sBTC transfer as sponsor and broadcast it */
+    post: {
+      parameters: {
+        query: {
+          network: 'mainnet' | 'testnet';
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            quoteId: string;
+            transaction: string;
+          };
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              txid: string;
+              transaction: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
     trace?: never;
   };
 }

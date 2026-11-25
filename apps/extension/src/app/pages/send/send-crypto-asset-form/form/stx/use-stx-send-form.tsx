@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { type UseFormSetError } from 'react-hook-form';
 
 import { z } from 'zod';
 
@@ -81,8 +82,11 @@ export function useStxSendForm() {
     stxFees,
     resolver,
 
-    async previewTransaction(values: StacksSendFormValues) {
-      const isFormValid = checkFormValidation(values);
+    async previewTransaction(
+      values: StacksSendFormValues,
+      setError: UseFormSetError<StacksSendFormValues>
+    ) {
+      const isFormValid = checkFormValidation(values, setError);
 
       if (!isFormValid) return;
 
