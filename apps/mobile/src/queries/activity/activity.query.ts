@@ -68,7 +68,7 @@ export function useActivityFeed(fingerprint: string, accountIndex: number) {
     ...retriableActivityQueryOptions,
     select: selectActivityFeedItems,
   });
-  const { fetchNextPage, isFetching, isFetchNextPageError } = feedQuery;
+  const { fetchNextPage, refetch, isFetching, isFetchNextPageError } = feedQuery;
   const isTailEmpty = feedQuery.data?.isTailEmpty ?? false;
   useEffect(() => {
     if (isTailEmpty && !isFetching && !isFetchNextPageError) void fetchNextPage();
@@ -87,6 +87,9 @@ export function useActivityFeed(fingerprint: string, accountIndex: number) {
     isFetchingNextPage: feedQuery.isFetchingNextPage,
     fetchNextPage() {
       void fetchNextPage();
+    },
+    refetch() {
+      void refetch();
     },
   };
 }
