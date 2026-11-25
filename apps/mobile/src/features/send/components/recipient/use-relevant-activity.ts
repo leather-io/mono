@@ -1,6 +1,6 @@
 import { type RecipientActivity } from '@/features/send/components/recipient/recipient.types';
 import { useActivityByAssetIdQuery } from '@/queries/activity/activity.query';
-import { type FetchState, toFetchState } from '@/queries/fetch-state';
+import { toFetchState } from '@/queries/fetch-state';
 import { filter, isDefined, map, pipe } from 'remeda';
 
 import {
@@ -45,22 +45,4 @@ function toRecipientActivity(activity: BlockchainActivity): RecipientActivity {
 
 function hasReceivers(activity: RecipientActivity) {
   return isDefined(activity.receivers[0]) && activity.receivers[0].length !== 0;
-}
-
-interface MatchRelevantActivityResult {
-  result: FetchState<RecipientActivity[]>;
-  loading: React.ReactNode;
-  error(error: string): React.ReactNode;
-  success(data: RecipientActivity[]): React.ReactNode;
-}
-
-export function matchRelevantActivityResult({
-  error,
-  loading,
-  result,
-  success,
-}: MatchRelevantActivityResult) {
-  if (result.state === 'loading') return loading;
-  if (result.state === 'error') return error(result.errorMessage);
-  return success(result.value);
 }
