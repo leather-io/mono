@@ -42,7 +42,7 @@ export function useRecipientSuggestions({
   const { list: accounts } = useAccounts();
 
   return useQuery({
-    queryKey: ['recipient-suggestions', debouncedSearchTerm],
+    queryKey: ['recipient-suggestions', debouncedSearchTerm, activity],
     placeholderData: keepPreviousData,
     queryFn: async ({ signal }: QueryFunctionContext) =>
       buildRecipientSuggestions({
