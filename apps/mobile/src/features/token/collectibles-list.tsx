@@ -12,7 +12,6 @@ import { useRouter } from 'expo-router';
 import { type NonFungibleCryptoAsset } from '@leather.io/models';
 import { getAssetId, serializeAssetId } from '@leather.io/utils';
 
-import { useCollectibleDetailsFlag } from '../feature-flags';
 import { Sip9 } from './stacks/sip9';
 
 interface RenderCollectibleProps {
@@ -43,7 +42,6 @@ export function CollectiblesList({ collectiblesState, header }: CollectiblesList
   const collectibles = collectiblesState.state === 'success' ? collectiblesState.value : [];
   const height = useCollectibleListItemHeight();
   const router = useRouter();
-  const collectiblesDetailsFlag = useCollectibleDetailsFlag();
 
   const isLoading = collectiblesState.state === 'loading';
   const isError = collectiblesState.state === 'error';
@@ -56,13 +54,11 @@ export function CollectiblesList({ collectiblesState, header }: CollectiblesList
         renderCollectible({
           item,
           height,
-          onPress: collectiblesDetailsFlag
-            ? () =>
-                router.navigate({
-                  pathname: '/(tabs)/(index)/[assetId]',
-                  params: { assetId: serializeAssetId(getAssetId(item)) },
-                })
-            : undefined,
+          onPress: () =>
+            router.navigate({
+              pathname: '/(tabs)/(index)/[assetId]',
+              params: { assetId: serializeAssetId(getAssetId(item)) },
+            }),
         })
       }
       getItemType={item => item.protocol}
