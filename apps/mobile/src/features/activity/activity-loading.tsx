@@ -20,7 +20,7 @@ export function ActivityLoading({ header, count }: ActivityLoadingProps) {
       data={skeletonRows}
       keyExtractor={index => `activity-skeleton-${index}`}
       renderItem={() => <LoadingItem />}
-      ListHeaderComponent={header ? <>{header}</> : null}
+      ListHeaderComponent={header ? <>{header}</> : undefined}
     />
   );
 }
