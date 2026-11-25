@@ -26,7 +26,7 @@ msgstr " on {date} "
 msgid " since {date}"
 msgstr " since {date}"
 
-#: src/app/settings/display/index.tsx:101
+#: src/app/settings/display/index.tsx:94
 msgid "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
 msgstr "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
 
@@ -75,7 +75,7 @@ msgctxt "Currency name"
 msgid "{symbol, select, USD {United States Dollar} EUR {Euro} GBP {British Pound} AUD {Australian Dollar} CAD {Canadian Dollar} CNY {Chinese Yuan} JPY {Japanese Yen} KRW {South Korean Won} BTC {Bitcoin} other {{name}}}"
 msgstr "{symbol, select, USD {United States Dollar} EUR {Euro} GBP {British Pound} AUD {Australian Dollar} CAD {Canadian Dollar} CNY {Chinese Yuan} JPY {Japanese Yen} KRW {South Korean Won} BTC {Bitcoin} other {{name}}}"
 
-#: src/app/settings/display/index.tsx:56
+#: src/app/settings/display/index.tsx:53
 #: src/features/settings/theme-sheet.tsx:32
 msgid "{themePreference, select, light {Light} dark {Dark} system {System} other {Unknown}}"
 msgstr "{themePreference, select, light {Light} dark {Dark} system {System} other {Unknown}}"
@@ -124,7 +124,7 @@ msgstr "Account created"
 msgid "Account creation failed"
 msgstr "Account creation failed"
 
-#: src/app/settings/display/index.tsx:100
+#: src/app/settings/display/index.tsx:93
 #: src/features/settings/account-identifier-sheet.tsx:37
 msgid "Account identifier"
 msgstr "Account identifier"
@@ -425,7 +425,7 @@ msgstr "BIP39 passphrase"
 msgid "Bitcoin"
 msgstr "Bitcoin"
 
-#: src/app/settings/display/index.tsx:72
+#: src/app/settings/display/index.tsx:67
 #: src/features/settings/bitcoin-unit-sheet.tsx:35
 msgid "Bitcoin unit"
 msgstr "Bitcoin unit"
@@ -460,7 +460,7 @@ msgstr "BTC, STX"
 msgid "BTC, STX, sBTC, USDCx"
 msgstr "BTC, STX, sBTC, USDCx"
 
-#: src/components/action-buttons.tsx:55
+#: src/components/action-buttons.tsx:50
 #: src/features/token/components/deposit-token-cell.tsx:60
 msgid "Buy"
 msgstr "Buy"
@@ -610,7 +610,7 @@ msgstr "Contract"
 msgid "Contract arguments"
 msgstr "Contract arguments"
 
-#: src/app/settings/display/index.tsx:92
+#: src/app/settings/display/index.tsx:85
 #: src/features/settings/conversion-unit-sheet.tsx:29
 msgid "Conversion unit"
 msgstr "Conversion unit"
@@ -716,7 +716,7 @@ msgstr "Discover Stacks NFTs"
 msgid "Dismiss"
 msgstr "Dismiss"
 
-#: src/app/settings/display/index.tsx:52
+#: src/app/settings/display/index.tsx:49
 #: src/app/settings/index.tsx:68
 msgid "Display"
 msgstr "Display"
@@ -935,7 +935,7 @@ msgstr "Granite"
 msgid "Guides"
 msgstr "Guides"
 
-#: src/app/settings/display/index.tsx:116
+#: src/app/settings/display/index.tsx:109
 msgid "Haptics"
 msgstr "Haptics"
 
@@ -1039,7 +1039,7 @@ msgstr "Invalid amount"
 msgid "Invalid words: {joinedInvalidWords}"
 msgstr "Invalid words: {joinedInvalidWords}"
 
-#: src/app/settings/display/index.tsx:83
+#: src/app/settings/display/index.tsx:76
 #: src/features/settings/language-sheet.tsx:37
 msgid "Language"
 msgstr "Language"
@@ -1398,7 +1398,7 @@ msgstr "Read less"
 msgid "Read more"
 msgstr "Read more"
 
-#: src/components/action-buttons.tsx:44
+#: src/components/action-buttons.tsx:39
 #: src/features/receive/screens/asset-details.tsx:56
 #: src/features/receive/screens/select-asset.tsx:86
 msgid "Receive"
@@ -1504,7 +1504,7 @@ msgstr "sBTC Bridge"
 msgid "Scan a Bitcoin or Stacks address"
 msgstr "Scan a Bitcoin or Stacks address"
 
-#: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:80
+#: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:78
 #: src/features/send/components/recipient/recipient-toggle.tsx:61
 msgid "Scan a QR code"
 msgstr "Scan a QR code"
@@ -1517,7 +1517,7 @@ msgstr "Scan QR Code"
 msgid "Search for asset"
 msgstr "Search for asset"
 
-#: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:73
+#: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:71
 msgid "Search for BNS name or address"
 msgstr "Search for BNS name or address"
 
@@ -1543,11 +1543,11 @@ msgstr "Select"
 msgid "Select asset"
 msgstr "Select asset"
 
-#: src/components/action-buttons.tsx:66
+#: src/components/action-buttons.tsx:61
 msgid "Sell"
 msgstr "Sell"
 
-#: src/components/action-buttons.tsx:33
+#: src/components/action-buttons.tsx:28
 #: src/features/send/screens/form.tsx:54
 #: src/features/send/screens/select-asset.tsx:35
 msgid "Send"
@@ -1681,7 +1681,7 @@ msgstr "Submitting..."
 msgid "Success"
 msgstr "Success"
 
-#: src/components/action-buttons.tsx:77
+#: src/components/action-buttons.tsx:72
 #: src/features/swap/screens/swap-form-screen.tsx:58
 msgid "Swap"
 msgstr "Swap"
@@ -1771,7 +1771,7 @@ msgstr "The guaranteed minimum amount you‘ll receive based on your slippage to
 msgid "The maximum price change you're willing to accept between when you submit and when your swap executes. If the price moves beyond this threshold, the transaction will revert."
 msgstr "The maximum price change you're willing to accept between when you submit and when your swap executes. If the price moves beyond this threshold, the transaction will revert."
 
-#: src/app/settings/display/index.tsx:55
+#: src/app/settings/display/index.tsx:52
 #: src/features/settings/theme-sheet.tsx:28
 msgid "Theme"
 msgstr "Theme"
@@ -1850,7 +1850,7 @@ msgstr "tiny amounts that cost more to send than they’re worth."
 msgid "To address"
 msgstr "To address"
 
-#: src/app/settings/display/index.tsx:117
+#: src/app/settings/display/index.tsx:110
 msgid "Toggle tactile feedback for interactions"
 msgstr "Toggle tactile feedback for interactions"
 
