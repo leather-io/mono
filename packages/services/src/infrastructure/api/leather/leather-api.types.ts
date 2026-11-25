@@ -6904,7 +6904,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** @description Quote the sBTC fee range for a sponsored sBTC transfer */
+    /** @description Quote the sBTC fee range for a sponsored transaction. Pass `service` (the prefix of an earlier quoteId, before the first colon) to ask only that service. */
     post: {
       parameters: {
         query: {
@@ -7021,6 +7021,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
+    /** @description Co-sign an origin-signed sponsored contract call as sponsor and broadcast it, paid for by a confirmed sBTC payment */
     post: {
       parameters: {
         query: {
@@ -7040,6 +7041,7 @@ export interface paths {
         };
       };
       responses: {
+        /** @description OK */
         200: {
           headers: {
             [name: string]: unknown;
@@ -7051,6 +7053,7 @@ export interface paths {
             };
           };
         };
+        /** @description Bad Request */
         400: {
           headers: {
             [name: string]: unknown;
