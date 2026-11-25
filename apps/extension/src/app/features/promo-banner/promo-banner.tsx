@@ -25,13 +25,13 @@ const promoCards = [
     eventName: 'stacking',
     message: 'Lock STX, earn BTC',
     imgSrc: 'assets/illustrations/promo-banner-stacking.svg',
-    linkUrl: 'https://app.leather.io/stacking',
+    linkUrl: 'https://leather.io/staking',
   },
   {
     eventName: 'sbtc',
     message: 'Grow your sBTC',
     imgSrc: 'assets/illustrations/promo-banner-sbtc.svg',
-    linkUrl: 'https://app.leather.io/sbtc',
+    linkUrl: 'https://leather.io/sbtc',
   },
 ];
 
