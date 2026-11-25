@@ -4,16 +4,16 @@ import { RecipientGuardSheet } from '@/features/send/components/recipient/recipi
 import { RecipientQrScanner } from '@/features/send/components/recipient/recipient-qr-scanner';
 import { RecipientQrSheet } from '@/features/send/components/recipient/recipient-qr-sheet';
 import { RecipientSelector } from '@/features/send/components/recipient/recipient-selector/recipient-selector';
-import { RecipientSelectorError } from '@/features/send/components/recipient/recipient-selector/recipient-selector-error';
 import { RecipientSheet } from '@/features/send/components/recipient/recipient-sheet';
 import { RecipientToggle } from '@/features/send/components/recipient/recipient-toggle';
+import { type RecipientActivity } from '@/features/send/components/recipient/recipient.types';
 import { useRecipientState } from '@/features/send/components/recipient/use-recipient-state';
-import { matchRelevantActivityResult } from '@/features/send/components/recipient/use-relevant-activity';
-import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
 import { analytics } from '@/utils/analytics';
 import { type ZodSchema } from 'zod';
 
 import { type AccountId, type FungibleCryptoAsset } from '@leather.io/models';
+
+const noActivity: RecipientActivity[] = [];
 
 interface RecipientProps {
   value: string;
@@ -53,21 +53,16 @@ export const Recipient = memo(
       <>
         <RecipientToggle value={value} onPress={onTogglePress} onQrButtonPress={onQrButtonPress} />
         <RecipientSheet sheetRef={sheetRef}>
-          {matchRelevantActivityResult({
-            result: relevantActivityResult,
-            loading: <SendFormLoadingSpinner />,
-            error: () => <RecipientSelectorError />,
-            success: data => (
-              <RecipientSelector
-                onQrButtonPress={onQrButtonPress}
-                asset={asset}
-                activity={data}
-                onSelectAddress={address => void onSelectAddress(address)}
-                recipientSchema={recipientSchema}
-                currentAccount={currentAccount}
-              />
-            ),
-          })}
+          <RecipientSelector
+            onQrButtonPress={onQrButtonPress}
+            asset={asset}
+            activity={
+              relevantActivityResult.state === 'success' ? relevantActivityResult.value : noActivity
+            }
+            onSelectAddress={address => void onSelectAddress(address)}
+            recipientSchema={recipientSchema}
+            currentAccount={currentAccount}
+          />
         </RecipientSheet>
         <RecipientQrSheet sheetRef={scannerSheetRef}>
           <RecipientQrScanner
