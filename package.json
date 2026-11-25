@@ -55,7 +55,7 @@
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.3.0",
     "@trivago/prettier-plugin-sort-imports": "5.2.2",
-    "@types/jest": "29.5.14",
+    "@types/jest": "30.0.0",
     "@types/node": "24.0.8",
     "@vitest/coverage-v8": "2.1.9",
     "dependency-cruiser": "16.10.0",
@@ -112,8 +112,8 @@
     },
     "patchedDependencies": {
       "pofile@1.1.4": "patches/pofile@1.1.4.patch",
-      "expo-secure-store@15.0.8": "patches/expo-secure-store@15.0.8.patch",
-      "react-native-webview@13.15.0": "patches/react-native-webview@13.15.0.patch"
+      "react-native-webview@14.0.1": "patches/react-native-webview@14.0.1.patch",
+      "expo-secure-store@58.0.3": "patches/expo-secure-store@58.0.3.patch"
     },
     "onlyBuiltDependencies": [
       "better-sqlite3",

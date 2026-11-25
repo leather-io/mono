@@ -1,5 +1,5 @@
 import { type ComponentPropsWithoutRef, type RefObject } from 'react';
-import { type TextInput as RNTextInput } from 'react-native';
+import { type TextInput as RNTextInput, type TextInputInstance } from 'react-native';
 
 import { t } from '@lingui/core/macro';
 import {
@@ -64,7 +64,7 @@ export function TextInput({
   ...rest
 }: Props & {
   inputState: InputState;
-  inputRef?: RefObject<RNTextInput | null>;
+  inputRef?: RefObject<TextInputInstance | null>;
   errorMessage?: string;
   textVariant?: TextInputProps<Theme>['textVariant'];
   TextInputComponent?: typeof UITextInput;

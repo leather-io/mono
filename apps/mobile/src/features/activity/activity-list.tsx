@@ -65,7 +65,7 @@ export function ActivityList({
       refreshControl={<RefreshControl />}
       ListHeaderComponent={<>{header}</>}
       ListEmptyComponent={<ActivityEmpty />}
-      ListFooterComponent={isFetchingNextPage ? <LoadingItem /> : null}
+      ListFooterComponent={isFetchingNextPage ? <LoadingItem /> : undefined}
       onEndReached={handleEndReached}
     />
   );

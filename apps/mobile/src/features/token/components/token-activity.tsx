@@ -49,7 +49,7 @@ export function TokenActivity({ activity, ListHeader }: TokenActivityProps) {
               <LoadingItem key={`activity-skeleton-${index}`} />
             ))}
           </Box>
-        ) : null
+        ) : undefined
       }
     />
   );
