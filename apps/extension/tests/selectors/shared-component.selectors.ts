@@ -20,6 +20,8 @@ export const SharedComponentsSelectors = {
   FeeToBePaidLabel: 'fee-to-be-paid-label',
   LowFeeEstimateItem: 'low-fee',
   MiddleFeeEstimateItem: 'standard-fee',
+  HighFeeEstimateItem: 'high-fee',
+  SponsoredFeeBadge: 'sponsored-fee-badge',
   FeesListItem: 'fee-list-item',
   FeesListItemFeeValue: 'fee-list-item-fee-value',
   FeeTabRecommended: 'tab-recommended',
@@ -27,6 +29,7 @@ export const SharedComponentsSelectors = {
 
   // Error
   BroadcastErrorTitle: 'broadcast-error-title',
+  BroadcastErrorSheetCloseBtn: 'broadcast-error-sheet-close-btn',
   GenericErrorTitle: 'generic-error-title',
   HeaderBackBtn: 'header-back-button',
   HeaderCloseBtn: 'header-close-button',

@@ -118,3 +118,11 @@ export async function mockEmptyStacksPrincipalBalancesRequest(page: Page | Brows
     })
   );
 }
+
+export async function mockZeroStxPrincipalBalanceRequest(target: Page | BrowserContext) {
+  await target.route(stxBalanceUrl, route =>
+    route.fulfill({
+      json: mockedEmptyStxBalance,
+    })
+  );
+}
