@@ -1458,6 +1458,7 @@ msgstr "Restake"
 msgid "Restore wallet"
 msgstr "Restore wallet"
 
+#: src/features/activity/activity-error.tsx:22
 #: src/features/approver/components/approver-buttons/index.tsx:85
 #: src/features/swap/components/asset-selector/asset-selector-error.tsx:23
 #: src/features/swap/components/quote-preview/quote-preview-error.tsx:18
@@ -1803,6 +1804,7 @@ msgstr "This feature is not available yet, but we can notify you when ready."
 msgid "This is an “Allow Mode” transaction"
 msgstr "This is an “Allow Mode” transaction"
 
+#: src/features/activity/activity-error.tsx:18
 #: src/features/swap/components/asset-selector/asset-selector-error.tsx:19
 #: src/features/swap/components/quote-preview/quote-preview-error.tsx:15
 #: src/features/swap/components/review/swap-review-error-state.tsx:18
@@ -1912,6 +1914,10 @@ msgstr "Type URL or search"
 #: src/hooks/use-version-check.ts:33
 msgid "Unable to determine current app version"
 msgstr "Unable to determine current app version"
+
+#: src/features/activity/activity-error.tsx:16
+msgid "Unable to load activity"
+msgstr "Unable to load activity"
 
 #: src/features/swap/components/asset-selector/asset-selector-error.tsx:17
 msgid "Unable to load assets"

@@ -6,6 +6,7 @@ import { SelectedAssetField } from '../../components/selected-asset-field';
 import { SendFiatValue } from '../../components/send-fiat-value';
 import { SendMaxButton } from '../../components/send-max-button';
 import { StacksCommonSendForm } from '../stacks/stacks-common-send-form';
+import { SbtcSponsoredFeesRow } from './components/sbtc-sponsored-fees-row';
 import { useSip10SendForm } from './use-sip10-send-form';
 
 interface Sip10TokenSendFormContainerProps {
@@ -20,6 +21,9 @@ export function Sip10TokenSendFormContainer({
 }: Sip10TokenSendFormContainerProps) {
   const {
     availableTokenBalance,
+    canPayFeeInSbtc,
+    offerSbtcFee,
+    onSelectedSbtcFeeChange,
     initialValues,
     previewTransaction,
     sendMaxBalance,
@@ -29,6 +33,16 @@ export function Sip10TokenSendFormContainer({
     decimals,
     symbol,
   } = useSip10SendForm({ info: asset, balance });
+
+  const feesRow = canPayFeeInSbtc ? (
+    <SbtcSponsoredFeesRow
+      fees={fees}
+      asset={asset}
+      marketData={marketData}
+      offerSbtcFee={offerSbtcFee}
+      onSelectedSbtcFeeChange={onSelectedSbtcFeeChange}
+    />
+  ) : undefined;
 
   const amountField = (
     <AmountField
@@ -75,6 +89,7 @@ export function Sip10TokenSendFormContainer({
       amountField={amountField}
       selectedAssetField={selectedAssetField}
       fees={fees}
+      feesRow={feesRow}
       availableTokenBalance={availableTokenBalance}
     />
   );
