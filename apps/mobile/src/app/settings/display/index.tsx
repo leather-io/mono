@@ -2,7 +2,6 @@ import { useRef } from 'react';
 
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
-import { useBtcConversionUnitFlag, useInternationalizationFlag } from '@/features/feature-flags';
 import { AccountIdentifierSheet } from '@/features/settings/account-identifier-sheet';
 import { BitcoinUnitSheet } from '@/features/settings/bitcoin-unit-sheet';
 import { ConversionUnitSheet } from '@/features/settings/conversion-unit-sheet';
@@ -26,9 +25,7 @@ import {
 } from '@leather.io/ui/native';
 
 export default function SettingsDisplayScreen() {
-  const btcConversionUnitEnabled = useBtcConversionUnitFlag();
-  const i18nEnabled = useInternationalizationFlag();
-  const shouldShowLanguageSetting = i18nEnabled && keys(supportedLanguages).length > 1;
+  const shouldShowLanguageSetting = keys(supportedLanguages).length > 1;
   const themeSheetRef = useRef<SheetInstance>(null);
   const bitcoinUnitSheetRef = useRef<SheetInstance>(null);
   const conversionUnitSheetRef = useRef<SheetInstance>(null);
@@ -68,19 +65,15 @@ export default function SettingsDisplayScreen() {
           }}
           testID={SettingsSelectors.ThemeButton}
         />
-        {btcConversionUnitEnabled && (
-          <>
-            <SettingsListItem
-              title={t`Bitcoin unit`}
-              caption={bitcoinUnitPreference.symbol}
-              icon={<BitcoinCircleIcon />}
-              onPress={() => {
-                bitcoinUnitSheetRef.current?.present();
-              }}
-              testID={SettingsSelectors.BitcoinUnitButton}
-            />
-          </>
-        )}
+        <SettingsListItem
+          title={t`Bitcoin unit`}
+          caption={bitcoinUnitPreference.symbol}
+          icon={<BitcoinCircleIcon />}
+          onPress={() => {
+            bitcoinUnitSheetRef.current?.present();
+          }}
+          testID={SettingsSelectors.BitcoinUnitButton}
+        />
         {shouldShowLanguageSetting && (
           <SettingsListItem
             title={t`Language`}

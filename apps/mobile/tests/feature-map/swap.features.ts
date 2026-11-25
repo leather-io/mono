@@ -5,7 +5,7 @@ import { SwapSelectors } from '@/shared/selectors/swap.selectors';
 import type { MobileFeatureEntry } from './mobile-feature-entry';
 
 const openSwapFromHomeStep =
-  'On the Home tab tap "Swap" in the action buttons (no test id; shown only with swap on); the sheet opens with STX as the base asset';
+  'On the Home tab tap "Swap" in the action buttons (no test id); the sheet opens with STX as the base asset';
 
 const openSwapFromTokenStep =
   'On token-details tap "Swap"; the sheet opens with that token as the base asset. On Bitcoin the button renders only with swap_sbtc_bridging on';
@@ -36,7 +36,7 @@ export const swapFeatures = [
       { kind: 'nav', steps: [openSwapFromTokenStep] },
     ],
     gate: 'splashScreen',
-    flags: ['swap'],
+    flags: [],
     preconditions: { session: 'signed-in', network: 'mainnet', mocks: [] },
     selectors: {
       ready: SwapSelectors.BaseAmountField,
@@ -52,7 +52,7 @@ export const swapFeatures = [
     actions: [],
     specs: [],
     description:
-      'The global swap sheet (features/swap/swap-sheet.tsx), mounted in the root layout only when settings hold a currentAccount and swap (useSwapFlag) is on, and presented through swapSheetRef.current?.present({ baseAsset?, targetAsset? }); the Home "Swap" button passes no assets, so the base defaults to STX, and the token-details "Swap" button passes the token (Bitcoin only with swap_sbtc_bridging). The sheet tracks swap_sheet_opened / swap_sheet_dismissed, preloads the account swap assets, wraps the SwapProvider of @leather.io/state/swap with the app dependencies (use-swap-dependencies.ts; it throws without a Stacks signer or a native segwit payer) and switches between a "form" and a "review" screen in local state, with no route. swap-form-screen.tsx shows the "Swap" title with no back element and two panels. The pay card holds the amount field (SwapSelectors.BaseAmountField; the caret takes the asset colour and turns red on error) with the base asset toggle (SwapSelectors.BaseAssetToggle, "Select" when empty) and the balance; its second line is either the error ("Enter an amount", "Invalid amount", "Too many decimals (max N)", "Minimum X", "Maximum X", "Insufficient balance", hidden while the input is effectively zero) or the currency mode switcher (SwapSelectors.CurrencyModeSwitcher, the converted amount with an arrow that toggles crypto and fiat input). The receive card holds the target amount preview (SwapSelectors.TargetAmountPreview, "0" until a quote, pulsing while loading) and the target toggle (SwapSelectors.TargetAssetToggle, disabled until a base asset is set). The flip button (SwapSelectors.FlipButton, "Flip assets") renders only while flipping is allowed. Below, the quote preview shows nothing until an amount and target exist, then a skeleton, "Unable to load the quote" with "Retry", "No quotes available for this swap.", a constraint box ("Amount too small", "Amount too large" or "Deposit cap reached" for the BTC and sBTC bridge limits), or the "Rate" (with a 30 s refetch ring) and "Estimated fees" rows. Presets offer 25 %, 50 %, 75 % and "MAX" above the numpad, and "Review" (SwapSelectors.ReviewButton, disabled until the form can submit) tracks swap_review_initiated and opens swap-review. The toggles open the swap-asset-selector-sheet. Quotes come from the alex-sdk, bitflow-sdk, bitflow-bff-api and sbtc-bridge providers of the swap service. There is no network gate: off mainnet the BTC pairs are excluded and the DEX providers take no network parameter, so a reproduction needs mainnet and a funded account. With swap_sbtc_bridging off, BTC cannot be the base and sBTC to BTC is blocked (use-swap-disabled-pairs.ts). Asset lists, balances, market data and quotes are fetched live.',
+      'The global swap sheet (features/swap/swap-sheet.tsx), mounted in the root layout only when settings hold a currentAccount, and presented through swapSheetRef.current?.present({ baseAsset?, targetAsset? }); the Home "Swap" button passes no assets, so the base defaults to STX, and the token-details "Swap" button passes the token (Bitcoin only with swap_sbtc_bridging). The sheet tracks swap_sheet_opened / swap_sheet_dismissed, preloads the account swap assets, wraps the SwapProvider of @leather.io/state/swap with the app dependencies (use-swap-dependencies.ts; it throws without a Stacks signer or a native segwit payer) and switches between a "form" and a "review" screen in local state, with no route. swap-form-screen.tsx shows the "Swap" title with no back element and two panels. The pay card holds the amount field (SwapSelectors.BaseAmountField; the caret takes the asset colour and turns red on error) with the base asset toggle (SwapSelectors.BaseAssetToggle, "Select" when empty) and the balance; its second line is either the error ("Enter an amount", "Invalid amount", "Too many decimals (max N)", "Minimum X", "Maximum X", "Insufficient balance", hidden while the input is effectively zero) or the currency mode switcher (SwapSelectors.CurrencyModeSwitcher, the converted amount with an arrow that toggles crypto and fiat input). The receive card holds the target amount preview (SwapSelectors.TargetAmountPreview, "0" until a quote, pulsing while loading) and the target toggle (SwapSelectors.TargetAssetToggle, disabled until a base asset is set). The flip button (SwapSelectors.FlipButton, "Flip assets") renders only while flipping is allowed. Below, the quote preview shows nothing until an amount and target exist, then a skeleton, "Unable to load the quote" with "Retry", "No quotes available for this swap.", a constraint box ("Amount too small", "Amount too large" or "Deposit cap reached" for the BTC and sBTC bridge limits), or the "Rate" (with a 30 s refetch ring) and "Estimated fees" rows. Presets offer 25 %, 50 %, 75 % and "MAX" above the numpad, and "Review" (SwapSelectors.ReviewButton, disabled until the form can submit) tracks swap_review_initiated and opens swap-review. The toggles open the swap-asset-selector-sheet. Quotes come from the alex-sdk, bitflow-sdk, bitflow-bff-api and sbtc-bridge providers of the swap service. There is no network gate: off mainnet the BTC pairs are excluded and the DEX providers take no network parameter, so a reproduction needs mainnet and a funded account. With swap_sbtc_bridging off, BTC cannot be the base and sBTC to BTC is blocked (use-swap-disabled-pairs.ts). Asset lists, balances, market data and quotes are fetched live.',
   },
   {
     id: 'swap-asset-selector-sheet',
@@ -71,7 +71,7 @@ export const swapFeatures = [
       },
     ],
     gate: 'splashScreen',
-    flags: ['swap'],
+    flags: [],
     preconditions: { session: 'signed-in', network: 'mainnet', mocks: [] },
     selectors: {
       ready: SwapSelectors.AssetSelector,
@@ -98,7 +98,7 @@ export const swapFeatures = [
     params: [],
     entry: [{ kind: 'nav', steps: [...openReviewSteps] }],
     gate: 'splashScreen',
-    flags: ['swap'],
+    flags: [],
     preconditions: { session: 'signed-in', network: 'mainnet', mocks: [] },
     selectors: {
       ready: SwapSelectors.ReviewDetails,
@@ -143,7 +143,7 @@ export const swapFeatures = [
       },
     ],
     gate: 'splashScreen',
-    flags: ['swap'],
+    flags: [],
     preconditions: { session: 'signed-in', network: 'mainnet', mocks: [] },
     selectors: {
       ready: SwapSelectors.SlippageValue,
@@ -175,7 +175,7 @@ export const swapFeatures = [
       },
     ],
     gate: 'splashScreen',
-    flags: ['swap'],
+    flags: [],
     preconditions: { session: 'signed-in', network: 'mainnet', mocks: [] },
     selectors: {
       ready: SwapSelectors.InfoSheetContent,

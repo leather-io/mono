@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { type SectionListRenderItemInfo } from 'react-native';
 
 import { SearchInput } from '@/components/search-input';
-import { useSendPasteButton } from '@/features/feature-flags';
 import { IosRecipientPasteButton } from '@/features/send/components/recipient/ios-recipient-paste-button';
 import { RecipientSelectorHeader } from '@/features/send/components/recipient/recipient-selector/recipient-selector-header';
 import { RecipientSelectorItem } from '@/features/send/components/recipient/recipient-selector/recipient-selector-item';
@@ -47,7 +46,6 @@ export function RecipientSelector({
   onQrButtonPress,
   currentAccount,
 }: RecipientSelectorProps) {
-  const pasteButtonEnabled = useSendPasteButton();
   const [searchTerm, setSearchTerm] = useState('');
   const recipientSuggestions = useRecipientSuggestions({
     searchTerm,
@@ -76,7 +74,7 @@ export function RecipientSelector({
           />
           {searchTerm.length === 0 && (
             <Box position="absolute" top={12} right={8} flexDirection="row">
-              {pasteButtonEnabled && <IosRecipientPasteButton onPress={handlePasteButtonPress} />}
+              <IosRecipientPasteButton onPress={handlePasteButtonPress} />
               <IconButton
                 label={t`Scan a QR code`}
                 onPress={() => onQrButtonPress('input')}

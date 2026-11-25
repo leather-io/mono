@@ -67,7 +67,7 @@ export const settingsFeatures = [
     actions: [],
     specs: [],
     description:
-      'The "Display" settings screen (app/settings/display/index.tsx). Rows: "Theme" with the current preference as caption ("Light", "Dark" or "System"; ThemeButton, presents the settings-theme-sheet), "Bitcoin unit" with the unit symbol (BitcoinUnitButton, presents the settings-bitcoin-unit-sheet) only with release_btc_conversion_unit_feature (useBtcConversionUnitFlag) on, "Language" only with internationalization (useInternationalizationFlag) on and more than one language in i18n/languages.ts, which lists only "English", so the row never renders, "Conversion unit" with the fiat currency symbol (ConversionUnitButton, presents the settings-conversion-unit-sheet), "Account identifier" with "Native Segwit address", "Taproot address", "BNS name" or "Stacks address" (AccountIdentifierButton, presents the settings-account-identifier-sheet), and "Haptics" / "Toggle tactile feedback for interactions" (HapticsItem), a switch row whose Switch flips hapticsPreference; the row itself has no press handler. Each sheet uses settings-sheet.layout.tsx (a sticky header title and, when given, a question-mark button that opens a guide URL in the Browser tab). All preferences live in the persisted settings slice. Back returns to Settings. legacy-flows/change-theme.yaml walked it by text ("Display Theme and account identifier", "Theme System", then "Light" / "Dark").',
+      'The "Display" settings screen (app/settings/display/index.tsx). Rows: "Theme" with the current preference as caption ("Light", "Dark" or "System"; ThemeButton, presents the settings-theme-sheet), "Bitcoin unit" with the unit symbol (BitcoinUnitButton, presents the settings-bitcoin-unit-sheet), "Language" only with more than one language in i18n/languages.ts, which lists only "English", so the row never renders, "Conversion unit" with the fiat currency symbol (ConversionUnitButton, presents the settings-conversion-unit-sheet), "Account identifier" with "Native Segwit address", "Taproot address", "BNS name" or "Stacks address" (AccountIdentifierButton, presents the settings-account-identifier-sheet), and "Haptics" / "Toggle tactile feedback for interactions" (HapticsItem), a switch row whose Switch flips hapticsPreference; the row itself has no press handler. Each sheet uses settings-sheet.layout.tsx (a sticky header title and, when given, a question-mark button that opens a guide URL in the Browser tab). All preferences live in the persisted settings slice. Back returns to Settings. legacy-flows/change-theme.yaml walked it by text ("Display Theme and account identifier", "Theme System", then "Light" / "Dark").',
   },
   {
     id: 'settings-security',
@@ -186,12 +186,12 @@ export const settingsFeatures = [
         steps: [
           openSettingsStep,
           openDisplayStep,
-          'Tap "Bitcoin unit" (SettingsSelectors.BitcoinUnitButton), shown only with release_btc_conversion_unit_feature on',
+          'Tap "Bitcoin unit" (SettingsSelectors.BitcoinUnitButton)',
         ],
       },
     ],
     gate: 'splashScreen',
-    flags: ['release_btc_conversion_unit_feature'],
+    flags: [],
     preconditions: { session: 'signed-out', mocks: [] },
     selectors: {
       ready: SettingsSelectors.BitcoinUnitOption,
@@ -200,7 +200,7 @@ export const settingsFeatures = [
     actions: [],
     specs: [],
     description:
-      'The "Bitcoin unit" sheet (features/settings/bitcoin-unit-sheet.tsx): radio rows for each bitcoin unit in @leather.io/constants, titled by symbol ("BTC", "sat") with the capitalised name as caption ("Bitcoin", "Satoshi"); test ids are SettingsSelectors.BitcoinUnitOption plus "-bitcoin" or "-satoshi". Tapping a row stores the unit preference and shows the toast "Bitcoin unit updated". The header question-mark opens the Bitcoin unit guide in the Browser tab. The row that presents it renders only with release_btc_conversion_unit_feature (useBtcConversionUnitFlag) on. Default is bitcoin.',
+      'The "Bitcoin unit" sheet (features/settings/bitcoin-unit-sheet.tsx): radio rows for each bitcoin unit in @leather.io/constants, titled by symbol ("BTC", "sat") with the capitalised name as caption ("Bitcoin", "Satoshi"); test ids are SettingsSelectors.BitcoinUnitOption plus "-bitcoin" or "-satoshi". Tapping a row stores the unit preference and shows the toast "Bitcoin unit updated". The header question-mark opens the Bitcoin unit guide in the Browser tab. Default is bitcoin.',
   },
   {
     id: 'settings-conversion-unit-sheet',
