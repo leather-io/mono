@@ -1,6 +1,7 @@
 import { Box, Stack, styled } from 'leather-styles/jsx';
 
 import {
+  type CollectibleKind,
   formatAttributeValue,
   getChainDisplayLabel,
   getProtocolDisplayLabel,
@@ -17,12 +18,14 @@ import { Row, SectionCard } from './collectible-details.layout';
 
 interface Sip9DetailsProps {
   asset: Sip9Asset;
+  kind: CollectibleKind;
   isDescriptionExpanded: boolean;
   onToggleDescription(): void;
 }
 
 export function Sip9Details({
   asset,
+  kind,
   isDescriptionExpanded,
   onToggleDescription,
 }: Sip9DetailsProps) {
@@ -39,7 +42,6 @@ export function Sip9Details({
     <>
       {description && (
         <Stack bg="ink.background-primary" py="space.03" gap="space.00">
-          <Box mx="space.05" borderTopWidth="1px" borderColor="ink.border-default" />
           <Box px="space.05" py="space.02">
             <styled.h2 textStyle="label.03" margin="0">
               Description
@@ -74,14 +76,17 @@ export function Sip9Details({
         </Stack>
       )}
 
-      <SectionCard title="Details">
+      <SectionCard title="Details" hasDivider={Boolean(description)}>
         {info.collectionName && (
           <Row label="Collection" value={info.collectionName} externalLink={info.collectionUrl} />
         )}
         {info.creator && <Row label="Creator" value={info.creator} />}
         {floorPrice && <Row label="Floor price" value={formatCurrency(floorPrice)} />}
         <Row label="Layer" value={getChainDisplayLabel(asset.chain)} />
-        <Row label="Protocol" value={getProtocolDisplayLabel(asset.protocol)} />
+        <Row
+          label="Protocol"
+          value={kind === 'legacy-bns' ? 'Legacy BNS' : getProtocolDisplayLabel(asset.protocol)}
+        />
         {asset.contractId && (
           <Row
             label="Contract details"

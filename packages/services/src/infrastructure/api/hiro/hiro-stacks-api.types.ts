@@ -229,6 +229,17 @@ export interface HiroPrincipalFtBalance {
   readonly balance: string;
 }
 
+export interface HiroMapEntryResponse {
+  data: string;
+}
+
+export interface GetMapEntryArgs {
+  contractAddress: string;
+  contractName: string;
+  mapName: string;
+  key: ClarityValue;
+}
+
 export interface CallReadOnlyFunctionArgs {
   contractAddress: string;
   contractName: string;

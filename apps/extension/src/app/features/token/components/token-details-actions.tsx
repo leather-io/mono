@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router';
 
 import { Flex, styled } from 'leather-styles/jsx';
 
+import { Spinner } from '@leather.io/ui';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { RouteUrls } from '@shared/route-urls';
@@ -20,10 +21,17 @@ interface TokenDetailsPillButtonProps {
   label: string;
   onClick(): void;
   disabled?: boolean;
+  isLoading?: boolean;
   testId?: string;
 }
 
-function TokenDetailsPillButton({ label, onClick, disabled, testId }: TokenDetailsPillButtonProps) {
+export function TokenDetailsPillButton({
+  label,
+  onClick,
+  disabled,
+  isLoading,
+  testId,
+}: TokenDetailsPillButtonProps) {
   return (
     <styled.button
       type="button"
@@ -41,10 +49,11 @@ function TokenDetailsPillButton({ label, onClick, disabled, testId }: TokenDetai
       color={disabled ? 'ink.text-subdued' : 'ink.text-primary'}
       opacity={disabled ? 0.6 : 1}
       _hover={disabled ? undefined : { bg: 'ink.component-background-hover', cursor: 'pointer' }}
-      onClick={disabled ? undefined : onClick}
+      onClick={disabled || isLoading ? undefined : onClick}
+      aria-busy={isLoading}
       data-testid={testId}
     >
-      {label}
+      {isLoading ? <Spinner size="sm" color="ink.text-primary" label={label} /> : label}
     </styled.button>
   );
 }

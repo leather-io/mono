@@ -1,4 +1,5 @@
 import { type Locator, type Page, expect } from '@playwright/test';
+import { CollectiblesSelectors } from '@tests/selectors/collectibles.selectors';
 import {
   CoreAssetSelectors,
   MockedTokensSelectors,
@@ -104,6 +105,12 @@ export class SendPage {
   async selectSip10AndGoToSendForm(tokenTestId: string = MockedTokensSelectors.Sip10TokenTestId) {
     await this.page.waitForURL('**' + RouteUrls.SendCryptoAsset);
     await this.page.getByTestId(tokenTestId).click();
+    await this.page.getByTestId(SendCryptoAssetSelectors.SendForm).waitFor();
+    await this.waitForFeeEstimate();
+  }
+
+  async goToCollectibleSendForm() {
+    await this.page.getByTestId(CollectiblesSelectors.CollectibleSendBtn).click();
     await this.page.getByTestId(SendCryptoAssetSelectors.SendForm).waitFor();
     await this.waitForFeeEstimate();
   }

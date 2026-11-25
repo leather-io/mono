@@ -2,6 +2,17 @@ import type { BrowserContext, Page } from '@playwright/test';
 
 const responseOkBoolErrorUint = { type: { response: { ok: 'bool', error: 'uint128' } } };
 
+const sip9TransferFunction = {
+  name: 'transfer',
+  access: 'public',
+  args: [
+    { name: 'id', type: 'uint128' },
+    { name: 'sender', type: 'principal' },
+    { name: 'recipient', type: 'principal' },
+  ],
+  outputs: responseOkBoolErrorUint,
+};
+
 const contractInterfaces = {
   'SP000000000000000000002Q6VF78/bns': {
     functions: [
@@ -19,18 +30,16 @@ const contractInterfaces = {
     ],
   },
   'SP2XMGYYTA1KRBKBYJHTW8CFWB2QYZKZE4BMHG3PJ/living-leather': {
-    functions: [
-      {
-        name: 'transfer',
-        access: 'public',
-        args: [
-          { name: 'id', type: 'uint128' },
-          { name: 'sender', type: 'principal' },
-          { name: 'recipient', type: 'principal' },
-        ],
-        outputs: responseOkBoolErrorUint,
-      },
-    ],
+    functions: [sip9TransferFunction],
+    non_fungible_tokens: [{ name: 'living-leather', type: 'uint128' }],
+  },
+  'SP2QEZ06AGJ3RKJPBV14SY1V5BBFNAW33D96YPGZF/BNS-V2': {
+    functions: [sip9TransferFunction],
+    non_fungible_tokens: [{ name: 'BNS-V2', type: 'uint128' }],
+  },
+  'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173/the-explorer-guild': {
+    functions: [],
+    non_fungible_tokens: [{ name: 'The-Explorer-Guild', type: 'uint128' }],
   },
   'SP1AY6K3PQV5MRT6R4S671NWW2FRVPKM0BR162CT6/leo-token': {
     functions: [

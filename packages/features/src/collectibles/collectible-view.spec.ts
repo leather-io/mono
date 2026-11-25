@@ -35,10 +35,25 @@ const sip9Generic = {
 } satisfies NonFungibleCryptoAsset;
 
 describe(createCollectibleView.name, () => {
-  it('marks BNS collectibles as special SIP-009 items', () => {
+  it('marks BNS v1 names as legacy BNS', () => {
     const view = createCollectibleView(sip9);
-    expect(view.isBns).toBe(true);
-    expect(view.subtitle).toBe('Stacks collectible');
+    expect(view.kind).toBe('legacy-bns');
+    expect(view.subtitle).toBe('Legacy BNS');
+  });
+
+  it('marks BNS-V2 names as BNS names', () => {
+    const view = createCollectibleView({
+      ...sip9,
+      assetId: 'SP2QEZ06AGJ3RKJPBV14SY1V5BBFNAW33D96YPGZF.BNS-V2::BNS-V2',
+      contractId: 'SP2QEZ06AGJ3RKJPBV14SY1V5BBFNAW33D96YPGZF.BNS-V2',
+    });
+    expect(view.kind).toBe('bns');
+    expect(view.subtitle).toBe('BNS name');
+  });
+
+  it('does not mark other contracts with a BNS-V2 asset name as BNS names', () => {
+    const view = createCollectibleView({ ...sip9Generic, assetId: 'SP123.BNS-V2::BNS-V2' });
+    expect(view.kind).toBe('nft');
   });
 
   it('falls back to a generic title for non-BNS sip9 items without a name', () => {

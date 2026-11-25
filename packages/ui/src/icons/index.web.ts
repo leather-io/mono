@@ -79,6 +79,7 @@ export * from './key-icon.web';
 export * from './leather-lettermark-icon.web';
 export * from './leather-logomark-icon.web';
 export * from './ledger-icon.web';
+export * from './legacy-bns-icon.web';
 export * from './lock-icon.web';
 export * from './magnifying-glass-icon.web';
 export * from './megaphone-icon.web';
