@@ -483,6 +483,8 @@ describe('fix-issue command actions', () => {
         'false',
         '--app-login',
         'leather-fix-issue[bot]',
+        '--workflow-app-client-id',
+        'Iv23client',
       ]);
       expect(calls.map(call => `${call.method} ${call.url}`)).toEqual([
         `GET ${apiUrl}/repos/${repoName}/pulls/7`,

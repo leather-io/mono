@@ -6,7 +6,7 @@ import { runOrThrow } from '../ci/exec.js';
 import { GitHubError } from '../ci/github.js';
 import { gitBlobSha } from './git.js';
 import { mergeDev } from './merge.js';
-import { openPullRequest } from './pull-request.js';
+import { revisePullRequest } from './pull-request.js';
 import { carriedScreenshots } from './revise-pull-request.js';
 import type { FixStatus } from './status.js';
 import { type GraphqlRoute, fakeGitHub, reviewThread, threadsPage } from './test/fake-github.js';
@@ -23,6 +23,7 @@ import {
 
 const repoName = 'leather-io/mono';
 const appLogin = 'leather-fix-issue[bot]';
+const appClientId = 'Iv23client';
 const resolved = 'export const feeRow = 4;\n';
 const permissionsPath = /^repos\/leather-io\/mono\/collaborators\/([^/]+)\/permission$/;
 
@@ -63,7 +64,7 @@ interface Scenario {
   moveDev?(): void;
 }
 
-describe('openPullRequest for a revise', () => {
+describe('revisePullRequest', () => {
   let repo: TestRepo;
   let head: string;
   let dev: string;
@@ -97,8 +98,6 @@ describe('openPullRequest for a revise', () => {
       'tmp/fix-issue/revise.json',
       JSON.stringify({
         pullRequest: 7,
-        issue: 12,
-        branch: pullRequestBranch,
         head: rest.revisedHead ?? head,
         dev,
         ordinal: 2,
@@ -131,7 +130,7 @@ describe('openPullRequest for a revise', () => {
             title: 'fix(extension): keep the fee row visible',
             html_url: 'https://github.com/leather-io/mono/pull/7',
             body: 'Closes #12\n\n## Screenshots\n\n| State | Before | After |\n| --- | --- | --- |\n| Narrow | — | ![After](a.png) |\n',
-            user: { login: appLogin },
+            user: { login: appLogin, type: 'Bot' },
             head: { ref: pullRequestBranch, sha: head, repo: { full_name: repoName } },
             base: { ref: 'dev' },
             ...scenario.pull,
@@ -139,8 +138,17 @@ describe('openPullRequest for a revise', () => {
         }
         if (method === 'GET' && path.startsWith(`repos/${repoName}/issues/7/comments`)) {
           return [
-            { body: '<!-- fix-issue:revise 1 -->\n**Revise 1 of 5**', user: { login: appLogin } },
-            { body: '<!-- fix-issue:revise 9 -->', user: { login: 'mallory' } },
+            {
+              body: '<!-- fix-issue:revise 1 -->\n**Revise 1 of 5**',
+              created_at: '2026-11-12T08:00:00Z',
+              user: { login: appLogin, type: 'Bot' },
+              performed_via_github_app: { client_id: appClientId },
+            },
+            {
+              body: '<!-- fix-issue:revise 9 -->',
+              created_at: '2026-11-12T09:00:00Z',
+              user: { login: 'mallory', type: 'User' },
+            },
           ];
         }
         if (method === 'GET' && path.startsWith(`repos/${repoName}/pulls/7/reviews`)) {
@@ -166,7 +174,7 @@ describe('openPullRequest for a revise', () => {
       },
       scenario.graphql ?? (query => (query.includes('reviewThreads') ? threads() : undefined))
     );
-    const result = openPullRequest({
+    const result = revisePullRequest({
       client,
       paths: repo.paths,
       repo: repoName,
@@ -175,6 +183,7 @@ describe('openPullRequest for a revise', () => {
       pullRequest: 7,
       mergeRequested: scenario.mergeRequested ?? false,
       appLogin,
+      workflowAppClientId: appClientId,
       coAuthor: 'alice',
       brief: scenario.request,
       runId: '888',
@@ -458,10 +467,10 @@ describe('openPullRequest for a revise', () => {
   });
 
   test.each<[string, Record<string, unknown>, RegExp]>([
-    ['is closed', { state: 'closed' }, /#7 is no longer open/],
+    ['is closed', { state: 'closed' }, /#7 cannot be revised: it is not open/],
     [
       'someone else opened',
-      { user: { login: 'alice' } },
+      { user: { login: 'alice[bot]', type: 'Bot' } },
       /#7 was not opened by leather-fix-issue\[bot\]/,
     ],
     [
@@ -472,7 +481,7 @@ describe('openPullRequest for a revise', () => {
     [
       'comes from a fork',
       { head: { ref: pullRequestBranch, sha: 'x', repo: { full_name: 'mallory/mono' } } },
-      /#7 is not a pull request of leather-io\/mono into dev/,
+      /#7 cannot be revised: it comes from another repository/,
     ],
   ])('writes nothing to a pull request that %s', async (_name, pull, error) => {
     const { client, result } = revise({ change: wrapLabel, pull });

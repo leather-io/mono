@@ -23,7 +23,7 @@ export function refusedPaths(files: readonly string[]): string[] {
   return files.filter(file => !isAllowedPath(file));
 }
 
-function splitNul(output: string): string[] {
+export function splitNul(output: string): string[] {
   return output.split('\0').filter(entry => entry !== '');
 }
 

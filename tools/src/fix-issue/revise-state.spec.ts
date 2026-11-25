@@ -12,17 +12,12 @@ import { type TestRepo, createTestRepo } from './test/test-repo.js';
 
 const state: ReviseState = {
   pullRequest: 7,
-  issue: 12,
-  branch: 'bot/fix-issue-12-777',
   head: 'a'.repeat(40),
   dev: 'b'.repeat(40),
   ordinal: 2,
   merge: true,
   conflicts: ['apps/extension/fee-row.tsx'],
-  items: [
-    { id: 'instructions', kind: 'instructions' },
-    { id: 'thread-55', kind: 'thread' },
-  ],
+  items: ['instructions', 'thread-55'],
 };
 
 describe('revise state', () => {

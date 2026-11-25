@@ -4,22 +4,15 @@ import path from 'node:path';
 import { type CommandRunner, runAndEcho, runCommand } from '../ci/exec.js';
 import { allowedPathsDescription, changedPaths, refusedPaths, treeSnapshot } from './git.js';
 import { filesWithConflictMarkers } from './merge.js';
-import { readReviseState } from './revise-state.js';
+import type { ReviseState } from './revise-state.js';
 import { type FixStatus, readStatus } from './status.js';
-
-interface ReviseCheck {
-  readonly since: string;
-  readonly itemIds: readonly string[];
-  readonly conflicts: readonly string[];
-  readonly merged: boolean;
-}
 
 interface VerifyOptions {
   readonly root: string;
   readonly statusFile: string;
   readonly reportFile?: string;
   readonly run?: CommandRunner;
-  readonly revise?: ReviseCheck;
+  readonly revise?: ReviseState | null;
   log?(line: string): void;
 }
 
@@ -138,17 +131,6 @@ function checkGate(
   return { passed: true, message: 'the verification gate passed' };
 }
 
-export function reviseCheck(reviseFile: string): ReviseCheck | undefined {
-  const state = readReviseState(reviseFile);
-  if (state === null) return undefined;
-  return {
-    since: state.since ?? uncommittedChanges,
-    itemIds: state.items.map(item => item.id),
-    conflicts: state.conflicts,
-    merged: state.merge,
-  };
-}
-
 function feedbackProblems(status: FixStatus, itemIds: readonly string[]): string[] {
   const answered = status.feedback.map(entry => entry.id);
   const missing = itemIds.filter(id => !answered.includes(id));
@@ -159,8 +141,12 @@ function feedbackProblems(status: FixStatus, itemIds: readonly string[]): string
   ];
 }
 
-function reviseProblem(root: string, status: FixStatus, revise: ReviseCheck): VerifyResult | null {
-  const problems = feedbackProblems(status, revise.itemIds);
+function reviseProblem(
+  status: FixStatus,
+  revise: ReviseState,
+  marked: readonly string[]
+): VerifyResult | null {
+  const problems = feedbackProblems(status, revise.items);
   if (problems.length > 0) {
     return {
       passed: false,
@@ -168,8 +154,7 @@ function reviseProblem(root: string, status: FixStatus, revise: ReviseCheck): Ve
       details: problems.join('\n'),
     };
   }
-  const marked = status.state === 'done' ? filesWithConflictMarkers(root, revise.conflicts) : [];
-  if (marked.length > 0) {
+  if (status.state === 'done' && marked.length > 0) {
     return {
       passed: false,
       message: 'conflict markers from the merge of dev remain',
@@ -200,7 +185,7 @@ function evaluate(
   root: string,
   statusFile: string,
   run: CommandRunner,
-  revise: ReviseCheck | undefined
+  revise: ReviseState | null | undefined
 ): VerifyResult {
   const status = readStatus(statusFile);
   if (!status.ok) {
@@ -219,30 +204,27 @@ function evaluate(
       details: `Only ${allowedPathsDescription} may change:\n${refused.join('\n')}`,
     };
   }
-  const untouchedMerge =
-    revise?.merged === true && filesWithConflictMarkers(root, revise.conflicts).length === 0;
-  if (
-    changes.length === 0 &&
-    !untouchedMerge &&
-    (status.status.state === 'blocked' || status.status.handoff.length > 0)
-  ) {
+  const marked = revise ? filesWithConflictMarkers(root, revise.conflicts) : [];
+  const mergedCleanly = revise?.merge === true && marked.length === 0;
+  const nothingToVerify = changes.length === 0 && !mergedCleanly;
+  if (nothingToVerify && (status.status.state === 'blocked' || status.status.handoff.length > 0)) {
     return {
       passed: true,
       skipped: true,
       message: 'the fixer changed nothing it may change; skipping the verification gate',
     };
   }
-  const failed = revise ? reviseProblem(root, status.status, revise) : null;
+  if (nothingToVerify && !revise) {
+    return { passed: false, message: 'state is done but nothing changed', details: '' };
+  }
+  const failed = revise ? reviseProblem(status.status, revise, marked) : null;
   if (failed) return failed;
-  if (changes.length === 0 && revise && !revise.merged) {
+  if (nothingToVerify) {
     return {
       passed: true,
       skipped: true,
       message: 'the revise changed nothing and only answers the feedback; skipping the gate',
     };
-  }
-  if (changes.length === 0 && !revise) {
-    return { passed: false, message: 'state is done but nothing changed', details: '' };
   }
   const gate = checkGate(
     root,

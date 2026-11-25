@@ -5,21 +5,14 @@ export const maxRevises = 5;
 export const botAccountType = 'Bot';
 const botBranchPattern = /^bot\/fix-issue-([1-9]\d*)-(\d+)$/;
 
-const itemSchema = z.object({
-  id: z.string(),
-  kind: z.enum(['instructions', 'thread', 'review', 'merge']),
-});
-
 const reviseStateSchema = z.object({
   pullRequest: z.number().int().positive(),
-  issue: z.number().int().positive(),
-  branch: z.string(),
   head: z.string(),
   dev: z.string(),
   ordinal: z.number().int().positive(),
   merge: z.boolean(),
   conflicts: z.array(z.string()),
-  items: z.array(itemSchema),
+  items: z.array(z.string()),
   since: z.string().optional(),
 });
 
@@ -40,7 +33,6 @@ export const revisePullSchema = z.object({
   base: z.object({ ref: z.string() }),
 });
 
-export type ReviseItem = z.infer<typeof itemSchema>;
 export type ReviseState = z.infer<typeof reviseStateSchema>;
 
 export function readReviseState(file: string): ReviseState | null {

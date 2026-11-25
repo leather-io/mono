@@ -6,9 +6,10 @@ import { type CommandRunner, runCommand } from '../ci/exec.js';
 import { treeSnapshot } from './git.js';
 import type { FixIssuePaths } from './paths.js';
 import { type Review, readReview } from './review.js';
+import { readReviseState } from './revise-state.js';
 import { maxFollowUps, readState, readStatus, writeStatus } from './status.js';
 import { resetStopGuards } from './stop-guard.js';
-import { reviseCheck, verifyFix } from './verify.js';
+import { verifyFix } from './verify.js';
 
 const outcomeSchema = z.enum(['clean', 'failed', 'blocked']);
 type RoundOutcome = z.infer<typeof outcomeSchema>;
@@ -64,7 +65,7 @@ export function verifyRound(paths: FixIssuePaths, round: number, run?: CommandRu
     statusFile: paths.statusFile,
     reportFile: paths.verifyReport,
     run,
-    revise: reviseCheck(paths.reviseFile),
+    revise: readReviseState(paths.reviseFile),
   });
   if (result.passed) rmSync(paths.verifyReport, { force: true });
   const verified = result.passed && !result.skipped;

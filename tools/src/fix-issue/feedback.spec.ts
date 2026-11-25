@@ -117,7 +117,6 @@ describe('fetchFeedback', () => {
         id: 'review-5',
         author: 'dave',
         state: 'CHANGES_REQUESTED',
-        submittedAt: '2026-11-12T10:00:00Z',
         body: 'Please rename the constant.',
       },
     ]);
@@ -167,7 +166,6 @@ describe('renderFeedback', () => {
     id: 'review-5',
     author: 'dave',
     state: 'CHANGES_REQUESTED',
-    submittedAt: '2026-11-12T10:00:00Z',
     body: 'Please rename the constant.',
   };
 

@@ -23,7 +23,6 @@ interface FeedbackReview {
   readonly id: string;
   readonly author: string;
   readonly state: string;
-  readonly submittedAt: string;
   readonly body: string;
 }
 
@@ -58,6 +57,8 @@ interface RenderFeedbackOptions {
 
 export const instructionsItemId = 'instructions';
 export const mergeItemId = 'merge';
+export const threadItemPrefix = 'thread-';
+export const reviewItemPrefix = 'review-';
 
 const threadsPageSize = 50;
 const maxThreadPages = 10;
@@ -125,7 +126,6 @@ const reviewSchema = z.object({
   body: z.string().nullable(),
   state: z.string(),
   commit_id: z.string().nullable().optional(),
-  submitted_at: z.string().nullable().optional(),
 });
 
 type RawThread = z.infer<typeof threadSchema>;
@@ -137,7 +137,7 @@ interface OpenThread {
 
 function threadItemId(thread: RawThread): string | null {
   const first = thread.comments.nodes[0]?.databaseId;
-  return first === null || first === undefined ? null : `thread-${first}`;
+  return first === null || first === undefined ? null : `${threadItemPrefix}${first}`;
 }
 
 export async function fetchOpenThreads(
@@ -208,10 +208,9 @@ export async function fetchFeedback({
     review.user && isUser(review.user.type) && trusted.has(review.user.login)
       ? [
           {
-            id: `review-${review.id}`,
+            id: `${reviewItemPrefix}${review.id}`,
             author: review.user.login,
             state: review.state,
-            submittedAt: review.submitted_at ?? '',
             body: (review.body ?? '').trim(),
           },
         ]

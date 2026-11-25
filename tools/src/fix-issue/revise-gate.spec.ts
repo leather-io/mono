@@ -3,7 +3,6 @@ import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 import { GitHubError } from '../ci/github.js';
 import { gateRevise } from './revise-gate.js';
-import { readReviseState } from './revise-state.js';
 import { fakeGitHub, reviewThread, threadsPage } from './test/fake-github.js';
 import {
   type TestRepo,
@@ -49,7 +48,6 @@ const briefComment = appComment(
     '- Settled: wrap the label',
     '',
     '</details>',
-    '<!-- /fix-issue:brief -->',
   ].join('\n')
 );
 
@@ -168,20 +166,14 @@ describe('gateRevise', () => {
     });
     const state = {
       pullRequest: 7,
-      issue: 12,
-      branch: pullRequestBranch,
       head,
       dev,
       ordinal: 2,
       merge: false,
       conflicts: [],
-      items: [
-        { id: 'instructions', kind: 'instructions' },
-        { id: 'thread-11', kind: 'thread' },
-      ],
+      items: ['instructions', 'thread-11'],
     };
     await expect(result).resolves.toEqual(state);
-    expect(readReviseState(repo.paths.reviseFile)).toEqual(state);
     expect(readFileSync(repo.paths.notesFile, 'utf8')).toBe('- Settled: wrap the label\n');
     expect(readFileSync(repo.paths.issueFile, 'utf8')).toContain('# Fee row overflows');
     expect(readFileSync(repo.paths.pullRequestFile, 'utf8')).toBe(
@@ -211,7 +203,7 @@ describe('gateRevise', () => {
     const { result } = gate({ threads: [wrapThread] });
     await expect(result).resolves.toMatchObject({
       merge: false,
-      items: [{ id: 'thread-11', kind: 'thread' }],
+      items: ['thread-11'],
     });
   });
 
@@ -255,7 +247,7 @@ describe('gateRevise', () => {
     await expect(result).resolves.toMatchObject({
       merge: true,
       conflicts: [conflictingFile],
-      items: [{ id: 'merge', kind: 'merge' }],
+      items: ['merge'],
     });
     expect(client.calls.some(call => call.method === 'GRAPHQL')).toBe(false);
     expect(readFileSync(repo.paths.feedbackFile, 'utf8')).toContain(`- \`${conflictingFile}\``);
@@ -266,11 +258,7 @@ describe('gateRevise', () => {
     const { result } = gate({ notes: 'wrap it', threads: [wrapThread] });
     await expect(result).resolves.toMatchObject({
       merge: true,
-      items: [
-        { id: 'instructions', kind: 'instructions' },
-        { id: 'merge', kind: 'merge' },
-        { id: 'thread-11', kind: 'thread' },
-      ],
+      items: ['instructions', 'merge', 'thread-11'],
     });
   });
 
@@ -280,7 +268,7 @@ describe('gateRevise', () => {
     await expect(result).resolves.toMatchObject({
       merge: true,
       conflicts: [],
-      items: [{ id: 'merge', kind: 'merge' }],
+      items: ['merge'],
     });
   });
 
@@ -293,10 +281,7 @@ describe('gateRevise', () => {
     const { result } = gate({ threads: [wrapThread] });
     await expect(result).resolves.toMatchObject({
       merge: true,
-      items: [
-        { id: 'merge', kind: 'merge' },
-        { id: 'thread-11', kind: 'thread' },
-      ],
+      items: ['merge', 'thread-11'],
     });
     await expect(gate().result).rejects.toThrow('there is nothing to revise on #7');
   });

@@ -17,7 +17,6 @@ describe('brief comment', () => {
         brief,
         '',
         '</details>',
-        '<!-- /fix-issue:brief -->',
         '',
       ].join('\n')
     );

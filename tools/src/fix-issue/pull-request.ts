@@ -19,7 +19,9 @@ import type { FixIssuePaths } from './paths.js';
 import {
   type ReviseTarget,
   answerFeedback,
+  bullets,
   carriedScreenshots,
+  errorMessage,
   noAnswers,
   readReviseTarget,
   renderReviseSummary,
@@ -51,12 +53,13 @@ interface RevisePullRequestOptions extends PublishOptions {
   readonly pullRequest: number;
   readonly mergeRequested: boolean;
   readonly appLogin: string;
+  readonly workflowAppClientId: string;
 }
 
 interface TreeEntry {
   readonly path: string;
   readonly mode: string;
-  readonly type: 'blob' | 'commit';
+  readonly type: 'blob';
   readonly sha: string | null;
 }
 
@@ -108,11 +111,6 @@ function commitMessage(subject: string, trailer: string | null): string {
 
 const fileModes = ['100644', '100755'];
 const fileMode = '100644';
-const submoduleMode = '160000';
-
-function bullets(lines: readonly string[]): string {
-  return lines.map(line => `- ${line}`).join('\n');
-}
 
 function sections(entries: readonly (readonly [string, readonly string[]])[]): string[] {
   return entries
@@ -285,12 +283,7 @@ async function commitEntries(
       return entry?.sha === change.sha && entry.mode === change.mode;
     });
     if (known) {
-      entries.push({
-        path: change.path,
-        mode: change.mode,
-        type: change.mode === submoduleMode ? 'commit' : 'blob',
-        sha: change.sha,
-      });
+      entries.push({ path: change.path, mode: change.mode, type: 'blob', sha: change.sha });
       continue;
     }
     if (!fileModes.includes(change.mode)) {
@@ -431,9 +424,7 @@ async function supersedeEarlierPullRequests(
       await client.request('DELETE', `repos/${repo}/git/refs/heads/${pull.head.ref}`);
       log(`open-pull-request: closed #${pull.number}, superseded by #${current.number}`);
     } catch (error) {
-      log(
-        `open-pull-request: could not supersede #${pull.number}: ${error instanceof Error ? error.message : String(error)}`
-      );
+      log(`open-pull-request: could not supersede #${pull.number}: ${errorMessage(error)}`);
     }
   }
 }
@@ -472,14 +463,8 @@ async function postBrief(
     }
     await client.request('POST', comments, { body: comment });
   } catch (error) {
-    log(
-      `open-pull-request: could not store the brief on #${pullRequest}: ${error instanceof Error ? error.message : String(error)}`
-    );
+    log(`open-pull-request: could not store the brief on #${pullRequest}: ${errorMessage(error)}`);
   }
-}
-
-function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
 }
 
 function runUrl(options: PublishOptions): string | null {
@@ -562,13 +547,12 @@ async function publishRevise(
   options: RevisePullRequestOptions,
   target: ReviseTarget,
   status: FixStatus,
-  entries: readonly TreeEntry[],
-  resolved: boolean,
+  entries: readonly TreeEntry[] | null,
   log: (line: string) => void
 ): Promise<string> {
   const { client, repo, parentSha } = options;
   let commit: string | null = null;
-  if (resolved && (target.merge || entries.length > 0)) {
+  if (entries !== null && (target.merge || entries.length > 0)) {
     const trailer = await coAuthorTrailer(client, options.coAuthor);
     commit = await commitTree(client, repo, commitMessage(status.commit, trailer), entries, {
       parents: target.merge ? [target.head, parentSha] : [target.head],
@@ -603,7 +587,7 @@ async function publishRevise(
     pullRequest: target.number,
     head: target.head,
     status,
-    resolve: resolved,
+    resolve: entries !== null,
     log,
   }).catch((error: unknown) => {
     log(`open-pull-request: could not answer the review threads: ${errorMessage(error)}`);
@@ -635,44 +619,55 @@ async function publishRevise(
   return summary.html_url;
 }
 
-export async function openPullRequest(
-  options: OpenPullRequestOptions | RevisePullRequestOptions
-): Promise<string> {
-  const { client, paths, repo, parentSha } = options;
-  const log = options.log ?? console.log;
+function readFixStatus({ paths, parentSha }: PublishOptions): FixStatus {
   if (headSha(paths.root) !== parentSha) throw new Error(`HEAD is not ${parentSha}`);
   const read = readStatus(paths.statusFile);
   if (!read.ok) throw new Error(`the fixer status is not valid:\n  ${read.problems.join('\n  ')}`);
-  const target =
-    'pullRequest' in options ? await readReviseTarget({ ...options, devSha: parentSha }) : null;
+  return read.status;
+}
 
-  const start = target?.head ?? parentSha;
-  const workspace = addWorkspace(paths, start);
+export async function openPullRequest(options: OpenPullRequestOptions): Promise<string> {
+  const { client, paths, repo, parentSha } = options;
+  const log = options.log ?? console.log;
+  const status = readFixStatus(options);
+  const workspace = addWorkspace(paths, parentSha);
   try {
-    const conflicts = target?.merge ? mergeDev(workspace, parentSha).conflicts : [];
+    applyPatch(paths);
+    refuseForbiddenChanges(workspace);
+    const entries = await commitEntries(client, repo, workspace, parentSha, [parentSha]);
+    return await publishFirstRun(options, status, entries, log);
+  } finally {
+    removeWorkspace(paths);
+  }
+}
+
+export async function revisePullRequest(options: RevisePullRequestOptions): Promise<string> {
+  const { client, paths, repo, parentSha } = options;
+  const log = options.log ?? console.log;
+  const status = readFixStatus(options);
+  const target = await readReviseTarget({ ...options, devSha: parentSha });
+  const workspace = addWorkspace(paths, target.head);
+  try {
+    const conflicts = target.merge ? mergeDev(workspace, parentSha) : [];
     applyPatch(paths);
     refuseForbiddenChanges(workspace);
     const unresolved = filesWithConflictMarkers(workspace, conflicts);
+    if (unresolved.length > 0) {
+      const blocked: FixStatus = {
+        ...status,
+        state: 'blocked',
+        questions: [...status.questions, unresolvedQuestion(unresolved)],
+      };
+      return await publishRevise(options, target, blocked, null, log);
+    }
     const entries = await commitEntries(
       client,
       repo,
       workspace,
-      target?.merge ? parentSha : start,
-      [start, parentSha]
+      target.merge ? parentSha : target.head,
+      [target.head, parentSha]
     );
-    if ('pullRequest' in options && target) {
-      const status: FixStatus =
-        unresolved.length === 0
-          ? read.status
-          : {
-              ...read.status,
-              state: 'blocked',
-              questions: [...read.status.questions, unresolvedQuestion(unresolved)],
-            };
-      return await publishRevise(options, target, status, entries, unresolved.length === 0, log);
-    }
-    if ('pullRequest' in options) throw new Error('the pull request to revise was not read');
-    return await publishFirstRun(options, read.status, entries, log);
+    return await publishRevise(options, target, status, entries, log);
   } finally {
     removeWorkspace(paths);
   }

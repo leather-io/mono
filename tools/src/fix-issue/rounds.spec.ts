@@ -76,14 +76,12 @@ describe('rounds', () => {
       'tmp/fix-issue/revise.json',
       JSON.stringify({
         pullRequest: 7,
-        issue: 12,
-        branch: 'bot/fix-issue-12-777',
         head: repo.head,
         dev: repo.head,
         ordinal: 1,
         merge: false,
         conflicts: [],
-        items: [{ id: 'thread-11', kind: 'thread' }],
+        items: ['thread-11'],
       })
     );
     repo.writeStatus({

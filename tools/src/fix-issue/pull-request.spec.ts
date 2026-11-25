@@ -414,7 +414,6 @@ describe('openPullRequest', () => {
       brief,
       '',
       '</details>',
-      '<!-- /fix-issue:brief -->',
       '',
     ].join('\n');
 

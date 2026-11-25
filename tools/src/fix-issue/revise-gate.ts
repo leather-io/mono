@@ -9,14 +9,12 @@ import { commentSchema, fetchIssue, isWorkflowAppComment } from './issue.js';
 import { ensureCommit, planMerge } from './merge.js';
 import type { FixIssuePaths } from './paths.js';
 import {
-  type ReviseItem,
   type ReviseState,
   botAccountType,
   isReviseSummary,
   issueOfBranch,
   maxRevises,
   revisePullSchema,
-  writeReviseState,
 } from './revise-state.js';
 
 interface GateOptions {
@@ -50,13 +48,36 @@ function renderPullRequest(pull: Pull): string {
   ].join('\n');
 }
 
-function pullProblem(pull: Pull, repo: string, baseBranch: string): string | null {
-  if (pull.state !== 'open') return 'it is not open';
-  if (pull.head.repo?.full_name !== repo) return 'it comes from another repository';
-  if (pull.base.ref !== baseBranch) return `it does not target ${baseBranch}`;
-  if (issueOfBranch(pull.head.ref) === null) return `${pull.head.ref} is not a fix-issue branch`;
-  if (pull.user?.type !== botAccountType) return 'it was not opened by the fix-issue App';
-  return null;
+function refusal(pull: Pull, reason: string): Error {
+  return new Error(`#${pull.number} cannot be revised: ${reason}`);
+}
+
+export function revisableIssue(pull: Pull, repo: string, baseBranch: string): number {
+  if (pull.state !== 'open') throw refusal(pull, 'it is not open');
+  if (pull.head.repo?.full_name !== repo) throw refusal(pull, 'it comes from another repository');
+  if (pull.base.ref !== baseBranch) throw refusal(pull, `it does not target ${baseBranch}`);
+  const issue = issueOfBranch(pull.head.ref);
+  if (issue === null) throw refusal(pull, `${pull.head.ref} is not a fix-issue branch`);
+  if (pull.user?.type !== botAccountType) {
+    throw refusal(pull, 'it was not opened by the fix-issue App');
+  }
+  return issue;
+}
+
+export async function fetchAppComments(
+  client: GitHubClient,
+  repo: string,
+  pullRequest: number,
+  workflowAppClientId: string
+) {
+  return z
+    .array(commentSchema)
+    .parse(await paginate(client, `repos/${repo}/issues/${pullRequest}/comments`))
+    .filter(comment => isWorkflowAppComment(comment, workflowAppClientId));
+}
+
+export function countRevises(comments: readonly { readonly body: string | null }[]): number {
+  return comments.filter(comment => isReviseSummary(comment.body)).length;
 }
 
 function listed(files: readonly string[]): string {
@@ -81,17 +102,10 @@ export async function gateRevise({
   const pull = revisePullSchema.parse(
     await client.request('GET', `repos/${repo}/pulls/${pullRequest}`)
   );
-  const problem = pullProblem(pull, repo, baseBranch);
-  const issue = issueOfBranch(pull.head.ref);
-  if (problem !== null || issue === null) {
-    throw new Error(`#${pullRequest} cannot be revised: ${problem ?? 'it has no issue'}`);
-  }
+  const issue = revisableIssue(pull, repo, baseBranch);
 
-  const fromApp = z
-    .array(commentSchema)
-    .parse(await paginate(client, `repos/${repo}/issues/${pullRequest}/comments`))
-    .filter(comment => isWorkflowAppComment(comment, workflowAppClientId));
-  const revises = fromApp.filter(comment => isReviseSummary(comment.body)).length;
+  const fromApp = await fetchAppComments(client, repo, pullRequest, workflowAppClientId);
+  const revises = countRevises(fromApp);
   if (revises >= maxRevises) {
     throw new Error(
       `#${pullRequest} has already been revised ${maxRevises} times, the most a pull request gets; take the branch over by hand, or dispatch the issue again with the review in the brief`
@@ -112,14 +126,8 @@ export async function gateRevise({
     text === '' && plan.onlyMerge
       ? { threads: [], reviews: [], omitted: 0 }
       : await fetchFeedback({ client, repo, pullRequest, head: pull.head.sha });
-  const instructionItems: ReviseItem[] =
-    text === '' ? [] : [{ id: instructionsItemId, kind: 'instructions' }];
-  const mergeItems: ReviseItem[] = plan.merge ? [{ id: mergeItemId, kind: 'merge' }] : [];
-  const feedbackItems: ReviseItem[] = [
-    ...feedback.threads.map((thread): ReviseItem => ({ id: thread.id, kind: 'thread' })),
-    ...feedback.reviews.map((review): ReviseItem => ({ id: review.id, kind: 'review' })),
-  ];
-  if (instructionItems.length + feedbackItems.length === 0 && !plan.onlyMerge) {
+  const feedbackItems = [...feedback.threads, ...feedback.reviews].map(item => item.id);
+  if (text === '' && feedbackItems.length === 0 && !plan.onlyMerge) {
     throw new Error(
       `there is nothing to revise on #${pullRequest}: no notes, no unresolved review thread, no review summary on its head commit, and no conflict with dev`
     );
@@ -144,17 +152,17 @@ export async function gateRevise({
       omitted: feedback.omitted,
     })
   );
-  const state: ReviseState = {
+  return {
     pullRequest,
-    issue,
-    branch: pull.head.ref,
     head: pull.head.sha,
     dev: devSha,
     ordinal,
     merge: plan.merge,
     conflicts: [...plan.conflicts],
-    items: [...instructionItems, ...mergeItems, ...feedbackItems],
+    items: [
+      ...(text === '' ? [] : [instructionsItemId]),
+      ...(plan.merge ? [mergeItemId] : []),
+      ...feedbackItems,
+    ],
   };
-  writeReviseState(paths.reviseFile, state);
-  return state;
 }

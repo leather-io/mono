@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { afterEach, describe, expect, test } from 'vitest';
 
+import type { ReviseState } from './revise-state.js';
 import {
   type FakePnpm,
   type TestRepo,
@@ -11,7 +12,7 @@ import {
   doneStatus,
   fakePnpm,
 } from './test/test-repo.js';
-import { reviseCheck, verifyFix } from './verify.js';
+import { verifyFix } from './verify.js';
 
 const gate = [
   'format',
@@ -158,10 +159,14 @@ describe('verifyFix', () => {
   describe('a revise', () => {
     const noConflicts: string[] = [];
     const revise = {
-      since: 'abc123',
-      itemIds: ['instructions', 'thread-11'],
+      pullRequest: 7,
+      head: 'a'.repeat(40),
+      dev: 'b'.repeat(40),
+      ordinal: 1,
+      merge: false,
       conflicts: noConflicts,
-      merged: false,
+      items: ['instructions', 'thread-11'],
+      since: 'abc123',
     };
     const answered = {
       ...doneStatus,
@@ -171,7 +176,7 @@ describe('verifyFix', () => {
       ],
     };
 
-    function verifyRevise(pnpm: FakePnpm, check = revise) {
+    function verifyRevise(pnpm: FakePnpm, check: ReviseState = revise) {
       return verifyFix({
         root: repo.root,
         statusFile: repo.paths.statusFile,
@@ -228,7 +233,7 @@ describe('verifyFix', () => {
       repo = createTestRepo();
       repo.writeStatus(answered);
       const pnpm = fakePnpm(repo);
-      expect(verifyRevise(pnpm, { ...revise, merged: true })).toMatchObject({ passed: true });
+      expect(verifyRevise(pnpm, { ...revise, merge: true })).toMatchObject({ passed: true });
       expect(pnpm.calls).toHaveLength(gate.length);
     });
 
@@ -236,7 +241,7 @@ describe('verifyFix', () => {
       repo = createTestRepo();
       repo.writeStatus({ ...answered, state: 'blocked', questions: ['Which range?'] });
       const pnpm = fakePnpm(repo);
-      expect(verifyRevise(pnpm, { ...revise, merged: true })).toMatchObject({ passed: true });
+      expect(verifyRevise(pnpm, { ...revise, merge: true })).toMatchObject({ passed: true });
       expect(pnpm.calls).toHaveLength(gate.length);
     });
 
@@ -250,7 +255,7 @@ describe('verifyFix', () => {
       repo.writeStatus({ ...answered, state: 'blocked', questions: ['Which side wins?'] });
       const pnpm = fakePnpm(repo);
       expect(
-        verifyRevise(pnpm, { ...revise, merged: true, conflicts: ['apps/extension/fee-row.tsx'] })
+        verifyRevise(pnpm, { ...revise, merge: true, conflicts: ['apps/extension/fee-row.tsx'] })
       ).toMatchObject({ passed: true, skipped: true });
       expect(pnpm.calls).toEqual([]);
     });
@@ -262,7 +267,7 @@ describe('verifyFix', () => {
         '<<<<<<< HEAD\nours\n=======\ntheirs\n>>>>>>> dev\n'
       );
       repo.writeStatus(answered);
-      const conflicted = { ...revise, merged: true, conflicts: ['apps/extension/fee-row.tsx'] };
+      const conflicted = { ...revise, merge: true, conflicts: ['apps/extension/fee-row.tsx'] };
       const pnpm = fakePnpm(repo);
       expect(verifyRevise(pnpm, conflicted)).toMatchObject({
         passed: false,
@@ -276,29 +281,13 @@ describe('verifyFix', () => {
       });
     });
 
-    test('reads what to check from the state of the revise, when there is one', () => {
+    test('checks from HEAD when the state of the revise names no starting point', () => {
       repo = createTestRepo();
-      expect(reviseCheck(repo.paths.reviseFile)).toBeUndefined();
-      const state = {
-        pullRequest: 7,
-        issue: 12,
-        branch: 'bot/fix-issue-12-777',
-        head: 'a'.repeat(40),
-        dev: 'b'.repeat(40),
-        ordinal: 1,
-        merge: true,
-        conflicts: ['apps/extension/fee-row.tsx'],
-        items: [{ id: 'merge', kind: 'merge' }],
-      };
-      repo.write('tmp/fix-issue/revise.json', JSON.stringify(state));
-      expect(reviseCheck(repo.paths.reviseFile)).toEqual({
-        since: 'HEAD',
-        itemIds: ['merge'],
-        conflicts: ['apps/extension/fee-row.tsx'],
-        merged: true,
-      });
-      repo.write('tmp/fix-issue/revise.json', JSON.stringify({ ...state, since: 'b'.repeat(40) }));
-      expect(reviseCheck(repo.paths.reviseFile)).toMatchObject({ since: 'b'.repeat(40) });
+      repo.makeFix();
+      repo.writeStatus(answered);
+      const pnpm = fakePnpm(repo);
+      expect(verifyRevise(pnpm, { ...revise, since: undefined }).passed).toBe(true);
+      expect(pnpm.calls).toEqual(gate);
     });
   });
 

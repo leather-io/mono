@@ -1,17 +1,15 @@
-import { z } from 'zod';
-
-import { type GitHubClient, paginate } from '../ci/github.js';
-import { fetchFeedback, instructionsItemId, mergeItemId } from './feedback.js';
+import type { GitHubClient } from '../ci/github.js';
+import {
+  fetchFeedback,
+  instructionsItemId,
+  mergeItemId,
+  reviewItemPrefix,
+  threadItemPrefix,
+} from './feedback.js';
 import { ensureCommit, planMerge } from './merge.js';
 import type { FixIssuePaths } from './paths.js';
-import {
-  isReviseSummary,
-  issueOfBranch,
-  maxRevises,
-  readReviseState,
-  reviseMarker,
-  revisePullSchema,
-} from './revise-state.js';
+import { countRevises, fetchAppComments, revisableIssue } from './revise-gate.js';
+import { maxRevises, readReviseState, reviseMarker, revisePullSchema } from './revise-state.js';
 import type { FixStatus } from './status.js';
 
 interface ReviseTargetOptions {
@@ -23,12 +21,12 @@ interface ReviseTargetOptions {
   readonly baseBranch: string;
   readonly mergeRequested: boolean;
   readonly appLogin: string;
+  readonly workflowAppClientId: string;
 }
 
 export interface ReviseTarget {
   readonly number: number;
   readonly nodeId: string;
-  readonly htmlUrl: string;
   readonly draft: boolean;
   readonly body: string | null;
   readonly branch: string;
@@ -67,14 +65,8 @@ interface SummaryOptions {
   readonly runUrl: string | null;
 }
 
-const commentAuthorsSchema = z.array(
-  z.object({ body: z.string().nullable(), user: z.object({ login: z.string() }).nullable() })
-);
-
 const shortShaLength = 12;
 const screenshotsHeading = '## Screenshots';
-const threadPrefix = 'thread-';
-const reviewPrefix = 'review-';
 
 const replyMutation =
   'mutation($thread: ID!, $body: String!) { addPullRequestReviewThreadReply(input: { pullRequestReviewThreadId: $thread, body: $body }) { clientMutationId } }';
@@ -89,7 +81,7 @@ export const noAnswers: FeedbackAnswers = {
   reviewers: [],
 };
 
-function message(error: unknown): string {
+export function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
@@ -97,7 +89,7 @@ function shortSha(sha: string): string {
   return sha.slice(0, shortShaLength);
 }
 
-function bullets(lines: readonly string[]): string {
+export function bullets(lines: readonly string[]): string {
   return lines.map(line => `- ${line}`).join('\n');
 }
 
@@ -110,19 +102,15 @@ export async function readReviseTarget({
   baseBranch,
   mergeRequested,
   appLogin,
+  workflowAppClientId,
 }: ReviseTargetOptions): Promise<ReviseTarget> {
   const pull = revisePullSchema.parse(
     await client.request('GET', `repos/${repo}/pulls/${pullRequest}`)
   );
-  if (pull.state !== 'open') throw new Error(`#${pullRequest} is no longer open`);
-  if (pull.head.repo?.full_name !== repo || pull.base.ref !== baseBranch) {
-    throw new Error(`#${pullRequest} is not a pull request of ${repo} into ${baseBranch}`);
-  }
+  const issue = revisableIssue(pull, repo, baseBranch);
   if (pull.user?.login !== appLogin) {
     throw new Error(`#${pullRequest} was not opened by ${appLogin}`);
   }
-  const issue = issueOfBranch(pull.head.ref);
-  if (issue === null) throw new Error(`${pull.head.ref} is not a fix-issue branch`);
   const revised = readReviseState(paths.reviseFile)?.head;
   if (revised !== pull.head.sha) {
     throw new Error(
@@ -130,16 +118,12 @@ export async function readReviseTarget({
     );
   }
   ensureCommit(paths.root, pull.head.sha);
-  const comments = commentAuthorsSchema.parse(
-    await paginate(client, `repos/${repo}/issues/${pullRequest}/comments`)
+  const revises = countRevises(
+    await fetchAppComments(client, repo, pullRequest, workflowAppClientId)
   );
-  const revises = comments.filter(
-    comment => comment.user?.login === appLogin && isReviseSummary(comment.body)
-  ).length;
   return {
     number: pull.number,
     nodeId: pull.node_id,
-    htmlUrl: pull.html_url,
     draft: pull.draft,
     body: pull.body,
     branch: pull.head.ref,
@@ -194,7 +178,7 @@ export async function answerFeedback({
         resolved += 1;
       }
     } catch (error) {
-      log(`open-pull-request: could not answer ${thread.id}: ${message(error)}`);
+      log(`open-pull-request: could not answer ${thread.id}: ${errorMessage(error)}`);
     }
   }
   const reviewers = [
@@ -221,7 +205,7 @@ function quoted(text: string): string {
 function answerLine(entry: FixStatus['feedback'][number]): string | null {
   if (entry.id === instructionsItemId) return `What was asked: ${entry.reply}`;
   if (entry.id === mergeItemId) return `Merge of \`dev\`: ${entry.reply}`;
-  if (entry.id.startsWith(reviewPrefix)) return `Review \`${entry.id}\`: ${entry.reply}`;
+  if (entry.id.startsWith(reviewItemPrefix)) return `Review \`${entry.id}\`: ${entry.reply}`;
   return null;
 }
 
@@ -239,7 +223,7 @@ export function renderReviseSummary({
   const run = runUrl ? ` ([run](${runUrl}))` : '';
   const merged = mergedDev ? `, merging \`dev\` at ${shortSha(mergedDev)}` : '';
   const lines = status.feedback
-    .filter(entry => !entry.id.startsWith(threadPrefix))
+    .filter(entry => !entry.id.startsWith(threadItemPrefix))
     .map(answerLine)
     .filter(line => line !== null);
   if (answers.threads > 0) {

@@ -2,16 +2,12 @@ import { lstatSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import { runCommand, runOrThrow } from '../ci/exec.js';
+import { splitNul } from './git.js';
 
 interface MergePlan {
   readonly merge: boolean;
   readonly conflicts: readonly string[];
   readonly onlyMerge: boolean;
-}
-
-interface MergeResult {
-  readonly conflicts: readonly string[];
-  readonly tree: string;
 }
 
 const mergeConfig = [
@@ -34,10 +30,6 @@ const conflictMarkerPattern = /^(<{7}|>{7}) /m;
 const toolingPaths = ['tools', '.github/prompts'];
 const cleanMerge = 0;
 const conflictedMerge = 1;
-
-function splitNul(output: string): string[] {
-  return output.split('\0').filter(entry => entry !== '');
-}
 
 function hasCommit(root: string, sha: string): boolean {
   return runCommand('git', ['cat-file', '-e', `${sha}^{commit}`], { cwd: root }).status === 0;
@@ -94,7 +86,7 @@ function unmergedPaths(root: string): string[] {
   );
 }
 
-export function mergeDev(root: string, dev: string): MergeResult {
+export function mergeDev(root: string, dev: string): string[] {
   if (isAncestor(root, dev, 'HEAD')) throw new Error(`${dev} is already part of the branch`);
   const merge = runCommand('git', [...mergeConfig, 'merge', '--no-ff', '--no-commit', dev], {
     cwd: root,
@@ -116,10 +108,7 @@ export function mergeDev(root: string, dev: string): MergeResult {
     [...mergeConfig, 'commit', '--no-verify', '--quiet', '--allow-empty', '-m', `Merge ${dev}`],
     { cwd: root }
   );
-  return {
-    conflicts,
-    tree: runOrThrow('git', ['rev-parse', 'HEAD^{tree}'], { cwd: root }).trim(),
-  };
+  return conflicts;
 }
 
 function isRegularFile(file: string): boolean {

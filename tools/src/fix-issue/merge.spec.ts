@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
+import { runOrThrow } from '../ci/exec.js';
 import {
   conflictingPaths,
   ensureCommit,
@@ -100,7 +101,7 @@ describe('merge helpers', () => {
     const { head, dev } = createPullRequestBranch(repo, { conflict: true });
     checkOut(head);
     const merged = mergeDev(repo.root, dev);
-    expect(merged.conflicts).toEqual([conflictingFile]);
+    expect(merged).toEqual([conflictingFile]);
     expect(repo.git(['rev-parse', 'HEAD^1', 'HEAD^2']).split('\n')).toEqual([head, dev]);
     expect(repo.git(['status', '--porcelain'])).toBe('');
     expect(readFileSync(path.join(repo.root, conflictingFile), 'utf8')).toBe(
@@ -115,22 +116,23 @@ describe('merge helpers', () => {
         '',
       ].join('\n')
     );
-    expect(merged.tree).toBe(repo.git(['rev-parse', 'HEAD^{tree}']));
   });
 
   test('the same merge in another worktree gives the same tree', () => {
     const { head, dev } = createPullRequestBranch(repo, { conflict: true });
     checkOut(head);
-    const first = mergeDev(repo.root, dev);
+    mergeDev(repo.root, dev);
     repo.git(['worktree', 'add', '--detach', '--quiet', repo.paths.applyDir, head]);
-    const second = mergeDev(repo.paths.applyDir, dev);
-    expect(second).toEqual(first);
+    mergeDev(repo.paths.applyDir, dev);
+    expect(
+      runOrThrow('git', ['rev-parse', 'HEAD^{tree}'], { cwd: repo.paths.applyDir }).trim()
+    ).toBe(repo.git(['rev-parse', 'HEAD^{tree}']));
   });
 
   test('merging dev without a conflict brings its changes in', () => {
     const { head, dev } = createPullRequestBranch(repo, { conflict: false });
     checkOut(head);
-    expect(mergeDev(repo.root, dev).conflicts).toEqual([]);
+    expect(mergeDev(repo.root, dev)).toEqual([]);
     expect(readFileSync(path.join(repo.root, 'README.md'), 'utf8')).toBe('newer readme\n');
     expect(readFileSync(path.join(repo.root, conflictingFile), 'utf8')).toBe(
       'export const feeRow = 2;\n'

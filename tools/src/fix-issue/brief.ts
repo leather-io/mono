@@ -1,22 +1,13 @@
 const briefStart = '<!-- fix-issue:brief -->';
-const briefEnd = '<!-- /fix-issue:brief -->';
 const briefSummary = '<summary>The brief this pull request was written from</summary>';
 const maxCommentLength = 65_536;
 
 export function renderBriefComment(brief: string | undefined): string | null {
   const text = (brief ?? '').trim();
   if (text === '') return null;
-  const comment = [
-    briefStart,
-    '<details>',
-    briefSummary,
-    '',
-    text,
-    '',
-    '</details>',
-    briefEnd,
-    '',
-  ].join('\n');
+  const comment = [briefStart, '<details>', briefSummary, '', text, '', '</details>', ''].join(
+    '\n'
+  );
   return comment.length > maxCommentLength ? null : comment;
 }
 

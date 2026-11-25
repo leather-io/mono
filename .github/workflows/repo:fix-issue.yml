@@ -249,11 +249,12 @@ jobs:
           PULL_REQUEST: ${{ inputs.pull_request }}
           MERGE: ${{ inputs.merge }}
           APP_LOGIN: ${{ steps.app-token.outputs.app-login }}
+          APP_CLIENT_ID: ${{ vars.FIX_ISSUE_APP_CLIENT_ID }}
           FIX_ISSUE_NOTES: ${{ inputs.notes }}
         run: >-
           pnpm lt fix-issue open-pull-request --issue "$ISSUE" --branch "$BRANCH" --base dev
           --parent-sha "$PARENT_SHA" --co-author "$CO_AUTHOR" --pull-request "$PULL_REQUEST"
-          --merge "$MERGE" --app-login "$APP_LOGIN"
+          --merge "$MERGE" --app-login "$APP_LOGIN" --workflow-app-client-id "$APP_CLIENT_ID"
 
       - name: revoke-app-token
         if: always() && steps.app-token.outputs.token != ''

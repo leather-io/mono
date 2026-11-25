@@ -11,8 +11,9 @@ import { briefIssues, dispatch, dispatchRevise } from '../fix-issue/dispatch.js'
 import { repoRoot } from '../fix-issue/git.js';
 import { fetchIssue } from '../fix-issue/issue.js';
 import { fixIssuePaths } from '../fix-issue/paths.js';
-import { openPullRequest } from '../fix-issue/pull-request.js';
+import { openPullRequest, revisePullRequest } from '../fix-issue/pull-request.js';
 import { gateRevise } from '../fix-issue/revise-gate.js';
+import { readReviseState } from '../fix-issue/revise-state.js';
 import { startRevise } from '../fix-issue/revise.js';
 import {
   checkReview,
@@ -25,7 +26,7 @@ import { anyRunFailed, fetchRunStatuses, formatRunStatuses } from '../fix-issue/
 import { captureScreenshots, previewScreenshots } from '../fix-issue/screenshots.js';
 import { decideStop, guardedOutputSchema } from '../fix-issue/stop-guard.js';
 import { stripForbiddenPaths } from '../fix-issue/strip.js';
-import { reviseCheck, verifyFix } from '../fix-issue/verify.js';
+import { verifyFix } from '../fix-issue/verify.js';
 
 interface RoundOptions {
   readonly round: string;
@@ -44,6 +45,7 @@ interface OpenPullRequestFlags {
   readonly pullRequest: string;
   readonly merge: string;
   readonly appLogin: string;
+  readonly workflowAppClientId: string;
 }
 
 const appTokenPermissions: TokenPermissions = {
@@ -224,7 +226,7 @@ export function registerFixIssueCommands(program: Command): void {
           root: target.root,
           statusFile: target.statusFile,
           reportFile: report ? target.verifyReport : undefined,
-          revise: reviseCheck(target.reviseFile),
+          revise: readReviseState(target.reviseFile),
         });
         if (!result.passed) process.exitCode = 1;
       })
@@ -356,6 +358,7 @@ export function registerFixIssueCommands(program: Command): void {
     .option('--pull-request <number>', 'Pull request a revise run changes', '')
     .option('--merge <boolean>', 'true when the revise was asked to merge the base branch', 'false')
     .option('--app-login <login>', 'Login of the fix-issue App bot, for a revise', '')
+    .option('--workflow-app-client-id <id>', 'Client ID of the fix-issue App, for a revise', '')
     .action((flags: OpenPullRequestFlags) =>
       guard('open-pull-request', async () => {
         const shared = {
@@ -377,11 +380,15 @@ export function registerFixIssueCommands(program: Command): void {
                 issue: parseIssue(flags.issue),
                 branch: required(flags.branch, '--branch'),
               })
-            : await openPullRequest({
+            : await revisePullRequest({
                 ...shared,
                 pullRequest: parsePullRequest(flags.pullRequest),
                 mergeRequested: flags.merge === 'true',
                 appLogin: required(flags.appLogin, '--app-login'),
+                workflowAppClientId: required(
+                  flags.workflowAppClientId,
+                  '--workflow-app-client-id'
+                ),
               });
         console.log(url);
       })
@@ -403,7 +410,7 @@ export function registerFixIssueCommands(program: Command): void {
     .action((flags: PrepareReviseFlags) =>
       guard('revise-prepare', async () => {
         const target = paths();
-        await gateRevise({
+        const gated = await gateRevise({
           client: github(),
           repo: readRequiredEnv('GITHUB_REPOSITORY'),
           paths: target,
@@ -415,7 +422,7 @@ export function registerFixIssueCommands(program: Command): void {
           requestedBy: flags.requestedBy,
           workflowAppClientId: flags.workflowAppClientId,
         });
-        const state = startRevise(target);
+        const state = startRevise(target, gated);
         writeStepOutputs({ merged: state.merge, conflicted: state.conflicts.length > 0 });
         console.log(
           `revise-prepare: revise ${state.ordinal} of #${state.pullRequest} at ${state.head} with ${state.items.length} feedback items${state.merge ? `, on a merge of ${state.dev} with ${state.conflicts.length} conflicting files` : ''}`
