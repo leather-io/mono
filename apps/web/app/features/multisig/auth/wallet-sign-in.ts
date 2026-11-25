@@ -19,7 +19,11 @@ interface WalletSignInParams {
 type GetAddressesParams = NonNullable<Parameters<typeof multisigLeather.getAddresses>[0]>;
 
 async function fetchWalletAddresses(network: string, chains: GetAddressesParams['chains']) {
-  const result = await multisigLeather.getAddresses({ network, chains });
+  const result = await multisigLeather.getAddresses({
+    network,
+    chains,
+    allowPolicyAccounts: false,
+  });
   return result.addresses;
 }
 
