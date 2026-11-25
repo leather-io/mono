@@ -323,4 +323,22 @@ describe(LedgerSignMsgContainer.name, () => {
     expect(mocks.disconnect).toHaveBeenCalledOnce();
     expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
   });
+
+  test('shows the validation error, cancels signing and closes the transport', async () => {
+    const { context } = setupSignMessage();
+    const error = 'Ledger messages must be 270 bytes or fewer.';
+    mocks.signUtf8Message.mockReturnValue(() => Promise.resolve({ error }));
+
+    await act(async () => {
+      await context.signMessage();
+    });
+
+    expect(mocks.toOperationRejectedStep).toHaveBeenCalledWith(error);
+    expect(mocks.settleLedgerAction).toHaveBeenCalledOnce();
+    expect(mocks.settleLedgerAction.mock.calls[0][1]).toEqual({ status: 'cancelled' });
+    expect(mocks.toDeviceDisconnectStep).not.toHaveBeenCalled();
+    expect(mocks.messageSignedOnLedgerSuccessfully).not.toHaveBeenCalled();
+    expect(mocks.disconnect).toHaveBeenCalledOnce();
+    expect(mocks.disconnect).toHaveBeenCalledWith({ sessionId: fakeLedgerSessionId });
+  });
 });

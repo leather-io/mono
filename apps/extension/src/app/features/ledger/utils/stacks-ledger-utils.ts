@@ -1,4 +1,5 @@
 import type { DeviceManagementKit } from '@ledgerhq/device-management-kit';
+import { encodeMessage } from '@stacks/encryption';
 import { ChainId } from '@stacks/network';
 import {
   AddressVersion,
@@ -34,6 +35,11 @@ import {
   versionObjectToVersionString,
 } from './generic-ledger-utils';
 import type { LedgerStacksApp } from './ledger-app';
+import {
+  getLedgerStacksRawMessageError,
+  getLedgerStacksStructuredMessageError,
+  getLedgerStacksTransactionError,
+} from './stacks-ledger-signing-validation';
 
 export function requestPublicKeyForStxAccount({ app }: LedgerStacksApp) {
   return async (derivationPath: string) =>
@@ -121,19 +127,40 @@ export function prepareLedgerDeviceStacksAppConnection(
   return prepareLedgerDeviceForAppFn(() => connectLedgerStacksApp(dmk, options));
 }
 
+interface LedgerStacksSigningBlocked {
+  error: string;
+}
+
+type LedgerStacksSigningResponse = ResponseSign | LedgerStacksSigningBlocked;
+
 export function signLedgerStacksTransaction({ app }: LedgerStacksApp) {
-  return async (payload: Buffer, derivationPath: string): Promise<ResponseSign> =>
-    toLedgerSignResponse(await app.sign(derivationPath, payload));
+  return async (payload: Buffer, derivationPath: string): Promise<LedgerStacksSigningResponse> => {
+    const error = getLedgerStacksTransactionError(payload);
+    if (error) return { error };
+    return toLedgerSignResponse(await app.sign(derivationPath, payload));
+  };
 }
 
 export function signLedgerStacksUtf8Message({ app }: LedgerStacksApp) {
-  return async (payload: string, derivationPath: string): Promise<ResponseSign> =>
-    toLedgerSignResponse(await app.sign_msg(derivationPath, payload));
+  return async (payload: string, derivationPath: string): Promise<LedgerStacksSigningResponse> => {
+    const error = getLedgerStacksRawMessageError(payload);
+    if (error) return { error };
+    return toLedgerSignResponse(
+      await app.sign(derivationPath, Buffer.from(encodeMessage(payload)))
+    );
+  };
 }
 
 export function signLedgerStacksStructuredMessage({ app }: LedgerStacksApp) {
-  return async (domain: string, payload: string, derivationPath: string): Promise<ResponseSign> =>
-    toLedgerSignResponse(await app.sign_structured_msg(derivationPath, domain, payload));
+  return async (
+    domain: string,
+    payload: string,
+    derivationPath: string
+  ): Promise<LedgerStacksSigningResponse> => {
+    const error = getLedgerStacksStructuredMessageError(domain, payload);
+    if (error) return { error };
+    return toLedgerSignResponse(await app.sign_structured_msg(derivationPath, domain, payload));
+  };
 }
 
 export function signStacksTransactionWithSignature(transaction: string, signatureVRS: Buffer) {
