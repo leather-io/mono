@@ -10,7 +10,7 @@ import { BitcoinDepositTokenCell } from '@/features/balances/bitcoin/bitcoin-dep
 import { ManageTokensSheet } from '@/features/balances/manage-tokens.sheet';
 import { StacksDepositTokenCell } from '@/features/balances/stacks/stacks-deposit-token-cell';
 import { CollectiblesList } from '@/features/token/collectibles-list';
-import { useActivity } from '@/queries/activity/activity.query';
+import { useActivityFeed } from '@/queries/activity/activity.query';
 import { useAccountTotalBalance } from '@/queries/balance/account-balance.query';
 import { useSip10AccountBalance } from '@/queries/balance/sip10-balance.query';
 import { useAccountCollectibles } from '@/queries/collectibles/account-collectibles.query';
@@ -43,8 +43,8 @@ export function HomeScreenWithAccount({ currentAccount }: HomeScreenWithAccountP
   const accountSelectorSheetRef = useRef<SheetInstance>(null);
   const sip10Data = useSip10AccountBalance(fingerprint, accountIndex);
 
-  const activityState = useActivity(fingerprint, accountIndex);
-  const hasActivity = !!activityState.value?.length;
+  const { activity: activityState } = useActivityFeed(fingerprint, accountIndex);
+  const hasActivity = activityState.state === 'success' && activityState.value.length > 0;
   const displayLearningSections = activityState.state === 'success' && !hasActivity;
 
   function onOpenAccountSelector() {
