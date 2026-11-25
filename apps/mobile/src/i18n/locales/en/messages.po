@@ -163,7 +163,6 @@ msgstr ""
 "swapping between currencies."
 
 #: src/features/approver/components/memo-sheet.tsx:16
-#: src/features/approver/components/nonce-sheet.tsx:16
 #: src/features/send/components/memo.tsx:33
 #: src/features/send/components/memo.tsx:66
 msgid "Add memo"
@@ -360,6 +359,10 @@ msgstr "App is not protected with device-level PIN or biometrics."
 #: src/utils/app-store-utils.ts:41
 msgid "App Store"
 msgstr "App Store"
+
+#: src/features/approver/components/nonce-sheet.tsx:18
+msgid "Apply"
+msgstr "Apply"
 
 #: src/features/approver/components/approver-buttons/index.tsx:29
 msgid "Approve"
@@ -567,7 +570,6 @@ msgstr ""
 "wallet"
 
 #: src/features/approver/components/memo-sheet.tsx:18
-#: src/features/approver/components/nonce-sheet.tsx:18
 #: src/features/send/components/memo.tsx:88
 #: src/features/send/components/recipient/recipient-guard-sheet.tsx:30
 #: src/features/swap/screens/swap-review-screen.tsx:203
@@ -661,6 +663,10 @@ msgstr "Custom"
 msgid "Custom fees"
 msgstr "Custom fees"
 
+#: src/features/approver/components/nonce-sheet.tsx:17
+msgid "Custom nonce"
+msgstr "Custom nonce"
+
 #: src/app/settings/index.tsx:90
 msgid "Customize your app icon"
 msgstr "Customize your app icon"
@@ -740,6 +746,10 @@ msgstr "Drag to refresh"
 #: src/features/send/components/memo.tsx:33
 msgid "Edit memo"
 msgstr "Edit memo"
+
+#: src/features/approver/components/nonce-sheet.tsx:16
+msgid "Edit nonce"
+msgstr "Edit nonce"
 
 #: src/features/swap/components/slippage-selector/slippage-selector-sheet.tsx:26
 msgid "Edit Slippage"
@@ -1164,7 +1174,6 @@ msgstr "Maybe later"
 
 #: src/features/approver/components/memo-card.tsx:19
 #: src/features/approver/components/memo-sheet.tsx:17
-#: src/features/approver/components/nonce-sheet.tsx:17
 #: src/features/send/components/memo.tsx:74
 msgid "Memo"
 msgstr "Memo"

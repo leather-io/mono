@@ -13,9 +13,9 @@ export function NonceSheet({ sheetRef, nonce, onChangeNonce }: NonceSheetProps) 
     <InputSheetLayout
       sheetRef={sheetRef}
       initialValue={nonce}
-      title={t`Add memo`}
-      placeholder={t`Memo`}
-      submitTitle={t`Confirm`}
+      title={t`Edit nonce`}
+      placeholder={t`Custom nonce`}
+      submitTitle={t`Apply`}
       onSubmit={value => {
         onChangeNonce(value);
         sheetRef.current?.close();
