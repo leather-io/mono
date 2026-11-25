@@ -1,4 +1,4 @@
-import { type NativeSyntheticEvent, type TextInputSubmitEditingEventData } from 'react-native';
+import { type TextInputSubmitEditingEvent } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { TextInput } from '@/components/text-input';
@@ -15,7 +15,7 @@ import {
 interface SearchInputProps {
   value: string;
   onChange(value: string): void;
-  onSubmitEditing?(e: NativeSyntheticEvent<TextInputSubmitEditingEventData>): void;
+  onSubmitEditing?(e: TextInputSubmitEditingEvent): void;
   placeholder: string;
   autoFocus?: boolean;
   TextInputComponent?: typeof UITextInput;

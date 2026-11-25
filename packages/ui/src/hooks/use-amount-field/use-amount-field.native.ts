@@ -1,5 +1,5 @@
 import { type RefObject, useRef } from 'react';
-import { type TextInput, type TextInputProps } from 'react-native';
+import { type TextInputInstance, type TextInputProps } from 'react-native';
 
 import {
   type CurrencySign,
@@ -10,14 +10,14 @@ import {
 type NativeInputProps = Pick<TextInputProps, 'value' | 'onChangeText' | 'keyboardType'>;
 
 interface UseAmountFieldResult {
-  ref: RefObject<TextInput | null>;
+  ref: RefObject<TextInputInstance | null>;
   textInputProps: NativeInputProps;
   touched: boolean;
   currencySign?: CurrencySign;
 }
 
 export function useAmountField(options: UseAmountFieldProps): UseAmountFieldResult {
-  const inputRef = useRef<TextInput>(null);
+  const inputRef = useRef<TextInputInstance>(null);
 
   const { displayValue, handleChange, touched, currencySign } = useBaseAmountField(options);
 

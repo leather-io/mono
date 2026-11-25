@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { InteractionManager, Keyboard } from 'react-native';
+import { Keyboard } from 'react-native';
 import type { default as WebView, WebViewNavigation } from 'react-native-webview';
 
 import { useToastContext } from '@/components/toast/toast-context';
@@ -54,7 +54,7 @@ export default function BrowserScreen() {
           // setting timeout s.t. keyboard has time to close before opening url
           // Without this search bar gets lost sometimes after going to active browser tab
           setTimeout(() => {
-            InteractionManager.runAfterInteractions(() => {
+            requestIdleCallback(() => {
               if (isValidUrl(browserSearchState.textUrl)) {
                 goToUrl(browserSearchState.textUrl);
               } else {
