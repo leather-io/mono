@@ -41,7 +41,7 @@ export function ensureCommit(root: string, sha: string): void {
   if (!hasCommit(root, sha)) throw new Error(`commit ${sha} is not in the repository`);
 }
 
-export function isAncestor(root: string, ancestor: string, descendant: string): boolean {
+function isAncestor(root: string, ancestor: string, descendant: string): boolean {
   return (
     runCommand('git', ['merge-base', '--is-ancestor', ancestor, descendant], { cwd: root })
       .status === 0
@@ -52,7 +52,7 @@ export function mergeBase(root: string, first: string, second: string): string {
   return runOrThrow('git', ['merge-base', first, second], { cwd: root }).trim();
 }
 
-export function conflictingPaths(root: string, head: string, dev: string): string[] {
+function conflictingPaths(root: string, head: string, dev: string): string[] {
   const result = runCommand(
     'git',
     [...mergeConfig, 'merge-tree', '--write-tree', '--name-only', '--no-messages', '-z', head, dev],
@@ -87,7 +87,6 @@ function unmergedPaths(root: string): string[] {
 }
 
 export function mergeDev(root: string, dev: string): string[] {
-  if (isAncestor(root, dev, 'HEAD')) throw new Error(`${dev} is already part of the branch`);
   const merge = runCommand('git', [...mergeConfig, 'merge', '--no-ff', '--no-commit', dev], {
     cwd: root,
   });

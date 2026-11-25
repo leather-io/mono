@@ -6,14 +6,11 @@ export const botAccountType = 'Bot';
 const botBranchPattern = /^bot\/fix-issue-([1-9]\d*)-(\d+)$/;
 
 const reviseStateSchema = z.object({
-  pullRequest: z.number().int().positive(),
   head: z.string(),
-  dev: z.string(),
-  ordinal: z.number().int().positive(),
   merge: z.boolean(),
   conflicts: z.array(z.string()),
   items: z.array(z.string()),
-  since: z.string().optional(),
+  since: z.string(),
 });
 
 export const revisePullSchema = z.object({

@@ -159,10 +159,7 @@ describe('verifyFix', () => {
   describe('a revise', () => {
     const noConflicts: string[] = [];
     const revise = {
-      pullRequest: 7,
       head: 'a'.repeat(40),
-      dev: 'b'.repeat(40),
-      ordinal: 1,
       merge: false,
       conflicts: noConflicts,
       items: ['instructions', 'thread-11'],
@@ -279,15 +276,6 @@ describe('verifyFix', () => {
       expect(verifyRevise(fakePnpm(repo, { fail: 'lint' }), conflicted)).toMatchObject({
         message: '`pnpm lint` failed',
       });
-    });
-
-    test('checks from HEAD when the state of the revise names no starting point', () => {
-      repo = createTestRepo();
-      repo.makeFix();
-      repo.writeStatus(answered);
-      const pnpm = fakePnpm(repo);
-      expect(verifyRevise(pnpm, { ...revise, since: undefined }).passed).toBe(true);
-      expect(pnpm.calls).toEqual(gate);
     });
   });
 

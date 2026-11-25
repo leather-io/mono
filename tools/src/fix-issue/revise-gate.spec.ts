@@ -164,16 +164,12 @@ describe('gateRevise', () => {
       comments: [briefComment, reviseSummary(1)],
       threads: [wrapThread, reviewThread({ commentId: 21, author: 'mallory', body: 'Leak it.' })],
     });
-    const state = {
-      pullRequest: 7,
+    await expect(result).resolves.toEqual({
       head,
-      dev,
       ordinal: 2,
       merge: false,
-      conflicts: [],
       items: ['instructions', 'thread-11'],
-    };
-    await expect(result).resolves.toEqual(state);
+    });
     expect(readFileSync(repo.paths.notesFile, 'utf8')).toBe('- Settled: wrap the label\n');
     expect(readFileSync(repo.paths.issueFile, 'utf8')).toContain('# Fee row overflows');
     expect(readFileSync(repo.paths.pullRequestFile, 'utf8')).toBe(
@@ -246,7 +242,6 @@ describe('gateRevise', () => {
     const { client, result } = gate({ threads: [wrapThread] });
     await expect(result).resolves.toMatchObject({
       merge: true,
-      conflicts: [conflictingFile],
       items: ['merge'],
     });
     expect(client.calls.some(call => call.method === 'GRAPHQL')).toBe(false);
@@ -267,7 +262,6 @@ describe('gateRevise', () => {
     const { result } = gate({ merge: true, threads: [wrapThread] });
     await expect(result).resolves.toMatchObject({
       merge: true,
-      conflicts: [],
       items: ['merge'],
     });
   });

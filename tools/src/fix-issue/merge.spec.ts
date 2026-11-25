@@ -3,15 +3,7 @@ import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 import { runOrThrow } from '../ci/exec.js';
-import {
-  conflictingPaths,
-  ensureCommit,
-  filesWithConflictMarkers,
-  isAncestor,
-  mergeBase,
-  mergeDev,
-  planMerge,
-} from './merge.js';
+import { ensureCommit, filesWithConflictMarkers, mergeBase, mergeDev, planMerge } from './merge.js';
 import {
   type TestRepo,
   binaryContent,
@@ -31,16 +23,8 @@ describe('merge helpers', () => {
     repo.git(['checkout', '-q', '--detach', sha]);
   }
 
-  test('list the files that conflict with dev, and none when the merge is clean', () => {
-    const { head, dev } = createPullRequestBranch(repo, { conflict: true });
-    expect(conflictingPaths(repo.root, head, dev)).toEqual([conflictingFile]);
-    expect(conflictingPaths(repo.root, head, repo.head)).toEqual([]);
-  });
-
-  test('know whether dev is already part of the branch, and where the two split', () => {
+  test('know where the branch and dev split', () => {
     const { head, dev } = createPullRequestBranch(repo, { conflict: false });
-    expect(isAncestor(repo.root, repo.head, head)).toBe(true);
-    expect(isAncestor(repo.root, dev, head)).toBe(false);
     expect(mergeBase(repo.root, head, dev)).toBe(repo.head);
   });
 
@@ -150,12 +134,6 @@ describe('merge helpers', () => {
       `conflicts with the branch in ${conflictingFile} without leaving conflict markers`
     );
     expect(repo.git(['rev-parse', 'HEAD'])).toBe(head);
-  });
-
-  test('refuses to merge a dev that is already part of the branch', () => {
-    const { head } = createPullRequestBranch(repo, { conflict: false });
-    checkOut(head);
-    expect(() => mergeDev(repo.root, repo.head)).toThrow('is already part of the branch');
   });
 
   test('find the files that still hold conflict markers', () => {

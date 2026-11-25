@@ -9,7 +9,6 @@ import { commentSchema, fetchIssue, isWorkflowAppComment } from './issue.js';
 import { ensureCommit, planMerge } from './merge.js';
 import type { FixIssuePaths } from './paths.js';
 import {
-  type ReviseState,
   botAccountType,
   isReviseSummary,
   issueOfBranch,
@@ -28,6 +27,21 @@ interface GateOptions {
   readonly instructions: string;
   readonly requestedBy: string;
   readonly workflowAppClientId?: string;
+}
+
+interface RevisableOptions {
+  readonly client: GitHubClient;
+  readonly repo: string;
+  readonly pullRequest: number;
+  readonly baseBranch: string;
+  readonly workflowAppClientId: string;
+}
+
+export interface GatedRevise {
+  readonly head: string;
+  readonly ordinal: number;
+  readonly merge: boolean;
+  readonly items: readonly string[];
 }
 
 const maxListedConflicts = 10;
@@ -52,7 +66,7 @@ function refusal(pull: Pull, reason: string): Error {
   return new Error(`#${pull.number} cannot be revised: ${reason}`);
 }
 
-export function revisableIssue(pull: Pull, repo: string, baseBranch: string): number {
+function revisableIssue(pull: Pull, repo: string, baseBranch: string): number {
   if (pull.state !== 'open') throw refusal(pull, 'it is not open');
   if (pull.head.repo?.full_name !== repo) throw refusal(pull, 'it comes from another repository');
   if (pull.base.ref !== baseBranch) throw refusal(pull, `it does not target ${baseBranch}`);
@@ -64,20 +78,23 @@ export function revisableIssue(pull: Pull, repo: string, baseBranch: string): nu
   return issue;
 }
 
-export async function fetchAppComments(
-  client: GitHubClient,
-  repo: string,
-  pullRequest: number,
-  workflowAppClientId: string
-) {
-  return z
+export async function fetchRevisable({
+  client,
+  repo,
+  pullRequest,
+  baseBranch,
+  workflowAppClientId,
+}: RevisableOptions) {
+  const pull = revisePullSchema.parse(
+    await client.request('GET', `repos/${repo}/pulls/${pullRequest}`)
+  );
+  const issue = revisableIssue(pull, repo, baseBranch);
+  const fromApp = z
     .array(commentSchema)
     .parse(await paginate(client, `repos/${repo}/issues/${pullRequest}/comments`))
     .filter(comment => isWorkflowAppComment(comment, workflowAppClientId));
-}
-
-export function countRevises(comments: readonly { readonly body: string | null }[]): number {
-  return comments.filter(comment => isReviseSummary(comment.body)).length;
+  const revises = fromApp.filter(comment => isReviseSummary(comment.body)).length;
+  return { pull, issue, fromApp, ordinal: revises + 1 };
 }
 
 function listed(files: readonly string[]): string {
@@ -97,16 +114,16 @@ export async function gateRevise({
   instructions,
   requestedBy,
   workflowAppClientId,
-}: GateOptions): Promise<ReviseState> {
+}: GateOptions): Promise<GatedRevise> {
   if (!workflowAppClientId) throw new Error('the client ID of the fix-issue App is not set');
-  const pull = revisePullSchema.parse(
-    await client.request('GET', `repos/${repo}/pulls/${pullRequest}`)
-  );
-  const issue = revisableIssue(pull, repo, baseBranch);
-
-  const fromApp = await fetchAppComments(client, repo, pullRequest, workflowAppClientId);
-  const revises = countRevises(fromApp);
-  if (revises >= maxRevises) {
+  const { pull, issue, fromApp, ordinal } = await fetchRevisable({
+    client,
+    repo,
+    pullRequest,
+    baseBranch,
+    workflowAppClientId,
+  });
+  if (ordinal > maxRevises) {
     throw new Error(
       `#${pullRequest} has already been revised ${maxRevises} times, the most a pull request gets; take the branch over by hand, or dispatch the issue again with the review in the brief`
     );
@@ -133,7 +150,6 @@ export async function gateRevise({
     );
   }
 
-  const ordinal = revises + 1;
   mkdirSync(paths.workDir, { recursive: true });
   await fetchIssue({ client, repo, issue, outFile: paths.issueFile, workflowAppClientId });
   const brief = fromApp.filter(comment => isBriefComment(comment.body)).at(-1)?.body ?? null;
@@ -153,12 +169,9 @@ export async function gateRevise({
     })
   );
   return {
-    pullRequest,
     head: pull.head.sha,
-    dev: devSha,
     ordinal,
     merge: plan.merge,
-    conflicts: [...plan.conflicts],
     items: [
       ...(text === '' ? [] : [instructionsItemId]),
       ...(plan.merge ? [mergeItemId] : []),

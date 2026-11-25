@@ -97,13 +97,11 @@ describe('revisePullRequest', () => {
     repo.write(
       'tmp/fix-issue/revise.json',
       JSON.stringify({
-        pullRequest: 7,
         head: rest.revisedHead ?? head,
-        dev,
-        ordinal: 2,
         merge: merged,
         conflicts: [],
         items: [],
+        since: dev,
       })
     );
   }

@@ -75,13 +75,11 @@ describe('rounds', () => {
     repo.write(
       'tmp/fix-issue/revise.json',
       JSON.stringify({
-        pullRequest: 7,
         head: repo.head,
-        dev: repo.head,
-        ordinal: 1,
         merge: false,
         conflicts: [],
         items: ['thread-11'],
+        since: repo.head,
       })
     );
     repo.writeStatus({

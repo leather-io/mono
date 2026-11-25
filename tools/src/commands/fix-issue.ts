@@ -410,11 +410,12 @@ export function registerFixIssueCommands(program: Command): void {
     .action((flags: PrepareReviseFlags) =>
       guard('revise-prepare', async () => {
         const target = paths();
+        const pullRequest = parsePullRequest(flags.pullRequest);
         const gated = await gateRevise({
           client: github(),
           repo: readRequiredEnv('GITHUB_REPOSITORY'),
           paths: target,
-          pullRequest: parsePullRequest(flags.pullRequest),
+          pullRequest,
           devSha: flags.devSha,
           baseBranch: flags.base,
           mergeRequested: flags.merge === 'true',
@@ -422,10 +423,10 @@ export function registerFixIssueCommands(program: Command): void {
           requestedBy: flags.requestedBy,
           workflowAppClientId: flags.workflowAppClientId,
         });
-        const state = startRevise(target, gated);
+        const state = startRevise(target, gated, flags.devSha);
         writeStepOutputs({ merged: state.merge, conflicted: state.conflicts.length > 0 });
         console.log(
-          `revise-prepare: revise ${state.ordinal} of #${state.pullRequest} at ${state.head} with ${state.items.length} feedback items${state.merge ? `, on a merge of ${state.dev} with ${state.conflicts.length} conflicting files` : ''}`
+          `revise-prepare: revise ${gated.ordinal} of #${pullRequest} at ${state.head} with ${state.items.length} feedback items${state.merge ? `, on a merge of ${flags.devSha} with ${state.conflicts.length} conflicting files` : ''}`
         );
       })
     );

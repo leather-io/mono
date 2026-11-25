@@ -8,8 +8,8 @@ import {
 } from './feedback.js';
 import { ensureCommit, planMerge } from './merge.js';
 import type { FixIssuePaths } from './paths.js';
-import { countRevises, fetchAppComments, revisableIssue } from './revise-gate.js';
-import { maxRevises, readReviseState, reviseMarker, revisePullSchema } from './revise-state.js';
+import { fetchRevisable } from './revise-gate.js';
+import { maxRevises, readReviseState, reviseMarker } from './revise-state.js';
 import type { FixStatus } from './status.js';
 
 interface ReviseTargetOptions {
@@ -104,10 +104,13 @@ export async function readReviseTarget({
   appLogin,
   workflowAppClientId,
 }: ReviseTargetOptions): Promise<ReviseTarget> {
-  const pull = revisePullSchema.parse(
-    await client.request('GET', `repos/${repo}/pulls/${pullRequest}`)
-  );
-  const issue = revisableIssue(pull, repo, baseBranch);
+  const { pull, issue, ordinal } = await fetchRevisable({
+    client,
+    repo,
+    pullRequest,
+    baseBranch,
+    workflowAppClientId,
+  });
   if (pull.user?.login !== appLogin) {
     throw new Error(`#${pullRequest} was not opened by ${appLogin}`);
   }
@@ -118,9 +121,6 @@ export async function readReviseTarget({
     );
   }
   ensureCommit(paths.root, pull.head.sha);
-  const revises = countRevises(
-    await fetchAppComments(client, repo, pullRequest, workflowAppClientId)
-  );
   return {
     number: pull.number,
     nodeId: pull.node_id,
@@ -130,7 +130,7 @@ export async function readReviseTarget({
     head: pull.head.sha,
     issue,
     merge: planMerge(paths.root, pull.head.sha, devSha, mergeRequested).merge,
-    ordinal: revises + 1,
+    ordinal,
   };
 }
 

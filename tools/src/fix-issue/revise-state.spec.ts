@@ -11,13 +11,11 @@ import {
 import { type TestRepo, createTestRepo } from './test/test-repo.js';
 
 const state: ReviseState = {
-  pullRequest: 7,
   head: 'a'.repeat(40),
-  dev: 'b'.repeat(40),
-  ordinal: 2,
   merge: true,
   conflicts: ['apps/extension/fee-row.tsx'],
   items: ['instructions', 'thread-55'],
+  since: 'b'.repeat(40),
 };
 
 describe('revise state', () => {
