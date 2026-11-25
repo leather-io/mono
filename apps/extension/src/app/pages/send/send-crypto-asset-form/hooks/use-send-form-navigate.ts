@@ -7,10 +7,19 @@ import { z } from 'zod';
 
 import { RouteUrls } from '@shared/route-urls';
 
+const sbtcSponsorshipRouteStateSchema = z.object({
+  quoteId: z.string(),
+  stxFeeMicro: z.number(),
+  expiresAt: z.string(),
+});
+
+export type SbtcSponsorshipRouteState = z.infer<typeof sbtcSponsorshipRouteStateSchema>;
+
 interface ConfirmationRouteStacksSip10Args {
   decimals?: number;
   name?: string;
   tx: StacksTransactionWire;
+  sponsorship?: SbtcSponsorshipRouteState;
 }
 
 const ownedUtxoSchema = z.object({
@@ -68,6 +77,8 @@ export const stacksConfirmationRouteStateSchema = z.object({
   decimals: z.number().optional(),
   token: z.string().optional(),
   showFeeChangeWarning: z.boolean().optional(),
+  sponsorship: sbtcSponsorshipRouteStateSchema.optional(),
+  showRequoteCallout: z.boolean().optional(),
 });
 
 type StacksConfirmationRouteState = z.infer<typeof stacksConfirmationRouteStateSchema>;
@@ -113,12 +124,14 @@ export function useSendFormNavigate() {
         decimals,
         name,
         tx,
+        sponsorship,
       }: ConfirmationRouteStacksSip10Args) {
         return navigate(`${location.pathname}/confirm`, {
           state: {
             decimals,
             token: name,
             tx: tx.serialize(),
+            sponsorship,
           } satisfies StacksConfirmationRouteState,
         });
       },
