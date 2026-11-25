@@ -68,6 +68,8 @@ function commitMessage(subject: string, trailer: string | null): string {
   return trailer ? `${subject}\n\n${trailer}\n` : subject;
 }
 
+const unpublishedScreenshotsNote =
+  'Not verified: screenshots; the run listed some but none could be published.';
 const executableMode = '100755';
 const fileMode = '100644';
 
@@ -419,7 +421,15 @@ export async function openPullRequest(options: OpenPullRequestOptions): Promise<
       );
       return null;
     });
-    const body = renderBody(status.status, closesNumbers(status.status, issue), table);
+    const tested =
+      table === null && status.status.screenshots.length > 0
+        ? [...status.status.tested, unpublishedScreenshotsNote]
+        : status.status.tested;
+    const body = renderBody(
+      { ...status.status, tested },
+      closesNumbers(status.status, issue),
+      table
+    );
     const title = status.status.commit;
     const trailer = await coAuthorTrailer(client, options.coAuthor);
     const commit = await commitTree(

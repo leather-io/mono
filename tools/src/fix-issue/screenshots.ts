@@ -4,14 +4,16 @@ import {
   mkdirSync,
   readFileSync,
   readdirSync,
+  renameSync,
   rmSync,
   writeFileSync,
 } from 'node:fs';
 import path from 'node:path';
 
 import { type CommandRunner, runAndEcho, runCommand } from '../ci/exec.js';
-import { treeSnapshot } from './git.js';
+import { changedPaths, treeSnapshot } from './git.js';
 import type { FixIssuePaths } from './paths.js';
+import { readStatus, writeStatus } from './status.js';
 
 type ScreenshotSide = 'before' | 'after' | 'preview';
 
@@ -20,6 +22,51 @@ interface ScreenshotOptions {
   readonly run?: CommandRunner;
   log?(line: string): void;
 }
+
+interface ScreenshotApp {
+  readonly name: string;
+  readonly dir: string;
+  readonly builds: readonly (readonly string[])[];
+  readonly xvfb: boolean;
+  readonly webServer: string;
+  extraConfig(appDir: string): string;
+}
+
+interface Capture {
+  readonly passed: boolean;
+  readonly duplicates: readonly string[];
+}
+
+const screenshotApps: readonly ScreenshotApp[] = [
+  {
+    name: 'extension',
+    dir: 'apps/extension',
+    builds: [
+      ['turbo', 'run', 'build', '--filter=@leather.io/extension^...'],
+      ['--filter', '@leather.io/extension', 'build:test'],
+    ],
+    xvfb: true,
+    webServer: '',
+    extraConfig(appDir) {
+      return `  globalSetup: '${appDir}/tests/global-playwright-setup.js',`;
+    },
+  },
+  {
+    name: 'web',
+    dir: 'apps/web',
+    builds: [['turbo', 'run', 'build', '--filter=@leather.io/web']],
+    xvfb: false,
+    webServer: "command: 'pnpm exec vite preview', reuseExistingServer: false, ",
+    extraConfig() {
+      return "  use: { ...baseConfig.use, channel: 'chromium' },";
+    },
+  },
+];
+
+const appFolders = screenshotApps.map(app => `screenshot-specs/${app.name}/`).join(' and ');
+const mobileDir = 'apps/mobile/';
+const mobileNote =
+  'Not verified: screenshots of the apps/mobile changes; capturing mobile screens needs a simulator.';
 
 const pngSignature = Buffer.from('89504e470d0a1a0a', 'hex');
 export const maxScreenshotBytes = 1024 * 1024;
@@ -38,83 +85,97 @@ export function isScreenshot(file: string): boolean {
   return readFileSync(file).subarray(0, pngSignature.length).equals(pngSignature);
 }
 
-function hasSpecs(paths: FixIssuePaths): boolean {
-  return (
-    existsSync(paths.screenshotSpecsDir) &&
-    readdirSync(paths.screenshotSpecsDir).some(file => file.endsWith('.spec.ts'))
-  );
+function specsDir(paths: FixIssuePaths, app: ScreenshotApp): string {
+  return path.join(paths.screenshotSpecsDir, app.name);
 }
 
-function extensionDir(paths: FixIssuePaths): string {
-  return path.join(paths.root, 'apps/extension');
+function appsWithSpecs(paths: FixIssuePaths): ScreenshotApp[] {
+  return screenshotApps.filter(app => {
+    const dir = specsDir(paths, app);
+    return existsSync(dir) && readdirSync(dir).some(file => file.endsWith('.spec.ts'));
+  });
 }
 
-function configFile(paths: FixIssuePaths): string {
-  return path.join(paths.workDir, 'playwright.screenshots.config.ts');
+function configFile(paths: FixIssuePaths, app: ScreenshotApp): string {
+  return path.join(paths.workDir, `playwright.screenshots.${app.name}.config.ts`);
 }
 
-function writeConfig(paths: FixIssuePaths): void {
-  const extension = extensionDir(paths);
+function writeConfig(paths: FixIssuePaths, app: ScreenshotApp): void {
+  const appDir = path.join(paths.root, app.dir);
   writeFileSync(
-    configFile(paths),
+    configFile(paths, app),
     [
       "import { defineConfig } from '@playwright/test';",
       '',
-      `import baseConfig from '${extension}/playwright.config';`,
+      `import baseConfig from '${appDir}/playwright.config';`,
       '',
       'export default defineConfig({',
       '  ...baseConfig,',
-      `  testDir: '${paths.screenshotSpecsDir}',`,
-      `  globalSetup: '${extension}/tests/global-playwright-setup.js',`,
-      `  tsconfig: '${extension}/tsconfig.json',`,
-      `  outputDir: '${path.join(paths.workDir, 'screenshot-results')}',`,
+      `  testDir: '${specsDir(paths, app)}',`,
+      `  tsconfig: '${appDir}/tsconfig.json',`,
+      `  outputDir: '${path.join(paths.workDir, 'screenshot-results', app.name)}',`,
       '  retries: 0,',
       "  reporter: [['list']],",
-      `  webServer: { ...baseConfig.webServer, cwd: '${extension}' },`,
+      app.extraConfig(appDir),
+      `  webServer: { ...baseConfig.webServer, ${app.webServer}cwd: '${appDir}' },`,
       '});',
       '',
     ].join('\n')
   );
 }
 
-function buildExtension(paths: FixIssuePaths, run: CommandRunner): boolean {
-  const packages = run('pnpm', ['turbo', 'run', 'build', '--filter=@leather.io/extension^...'], {
-    cwd: paths.root,
-  });
-  if (packages.status !== 0) return false;
-  return (
-    run('pnpm', ['--filter', '@leather.io/extension', 'build:test'], { cwd: paths.root }).status ===
-    0
-  );
+function buildApp(paths: FixIssuePaths, app: ScreenshotApp, run: CommandRunner): boolean {
+  return app.builds.every(args => run('pnpm', args, { cwd: paths.root }).status === 0);
+}
+
+function sideDir(paths: FixIssuePaths, side: ScreenshotSide): string {
+  return path.join(paths.screenshotsDir, side);
+}
+
+function resetSide(paths: FixIssuePaths, side: ScreenshotSide): void {
+  const dir = sideDir(paths, side);
+  rmSync(dir, { recursive: true, force: true });
+  mkdirSync(dir, { recursive: true });
+}
+
+function pngs(dir: string): string[] {
+  return existsSync(dir) ? readdirSync(dir).filter(file => file.endsWith('.png')) : [];
 }
 
 function takeScreenshots(
   paths: FixIssuePaths,
+  app: ScreenshotApp,
   side: ScreenshotSide,
   run: CommandRunner,
   log: (line: string) => void
-) {
-  const dir = path.join(paths.screenshotsDir, side);
-  rmSync(dir, { recursive: true, force: true });
-  mkdirSync(dir, { recursive: true });
-  writeConfig(paths);
-  const result = run(
-    'xvfb-run',
-    ['pnpm', 'exec', 'playwright', 'test', '--config', configFile(paths)],
-    {
-      cwd: extensionDir(paths),
-      env: { ...process.env, REVIEW_SCREENSHOT_DIR: dir },
-    }
-  );
+): Capture {
+  const dir = sideDir(paths, side);
+  const appShots = path.join(dir, app.name);
+  mkdirSync(appShots, { recursive: true });
+  writeConfig(paths, app);
+  const playwright = ['exec', 'playwright', 'test', '--config', configFile(paths, app)];
+  const options = {
+    cwd: path.join(paths.root, app.dir),
+    env: { ...process.env, REVIEW_SCREENSHOT_DIR: appShots },
+  };
+  const result = app.xvfb
+    ? run('xvfb-run', ['pnpm', ...playwright], options)
+    : run('pnpm', playwright, options);
   if (result.status !== 0) {
     log(
-      `fix-issue-screenshots: some ${side} screenshot specs failed; their states show as missing`
+      `fix-issue-screenshots: some ${app.name} ${side} screenshot specs failed; their states show as missing`
     );
   }
+  const duplicates = pngs(appShots).filter(file => existsSync(path.join(dir, file)));
+  for (const file of pngs(appShots)) {
+    if (!duplicates.includes(file)) renameSync(path.join(appShots, file), path.join(dir, file));
+  }
+  rmSync(appShots, { recursive: true, force: true });
+  return { passed: result.status === 0, duplicates: duplicates.map(file => file.slice(0, -4)) };
 }
 
-function countPngs(dir: string): number {
-  return existsSync(dir) ? readdirSync(dir).filter(file => file.endsWith('.png')).length : 0;
+function duplicateNote(app: ScreenshotApp, id: string): string {
+  return `Not verified: the ${app.name} screenshot ${id}; another app already saved a state with that id.`;
 }
 
 export function previewScreenshots({
@@ -122,11 +183,15 @@ export function previewScreenshots({
   run = runAndEcho,
   log = console.log,
 }: ScreenshotOptions): void {
-  if (!hasSpecs(paths)) throw new Error(`no specs in ${paths.screenshotSpecsDir}`);
-  takeScreenshots(paths, 'preview', run, log);
-  log(
-    `fix-issue-screenshots: ${countPngs(path.join(paths.screenshotsDir, 'preview'))} preview screenshots`
-  );
+  const apps = appsWithSpecs(paths);
+  if (apps.length === 0) throw new Error(`no specs in ${appFolders} under ${paths.workDir}`);
+  resetSide(paths, 'preview');
+  for (const app of apps) {
+    for (const id of takeScreenshots(paths, app, 'preview', run, log).duplicates) {
+      log(`fix-issue-screenshots: ${duplicateNote(app, id)}`);
+    }
+  }
+  log(`fix-issue-screenshots: ${pngs(sideDir(paths, 'preview')).length} preview screenshots`);
 }
 
 function stashCount(root: string): number {
@@ -139,28 +204,42 @@ function git(root: string, args: readonly string[]): void {
   if (result.status !== 0) throw new Error(`git ${args.join(' ')} failed: ${result.stderr.trim()}`);
 }
 
-export function captureScreenshots({
-  paths,
-  run = runAndEcho,
-  log = console.log,
-}: ScreenshotOptions): void {
-  if (!hasSpecs(paths)) {
-    log('fix-issue-screenshots: no screenshot specs; nothing to capture');
-    return;
+function captureApps(
+  paths: FixIssuePaths,
+  apps: readonly ScreenshotApp[],
+  run: CommandRunner,
+  log: (line: string) => void
+): string[] {
+  const notes: string[] = [];
+  const snapshot = treeSnapshot(paths.root);
+  resetSide(paths, 'after');
+  resetSide(paths, 'before');
+  const built = apps.filter(app => {
+    if (buildApp(paths, app, run)) return true;
+    notes.push(`Not verified: ${app.name} screenshots; the fix did not build for the capture.`);
+    return false;
+  });
+  if (built.length === 0) return notes;
+  for (const app of built) {
+    const capture = takeScreenshots(paths, app, 'after', run, log);
+    if (!capture.passed) {
+      notes.push(`Not verified: some ${app.name} screenshots; their specs failed on the fix.`);
+    }
+    notes.push(...capture.duplicates.map(id => duplicateNote(app, id)));
   }
-  const before = treeSnapshot(paths.root);
-  if (!buildExtension(paths, run)) {
-    log('fix-issue-screenshots: the fixed tree did not build; skipping screenshots');
-    return;
-  }
-  takeScreenshots(paths, 'after', run, log);
 
   const stashes = stashCount(paths.root);
   git(paths.root, ['stash', 'push', '--include-untracked', '--quiet', '-m', stashMessage]);
   const stashed = stashCount(paths.root) > stashes;
   try {
-    if (buildExtension(paths, run)) takeScreenshots(paths, 'before', run, log);
-    else log('fix-issue-screenshots: dev did not build; before screenshots show as missing');
+    for (const app of built) {
+      if (buildApp(paths, app, run)) takeScreenshots(paths, app, 'before', run, log);
+      else {
+        notes.push(
+          `Not verified: ${app.name} before screenshots; dev did not build for the capture.`
+        );
+      }
+    }
   } finally {
     if (stashed) {
       git(paths.root, ['checkout', '--quiet', '--', '.']);
@@ -168,10 +247,47 @@ export function captureScreenshots({
       git(paths.root, ['stash', 'pop', '--index', '--quiet']);
     }
   }
-  if (treeSnapshot(paths.root) !== before) {
+  if (treeSnapshot(paths.root) !== snapshot) {
     throw new Error('the fix did not come back intact after the before capture');
   }
-  log(
-    `fix-issue-screenshots: captured ${countPngs(path.join(paths.screenshotsDir, 'after'))} after and ${countPngs(path.join(paths.screenshotsDir, 'before'))} before screenshots`
-  );
+  return notes;
+}
+
+function recordNotes(
+  paths: FixIssuePaths,
+  notes: readonly string[],
+  log: (line: string) => void
+): void {
+  if (notes.length === 0) return;
+  for (const note of notes) log(`fix-issue-screenshots: ${note}`);
+  const status = readStatus(paths.statusFile);
+  if (!status.ok) {
+    log('fix-issue-screenshots: the status is not valid; the notes above are not recorded');
+    return;
+  }
+  writeStatus(paths.statusFile, {
+    ...status.status,
+    tested: [...status.status.tested, ...notes],
+  });
+}
+
+export function captureScreenshots({
+  paths,
+  run = runAndEcho,
+  log = console.log,
+}: ScreenshotOptions): void {
+  const apps = appsWithSpecs(paths);
+  const notes: string[] = [];
+  if (apps.length === 0) {
+    log('fix-issue-screenshots: no screenshot specs; nothing to capture');
+  } else {
+    notes.push(...captureApps(paths, apps, run, log));
+    log(
+      `fix-issue-screenshots: captured ${pngs(sideDir(paths, 'after')).length} after and ${pngs(sideDir(paths, 'before')).length} before screenshots`
+    );
+  }
+  if (changedPaths(paths.root).some(change => change.path.startsWith(mobileDir))) {
+    notes.push(mobileNote);
+  }
+  recordNotes(paths, notes, log);
 }

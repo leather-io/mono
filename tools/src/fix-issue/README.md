@@ -26,37 +26,37 @@ How rounds end, and what `round finish` and `strip-forbidden` do after them, is 
 
 ## Files in `tmp/fix-issue/`
 
-| File                                  | Written by                                       | Read by                                                  |
-| ------------------------------------- | ------------------------------------------------ | -------------------------------------------------------- |
-| `issue.md`                            | `fetch-issue`                                    | fixer, reviewer                                          |
-| `notes.md`                            | workflow (the brief)                             | fixer, reviewer                                          |
-| `status.json`                         | fixer, then `round finish` and `strip-forbidden` | every step; schema in `status.ts`                        |
-| `verify.md`                           | `round verify` on failure                        | `round end`, next fixer                                  |
-| `review-snapshot.txt`                 | `round verify`                                   | `round check-review`                                     |
-| `review.json`                         | reviewer                                         | `round check-review`, `round end`; schema in `review.ts` |
-| `rounds/<n>/`                         | `round end`                                      | next fixer and reviewer, `round finish`                  |
-| `run.json`                            | `round end`                                      | `round end`, `round finish`                              |
-| `screenshot-specs/*.spec.ts`          | fixer                                            | `screenshots capture`                                    |
-| `screenshots/{before,after}/<id>.png` | `screenshots capture`                            | `open-pull-request`                                      |
-| `fix.patch`                           | workflow (`git diff`)                            | `open-pull-request`                                      |
+| File                                  | Written by                                                              | Read by                                                  |
+| ------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------- |
+| `issue.md`                            | `fetch-issue`                                                           | fixer, reviewer                                          |
+| `notes.md`                            | workflow (the brief)                                                    | fixer, reviewer                                          |
+| `status.json`                         | fixer, then `round finish`, `strip-forbidden` and `screenshots capture` | every step; schema in `status.ts`                        |
+| `verify.md`                           | `round verify` on failure                                               | `round end`, next fixer                                  |
+| `review-snapshot.txt`                 | `round verify`                                                          | `round check-review`                                     |
+| `review.json`                         | reviewer                                                                | `round check-review`, `round end`; schema in `review.ts` |
+| `rounds/<n>/`                         | `round end`                                                             | next fixer and reviewer, `round finish`                  |
+| `run.json`                            | `round end`                                                             | `round end`, `round finish`                              |
+| `screenshot-specs/<app>/*.spec.ts`    | fixer                                                                   | `screenshots capture`                                    |
+| `screenshots/{before,after}/<id>.png` | `screenshots capture`                                                   | `open-pull-request`                                      |
+| `fix.patch`                           | workflow (`git diff`)                                                   | `open-pull-request`                                      |
 
 ## Modules
 
-| Module            | Responsibility                                                                                           |
-| ----------------- | -------------------------------------------------------------------------------------------------------- |
-| `status.ts`       | the fixer status schema and its rules (subject, required entries, screenshots)                           |
-| `review.ts`       | the review schema                                                                                        |
-| `git.ts`          | changed paths, allowed paths, tree snapshots, blob hashes                                                |
-| `verify.ts`       | the verification gate                                                                                    |
-| `strip.ts`        | removing changes outside the allowed paths, with a blocking question                                     |
-| `rounds.ts`       | round verify (clears the last round, snapshots for the review), review check, end and finish             |
-| `screenshots.ts`  | capture before and after, PNG checks                                                                     |
-| `issue.ts`        | fetch and render the issue                                                                               |
-| `pull-request.ts` | patch in a separate worktree, signed commit, screenshots, pull request or questions comment, superseding |
-| `stop-guard.ts`   | the Stop hook that keeps an agent working until its output file is valid                                 |
-| `dispatch.ts`     | dispatching one brief of a run directory                                                                 |
-| `run-status.ts`   | the latest run and pull request per issue, and the questions of blocked drafts                           |
-| `paths.ts`        | the paths under `tmp/fix-issue/`                                                                         |
+| Module            | Responsibility                                                                                                 |
+| ----------------- | -------------------------------------------------------------------------------------------------------------- |
+| `status.ts`       | the fixer status schema and its rules (subject, required entries, screenshots)                                 |
+| `review.ts`       | the review schema                                                                                              |
+| `git.ts`          | changed paths, allowed paths, tree snapshots, blob hashes                                                      |
+| `verify.ts`       | the verification gate                                                                                          |
+| `strip.ts`        | removing changes outside the allowed paths, with a blocking question                                           |
+| `rounds.ts`       | round verify (clears the last round, snapshots for the review), review check, end and finish                   |
+| `screenshots.ts`  | capture before and after per app (extension, web), `Not verified:` lines for what was not captured, PNG checks |
+| `issue.ts`        | fetch and render the issue                                                                                     |
+| `pull-request.ts` | patch in a separate worktree, signed commit, screenshots, pull request or questions comment, superseding       |
+| `stop-guard.ts`   | the Stop hook that keeps an agent working until its output file is valid                                       |
+| `dispatch.ts`     | dispatching one brief of a run directory                                                                       |
+| `run-status.ts`   | the latest run and pull request per issue, and the questions of blocked drafts                                 |
+| `paths.ts`        | the paths under `tmp/fix-issue/`                                                                               |
 
 The GitHub REST and GraphQL client (over a token or the `gh` CLI), command running, step outputs
 and the App token signed through KMS live in `../ci/` (`github.ts`, `exec.ts`, `outputs.ts`,
@@ -72,8 +72,8 @@ renders the issue and its comments to `tmp/fix-issue/issue.md` (only text by peo
 access to the repository: their permission is looked up per author, because `leather-io`
 memberships are private; anyone else's comments, and the title and body of an issue they opened,
 are left out with a note, so the brief must carry what an outside report says), writes the brief to
-`tmp/fix-issue/notes.md`, writes `apps/extension/.env` from the `PUBLIC_*` repository variables,
-installs Chromium for Playwright and runs the fixer
+`tmp/fix-issue/notes.md`, writes `apps/extension/.env` and `apps/web/.env` from the `PUBLIC_*`
+repository variables, installs Chromium for Playwright and runs the fixer
 with `.github/prompts/fix-issue.md`. `fetch-issue` fails the run when the number is a pull request
 or a closed issue. The fixer can build the extension in test mode and run its
 end-to-end specs under `xvfb-run` with the `EXTENSION_INTEGRATION_TEST_MNEMONIC` test wallet. It has
@@ -141,18 +141,24 @@ only ever holds allowed paths, and a fixer that touched `.github/` produces a dr
 that question (or, when nothing else changed, a comment with it on the issue) instead of a refused,
 empty run.
 
-For a change that alters what an extension screen shows, the fixer writes throwaway Playwright
-specs in `tmp/fix-issue/screenshot-specs/` that save one PNG per state, and lists the states under
-`screenshots` in the status. `pnpm lt fix-issue screenshots capture` builds the test extension and
-runs them on the fix, stashes the fix, builds and runs them on `dev`, then restores the fix and
-fails the run if it did not come back intact. A failed build or spec only leaves that cell empty.
+For a change that alters what an extension screen or a web page shows, the fixer writes throwaway
+Playwright specs in `tmp/fix-issue/screenshot-specs/<app>/` (`extension` or `web`) that save one PNG
+per state, and lists the states under `screenshots` in the status. `pnpm lt fix-issue screenshots
+capture` builds each app that has specs and runs them on the fix, stashes the fix, builds and runs
+them on `dev`, then restores the fix and fails the run if it did not come back intact. The apps are
+the entries of `screenshotApps` in `screenshots.ts`, and both save into the same
+`screenshots/{before,after}/`, so a change that shows in both gets one table. A failed build or spec
+only leaves that cell empty. A build that fails, specs that fail on the fix, an id two apps both
+saved, and any change under `apps/mobile` (never captured: it needs a simulator) each add a
+`Not verified:` line to `tested` in the status.
 `open-pull-request` checks each image (a real PNG, at most 1 MB, a lowercase hyphenated name, 12 at
 most), commits them to the issue's own `bot/screenshots-<issue>` branch under
 `<issue>/<run>-<attempt>/` (created on the issue's first run, added to after that; a new dispatch
 cancels the issue's run in progress, so runs for one issue never overlap and the branch never
 races), and adds a `## Screenshots` table with one row per
 state and `Before` and `After` images linked by commit. A failure to publish them is logged and the
-pull request opens without the table; screenshots never cost the fix. Delete a
+pull request opens without the table; screenshots never cost the fix. When the status lists
+screenshots and none was published, `## Tested` gets a `Not verified:` line saying so. Delete a
 `bot/screenshots-<issue>` branch once its issue is closed if you want the branch list tidy.
 
 Job `open-pull-request` builds `tools` from `dev`, gets only the run's artifact (the patch, the
