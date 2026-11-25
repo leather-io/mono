@@ -32,45 +32,14 @@ export async function setupFeatureFlags() {
     console.log(e);
   });
 }
-export function useCollectibleDetailsFlag() {
-  return useBoolVariation('collectible_details', false);
-}
 
 export function useWaitlistFlag() {
   return useBoolVariation('release_waitlist_features', false);
 }
 
-export function useSip10SendFlag() {
-  return useBoolVariation('release_sip10_send_feature', false);
-}
-
-export function useSendPasteButton() {
-  return useBoolVariation('send_paste_button', false);
-}
-
 // Setting an empty string will not enforce a minimum version and will skip the check.
 export function useMinimumAppVersion() {
   return useStringVariation('minimum_app_version', '');
-}
-
-export function useBtcConversionUnitFlag() {
-  return useBoolVariation('release_btc_conversion_unit_feature', false);
-}
-
-export function useInternationalizationFlag() {
-  return useBoolVariation('internationalization', false);
-}
-
-export function useSwapFlag() {
-  return useBoolVariation('swap', false);
-}
-
-export function useOnramperBuyFlag() {
-  return useBoolVariation('release_onramper_buy', false);
-}
-
-export function useOnramperSellFlag() {
-  return useBoolVariation('release_onramper_sell', false);
 }
 
 export function useSwapSbtcBridgingFlag() {
