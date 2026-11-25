@@ -7,7 +7,6 @@ import { createGitHubClient, readRequiredEnv, writeSummary } from '../ci/github.
 import {
   describeGate,
   findApprovers,
-  findCoAuthors,
   findDispatchers,
   findFixIssueRun,
   findSharedHeadPullRequests,
@@ -44,14 +43,12 @@ async function countApprovals(
   const { number } = pullRequest;
   const headSha = pullRequest.head.sha;
   const fixIssueRun = findFixIssueRun(pullRequest);
-  const [reviews, commitPullRequests, workflowRun, commits] = await Promise.all([
+  const [reviews, commitPullRequests, workflowRun] = await Promise.all([
     github.listReviews(number),
     github.listCommitPullRequests(headSha),
     fixIssueRun ? github.getWorkflowRun(fixIssueRun.runId) : null,
-    fixIssueRun ? github.listCommits(number) : [],
   ]);
-  const firstDispatchers = fixIssueRun ? findDispatchers(workflowRun, fixIssueRun.issue) : [];
-  const dispatchers = [...new Set([...firstDispatchers, ...findCoAuthors(commits)])];
+  const dispatchers = fixIssueRun ? findDispatchers(workflowRun, fixIssueRun.issue) : [];
   const approvers = findApprovers(reviews, {
     headSha,
     author: pullRequest.user.login,
@@ -64,7 +61,7 @@ async function countApprovals(
     approvals,
     required: requiredApprovals,
     sharedWith,
-    undispatched: fixIssueRun !== null && firstDispatchers.length === 0,
+    undispatched: fixIssueRun !== null && dispatchers.length === 0,
     dispatcherApprovals: approvers
       .filter(({ login }) => isDispatcher(login, dispatchers))
       .map(({ login }) => login),

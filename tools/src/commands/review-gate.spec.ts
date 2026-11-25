@@ -60,7 +60,6 @@ interface FakeGitHub {
   readonly statuses: Map<string, FakeStatus[]>;
   readonly commitPullRequests: Map<string, FakeCommitPullRequest[]>;
   readonly workflowRuns: Map<string, unknown>;
-  readonly commits: Map<number, unknown[]>;
   readonly calls: ApiCall[];
   override: Override;
 }
@@ -173,13 +172,6 @@ const routes: readonly FakeRoute[] = [
       return found ? json(found) : notFound();
     },
   },
-  {
-    method: 'GET',
-    pattern: /^\/pulls\/(\d+)\/commits$/,
-    handle(github, number, { url }) {
-      return list(url, github.commits.get(Number(number)) ?? []);
-    },
-  },
 ];
 
 function reviews(github: FakeGitHub): Response {
@@ -217,7 +209,6 @@ function stubGitHub(): FakeGitHub {
     statuses: new Map(),
     commitPullRequests: new Map(),
     workflowRuns: new Map(),
-    commits: new Map(),
     calls: [],
     override: () => undefined,
   };
@@ -367,30 +358,6 @@ describe('review-gate commands', () => {
           )
         );
         expect(summary()).toContain('Dispatched by dispatcher.');
-      });
-
-      test('never counts the approval of whoever dispatched a revise of it', async () => {
-        github.commits.set(7, [
-          { commit: { message: 'fix(extension): keep the fee row visible' } },
-          {
-            commit: {
-              message:
-                'fix(extension): wrap the label\n\nCo-authored-by: Rev Iewer <42+reviewer@users.noreply.github.com>\n',
-            },
-          },
-        ]);
-        github.reviews.set(7, [approval(reviewer), approval('second-writer')]);
-
-        await run(['check', '--pr', '7']);
-
-        expect(latestStatus(headSha, 'review-gate')).toEqual(
-          gateStatus(
-            'review-gate',
-            'failure',
-            '1 of 2 required approvals; reviewer dispatched the fix, so cannot approve it'
-          )
-        );
-        expect(summary()).toContain('Dispatched by dispatcher, reviewer.');
       });
 
       test('passes on the approvals of two other people', async () => {

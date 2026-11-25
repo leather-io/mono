@@ -4,7 +4,6 @@ import { type GitHubClient, GitHubError, type HttpMethod, paginate } from '../ci
 import {
   type Review,
   commitPullRequestSchema,
-  pullRequestCommitSchema,
   pullRequestSchema,
   reviewsPageSchema,
   workflowRunSchema,
@@ -74,10 +73,6 @@ export function createGateClient(github: GitHubClient, repository: string) {
         if (error instanceof GitHubError && error.status === notFoundStatus) return null;
         throw error;
       }
-    },
-    async listCommits(number: number) {
-      const commits = await paginate(github, `${repoPath}/pulls/${number}/commits`);
-      return z.array(pullRequestCommitSchema).parse(commits);
     },
     async listReviews(number: number): Promise<Review[]> {
       const [owner, name] = repository.split('/');

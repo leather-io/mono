@@ -1,19 +1,11 @@
 import { botAccountType, fixIssueBranch } from '../fix-issue/revise-state.js';
-import type {
-  CommitPullRequest,
-  PullRequest,
-  PullRequestCommit,
-  Review,
-  WorkflowRun,
-} from './schemas.js';
+import type { CommitPullRequest, PullRequest, Review, WorkflowRun } from './schemas.js';
 
 const maxStatusDescriptionLength = 140;
 const humanAccountType = 'User';
 const decisiveReviewStates = new Set(['APPROVED', 'CHANGES_REQUESTED', 'DISMISSED']);
 const fixIssueWorkflowPath = '.github/workflows/repo:fix-issue.yml';
 const dispatchEvent = 'workflow_dispatch';
-const coAuthorPattern =
-  /^Co-authored-by: .*<(?:\d+\+)?([^@\s<>]+)@users\.noreply\.github\.com>\s*$/gim;
 
 interface ApproverContext {
   readonly headSha: string;
@@ -41,13 +33,6 @@ export function findDispatchers(run: WorkflowRun | null, issue: string): string[
   const logins = [run.actor, run.triggering_actor].flatMap(account =>
     account ? [account.login] : []
   );
-  return [...new Set(logins)];
-}
-
-export function findCoAuthors(commits: readonly PullRequestCommit[]): string[] {
-  const logins = commits
-    .flatMap(({ commit }) => [...commit.message.matchAll(coAuthorPattern)])
-    .flatMap(([, login]) => (login ? [login] : []));
   return [...new Set(logins)];
 }
 

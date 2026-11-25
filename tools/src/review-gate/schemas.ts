@@ -37,9 +37,6 @@ export const workflowRunSchema = z.object({
 });
 export type WorkflowRun = z.infer<typeof workflowRunSchema>;
 
-export const pullRequestCommitSchema = z.object({ commit: z.object({ message: z.string() }) });
-export type PullRequestCommit = z.infer<typeof pullRequestCommitSchema>;
-
 export const reviewsPageSchema = z.object({
   repository: z.object({
     pullRequest: z.object({
