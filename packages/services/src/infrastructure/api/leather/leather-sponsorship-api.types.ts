@@ -35,3 +35,17 @@ export function getSbtcSponsorshipIneligibilityReason(error: unknown): string | 
   if (!LeatherApiError.isLeatherApiError(error)) return undefined;
   return error.data?.reason;
 }
+
+const sbtcSponsorshipQuoteServiceSeparator = ':';
+
+export function getSbtcSponsorshipQuoteServiceId(quoteId: string): string | undefined {
+  const separatorIndex = quoteId.indexOf(sbtcSponsorshipQuoteServiceSeparator);
+  return separatorIndex > 0 ? quoteId.slice(0, separatorIndex) : undefined;
+}
+
+export function getSbtcSponsorshipUnconfirmedBroadcast(error: unknown) {
+  if (!LeatherApiError.isLeatherApiError(error)) return undefined;
+  if (getSbtcSponsorshipErrorCode(error) !== 'broadcast_failed') return undefined;
+  const { txid, transaction } = error.data ?? {};
+  return txid && transaction ? { txid, transaction } : undefined;
+}

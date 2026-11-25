@@ -9,9 +9,13 @@ import {
 const sbtcEmilyUrl = `${SBTC_EMILY_API_URL}/deposit*`;
 const sbtcSponsorshipQuoteUrl = '**/v1/sponsorship/quote?network=*';
 const sbtcSponsorshipSubmitUrl = '**/v1/sponsorship/submit?network=*';
+const sbtcSponsorshipSubmitCallUrl = '**/v1/sponsorship/submit-call?network=*';
 
 export const SBTC_SPONSORSHIP_TXID =
   '9b709768122e6c62a37b087106cc9c23280ed6242b565484b6cc4e6a43ae1155';
+
+export const SBTC_SPONSORSHIP_CALL_TXID =
+  '4f1d3c2b5a69788796a5b4c3d2e1f00112233445566778899aabbccddeeff001';
 
 export const SBTC_SPONSORSHIP_QUOTE_ID = 'quote-1';
 
@@ -97,29 +101,68 @@ export async function mockSbtcSponsorshipQuote(
 }
 
 type SbtcSponsorshipSubmitResult =
-  | { txid?: string }
+  | { txid?: string; code?: never }
   | { networkFailure: true }
-  | { status: number; code: string; error?: string; reason?: string };
+  | {
+      status: number;
+      code: string;
+      error?: string;
+      reason?: string;
+      txid?: string;
+      transaction?: string;
+    };
+
+async function mockSbtcSponsorshipSubmitRoute(
+  target: Page | BrowserContext,
+  url: string,
+  defaultTxid: string,
+  results: SbtcSponsorshipSubmitResult[]
+) {
+  const queue = [...results];
+  await target.route(url, route => {
+    if (!isPost(route)) return route.fallback();
+    const result = queue.length > 1 ? queue.shift() : queue[0];
+    if (result && 'networkFailure' in result) return route.abort();
+    if (result && 'code' in result && result.code) {
+      const { status, code, error = code, reason, txid, transaction } = result;
+      return route.fulfill({ status, json: { error, code, reason, txid, transaction } });
+    }
+    const body: unknown = route.request().postDataJSON();
+    const transaction =
+      body && typeof body === 'object' && 'transaction' in body ? body.transaction : '';
+    const txid = result && 'txid' in result && result.txid ? result.txid : defaultTxid;
+    return route.fulfill({ json: { txid, transaction } });
+  });
+}
 
 export async function mockSbtcSponsorshipSubmit(
   target: Page | BrowserContext,
   results: SbtcSponsorshipSubmitResult[] = [{}]
 ) {
-  const queue = [...results];
-  await target.route(sbtcSponsorshipSubmitUrl, route => {
-    if (!isPost(route)) return route.fallback();
-    const result = queue.length > 1 ? queue.shift() : queue[0];
-    if (result && 'networkFailure' in result) return route.abort();
-    if (result && 'status' in result) {
-      const { status, code, error = code, reason } = result;
-      return route.fulfill({ status, json: { error, code, reason } });
-    }
-    const body: unknown = route.request().postDataJSON();
-    const transaction =
-      body && typeof body === 'object' && 'transaction' in body ? body.transaction : '';
-    const txid = result && 'txid' in result && result.txid ? result.txid : SBTC_SPONSORSHIP_TXID;
-    return route.fulfill({ json: { txid, transaction } });
-  });
+  await mockSbtcSponsorshipSubmitRoute(
+    target,
+    sbtcSponsorshipSubmitUrl,
+    SBTC_SPONSORSHIP_TXID,
+    results
+  );
+}
+
+export async function mockSbtcSponsorshipSubmitCall(
+  target: Page | BrowserContext,
+  results: SbtcSponsorshipSubmitResult[] = [{}]
+) {
+  await mockSbtcSponsorshipSubmitRoute(
+    target,
+    sbtcSponsorshipSubmitCallUrl,
+    SBTC_SPONSORSHIP_CALL_TXID,
+    results
+  );
+}
+
+export async function mockSbtcSponsorshipPaymentConfirmed(target: Page | BrowserContext) {
+  await target.route(`**/extended/v3/transactions/${SBTC_SPONSORSHIP_TXID}`, route =>
+    route.fulfill({ json: { tx_id: SBTC_SPONSORSHIP_TXID, status: 'success' } })
+  );
 }
 
 export async function mockMainnetTestAccountSbtcDepositRequests(page: Page | BrowserContext) {

@@ -6909,6 +6909,7 @@ export interface paths {
       parameters: {
         query: {
           network: 'mainnet' | 'testnet';
+          service?: string;
         };
         header?: never;
         path?: never;
@@ -6993,6 +6994,63 @@ export interface paths {
           };
         };
         /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/sponsorship/submit-call': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: {
+      parameters: {
+        query: {
+          network: 'mainnet' | 'testnet';
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            quoteId: string;
+            transaction: string;
+            paymentTxid: string;
+          };
+        };
+      };
+      responses: {
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              txid: string;
+              transaction: string;
+            };
+          };
+        };
         400: {
           headers: {
             [name: string]: unknown;

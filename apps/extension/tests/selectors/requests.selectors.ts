@@ -23,3 +23,10 @@ export const PostConditionSelectors = {
 } as const;
 export type PostConditionSelectors =
   (typeof PostConditionSelectors)[keyof typeof PostConditionSelectors];
+
+export const SbtcSponsoredCallSelectors = {
+  FeeSection: 'sbtc-sponsored-call-fee-section',
+  FailureCallout: 'sbtc-sponsored-call-failure-callout',
+} as const;
+export type SbtcSponsoredCallSelectors =
+  (typeof SbtcSponsoredCallSelectors)[keyof typeof SbtcSponsoredCallSelectors];

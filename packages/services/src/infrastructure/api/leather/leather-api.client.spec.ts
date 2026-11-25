@@ -12,6 +12,8 @@ import { LeatherApiError, getErrorDetail } from './leather-api.error';
 import {
   getSbtcSponsorshipErrorCode,
   getSbtcSponsorshipIneligibilityReason,
+  getSbtcSponsorshipQuoteServiceId,
+  getSbtcSponsorshipUnconfirmedBroadcast,
 } from './leather-sponsorship-api.types';
 
 const proposalRequest = {
@@ -264,6 +266,52 @@ describe(LeatherApiClient.name, () => {
       expect(await requests[0].json()).toEqual(submitRequest);
     });
 
+    test('pins a quote to the service named by an earlier quote id', async () => {
+      const requests: Request[] = [];
+      vi.stubGlobal(
+        'fetch',
+        vi.fn((request: Request) => {
+          requests.push(request);
+          return Promise.resolve(jsonResponse(quote));
+        })
+      );
+
+      await createClient(defaultNetworksKeyedById.mainnet).fetchSbtcSponsorshipQuote({
+        service: getSbtcSponsorshipQuoteServiceId('service-a:signed:token'),
+      });
+
+      expect(requests[0].url).toBe(
+        `${LEATHER_API_URL_PRODUCTION}/v1/sponsorship/quote?network=mainnet&service=service-a`
+      );
+    });
+
+    test('reads no service from a quote id without a prefix', () => {
+      expect(getSbtcSponsorshipQuoteServiceId('quote-1')).toBeUndefined();
+    });
+
+    test('submits the signed call with the txid of its payment', async () => {
+      const requests: Request[] = [];
+      vi.stubGlobal(
+        'fetch',
+        vi.fn((request: Request) => {
+          requests.push(request.clone());
+          return Promise.resolve(jsonResponse({ txid: 'abc', transaction: '00deadbeef' }));
+        })
+      );
+
+      const submitCallRequest = { quoteId: 'quote-1', transaction: '00cafe', paymentTxid: 'ff' };
+      const result = await createClient(defaultNetworksKeyedById.mainnet).submitSbtcSponsoredCall(
+        submitCallRequest
+      );
+
+      expect(result).toEqual({ txid: 'abc', transaction: '00deadbeef' });
+      expect(requests[0].method).toBe('POST');
+      expect(requests[0].url).toBe(
+        `${LEATHER_API_URL_PRODUCTION}/v1/sponsorship/submit-call?network=mainnet`
+      );
+      expect(await requests[0].json()).toEqual(submitCallRequest);
+    });
+
     test('throws a LeatherApiError carrying the typed error code', async () => {
       vi.stubGlobal(
         'fetch',
@@ -285,6 +333,24 @@ describe(LeatherApiClient.name, () => {
       expect(getSbtcSponsorshipErrorCode(error)).toBe('not_eligible');
       expect(getSbtcSponsorshipIneligibilityReason(error)).toBe('fee_too_low');
       expect(getErrorDetail(error)).toBe('fee entry below quote');
+    });
+
+    test('reads the txid and transaction a failed broadcast carries', async () => {
+      const broadcast = { txid: 'abc', transaction: '00deadbeef' };
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(() =>
+          Promise.resolve(
+            jsonResponse({ error: 'node timeout', code: 'broadcast_failed', ...broadcast }, 502)
+          )
+        )
+      );
+
+      const error = await createClient(defaultNetworksKeyedById.mainnet)
+        .submitSbtcSponsoredCall({ quoteId: 'quote-1', transaction: '00cafe', paymentTxid: 'ff' })
+        .catch((e: unknown) => e);
+
+      expect(getSbtcSponsorshipUnconfirmedBroadcast(error)).toEqual(broadcast);
     });
   });
 });
