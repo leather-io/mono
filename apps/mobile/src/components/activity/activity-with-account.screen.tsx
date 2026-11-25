@@ -11,7 +11,7 @@ interface ActivityScreenWithAccountProps {
 export default function ActivityScreenWithAccount({
   currentAccount,
 }: ActivityScreenWithAccountProps) {
-  const { activity, hasNextPage, isFetchingNextPage, fetchNextPage } = useActivityFeed(
+  const { activity, hasNextPage, isFetchingNextPage, fetchNextPage, refetch } = useActivityFeed(
     currentAccount.fingerprint,
     currentAccount.accountIndex
   );
@@ -25,6 +25,7 @@ export default function ActivityScreenWithAccount({
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
         onLoadMore={fetchNextPage}
+        onRetry={refetch}
       />
     </Screen>
   );

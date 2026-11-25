@@ -8,6 +8,7 @@ import { RefreshControl } from '@/features/refresh-control/refresh-control';
 import { type BlockchainActivityItem } from '@leather.io/features';
 
 import { ActivityEmpty } from './activity-empty';
+import { ActivityError } from './activity-error';
 import { ActivityItem } from './activity-item';
 import { ActivityLoading } from './activity-loading';
 
@@ -17,6 +18,7 @@ interface ActivityListProps {
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
   onLoadMore?(): void;
+  onRetry(): void;
 }
 
 export function ActivityList({
@@ -25,6 +27,7 @@ export function ActivityList({
   hasNextPage = false,
   isFetchingNextPage = false,
   onLoadMore,
+  onRetry,
 }: ActivityListProps) {
   const renderItem = useCallback(
     ({ item }: { item: BlockchainActivityItem }) => <ActivityItem item={item} />,
@@ -49,7 +52,7 @@ export function ActivityList({
         renderItem={renderItem}
         refreshControl={<RefreshControl />}
         ListHeaderComponent={<>{header}</>}
-        ListEmptyComponent={<ActivityEmpty />}
+        ListEmptyComponent={<ActivityError onRetry={onRetry} />}
       />
     );
   }
