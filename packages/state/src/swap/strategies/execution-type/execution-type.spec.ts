@@ -235,7 +235,7 @@ describe('sbtcBridgeDepositStrategy', () => {
   });
 
   describe('submitSwap', () => {
-    test('builds, signs and broadcasts the deposit, then notifies sbtc with the signed tx', async () => {
+    test('builds and signs the deposit, registers it with sbtc, then broadcasts it', async () => {
       const {
         dependencies,
         bitcoin,
@@ -270,6 +270,9 @@ describe('sbtcBridgeDepositStrategy', () => {
         reclaimScript: 'reclaim-script',
         transactionHex: signedDepositTxHex,
       });
+      expect(swapServiceMocks.notifySbtcDeposit.mock.invocationCallOrder[0]).toBeLessThan(
+        vi.mocked(bitcoin.broadcast).mock.invocationCallOrder[0]
+      );
       expect(result).toEqual({ status: 'submitted', txid: signedDepositTxid });
     });
 
@@ -285,8 +288,22 @@ describe('sbtcBridgeDepositStrategy', () => {
       expect(swapServiceMocks.notifySbtcDeposit).not.toHaveBeenCalled();
     });
 
-    test('rejects without notifying sbtc when the node rejects the broadcast', async () => {
+    test('rejects without broadcasting when sbtc registration fails', async () => {
       const { dependencies, bitcoin, swapServiceMocks } = createSbtcFixtures();
+      swapServiceMocks.notifySbtcDeposit.mockResolvedValue({
+        status: 'failed',
+        errorMessage: 'Service unavailable',
+        httpStatus: 503,
+      });
+
+      await expect(
+        getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(dependencies, bitcoinNetworkFee)
+      ).rejects.toThrowError('sBTC deposit registration failed: Service unavailable');
+      expect(bitcoin.broadcast).not.toHaveBeenCalled();
+    });
+
+    test('rejects when the node rejects the broadcast', async () => {
+      const { dependencies, bitcoin } = createSbtcFixtures();
       bitcoin.broadcast = vi.fn().mockResolvedValue({
         status: 'rejected',
         errorMessage: 'bad-txns-inputs-missingorspent',
@@ -295,11 +312,10 @@ describe('sbtcBridgeDepositStrategy', () => {
       await expect(
         getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(dependencies, bitcoinNetworkFee)
       ).rejects.toThrowError('bad-txns-inputs-missingorspent');
-      expect(swapServiceMocks.notifySbtcDeposit).not.toHaveBeenCalled();
     });
 
-    test('still notifies sbtc and resolves broadcast-uncertain when the broadcast outcome is unknown', async () => {
-      const { dependencies, bitcoin, swapServiceMocks } = createSbtcFixtures();
+    test('resolves broadcast-uncertain when the broadcast outcome is unknown', async () => {
+      const { dependencies, bitcoin } = createSbtcFixtures();
       bitcoin.broadcast = vi.fn().mockResolvedValue({
         status: 'unknown',
         errorMessage: 'Failed to fetch',
@@ -310,78 +326,10 @@ describe('sbtcBridgeDepositStrategy', () => {
         bitcoinNetworkFee
       );
 
-      expect(swapServiceMocks.notifySbtcDeposit).toHaveBeenCalledWith(
-        expect.objectContaining({ bitcoinTxid: signedDepositTxid })
-      );
       expect(result).toEqual({
         status: 'broadcast-uncertain',
         txid: signedDepositTxid,
         errorMessage: 'Failed to fetch',
-        notified: true,
-      });
-    });
-
-    test('reports broadcast-uncertain over a failed notification when both are unknown', async () => {
-      const { dependencies, bitcoin, swapServiceMocks } = createSbtcFixtures();
-      bitcoin.broadcast = vi
-        .fn()
-        .mockResolvedValue({ status: 'unknown', errorMessage: 'Bad Gateway' });
-      swapServiceMocks.notifySbtcDeposit.mockResolvedValue({
-        status: 'failed',
-        errorMessage: 'Service unavailable',
-        httpStatus: 503,
-      });
-
-      const result = await getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(
-        dependencies,
-        bitcoinNetworkFee
-      );
-
-      expect(result).toEqual({
-        status: 'broadcast-uncertain',
-        txid: signedDepositTxid,
-        errorMessage: 'Bad Gateway',
-        notified: false,
-      });
-    });
-
-    test('resolves with a notification failure instead of rejecting when sbtc cannot be notified', async () => {
-      const { dependencies, swapServiceMocks } = createSbtcFixtures();
-      swapServiceMocks.notifySbtcDeposit.mockResolvedValue({
-        status: 'failed',
-        errorMessage: 'Service unavailable',
-        httpStatus: 503,
-      });
-
-      const result = await getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(
-        dependencies,
-        bitcoinNetworkFee
-      );
-
-      expect(result).toEqual({
-        status: 'sbtc-notification-failed',
-        txid: signedDepositTxid,
-        errorMessage: 'Service unavailable',
-        httpStatus: 503,
-      });
-    });
-
-    test('omits the http status from the notification failure when none is available', async () => {
-      const { dependencies, swapServiceMocks } = createSbtcFixtures();
-      swapServiceMocks.notifySbtcDeposit.mockResolvedValue({
-        status: 'failed',
-        errorMessage: 'timeout of 10000ms exceeded',
-      });
-
-      const result = await getExecutionTypeStrategy('sbtc-bridge-deposit').submitSwap(
-        dependencies,
-        bitcoinNetworkFee
-      );
-
-      expect(result).toEqual({
-        status: 'sbtc-notification-failed',
-        txid: signedDepositTxid,
-        errorMessage: 'timeout of 10000ms exceeded',
       });
     });
   });

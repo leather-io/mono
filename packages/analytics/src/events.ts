@@ -111,14 +111,9 @@ export interface Events extends HistoricalEvents {
     errorMessage: string;
     provider: string;
   };
-  swap_sbtc_notify_failed: {
-    txid: string;
-    errorMessage: string;
-  };
   swap_broadcast_uncertain: {
     txid: string;
     errorMessage: string;
-    notified: boolean;
   };
   receive_sheet_opened: { type: string };
   receive_sheet_dismissed: undefined;

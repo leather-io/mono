@@ -125,46 +125,6 @@ function logActivityDetailed(activities) {
   }
 }
 
-function countUserEvents(rawEvents, stxAddress) {
-  let total = 0;
-  let matched = 0;
-  for (const event of rawEvents) {
-    total++;
-    const asset = event.asset ?? event.stx_lock_event ?? {};
-    const sender = asset.sender ?? asset.locked_address;
-    const recipient = asset.recipient;
-    if (sender === stxAddress || recipient === stxAddress || asset.locked_address === stxAddress) {
-      matched++;
-    }
-  }
-  return { total, matched };
-}
-
-async function fetchHiroAllPages(url, limit, stopAfter) {
-  const axios = (await import('axios')).default;
-  const baseUrl = 'https://api.hiro.so';
-  const firstRes = await axios.get(`${baseUrl}${url}?limit=${limit}&offset=0`, {
-    headers: { 'X-Partner': 'Leather' },
-  });
-  const total = firstRes.data.total;
-  const totalPages = Math.ceil(total / limit);
-  const pagesToFetch = Math.min(totalPages, stopAfter);
-  const results = [...firstRes.data.results];
-
-  if (pagesToFetch > 1) {
-    const remaining = await Promise.all(
-      Array.from({ length: pagesToFetch - 1 }, (_, i) =>
-        axios.get(`${baseUrl}${url}?limit=${limit}&offset=${(i + 1) * limit}`, {
-          headers: { 'X-Partner': 'Leather' },
-        })
-      )
-    );
-    for (const res of remaining) results.push(...res.data.results);
-  }
-
-  return { results, total, pagesFetched: pagesToFetch };
-}
-
 async function runBtcDiagnostics(container, account) {
   const { BitcoinTransactionsService } = await import('@leather.io/services');
   const btcService = container.get(BitcoinTransactionsService);
@@ -218,79 +178,6 @@ async function runBtcDiagnostics(container, account) {
 async function runDiagnostics(container, account) {
   if (account.bitcoin?.nativeSegwitDescriptor) {
     await runBtcDiagnostics(container, account);
-  }
-
-  const stxAddress = account.stacks?.stxAddress;
-  if (!stxAddress) {
-    console.log('  No STX address, skipping Stacks diagnostics');
-    return;
-  }
-
-  console.log('\n--- Stacks Event Diagnostics ---');
-
-  const start = performance.now();
-  const [txData, eventData] = await Promise.all([
-    fetchHiroAllPages(`/extended/v2/addresses/${stxAddress}/transactions`, 50, 20),
-    fetchHiroAllPages(`/extended/v1/address/${stxAddress}/assets`, 100, 20),
-  ]);
-  const fetchMs = Math.round(performance.now() - start);
-  const txs = txData.results;
-  const txEvents = eventData.results;
-
-  console.log(`  Fetch time: ${fetchMs}ms`);
-  console.log(
-    `  Transactions: ${txs.length} (${txData.pagesFetched} pages, ${txData.total} total on-chain)`
-  );
-  console.log(
-    `  Raw events: ${txEvents.length} (${eventData.pagesFetched} pages, ${eventData.total} total on-chain)`
-  );
-
-  const eventsByTxId = new Map();
-  for (const event of txEvents) {
-    if (!eventsByTxId.has(event.tx_id)) eventsByTxId.set(event.tx_id, []);
-    eventsByTxId.get(event.tx_id).push(event);
-  }
-
-  const txsWithEvents = eventsByTxId.size;
-  const txsWithoutEvents = txs.length - txsWithEvents;
-
-  let totalRawEvents = 0;
-  let userMatchedEvents = 0;
-  for (const [, events] of eventsByTxId) {
-    const { total, matched } = countUserEvents(events, stxAddress);
-    totalRawEvents += total;
-    userMatchedEvents += matched;
-  }
-
-  const wastePercent =
-    totalRawEvents > 0
-      ? Math.round(((totalRawEvents - userMatchedEvents) / totalRawEvents) * 100)
-      : 0;
-
-  console.log(`  Txs with events: ${txsWithEvents}`);
-  console.log(`  Txs without events: ${txsWithoutEvents}`);
-  console.log(`  Total raw events: ${totalRawEvents}`);
-  console.log(`  Events matching user address: ${userMatchedEvents}`);
-  console.log(
-    `  Intermediate/irrelevant events: ${totalRawEvents - userMatchedEvents} (${wastePercent}% waste)`
-  );
-
-  const txTypes = new Map();
-  for (const t of txs) {
-    const type = t.tx?.tx_type ?? 'unknown';
-    txTypes.set(type, (txTypes.get(type) ?? 0) + 1);
-  }
-  console.log(`  Tx types: ${[...txTypes.entries()].map(([k, v]) => `${k}=${v}`).join(', ')}`);
-
-  const topEventTxs = [...eventsByTxId.entries()]
-    .map(([txid, events]) => ({ txid, count: events.length }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 5);
-  if (topEventTxs.length > 0) {
-    console.log(`  Top 5 txs by event count:`);
-    for (const t of topEventTxs) {
-      console.log(`    ${t.txid.slice(0, 16)}... → ${t.count} events`);
-    }
   }
 }
 

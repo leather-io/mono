@@ -78,7 +78,7 @@ Follow this pattern when adding new service query configs:
 1. **Add registry entry**
    - In `src/shared/query-key.registry.ts`, register a new prefix + required deps.
 2. **Create config file**
-   - e.g. `src/activity/activity.query-config.ts`
+   - e.g. `src/activity/blockchain-activity.query-config.ts`
 3. **Key factory**
    - Use `createServiceQueryKey(prefix, paramsArray, settings)`
 4. **Config builder**
@@ -100,7 +100,7 @@ To keep this package and its consumers aligned on the “builder only” pattern
   - Type aliases ending in `QueryOptions` are banned here to avoid patterns like `Omit<UseQueryOptions, 'queryKey' | 'queryFn'>`.
   - Apps should use `UseQueryOptions` (or `Partial<UseQueryOptions<...>>`) directly when they need configuration objects.
 - **App query modules must not import certain `get*Service` helpers**
-  - In `apps/*` query directories we forbid importing `getActivityService`, `getMarketDataService`, and `getBtcBalancesService` from `@leather.io/services`.
+  - In `apps/*` query directories we forbid importing `getMarketDataService` and `getBtcBalancesService` from `@leather.io/services`.
   - Instead, query modules should rely on the corresponding builders exported from `@leather.io/queries` and call `useQuery` themselves.
 - **`useQuery` object calls must be complete or builder-based**
   - For object-literal `useQuery({ ... })` calls in app query modules, ESLint requires either:

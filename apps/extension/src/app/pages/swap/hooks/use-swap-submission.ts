@@ -46,11 +46,7 @@ export function useSwapSubmission() {
         const result = await submitWithMinimumDuration();
         if (!isMountedRef.current) return;
         if (result.status !== 'submitted') {
-          const exception =
-            result.status === 'sbtc-notification-failed'
-              ? new Error('sBTC bridge deposit notification failed')
-              : new Error('sBTC bridge deposit broadcast outcome unknown');
-          captureException(exception, {
+          captureException(new Error('sBTC bridge deposit broadcast outcome unknown'), {
             level: 'error',
             tags: { swap: 'sbtc-bridge-deposit' },
             extra: result,

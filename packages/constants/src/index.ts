@@ -86,7 +86,7 @@ export const MEMBER_MAX_NAME_LENGTH = 32;
 
 export const LEATHER_SUPPORT_URL = 'https://leather.io/contact';
 
-export const LEATHER_APP_URL = 'https://app.leather.io';
+export const LEATHER_APP_URL = 'https://leather.io';
 export const LEATHER_GUIDES_URL: string = `${LEATHER_APP_URL}/support`;
 export const LEATHER_PORTFOLIO_URL: string = `${LEATHER_APP_URL}/portfolio`;
 export const LEATHER_SBTC_URL: string = `${LEATHER_APP_URL}/sbtc`;
@@ -203,7 +203,7 @@ export const SBTC_ASSET_ID_MAINNET =
   'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token::sbtc-token';
 
 export const SBTC_ASSET_ID_TESTNET =
-  'SNGWPN3XDAQE673MXYXF81016M50NHF5X5PWWM70.sbtc-token::sbtc-token';
+  'SN3VMHXEN64ZZF71JQ5VESXDWTR301XTTXGF4J8F1.sbtc-token::sbtc-token';
 
 export const AEUSDC_ASSET_PRINCIPAL = 'SP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc';
 

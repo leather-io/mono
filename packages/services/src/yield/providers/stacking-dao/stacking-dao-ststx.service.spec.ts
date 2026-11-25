@@ -23,12 +23,12 @@ describe(StackingDaoStStxService.name, () => {
     },
   ];
 
-  const getAddressFtBalances = vi.fn();
+  const getPrincipalFtBalances = vi.fn();
   const getPrincipalNftBalances = vi.fn();
   const getLstWithdrawals = vi.fn();
 
   const service = new StackingDaoStStxService(
-    createMock<HiroStacksApiClient>({ getAddressFtBalances, getPrincipalNftBalances }),
+    createMock<HiroStacksApiClient>({ getPrincipalFtBalances, getPrincipalNftBalances }),
     createMock<StackingDaoLstService>({
       getLstHolding: vi.fn().mockResolvedValue(null),
       getLstWithdrawals,
@@ -38,7 +38,7 @@ describe(StackingDaoStStxService.name, () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    getAddressFtBalances.mockResolvedValue({ limit: 0, offset: 0, total: 0, results: [] });
+    getPrincipalFtBalances.mockResolvedValue([]);
     getPrincipalNftBalances.mockResolvedValue(withdrawalNfts);
     getLstWithdrawals.mockResolvedValue([]);
   });
