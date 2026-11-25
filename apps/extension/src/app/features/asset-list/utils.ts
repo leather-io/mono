@@ -8,7 +8,6 @@ import { closeWindow } from '@shared/utils';
 
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
-import { useFlags } from '@app/features/feature-flags';
 import { useBlockchainActivityByAssetId } from '@app/query/activity/blockchain-activity.query';
 import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
@@ -18,15 +17,10 @@ export function useCryptoAssetBuy(asset: CryptoAsset) {
   const navigate = useNavigate();
   const account = useCurrentAccountAddresses();
   const activityQuery = useBlockchainActivityByAssetId(account, asset);
-  const { releaseOnramperBuy } = useFlags();
   const policy = useCurrentPolicy();
   const { isMainnet } = useCurrentNetworkState();
   const showBuyButton =
-    activityQuery.isSuccess &&
-    !activityQuery.data?.length &&
-    releaseOnramperBuy &&
-    !policy &&
-    isMainnet;
+    activityQuery.isSuccess && !activityQuery.data?.length && !policy && isMainnet;
 
   const onBuy = useCallback(() => {
     const route = RouteUrls.Fund.replace(':chain?', asset.chain);
