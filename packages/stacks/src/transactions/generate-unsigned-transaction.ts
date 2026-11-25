@@ -1,6 +1,5 @@
 import { hexToBytes } from '@noble/hashes/utils';
 import {
-  createSmartContractPayload,
   deserializeCV,
   makeUnsignedContractCall,
   makeUnsignedContractDeploy,
@@ -51,16 +50,6 @@ export function getUnsignedContractDeployParsedOptions(
   };
 }
 
-async function generateUnsignedContractDeployTransaction(
-  options: StacksUnsignedContractDeployOptions
-) {
-  const transaction = await makeUnsignedContractDeploy(
-    getUnsignedContractDeployParsedOptions(options)
-  );
-  transaction.payload = createSmartContractPayload(options.contractName, options.codeBody);
-  return transaction;
-}
-
 export function getUnsignedStxTokenTransferParsedOptions(
   options: StacksUnsignedStxTokenTransferOptions
 ): Parameters<typeof makeUnsignedSTXTokenTransfer>[0] {
@@ -85,7 +74,7 @@ export function generateStacksUnsignedTransaction(options: StacksUnsignedTransac
     case TransactionTypes.ContractCall:
       return makeUnsignedContractCall(getUnsignedContractCallParsedOptions(options));
     case TransactionTypes.ContractDeploy:
-      return generateUnsignedContractDeployTransaction(options);
+      return makeUnsignedContractDeploy(getUnsignedContractDeployParsedOptions(options));
     default:
       assertUnreachable(txType);
   }

@@ -8,6 +8,8 @@ import {
 import { Callout } from '@leather.io/ui';
 import { createMoneyFromDecimal } from '@leather.io/utils';
 
+import { clarityVersionDeprecationNotice } from '@shared/rpc/methods/stx-deploy-contract';
+
 import { useConvertCryptoCurrencyToFiatAmount } from '@app/common/hooks/use-convert-to-fiat-amount';
 import { AccountStacksAddress } from '@app/components/account/account-stacks-address';
 import { FeeEditor } from '@app/features/fee-editor/fee-editor';
@@ -27,9 +29,6 @@ import {
   getUnsignedStacksDeployContractOptions,
   isClarityVersionRequested,
 } from './rpc-stx-deploy-contract.utils';
-
-const clarityVersionDeprecationNotice =
-  'This app asked for a specific Clarity version. Leather no longer supports that, so the contract will deploy with the latest Clarity version.';
 
 export function RpcStxDeployContract() {
   const { address, isLoadingBalance, network, publicKey } = useStacksRpcTransactionRequestContext();
@@ -64,7 +63,7 @@ export function RpcStxDeployContract() {
     await signAndBroadcastTransaction(unsignedTx);
   }
   const onApprove = useStacksRpcTransactionRequestApproval(onApproveTransaction);
-  const showClarityVersionNotice = useMemo(() => isClarityVersionRequested(), []);
+  const showClarityVersionNotice = isClarityVersionRequested();
 
   return (
     <RpcTransactionRequestLayout

@@ -7,6 +7,7 @@ import { SharedComponentsSelectors } from '@tests/selectors/shared-component.sel
 
 import type { RpcParams, stxDeployContract } from '@leather.io/rpc';
 
+import { clarityVersionDeprecationNotice } from '@shared/rpc/methods/stx-deploy-contract';
 import { RpcErrorMessage } from '@shared/rpc/methods/validation.utils';
 
 import { test } from '../../fixtures/fixtures';
@@ -17,9 +18,6 @@ test.describe('RPC: stx_deployContract', () => {
     await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
     await page.goto('localhost:3000');
   });
-
-  const clarityVersionDeprecationNotice =
-    'This app asked for a specific Clarity version. Leather no longer supports that, so the contract will deploy with the latest Clarity version.';
 
   function checkVisibleContent(context: BrowserContext) {
     return async (buttonToPress: 'Cancel' | 'Confirm', expectClarityVersionNotice: boolean) => {
