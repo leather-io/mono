@@ -7,6 +7,7 @@ export const featureGates = [
   'ledgerStacks',
   'ledgerBitcoin',
   'none',
+  'splashScreen',
 ] as const;
 export type FeatureGate = (typeof featureGates)[number];
 

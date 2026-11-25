@@ -6,6 +6,7 @@ import {
   getAccountDisplayPreferencesKeyedByType,
   getChainDisplayLabel,
 } from '@/shared/display-preference';
+import { SettingsSelectors } from '@/shared/selectors/settings.selectors';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
 
@@ -48,6 +49,7 @@ export function AccountIdentifierSheet({ sheetRef }: AccountIdentifierSheetProps
             onPress={() => onUpdateAccountDisplayPreference(accountDisplayPref.type)}
             type="radio"
             isRadioSelected={settings.accountDisplayPreference.type === accountDisplayPref.type}
+            testID={`${SettingsSelectors.AccountIdentifierOption}-${accountDisplayPref.type}`}
           />
         ))}
       </SettingsList>

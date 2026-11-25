@@ -1,5 +1,7 @@
 import { useRef } from 'react';
 
+import { RpcStacksSelectors } from '@/shared/selectors/rpc-stacks.selectors';
+
 import { Approver, type SheetInstance } from '@leather.io/ui/native';
 
 import { MemoCard } from './components/memo-card';
@@ -16,7 +18,7 @@ export function MemoSection({ memo, disabled, onChangeMemo }: MemoSectionProps) 
 
   return (
     <>
-      <Approver.Section>
+      <Approver.Section testID={RpcStacksSelectors.MemoSection}>
         <MemoCard
           memo={memo}
           disabled={disabled}

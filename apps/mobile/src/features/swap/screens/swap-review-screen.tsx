@@ -25,6 +25,7 @@ import { SlippageInfoSheet } from '@/features/swap/components/slippage-info-shee
 import { SlippageSelectorSheet } from '@/features/swap/components/slippage-selector/slippage-selector-sheet';
 import { formatSwapRate, sumFeesInQuoteCurrency } from '@/features/swap/swap.utils';
 import { useAndroidBackHandler } from '@/hooks/use-android-back-handler';
+import { SwapSelectors } from '@/shared/selectors/swap.selectors';
 import { formatCurrency, formatPercentage } from '@/utils/currency-formatter';
 import { useBottomSheetModal } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/core/macro';
@@ -200,6 +201,7 @@ function SwapReviewContent({ liveEstimate }: SwapReviewContentProps) {
         <Button
           disabled={!swapState.canSubmit || submissionStatus !== 'idle'}
           onPress={handleConfirm}
+          testID={SwapSelectors.ConfirmButton}
         >{t`Confirm`}</Button>
       </SwapReviewFooter>
 

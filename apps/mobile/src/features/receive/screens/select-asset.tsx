@@ -5,7 +5,7 @@ import { FullHeightSheetHeader } from '@/components/sheets/full-height-sheet/ful
 import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/full-height-sheet.layout';
 import { useReceiveFlowContext } from '@/features/receive/receive-flow-provider';
 import { useCopyAddress } from '@/hooks/use-copy-address';
-import { TestId } from '@/shared/test-id';
+import { SharedSelectors } from '@/shared/selectors/shared.selectors';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
@@ -85,7 +85,9 @@ export function SelectAsset() {
             title={t`Select asset`}
             subtitle={t`Receive`}
             leftElement={
-              canGoBack ? <HeaderBackButton onPress={goBack} testID={TestId.backButton} /> : null
+              canGoBack ? (
+                <HeaderBackButton onPress={goBack} testID={SharedSelectors.BackButton} />
+              ) : null
             }
           />
         }

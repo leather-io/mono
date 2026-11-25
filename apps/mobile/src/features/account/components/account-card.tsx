@@ -36,6 +36,7 @@ export function AccountCard({
   isLoading,
   width,
   testID,
+  iconTestID,
   isSelected,
 }: AccountCardProps) {
   if (isLoading) {
@@ -54,7 +55,7 @@ export function AccountCard({
       testID={testID}
     >
       <Box flexDirection="row" justifyContent="space-between">
-        <AccountAvatar icon={icon} />
+        <AccountAvatar icon={icon} testID={iconTestID} />
         {address}
       </Box>
       <Box

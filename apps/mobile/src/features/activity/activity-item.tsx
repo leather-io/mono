@@ -1,6 +1,7 @@
 import { memo } from 'react';
 
 import { Balance } from '@/components/balance/balance';
+import { ActivitySelectors } from '@/shared/selectors/activity.selectors';
 import { useSettings } from '@/store/settings/settings';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
@@ -52,6 +53,7 @@ function ActivityItemComponent({ item }: ActivityItemProps) {
   return (
     <Cell.Root
       pressable={Boolean(activityLink)}
+      testID={ActivitySelectors.ActivityItem}
       onPress={activityLink ? () => openUrl(activityLink) : undefined}
     >
       <Cell.Icon>

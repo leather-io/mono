@@ -14,7 +14,7 @@ import { RemoveWalletSheet } from '@/features/settings/wallet-and-accounts/remov
 import { WalletNameSheet } from '@/features/settings/wallet-and-accounts/wallet-name-sheet';
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { useAuthentication } from '@/hooks/use-authentication';
-import { TestId } from '@/shared/test-id';
+import { WalletSettingsSelectors } from '@/shared/selectors/wallet-settings.selectors';
 import { useSettings } from '@/store/settings/settings';
 import { useAppDispatch } from '@/store/utils';
 import { WalletLoader, useWallets } from '@/store/wallets/wallets.read';
@@ -161,7 +161,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
                   params: { fingerprint: wallet.fingerprint, wallet: wallet.fingerprint },
                 });
               }}
-              testID={TestId.walletSettingsViewSecretKeyButton}
+              testID={WalletSettingsSelectors.ViewSecretKeyButton}
             />
             <SettingsListItem
               title={t`Rename wallet`}
@@ -169,7 +169,7 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               onPress={() => {
                 walletNameSheetRef.current?.present();
               }}
-              testID={TestId.walletSettingsRenameWalletButton}
+              testID={WalletSettingsSelectors.RenameWalletButton}
             />
             <SettingsListItem
               title={t`Remove wallet`}
@@ -177,13 +177,14 @@ function ConfigureWallet({ wallet }: ConfigureWalletProps) {
               onPress={() => {
                 removeWalletSheetRef.current?.present();
               }}
-              testID={TestId.walletSettingsRemoveWalletButton}
+              testID={WalletSettingsSelectors.RemoveWalletButton}
             />
           </SettingsList>
           {releaseWaitlistFeatures && (
             <Box px="5">
               <Accordion
                 label={t`Advanced options`}
+                testID={WalletSettingsSelectors.AdvancedOptionsAccordion}
                 content={
                   <SettingsList mx="-5">
                     {Object.values(getUnavailableFeatures({ iconColor: 'ink.text-subdued' })).map(

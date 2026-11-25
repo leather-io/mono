@@ -1,6 +1,7 @@
 import { WarningSheetLayout } from '@/components/sheets/warning-sheet.layout';
 import { useOpenUrl } from '@/features/browser/browser/use-open-url';
 import { LEATHER_GUIDES_MOBILE_REMOVE_WALLET } from '@/shared/constants';
+import { WalletSettingsSelectors } from '@/shared/selectors/wallet-settings.selectors';
 import { t } from '@lingui/core/macro';
 
 import { type SheetRef } from '@leather.io/ui/native';
@@ -19,6 +20,8 @@ export function RemoveWalletSheet({ sheetRef, onSubmit }: RemoveWalletSheetProps
       variant="critical"
       onSubmit={onSubmit}
       onPressSupport={() => openUrl(LEATHER_GUIDES_MOBILE_REMOVE_WALLET)}
+      submitTestId={WalletSettingsSelectors.RemoveWalletContinueButton}
+      cancelTestId={WalletSettingsSelectors.RemoveWalletCancelButton}
     />
   );
 }

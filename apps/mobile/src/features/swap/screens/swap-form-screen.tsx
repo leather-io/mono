@@ -5,6 +5,7 @@ import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/ful
 import { getAmountErrorMessage } from '@/features/swap/components/amount-field/amount-field-error-messages';
 import { AmountPresets } from '@/features/swap/components/amount-presets';
 import { QuotePreview } from '@/features/swap/components/quote-preview/quote-preview';
+import { SwapSelectors } from '@/shared/selectors/swap.selectors';
 import { t } from '@lingui/core/macro';
 
 import { currencyDecimalsMap } from '@leather.io/constants';
@@ -72,6 +73,7 @@ export function SwapFormScreen({ liveEstimate, onPressReview }: SwapFormScreenPr
               <AssetSelectorToggle
                 asset={state.baseSwapAsset?.asset}
                 onPress={() => actions.openAssetSelector('base')}
+                testID={SwapSelectors.BaseAssetToggle}
               />
               <AssetBalance
                 balance={state.baseSwapAsset?.balance}
@@ -92,6 +94,7 @@ export function SwapFormScreen({ liveEstimate, onPressReview }: SwapFormScreenPr
                 asset={state.targetSwapAsset?.asset}
                 onPress={() => actions.openAssetSelector('target')}
                 disabled={state.baseSwapAsset === null}
+                testID={SwapSelectors.TargetAssetToggle}
               />
               <AssetBalance
                 balance={state.targetSwapAsset?.balance}
@@ -115,7 +118,11 @@ export function SwapFormScreen({ liveEstimate, onPressReview }: SwapFormScreenPr
           allowNextValue={validateDecimalPlaces}
         />
         <Box px="5" mt="2">
-          <Button disabled={!canSubmit} onPress={onPressReview}>{t`Review`}</Button>
+          <Button
+            disabled={!canSubmit}
+            onPress={onPressReview}
+            testID={SwapSelectors.ReviewButton}
+          >{t`Review`}</Button>
         </Box>
       </Box>
 
