@@ -13,7 +13,6 @@ import type { ReceiveView } from '@app/common/receive/receive';
 import { useReceiveDialog } from '@app/common/receive/use-receive-dialog-context';
 import { whenPageMode } from '@app/common/utils';
 import { openIndexPageInNewTab } from '@app/common/utils/open-in-new-tab';
-import { useFlags } from '@app/features/feature-flags';
 import { useCurrentNetworkState } from '@app/store/networks/networks.hooks';
 
 interface TokenDetailsPillButtonProps {
@@ -71,7 +70,6 @@ export function TokenDetailsActionsRow({
   const navigate = useNavigate();
   const navigateToSendForm = useNavigateToSendForm();
   const { showReceive } = useReceiveDialog();
-  const { releaseOnramperBuy } = useFlags();
   const swapAvailability = useSwapAvailability();
   const { isMainnet } = useCurrentNetworkState();
 
@@ -108,7 +106,7 @@ export function TokenDetailsActionsRow({
         onClick={() => void navigateToSendForm(assetId)}
         testId="token-details-send-btn"
       />
-      {releaseOnramperBuy && isMainnet && (
+      {isMainnet && (
         <TokenDetailsPillButton
           label="Buy"
           disabled={!isBuyEnabled}

@@ -15,7 +15,6 @@ import { CancelStacksTransactionSheet } from '@app/features/dialogs/transaction-
 import { IncreaseBtcFeeSheet } from '@app/features/dialogs/transaction-action-dialog/increase-btc-fee-dialog';
 import { IncreaseStacksTransactionFeeSheet } from '@app/features/dialogs/transaction-action-dialog/increase-stacks-fee-sheet';
 import { RouterErrorBoundary } from '@app/features/errors/app-error-boundary';
-import { useFlags } from '@app/features/feature-flags';
 import { LedgerFlowProvider } from '@app/features/ledger/flow/ledger-flow.context';
 import { TokenDetails } from '@app/features/token/token-details';
 import { AddWallet } from '@app/pages/add-wallet/add-wallet';
@@ -58,8 +57,6 @@ export function AppRoutes() {
 const sentryCreateBrowserRouter = Sentry.wrapCreateBrowserRouterV7(createHashRouter);
 
 function useAppRoutes() {
-  const { releaseOnramperBuy, releaseOnramperSell } = useFlags();
-
   return sentryCreateBrowserRouter(
     createRoutesFromElements(
       <Route
@@ -128,27 +125,23 @@ function useAppRoutes() {
             }
           />
 
-          {releaseOnramperBuy && (
-            <Route
-              path={RouteUrls.Fund}
-              element={
-                <AccountGate>
-                  <FundPage />
-                </AccountGate>
-              }
-            />
-          )}
+          <Route
+            path={RouteUrls.Fund}
+            element={
+              <AccountGate>
+                <FundPage />
+              </AccountGate>
+            }
+          />
 
-          {releaseOnramperSell && (
-            <Route
-              path={RouteUrls.Sell}
-              element={
-                <AccountGate>
-                  <SellPage />
-                </AccountGate>
-              }
-            />
-          )}
+          <Route
+            path={RouteUrls.Sell}
+            element={
+              <AccountGate>
+                <SellPage />
+              </AccountGate>
+            }
+          />
 
           {sendCryptoAssetFormRoutes}
 
