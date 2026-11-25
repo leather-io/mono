@@ -1,8 +1,8 @@
 import { type RefObject } from 'react';
-import { type TextInput as RNTextInput } from 'react-native';
+import { type TextInputInstance } from 'react-native';
 
 export interface SearchInputProps {
-  textInputRef: RefObject<RNTextInput | null>;
+  textInputRef: RefObject<TextInputInstance | null>;
   textUrl: string;
   setTextUrl(textUrl: string): void;
   onSubmit(): void;

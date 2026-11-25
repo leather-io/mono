@@ -38,9 +38,7 @@ export type PressableRestyleProps = OpacityProps<Theme> &
   LayoutProps<Theme> &
   PositionProps<Theme>;
 
-const AnimatedRestylePressable = Animated.createAnimatedComponent<
-  PressableRestyleProps & RNPressableProps
->(
+const AnimatedRestylePressable = Animated.createAnimatedComponent(
   createRestyleComponent<PressableRestyleProps & RNPressableProps, Theme>(
     [
       backgroundColorShorthand,

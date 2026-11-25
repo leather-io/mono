@@ -101,27 +101,28 @@ function useStableTargetAmounts({
   return lastStableAmounts.current;
 }
 
+const pulseDuration = 350;
+const pulseEasing = Easing.inOut(Easing.cubic);
+
 function usePulsingAnimation(enabled: boolean) {
-  const duration = 350;
-  const easing = Easing.inOut(Easing.cubic);
   const opacity = useDerivedValue(() => {
-    if (!enabled) return withTiming(1, { duration, easing });
+    if (!enabled) return withTiming(1, { duration: pulseDuration, easing: pulseEasing });
 
     return withRepeat(
       withSequence(
         withTiming(0.6, {
-          duration,
-          easing,
+          duration: pulseDuration,
+          easing: pulseEasing,
         }),
         withTiming(0.85, {
-          duration,
-          easing,
+          duration: pulseDuration,
+          easing: pulseEasing,
         })
       ),
       -1,
       true
     );
-  }, [enabled]);
+  });
 
   return useAnimatedStyle(() => ({ opacity: opacity.value }));
 }
