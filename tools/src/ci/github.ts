@@ -125,14 +125,3 @@ export function writeSummary(markdown: string): void {
   if (summaryPath) appendFileSync(summaryPath, `${markdown}\n`);
   console.log(markdown);
 }
-
-export function describeError(error: unknown): string {
-  const message = error instanceof Error ? error.message : String(error);
-  return message.slice(0, maxErrorLength);
-}
-
-export function describeZodError(error: z.ZodError): string {
-  return error.issues
-    .map(issue => `${issue.path.map(String).join('.') || 'value'}: ${issue.message}`)
-    .join('; ');
-}

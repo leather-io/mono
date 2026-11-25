@@ -1,8 +1,8 @@
-import { existsSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-import { buildClassifierArgs, classifierPromptPath } from './classifier.js';
-import { buildPrompt, decideByRules } from './rules.js';
+import { tierJsonSchema } from './decision.js';
+import { buildPrompt, classifierPromptPath, decideByRules } from './rules.js';
 import type { PullRequestFile } from './schemas.js';
 
 function file(filename: string, overrides: Partial<PullRequestFile> = {}): PullRequestFile {
@@ -114,16 +114,11 @@ describe('buildPrompt', () => {
   });
 });
 
-describe('buildClassifierArgs', () => {
-  it('gives the classifier no tools, its markdown prompt and the review count schema', () => {
-    const args = buildClassifierArgs();
-    expect(args[args.indexOf('--tools') + 1]).toBe('');
-    expect(args).not.toContain('--allowedTools');
-    expect(args[args.indexOf('--system-prompt-file') + 1]).toBe(classifierPromptPath);
-    expect(classifierPromptPath).toMatch(/\.github\/prompts\/review-gate-classifier\.md$/);
-    expect(existsSync(classifierPromptPath)).toBe(true);
-    expect(JSON.parse(args[args.indexOf('--json-schema') + 1] ?? '{}')).toMatchObject({
-      required: ['reviews', 'confidence', 'reason', 'summary'],
-    });
+describe('the classifier prompt', () => {
+  it('names every field the classifier answers with', () => {
+    const prompt = readFileSync(classifierPromptPath, 'utf8');
+    for (const name of tierJsonSchema.required) {
+      expect(prompt, `the prompt never names ${name}`).toMatch(new RegExp(`\\b${name}\\b`, 'i'));
+    }
   });
 });

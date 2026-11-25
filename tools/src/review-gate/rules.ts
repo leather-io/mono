@@ -1,10 +1,20 @@
-import type { Tier } from './decision.js';
+import path from 'node:path';
+
+import { getMonorepoRoot } from '../utils/paths.js';
+import { type Decision, requireTwoReviews } from './decision.js';
 import type { PullRequest, PullRequestFile } from './schemas.js';
 
 const maxChangedFiles = 30;
 const maxChangedLines = 1000;
 const maxPromptBytes = 100_000;
 const shownFileCount = 5;
+
+export const classifierPromptPath = path.join(
+  getMonorepoRoot(),
+  '.github',
+  'prompts',
+  'review-gate-classifier.md'
+);
 
 const assetExtensionPattern =
   /\.(?:png|jpe?g|gif|webp|avif|ico|bmp|woff2?|ttf|otf|eot|mp4|webm|mov|mp3|wav|pdf)$/i;
@@ -68,32 +78,38 @@ export function buildPrompt(
   return `Classify this pull request. It is given as JSON.\n\n${JSON.stringify(payload, null, 2)}`;
 }
 
-function requireTwoReviews(reason: string): Tier {
-  return { reviews: 2, confidence: 'high', reason, summary: reason };
-}
-
 export function decideByRules(
   pullRequest: ClassifiedPullRequest,
   files: readonly PullRequestFile[],
   { baseBlobs, sensitiveFiles = [] }: RuleOptions = {}
-): Tier | null {
+): Decision | null {
   if (sensitiveFiles.length > 0) {
-    return requireTwoReviews(`Touches sensitive paths: ${summariseFiles(sensitiveFiles)}.`);
+    return requireTwoReviews(
+      `Touches sensitive paths: ${summariseFiles(sensitiveFiles)}.`,
+      'rules'
+    );
   }
   if (files.length > maxChangedFiles) {
-    return requireTwoReviews(`Changes ${files.length} files, more than ${maxChangedFiles}.`);
+    return requireTwoReviews(
+      `Changes ${files.length} files, more than ${maxChangedFiles}.`,
+      'rules'
+    );
   }
   const changedLines = files.reduce((sum, file) => sum + file.additions + file.deletions, 0);
   if (changedLines > maxChangedLines) {
-    return requireTwoReviews(`Changes ${changedLines} lines, more than ${maxChangedLines}.`);
+    return requireTwoReviews(
+      `Changes ${changedLines} lines, more than ${maxChangedLines}.`,
+      'rules'
+    );
   }
   const hiddenDiffs = findHiddenDiffs(files, baseBlobs);
   if (hiddenDiffs.length > 0) {
-    return requireTwoReviews(`GitHub omits the diff for ${summariseFiles(hiddenDiffs)}.`);
+    return requireTwoReviews(`GitHub omits the diff for ${summariseFiles(hiddenDiffs)}.`, 'rules');
   }
   if (Buffer.byteLength(buildPrompt(pullRequest, files)) > maxPromptBytes) {
     return requireTwoReviews(
-      `The diff is larger than the ${maxPromptBytes} bytes the classifier reads.`
+      `The diff is larger than the ${maxPromptBytes} bytes the classifier reads.`,
+      'rules'
     );
   }
   return null;

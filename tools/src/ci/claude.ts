@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { type CommandRunner, runCommand } from './exec.js';
+import { readRequiredEnv } from './github.js';
 
 export const claudeModel = 'claude-opus-5-5';
 const claudeEffort = 'high';
@@ -23,7 +24,7 @@ interface ClaudeArgsOptions {
   readonly schema: Record<string, unknown>;
 }
 
-export function buildClaudeArgs({ systemPromptPath, schema }: ClaudeArgsOptions): string[] {
+function buildClaudeArgs({ systemPromptPath, schema }: ClaudeArgsOptions): string[] {
   return [
     '--print',
     '--output-format',
@@ -45,38 +46,37 @@ export function buildClaudeArgs({ systemPromptPath, schema }: ClaudeArgsOptions)
   ];
 }
 
-export function parseClaudeOutput(text: string): unknown {
+function parseClaudeOutput(text: string): unknown {
   try {
     const parsed = resultSchema.safeParse(JSON.parse(text));
     if (!parsed.success || parsed.data.is_error || parsed.data.structured_output === undefined) {
-      return null;
+      return undefined;
     }
     return parsed.data.structured_output;
   } catch {
-    return null;
+    return undefined;
   }
 }
 
-interface RunClaudeOptions {
-  readonly args: readonly string[];
+interface RunClaudeOptions extends ClaudeArgsOptions {
   readonly prompt: string;
   readonly cwd: string;
 }
 
 export function runClaude(
-  { args, prompt, cwd }: RunClaudeOptions,
+  { prompt, cwd, ...argsOptions }: RunClaudeOptions,
   run: CommandRunner = runCommand
 ): unknown {
-  const result = run(process.env.CLAUDE_BIN || 'claude', args, {
+  const result = run(readRequiredEnv('CLAUDE_BIN'), buildClaudeArgs(argsOptions), {
     cwd,
     input: prompt,
     env: withoutJobCredentials(process.env),
     timeoutMs: claudeTimeoutMs,
   });
   process.stderr.write(result.stderr);
-  const output = parseClaudeOutput(result.stdout);
-  if (result.status !== 0 || output === null) {
-    throw new Error(`Claude exited with ${result.status} and no structured output`);
+  const output = result.status === 0 ? parseClaudeOutput(result.stdout) : undefined;
+  if (output === undefined) {
+    console.log(`::warning::Claude exited with ${result.status} and no structured output`);
   }
   return output;
 }

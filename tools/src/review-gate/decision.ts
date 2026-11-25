@@ -1,11 +1,9 @@
 import { z } from 'zod';
 
-import { claudeModel } from '../ci/claude.js';
-import { describeZodError } from '../ci/github.js';
-import type { CommitStatus } from './schemas.js';
+import { maxStatusDescriptionLength } from './approvals.js';
+import type { CommitStatus, PullRequest } from './schemas.js';
 
 export const decisionContext = 'review-gate/decision';
-const maxStatusDescriptionLength = 140;
 const truncationMarker = '...';
 const fallbackMarker = ' (fallback)';
 
@@ -29,32 +27,27 @@ const tierSchema = z.object({
   reason: z.string(),
   summary: z.string(),
 });
-export type Tier = z.infer<typeof tierSchema>;
+type Tier = z.infer<typeof tierSchema>;
 
-type DecisionSource = 'rules' | 'model' | 'fallback';
+export type DecisionSource = 'rules' | 'model' | 'fallback';
 export type Decision = Tier & { readonly source: DecisionSource };
 
-function failClosed(reason: string): Decision {
-  return { reviews: 2, confidence: 'high', reason, summary: reason, source: 'fallback' };
+export function requireTwoReviews(reason: string, source: DecisionSource): Decision {
+  return { reviews: 2, confidence: 'high', reason, summary: reason, source };
 }
 
-interface ResolveDecisionInput {
-  readonly ruleDecision?: Tier | null;
-  readonly structuredOutput?: unknown;
-}
-
-export function resolveDecision({
-  ruleDecision,
-  structuredOutput,
-}: ResolveDecisionInput): Decision {
-  if (ruleDecision) return { ...ruleDecision, source: 'rules' };
+export function resolveDecision(structuredOutput: unknown): Decision {
   if (structuredOutput === undefined) {
-    return failClosed('Claude returned no answer, so 2 reviews are required.');
+    return requireTwoReviews('Claude returned no answer, so 2 reviews are required.', 'fallback');
   }
   const parsed = tierSchema.safeParse(structuredOutput);
   if (!parsed.success) {
-    return failClosed(
-      `Claude's answer was invalid (${describeZodError(parsed.error)}), so 2 reviews are required.`
+    const issues = parsed.error.issues
+      .map(issue => `${issue.path.map(String).join('.') || 'value'}: ${issue.message}`)
+      .join('; ');
+    return requireTwoReviews(
+      `Claude's answer was invalid (${issues}), so 2 reviews are required.`,
+      'fallback'
     );
   }
   const tier = parsed.data;
@@ -67,6 +60,26 @@ export function resolveDecision({
     };
   }
   return { ...tier, source: 'model' };
+}
+
+const classifierAnswerSchema = z.object({
+  base: z.string(),
+  head: z.string(),
+  answer: z.unknown(),
+});
+
+export function formatClassifierAnswer(pullRequest: PullRequest, answer: unknown): string {
+  return JSON.stringify({ base: pullRequest.base.sha, head: pullRequest.head.sha, answer });
+}
+
+export function readClassifierAnswer(raw: string | undefined, pullRequest: PullRequest): unknown {
+  if (!raw) return undefined;
+  try {
+    const { base, head, answer } = classifierAnswerSchema.parse(JSON.parse(raw));
+    return base === pullRequest.base.sha && head === pullRequest.head.sha ? answer : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 export function formatReviewCount(reviews: number): string {
@@ -85,6 +98,10 @@ export function describeDecision(decision: DescribedDecision): string {
 
 function isFallback(status: CommitStatus): boolean {
   return status.description?.startsWith(`${formatReviewCount(2)}${fallbackMarker}:`) ?? false;
+}
+
+export function hasPostedDecision(statuses: readonly CommitStatus[]): boolean {
+  return statuses.some(status => status.context === decisionContext && !isFallback(status));
 }
 
 function findAnsweredDecisions(
@@ -124,14 +141,4 @@ export function requiredApprovals(
         status.state === 'success' && status.description?.startsWith(`${formatReviewCount(1)}:`)
     );
   return allowSingleReview ? 1 : 2;
-}
-
-const sourceLabels: Record<DecisionSource, string> = {
-  rules: 'path rules',
-  model: `Claude (${claudeModel})`,
-  fallback: 'fallback, because Claude gave no usable answer',
-};
-
-export function describeSource(source: DecisionSource): string {
-  return sourceLabels[source];
 }

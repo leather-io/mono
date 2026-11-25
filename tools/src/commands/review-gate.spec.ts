@@ -368,9 +368,13 @@ describe('review-gate commands', () => {
     return readFileSync(summaryFile, 'utf8');
   }
 
-  test('registers the check and app token steps', () => {
+  test('registers the classify, check and app token steps', () => {
     const gate = program().commands.find(command => command.name() === 'review-gate');
-    expect(gate?.commands.map(command => command.name())).toEqual(['check', 'app-token']);
+    expect(gate?.commands.map(command => command.name())).toEqual([
+      'classify',
+      'check',
+      'app-token',
+    ]);
     const appToken = gate?.commands.find(command => command.name() === 'app-token');
     expect(appToken?.commands.map(command => command.name())).toEqual(['create', 'revoke']);
   });
@@ -508,12 +512,60 @@ describe('review-gate commands', () => {
     });
 
     describe('deciding how many reviews are needed', () => {
+      async function classifyThenCheck(pr: string) {
+        const outputFile = path.join(scratch, 'output');
+        rmSync(outputFile, { force: true });
+        vi.stubEnv('GITHUB_OUTPUT', outputFile);
+        await run(['classify', '--pr', pr]);
+        const output = existsSync(outputFile) ? readFileSync(outputFile, 'utf8') : '';
+        vi.stubEnv('CLASSIFIER_ANSWER', /^answer=(.*)$/m.exec(output)?.[1]);
+        await run(['check', '--pr', pr]);
+      }
+
+      test('falls back to two reviews when the answer is for other commits', async () => {
+        github.pullRequests.set(7, pullRequest(7));
+        github.files.set(7, [changedFile(plainFile)]);
+        vi.stubEnv(
+          'CLASSIFIER_ANSWER',
+          JSON.stringify({
+            base: baseSha,
+            head: 'old-sha',
+            answer: { reviews: 1, confidence: 'high', reason: 'Copy.', summary: 'Footer copy' },
+          })
+        );
+
+        await run(['check', '--pr', '7']);
+
+        expect(latestStatus(headSha, 'review-gate/decision')?.description).toContain(
+          '2 reviews required (fallback)'
+        );
+      });
+
+      test('decides a sensitive path by the rules whatever answer it is handed', async () => {
+        github.pullRequests.set(7, pullRequest(7));
+        github.files.set(7, [changedFile(sensitiveFile)]);
+        vi.stubEnv(
+          'CLASSIFIER_ANSWER',
+          JSON.stringify({
+            base: baseSha,
+            head: headSha,
+            answer: { reviews: 1, confidence: 'high', reason: 'Copy.', summary: 'Footer copy' },
+          })
+        );
+
+        await run(['check', '--pr', '7']);
+
+        expect(latestStatus(headSha, 'review-gate/decision')?.description).toContain(
+          '2 reviews required: Touches sensitive paths'
+        );
+      });
+
       test('lets Claude decide a small change, then passes with one team approval', async () => {
         github.pullRequests.set(7, pullRequest(7));
         github.files.set(7, [changedFile(plainFile)]);
         github.reviews.set(7, [approval(reviewer)]);
 
-        await run(['check', '--pr', '7']);
+        await classifyThenCheck('7');
 
         expect(latestStatus(headSha, 'review-gate/decision')).toEqual(
           decision('1 review required: Footer copy')
@@ -546,7 +598,7 @@ describe('review-gate commands', () => {
             ? json({ truncated: true, tree: [] })
             : undefined;
 
-        await run(['check', '--pr', '7']);
+        await classifyThenCheck('7');
 
         expect(existsSync(claudeLog)).toBe(false);
         expect(latestStatus(headSha, 'review-gate/decision')?.description).toContain(
@@ -565,7 +617,7 @@ describe('review-gate commands', () => {
           summary: 'Footer copy',
         });
 
-        await run(['check', '--pr', '7']);
+        await classifyThenCheck('7');
 
         expect(latestStatus(headSha, 'review-gate/decision')).toEqual(
           decision('2 reviews required: Footer copy')
@@ -578,7 +630,7 @@ describe('review-gate commands', () => {
         github.files.set(7, [changedFile(sensitiveFile)]);
         github.reviews.set(7, [approval(reviewer)]);
 
-        await run(['check', '--pr', '7']);
+        await classifyThenCheck('7');
 
         expect(existsSync(claudeLog)).toBe(false);
         expect(latestStatus(headSha, 'review-gate/decision')?.description).toContain(
@@ -592,7 +644,7 @@ describe('review-gate commands', () => {
         github.files.set(7, [changedFile(plainFile)]);
         github.statuses.set(headSha, [decision('2 reviews required: Big change')]);
 
-        await run(['check', '--pr', '7']);
+        await classifyThenCheck('7');
 
         expect(existsSync(claudeLog)).toBe(false);
         expect(latestStatus(headSha, 'review-gate')?.description).toBe('0 of 2 required approvals');
@@ -604,14 +656,14 @@ describe('review-gate commands', () => {
         github.reviews.set(7, [approval(reviewer)]);
         vi.stubEnv('FAKE_CLAUDE_EXIT', '1');
 
-        await run(['check', '--pr', '7']);
+        await classifyThenCheck('7');
         expect(latestStatus(headSha, 'review-gate/decision')?.description).toContain(
           '2 reviews required (fallback)'
         );
         expect(latestStatus(headSha, 'review-gate')?.state).toBe('failure');
 
         vi.stubEnv('FAKE_CLAUDE_EXIT', '0');
-        await run(['check', '--pr', '7']);
+        await classifyThenCheck('7');
         expect(latestStatus(headSha, 'review-gate')).toEqual(
           gateStatus('review-gate', 'success', '1 of 1 required approvals')
         );
@@ -623,7 +675,7 @@ describe('review-gate commands', () => {
         github.statuses.set(headSha, [decision('1 review required: Footer copy')]);
         github.reviews.set(7, [approval(reviewer)]);
 
-        await run(['check', '--pr', '7']);
+        await classifyThenCheck('7');
 
         expect(existsSync(claudeLog)).toBe(false);
         expect(latestStatus(headSha, 'review-gate')?.description).toBe('1 of 1 required approvals');
@@ -637,7 +689,7 @@ describe('review-gate commands', () => {
         ]);
         github.reviews.set(7, [approval(reviewer)]);
 
-        await run(['check', '--pr', '7']);
+        await classifyThenCheck('7');
 
         expect(latestStatus(headSha, 'review-gate')?.description).toBe('1 of 2 required approvals');
       });
@@ -652,7 +704,7 @@ describe('review-gate commands', () => {
         github.files.set(7, [changedFile(plainFile)]);
         github.reviews.set(7, [approval(reviewer)]);
 
-        await run(['check', '--pr', '7']);
+        await classifyThenCheck('7');
 
         expect(existsSync(claudeLog)).toBe(false);
         expect(latestStatus(headSha, 'review-gate/decision')).toBeUndefined();

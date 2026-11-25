@@ -14,12 +14,16 @@ nothing.
 ```
 pull_request, pull_request_review  ─▶ repo:review-gate-dispatch ─▶ workflow_dispatch on dev ─┐
                                                                                            ▼
-                         check: pending ─▶ classify (once per head) ─▶ count approvals
+         job classify: read-only token, asks Claude (once per head)
+                                                                                           ▼
+         job check: App token, records the decision, counts approvals
 ```
 
 | Command            | Does                                                                           |
 | ------------------ | ------------------------------------------------------------------------------ |
-| `check`            | classifies the head unless it already has an answer, records                   |
+| `classify`         | asks Claude about a head that has no decision and that the path rules do not   |
+|                    | decide, and writes the answer to the step output                               |
+| `check`            | decides the head unless it already has an answer, records                      |
 |                    | `review-gate/decision`, then counts approvals and posts the `review-gate`      |
 |                    | status                                                                         |
 | `app-token create` | signs the App JWT with KMS and writes an installation token to the step output |
@@ -27,9 +31,15 @@ pull_request, pull_request_review  ─▶ repo:review-gate-dispatch ─▶ workf
 
 Classifying reads the diff between the base and head commits the check started with
 (`compare/<base>...<head>`), so changing the base or the head while it runs cannot change what is
-classified. It applies the path rules (`rules.ts`) first and asks Claude, with no tools and the tier
+classified. The path rules (`rules.ts`) come first, and Claude is asked, with no tools and the tier
 schema, only when none decides. An answer of 1 review with low confidence counts as 2. Anything
-invalid fails closed to 2 reviews, and a fallback is retried on the next check. The decision is read back from the `review-gate/decision` status, and
+invalid fails closed to 2 reviews, and a fallback is retried on the next check.
+
+Claude runs in the `classify` job, which has no environment, no OIDC token and only a read-only
+GitHub token. Its answer reaches the `check` job as a job output naming the two commits it is for.
+`check` applies the path rules itself, uses the answer only when those commits are the ones it
+reads, and parses it against the tier schema, so nothing the `classify` job says can lower a
+decision the rules make. The decision is read back from the `review-gate/decision` status, and
 only one the gate App posted counts.
 
 Sensitive paths live in `.github/review-gate/sensitive-paths.yml` and are matched with `minimatch`,
@@ -53,13 +63,12 @@ nobody dispatched is blocked.
 
 | Module               | Responsibility                                                  |
 | -------------------- | --------------------------------------------------------------- |
-| `rules.ts`           | size limits, hidden diffs, the classifier prompt                |
+| `rules.ts`           | size limits, hidden diffs, the classifier prompt and its path   |
 | `sensitive-paths.ts` | reading and matching the sensitive path list                    |
-| `classifier.ts`      | the classifier's prompt path and Claude arguments               |
 | `decision.ts`        | the tier schema, fail-closed decisions, the status text         |
 | `approvals.ts`       | approvers, fix-issue dispatchers, shared heads, the gate status |
 | `client.ts`          | the GitHub calls, each response checked with `schemas.ts`       |
-| `steps.ts`           | the `check` and `app-token` commands                            |
+| `steps.ts`           | the `classify`, `check` and `app-token` commands                |
 
 `../ci/` holds the shared pieces: the GitHub REST and GraphQL client and Actions helpers
 (`github.ts`), command running (`exec.ts`), step outputs (`outputs.ts`), the App token signed
@@ -83,8 +92,8 @@ request stays blocked.
 
 The gate never checks out or runs pull request code. It reads the pull request and its reviews
 through the API and parses every response against a schema before anything acts on it. Claude only
-ever sees the pull request as data, runs without the App token and the AWS and Actions credentials
-of the job, and its answer is parsed against a schema too. A pull request
+ever sees the pull request as data, runs in a job that never holds the App token or the AWS
+credentials, and its answer is parsed against a schema too. A pull request
 that changes `tools/`, `.github/` or the sensitive path list needs 2 approvals, because it changes
 the gate itself. The job has
 no access to the Actions cache (`cache-mode: none`, pnpm cache off in `setup-tools`), so nothing

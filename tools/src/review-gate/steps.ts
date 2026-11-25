@@ -6,8 +6,9 @@ import {
   revokeInstallationToken,
   writeAppTokenOutput,
 } from '../ci/app-token.js';
-import { runClaude } from '../ci/claude.js';
-import { createGitHubClient, describeError, readRequiredEnv, writeSummary } from '../ci/github.js';
+import { claudeModel, runClaude } from '../ci/claude.js';
+import { createGitHubClient, readRequiredEnv, writeSummary } from '../ci/github.js';
+import { writeStepOutputs } from '../ci/outputs.js';
 import {
   describeGate,
   findApprovers,
@@ -16,19 +17,22 @@ import {
   findSharedHeadPullRequests,
   isDispatcher,
 } from './approvals.js';
-import { buildClassifierArgs } from './classifier.js';
 import { createGateClient } from './client.js';
 import {
   type Decision,
+  type DecisionSource,
   decisionContext,
   describeDecision,
-  describeSource,
+  formatClassifierAnswer,
   formatReviewCount,
   hasAnsweredDecision,
+  hasPostedDecision,
+  readClassifierAnswer,
   requiredApprovals,
   resolveDecision,
+  tierJsonSchema,
 } from './decision.js';
-import { buildPrompt, decideByRules, needsBaseBlob } from './rules.js';
+import { buildPrompt, classifierPromptPath, decideByRules, needsBaseBlob } from './rules.js';
 import type { PullRequest } from './schemas.js';
 import { findSensitiveFiles, readSensitiveGlobs } from './sensitive-paths.js';
 
@@ -41,6 +45,12 @@ const appTokenPermissions: TokenPermissions = {
   members: 'read',
   pull_requests: 'read',
   statuses: 'write',
+};
+
+const sourceLabels: Record<DecisionSource, string> = {
+  rules: 'path rules',
+  model: `Claude (${claudeModel})`,
+  fallback: 'fallback, because Claude gave no usable answer',
 };
 
 type GateClient = ReturnType<typeof createGateClient>;
@@ -59,27 +69,29 @@ function createTokenClient() {
 }
 
 function askClaude(prompt: string): unknown {
-  try {
-    return runClaude({
-      args: buildClassifierArgs(),
-      prompt,
-      cwd: mkdtempSync(path.join(readRequiredEnv('RUNNER_TEMP'), 'review-gate-')),
-    });
-  } catch (error) {
-    console.log(`::warning::Claude did not answer: ${describeError(error)}`);
-    return undefined;
-  }
+  return runClaude({
+    systemPromptPath: classifierPromptPath,
+    schema: tierJsonSchema,
+    prompt,
+    cwd: mkdtempSync(path.join(readRequiredEnv('RUNNER_TEMP'), 'review-gate-')),
+  });
 }
 
-async function classify(github: GateClient, pullRequest: PullRequest): Promise<Decision> {
+async function decideByPaths(github: GateClient, pullRequest: PullRequest) {
   const files = await github.listFiles(pullRequest.base.sha, pullRequest.head.sha);
   const baseBlobs = files.some(needsBaseBlob)
     ? await github.listBaseBlobs(pullRequest.base.sha)
     : undefined;
   const sensitiveFiles = findSensitiveFiles(files, readSensitiveGlobs());
-  const ruleDecision = decideByRules(pullRequest, files, { baseBlobs, sensitiveFiles });
-  if (ruleDecision) return resolveDecision({ ruleDecision });
-  return resolveDecision({ structuredOutput: askClaude(buildPrompt(pullRequest, files)) });
+  return { files, ruleDecision: decideByRules(pullRequest, files, { baseBlobs, sensitiveFiles }) };
+}
+
+async function decide(github: GateClient, pullRequest: PullRequest): Promise<Decision> {
+  const { ruleDecision } = await decideByPaths(github, pullRequest);
+  return (
+    ruleDecision ??
+    resolveDecision(readClassifierAnswer(process.env.CLASSIFIER_ANSWER, pullRequest))
+  );
 }
 
 async function recordDecision(
@@ -97,7 +109,7 @@ async function recordDecision(
   });
   writeSummary(
     `### #${pullRequest.number}: ${formatReviewCount(decision.reviews)}\n\n` +
-      `${decision.reason}\n\nDecided by ${describeSource(decision.source)}, confidence: ${decision.confidence}.`
+      `${decision.reason}\n\nDecided by ${sourceLabels[decision.source]}, confidence: ${decision.confidence}.`
   );
 }
 
@@ -139,27 +151,46 @@ async function countApprovals(
   writeSummary(`#${number}: ${gate.description} on ${headSha}.${dispatchedBy}`);
 }
 
-interface CheckOptions {
+interface PullRequestOptions {
   readonly pr: string;
 }
 
-export async function runCheck({ pr }: CheckOptions): Promise<void> {
+async function readGatedPullRequest(pr: string) {
   const number = Number(pr);
   if (!Number.isInteger(number) || number <= 0) {
     throw new Error(`${pr} is not a pull request number.`);
   }
   const repository = readRequiredEnv('GITHUB_REPOSITORY');
   const github = createGateClient(createTokenClient(), repository);
-  const runUrl = readRequiredEnv('RUN_URL');
   const pullRequest = await github.getPullRequest(number);
   if (pullRequest.state !== 'open' || pullRequest.base.ref !== protectedBaseBranch) {
     writeSummary(
       `#${number}: skipped, it is ${pullRequest.state} and targets ${pullRequest.base.ref}.`
     );
-    return;
+    return null;
   }
-  const headSha = pullRequest.head.sha;
   const fromFork = pullRequest.head.repo?.full_name !== repository;
+  return { github, pullRequest, fromFork };
+}
+
+export async function runClassify({ pr }: PullRequestOptions): Promise<void> {
+  const gated = await readGatedPullRequest(pr);
+  if (!gated || gated.fromFork) return;
+  const { github, pullRequest } = gated;
+  if (hasPostedDecision(await github.listStatuses(pullRequest.head.sha))) return;
+  const { files, ruleDecision } = await decideByPaths(github, pullRequest);
+  if (ruleDecision) return;
+  const answer = askClaude(buildPrompt(pullRequest, files));
+  if (answer === undefined) return;
+  writeStepOutputs({ answer: formatClassifierAnswer(pullRequest, answer) });
+}
+
+export async function runCheck({ pr }: PullRequestOptions): Promise<void> {
+  const gated = await readGatedPullRequest(pr);
+  if (!gated) return;
+  const { github, pullRequest, fromFork } = gated;
+  const runUrl = readRequiredEnv('RUN_URL');
+  const headSha = pullRequest.head.sha;
   try {
     const run: GateRun = {
       github,
@@ -174,7 +205,7 @@ export async function runCheck({ pr }: CheckOptions): Promise<void> {
     });
     const decided = hasAnsweredDecision(await github.listStatuses(headSha), run.trustedCreator);
     if (!fromFork && !decided) {
-      await recordDecision(run, pullRequest, await classify(github, pullRequest));
+      await recordDecision(run, pullRequest, await decide(github, pullRequest));
     }
     await countApprovals(run, pullRequest, fromFork);
   } catch (error) {
