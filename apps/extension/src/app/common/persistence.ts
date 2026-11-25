@@ -12,7 +12,6 @@ import superjson from 'superjson';
 import { ZodError, z } from 'zod';
 
 import { PERSISTENCE_CACHE_TIME } from '@leather.io/constants';
-import { onramperWidgetSignatureQueryPrefix } from '@leather.io/queries';
 
 import { IS_TEST_ENV } from '@shared/environment';
 import { logger } from '@shared/logger';
@@ -49,6 +48,10 @@ const chromeStorageLocalPersister = createAsyncStoragePersister({
 });
 
 const zodIssuesSchema = z.object({ issues: z.array(z.unknown()) });
+
+function shouldPersistQuery(query: Query) {
+  return defaultShouldDehydrateQuery(query) && query.meta?.persist !== false;
+}
 
 function isZodError(error: Error) {
   // `instanceof` check doesn't work when ZodError thrown from within a package
@@ -99,19 +102,13 @@ export const queryClient = new QueryClient({
   },
 });
 
-function shouldDehydrateQuery(query: Query) {
-  return (
-    defaultShouldDehydrateQuery(query) && query.queryKey[0] !== onramperWidgetSignatureQueryPrefix
-  );
-}
-
 export function persistAndRenderApp(renderApp: () => Promise<void>) {
   if (!IS_TEST_ENV) {
     void persistQueryClient({
       queryClient,
       persister: chromeStorageLocalPersister,
       buster: VERSION,
-      dehydrateOptions: { shouldDehydrateQuery },
+      dehydrateOptions: { shouldDehydrateQuery: shouldPersistQuery },
     });
   }
   void renderApp();
