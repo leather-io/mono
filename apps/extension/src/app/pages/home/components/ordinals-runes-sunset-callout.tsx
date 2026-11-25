@@ -8,8 +8,7 @@ import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-a
 import { DismissibleCallout } from './dismissible-callout';
 
 const sunsetCalloutMessageId = 'ordinals-runes-sunset';
-const deprecationGuideUrl =
-  'https://app.leather.io/posts/deprecation-of-ordinals-inscriptions-support-in-leather';
+const deprecationGuideUrl = 'https://docs.leather.io/discontinued/ordinals-inscriptions';
 
 export function OrdinalsRunesSunsetCallout() {
   const { isLoading, utxos } = useCurrentUtxos();
