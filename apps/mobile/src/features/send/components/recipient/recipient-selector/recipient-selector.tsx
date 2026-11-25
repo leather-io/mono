@@ -21,7 +21,6 @@ import {
   useRecipientSuggestions,
 } from '@/features/send/components/recipient/use-recipient-suggestions';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
-import { useSendPasteButton } from '@/shared/feature-flags';
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/core/macro';
 import { type ZodSchema } from 'zod';
@@ -46,7 +45,6 @@ export function RecipientSelector({
   onQrButtonPress,
   currentAccount,
 }: RecipientSelectorProps) {
-  const pasteButtonEnabled = useSendPasteButton();
   const [searchTerm, setSearchTerm] = useState('');
   const recipientSuggestions = useRecipientSuggestions({
     searchTerm,
@@ -75,7 +73,7 @@ export function RecipientSelector({
           />
           {searchTerm.length === 0 && (
             <Box position="absolute" top={12} right={8} flexDirection="row">
-              {pasteButtonEnabled && <IosRecipientPasteButton onPress={handlePasteButtonPress} />}
+              <IosRecipientPasteButton onPress={handlePasteButtonPress} />
               <IconButton
                 label={t`Scan a QR code`}
                 onPress={() => onQrButtonPress('input')}

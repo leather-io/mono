@@ -9,7 +9,6 @@ import { LanguageSheet } from '@/features/settings/language-sheet';
 import SettingsLayout from '@/features/settings/settings-layout';
 import { ThemeSheet } from '@/features/settings/theme-sheet';
 import { supportedLanguages } from '@/i18n/languages';
-import { useBtcConversionUnitFlag, useInternationalizationFlag } from '@/shared/feature-flags';
 import { useSettings } from '@/store/settings/settings';
 import { select, t } from '@lingui/core/macro';
 import { keys } from 'remeda';
@@ -25,9 +24,7 @@ import {
 } from '@leather.io/ui/native';
 
 export default function SettingsDisplayScreen() {
-  const btcConversionUnitEnabled = useBtcConversionUnitFlag();
-  const i18nEnabled = useInternationalizationFlag();
-  const shouldShowLanguageSetting = i18nEnabled && keys(supportedLanguages).length > 1;
+  const shouldShowLanguageSetting = keys(supportedLanguages).length > 1;
   const themeSheetRef = useRef<SheetInstance>(null);
   const bitcoinUnitSheetRef = useRef<SheetInstance>(null);
   const conversionUnitSheetRef = useRef<SheetInstance>(null);
@@ -66,18 +63,14 @@ export default function SettingsDisplayScreen() {
             themeSheetRef.current?.present();
           }}
         />
-        {btcConversionUnitEnabled && (
-          <>
-            <SettingsListItem
-              title={t`Bitcoin unit`}
-              caption={bitcoinUnitPreference.symbol}
-              icon={<BitcoinCircleIcon />}
-              onPress={() => {
-                bitcoinUnitSheetRef.current?.present();
-              }}
-            />
-          </>
-        )}
+        <SettingsListItem
+          title={t`Bitcoin unit`}
+          caption={bitcoinUnitPreference.symbol}
+          icon={<BitcoinCircleIcon />}
+          onPress={() => {
+            bitcoinUnitSheetRef.current?.present();
+          }}
+        />
         {shouldShowLanguageSetting && (
           <SettingsListItem
             title={t`Language`}

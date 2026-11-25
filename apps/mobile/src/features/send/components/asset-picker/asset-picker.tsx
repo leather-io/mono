@@ -9,7 +9,6 @@ import {
   useSip10AccountBalance,
   type useSip10TotalBalance,
 } from '@/queries/balance/sip10-balance.query';
-import { useSip10SendFlag } from '@/shared/feature-flags';
 import { type ListRenderItemInfo } from '@shopify/flash-list';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
@@ -30,12 +29,10 @@ interface AssetPickerFlashListProps {
 }
 
 function AssetPickerFlashList({ sip10Data, header, handleSelectAsset }: AssetPickerFlashListProps) {
-  const isSip10SendEnabled = useSip10SendFlag();
   const sip10Memo = useMemo(() => {
-    if (sip10Data.state === 'success' && isSip10SendEnabled)
-      return sip10Data.value.sip10s.sort(sortSip10Balances);
+    if (sip10Data.state === 'success') return sip10Data.value.sip10s.sort(sortSip10Balances);
     return [];
-  }, [sip10Data, isSip10SendEnabled]);
+  }, [sip10Data]);
 
   return (
     <Sheet.FlashList

@@ -26,7 +26,7 @@ import { useUpdateAnalyticsPlugin } from '@/hooks/use-update-analytics-plugin';
 import { queryClient } from '@/queries/query';
 import { initAppServices } from '@/services/init-app-services';
 import { getSentryDsn } from '@/shared/environment';
-import { featureFlagClient, setupFeatureFlags, useSwapFlag } from '@/shared/feature-flags';
+import { featureFlagClient, setupFeatureFlags } from '@/shared/feature-flags';
 import { useSettings } from '@/store/settings/settings';
 import { persistor, store } from '@/store/store';
 import { trackFirstAppOpen } from '@/utils/analytics';
@@ -67,7 +67,6 @@ function App() {
   useUpdateAnalyticsPlugin();
   usePageViewTracking();
   useOnMount(trackFirstAppOpen);
-  const isSwapEnabled = useSwapFlag();
 
   const { currentAccount } = useSettings();
 
@@ -84,7 +83,7 @@ function App() {
             <SendSheet />
             <ReceiveSheet />
             <RampSheet />
-            {isSwapEnabled ? <SwapSheet /> : null}
+            <SwapSheet />
           </>
         )}
         <AddAccountSheet />
