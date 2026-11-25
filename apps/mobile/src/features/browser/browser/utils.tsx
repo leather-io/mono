@@ -1,5 +1,5 @@
 import { type ComponentProps, type RefObject } from 'react';
-import { type default as ViewShot, captureRef } from 'react-native-view-shot';
+import { type ViewShotRef, captureRef } from 'react-native-view-shot';
 
 import { type App } from '@/store/apps/utils';
 import { getDappMap } from '@/utils/dapps';
@@ -45,7 +45,10 @@ function getScreenshotFile(hostname: string) {
   return new File(Paths.document, `${hostname}_screenshot.jpg`);
 }
 // Capture screenshot using react-native-view-shot
-export async function captureScreenshot(viewShotRef: RefObject<ViewShot | null>, hostname: string) {
+export async function captureScreenshot(
+  viewShotRef: RefObject<ViewShotRef | null>,
+  hostname: string
+) {
   if (!viewShotRef.current) return;
 
   try {
@@ -61,11 +64,7 @@ export async function captureScreenshot(viewShotRef: RefObject<ViewShot | null>,
     const tmpFile = new File(tmpFileUri);
     const screenshotFile = getScreenshotFile(hostname);
 
-    if (screenshotFile.exists) {
-      screenshotFile.delete();
-    }
-
-    tmpFile.copy(screenshotFile);
+    await tmpFile.copy(screenshotFile, { overwrite: true });
 
     return screenshotFile.uri;
   } catch (error) {
