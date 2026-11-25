@@ -21,7 +21,7 @@ export interface ResolvedLearnItem {
   url: string;
 }
 
-const helpCenterBaseUrl = 'https://app.leather.io/support';
+const helpCenterBaseUrl = 'https://leather.io/support';
 
 function resolveLearnItemUrl(item: SanityLearnItem): string {
   if (item.linkType === 'guide' && item.guideSlug) {
