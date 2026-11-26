@@ -4,7 +4,6 @@ import { renderAsset } from '@/features/balances/assets/render-assets';
 import { sortSip10Balances } from '@/features/balances/assets/utils/sort-sip10-balances';
 import { BitcoinBalanceByAccount } from '@/features/balances/bitcoin/bitcoin-balance-by-account';
 import { StacksBalanceByAccount } from '@/features/balances/stacks/stacks-balance-by-account';
-import { useSip10SendFlag } from '@/features/feature-flags';
 import { AssetPickerItem } from '@/features/send/components/asset-picker/asset-picker-item';
 import {
   useSip10AccountBalance,
@@ -30,12 +29,10 @@ interface AssetPickerFlashListProps {
 }
 
 function AssetPickerFlashList({ sip10Data, header, handleSelectAsset }: AssetPickerFlashListProps) {
-  const isSip10SendEnabled = useSip10SendFlag();
   const sip10Memo = useMemo(() => {
-    if (sip10Data.state === 'success' && isSip10SendEnabled)
-      return sip10Data.value.sip10s.sort(sortSip10Balances);
+    if (sip10Data.state === 'success') return sip10Data.value.sip10s.sort(sortSip10Balances);
     return [];
-  }, [sip10Data, isSip10SendEnabled]);
+  }, [sip10Data]);
 
   return (
     <Sheet.FlashList

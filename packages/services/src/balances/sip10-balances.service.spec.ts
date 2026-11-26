@@ -19,13 +19,11 @@ describe(Sip10BalancesService.name, () => {
   const assetId1Balance = 12000000;
   const assetId2Balance = 20000000;
 
-  const getAddressFtBalances = vi.fn().mockResolvedValue({
-    results: [
-      { token: assetId1, balance: assetId1Balance },
-      { token: assetId2, balance: assetId2Balance },
-    ],
-  });
-  const mockStacksApiClient = createMock<HiroStacksApiClient>({ getAddressFtBalances });
+  const getPrincipalFtBalances = vi.fn().mockResolvedValue([
+    { asset_identifier: assetId1, balance: String(assetId1Balance) },
+    { asset_identifier: assetId2, balance: String(assetId2Balance) },
+  ]);
+  const mockStacksApiClient = createMock<HiroStacksApiClient>({ getPrincipalFtBalances });
 
   function mockGetMarketData(asset: Sip10Asset) {
     if (asset.symbol === 'MOCK1') {
@@ -143,7 +141,7 @@ describe(Sip10BalancesService.name, () => {
     it('retrieves sip10 token balances using hiro stacks API, market data, and token info', async () => {
       const signal = new AbortController().signal;
       const addressBalance = await sip10BalancesService.getSip10AccountBalance(request, signal);
-      expect(mockStacksApiClient.getAddressFtBalances).toHaveBeenCalledWith(stacksAddress, {
+      expect(mockStacksApiClient.getPrincipalFtBalances).toHaveBeenCalledWith(stacksAddress, {
         signal,
       });
       expect(mockMarketDataService.getMarketData).toHaveBeenCalledTimes(2);
@@ -209,7 +207,7 @@ describe(Sip10BalancesService.name, () => {
         request2,
         request3,
       ]);
-      expect(mockStacksApiClient.getAddressFtBalances).toHaveBeenCalledTimes(3);
+      expect(mockStacksApiClient.getPrincipalFtBalances).toHaveBeenCalledTimes(3);
       expect(mockMarketDataService.getMarketData).toHaveBeenCalledTimes(6);
       expect(mockSip10AssetService.getAsset).toHaveBeenCalledTimes(6);
       expect(aggregateBalance.sip10s.length).toEqual(2);

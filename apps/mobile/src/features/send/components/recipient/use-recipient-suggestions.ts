@@ -1,5 +1,8 @@
 import { buildRecipientSuggestions } from '@/features/send/components/recipient/build-recipient-suggestions';
-import { type RecipientSection } from '@/features/send/components/recipient/recipient.types';
+import {
+  type RecipientActivity,
+  type RecipientSection,
+} from '@/features/send/components/recipient/recipient.types';
 import {
   getLookupHelperByChain,
   recipientSchemaResultContainsError,
@@ -14,16 +17,12 @@ import {
 } from '@tanstack/react-query';
 import { type ZodSchema } from 'zod';
 
-import {
-  type AccountId,
-  type FungibleCryptoAsset,
-  type SendAssetActivity,
-} from '@leather.io/models';
+import { type AccountId, type FungibleCryptoAsset } from '@leather.io/models';
 import { useDebouncedValue } from '@leather.io/ui/native';
 
 interface UseRecipientSuggestionsParams {
   searchTerm: string;
-  activity: SendAssetActivity[];
+  activity: RecipientActivity[];
   recipientSchema: ZodSchema;
   asset: FungibleCryptoAsset;
   currentAccount: AccountId;
@@ -43,7 +42,7 @@ export function useRecipientSuggestions({
   const { list: accounts } = useAccounts();
 
   return useQuery({
-    queryKey: ['recipient-suggestions', debouncedSearchTerm],
+    queryKey: ['recipient-suggestions', debouncedSearchTerm, activity],
     placeholderData: keepPreviousData,
     queryFn: async ({ signal }: QueryFunctionContext) =>
       buildRecipientSuggestions({

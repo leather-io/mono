@@ -7,7 +7,6 @@ import { createTokenDetailsPath } from '@leather.io/features';
 import type { SerializedCryptoAssetId } from '@leather.io/utils';
 
 import { TokenList } from '@app/features/asset-list/token-list';
-import { useFlags } from '@app/features/feature-flags';
 import { TrendingTokens } from '@app/features/trending-tokens/trending-tokens';
 import { useBlockchainActivityFeed } from '@app/query/activity/blockchain-activity.query';
 import { useCurrentAccountAddresses } from '@app/services/accounts/use-account-addresses';
@@ -21,7 +20,6 @@ import { TokensTabHeader } from './tokens-tab-header';
 export function Tokens() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { releaseTrendingTokens } = useFlags();
   const account = useCurrentAccountAddresses();
   const activityFeed = useBlockchainActivityFeed(account, { poll: false });
   const showFirstTokenBanner = activityFeed.isSuccess && !activityFeed.items.length;
@@ -37,7 +35,7 @@ export function Tokens() {
       {showFirstTokenBanner && <FirstTokenBanner />}
       {!showFirstTokenBanner && <TokensTabHeader />}
       <TokenList filter="enabled" onSelectAsset={handleSelectAsset} showDepositButtons />
-      {releaseTrendingTokens && <TrendingTokens onSelectAsset={handleSelectAsset} />}
+      <TrendingTokens onSelectAsset={handleSelectAsset} />
       <TokensLearn />
       <Outlet />
     </Stack>
