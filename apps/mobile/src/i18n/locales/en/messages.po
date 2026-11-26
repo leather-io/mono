@@ -360,7 +360,7 @@ msgstr "App is not protected with device-level PIN or biometrics."
 msgid "App Store"
 msgstr "App Store"
 
-#: src/features/approver/components/nonce-sheet.tsx:18
+#: src/features/approver/components/nonce-sheet.tsx:29
 msgid "Apply"
 msgstr "Apply"
 
@@ -663,7 +663,7 @@ msgstr "Custom"
 msgid "Custom fees"
 msgstr "Custom fees"
 
-#: src/features/approver/components/nonce-sheet.tsx:17
+#: src/features/approver/components/nonce-sheet.tsx:20
 msgid "Custom nonce"
 msgstr "Custom nonce"
 
@@ -747,7 +747,7 @@ msgstr "Drag to refresh"
 msgid "Edit memo"
 msgstr "Edit memo"
 
-#: src/features/approver/components/nonce-sheet.tsx:16
+#: src/features/approver/components/nonce-sheet.tsx:17
 msgid "Edit nonce"
 msgstr "Edit nonce"
 

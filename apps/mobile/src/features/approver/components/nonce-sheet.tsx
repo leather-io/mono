@@ -1,7 +1,9 @@
-import { InputSheetLayout } from '@/components/sheets/input-sheet.layout';
+import { useState } from 'react';
+
+import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { t } from '@lingui/core/macro';
 
-import { type SheetRef } from '@leather.io/ui/native';
+import { Box, Button, Numpad, type SheetRef, Text } from '@leather.io/ui/native';
 
 interface NonceSheetProps {
   sheetRef: SheetRef;
@@ -9,17 +11,23 @@ interface NonceSheetProps {
   onChangeNonce(nonce: string): void;
 }
 export function NonceSheet({ sheetRef, nonce, onChangeNonce }: NonceSheetProps) {
+  const [value, setValue] = useState(nonce);
+
   return (
-    <InputSheetLayout
-      sheetRef={sheetRef}
-      initialValue={nonce}
-      title={t`Edit nonce`}
-      placeholder={t`Custom nonce`}
-      submitTitle={t`Apply`}
-      onSubmit={value => {
-        onChangeNonce(value);
-        sheetRef.current?.close();
-      }}
-    />
+    <SheetLayout sheetRef={sheetRef} title={t`Edit nonce`}>
+      <Box gap="5">
+        <Box gap="1">
+          <Text variant="caption01" color="ink.text-secondary">{t`Custom nonce`}</Text>
+          <Text variant="heading04">{value}</Text>
+        </Box>
+        <Numpad mode="numeric" value={value} onChange={setValue} />
+        <Button
+          onPress={() => {
+            onChangeNonce(value);
+            sheetRef.current?.close();
+          }}
+        >{t`Apply`}</Button>
+      </Box>
+    </SheetLayout>
   );
 }
