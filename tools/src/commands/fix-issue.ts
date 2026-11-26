@@ -348,7 +348,7 @@ export function registerFixIssueCommands(program: Command): void {
   fixIssue
     .command('open-pull-request')
     .description(
-      'Commit the patch and open the pull request of a first run, or with --pull-request commit it on top of that pull request and answer its reviewers'
+      'Commit the patch and open the pull request of a first run, or with --pull-request commit it on top of that pull request and record the revise in a comment'
     )
     .requiredOption('--base <branch>', 'Base branch')
     .requiredOption('--parent-sha <sha>', 'Tip of the base branch the run started from')

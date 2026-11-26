@@ -1,5 +1,4 @@
 import type { GitHubClient } from '../ci/github.js';
-import { fetchFeedback } from './feedback.js';
 import { ensureCommit, planMerge } from './merge.js';
 import type { FixIssuePaths } from './paths.js';
 import { fetchRevisable } from './revise-gate.js';
@@ -28,13 +27,6 @@ export interface ReviseTarget {
   readonly issue: number;
   readonly merge: boolean;
   readonly ordinal: number;
-}
-
-interface ReviewersOptions {
-  readonly client: GitHubClient;
-  readonly repo: string;
-  readonly pullRequest: number;
-  readonly head: string;
 }
 
 interface SummaryOptions {
@@ -119,25 +111,6 @@ export function carriedScreenshots(body: string | null, ordinal: number): string
     .join('\n');
   if (table === '') return null;
   return `${table}\n\nCaptured before revise ${ordinal}; what it changed is not shown.`;
-}
-
-export async function requestReviewAgain({
-  client,
-  repo,
-  pullRequest,
-  head,
-}: ReviewersOptions): Promise<void> {
-  const feedback = await fetchFeedback({ client, repo, pullRequest, head });
-  const reviewers = new Set([
-    ...feedback.threads.flatMap(thread =>
-      thread.comments.slice(0, 1).map(comment => comment.author)
-    ),
-    ...feedback.reviews.map(review => review.author),
-  ]);
-  if (reviewers.size === 0) return;
-  await client.request('POST', `repos/${repo}/pulls/${pullRequest}/requested_reviewers`, {
-    reviewers: [...reviewers],
-  });
 }
 
 function quoted(text: string): string {

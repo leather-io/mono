@@ -9,8 +9,9 @@ ends with the status file.
 
 ## Inputs
 
-- `tmp/fix-issue/feedback.md`: what to address, one item per section. It holds only text written
-  by people with write access to the repository.
+- `tmp/fix-issue/feedback.md`: what to address. It holds the notes of whoever dispatched the
+  revise, who has write access to the repository and may quote review comments in them, and a
+  section about the merge of `dev` when there was one.
 - `tmp/fix-issue/pull-request.md`: the pull request's title and its current description.
 - `tmp/fix-issue/pull-request.diff`: everything the pull request changes against `dev`, before this
   revise. The working tree is the pull request branch, so `git diff HEAD` shows only what you
@@ -26,8 +27,9 @@ says what a revise does differently.
 
 ## The feedback
 
-1. Address every item in `feedback.md`, and change nothing it does not ask for. For a review
-   thread, fix what it points at, then check the rest of `pull-request.diff` for the same problem.
+1. Address everything `feedback.md` asks for, and change nothing it does not ask for. For a review
+   comment on a line, fix what it points at, then check the rest of `pull-request.diff` for the
+   same problem.
 2. The brief's `Settled:` lines still bind. Feedback that contradicts one is not applied: say so
    in its answer, set `"state": "blocked"` and add a question that names the `Settled:` line, the
    feedback and the options.
@@ -78,17 +80,17 @@ these differences:
   the workflow writes itself, and any handoff the branch already carries.
 - Leave `screenshots` out. A revise does not capture screenshots again; the pull request keeps the
   ones it has.
-- Add `answers`, one plain line per item in `feedback.md`, in the same order:
+- Add `answers`, one plain line per thing `feedback.md` asks for, in the same order:
 
   ```json
   "answers": [
     "<what changed, and where>",
-    "<file and line of the review thread>: <why it was not changed>"
+    "<file and line of the review comment>: <why it was not changed>"
   ]
   ```
 
   Each line is posted on the pull request as written: what you changed and where, or why you did
-  not. Name the review thread or the reviewer an answer is for, since the lines are read without
+  not. Name the file and line or the reviewer an answer is for, since the lines are read without
   `feedback.md`. The workflow fails the round when `answers` is empty.
 
 - A revise that only answers, because no item needed a change, is `"state": "done"` with nothing

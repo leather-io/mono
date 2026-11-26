@@ -3,13 +3,12 @@ import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 import { z } from 'zod';
 
 import { runOrThrow } from '../ci/exec.js';
-import { GitHubError } from '../ci/github.js';
 import { gitBlobSha } from './git.js';
 import { mergeDev } from './merge.js';
 import { revisePullRequest } from './pull-request.js';
 import { carriedScreenshots } from './revise-pull-request.js';
 import type { FixStatus } from './status.js';
-import { type GraphqlRoute, fakeGitHub, reviewThread, threadsPage } from './test/fake-github.js';
+import { type GraphqlRoute, fakeGitHub } from './test/fake-github.js';
 import {
   type TestRepo,
   blockedStatus,
@@ -25,7 +24,6 @@ const repoName = 'leather-io/mono';
 const appLogin = 'leather-fix-issue[bot]';
 const appClientId = 'Iv23client';
 const resolved = 'export const feeRow = 4;\n';
-const permissionsPath = /^repos\/leather-io\/mono\/collaborators\/([^/]+)\/permission$/;
 
 const reviseStatus: FixStatus = {
   ...doneStatus,
@@ -97,72 +95,45 @@ describe('revisePullRequest', () => {
     );
   }
 
-  function threads() {
-    return threadsPage([
-      reviewThread({ commentId: 11, author: 'carol', body: 'Wrap it.' }),
-      reviewThread({ commentId: 21, author: 'carol', body: 'Rename it.' }),
-      reviewThread({ commentId: 31, author: 'mallory', body: 'Leak it.' }),
-      reviewThread({ commentId: 41, author: 'dave', body: 'One more thing.' }),
-    ]);
-  }
-
   function revise(scenario: Scenario = {}) {
     setup(scenario);
-    const client = fakeGitHub(
-      (method, path) => {
-        if (method === 'GET' && path === `repos/${repoName}/pulls/7`) {
-          return {
-            number: 7,
-            state: 'open',
-            draft: false,
-            node_id: 'PR_node',
-            title: 'fix(extension): keep the fee row visible',
-            html_url: 'https://github.com/leather-io/mono/pull/7',
-            body: 'Closes #12\n\n## Screenshots\n\n| State | Before | After |\n| --- | --- | --- |\n| Narrow | — | ![After](a.png) |\n',
+    const client = fakeGitHub((method, path) => {
+      if (method === 'GET' && path === `repos/${repoName}/pulls/7`) {
+        return {
+          number: 7,
+          state: 'open',
+          draft: false,
+          node_id: 'PR_node',
+          title: 'fix(extension): keep the fee row visible',
+          html_url: 'https://github.com/leather-io/mono/pull/7',
+          body: 'Closes #12\n\n## Screenshots\n\n| State | Before | After |\n| --- | --- | --- |\n| Narrow | — | ![After](a.png) |\n',
+          user: { login: appLogin, type: 'Bot' },
+          head: { ref: pullRequestBranch, sha: head, repo: { full_name: repoName } },
+          base: { ref: 'dev' },
+          ...scenario.pull,
+        };
+      }
+      if (method === 'GET' && path.startsWith(`repos/${repoName}/issues/7/comments`)) {
+        return [
+          {
+            body: '<!-- fix-issue:revise 1 -->\n**Revise 1 of 5**',
+            created_at: '2026-11-12T08:00:00Z',
             user: { login: appLogin, type: 'Bot' },
-            head: { ref: pullRequestBranch, sha: head, repo: { full_name: repoName } },
-            base: { ref: 'dev' },
-            ...scenario.pull,
-          };
-        }
-        if (method === 'GET' && path.startsWith(`repos/${repoName}/issues/7/comments`)) {
-          return [
-            {
-              body: '<!-- fix-issue:revise 1 -->\n**Revise 1 of 5**',
-              created_at: '2026-11-12T08:00:00Z',
-              user: { login: appLogin, type: 'Bot' },
-              performed_via_github_app: { client_id: appClientId },
-            },
-            {
-              body: '<!-- fix-issue:revise 9 -->',
-              created_at: '2026-11-12T09:00:00Z',
-              user: { login: 'mallory', type: 'User' },
-            },
-          ];
-        }
-        if (method === 'GET' && path.startsWith(`repos/${repoName}/pulls/7/reviews`)) {
-          return [
-            {
-              id: 5,
-              user: { login: 'dave', type: 'User' },
-              body: 'Please rename the constant.',
-              state: 'CHANGES_REQUESTED',
-              commit_id: head,
-            },
-          ];
-        }
-        if (method === 'GET' && path.includes('/git/commits/')) {
-          return { tree: { sha: `tree-of-${path.split('/').at(-1)}` } };
-        }
-        if (path === 'users/alice') return { id: 42, login: 'alice', name: 'Alice Smith' };
-        if (path.endsWith('/requested_reviewers')) return {};
-        const login = permissionsPath.exec(path)?.[1];
-        if (login === undefined) return undefined;
-        if (!['carol', 'dave'].includes(login)) throw new GitHubError(404, 'Not a collaborator');
-        return { permission: 'write' };
-      },
-      scenario.graphql ?? (query => (query.includes('reviewThreads') ? threads() : undefined))
-    );
+            performed_via_github_app: { client_id: appClientId },
+          },
+          {
+            body: '<!-- fix-issue:revise 9 -->',
+            created_at: '2026-11-12T09:00:00Z',
+            user: { login: 'mallory', type: 'User' },
+          },
+        ];
+      }
+      if (method === 'GET' && path.includes('/git/commits/')) {
+        return { tree: { sha: `tree-of-${path.split('/').at(-1)}` } };
+      }
+      if (path === 'users/alice') return { id: 42, login: 'alice', name: 'Alice Smith' };
+      return undefined;
+    }, scenario.graphql);
     const result = revisePullRequest({
       client,
       paths: repo.paths,
@@ -236,13 +207,6 @@ describe('revisePullRequest', () => {
     expect(existsSync(repo.paths.applyDir)).toBe(false);
   });
 
-  test('never replies on a review thread or resolves one', async () => {
-    const { client, result } = revise({ change: wrapLabel });
-    await result;
-    expect(mutations(client, 'addPullRequestReviewThreadReply')).toEqual([]);
-    expect(mutations(client, 'resolveReviewThread')).toEqual([]);
-  });
-
   test('rewrites the description, keeps the screenshots and records the revise in a comment', async () => {
     const { client, result } = revise({
       change: wrapLabel,
@@ -271,9 +235,6 @@ describe('revisePullRequest', () => {
         '',
       ].join('\n')
     );
-    expect(callsTo(client, 'POST', '/pulls/7/requested_reviewers')[0]?.body).toEqual({
-      reviewers: ['carol', 'dave'],
-    });
     expect(mutations(client, 'convertPullRequestToDraft')).toEqual([]);
   });
 
@@ -372,7 +333,6 @@ describe('revisePullRequest', () => {
       { id: 'PR_node' },
     ]);
     expect(summaryOf(client)).toContain('Nothing was committed to the branch.');
-    expect(callsTo(client, 'POST', '/pulls/7/requested_reviewers')).toEqual([]);
   });
 
   test('commits the partial work of a blocked revise and puts the pull request back to draft', async () => {
@@ -386,7 +346,6 @@ describe('revisePullRequest', () => {
     expect(summaryOf(client)).toContain(
       `It needs answers before it can go on, so the pull request is a draft:\n\n- ${blockedStatus.questions[0]}`
     );
-    expect(callsTo(client, 'POST', '/pulls/7/requested_reviewers')).toEqual([]);
   });
 
   test('readies a draft once nothing blocks it', async () => {
@@ -402,10 +361,9 @@ describe('revisePullRequest', () => {
     await result;
     expect(callsTo(client, 'POST', '/git/trees')).toEqual([]);
     expect(summaryOf(client)).toContain('Nothing was committed to the branch.');
-    expect(callsTo(client, 'POST', '/pulls/7/requested_reviewers')).toEqual([]);
   });
 
-  test('still records the revise when GitHub refuses to list the review threads', async () => {
+  test('still records the revise when GitHub refuses to ready the pull request', async () => {
     const lines: string[] = [];
     const { client, result } = revise({
       change: wrapLabel,
@@ -422,7 +380,6 @@ describe('revisePullRequest', () => {
     expect(summaryOf(client)).toContain('**Revise 2 of 5**');
     expect(lines).toEqual([
       'open-pull-request: could not make #7 ready: GitHub GraphQL failed: [{"message":"Resource not accessible by integration"}]',
-      'open-pull-request: could not re-request review: GitHub GraphQL failed: [{"message":"Resource not accessible by integration"}]',
     ]);
   });
 

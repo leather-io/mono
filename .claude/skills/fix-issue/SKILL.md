@@ -171,26 +171,36 @@ draft with the answer as its notes instead (section 9); that continues on the sa
 ## 9. Ask for changes on a pull request
 
 A bot pull request is changed in place by dispatching the same workflow with the pull request
-instead of an issue. It needs no brief: the run reads the review from GitHub.
+instead of an issue. It needs no brief, but the run reads nothing of the review from GitHub: the
+notes file is the only feedback the fixer gets, so every revise that is not a bare merge needs one.
 
 ```bash
 pnpm lt fix-issue dispatch --pull-request <pull request> [--notes-file <file>] [--merge]
 gh run list --repo leather-io/mono --workflow repo:fix-issue.yml --limit 5
 ```
 
-| Dispatch                 | What the revise does                                                          |
-| ------------------------ | ----------------------------------------------------------------------------- |
-| the pull request alone   | addresses every unresolved review thread and every review summary on its head |
-| with `--notes-file`      | does what the notes ask, and addresses those threads and summaries            |
-| with `--merge`           | merges `dev` into the branch and fixes what that breaks, nothing else         |
-| with `--merge` and notes | the merge, the notes, the threads and the summaries                           |
+| Dispatch                 | What the revise does                                                  |
+| ------------------------ | --------------------------------------------------------------------- |
+| with `--notes-file`      | does what the notes ask                                               |
+| with `--merge`           | merges `dev` into the branch and fixes what that breaks, nothing else |
+| with `--merge` and notes | the merge and the notes                                               |
 
-So the usual way is for reviewers to review on GitHub as for any pull request, with comments on
-the lines, and then for someone to dispatch the revise. Write the notes file only for what the
-review does not already say; never put it in a temp directory the run directory does not own. When
-the pull request conflicts with `dev`, any revise merges `dev` first, and one without notes only
-resolves the conflicts and leaves the threads for the next one. Reviewers without a session can
-use "Run workflow" on `repo:fix-issue` in the Actions tab and fill in `pull_request`.
+Before every dispatch, gather the feedback and write it into the notes file yourself:
+
+1. Read the unresolved review threads and the review summaries of the pull request with `gh`
+   (`gh pr view <n> --json reviews` and `gh api graphql` for `reviewThreads`), plus anything the
+   person asks for in the conversation.
+2. Keep only what people with write access to the repository wrote
+   (`gh api repos/leather-io/mono/collaborators/<login>/permission`); leave out bots and everyone
+   else. The workflow does not filter the notes.
+3. Write one entry per comment: the file and line, who wrote it, and the comment as written. Add
+   the person's own instructions on top.
+4. Keep the notes file in the run directory, never in a temp directory, and under 60,000 bytes.
+
+A dispatch with no notes and no merge to do is refused. When the pull request conflicts with
+`dev`, any revise merges `dev` first, and one without notes only resolves the conflicts. Reviewers
+without a session can use "Run workflow" on `repo:fix-issue` in the Actions tab, fill in
+`pull_request` and paste the feedback into `notes`.
 
 Dispatching is a GitHub write as the person: show the pull request, the notes and the flags, and
 get an explicit yes first. Whoever dispatches is recorded as the co-author of the revise commit.
@@ -199,11 +209,11 @@ What comes back, 20 minutes to two hours later, on the same pull request:
 
 - one new signed commit on top of the branch, never a force-push; after a merge it has `dev` as its
   second parent;
-- the description rewritten for the pull request as it now stands, and review requested again from
-  the people whose feedback it answered;
+- the description rewritten for the pull request as it now stands;
 - one comment that records the revise: `Revise <n> of 5`, who dispatched it and with which notes,
-  the commit, and one line per feedback item saying what was done or why not. The review threads
-  get no reply and stay open; reviewers resolve them;
+  the commit, and one line per thing asked for saying what was done or why not. The review threads
+  get no reply and stay open, and no review is requested: tell the person which threads the revise
+  answered so they can resolve them and ask for review again;
 - a draft with the question when it needs a decision. Feedback that contradicts a `Settled:` line
   of the brief is never applied; it comes back as a question. To change a settled decision, change
   the brief and dispatch the issue again (section 8).

@@ -68,7 +68,7 @@ async function hasWriteAccess(client: GitHubClient, repo: string, user: string):
   }
 }
 
-export async function trustedAuthors(
+async function trustedAuthors(
   client: GitHubClient,
   repo: string,
   users: readonly (string | null)[]

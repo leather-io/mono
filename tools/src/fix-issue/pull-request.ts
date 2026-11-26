@@ -23,7 +23,6 @@ import {
   errorMessage,
   readReviseTarget,
   renderReviseSummary,
-  requestReviewAgain,
   unresolvedQuestion,
 } from './revise-pull-request.js';
 import { isScreenshot } from './screenshots.js';
@@ -593,16 +592,6 @@ async function publishRevise(
       }),
     })
   );
-  if (commit !== null && !draft) {
-    await requestReviewAgain({
-      client,
-      repo,
-      pullRequest: target.number,
-      head: target.head,
-    }).catch((error: unknown) => {
-      log(`open-pull-request: could not re-request review: ${errorMessage(error)}`);
-    });
-  }
   return summary.html_url;
 }
 

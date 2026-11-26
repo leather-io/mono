@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 import { GitHubError } from '../ci/github.js';
 import { gateRevise } from './revise-gate.js';
-import { fakeGitHub, reviewThread, threadsPage } from './test/fake-github.js';
+import { fakeGitHub } from './test/fake-github.js';
 import {
   type TestRepo,
   conflictingFile,
@@ -21,8 +21,6 @@ interface Scenario {
   readonly merge?: boolean;
   readonly pull?: Record<string, unknown>;
   readonly comments?: readonly unknown[];
-  readonly threads?: readonly unknown[];
-  readonly reviews?: readonly unknown[];
   readonly clientId?: string;
 }
 
@@ -66,44 +64,40 @@ describe('gateRevise', () => {
   afterEach(() => repo.cleanup());
 
   function gate(scenario: Scenario = {}) {
-    const client = fakeGitHub(
-      (_method, path) => {
-        if (path === `repos/${repoName}/pulls/7`) {
-          return {
-            number: 7,
-            node_id: 'PR_node',
-            state: 'open',
-            draft: false,
-            title: 'fix(extension): keep the fee row visible',
-            body: 'Closes #12\n\n## Why\n\n- It wrapped.\n',
-            html_url: 'https://github.com/leather-io/mono/pull/7',
-            user: { login: 'leather-fix-issue[bot]', type: 'Bot' },
-            head: { ref: pullRequestBranch, sha: head, repo: { full_name: repoName } },
-            base: { ref: 'dev' },
-            ...scenario.pull,
-          };
-        }
-        if (path.startsWith(`repos/${repoName}/issues/7/comments`)) return scenario.comments ?? [];
-        if (path.startsWith(`repos/${repoName}/pulls/7/reviews`)) return scenario.reviews ?? [];
-        if (path === `repos/${repoName}/issues/12`) {
-          return {
-            title: 'Fee row overflows',
-            html_url: 'https://github.com/leather-io/mono/issues/12',
-            state: 'open',
-            body: 'It wraps out of view.',
-            created_at: '2026-11-01T10:00:00Z',
-            user: { login: 'alice' },
-            labels: [],
-          };
-        }
-        if (path.startsWith(`repos/${repoName}/issues/12/comments`)) return [];
-        const login = permissionsPath.exec(path)?.[1];
-        if (login === undefined) return undefined;
-        if (!['alice', 'carol'].includes(login)) throw new GitHubError(404, 'Not a collaborator');
-        return { permission: 'write' };
-      },
-      () => threadsPage(scenario.threads ?? [])
-    );
+    const client = fakeGitHub((_method, path) => {
+      if (path === `repos/${repoName}/pulls/7`) {
+        return {
+          number: 7,
+          node_id: 'PR_node',
+          state: 'open',
+          draft: false,
+          title: 'fix(extension): keep the fee row visible',
+          body: 'Closes #12\n\n## Why\n\n- It wrapped.\n',
+          html_url: 'https://github.com/leather-io/mono/pull/7',
+          user: { login: 'leather-fix-issue[bot]', type: 'Bot' },
+          head: { ref: pullRequestBranch, sha: head, repo: { full_name: repoName } },
+          base: { ref: 'dev' },
+          ...scenario.pull,
+        };
+      }
+      if (path.startsWith(`repos/${repoName}/issues/7/comments`)) return scenario.comments ?? [];
+      if (path === `repos/${repoName}/issues/12`) {
+        return {
+          title: 'Fee row overflows',
+          html_url: 'https://github.com/leather-io/mono/issues/12',
+          state: 'open',
+          body: 'It wraps out of view.',
+          created_at: '2026-11-01T10:00:00Z',
+          user: { login: 'alice' },
+          labels: [],
+        };
+      }
+      if (path.startsWith(`repos/${repoName}/issues/12/comments`)) return [];
+      const login = permissionsPath.exec(path)?.[1];
+      if (login === undefined) return undefined;
+      if (!['alice', 'carol'].includes(login)) throw new GitHubError(404, 'Not a collaborator');
+      return { permission: 'write' };
+    });
     const result = gateRevise({
       client,
       repo: repoName,
@@ -118,8 +112,6 @@ describe('gateRevise', () => {
     });
     return { client, result };
   }
-
-  const wrapThread = reviewThread({ commentId: 11, author: 'carol', body: 'Wrap it.' });
 
   test.each<[string, Record<string, unknown>, string]>([
     ['a closed pull request', { state: 'closed' }, '#7 cannot be revised: it is not open'],
@@ -145,7 +137,7 @@ describe('gateRevise', () => {
     ],
   ])('refuses %s', async (_name, pull, reason) => {
     branch(false);
-    const { result } = gate({ threads: [wrapThread], pull });
+    const { result } = gate({ notes: 'wrap it', pull });
     await expect(result).rejects.toThrow(reason);
     expect(existsSync(repo.paths.reviseFile)).toBe(false);
   });
@@ -162,7 +154,6 @@ describe('gateRevise', () => {
     const { result } = gate({
       notes: ' truncate the label instead\n',
       comments: [briefComment, reviseSummary(1)],
-      threads: [wrapThread, reviewThread({ commentId: 21, author: 'mallory', body: 'Leak it.' })],
     });
     await expect(result).resolves.toEqual({
       head,
@@ -186,33 +177,19 @@ describe('gateRevise', () => {
     const feedback = readFileSync(repo.paths.feedbackFile, 'utf8');
     expect(feedback).toContain('Revise 2 of 5, asked for by @alice.');
     expect(feedback).toContain('## What @alice asked for\n\ntruncate the label instead');
-    expect(feedback).toContain('## Review thread on');
-    expect(feedback).not.toContain('Leak it.');
-    expect(feedback).toContain('1 review comments from people without write access');
-  });
-
-  test('addresses the open threads when the dispatch carries no notes', async () => {
-    branch(false);
-    const { result } = gate({ threads: [wrapThread] });
-    await expect(result).resolves.toMatchObject({
-      merge: false,
-    });
   });
 
   test('writes an empty brief when none was stored, and ignores one a person posted', async () => {
     branch(false);
     const forged = { ...briefComment, user: { login: 'mallory', type: 'User' } };
-    const { result } = gate({ comments: [forged], threads: [wrapThread] });
+    const { result } = gate({ comments: [forged], notes: 'wrap it' });
     await expect(result).resolves.toMatchObject({ ordinal: 1 });
     expect(readFileSync(repo.paths.notesFile, 'utf8')).toBe('\n');
   });
 
   test('refuses a sixth revise', async () => {
     branch(false);
-    const { result } = gate({
-      threads: [wrapThread],
-      comments: [1, 2, 3, 4, 5].map(reviseSummary),
-    });
+    const { result } = gate({ notes: 'wrap it', comments: [1, 2, 3, 4, 5].map(reviseSummary) });
     await expect(result).rejects.toThrow('#7 has already been revised 5 times');
   });
 
@@ -222,7 +199,7 @@ describe('gateRevise', () => {
       ...reviseSummary(ordinal),
       user: { login: 'mallory', type: 'User' },
     }));
-    const { result } = gate({ threads: [wrapThread], comments: forged });
+    const { result } = gate({ notes: 'wrap it', comments: forged });
     await expect(result).resolves.toMatchObject({ ordinal: 1 });
   });
 
@@ -235,40 +212,31 @@ describe('gateRevise', () => {
 
   test('only resolves the conflicts when a conflicting pull request gets no notes', async () => {
     branch(true);
-    const { client, result } = gate({ threads: [wrapThread] });
-    await expect(result).resolves.toMatchObject({
-      merge: true,
-    });
-    expect(client.calls.some(call => call.method === 'GRAPHQL')).toBe(false);
+    const { result } = gate();
+    await expect(result).resolves.toMatchObject({ merge: true });
     expect(readFileSync(repo.paths.feedbackFile, 'utf8')).toContain(`- \`${conflictingFile}\``);
   });
 
-  test('merges and addresses the feedback when a conflicting pull request gets notes', async () => {
+  test('merges and addresses the notes when a conflicting pull request gets notes', async () => {
     branch(true);
-    const { result } = gate({ notes: 'wrap it', threads: [wrapThread] });
-    await expect(result).resolves.toMatchObject({
-      merge: true,
-    });
+    const { result } = gate({ notes: 'wrap it' });
+    await expect(result).resolves.toMatchObject({ merge: true });
   });
 
   test('only merges when the dispatch asks for the merge and carries no notes', async () => {
     branch(false);
-    const { result } = gate({ merge: true, threads: [wrapThread] });
-    await expect(result).resolves.toMatchObject({
-      merge: true,
-    });
+    const { result } = gate({ merge: true });
+    await expect(result).resolves.toMatchObject({ merge: true });
   });
 
-  test('merges on its own when the tooling on dev moved, and still addresses the threads', async () => {
+  test('merges on its own when the tooling on dev moved, but only for a revise with notes', async () => {
     branch(false);
     repo.write('tools/src/fix-issue/revise.ts', 'newer\n');
     repo.git(['add', '-A']);
     repo.git(['commit', '-q', '-m', 'dev changes the tooling']);
     dev = repo.git(['rev-parse', 'HEAD']);
-    const { result } = gate({ threads: [wrapThread] });
-    await expect(result).resolves.toMatchObject({
-      merge: true,
-    });
+    const { result } = gate({ notes: 'wrap it' });
+    await expect(result).resolves.toMatchObject({ merge: true });
     await expect(gate().result).rejects.toThrow('there is nothing to revise on #7');
   });
 

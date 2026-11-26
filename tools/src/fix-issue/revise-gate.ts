@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { type GitHubClient, paginate } from '../ci/github.js';
 import { extractBrief, isBriefComment } from './brief.js';
-import { fetchFeedback, renderFeedback } from './feedback.js';
+import { renderFeedback } from './feedback.js';
 import { refusedPaths } from './git.js';
 import { commentSchema, fetchIssue, isWorkflowAppComment } from './issue.js';
 import { ensureCommit, planMerge } from './merge.js';
@@ -138,14 +138,9 @@ export async function gateRevise({
   }
 
   const text = instructions.trim();
-  const feedback =
-    text === '' && plan.onlyMerge
-      ? { threads: [], reviews: [], omitted: 0 }
-      : await fetchFeedback({ client, repo, pullRequest, head: pull.head.sha });
-  const feedbackItems = feedback.threads.length + feedback.reviews.length;
-  if (text === '' && feedbackItems === 0 && !plan.onlyMerge) {
+  if (text === '' && !plan.onlyMerge) {
     throw new Error(
-      `there is nothing to revise on #${pullRequest}: no notes, no unresolved review thread, no review summary on its head commit, and no conflict with dev`
+      `there is nothing to revise on #${pullRequest}: no notes and no conflict with dev`
     );
   }
 
@@ -162,9 +157,6 @@ export async function gateRevise({
       requestedBy,
       instructions: text,
       merge: plan.merge ? { dev: devSha, conflicts: plan.conflicts } : null,
-      threads: feedback.threads,
-      reviews: feedback.reviews,
-      omitted: feedback.omitted,
     })
   );
   return { head: pull.head.sha, ordinal, merge: plan.merge };
