@@ -56,7 +56,11 @@ export function vaultThemeName(themeId: number): string {
 }
 
 export function vaultThemeFromName(name: string | null | undefined): VaultTheme {
-  return vaultThemes.find(theme => theme.name === name) ?? vaultThemes[fallbackVaultThemeId];
+  const normalizedName = name?.toLowerCase();
+  return (
+    vaultThemes.find(theme => theme.name.toLowerCase() === normalizedName) ??
+    vaultThemes[fallbackVaultThemeId]
+  );
 }
 
 export const accountIcons = [

@@ -16,7 +16,7 @@ export {
   AddressDisplayer,
   type AddressDisplayerProps,
 } from './components/address-displayer/address-displayer.web';
-export { Avatar, type AvatarProps } from './components/avatar/avatar.web';
+export { Avatar, AvatarIndicatorBadge, type AvatarProps } from './components/avatar/avatar.web';
 export { Badge, type BadgeProps } from './components/badge/badge.web';
 export {
   BlockchainActivityIndicatorIcon,

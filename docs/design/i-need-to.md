@@ -73,7 +73,7 @@ import { Sheet, SheetHeader } from '@leather.io/ui';
 <Sheet
   title="Remove wallet"
   description="Confirm wallet removal"
-  header={<SheetHeader title="Remove wallet" />}
+  header={<SheetHeader title="Remove wallet" showCloseButton={isRemoving} />}
   isShowing={isShowing}
   onClose={onClose}
   footer={
@@ -369,6 +369,9 @@ How the extension uses inputs today, and so what to reach for:
 
 - The badge is a 20px circle (on `lg`/`xl` avatars) holding a 16px mark. Use a
   `*FilledCircleIcon variant="small"`, as the asset lists do, or a token avatar at `size="xs"`.
+- For a custom textured avatar on web, place `AvatarIndicatorBadge` inside its positioned wrapper.
+  It supplies the same size and corner offset as `Avatar`’s indicator. For a wallet logo,
+  center the lettermark inside the colored disc with visible space around the glyph.
 - Token avatars draw their logo at the avatar's full size; don't pass `width`/`height` or a
   glyph `variant`. (Before this fix an `xs` token avatar rendered a 7px logo.)
 - **Seen in:** `apps/extension/src/app/features/asset-list/token-list.tsx:90`.
@@ -450,6 +453,9 @@ import { Caption, ItemLayout, Pressable, Title } from '@leather.io/ui';
   view that exists (`navigates` + `onClick`; lint `no-dead-chevron`). Pick rows have no chevron.
 - For new web rows, prefer `ListItemBox`, which takes `title`, `caption`, `leading`, `trailing`,
   `trailingCaption`, `density`, `onClick` and `href`.
+- On vault accounts, **Send** and the extension reminder share the same `ListContainer`
+  surface. A single-action row can use a full-row `Pressable`. When a row also offers help,
+  put the help link with the description and give the primary action a visible `Button`.
 - **Native:** `<Cell.Root pressable onPress={…}><Cell.Content><Cell.Label variant="primary">…`.
 
 ## Put an icon next to text
@@ -523,6 +529,10 @@ import { PlusIcon } from '@leather.io/ui';
 
 ## Open a focused task
 
+Use `SheetHeader variant="task"` for a compact title aligned with a form or instruction. Give the body the same `space.05` horizontal padding. When the footer fade would cover instructions or controls, set `footerFade={false}` on `Sheet`.
+
+Give people a visible way to leave without acting. When a reachable footer action such as Cancel, Not now, or Keep vault closes the sheet, set `showCloseButton={false}` on `SheetHeader`. Keep Close when the actions change data, move to another step, or can be unavailable. Keep `onClose` on the sheet for Escape and backdrop dismissal.
+
 Use the real `Sheet` for modal behavior, keyboard focus management and dismissal. Its footer can
 use the same `PageActions` directly, without another `PageFooter` wrapper:
 
@@ -536,7 +546,7 @@ import { Sheet, SheetHeader } from '@leather.io/ui';
   description="Choose the transaction fee"
   isShowing={isShowing}
   onClose={onClose}
-  header={<SheetHeader title="Edit fee" onClose={onClose} />}
+  header={<SheetHeader variant="task" title="Edit fee" showCloseButton={isSaving} />}
   footer={
     <PageActions
       secondary={{ label: 'Cancel', onClick: onClose }}

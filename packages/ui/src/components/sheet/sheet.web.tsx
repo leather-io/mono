@@ -20,6 +20,7 @@ interface RadixDialogProps extends SheetProps {
   description?: string;
   children: ReactNode;
   footer?: ReactNode;
+  footerFade?: boolean;
   header?: ReactElement<Pick<SheetProps, 'onClose'>>;
   onGoBack?(): void;
   wrapChildren?: boolean;
@@ -44,6 +45,7 @@ function getContentMaxHeight(maxHeightOffset: number, overrideVh?: number) {
 export function Sheet({
   children,
   footer,
+  footerFade = true,
   header,
   onClose,
   isShowing,
@@ -100,6 +102,7 @@ export function Sheet({
               flexDirection: 'column',
               overflow: 'hidden',
               bg: 'ink.background-primary',
+              color: 'ink.text-primary',
               // remove borderRadius on small to give impression of full page
               borderRadius: { base: '0', md: 'md' },
               boxShadow:
@@ -137,7 +140,11 @@ export function Sheet({
               children
             )}
             {footer && (
-              <SheetFooter position="static" flexShrink={0}>
+              <SheetFooter
+                position="static"
+                flexShrink={0}
+                boxShadow={footerFade ? 'contentOverflowFade' : 'none'}
+              >
                 {footer}
               </SheetFooter>
             )}

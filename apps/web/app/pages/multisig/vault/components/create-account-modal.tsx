@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { InlineLearnMoreLink } from '~/components/inline-learn-more-link';
 import { useAddAccountToWallet } from '~/features/multisig/vaults/use-add-account-to-wallet';
 import { useCreateVaultAccount } from '~/features/multisig/vaults/use-vault-account-mutations';
 import {
@@ -16,17 +17,20 @@ import {
   BasicTooltip,
   Button,
   Callout,
-  CloseIcon,
-  IconButton,
   InfoCircleIcon,
-  ListItemBox,
+  Pressable,
   Sheet,
+  SheetHeader,
 } from '@leather.io/ui';
 
 import { AccountIconNameField } from '../../components/account-icon-name-field';
-import { AvatarSq } from '../../components/avatar-sq';
+import { AddToExtensionButton } from '../../components/add-to-extension-button';
 import { defaultAccountIcon, vaultThemeFromName } from '../../multisig-tokens';
+import { multisigGuides } from '../../multisig.constants';
 import { chainFromNetwork } from '../../multisig.utils';
+import { AccountRegistrationBody } from './vault-account-setup';
+
+export { AccountRegistrationBody as AccountCreatedStep } from './vault-account-setup';
 
 interface CreateAccountModalProps {
   vault: Vault;
@@ -41,66 +45,6 @@ function accountLimitExplanation(memberCount: number, limit: number) {
 
 function fullThresholdExplanation(threshold: number, limit: number) {
   return `Threshold ${threshold} already has its ${limit} ${limit === 1 ? 'account' : 'accounts'}, so you can’t pick it again.`;
-}
-
-function CreateAccountHeader({ title, onClose }: { title: string; onClose?(): void }) {
-  return (
-    <Flex
-      alignItems="center"
-      justifyContent="space-between"
-      gap="space.04"
-      px="space.05"
-      py="space.04"
-      width="100%"
-      minHeight="headerHeight"
-    >
-      <styled.h2 textStyle="heading.05">{title}</styled.h2>
-      {onClose && <IconButton icon={<CloseIcon />} onClick={onClose} />}
-    </Flex>
-  );
-}
-
-interface AccountCreatedStepProps {
-  vault: Vault;
-  account: VaultAccount;
-}
-
-export function AccountCreatedStep({ vault, account }: AccountCreatedStepProps) {
-  const theme = vaultThemeFromName(vault.theme);
-  const chain = chainFromNetwork(vault.network);
-
-  return (
-    <Flex direction="column" gap="space.05" px="space.05" pb="space.05">
-      <Box
-        borderWidth="1px"
-        borderStyle="solid"
-        borderColor="ink.border-default"
-        borderRadius="md"
-        p="space.04"
-      >
-        <ListItemBox
-          variant="plain"
-          density="compact"
-          leading={
-            <AvatarSq
-              chain={chain}
-              icon={account.icon ?? defaultAccountIcon}
-              themeId={theme.id}
-              size="sm"
-            />
-          }
-          title={account.name}
-          caption={`Any ${account.threshold} of ${account.signers.length} members can approve`}
-        />
-      </Box>
-
-      <styled.p textStyle="body.02" color="ink.text-subdued">
-        Apps can&rsquo;t see this account yet. This site manages the vault &mdash; your Leather
-        extension is what apps talk to, for contract calls, dApp connections and staking. Add the
-        account to your extension to use it with apps.
-      </styled.p>
-    </Flex>
-  );
 }
 
 export function CreateAccountModal({
@@ -160,18 +104,25 @@ export function CreateAccountModal({
   }
 
   async function addCreatedAccountToWallet() {
-    await addAccountToWallet();
-    handleClose();
+    if (await addAccountToWallet()) handleClose();
   }
+
+  const title = createdAccount ? 'Account created' : 'Create vault account';
 
   return (
     <Sheet
       isShowing={isShowing}
       onClose={handleClose}
+      variant={createdAccount ? 'drawer' : 'dialog'}
       contentMaxVh={90}
-      header={
-        <CreateAccountHeader title={createdAccount ? 'Account created' : 'Create vault account'} />
+      title={title}
+      description={
+        createdAccount
+          ? 'Use this vault account with apps through Leather in this browser.'
+          : 'Choose an account name and signing threshold.'
       }
+      header={<SheetHeader variant="task" title={title} showCloseButton={isAddingToWallet} />}
+      footerFade={false}
       footer={
         <Flex gap="space.03" justifyContent="flex-end" width="100%">
           {createdAccount ? (
@@ -179,14 +130,12 @@ export function CreateAccountModal({
               <Button variant="ghost" disabled={isAddingToWallet} onClick={handleClose}>
                 Not now
               </Button>
-              <Button
+              <AddToExtensionButton
                 variant="solid"
                 aria-busy={isAddingToWallet}
                 disabled={isAddingToWallet}
                 onClick={() => void addCreatedAccountToWallet()}
-              >
-                Add account to wallet
-              </Button>
+              />
             </>
           ) : (
             <>
@@ -207,12 +156,16 @@ export function CreateAccountModal({
       }
     >
       {createdAccount ? (
-        <AccountCreatedStep vault={vault} account={createdAccount} />
+        <AccountRegistrationBody vault={vault} account={createdAccount} />
       ) : (
         <Flex direction="column" gap="space.05" px="space.05" pb="space.05">
-          <styled.p textStyle="body.02" color="ink.text-subdued">
+          <styled.p textStyle="body.02" color="ink.text-primary">
             An account is a shared on-chain address with its own signing threshold. Use multiple
             accounts for different purposes, like treasury, day-to-day DeFi, or ops.
+            <InlineLearnMoreLink
+              href={multisigGuides.createAccount}
+              subject="creating vault accounts"
+            />
           </styled.p>
           <Box>
             <styled.div textStyle="label.02" color="ink.text-primary" mb="space.02">
@@ -233,7 +186,7 @@ export function CreateAccountModal({
             <styled.div textStyle="label.02" color="ink.text-primary" mb="space.01">
               Signing threshold
             </styled.div>
-            <styled.p textStyle="caption.01" color="ink.text-subdued" mb="space.03">
+            <styled.p textStyle="caption.01" color="ink.text-secondary" mb="space.03">
               How many of {memberCount} members need to approve before a transaction can be
               broadcast?
             </styled.p>
@@ -257,7 +210,7 @@ export function CreateAccountModal({
                 const selected = threshold === value;
                 const atLimit = isThresholdAtAccountLimit(accountList, value, accountLimit);
                 const button = (
-                  <styled.button
+                  <Pressable
                     type="button"
                     aria-disabled={atLimit || undefined}
                     data-disabled={atLimit || undefined}
@@ -266,6 +219,7 @@ export function CreateAccountModal({
                     }}
                     aria-pressed={selected}
                     width="100%"
+                    justifyContent="center"
                     py="space.04"
                     borderRadius="sm"
                     borderWidth="1px"
@@ -275,6 +229,7 @@ export function CreateAccountModal({
                     color={selected ? 'ink.background-primary' : 'ink.text-primary'}
                     textStyle="label.01"
                     cursor="pointer"
+                    _before={{ inset: 0 }}
                     _hover={{ borderColor: 'ink.action-primary-default' }}
                     _disabled={{
                       opacity: 0.4,
@@ -283,7 +238,7 @@ export function CreateAccountModal({
                     }}
                   >
                     {value}
-                  </styled.button>
+                  </Pressable>
                 );
 
                 if (!atLimit) return <Box key={value}>{button}</Box>;

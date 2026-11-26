@@ -65,6 +65,25 @@ const mockAccessTokenPayloadSchema = z.object({
 });
 
 const mockRefreshRequestSchema = z.object({ refreshToken: z.string() });
+const mockCreateAccountSchema = z.object({
+  name: z.string(),
+  icon: z.string().optional(),
+  threshold: z.number(),
+  index: z.number(),
+});
+const mockCreatedAccountsSchema = z.record(z.string(), mockCreateAccountSchema);
+const mockCreatedAccountsKey = 'leather:mock:created-vault-accounts';
+
+function mockCreatedAccounts() {
+  try {
+    const parsed = mockCreatedAccountsSchema.safeParse(
+      JSON.parse(localStorage.getItem(mockCreatedAccountsKey) ?? '{}')
+    );
+    return parsed.success ? parsed.data : {};
+  } catch {
+    return {};
+  }
+}
 
 interface AuthHeaderSource {
   headers: { get(name: string): string | null };
@@ -145,13 +164,22 @@ function vaultSummariesFor(network: AuthNetworkId): VaultSummary[] {
   const isBtc = network.startsWith('btc');
   const isMainnet = network.endsWith('mainnet');
   if (mockScenario() === 'empty') return [];
-  const base = {
+  const base: Omit<VaultSummary, 'id' | 'name' | 'theme' | 'icon' | 'accountCount'> = {
     network,
-    status: 'active' as const,
+    status: 'active',
     createdBy: 'user-me',
     createdAt: '2026-04-18T10:00:00.000Z',
-    membershipStatus: 'joined' as const,
+    membershipStatus: 'joined',
     memberCount: 3,
+  };
+  const emptyVaultId = isMainnet ? 'vault-stx-empty' : 'vault-stx-testnet-empty';
+  const starterVault: VaultSummary = {
+    ...base,
+    id: emptyVaultId,
+    name: 'New Treasury',
+    theme: 'green',
+    icon: 'vault',
+    accountCount: accountSummariesFor(network, emptyVaultId).length,
   };
   if (isMainnet) {
     return isBtc
@@ -184,6 +212,7 @@ function vaultSummariesFor(network: AuthNetworkId): VaultSummary[] {
             membershipStatus: 'invited',
             status: 'pending',
           },
+          starterVault,
         ];
   }
   // testnet: a single playground vault so switching mode shows different data
@@ -196,8 +225,10 @@ function vaultSummariesFor(network: AuthNetworkId): VaultSummary[] {
           name: 'Testnet Playground',
           theme: 'orange',
           icon: 'vault',
+          createdBy: 'user-amber',
           accountCount: 1,
         },
+        starterVault,
       ];
 }
 
@@ -211,7 +242,7 @@ function vaultDetailFor(network: AuthNetworkId, id: string): Vault {
     icon: 'vault',
     network,
     status: summary?.status ?? 'active',
-    createdBy: 'user-me',
+    createdBy: summary?.createdBy ?? 'user-me',
     createdAt: '2026-04-18T10:00:00.000Z',
     members: membersFor(network),
   };
@@ -222,24 +253,43 @@ function accountSummariesFor(network: AuthNetworkId, vaultId: string): VaultAcco
   const addr = isBtc
     ? 'bc1qsnpv5h9k3p7w2x8r4tnvyu0d5h6f0jgk8m4cqfltm9phf8x2axqs4vym3p'
     : 'SM2ZD8K9J3XYE7WQ4N5H6VBRFC0TPGA1MKS3JBNVY';
-  return [
-    {
-      id: `acct-cold-${vaultId}`,
-      vaultId,
-      name: 'Cold storage',
-      icon: 'piggybank',
-      network,
-      threshold: 2,
-      multisigAddress: addr,
-      accountIndex: 0,
-      createdAt: '2026-04-18T10:05:00.000Z',
-      signerCount: 3,
-    },
-  ];
+  const coldAccount: VaultAccountSummary = {
+    id: `acct-cold-${vaultId}`,
+    vaultId,
+    name: 'Cold storage',
+    icon: 'piggybank',
+    network,
+    threshold: 2,
+    multisigAddress: addr,
+    accountIndex: 0,
+    createdAt: '2026-04-18T10:05:00.000Z',
+    signerCount: 3,
+  };
+  const createdPrefix = `${network}:acct-created-${vaultId}-`;
+  const createdAccounts = Object.entries(mockCreatedAccounts())
+    .filter(([key]) => key.startsWith(createdPrefix))
+    .map(([key, account]) => ({
+      ...coldAccount,
+      id: key.slice(network.length + 1),
+      name: account.name,
+      icon: account.icon ?? null,
+      threshold: account.threshold,
+      accountIndex: account.index,
+    }));
+  if (vaultId === 'vault-stx-empty' || vaultId === 'vault-stx-testnet-empty')
+    return createdAccounts;
+  if (vaultId === 'vault-stx-1') {
+    return [
+      coldAccount,
+      { ...coldAccount, id: `acct-ops-${vaultId}`, name: 'Operations', threshold: 3 },
+      ...createdAccounts,
+    ];
+  }
+  return [coldAccount, ...createdAccounts];
 }
 
-function accountDetailFor(network: AuthNetworkId, id: string): VaultAccount {
-  const summary = accountSummariesFor(network, 'vault')[0];
+function accountDetailFor(summary: VaultAccountSummary): VaultAccount {
+  const { network } = summary;
   const signers = membersFor(network).map((m, index) => ({
     network,
     publicKey: mockIdentities[network].publicKey,
@@ -254,7 +304,6 @@ function accountDetailFor(network: AuthNetworkId, id: string): VaultAccount {
   }));
   return {
     ...summary,
-    id,
     signers,
     pendingTransactionCount: 0,
     queuedTransactionCount: 0,
@@ -278,9 +327,27 @@ export const multisigHandlers = [
   http.get('*/v1/multisig/vaults/:id/accounts', ({ request, params }) =>
     HttpResponse.json(accountSummariesFor(networkFromAuthHeader(request), String(params.id)))
   ),
-  http.get('*/v1/multisig/vault-accounts/:id', ({ request, params }) =>
-    HttpResponse.json(accountDetailFor(networkFromAuthHeader(request), String(params.id)))
-  ),
+  http.post('*/v1/multisig/vaults/:id/accounts', async ({ request, params }) => {
+    const network = networkFromAuthHeader(request);
+    const vaultId = String(params.id);
+    const account = mockCreateAccountSchema.safeParse(await request.json());
+    if (!account.success) return HttpResponse.json(null, { status: 400 });
+    const id = `acct-created-${vaultId}-${account.data.threshold}-${account.data.index}`;
+    const createdAccounts = mockCreatedAccounts();
+    createdAccounts[`${network}:${id}`] = account.data;
+    localStorage.setItem(mockCreatedAccountsKey, JSON.stringify(createdAccounts));
+    const summary = accountSummariesFor(network, vaultId).find(candidate => candidate.id === id);
+    if (!summary) return HttpResponse.json(null, { status: 404 });
+    return HttpResponse.json(accountDetailFor(summary));
+  }),
+  http.get('*/v1/multisig/vault-accounts/:id', ({ request, params }) => {
+    const network = networkFromAuthHeader(request);
+    const account = vaultSummariesFor(network)
+      .flatMap(vault => accountSummariesFor(network, vault.id))
+      .find(summary => summary.id === params.id);
+    if (!account) return HttpResponse.json(null, { status: 404 });
+    return HttpResponse.json(accountDetailFor(account));
+  }),
   http.get('*/v1/multisig/vault-accounts/:id/transactions', () => HttpResponse.json([])),
   http.post('*/v1/auth/refresh', async ({ request }) => {
     let refreshToken = '';

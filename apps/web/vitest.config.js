@@ -19,8 +19,12 @@ export default defineProject({
       ['app/pages/playground/shared/recipes/**/*.spec.tsx', 'jsdom'],
       ['app/features/bitcoin-staking/**/*.spec.tsx', 'jsdom'],
       ['app/queries/activity/use-fetch-past-empty-activity-pages.spec.ts', 'jsdom'],
+      ['app/features/multisig/vaults/use-add-account-to-wallet.spec.tsx', 'jsdom'],
+      ['app/pages/multisig/account/components/account-wallet-offer.spec.tsx', 'jsdom'],
       ['app/pages/multisig/account/components/propose-transaction-modal.spec.tsx', 'jsdom'],
+      ['app/pages/multisig/vault/components/accounts-section.spec.tsx', 'jsdom'],
       ['app/pages/multisig/vault/components/share-invitations-modal.spec.tsx', 'jsdom'],
+      ['app/pages/multisig/vault/vault.page.spec.tsx', 'jsdom'],
     ],
   },
 });

@@ -5,7 +5,7 @@ import { useVaultAccountBalance } from '~/features/multisig/vaults/use-vault-acc
 import { formatCryptoGlanceable, formatCurrency } from '~/utils/currency-formatter';
 
 import type { Vault, VaultAccountSummary } from '@leather.io/models';
-import { Button, ListItemBox } from '@leather.io/ui';
+import { Button, ListItemBox, PlusIcon, Pressable } from '@leather.io/ui';
 
 import { AvatarSq } from '../../components/avatar-sq';
 import { vaultThemeFromName } from '../../multisig-tokens';
@@ -46,7 +46,7 @@ function AccountCard({
       borderColor="ink.border-default"
       _hover={{ bg: 'ink.component-background-hover' }}
     >
-      <styled.button
+      <Pressable
         type="button"
         onClick={onOpen}
         aria-label={`Open ${account.name}`}
@@ -56,6 +56,7 @@ function AccountCard({
         bg="transparent"
         cursor="pointer"
         borderRadius="md"
+        _before={{ inset: 0 }}
       />
       <Box position="relative" zIndex={1} pointerEvents="none">
         <ListItemBox
@@ -91,9 +92,15 @@ function AccountCard({
   );
 }
 
-function CreateAccountTile({ onClick }: { onClick(): void }) {
+function CreateAccountTile({
+  isFirstAccount,
+  onClick,
+}: {
+  isFirstAccount: boolean;
+  onClick(): void;
+}) {
   return (
-    <styled.button
+    <Pressable
       type="button"
       onClick={onClick}
       width="100%"
@@ -110,13 +117,12 @@ function CreateAccountTile({ onClick }: { onClick(): void }) {
       cursor="pointer"
       textStyle="label.02"
       color="ink.text-primary"
+      _before={{ inset: 0 }}
       _hover={{ bg: 'ink.component-background-hover' }}
     >
-      <styled.span textStyle="heading.05" lineHeight="1">
-        +
-      </styled.span>
-      Create new account
-    </styled.button>
+      <PlusIcon variant="medium" width={20} height={20} color="ink.text-primary" />
+      {isFirstAccount ? 'Create your first account' : 'Create new account'}
+    </Pressable>
   );
 }
 
@@ -203,7 +209,9 @@ export function AccountsSection({
           </Button>
         </Flex>
       )}
-      {canCreate && <CreateAccountTile onClick={onCreateAccount} />}
+      {canCreate && (
+        <CreateAccountTile isFirstAccount={accounts?.length === 0} onClick={onCreateAccount} />
+      )}
       {!canCreate && disabledReason !== undefined && (
         <CreateAccountDisabled reason={disabledReason} />
       )}
