@@ -14,6 +14,7 @@ const signingAlgorithm = 'RSASSA_PKCS1_V1_5_SHA_256';
 export type TokenPermissions = Readonly<Record<string, 'read' | 'write'>>;
 
 const installationSchema = z.object({ id: z.number() });
+const appSchema = z.object({ slug: z.string().min(1) });
 const accessTokenSchema = z.object({
   token: z.string().min(1),
   permissions: z.record(z.string(), z.string()),
@@ -72,6 +73,11 @@ interface InstallationTokenOptions {
   readonly permissions: TokenPermissions;
 }
 
+export async function appBotLogin(appClient: GitHubClient): Promise<string> {
+  const { slug } = appSchema.parse(await appClient.request('GET', 'app'));
+  return `${slug}[bot]`;
+}
+
 export async function revokeInstallationToken(client: GitHubClient): Promise<void> {
   await client.request('DELETE', 'installation/token');
 }
@@ -109,17 +115,20 @@ interface AppTokenOutputOptions {
   readonly clientId: string;
   readonly kmsKeyId: string;
   readonly permissions: TokenPermissions;
+  readonly withAppLogin?: boolean;
 }
 
 export async function writeAppTokenOutput({
   clientId,
   kmsKeyId,
   permissions,
+  withAppLogin = false,
 }: AppTokenOutputOptions): Promise<void> {
   const apiUrl = process.env.GITHUB_API_URL;
   const jwt = appJwt(clientId, kmsSigner(kmsKeyId), Date.now());
+  const appClient = createGitHubClient({ token: jwt, apiUrl });
   const token = await createInstallationToken({
-    appClient: createGitHubClient({ token: jwt, apiUrl }),
+    appClient,
     tokenClient(installationToken) {
       return createGitHubClient({ token: installationToken, apiUrl });
     },
@@ -127,6 +136,6 @@ export async function writeAppTokenOutput({
     permissions,
   });
   console.log(`::add-mask::${token}`);
-  writeStepOutputs({ token });
+  writeStepOutputs(withAppLogin ? { token, 'app-login': await appBotLogin(appClient) } : { token });
   console.log('app-token: created an installation token that expires within an hour');
 }
