@@ -67,13 +67,13 @@ access.
    pull request branch, `git diff HEAD` is only what the revise changed, and
    `tmp/fix-issue/pull-request.diff` is what the pull request changed before it. Steps 3 to 5
    still cover the whole pull request as it now stands. On top of them:
-   - Check every item of `feedback.md` against its entry under `feedback` in the status. An item
-     marked `"addressed": true` that the change does not deliver, or delivers only in part, is a
-     `blocker`, and so is a reply that says something the code does not do. An item marked
-     `"addressed": false` needs a reason that holds; an item refused without one is a `blocker`.
+   - Check every item of `feedback.md` against its line under `answers` in the status. An item
+     with no answer is a `blocker`. So is an answer that claims a change the code does not
+     deliver, or delivers only in part. An item that was not applied needs a reason that holds; an
+     item refused without one is a `blocker`.
    - Feedback that contradicts a `Settled:` line must not be applied; applying it is a `blocker`.
    - A change no feedback item asks for is a `blocker`, as in step 2.
-   - With a `merge` item, `HEAD` is a merge of `dev` and the listed files conflicted. Read each
+   - With a merge section, `HEAD` is a merge of `dev` and the listed files conflicted. Read each
      one: a resolution that drops what `dev` changed is a `regression`, one that drops what the
      pull request is for is a `blocker`, and a conflict marker left in a file is `critical`. Then
      look for what the merge broke without a conflict: code on `dev` that the pull request relies

@@ -131,28 +131,9 @@ function checkGate(
   return { passed: true, message: 'the verification gate passed' };
 }
 
-function feedbackProblems(status: FixStatus, itemIds: readonly string[]): string[] {
-  const answered = status.feedback.map(entry => entry.id);
-  const missing = itemIds.filter(id => !answered.includes(id));
-  const unknown = answered.filter(id => !itemIds.includes(id));
-  return [
-    ...missing.map(id => `feedback: no entry for ${id}`),
-    ...unknown.map(id => `feedback: ${id} is not an item of the feedback file`),
-  ];
-}
-
-function reviseProblem(
-  status: FixStatus,
-  revise: ReviseState,
-  marked: readonly string[]
-): VerifyResult | null {
-  const problems = feedbackProblems(status, revise.items);
-  if (problems.length > 0) {
-    return {
-      passed: false,
-      message: 'the status does not answer the feedback items one for one',
-      details: problems.join('\n'),
-    };
+function reviseProblem(status: FixStatus, marked: readonly string[]): VerifyResult | null {
+  if (status.answers.length === 0) {
+    return { passed: false, message: 'the status does not answer the feedback', details: '' };
   }
   if (status.state === 'done' && marked.length > 0) {
     return {
@@ -217,7 +198,7 @@ function evaluate(
   if (nothingToVerify && !revise) {
     return { passed: false, message: 'state is done but nothing changed', details: '' };
   }
-  const failed = revise ? reviseProblem(status.status, revise, marked) : null;
+  const failed = revise ? reviseProblem(status.status, marked) : null;
   if (failed) return failed;
   if (nothingToVerify) {
     return {

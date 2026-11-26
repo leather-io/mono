@@ -18,13 +18,12 @@ import { filesWithConflictMarkers, mergeDev } from './merge.js';
 import type { FixIssuePaths } from './paths.js';
 import {
   type ReviseTarget,
-  answerFeedback,
   bullets,
   carriedScreenshots,
   errorMessage,
-  noAnswers,
   readReviseTarget,
   renderReviseSummary,
+  requestReviewAgain,
   unresolvedQuestion,
 } from './revise-pull-request.js';
 import { isScreenshot } from './screenshots.js';
@@ -581,18 +580,6 @@ async function publishRevise(
       });
   }
 
-  const answers = await answerFeedback({
-    client,
-    repo,
-    pullRequest: target.number,
-    head: target.head,
-    status,
-    resolve: entries !== null,
-    log,
-  }).catch((error: unknown) => {
-    log(`open-pull-request: could not answer the review threads: ${errorMessage(error)}`);
-    return noAnswers;
-  });
   const summary = urlSchema.parse(
     await client.request('POST', `repos/${repo}/issues/${target.number}/comments`, {
       body: renderReviseSummary({
@@ -600,21 +587,21 @@ async function publishRevise(
         status,
         commit,
         mergedDev: target.merge ? parentSha : null,
-        answers,
         requestedBy: options.coAuthor,
         request: options.brief,
         runUrl: runUrl(options),
       }),
     })
   );
-  if (commit !== null && !draft && answers.reviewers.length > 0) {
-    await client
-      .request('POST', `repos/${repo}/pulls/${target.number}/requested_reviewers`, {
-        reviewers: answers.reviewers,
-      })
-      .catch((error: unknown) => {
-        log(`open-pull-request: could not re-request review: ${errorMessage(error)}`);
-      });
+  if (commit !== null && !draft) {
+    await requestReviewAgain({
+      client,
+      repo,
+      pullRequest: target.number,
+      head: target.head,
+    }).catch((error: unknown) => {
+      log(`open-pull-request: could not re-request review: ${errorMessage(error)}`);
+    });
   }
   return summary.html_url;
 }

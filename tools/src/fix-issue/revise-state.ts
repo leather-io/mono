@@ -9,7 +9,6 @@ const reviseStateSchema = z.object({
   head: z.string(),
   merge: z.boolean(),
   conflicts: z.array(z.string()),
-  items: z.array(z.string()),
   since: z.string(),
 });
 

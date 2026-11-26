@@ -1,11 +1,5 @@
 import type { GitHubClient } from '../ci/github.js';
-import {
-  fetchFeedback,
-  instructionsItemId,
-  mergeItemId,
-  reviewItemPrefix,
-  threadItemPrefix,
-} from './feedback.js';
+import { fetchFeedback } from './feedback.js';
 import { ensureCommit, planMerge } from './merge.js';
 import type { FixIssuePaths } from './paths.js';
 import { fetchRevisable } from './revise-gate.js';
@@ -36,22 +30,11 @@ export interface ReviseTarget {
   readonly ordinal: number;
 }
 
-interface AnswerOptions {
+interface ReviewersOptions {
   readonly client: GitHubClient;
   readonly repo: string;
   readonly pullRequest: number;
   readonly head: string;
-  readonly status: FixStatus;
-  readonly resolve: boolean;
-  log(line: string): void;
-}
-
-interface FeedbackAnswers {
-  readonly threads: number;
-  readonly answered: number;
-  readonly resolved: number;
-  readonly leftOpen: number;
-  readonly reviewers: readonly string[];
 }
 
 interface SummaryOptions {
@@ -59,7 +42,6 @@ interface SummaryOptions {
   readonly status: FixStatus;
   readonly commit: string | null;
   readonly mergedDev: string | null;
-  readonly answers: FeedbackAnswers;
   readonly requestedBy?: string;
   readonly request?: string;
   readonly runUrl: string | null;
@@ -67,19 +49,6 @@ interface SummaryOptions {
 
 const shortShaLength = 12;
 const screenshotsHeading = '## Screenshots';
-
-const replyMutation =
-  'mutation($thread: ID!, $body: String!) { addPullRequestReviewThreadReply(input: { pullRequestReviewThreadId: $thread, body: $body }) { clientMutationId } }';
-const resolveMutation =
-  'mutation($thread: ID!) { resolveReviewThread(input: { threadId: $thread }) { clientMutationId } }';
-
-export const noAnswers: FeedbackAnswers = {
-  threads: 0,
-  answered: 0,
-  resolved: 0,
-  leftOpen: 0,
-  reviewers: [],
-};
 
 export function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
@@ -152,46 +121,23 @@ export function carriedScreenshots(body: string | null, ordinal: number): string
   return `${table}\n\nCaptured before revise ${ordinal}; what it changed is not shown.`;
 }
 
-export async function answerFeedback({
+export async function requestReviewAgain({
   client,
   repo,
   pullRequest,
   head,
-  status,
-  resolve,
-  log,
-}: AnswerOptions): Promise<FeedbackAnswers> {
+}: ReviewersOptions): Promise<void> {
   const feedback = await fetchFeedback({ client, repo, pullRequest, head });
-  const answersById = new Map(status.feedback.map(entry => [entry.id, entry]));
-  const answers = feedback.threads.flatMap(thread => {
-    const answer = answersById.get(thread.id);
-    return answer === undefined ? [] : [{ thread, answer }];
+  const reviewers = new Set([
+    ...feedback.threads.flatMap(thread =>
+      thread.comments.slice(0, 1).map(comment => comment.author)
+    ),
+    ...feedback.reviews.map(review => review.author),
+  ]);
+  if (reviewers.size === 0) return;
+  await client.request('POST', `repos/${repo}/pulls/${pullRequest}/requested_reviewers`, {
+    reviewers: [...reviewers],
   });
-  let answered = 0;
-  let resolved = 0;
-  for (const { thread, answer } of answers) {
-    try {
-      await client.graphql(replyMutation, { thread: thread.nodeId, body: answer.reply });
-      answered += 1;
-      if (resolve && answer.addressed) {
-        await client.graphql(resolveMutation, { thread: thread.nodeId });
-        resolved += 1;
-      }
-    } catch (error) {
-      log(`open-pull-request: could not answer ${thread.id}: ${errorMessage(error)}`);
-    }
-  }
-  const reviewers = [
-    ...answers.flatMap(({ thread }) => thread.comments.slice(0, 1).map(comment => comment.author)),
-    ...feedback.reviews.filter(review => answersById.has(review.id)).map(review => review.author),
-  ];
-  return {
-    threads: answers.length,
-    answered,
-    resolved,
-    leftOpen: feedback.threads.length - answers.length,
-    reviewers: [...new Set(reviewers)],
-  };
 }
 
 function quoted(text: string): string {
@@ -202,19 +148,11 @@ function quoted(text: string): string {
     .join('\n');
 }
 
-function answerLine(entry: FixStatus['feedback'][number]): string | null {
-  if (entry.id === instructionsItemId) return `What was asked: ${entry.reply}`;
-  if (entry.id === mergeItemId) return `Merge of \`dev\`: ${entry.reply}`;
-  if (entry.id.startsWith(reviewItemPrefix)) return `Review \`${entry.id}\`: ${entry.reply}`;
-  return null;
-}
-
 export function renderReviseSummary({
   ordinal,
   status,
   commit,
   mergedDev,
-  answers,
   requestedBy,
   request,
   runUrl,
@@ -222,20 +160,6 @@ export function renderReviseSummary({
   const by = requestedBy ? `, asked for by @${requestedBy}` : '';
   const run = runUrl ? ` ([run](${runUrl}))` : '';
   const merged = mergedDev ? `, merging \`dev\` at ${shortSha(mergedDev)}` : '';
-  const lines = status.feedback
-    .filter(entry => !entry.id.startsWith(threadItemPrefix))
-    .map(answerLine)
-    .filter(line => line !== null);
-  if (answers.threads > 0) {
-    lines.push(
-      `Review threads: ${answers.answered} of ${answers.threads} answered, ${answers.resolved} resolved.`
-    );
-  }
-  if (answers.leftOpen > 0) {
-    lines.push(
-      `${answers.leftOpen} unresolved review threads were not part of this revise; dispatch another one to have them addressed.`
-    );
-  }
   const parts = [reviseMarker(ordinal), `**Revise ${ordinal} of ${maxRevises}**${by}${run}.`];
   if (request !== undefined && request.trim() !== '') parts.push(quoted(request));
   parts.push(
@@ -243,7 +167,7 @@ export function renderReviseSummary({
       ? `Committed ${shortSha(commit)} (\`${status.commit}\`)${merged}.`
       : 'Nothing was committed to the branch.'
   );
-  if (lines.length > 0) parts.push(bullets(lines));
+  if (status.answers.length > 0) parts.push(bullets(status.answers));
   if (status.state === 'blocked' && status.questions.length > 0) {
     parts.push(
       `It needs answers before it can go on, so the pull request is a draft:\n\n${bullets(status.questions)}`

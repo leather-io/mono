@@ -70,25 +70,14 @@ describe('parseStatus', () => {
     });
   });
 
-  test('takes one answer per feedback item of a revise', () => {
-    const feedback = [
-      { id: 'instructions', addressed: true, reply: 'Wrapped the label.' },
-      { id: 'thread-2187654321', addressed: false, reply: 'Kept the name the brief settles.' },
-    ];
-    const result = parseStatus({ ...doneStatus, feedback });
-    expect(result.ok && result.status.feedback).toEqual(feedback);
-  });
-
-  test.each([
-    [{ id: 'Thread 11', addressed: true, reply: 'Done.' }, 'feedback.0.id: must be an id'],
-    [
-      { id: 'thread-11', addressed: true, reply: 'one\ntwo' },
-      'feedback.0.reply: must be a single line',
-    ],
-    [{ id: 'thread-11', reply: 'Done.' }, 'feedback.0.addressed'],
-  ])('refuses a feedback answer that is not in shape', (entry, message) => {
-    const result = parseStatus({ ...doneStatus, feedback: [entry] });
-    expect(result.ok === false && result.problems.join(' ')).toContain(message);
+  test('takes one answer per feedback item of a revise, each a single line', () => {
+    const answers = ['Wrapped the label.', 'Kept the name the brief settles.'];
+    const result = parseStatus({ ...doneStatus, answers });
+    expect(result.ok && result.status.answers).toEqual(answers);
+    expect(parseStatus({ ...doneStatus, answers: ['one\ntwo'] })).toEqual({
+      ok: false,
+      problems: ['answers.0: must be a single line'],
+    });
   });
 
   test('refuses more than 12 screenshots', () => {

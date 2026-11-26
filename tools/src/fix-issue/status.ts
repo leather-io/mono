@@ -12,8 +12,7 @@ const maxScreenshots = 12;
 const maxHandoffs = 20;
 export const maxFollowUps = 20;
 const screenshotIdPattern = /^[a-z0-9][a-z0-9-]{0,62}$/;
-const maxFeedback = 200;
-const feedbackIdPattern = /^[a-z]+(-\d+)?$/;
+const maxAnswers = 200;
 
 const lineSchema = z
   .string()
@@ -54,12 +53,6 @@ const handoffSchema = z.object({
   change: lineSchema,
 });
 
-const feedbackSchema = z.object({
-  id: z.string().regex(feedbackIdPattern, 'must be an id from the feedback file'),
-  addressed: z.boolean(),
-  reply: lineSchema,
-});
-
 type ListKey = 'why' | 'how' | 'tested';
 const requiredWhenDone: readonly ListKey[] = ['why', 'how', 'tested'];
 
@@ -75,7 +68,7 @@ const fixStatusSchema = z
     screenshots: z.array(screenshotSchema).max(maxScreenshots).default([]),
     handoff: z.array(handoffSchema).max(maxHandoffs).default([]),
     followUps: z.array(lineSchema).max(maxFollowUps).default([]),
-    feedback: z.array(feedbackSchema).max(maxFeedback).default([]),
+    answers: z.array(lineSchema).max(maxAnswers).default([]),
   })
   .superRefine((status, context) => {
     const subject = subjectProblem(status.commit);

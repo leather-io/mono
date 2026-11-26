@@ -14,7 +14,6 @@ const state: ReviseState = {
   head: 'a'.repeat(40),
   merge: true,
   conflicts: ['apps/extension/fee-row.tsx'],
-  items: ['instructions', 'thread-55'],
   since: 'b'.repeat(40),
 };
 
@@ -32,7 +31,7 @@ describe('revise state', () => {
   });
 
   test('refuses a file that is not a revise state', () => {
-    repo.write('tmp/fix-issue/revise.json', JSON.stringify({ ...state, items: [{ id: 'x' }] }));
+    repo.write('tmp/fix-issue/revise.json', JSON.stringify({ ...state, conflicts: [{ id: 'x' }] }));
     expect(() => readReviseState(repo.paths.reviseFile)).toThrow();
   });
 });

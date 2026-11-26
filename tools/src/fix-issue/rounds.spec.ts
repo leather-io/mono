@@ -78,14 +78,10 @@ describe('rounds', () => {
         head: repo.head,
         merge: false,
         conflicts: [],
-        items: ['thread-11'],
         since: repo.head,
       })
     );
-    repo.writeStatus({
-      ...doneStatus,
-      feedback: [{ id: 'thread-11', addressed: true, reply: 'It already wraps; see line 4.' }],
-    });
+    repo.writeStatus({ ...doneStatus, answers: ['It already wraps; see line 4.'] });
     const pnpm = fakePnpm(repo);
     expect(verifyRound(repo.paths, 1, pnpm.run)).toBe(false);
     expect(pnpm.calls).toEqual([]);

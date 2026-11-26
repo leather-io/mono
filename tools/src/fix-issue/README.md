@@ -35,7 +35,7 @@ revise prepare (checks the pull request, gathers feedback, checks out its head, 
   │
   ▼  job open-pull-request: write token, runs only dev's code
 open-pull-request --pull-request ─▶ signed commit on top of the branch head, co-authored by the dispatcher
-  ─▶ thread replies, new description, a comment that records the revise
+  ─▶ new description, a comment that records the revise and its answers
 ```
 
 [Revising a pull request](#revising-a-pull-request) has the rules.
@@ -78,7 +78,7 @@ open-pull-request --pull-request ─▶ signed commit on top of the branch head,
 | `feedback.ts`            | unresolved review threads and review summaries by people with write access, rendered as `feedback.md`    |
 | `merge.ts`               | when a revise merges dev, the merge itself (the same in both jobs), leftover conflict markers            |
 | `revise.ts`              | moving the fixer job from dev to the pull request head: the checkout, the merge, the diff                |
-| `revise-pull-request.ts` | what `open-pull-request` adds for a revise: its target, thread replies, the comment that records it      |
+| `revise-pull-request.ts` | what `open-pull-request` adds for a revise: its target, the reviewers to ask again, the comment          |
 | `revise-state.ts`        | `revise.json`, the branch name pattern, the marker that counts revises                                   |
 | `stop-guard.ts`          | the Stop hook that keeps an agent working until its output file is valid                                 |
 | `dispatch.ts`            | dispatching one brief of a run directory, or the revise of a pull request                                |
@@ -251,9 +251,9 @@ Job `fix-issue` starts on `dev` as always. Before any code of the pull request r
 
 It then writes what the fixer works from: `issue.md` as in a first run, `notes.md` from the brief
 comment (empty when the pull request has none), `pull-request.md` with the title and the
-description, and `feedback.md`. Feedback is one item per section, each with an id: `instructions`
-(the notes of the dispatch), `merge`, `thread-<id>` per unresolved review thread with its path, line
-and comments, and `review-<id>` per review summary. The same write-access filter as `issue.md`
+description, and `feedback.md`. Feedback is one item per section: the notes of the dispatch, the
+merge of `dev`, each unresolved review thread with its path, line and comments, and each review
+summary. The same write-access filter as `issue.md`
 applies to every thread comment and every review: text by anyone else, bots included, is left out
 and counted. Only review summaries written on the current head commit are taken, so one that an
 earlier revise answered with a commit is not handed over twice.
@@ -278,10 +278,10 @@ conflicting `pnpm-lock.yaml`) and builds once it has resolved them.
 The rounds are the same, with these differences, all keyed on `revise.json` and `feedback.md`:
 
 - `.github/prompts/fix-issue.md` sends the fixer to `.github/prompts/fix-issue-revise.md`. The
-  fixer addresses each item and answers it under `feedback` in the status (`id`, `addressed`, a
-  one-line `reply`). The brief's `Settled:` lines still bind: feedback that contradicts one is not
+  fixer addresses each item and answers it with one line under `answers` in the status. The
+  brief's `Settled:` lines still bind: feedback that contradicts one is not
   applied and becomes a question.
-- `round verify` fails a round whose status does not answer the items one for one, or that calls
+- `round verify` fails a round whose status has no answers, or that calls
   itself done while a conflict marker remains, and runs the gate over every package the pull
   request changed against `dev`, not only what the revise touched. A revise that changes nothing
   and only answers is valid and skips the gate and the review; a merge is always checked, even when
@@ -299,16 +299,14 @@ The signed commit has the branch head as its parent, and `dev` as a second paren
 the branch is moved without force. While a conflict marker remains nothing is committed, the
 question goes on the pull request and it becomes a draft. After the commit it:
 
-- replies on each unresolved review thread the fixer answered, when the thread has a comment by
-  someone with write access, and resolves the ones marked addressed (GraphQL);
 - rewrites the description from the status, which describes the whole pull request as it now
   stands, and makes the pull request a draft when the status is blocked or hands changes off, or
   ready again when nothing blocks it;
 - posts one comment that records the revise on the pull request: which revise of five it was, who
-  dispatched it and with which notes, the run, the commit, the answers to the items that have no
-  thread, the questions, and how many unresolved threads were left out;
-- requests review again from the authors of the threads and summaries it answered, when a commit
-  landed and the pull request is not a draft.
+  dispatched it and with which notes, the run, the commit, the fixer's answers and the questions;
+- requests review again from the authors of the unresolved threads and of the summaries, when a
+  commit landed and the pull request is not a draft. It never replies on a review thread or
+  resolves one; reviewers do that.
 
 Nothing shows on the pull request while a revise runs, and a failed run leaves it as it was, with
 no comment; the run itself is the record then.

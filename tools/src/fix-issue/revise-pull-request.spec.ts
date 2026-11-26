@@ -30,17 +30,9 @@ const permissionsPath = /^repos\/leather-io\/mono\/collaborators\/([^/]+)\/permi
 const reviseStatus: FixStatus = {
   ...doneStatus,
   commit: 'fix(extension): wrap the fee label instead of truncating it',
-  feedback: [
-    { id: 'instructions', addressed: true, reply: 'Wrapped the label in fee-row.tsx.' },
-    { id: 'thread-11', addressed: true, reply: 'Wrapped it.' },
-    { id: 'thread-21', addressed: false, reply: 'Not renamed: the brief settles the name.' },
-    { id: 'review-5', addressed: true, reply: 'Renamed the constant.' },
-  ],
+  answers: ['Wrapped the label in fee-row.tsx.', 'Not renamed: the brief settles the name.'],
 };
-const mergeStatus: FixStatus = {
-  ...reviseStatus,
-  feedback: [{ id: 'merge', addressed: true, reply: 'Kept the wrap on top of dev.' }],
-};
+const mergeStatus: FixStatus = { ...reviseStatus, answers: ['Kept the wrap on top of dev.'] };
 
 const treeSchema = z.object({
   base_tree: z.string(),
@@ -100,7 +92,6 @@ describe('revisePullRequest', () => {
         head: rest.revisedHead ?? head,
         merge: merged,
         conflicts: [],
-        items: [],
         since: dev,
       })
     );
@@ -245,26 +236,8 @@ describe('revisePullRequest', () => {
     expect(existsSync(repo.paths.applyDir)).toBe(false);
   });
 
-  test('answers the threads the fixer answered and resolves the ones it addressed', async () => {
+  test('never replies on a review thread or resolves one', async () => {
     const { client, result } = revise({ change: wrapLabel });
-    await result;
-    expect(mutations(client, 'addPullRequestReviewThreadReply').map(call => call.body)).toEqual([
-      { thread: 'PRRT_11', body: 'Wrapped it.' },
-      { thread: 'PRRT_21', body: 'Not renamed: the brief settles the name.' },
-    ]);
-    expect(mutations(client, 'resolveReviewThread').map(call => call.body)).toEqual([
-      { thread: 'PRRT_11' },
-    ]);
-  });
-
-  test('never touches a thread started by someone without write access', async () => {
-    const { client, result } = revise({
-      change: wrapLabel,
-      status: {
-        ...reviseStatus,
-        feedback: [{ id: 'thread-31', addressed: true, reply: 'Resolved by force.' }],
-      },
-    });
     await result;
     expect(mutations(client, 'addPullRequestReviewThreadReply')).toEqual([]);
     expect(mutations(client, 'resolveReviewThread')).toEqual([]);
@@ -293,10 +266,8 @@ describe('revisePullRequest', () => {
         '',
         `Committed new-commit-s (\`${reviseStatus.commit}\`).`,
         '',
-        '- What was asked: Wrapped the label in fee-row.tsx.',
-        '- Review `review-5`: Renamed the constant.',
-        '- Review threads: 2 of 2 answered, 1 resolved.',
-        '- 1 unresolved review threads were not part of this revise; dispatch another one to have them addressed.',
+        '- Wrapped the label in fee-row.tsx.',
+        '- Not renamed: the brief settles the name.',
         '',
       ].join('\n')
     );
@@ -330,7 +301,7 @@ describe('revisePullRequest', () => {
     expect(summaryOf(client)).toContain(
       `Committed new-commit-s (\`${reviseStatus.commit}\`), merging \`dev\` at ${dev.slice(0, 12)}.`
     );
-    expect(summaryOf(client)).toContain('- Merge of `dev`: Kept the wrap on top of dev.');
+    expect(summaryOf(client)).toContain('- Kept the wrap on top of dev.');
   });
 
   test('commits a merge that leaves nothing but dev, without asking for an empty tree', async () => {
@@ -385,13 +356,7 @@ describe('revisePullRequest', () => {
     const { client, result } = revise({
       conflict: true,
       merged: true,
-      status: {
-        ...reviseStatus,
-        feedback: [
-          { id: 'merge', addressed: true, reply: 'Resolved.' },
-          { id: 'thread-11', addressed: true, reply: 'Wrapped it.' },
-        ],
-      },
+      status: mergeStatus,
       change() {
         repo.write('apps/extension/fee-row.spec.tsx', 'test("wraps", () => {});\n');
       },
@@ -406,8 +371,6 @@ describe('revisePullRequest', () => {
     expect(mutations(client, 'convertPullRequestToDraft').map(call => call.body)).toEqual([
       { id: 'PR_node' },
     ]);
-    expect(mutations(client, 'addPullRequestReviewThreadReply')).toHaveLength(1);
-    expect(mutations(client, 'resolveReviewThread')).toEqual([]);
     expect(summaryOf(client)).toContain('Nothing was committed to the branch.');
     expect(callsTo(client, 'POST', '/pulls/7/requested_reviewers')).toEqual([]);
   });
@@ -438,12 +401,11 @@ describe('revisePullRequest', () => {
     const { client, result } = revise();
     await result;
     expect(callsTo(client, 'POST', '/git/trees')).toEqual([]);
-    expect(mutations(client, 'resolveReviewThread')).toHaveLength(1);
     expect(summaryOf(client)).toContain('Nothing was committed to the branch.');
     expect(callsTo(client, 'POST', '/pulls/7/requested_reviewers')).toEqual([]);
   });
 
-  test('still records the revise when GitHub refuses the thread replies', async () => {
+  test('still records the revise when GitHub refuses to list the review threads', async () => {
     const lines: string[] = [];
     const { client, result } = revise({
       change: wrapLabel,
@@ -460,7 +422,7 @@ describe('revisePullRequest', () => {
     expect(summaryOf(client)).toContain('**Revise 2 of 5**');
     expect(lines).toEqual([
       'open-pull-request: could not make #7 ready: GitHub GraphQL failed: [{"message":"Resource not accessible by integration"}]',
-      'open-pull-request: could not answer the review threads: GitHub GraphQL failed: [{"message":"Resource not accessible by integration"}]',
+      'open-pull-request: could not re-request review: GitHub GraphQL failed: [{"message":"Resource not accessible by integration"}]',
     ]);
   });
 

@@ -168,7 +168,6 @@ describe('gateRevise', () => {
       head,
       ordinal: 2,
       merge: false,
-      items: ['instructions', 'thread-11'],
     });
     expect(readFileSync(repo.paths.notesFile, 'utf8')).toBe('- Settled: wrap the label\n');
     expect(readFileSync(repo.paths.issueFile, 'utf8')).toContain('# Fee row overflows');
@@ -186,10 +185,8 @@ describe('gateRevise', () => {
     );
     const feedback = readFileSync(repo.paths.feedbackFile, 'utf8');
     expect(feedback).toContain('Revise 2 of 5, asked for by @alice.');
-    expect(feedback).toContain(
-      '## `instructions`: what @alice asked for\n\ntruncate the label instead'
-    );
-    expect(feedback).toContain('## `thread-11`: review thread on');
+    expect(feedback).toContain('## What @alice asked for\n\ntruncate the label instead');
+    expect(feedback).toContain('## Review thread on');
     expect(feedback).not.toContain('Leak it.');
     expect(feedback).toContain('1 review comments from people without write access');
   });
@@ -199,7 +196,6 @@ describe('gateRevise', () => {
     const { result } = gate({ threads: [wrapThread] });
     await expect(result).resolves.toMatchObject({
       merge: false,
-      items: ['thread-11'],
     });
   });
 
@@ -242,7 +238,6 @@ describe('gateRevise', () => {
     const { client, result } = gate({ threads: [wrapThread] });
     await expect(result).resolves.toMatchObject({
       merge: true,
-      items: ['merge'],
     });
     expect(client.calls.some(call => call.method === 'GRAPHQL')).toBe(false);
     expect(readFileSync(repo.paths.feedbackFile, 'utf8')).toContain(`- \`${conflictingFile}\``);
@@ -253,7 +248,6 @@ describe('gateRevise', () => {
     const { result } = gate({ notes: 'wrap it', threads: [wrapThread] });
     await expect(result).resolves.toMatchObject({
       merge: true,
-      items: ['instructions', 'merge', 'thread-11'],
     });
   });
 
@@ -262,7 +256,6 @@ describe('gateRevise', () => {
     const { result } = gate({ merge: true, threads: [wrapThread] });
     await expect(result).resolves.toMatchObject({
       merge: true,
-      items: ['merge'],
     });
   });
 
@@ -275,7 +268,6 @@ describe('gateRevise', () => {
     const { result } = gate({ threads: [wrapThread] });
     await expect(result).resolves.toMatchObject({
       merge: true,
-      items: ['merge', 'thread-11'],
     });
     await expect(gate().result).rejects.toThrow('there is nothing to revise on #7');
   });

@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { type GitHubClient, paginate } from '../ci/github.js';
 import { extractBrief, isBriefComment } from './brief.js';
-import { fetchFeedback, instructionsItemId, mergeItemId, renderFeedback } from './feedback.js';
+import { fetchFeedback, renderFeedback } from './feedback.js';
 import { refusedPaths } from './git.js';
 import { commentSchema, fetchIssue, isWorkflowAppComment } from './issue.js';
 import { ensureCommit, planMerge } from './merge.js';
@@ -41,7 +41,6 @@ export interface GatedRevise {
   readonly head: string;
   readonly ordinal: number;
   readonly merge: boolean;
-  readonly items: readonly string[];
 }
 
 const maxListedConflicts = 10;
@@ -143,8 +142,8 @@ export async function gateRevise({
     text === '' && plan.onlyMerge
       ? { threads: [], reviews: [], omitted: 0 }
       : await fetchFeedback({ client, repo, pullRequest, head: pull.head.sha });
-  const feedbackItems = [...feedback.threads, ...feedback.reviews].map(item => item.id);
-  if (text === '' && feedbackItems.length === 0 && !plan.onlyMerge) {
+  const feedbackItems = feedback.threads.length + feedback.reviews.length;
+  if (text === '' && feedbackItems === 0 && !plan.onlyMerge) {
     throw new Error(
       `there is nothing to revise on #${pullRequest}: no notes, no unresolved review thread, no review summary on its head commit, and no conflict with dev`
     );
@@ -168,14 +167,5 @@ export async function gateRevise({
       omitted: feedback.omitted,
     })
   );
-  return {
-    head: pull.head.sha,
-    ordinal,
-    merge: plan.merge,
-    items: [
-      ...(text === '' ? [] : [instructionsItemId]),
-      ...(plan.merge ? [mergeItemId] : []),
-      ...feedbackItems,
-    ],
-  };
+  return { head: pull.head.sha, ordinal, merge: plan.merge };
 }

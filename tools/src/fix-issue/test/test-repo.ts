@@ -42,7 +42,7 @@ export const doneStatus: FixStatus = {
   screenshots: [],
   handoff: [],
   followUps: [],
-  feedback: [],
+  answers: [],
 };
 
 export const blockedStatus: FixStatus = {

@@ -162,16 +162,9 @@ describe('verifyFix', () => {
       head: 'a'.repeat(40),
       merge: false,
       conflicts: noConflicts,
-      items: ['instructions', 'thread-11'],
       since: 'abc123',
     };
-    const answered = {
-      ...doneStatus,
-      feedback: [
-        { id: 'instructions', addressed: true, reply: 'Wrapped the label.' },
-        { id: 'thread-11', addressed: false, reply: 'Kept the name.' },
-      ],
-    };
+    const answered = { ...doneStatus, answers: ['Wrapped the label.', 'Kept the name.'] };
 
     function verifyRevise(pnpm: FakePnpm, check: ReviseState = revise) {
       return verifyFix({
@@ -193,24 +186,15 @@ describe('verifyFix', () => {
       expect(pnpm.calls).toEqual(gate.map(call => call.replace('[HEAD]', '[abc123]')));
     });
 
-    test('fails until the status answers every feedback item, and no other', () => {
+    test('fails until the status answers the feedback', () => {
       repo = createTestRepo();
       repo.makeFix();
-      repo.writeStatus({
-        ...doneStatus,
-        feedback: [
-          { id: 'instructions', addressed: true, reply: 'Wrapped the label.' },
-          { id: 'thread-99', addressed: true, reply: 'Made up.' },
-        ],
-      });
+      repo.writeStatus(doneStatus);
       const pnpm = fakePnpm(repo);
       expect(verifyRevise(pnpm)).toMatchObject({
         passed: false,
-        message: 'the status does not answer the feedback items one for one',
+        message: 'the status does not answer the feedback',
       });
-      expect(readFileSync(repo.paths.verifyReport, 'utf8')).toBe(
-        'FAILED: the status does not answer the feedback items one for one\n\n```\nfeedback: no entry for thread-11\nfeedback: thread-99 is not an item of the feedback file\n```\n'
-      );
       expect(pnpm.calls).toEqual([]);
     });
 

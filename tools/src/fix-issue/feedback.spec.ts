@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
 import { GitHubError } from '../ci/github.js';
-import { fetchFeedback, fetchOpenThreads, renderFeedback } from './feedback.js';
+import { fetchFeedback, renderFeedback } from './feedback.js';
 import { type GraphqlRoute, fakeGitHub, reviewThread, threadsPage } from './test/fake-github.js';
 
 const repo = 'leather-io/mono';
@@ -34,9 +34,9 @@ function github(
   }, threads);
 }
 
-describe('fetchOpenThreads', () => {
-  test('pages through the threads and keeps the unresolved ones under stable ids', async () => {
-    const client = fakeGitHub(undefined, (_query, variables) =>
+describe('fetchFeedback', () => {
+  test('pages through the threads and keeps the unresolved ones', async () => {
+    const client = github((_query, variables) =>
       variables['cursor'] === null
         ? threadsPage(
             [
@@ -52,10 +52,9 @@ describe('fetchOpenThreads', () => {
           )
         : threadsPage([reviewThread({ commentId: 13, author: 'dave', body: 'Name it.' })])
     );
-    const threads = await fetchOpenThreads(client, repo, 7);
-    expect(threads.map(thread => thread.id)).toEqual(['thread-11', 'thread-13']);
-    expect(threads.map(({ thread }) => thread.id)).toEqual(['PRRT_11', 'PRRT_13']);
-    expect(client.calls.map(call => call.body)).toEqual([
+    const { threads } = await fetchFeedback({ client, repo, pullRequest: 7, head });
+    expect(threads.map(thread => thread.comments[0]?.body)).toEqual(['Wrap it.', 'Name it.']);
+    expect(client.calls.filter(call => call.method === 'GRAPHQL').map(call => call.body)).toEqual([
       { owner: 'leather-io', name: 'mono', number: 7, cursor: null },
       { owner: 'leather-io', name: 'mono', number: 7, cursor: 'next' },
     ]);
@@ -63,13 +62,11 @@ describe('fetchOpenThreads', () => {
 
   test('fails when GitHub answers with an error', async () => {
     const client = fakeGitHub(undefined, () => ({ errors: [{ message: 'Not found' }] }));
-    await expect(fetchOpenThreads(client, repo, 7)).rejects.toThrow(
+    await expect(fetchFeedback({ client, repo, pullRequest: 7, head })).rejects.toThrow(
       'GitHub GraphQL failed: [{"message":"Not found"}]'
     );
   });
-});
 
-describe('fetchFeedback', () => {
   test('keeps only what people with write access wrote and counts the rest', async () => {
     const client = github(
       () =>
@@ -101,8 +98,6 @@ describe('fetchFeedback', () => {
     const feedback = await fetchFeedback({ client, repo, pullRequest: 7, head });
     expect(feedback.threads).toEqual([
       {
-        id: 'thread-11',
-        nodeId: 'PRRT_11',
         path: 'apps/extension/fee-row.tsx',
         line: 4,
         outdated: false,
@@ -114,7 +109,6 @@ describe('fetchFeedback', () => {
     ]);
     expect(feedback.reviews).toEqual([
       {
-        id: 'review-5',
         author: 'dave',
         state: 'CHANGES_REQUESTED',
         body: 'Please rename the constant.',
@@ -138,7 +132,7 @@ describe('fetchFeedback', () => {
       ]
     );
     const feedback = await fetchFeedback({ client, repo, pullRequest: 7, head });
-    expect(feedback.reviews.map(entry => entry.id)).toEqual(['review-6']);
+    expect(feedback.reviews.map(entry => entry.body)).toEqual(['New.']);
     expect(feedback.omitted).toBe(0);
   });
 
@@ -155,21 +149,18 @@ describe('fetchFeedback', () => {
 
 describe('renderFeedback', () => {
   const thread = {
-    id: 'thread-11',
-    nodeId: 'PRRT_11',
     path: 'apps/extension/fee-row.tsx',
     line: 4,
     outdated: true,
     comments: [{ author: 'carol', createdAt: '2026-11-12T09:00:00Z', body: 'Wrap it.\n' }],
   };
   const summary = {
-    id: 'review-5',
     author: 'dave',
     state: 'CHANGES_REQUESTED',
     body: 'Please rename the constant.',
   };
 
-  test('gives every item a section with its id', () => {
+  test('gives every item a section', () => {
     expect(
       renderFeedback({
         pullRequest: 7,
@@ -185,19 +176,19 @@ describe('renderFeedback', () => {
       [
         '# Feedback on pull request #7',
         '',
-        'Revise 2 of 5, asked for by @alice. Every section below is one item with an id; the status file needs one `feedback` entry per id.',
+        'Revise 2 of 5, asked for by @alice. Every section below is one item; the status file needs one line under `answers` per item.',
         '',
-        '## `instructions`: what @alice asked for',
+        '## What @alice asked for',
         '',
         'Truncate instead.',
         '',
-        '## `merge`: `dev` was merged into the branch and conflicts',
+        '## `dev` was merged into the branch and conflicts',
         '',
         `The workflow merged \`dev\` at \`${'d'.repeat(40)}\` into the pull request branch before you started. These files conflict; resolve every one:`,
         '',
         '- `apps/extension/fee-row.tsx`',
         '',
-        '## `thread-11`: review thread on `apps/extension/fee-row.tsx line 4`',
+        '## Review thread on `apps/extension/fee-row.tsx line 4`',
         '',
         'The code under this thread changed after the comment was written.',
         '',
@@ -205,7 +196,7 @@ describe('renderFeedback', () => {
         '',
         'Wrap it.',
         '',
-        '## `review-5`: review by @dave (changes requested)',
+        '## Review by @dave (changes requested)',
         '',
         'Please rename the constant.',
         '',
@@ -226,8 +217,8 @@ describe('renderFeedback', () => {
       reviews: [],
       omitted: 0,
     });
-    expect(text).toContain('## `merge`: `dev` was merged into the branch\n');
+    expect(text).toContain('## `dev` was merged into the branch\n');
     expect(text).toContain('The merge had no conflicts.');
-    expect(text).not.toMatch(/instructions|omitted/);
+    expect(text).not.toMatch(/asked for\n|omitted/);
   });
 });

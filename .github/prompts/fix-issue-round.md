@@ -21,7 +21,7 @@ nobody can answer a question while it runs.
 - The current change: `git status --porcelain=v1 --untracked-files=all` and `git diff HEAD`.
 - `tmp/fix-issue/feedback.md`, only when this run revises an open pull request: the feedback the
   change answers. `.github/prompts/fix-issue-revise.md` then applies as well: every item keeps its
-  entry under `feedback` in the status, and a `merge` item means `HEAD` is a merge of `dev` whose
+  line under `answers` in the status, and a merge section means `HEAD` is a merge of `dev` whose
   conflicts must stay resolved.
 
 Every rule in `.github/prompts/fix-issue.md` still applies: the paths you may change, no commits, no

@@ -426,7 +426,7 @@ export function registerFixIssueCommands(program: Command): void {
         const state = startRevise(target, gated, flags.devSha);
         writeStepOutputs({ merged: state.merge, conflicted: state.conflicts.length > 0 });
         console.log(
-          `revise-prepare: revise ${gated.ordinal} of #${pullRequest} at ${state.head} with ${state.items.length} feedback items${state.merge ? `, on a merge of ${flags.devSha} with ${state.conflicts.length} conflicting files` : ''}`
+          `revise-prepare: revise ${gated.ordinal} of #${pullRequest} at ${state.head}${state.merge ? `, on a merge of ${flags.devSha} with ${state.conflicts.length} conflicting files` : ''}`
         );
       })
     );

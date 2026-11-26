@@ -18,7 +18,6 @@ export function startRevise(paths: FixIssuePaths, gated: GatedRevise, dev: strin
     head: gated.head,
     merge: gated.merge,
     conflicts,
-    items: [...gated.items],
     since,
   };
   writeReviseState(paths.reviseFile, started);

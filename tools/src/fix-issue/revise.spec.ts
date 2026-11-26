@@ -21,13 +21,13 @@ describe('startRevise', () => {
 
   function prepare(conflict: boolean, merge: boolean) {
     const { head, dev } = createPullRequestBranch(repo, { conflict });
-    const gated: GatedRevise = { head, ordinal: 1, merge, items: ['instructions'] };
+    const gated: GatedRevise = { head, ordinal: 1, merge };
     return { gated, dev };
   }
 
   test('moves from dev to the pull request head and writes its diff against dev', () => {
     const { gated, dev } = prepare(false, false);
-    const started = { head: gated.head, merge: false, conflicts: [], items: gated.items };
+    const started = { head: gated.head, merge: false, conflicts: [] };
     expect(startRevise(repo.paths, gated, dev)).toEqual({ ...started, since: repo.head });
     expect(repo.git(['rev-parse', 'HEAD'])).toBe(gated.head);
     expect(readReviseState(repo.paths.reviseFile)).toEqual({ ...started, since: repo.head });

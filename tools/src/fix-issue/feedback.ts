@@ -11,8 +11,6 @@ interface FeedbackComment {
 }
 
 interface FeedbackThread {
-  readonly id: string;
-  readonly nodeId: string;
   readonly path: string;
   readonly line: number | null;
   readonly outdated: boolean;
@@ -20,7 +18,6 @@ interface FeedbackThread {
 }
 
 interface FeedbackReview {
-  readonly id: string;
   readonly author: string;
   readonly state: string;
   readonly body: string;
@@ -55,11 +52,6 @@ interface RenderFeedbackOptions {
   readonly omitted: number;
 }
 
-export const instructionsItemId = 'instructions';
-export const mergeItemId = 'merge';
-export const threadItemPrefix = 'thread-';
-export const reviewItemPrefix = 'review-';
-
 const threadsPageSize = 50;
 const maxThreadPages = 10;
 const userType = 'User';
@@ -75,14 +67,13 @@ const threadsQuery = `query($owner: String!, $name: String!, $number: Int!, $cur
       reviewThreads(first: ${threadsPageSize}, after: $cursor) {
         pageInfo { hasNextPage endCursor }
         nodes {
-          id
           isResolved
           isOutdated
           path
           line
           originalLine
           comments(first: ${threadsPageSize}) {
-            nodes { databaseId body createdAt author { __typename login } }
+            nodes { body createdAt author { __typename login } }
           }
         }
       }
@@ -91,7 +82,6 @@ const threadsQuery = `query($owner: String!, $name: String!, $number: Int!, $cur
 }`;
 
 const threadSchema = z.object({
-  id: z.string(),
   isResolved: z.boolean(),
   isOutdated: z.boolean(),
   path: z.string(),
@@ -100,7 +90,6 @@ const threadSchema = z.object({
   comments: z.object({
     nodes: z.array(
       z.object({
-        databaseId: z.number().nullable(),
         body: z.string(),
         createdAt: z.string(),
         author: z.object({ __typename: z.string(), login: z.string() }).nullable(),
@@ -130,33 +119,20 @@ const reviewSchema = z.object({
 
 type RawThread = z.infer<typeof threadSchema>;
 
-interface OpenThread {
-  readonly id: string;
-  readonly thread: RawThread;
-}
-
-function threadItemId(thread: RawThread): string | null {
-  const first = thread.comments.nodes[0]?.databaseId;
-  return first === null || first === undefined ? null : `${threadItemPrefix}${first}`;
-}
-
-export async function fetchOpenThreads(
+async function fetchOpenThreads(
   client: GitHubClient,
   repo: string,
   pullRequest: number
-): Promise<OpenThread[]> {
+): Promise<RawThread[]> {
   const [owner, name] = repo.split('/');
-  const threads: OpenThread[] = [];
+  const threads: RawThread[] = [];
   let cursor: string | null = null;
   for (let page = 0; page < maxThreadPages; page += 1) {
     const data: z.infer<typeof threadsSchema> = threadsSchema.parse(
       await client.graphql(threadsQuery, { owner, name, number: pullRequest, cursor })
     );
     const { nodes, pageInfo } = data.repository.pullRequest.reviewThreads;
-    for (const thread of nodes) {
-      const id = threadItemId(thread);
-      if (!thread.isResolved && id !== null) threads.push({ id, thread });
-    }
+    threads.push(...nodes.filter(thread => !thread.isResolved));
     if (!pageInfo.hasNextPage) break;
     cursor = pageInfo.endCursor;
   }
@@ -183,7 +159,7 @@ export async function fetchFeedback({
         (review.body ?? '').trim() !== '' &&
         review.commit_id === head
     );
-  const threadComments = open.flatMap(({ thread }) => thread.comments.nodes);
+  const threadComments = open.flatMap(thread => thread.comments.nodes);
   const trusted = await trustedAuthors(client, repo, [
     ...threadComments.map(comment =>
       comment.author && isUser(comment.author.__typename) ? comment.author.login : null
@@ -191,9 +167,7 @@ export async function fetchFeedback({
     ...reviews.map(review => (review.user && isUser(review.user.type) ? review.user.login : null)),
   ]);
   const threads = open
-    .map(({ id, thread }) => ({
-      id,
-      nodeId: thread.id,
+    .map(thread => ({
       path: thread.path,
       line: thread.line ?? thread.originalLine,
       outdated: thread.isOutdated,
@@ -208,7 +182,6 @@ export async function fetchFeedback({
     review.user && isUser(review.user.type) && trusted.has(review.user.login)
       ? [
           {
-            id: `${reviewItemPrefix}${review.id}`,
             author: review.user.login,
             state: review.state,
             body: (review.body ?? '').trim(),
@@ -228,13 +201,13 @@ function renderMerge({ dev, conflicts }: MergeNote): string[] {
   const intro = `The workflow merged \`dev\` at \`${dev}\` into the pull request branch before you started.`;
   if (conflicts.length === 0) {
     return [
-      `## \`${mergeItemId}\`: \`dev\` was merged into the branch`,
+      '## `dev` was merged into the branch',
       '',
       `${intro} The merge had no conflicts. Check that the change still does its job against the newer code on \`dev\`.`,
     ];
   }
   return [
-    `## \`${mergeItemId}\`: \`dev\` was merged into the branch and conflicts`,
+    '## `dev` was merged into the branch and conflicts',
     '',
     `${intro} These files conflict; resolve every one:`,
     '',
@@ -248,7 +221,7 @@ function renderThread(thread: FeedbackThread): string[] {
     ? ['', 'The code under this thread changed after the comment was written.']
     : [];
   return [
-    `## \`${thread.id}\`: review thread on \`${where}\``,
+    `## Review thread on \`${where}\``,
     ...outdated,
     ...thread.comments.flatMap(comment => [
       '',
@@ -261,7 +234,7 @@ function renderThread(thread: FeedbackThread): string[] {
 
 function renderReview(review: FeedbackReview): string[] {
   return [
-    `## \`${review.id}\`: review by @${review.author} (${reviewStates[review.state] ?? review.state})`,
+    `## Review by @${review.author} (${reviewStates[review.state] ?? review.state})`,
     '',
     review.body,
   ];
@@ -281,15 +254,11 @@ export function renderFeedback({
     [
       `# Feedback on pull request #${pullRequest}`,
       '',
-      `Revise ${ordinal} of ${maxRevises}, asked for by @${requestedBy}. Every section below is one item with an id; the status file needs one \`feedback\` entry per id.`,
+      `Revise ${ordinal} of ${maxRevises}, asked for by @${requestedBy}. Every section below is one item; the status file needs one line under \`answers\` per item.`,
     ],
   ];
   if (instructions !== '') {
-    sections.push([
-      `## \`${instructionsItemId}\`: what @${requestedBy} asked for`,
-      '',
-      instructions,
-    ]);
+    sections.push([`## What @${requestedBy} asked for`, '', instructions]);
   }
   if (merge) sections.push(renderMerge(merge));
   sections.push(...threads.map(renderThread), ...reviews.map(renderReview));

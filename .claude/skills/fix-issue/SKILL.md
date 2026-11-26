@@ -199,12 +199,11 @@ What comes back, 20 minutes to two hours later, on the same pull request:
 
 - one new signed commit on top of the branch, never a force-push; after a merge it has `dev` as its
   second parent;
-- a reply on each review thread saying what was done, resolved when it was addressed and left open
-  when the fixer disagreed or needs an answer;
 - the description rewritten for the pull request as it now stands, and review requested again from
   the people whose feedback it answered;
 - one comment that records the revise: `Revise <n> of 5`, who dispatched it and with which notes,
-  the commit, and the answers that have no thread;
+  the commit, and one line per feedback item saying what was done or why not. The review threads
+  get no reply and stay open; reviewers resolve them;
 - a draft with the question when it needs a decision. Feedback that contradicts a `Settled:` line
   of the brief is never applied; it comes back as a question. To change a settled decision, change
   the brief and dispatch the issue again (section 8).
