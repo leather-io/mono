@@ -32,6 +32,7 @@ interface VaultActivityRowProps {
   item: VaultActivityItem;
   scale?: TransactionRowScale;
   needsAttention?: boolean;
+  review?: 'solid' | 'outline';
   location?: ActivityRowLocation;
   href?: string;
   variant?: 'boxed' | 'plain';
@@ -84,6 +85,7 @@ export function VaultActivityRow({
   item,
   scale = 'regular',
   needsAttention,
+  review = needsAttention ? 'solid' : undefined,
   location,
   href,
   variant = 'boxed',
@@ -142,8 +144,8 @@ export function VaultActivityRow({
         ) : undefined
       }
       action={
-        needsAttention ? (
-          <Button size="sm" onClick={onClick}>
+        review ? (
+          <Button variant={review} size="sm" onClick={onClick}>
             Review
           </Button>
         ) : undefined

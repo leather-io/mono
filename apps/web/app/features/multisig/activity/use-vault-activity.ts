@@ -15,11 +15,8 @@ import { isDefined } from '@leather.io/utils';
 import { useMultisigNetworks } from '../auth/use-multisig-networks';
 import { useSession } from '../auth/use-session';
 import { createMultisigAccountAddresses } from '../vaults/multisig-account-addresses';
-import {
-  multisigProposalsRefetchInterval,
-  onchainActivityRefetchInterval,
-  retryMultisigQuery,
-} from '../vaults/use-vaults';
+import { accountTransactionsQuery } from '../vaults/use-vault-transactions';
+import { onchainActivityRefetchInterval, retryMultisigQuery } from '../vaults/use-vaults';
 import { multisigVaultKeys } from '../vaults/vault-query-keys';
 import {
   type ActivityAccount,
@@ -41,8 +38,6 @@ import type {
   MultisigActivityClassification,
   ProposalTokenInfo,
 } from './multisig-transaction-activity-view';
-
-const transactionsPageRequest = { page: 1, pageSize: 100 };
 
 const previewActivityLimit = 15;
 
@@ -79,23 +74,7 @@ export function useMultisigActivityInputs(
   const summaryResults = useQueries({
     queries: accounts.map(account => {
       const session = sessionForNetwork(account.network);
-      return {
-        queryKey: multisigVaultKeys.accountTransactions(
-          account.network,
-          session?.identity.address,
-          account.id
-        ),
-        queryFn: ({ signal }: { signal: AbortSignal }) =>
-          getMultisigService().listVaultAccountTransactions(
-            account.network,
-            account.id,
-            transactionsPageRequest,
-            signal
-          ),
-        enabled: Boolean(session),
-        retry: retryMultisigQuery,
-        refetchInterval: multisigProposalsRefetchInterval,
-      };
+      return accountTransactionsQuery(account.network, session?.identity.address, account.id);
     }),
   });
 

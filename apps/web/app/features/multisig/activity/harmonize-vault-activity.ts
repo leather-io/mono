@@ -24,6 +24,14 @@ export interface VaultActivityItem {
   vaultAccountId?: string;
 }
 
+export function isReadyToBroadcast(item: VaultActivityItem) {
+  return item.view.status === 'pending' && item.multisig?.transaction.status === 'signed';
+}
+
+export function prioritizeReadyToBroadcast(items: VaultActivityItem[]) {
+  return [...items].sort((a, b) => Number(isReadyToBroadcast(b)) - Number(isReadyToBroadcast(a)));
+}
+
 export interface OnchainActivityItem {
   view: BlockchainActivityView;
   vaultId: string;

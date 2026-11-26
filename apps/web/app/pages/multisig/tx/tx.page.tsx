@@ -15,7 +15,11 @@ import {
 import { getMultisigAccountAddresses } from '~/features/multisig/vaults/multisig-account-addresses';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useVaultAccount } from '~/features/multisig/vaults/use-vault-accounts';
-import { useMultisigTransaction } from '~/features/multisig/vaults/use-vault-transactions';
+import {
+  findBlockingProposal,
+  useAccountTransactions,
+  useMultisigTransaction,
+} from '~/features/multisig/vaults/use-vault-transactions';
 import { useVault, useVaults } from '~/features/multisig/vaults/use-vaults';
 import { useToast } from '~/features/toasts/use-toast';
 import { useRouteState } from '~/hooks/use-route-state';
@@ -95,6 +99,9 @@ export function TxDetailPage() {
 
   const vault = useVault(network, vaultNetworkKnown ? vaultId : undefined);
   const transaction = useMultisigTransaction(network, vaultNetworkKnown ? txId : undefined);
+  const queuedProposal = transaction.data?.status === 'queued' ? transaction.data : undefined;
+  const accountTransactions = useAccountTransactions(network, queuedProposal?.vaultAccountId);
+  const blockingProposal = findBlockingProposal(queuedProposal, accountTransactions.data?.data);
   const account = useVaultAccount(network, transaction.data?.vaultAccountId);
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
   const marketData = useMarketDataQuery(network.startsWith('btc') ? btcAsset : stxAsset);
@@ -289,6 +296,9 @@ export function TxDetailPage() {
             vault={vault.data}
             account={acct}
             transaction={tx}
+            blockingProposalHref={
+              blockingProposal ? multisigPaths.tx(vault.data.id, blockingProposal.id) : undefined
+            }
             currentUserAddress={me.data?.address}
             currentUserId={me.data?.id}
             isSigning={signTransaction.isPending}

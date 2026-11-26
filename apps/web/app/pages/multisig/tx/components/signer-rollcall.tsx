@@ -1,12 +1,17 @@
+import { Link } from 'react-router';
+
 import { Box, Flex, styled } from 'leather-styles/jsx';
+import { link as linkRecipe } from 'leather-styles/recipes';
 import { CopyAddress } from '~/components/copy-address';
 import { SignIcon } from '~/components/icons/sign-icon';
+import { InlineLearnMoreLink } from '~/components/inline-learn-more-link';
 
 import type { MultisigTransaction, Vault, VaultAccount } from '@leather.io/models';
 import { Button, ListItemBox, Spinner } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 import { AvatarCircle } from '../../components/avatar-circle';
+import { multisigGuides } from '../../multisig.constants';
 import { formatDateTime } from '../relative-time';
 
 const cancellableStatuses = ['queued', 'pending', 'signed'];
@@ -15,6 +20,7 @@ interface SignerRollcallProps {
   vault: Vault;
   account: VaultAccount;
   transaction: MultisigTransaction;
+  blockingProposalHref?: string;
   currentUserAddress?: string;
   currentUserId?: string;
   isSigning: boolean;
@@ -66,6 +72,7 @@ export function SignerRollcall({
   vault,
   account,
   transaction,
+  blockingProposalHref,
   currentUserAddress,
   currentUserId,
   isSigning,
@@ -101,12 +108,32 @@ export function SignerRollcall({
           borderBottomStyle="solid"
           borderBottomColor="ink.border-transparent"
         >
-          <styled.div textStyle="label.02" color="blue.text-primary">
-            Queued behind an active transaction
-          </styled.div>
-          <styled.div textStyle="caption.01" color="ink.text-subdued" mt="space.01">
+          <Flex
+            alignItems="baseline"
+            justifyContent="space-between"
+            gap="space.03"
+            color="ink.text-primary"
+          >
+            <styled.h3 textStyle="label.02" color="blue.text-primary">
+              Queued behind an active transaction
+            </styled.h3>
+            {blockingProposalHref && (
+              <Link
+                className={linkRecipe({ size: 'sm' })}
+                to={blockingProposalHref}
+                aria-label="View active transaction"
+              >
+                View
+              </Link>
+            )}
+          </Flex>
+          <styled.div textStyle="caption.01" color="ink.text-secondary" mt="space.01">
             You can sign this once this account&rsquo;s active transaction is broadcast or
             cancelled.
+            <InlineLearnMoreLink
+              href={multisigGuides.signAndBroadcast}
+              subject="signing and broadcasting proposals"
+            />
           </styled.div>
         </Box>
       )}

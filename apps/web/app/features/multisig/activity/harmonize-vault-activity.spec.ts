@@ -10,6 +10,7 @@ import {
   type OnchainActivityItem,
   type VaultMultisigTransaction,
   harmonizeVaultActivity,
+  prioritizeReadyToBroadcast,
   selectTransactionIdsNeedingPayload,
 } from './harmonize-vault-activity';
 
@@ -95,6 +96,32 @@ function makeVaultTransaction(
 }
 
 describe(harmonizeVaultActivity.name, () => {
+  test('prioritizes a ready proposal ahead of newer queued proposals without reordering the queue', () => {
+    const items = harmonizeVaultActivity({
+      onchain: [],
+      multisigTransactions: [
+        makeVaultTransaction({ id: 'ready', status: 'signed', proposalTimestamp: 1 }),
+        makeVaultTransaction({ id: 'queued-1', status: 'queued', proposalTimestamp: 2 }),
+        makeVaultTransaction({ id: 'queued-2', status: 'queued', proposalTimestamp: 3 }),
+        makeVaultTransaction({
+          id: 'other-account',
+          vaultAccountId: 'vault-account-2',
+          proposalTimestamp: 4,
+        }),
+      ],
+    });
+
+    const prioritized = prioritizeReadyToBroadcast(items);
+
+    expect(prioritized.map(item => item.multisig?.transaction.id)).toEqual([
+      'ready',
+      'other-account',
+      'queued-2',
+      'queued-1',
+    ]);
+    expect(items[0].multisig?.transaction.id).toBe('other-account');
+  });
+
   test('the on-chain view wins for a broadcast transaction and is not duplicated', () => {
     const twin = makeView({ txid: 'abc123', status: 'pending' });
     const item = makeVaultTransaction({ txId: '0xabc123', status: 'broadcast' });
