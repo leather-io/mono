@@ -91,7 +91,8 @@ these differences:
 
   Each line is posted on the pull request as written: what you changed and where, or why you did
   not. Name the file and line or the reviewer an answer is for, since the lines are read without
-  `feedback.md`. The workflow fails the round when `answers` is empty.
+  `feedback.md`. The workflow fails the round when `answers` is empty, unless the status is blocked
+  or hands changes off with nothing changed.
 
 - A revise that only answers, because no item needed a change, is `"state": "done"` with nothing
   changed. That is valid here.

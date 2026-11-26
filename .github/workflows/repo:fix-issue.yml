@@ -41,7 +41,7 @@ jobs:
     permissions:
       contents: read # checkout only; this job runs the fixer and its code and never writes to the repository
       issues: read # read the issue and its comments for the fixer
-      pull-requests: read # for a revise, read the pull request, its reviews and its review threads
+      pull-requests: read # for a revise, read the pull request and its comments (the brief and earlier revises)
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

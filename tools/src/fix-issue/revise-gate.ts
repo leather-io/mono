@@ -1,19 +1,21 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { z } from 'zod';
 
+import { runOrThrow } from '../ci/exec.js';
 import { type GitHubClient, paginate } from '../ci/github.js';
 import { extractBrief, isBriefComment } from './brief.js';
-import { renderFeedback } from './feedback.js';
 import { refusedPaths } from './git.js';
 import { commentSchema, fetchIssue, isWorkflowAppComment } from './issue.js';
-import { ensureCommit, planMerge } from './merge.js';
+import { ensureCommit, mergeBase, mergeDev, planMerge } from './merge.js';
 import type { FixIssuePaths } from './paths.js';
 import {
+  type ReviseState,
   botAccountType,
   isReviseSummary,
   issueOfBranch,
   maxRevises,
   revisePullSchema,
+  writeReviseState,
 } from './revise-state.js';
 
 interface GateOptions {
@@ -37,10 +39,8 @@ interface RevisableOptions {
   readonly workflowAppClientId: string;
 }
 
-export interface GatedRevise {
-  readonly head: string;
+interface StartedRevise extends ReviseState {
   readonly ordinal: number;
-  readonly merge: boolean;
 }
 
 const maxListedConflicts = 10;
@@ -96,6 +96,14 @@ export async function fetchRevisable({
   return { pull, issue, fromApp, ordinal: revises + 1 };
 }
 
+function mergeSection(dev: string, conflicts: readonly string[]): string {
+  const intro = `The workflow merged \`dev\` at \`${dev}\` into the pull request branch before you started.`;
+  if (conflicts.length === 0) {
+    return `## \`dev\` was merged into the branch\n\n${intro} The merge had no conflicts. Check that the change still does its job against the newer code on \`dev\`.`;
+  }
+  return `## \`dev\` was merged into the branch and conflicts\n\n${intro} These files conflict; resolve every one:\n\n${conflicts.map(file => `- \`${file}\``).join('\n')}`;
+}
+
 function listed(files: readonly string[]): string {
   const shown = files.slice(0, maxListedConflicts).map(file => `\`${file}\``);
   const rest = files.length - shown.length;
@@ -113,7 +121,7 @@ export async function gateRevise({
   instructions,
   requestedBy,
   workflowAppClientId,
-}: GateOptions): Promise<GatedRevise> {
+}: GateOptions): Promise<StartedRevise> {
   if (!workflowAppClientId) throw new Error('the client ID of the fix-issue App is not set');
   const { pull, issue, fromApp, ordinal } = await fetchRevisable({
     client,
@@ -149,15 +157,21 @@ export async function gateRevise({
   const brief = fromApp.filter(comment => isBriefComment(comment.body)).at(-1)?.body ?? null;
   writeFileSync(paths.notesFile, `${brief === null ? '' : (extractBrief(brief) ?? '')}\n`);
   writeFileSync(paths.pullRequestFile, renderPullRequest(pull));
+  const sections = [
+    `# Feedback on pull request #${pullRequest}\n\nRevise ${ordinal} of ${maxRevises}, asked for by @${requestedBy}. The status file needs one line under \`answers\` per thing asked for below.`,
+    ...(text === '' ? [] : [`## What @${requestedBy} asked for\n\n${text}`]),
+    ...(plan.merge ? [mergeSection(devSha, plan.conflicts)] : []),
+  ];
+  writeFileSync(paths.feedbackFile, `${sections.join('\n\n')}\n`);
+
+  runOrThrow('git', ['checkout', '--quiet', '--detach', pull.head.sha], { cwd: paths.root });
+  const conflicts = plan.merge ? mergeDev(paths.root, devSha) : [];
+  const since = mergeBase(paths.root, 'HEAD', devSha);
   writeFileSync(
-    paths.feedbackFile,
-    renderFeedback({
-      pullRequest,
-      ordinal,
-      requestedBy,
-      instructions: text,
-      merge: plan.merge ? { dev: devSha, conflicts: plan.conflicts } : null,
-    })
+    paths.pullRequestDiff,
+    runOrThrow('git', ['diff', '--no-renames', since, 'HEAD'], { cwd: paths.root })
   );
-  return { head: pull.head.sha, ordinal, merge: plan.merge };
+  const state: ReviseState = { head: pull.head.sha, merge: plan.merge, conflicts, since };
+  writeReviseState(paths.reviseFile, state);
+  return { ...state, ordinal };
 }

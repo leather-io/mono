@@ -14,7 +14,6 @@ import { fixIssuePaths } from '../fix-issue/paths.js';
 import { openPullRequest, revisePullRequest } from '../fix-issue/pull-request.js';
 import { gateRevise } from '../fix-issue/revise-gate.js';
 import { readReviseState } from '../fix-issue/revise-state.js';
-import { startRevise } from '../fix-issue/revise.js';
 import {
   checkReview,
   endRound,
@@ -109,10 +108,6 @@ function parsePullRequest(value: string): number {
 function required(value: string | undefined, flag: string): string {
   if (!value) throw new Error(`${flag} is required`);
   return value;
-}
-
-function notes(): string | undefined {
-  return process.env.FIX_ISSUE_NOTES;
 }
 
 function github() {
@@ -368,7 +363,7 @@ export function registerFixIssueCommands(program: Command): void {
           baseBranch: flags.base,
           parentSha: flags.parentSha,
           coAuthor: flags.coAuthor,
-          brief: notes(),
+          brief: process.env.FIX_ISSUE_NOTES,
           runId: process.env.GITHUB_RUN_ID,
           runAttempt: process.env.GITHUB_RUN_ATTEMPT,
           serverUrl: process.env.GITHUB_SERVER_URL,
@@ -399,7 +394,7 @@ export function registerFixIssueCommands(program: Command): void {
     .description('Steps only a run that revises an open bot pull request takes')
     .command('prepare')
     .description(
-      'Check that the pull request may be revised, gather the feedback, the issue and the brief into tmp/fix-issue/, then check out its head and merge dev when that is needed'
+      'Check that the pull request may be revised, write the notes, the issue and the brief into tmp/fix-issue/, then check out its head and merge dev when that is needed'
     )
     .requiredOption('--pull-request <number>', 'Pull request to revise')
     .requiredOption('--dev-sha <sha>', 'Tip of the base branch the run started from')
@@ -411,7 +406,7 @@ export function registerFixIssueCommands(program: Command): void {
       guard('revise-prepare', async () => {
         const target = paths();
         const pullRequest = parsePullRequest(flags.pullRequest);
-        const gated = await gateRevise({
+        const state = await gateRevise({
           client: github(),
           repo: readRequiredEnv('GITHUB_REPOSITORY'),
           paths: target,
@@ -419,14 +414,13 @@ export function registerFixIssueCommands(program: Command): void {
           devSha: flags.devSha,
           baseBranch: flags.base,
           mergeRequested: flags.merge === 'true',
-          instructions: notes() ?? '',
+          instructions: process.env.FIX_ISSUE_NOTES ?? '',
           requestedBy: flags.requestedBy,
           workflowAppClientId: flags.workflowAppClientId,
         });
-        const state = startRevise(target, gated, flags.devSha);
         writeStepOutputs({ merged: state.merge, conflicted: state.conflicts.length > 0 });
         console.log(
-          `revise-prepare: revise ${gated.ordinal} of #${pullRequest} at ${state.head}${state.merge ? `, on a merge of ${flags.devSha} with ${state.conflicts.length} conflicting files` : ''}`
+          `revise-prepare: revise ${state.ordinal} of #${pullRequest} at ${state.head}${state.merge ? `, on a merge of ${flags.devSha} with ${state.conflicts.length} conflicting files` : ''}`
         );
       })
     );

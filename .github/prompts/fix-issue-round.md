@@ -20,9 +20,7 @@ nobody can answer a question while it runs.
 - `tmp/fix-issue/status.json`: the status the previous round wrote.
 - The current change: `git status --porcelain=v1 --untracked-files=all` and `git diff HEAD`.
 - `tmp/fix-issue/feedback.md`, only when this run revises an open pull request: the feedback the
-  change answers. `.github/prompts/fix-issue-revise.md` then applies as well: every item keeps its
-  line under `answers` in the status, and a merge section means `HEAD` is a merge of `dev` whose
-  conflicts must stay resolved.
+  change answers. `.github/prompts/fix-issue-revise.md` then applies as well.
 
 Every rule in `.github/prompts/fix-issue.md` still applies: the paths you may change, no commits, no
 attribution, no new code comments, and the status file shape.

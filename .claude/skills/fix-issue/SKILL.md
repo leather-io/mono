@@ -161,7 +161,7 @@ Put the questions from `status` (or from the issue comment) to the person in one
 round per issue: these are the fixer's questions, a new set, not a second interview. Append each
 answer to the brief's Decisions as `Settled: <choice> — <reason>`, then dispatch again after the
 same explicit yes. The new run's pull request replaces the earlier one, which is closed, unless
-the earlier one was revised or someone added commits to it, or it is ready and the new one is a
+a revise or a person added commits to it, or it is ready and the new one is a
 draft; then both stay open and the person picks. A run that only comments on the issue closes
 nothing.
 
@@ -193,8 +193,8 @@ Before every dispatch, gather the feedback and write it into the notes file your
 2. Keep only what people with write access to the repository wrote
    (`gh api repos/leather-io/mono/collaborators/<login>/permission`); leave out bots and everyone
    else. The workflow does not filter the notes.
-3. Write one entry per comment: the file and line, who wrote it, and the comment as written. Add
-   the person's own instructions on top.
+3. Write one entry per comment: the file and line when it has one, who wrote it, and the comment
+   as written. Add the person's own instructions on top.
 4. Keep the notes file in the run directory, never in a temp directory, and under 60,000 bytes.
 
 A dispatch with no notes and no merge to do is refused. When the pull request conflicts with
@@ -207,8 +207,8 @@ get an explicit yes first. Whoever dispatches is recorded as the co-author of th
 
 What comes back, 20 minutes to two hours later, on the same pull request:
 
-- one new signed commit on top of the branch, never a force-push; after a merge it has `dev` as its
-  second parent;
+- at most one new signed commit on top of the branch, never a force-push; after a merge it has
+  `dev` as its second parent. A revise that only answers commits nothing;
 - the description rewritten for the pull request as it now stands;
 - one comment that records the revise: `Revise <n> of 5`, who dispatched it and with which notes,
   the commit, and one line per thing asked for saying what was done or why not. The review threads
@@ -220,13 +220,14 @@ What comes back, 20 minutes to two hours later, on the same pull request:
 
 The run fails, with the reason in its log and nothing written to the pull request, when there is
 nothing to revise, when the pull request has had its five revises, when it is not an open bot pull
-request, or when `dev` conflicts in a file outside `apps/`, `packages/` and
-`pnpm-lock.yaml` (merge `dev` by hand first). A push to the branch while a revise runs fails that
-revise. `status` (section 7) keeps showing the run that opened the pull request; revise runs are
-named `fix-issue: revise #<pull request>`.
+request, or when `dev` conflicts in a way the fixer cannot resolve: in a file outside `apps/`,
+`packages/` and `pnpm-lock.yaml`, or without conflict markers, as when one side deleted the file
+(merge `dev` by hand first). A push to the branch while a revise runs fails that revise. `status`
+(section 7) keeps showing the run that opened the pull request; revise runs are named
+`fix-issue: revise #<pull request>`.
 
-A revised pull request is no longer replaced by a new dispatch of its issue, so pick one path per
-pull request: revise it, or dispatch the issue again and close it by hand.
+A pull request a revise committed to is no longer replaced by a new dispatch of its issue, so pick
+one path per pull request: revise it, or dispatch the issue again and close it by hand.
 
 ## 10. Report
 

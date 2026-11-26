@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 import { GitHubError } from '../ci/github.js';
 import { gateRevise } from './revise-gate.js';
+import { readReviseState } from './revise-state.js';
 import { fakeGitHub } from './test/fake-github.js';
 import {
   type TestRepo,
@@ -155,11 +156,13 @@ describe('gateRevise', () => {
       notes: ' truncate the label instead\n',
       comments: [briefComment, reviseSummary(1)],
     });
-    await expect(result).resolves.toEqual({
-      head,
-      ordinal: 2,
-      merge: false,
-    });
+    const state = { head, merge: false, conflicts: [], since: repo.head };
+    await expect(result).resolves.toEqual({ ...state, ordinal: 2 });
+    expect(repo.git(['rev-parse', 'HEAD'])).toBe(head);
+    expect(readReviseState(repo.paths.reviseFile)).toEqual(state);
+    const diff = readFileSync(repo.paths.pullRequestDiff, 'utf8');
+    expect(diff).toContain('-export const feeRow = 1;\n+export const feeRow = 2;');
+    expect(diff).not.toContain('newer readme');
     expect(readFileSync(repo.paths.notesFile, 'utf8')).toBe('- Settled: wrap the label\n');
     expect(readFileSync(repo.paths.issueFile, 'utf8')).toContain('# Fee row overflows');
     expect(readFileSync(repo.paths.pullRequestFile, 'utf8')).toBe(
@@ -174,9 +177,18 @@ describe('gateRevise', () => {
         '',
       ].join('\n')
     );
-    const feedback = readFileSync(repo.paths.feedbackFile, 'utf8');
-    expect(feedback).toContain('Revise 2 of 5, asked for by @alice.');
-    expect(feedback).toContain('## What @alice asked for\n\ntruncate the label instead');
+    expect(readFileSync(repo.paths.feedbackFile, 'utf8')).toBe(
+      [
+        '# Feedback on pull request #7',
+        '',
+        'Revise 2 of 5, asked for by @alice. The status file needs one line under `answers` per thing asked for below.',
+        '',
+        '## What @alice asked for',
+        '',
+        'truncate the label instead',
+        '',
+      ].join('\n')
+    );
   });
 
   test('writes an empty brief when none was stored, and ignores one a person posted', async () => {
@@ -213,8 +225,19 @@ describe('gateRevise', () => {
   test('only resolves the conflicts when a conflicting pull request gets no notes', async () => {
     branch(true);
     const { result } = gate();
-    await expect(result).resolves.toMatchObject({ merge: true });
-    expect(readFileSync(repo.paths.feedbackFile, 'utf8')).toContain(`- \`${conflictingFile}\``);
+    await expect(result).resolves.toMatchObject({
+      merge: true,
+      conflicts: [conflictingFile],
+      since: dev,
+    });
+    expect(repo.git(['rev-parse', 'HEAD^1', 'HEAD^2']).split('\n')).toEqual([head, dev]);
+    expect(repo.git(['status', '--porcelain'])).toBe('');
+    expect(readFileSync(repo.paths.pullRequestDiff, 'utf8')).toContain('+<<<<<<< HEAD');
+    const feedback = readFileSync(repo.paths.feedbackFile, 'utf8');
+    expect(feedback).toContain(
+      `## \`dev\` was merged into the branch and conflicts\n\nThe workflow merged \`dev\` at \`${dev}\` into the pull request branch before you started. These files conflict; resolve every one:\n\n- \`${conflictingFile}\`\n`
+    );
+    expect(feedback).not.toContain('asked for\n');
   });
 
   test('merges on its own when the tooling on dev moved, but only for a revise with notes', async () => {
@@ -224,7 +247,10 @@ describe('gateRevise', () => {
     repo.git(['commit', '-q', '-m', 'dev changes the tooling']);
     dev = repo.git(['rev-parse', 'HEAD']);
     const { result } = gate({ notes: 'wrap it' });
-    await expect(result).resolves.toMatchObject({ merge: true });
+    await expect(result).resolves.toMatchObject({ merge: true, conflicts: [] });
+    expect(readFileSync(repo.paths.feedbackFile, 'utf8')).toContain(
+      '## `dev` was merged into the branch\n\nThe workflow merged'
+    );
     await expect(gate().result).rejects.toThrow('there is nothing to revise on #7');
   });
 
