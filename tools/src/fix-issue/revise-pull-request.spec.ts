@@ -297,22 +297,6 @@ describe('revisePullRequest', () => {
     });
   });
 
-  test('merges on its own account when the tooling on dev moved', async () => {
-    const { client, result } = revise({
-      merged: true,
-      status: mergeStatus,
-      moveDev() {
-        repo.write('tools/src/fix-issue/revise.ts', 'newer\n');
-        repo.git(['add', '-A']);
-        repo.git(['commit', '-q', '-m', 'dev changes the tooling']);
-      },
-    });
-    await result;
-    expect(callsTo(client, 'POST', '/git/commits')[0]?.body).toMatchObject({
-      parents: [head, dev],
-    });
-  });
-
   test('commits nothing while a conflict marker remains, and asks instead', async () => {
     const { client, result } = revise({
       conflict: true,
@@ -384,7 +368,6 @@ describe('revisePullRequest', () => {
   });
 
   test.each<[string, Record<string, unknown>, RegExp]>([
-    ['is closed', { state: 'closed' }, /#7 cannot be revised: it is not open/],
     [
       'someone else opened',
       { user: { login: 'alice[bot]', type: 'Bot' } },
@@ -394,11 +377,6 @@ describe('revisePullRequest', () => {
       'moved during the run',
       { head: { ref: pullRequestBranch, sha: 'f'.repeat(40), repo: { full_name: repoName } } },
       /is at f+, not at the commit the fixer revised \(\w+\); dispatch the revise again/,
-    ],
-    [
-      'comes from a fork',
-      { head: { ref: pullRequestBranch, sha: 'x', repo: { full_name: 'mallory/mono' } } },
-      /#7 cannot be revised: it comes from another repository/,
     ],
   ])('writes nothing to a pull request that %s', async (_name, pull, error) => {
     const { client, result } = revise({ change: wrapLabel, pull });

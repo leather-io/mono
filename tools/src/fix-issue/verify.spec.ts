@@ -210,17 +210,12 @@ describe('verifyFix', () => {
       expect(pnpm.calls).toEqual([]);
     });
 
-    test('still runs the gate on a merge of dev the fixer left untouched', () => {
+    test.each([
+      ['done', answered],
+      ['blocked', { ...answered, state: 'blocked', questions: ['Which range?'] }],
+    ])('runs the gate on a merge of dev a %s fixer left untouched', (_state, status) => {
       repo = createTestRepo();
-      repo.writeStatus(answered);
-      const pnpm = fakePnpm(repo);
-      expect(verifyRevise(pnpm, { ...revise, merge: true })).toMatchObject({ passed: true });
-      expect(pnpm.calls).toHaveLength(gate.length);
-    });
-
-    test('runs the gate on a merge even when the fixer stopped as blocked without changing it', () => {
-      repo = createTestRepo();
-      repo.writeStatus({ ...answered, state: 'blocked', questions: ['Which range?'] });
+      repo.writeStatus(status);
       const pnpm = fakePnpm(repo);
       expect(verifyRevise(pnpm, { ...revise, merge: true })).toMatchObject({ passed: true });
       expect(pnpm.calls).toHaveLength(gate.length);

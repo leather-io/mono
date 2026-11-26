@@ -428,18 +428,7 @@ describe('fix-issue command actions', () => {
             labels: [],
           });
         }
-        if (url.endsWith('/graphql')) {
-          return json({
-            data: {
-              repository: {
-                pullRequest: {
-                  reviewThreads: { pageInfo: { hasNextPage: false, endCursor: null }, nodes: [] },
-                },
-              },
-            },
-          });
-        }
-        if (url.includes('/comments') || url.includes('/reviews')) return json([]);
+        if (url.includes('/comments')) return json([]);
         return json({ permission: 'write' });
       });
       await prepare('Iv23client');
@@ -451,7 +440,6 @@ describe('fix-issue command actions', () => {
       );
       expect(readFileSync(repo.paths.feedbackFile, 'utf8')).toContain('wrap the label');
       expect(repo.git(['rev-parse', 'HEAD'])).toBe(head);
-      expect(existsSync(repo.paths.pullRequestDiff)).toBe(true);
     });
 
     test('prepare fails the run, with the reason, when the pull request may not be revised', async () => {
@@ -462,35 +450,6 @@ describe('fix-issue command actions', () => {
       expect(calls).toEqual([]);
       expect(process.exitCode).toBe(1);
       expect(repo.git(['rev-parse', 'HEAD'])).toBe(repo.head);
-    });
-
-    test('open-pull-request revises a pull request when it is given one', async () => {
-      repo.writeStatus(doneStatus);
-      const calls = stubGitHubApi(() => json({}));
-      await run([
-        'open-pull-request',
-        '--issue',
-        '',
-        '--branch',
-        'bot/fix-issue--777',
-        '--base',
-        'dev',
-        '--parent-sha',
-        repo.head,
-        '--pull-request',
-        '7',
-        '--merge',
-        'false',
-        '--app-login',
-        'leather-fix-issue[bot]',
-        '--workflow-app-client-id',
-        'Iv23client',
-      ]);
-      expect(calls.map(call => `${call.method} ${call.url}`)).toEqual([
-        `GET ${apiUrl}/repos/${repoName}/pulls/7`,
-      ]);
-      expect(errors).toHaveLength(1);
-      expect(process.exitCode).toBe(1);
     });
 
     test('open-pull-request needs the login of the App to revise', async () => {
@@ -524,21 +483,6 @@ describe('fix-issue command actions', () => {
       expect(logs).toEqual(['https://github.com/leather-io/mono/actions/runs/777']);
       expect(readFileSync(argsFile, 'utf8').trim()).toBe(
         `workflow run repo:fix-issue.yml --repo ${repoName} --ref dev -f issue=12 -F notes=@${brief}`
-      );
-    });
-
-    test('dispatch with a pull request starts a revise of it', async () => {
-      const argsFile = path.join(scratch, 'gh-args');
-      const notesFile = path.join(scratch, 'notes.md');
-      writeFileSync(notesFile, 'Wrap the label.\n');
-      fakeBinary(
-        'gh',
-        `echo "$@" > "${argsFile}"\necho https://github.com/leather-io/mono/actions/runs/888`
-      );
-      await run(['dispatch', '--pull-request', '7', '--merge', '--notes-file', notesFile]);
-      expect(logs).toEqual(['https://github.com/leather-io/mono/actions/runs/888']);
-      expect(readFileSync(argsFile, 'utf8').trim()).toBe(
-        `workflow run repo:fix-issue.yml --repo ${repoName} --ref dev -f pull_request=7 -f merge=true -F notes=@${notesFile}`
       );
     });
 

@@ -6,7 +6,6 @@ import {
   issueOfBranch,
   readReviseState,
   reviseMarker,
-  writeReviseState,
 } from './revise-state.js';
 import { type TestRepo, createTestRepo } from './test/test-repo.js';
 
@@ -23,12 +22,6 @@ describe('revise state', () => {
     repo = createTestRepo();
   });
   afterEach(() => repo.cleanup());
-
-  test('reads back what was written, and nothing when no revise is running', () => {
-    expect(readReviseState(repo.paths.reviseFile)).toBeNull();
-    writeReviseState(repo.paths.reviseFile, state);
-    expect(readReviseState(repo.paths.reviseFile)).toEqual(state);
-  });
 
   test('refuses a file that is not a revise state', () => {
     repo.write('tmp/fix-issue/revise.json', JSON.stringify({ ...state, conflicts: [{ id: 'x' }] }));

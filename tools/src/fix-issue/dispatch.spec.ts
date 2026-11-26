@@ -129,7 +129,7 @@ describe('dispatch', () => {
       ]);
     });
 
-    test('dispatches without notes to have the open review threads addressed', () => {
+    test('dispatches without notes for a revise that only merges', () => {
       const gh = fakeGh();
       revise(gh);
       expect(gh.calls[0]?.slice(-4)).toEqual(['-f', 'pull_request=7', '-f', 'merge=false']);

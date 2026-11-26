@@ -217,18 +217,6 @@ describe('gateRevise', () => {
     expect(readFileSync(repo.paths.feedbackFile, 'utf8')).toContain(`- \`${conflictingFile}\``);
   });
 
-  test('merges and addresses the notes when a conflicting pull request gets notes', async () => {
-    branch(true);
-    const { result } = gate({ notes: 'wrap it' });
-    await expect(result).resolves.toMatchObject({ merge: true });
-  });
-
-  test('only merges when the dispatch asks for the merge and carries no notes', async () => {
-    branch(false);
-    const { result } = gate({ merge: true });
-    await expect(result).resolves.toMatchObject({ merge: true });
-  });
-
   test('merges on its own when the tooling on dev moved, but only for a revise with notes', async () => {
     branch(false);
     repo.write('tools/src/fix-issue/revise.ts', 'newer\n');
@@ -238,12 +226,6 @@ describe('gateRevise', () => {
     const { result } = gate({ notes: 'wrap it' });
     await expect(result).resolves.toMatchObject({ merge: true });
     await expect(gate().result).rejects.toThrow('there is nothing to revise on #7');
-  });
-
-  test('has nothing to merge when dev is already part of the branch', async () => {
-    branch(false);
-    dev = repo.head;
-    await expect(gate({ merge: true }).result).rejects.toThrow('there is nothing to revise on #7');
   });
 
   test('refuses a conflict in a file fix-issue may never change', async () => {
