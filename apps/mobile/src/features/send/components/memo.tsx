@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { type FieldError } from 'react-hook-form';
-import { type NativeSyntheticEvent, type TextInputSubmitEditingEventData } from 'react-native';
+import { type TextInputSubmitEditingEvent } from 'react-native';
 
 import { SheetLayout } from '@/components/sheets/sheet.layout';
 import { TextInput } from '@/components/text-input';
@@ -32,7 +32,7 @@ export function Memo({ value, onChange, onBlur, invalid, isTouched, error }: Mem
   const shouldMarkToggleAsInvalid = invalid && isTouched && confirmationAttempted;
   const toggleLabel = value ? t`Edit memo` : t`Add memo`;
 
-  function handleSubmitEditing(event?: NativeSyntheticEvent<TextInputSubmitEditingEventData>) {
+  function handleSubmitEditing(event?: TextInputSubmitEditingEvent) {
     setConfirmationAttempted(true);
     event?.preventDefault();
     if (invalid) {

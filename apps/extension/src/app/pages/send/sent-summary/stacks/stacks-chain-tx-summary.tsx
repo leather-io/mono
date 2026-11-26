@@ -1,5 +1,9 @@
 import { type StacksTransactionWire, isTokenTransferPayload } from '@stacks/transactions';
 
+import {
+  type SbtcSponsoredTransferDetails,
+  getSbtcSponsoredTransferDetails,
+} from '@leather.io/stacks';
 import { baseCurrencyAmountInQuote, createMoney, isNumber, sumMoney } from '@leather.io/utils';
 
 import { formatCurrency } from '@app/common/currency-formatter';
@@ -60,7 +64,51 @@ export function StxSentSummary({ txid, tx }: StacksChainSummaryProps) {
   );
 }
 
-export function Sip10SentSummary({ txid, symbol, tx }: StacksChainSummaryProps) {
+function getFungibleTokenDecimals(tokenMetadata: unknown): number | undefined {
+  if (!tokenMetadata || typeof tokenMetadata !== 'object') return undefined;
+  if (!('decimals' in tokenMetadata)) return undefined;
+  return isNumber(tokenMetadata.decimals) ? tokenMetadata.decimals : undefined;
+}
+
+interface SbtcSponsoredSentSummaryProps extends StacksChainSummaryProps {
+  details: SbtcSponsoredTransferDetails;
+}
+function SbtcSponsoredSentSummary({ txid, symbol, tx, details }: SbtcSponsoredSentSummaryProps) {
+  const { data: tokenMetadata } = useGetFungibleTokenMetadataQuery(details.contractId);
+  const decimals = getFungibleTokenDecimals(tokenMetadata);
+
+  if (decimals === undefined) return <StacksChainTxSummaryLoading txid={txid} />;
+
+  const displaySymbol = symbol.toUpperCase();
+  const amount = createMoney(details.amount, displaySymbol, decimals);
+  const fee = createMoney(details.feeAmount, displaySymbol, decimals);
+  const total = sumMoney([amount, fee]);
+
+  return (
+    <StacksChainTxSummaryLayout
+      token={symbol}
+      txid={txid}
+      value={amount}
+      recipient={details.recipient}
+      metadata={[
+        ['Status', <TxStatusBadge key={txid} txid={txid} />],
+        ['Total spend', formatCurrency(total)],
+        ['Sending', formatCurrency(amount)],
+        ['Fee', formatCurrency(fee)],
+        ['Memo', details.memo || '—'],
+        ['Nonce', getNonceFromStacksTransaction(tx)],
+      ]}
+    />
+  );
+}
+
+export function Sip10SentSummary(props: StacksChainSummaryProps) {
+  const sponsoredDetails = getSbtcSponsoredTransferDetails(props.tx);
+  if (sponsoredDetails) return <SbtcSponsoredSentSummary {...props} details={sponsoredDetails} />;
+  return <Sip10TransferSentSummary {...props} />;
+}
+
+function Sip10TransferSentSummary({ txid, symbol, tx }: StacksChainSummaryProps) {
   const sip10Payload = getSip10TransferPayload(tx);
   if (!sip10Payload) throw new Error('Impossible state, not a SIP-10 transfer');
   const contract = getContractAddressFromContractCallPayload(sip10Payload);

@@ -4,7 +4,8 @@ export {
   BulletSeparator,
   BulletOperator,
 } from './components/bullet-separator/bullet-separator.native';
-export { ActivityAvatarIcon } from './components/avatar/activity-avatar-icon.native';
+export { BlockchainActivityAvatarIcon } from './components/avatar/blockchain-activity-avatar-icon.native';
+export { BlockchainActivityIndicatorIcon } from './components/activity/blockchain-activity-indicator-icon.native';
 export { AssetAvatarIcon } from './components/avatar/asset-avatar-icon.native';
 export { BtcAvatarIcon } from './components/avatar/btc-avatar-icon.native';
 export { Sip10AvatarIcon } from './components/avatar/sip10-avatar-icon.native';

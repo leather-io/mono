@@ -6,5 +6,4 @@ export { Sip10AvatarIcon } from './sip10-avatar-icon.web';
 export { SbtcAvatarIcon } from './sbtc-avatar-icon.web';
 export { StxAvatarIcon } from './stx-avatar-icon.web';
 export { UsdcxAvatarIcon } from './usdcx-avatar-icon.web';
-export { ActivityAvatarIcon } from './activity-avatar-icon.web';
 export { BlockchainActivityAvatarIcon } from './blockchain-activity-avatar-icon.web';

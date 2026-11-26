@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { type SectionListRenderItemInfo } from 'react-native';
 
 import { SearchInput } from '@/components/search-input';
-import { useSendPasteButton } from '@/features/feature-flags';
 import { IosRecipientPasteButton } from '@/features/send/components/recipient/ios-recipient-paste-button';
 import { RecipientSelectorHeader } from '@/features/send/components/recipient/recipient-selector/recipient-selector-header';
 import { RecipientSelectorItem } from '@/features/send/components/recipient/recipient-selector/recipient-selector-item';
 import { RecipientSelectorSearchEmptyState } from '@/features/send/components/recipient/recipient-selector/recipient-selector-search-empty-state';
 import { RecipientSelectorSectionHeader } from '@/features/send/components/recipient/recipient-selector/recipient-selector-section-header';
 import {
+  type RecipientActivity,
   type RecipientSection,
   type RecipientSuggestionEntry,
 } from '@/features/send/components/recipient/recipient.types';
@@ -25,15 +25,11 @@ import { BottomSheetSectionList } from '@gorhom/bottom-sheet';
 import { t } from '@lingui/core/macro';
 import { type ZodSchema } from 'zod';
 
-import {
-  type AccountId,
-  type FungibleCryptoAsset,
-  type SendAssetActivity,
-} from '@leather.io/models';
+import { type AccountId, type FungibleCryptoAsset } from '@leather.io/models';
 import { Box, IconButton, QrCodeIcon, Sheet } from '@leather.io/ui/native';
 
 interface RecipientSelectorProps {
-  activity: SendAssetActivity[];
+  activity: RecipientActivity[];
   recipientSchema: ZodSchema;
   asset: FungibleCryptoAsset;
   onSelectAddress(address: string): void;
@@ -49,7 +45,6 @@ export function RecipientSelector({
   onQrButtonPress,
   currentAccount,
 }: RecipientSelectorProps) {
-  const pasteButtonEnabled = useSendPasteButton();
   const [searchTerm, setSearchTerm] = useState('');
   const recipientSuggestions = useRecipientSuggestions({
     searchTerm,
@@ -78,7 +73,7 @@ export function RecipientSelector({
           />
           {searchTerm.length === 0 && (
             <Box position="absolute" top={12} right={8} flexDirection="row">
-              {pasteButtonEnabled && <IosRecipientPasteButton onPress={handlePasteButtonPress} />}
+              <IosRecipientPasteButton onPress={handlePasteButtonPress} />
               <IconButton
                 label={t`Scan a QR code`}
                 onPress={() => onQrButtonPress('input')}

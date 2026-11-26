@@ -21,7 +21,7 @@ function getMockFlag(key: string): string | null {
 
 // Override paths target the configured pox-5 host, where the pinned pox-5 read
 // layer sends these requests.
-const stxBalancePath = `${pox5NetworkConfig.apiUrl}/extended/v2/addresses/SP32YZPY7SEF52D2R4AD103SCDP4E7ATVBF1CTEST/balances/stx`;
+const stxBalancePath = `${pox5NetworkConfig.apiUrl}/extended/v3/principals/SP32YZPY7SEF52D2R4AD103SCDP4E7ATVBF1CTEST/balances/stx`;
 
 const defaultMockTxStatus = 'success';
 const notFoundMockTxStatus = 'not-found';
@@ -58,12 +58,9 @@ export const pox5MockOverrideHandlers = [
     if (!balance) return undefined;
     return HttpResponse.json({
       balance,
-      total_miner_rewards_received: '0',
-      lock_tx_id: '',
-      locked: '0',
-      lock_height: 0,
-      burnchain_lock_height: 0,
-      burnchain_unlock_height: 0,
+      available: balance,
+      locked: null,
+      mempool: null,
     });
   }),
 ];

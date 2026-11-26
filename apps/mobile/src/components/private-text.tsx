@@ -2,7 +2,7 @@ import { usePrivacyMode } from '@/store/settings/settings.read';
 
 import { Text, type TextProps } from '@leather.io/ui/native';
 
-const defaultMask = '***';
+export const defaultMask = '***';
 
 interface PrivateTextProps extends TextProps {
   mask?: string;

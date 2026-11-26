@@ -14,7 +14,7 @@ import { HapticsProvider } from '@/core/haptics-provider';
 import { LeatherQueryProvider } from '@/core/leather-query-provider';
 import { ThemeProvider } from '@/core/theme-provider';
 import { AddAccountSheet } from '@/features/account/sheets/add-account-sheet';
-import { featureFlagClient, setupFeatureFlags, useSwapFlag } from '@/features/feature-flags';
+import { featureFlagClient, setupFeatureFlags } from '@/features/feature-flags';
 import { RampSheet } from '@/features/ramp/ramp-sheet';
 import { ReceiveSheet } from '@/features/receive/receive-sheet';
 import { SendSheet } from '@/features/send/send-sheet';
@@ -53,7 +53,7 @@ Sentry.init({
 export { ErrorBoundary } from 'expo-router';
 
 // Ensure that reloading on `/modal` keeps a back button present
-export const unstable_settings = { initialRouteName: '/' };
+export const unstable_settings = { anchor: '(tabs)' };
 
 initAppServices();
 void SplashScreen.preventAutoHideAsync();
@@ -66,7 +66,6 @@ function App() {
   useUpdateAnalyticsPlugin();
   usePageViewTracking();
   useOnMount(trackFirstAppOpen);
-  const isSwapEnabled = useSwapFlag();
 
   const { currentAccount } = useSettings();
 
@@ -83,7 +82,7 @@ function App() {
             <SendSheet />
             <ReceiveSheet />
             <RampSheet />
-            {isSwapEnabled ? <SwapSheet /> : null}
+            <SwapSheet />
           </>
         )}
         <AddAccountSheet />

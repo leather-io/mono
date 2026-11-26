@@ -1,0 +1,50 @@
+diff --git a/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java b/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java
+index fa8efb88e2b7c09afbfe473363cdb29af964563c..2c38d1a63a721c107568a03008e66f1402e55f2f 100644
+--- a/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java
++++ b/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java
+@@ -313,6 +313,12 @@ public class RNCWebViewManager extends ViewGroupManager<RNCWebViewWrapper>
+     public void setNewSource(RNCWebViewWrapper view, @Nullable ReadableMap value) {
+         mRNCWebViewManagerImpl.setSource(view, value);
+     }
++   
++    @Override
++    @ReactProp(name = "source")
++    public void setSource(RNCWebViewWrapper view, @Nullable ReadableMap value) {
++        mRNCWebViewManagerImpl.setSource(view, value);
++    }
+ 
+     @Override
+     @ReactProp(name = "textZoom")
+diff --git a/index.d.ts b/index.d.ts
+index 10b9c145b920a6a2ba1fb09bd72150328fafe211..626a67a3d6aca587ee9e74a52b799a2c50b4c52b 100644
+--- a/index.d.ts
++++ b/index.d.ts
+@@ -5,7 +5,7 @@ export { FileDownload, WebViewMessageEvent, WebViewNavigation } from './lib/WebV
+ 
+ export type WebViewProps = IOSWebViewProps & AndroidWebViewProps & WindowsWebViewProps;
+ 
+-declare class WebView<P = undefined> extends Component<WebViewProps & P> {
++declare class WebView<P = {}> extends Component<WebViewProps & P> {
+   /**
+    * Go back one page in the webview's history.
+    */
+diff --git a/src/RNCWebViewNativeComponent.ts b/src/RNCWebViewNativeComponent.ts
+index ca3af151a378c516266ae965a44898920e831172..b7275e1622bee856ff9fa62093932a6b8efd0013 100644
+--- a/src/RNCWebViewNativeComponent.ts
++++ b/src/RNCWebViewNativeComponent.ts
+@@ -268,6 +268,15 @@ export interface NativeProps extends ViewProps {
+     html?: string;
+     baseUrl?: string;
+   }>;
++  source: Readonly<{
++    uri?: string;
++    method?: string;
++    body?: string;
++
++    headers?: ReadonlyArray<Readonly<{ name: string; value: string }>>;
++    html?: string;
++    baseUrl?: string;
++  }>;
+   userAgent?: string;
+   injectedJavaScriptObject?: string;
+   paymentRequestEnabled?: boolean;

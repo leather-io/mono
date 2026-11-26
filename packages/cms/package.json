@@ -1,6 +1,6 @@
 {
   "name": "@leather.io/cms",
-  "version": "1.6.4",
+  "version": "1.7.0",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -41,12 +41,12 @@
     "@sanity/eslint-config-studio": "5.0.2",
     "@sanity/icons": "3.7.4",
     "@sanity/vision": "4.6.1",
-    "@types/react": "19.1.17",
+    "@types/react": "19.3.0",
     "concurrently": "8.2.2",
     "nodemon": "3.1.10",
     "prettier": "3.5.1",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
     "styled-components": "6.1.18",
     "tsdown": "0.16.5",
     "typescript": "5.9.3",

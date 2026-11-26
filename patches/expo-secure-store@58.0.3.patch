@@ -1,0 +1,64 @@
+diff --git a/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt b/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt
+index b60705b7a501407c0b8bd970ccd0ce68be693746..3694ff3f709ab2e3b1521aa5303441a63db7485c 100644
+--- a/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt
++++ b/android/src/main/java/expo/modules/securestore/AuthenticationHelper.kt
+@@ -63,8 +63,10 @@ class AuthenticationHelper(
+ 
+   fun assertBiometricsSupport() {
+     val biometricManager = BiometricManager.from(context)
++    val biometricAuthenticators = BiometricManager.Authenticators.BIOMETRIC_STRONG or
++                                  BiometricManager.Authenticators.DEVICE_CREDENTIAL;
+     @SuppressLint("SwitchIntDef") // BiometricManager.BIOMETRIC_SUCCESS shouldn't do anything
+-    when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
++    when (biometricManager.canAuthenticate(biometricAuthenticators)) {
+       BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE, BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> {
+         throw AuthenticationException("No hardware available for biometric authentication. Use expo-local-authentication to check if the device supports it")
+       }
+diff --git a/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt b/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt
+index 53085985622b879dd140324960a75baacfd0e705..54a3a475f2860577d3961ccf7351a46357876333 100644
+--- a/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt
++++ b/android/src/main/java/expo/modules/securestore/AuthenticationPrompt.kt
+@@ -1,6 +1,7 @@
+ package expo.modules.securestore
+ 
+ import android.content.Context
++import androidx.biometric.BiometricManager
+ import androidx.biometric.BiometricPrompt
+ import androidx.biometric.BiometricPrompt.PromptInfo
+ import androidx.core.content.ContextCompat
+@@ -67,6 +68,9 @@ internal fun buildAuthenticationPromptInfo(
+   requireConfirmation: Boolean = true
+ ): PromptInfo = PromptInfo.Builder()
+   .setTitle(title)
+-  .setNegativeButtonText(context.getString(android.R.string.cancel))
++  .setAllowedAuthenticators(
++    BiometricManager.Authenticators.BIOMETRIC_STRONG or
++    BiometricManager.Authenticators.DEVICE_CREDENTIAL
++  )
+   .setConfirmationRequired(requireConfirmation)
+   .build()
+diff --git a/android/src/main/java/expo/modules/securestore/encryptors/AESEncryptor.kt b/android/src/main/java/expo/modules/securestore/encryptors/AESEncryptor.kt
+index 56aeaacb5945b1210816ab8b78ae148d1a044206..686dc6d5b35a377ed0a115511189deeef39ebdd6 100644
+--- a/android/src/main/java/expo/modules/securestore/encryptors/AESEncryptor.kt
++++ b/android/src/main/java/expo/modules/securestore/encryptors/AESEncryptor.kt
+@@ -62,6 +62,7 @@ class AESEncryptor : KeyBasedEncryptor<KeyStore.SecretKeyEntry> {
+       .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+       .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+       .setUserAuthenticationRequired(options.requireAuthentication)
++      .setUserAuthenticationParameters(0, KeyProperties.AUTH_BIOMETRIC_STRONG or KeyProperties.AUTH_DEVICE_CREDENTIAL)
+       .build()
+ 
+     val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, keyStore.provider)
+diff --git a/ios/SecureStoreModule.swift b/ios/SecureStoreModule.swift
+index 9bc191e02aa48a739ec40991673f0a2be902277a..ac1bcba3ffdfcc0f2f1035e1126eb249636ba063 100644
+--- a/ios/SecureStoreModule.swift
++++ b/ios/SecureStoreModule.swift
+@@ -229,7 +229,7 @@ public final class SecureStoreModule: Module {
+     guard let accessControl = SecAccessControlCreateWithFlags(
+       kCFAllocatorDefault,
+       attributeWith(options: options),
+-      .biometryCurrentSet,
++      .userPresence,
+       &error
+     ) else {
+       let errorCode = error.map { CFErrorGetCode($0.takeRetainedValue()) }
