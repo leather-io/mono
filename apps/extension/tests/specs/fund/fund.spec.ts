@@ -1,5 +1,4 @@
 import { type Locator, expect } from '@playwright/test';
-import { overrideLaunchDarklyFlags } from '@tests/mocks/mock-launchdarkly';
 import {
   mockEmptyLeatherApiUtxosRequest,
   mockedOnramperWidgetSignature,
@@ -115,7 +114,6 @@ test.describe('Fund', () => {
   test.describe('sell', () => {
     test.beforeEach(async ({ extensionId, globalPage, onboardingPage }) => {
       await globalPage.setupAndUseApiCalls(extensionId);
-      await overrideLaunchDarklyFlags(globalPage.page, { releaseOnramperSell: true });
       await onboardingPage.signInWithTestAccount(extensionId);
     });
 
