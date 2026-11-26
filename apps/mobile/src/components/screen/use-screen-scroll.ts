@@ -40,13 +40,10 @@ export function useScreenScroll({
   const scrollY = useSharedValue(0);
   const animationTargetHeight = useSharedValue(0);
 
-  const scrollHandler = useAnimatedScrollHandler(
-    event => {
-      onScrollWorklet?.(event);
-      scrollY.value = event.contentOffset.y;
-    },
-    [onScrollWorklet]
-  );
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    onScrollWorklet?.(event);
+    scrollY.value = event.contentOffset.y;
+  });
 
   const headerVisibility = useDerivedValue<number>(() => {
     if (!enableHeaderAnimation) return 1;

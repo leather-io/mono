@@ -1,7 +1,9 @@
 import { type RefObject, useEffect, useRef, useState } from 'react';
+import { type ScrollEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import ViewShot from 'react-native-view-shot';
+import ViewShot, { type ViewShotRef } from 'react-native-view-shot';
 import { WebView, type WebViewMessageEvent, type WebViewNavigation } from 'react-native-webview';
+import { type ShouldStartLoadRequest } from 'react-native-webview/lib/WebViewTypes';
 
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { type BrowserLoadingMethods } from '@/features/account/components/browser-loading';
@@ -37,7 +39,7 @@ export function Browser({
   browserLoadingRef,
 }: BrowserProps) {
   const { top } = useSafeAreaInsets();
-  const viewShotRef = useRef<ViewShot>(null);
+  const viewShotRef = useRef<ViewShotRef>(null);
   const { approverSheetRef } = useGlobalSheets();
   const [origin, setOrigin] = useState<string | null>(null);
   const dispatch = useAppDispatch();
@@ -84,11 +86,15 @@ export function Browser({
     approverSheetRef.current?.dismiss();
   }
 
-  function onShouldStartLoadWithRequest(event: WebViewNavigation) {
-    const { url } = event;
+  function onShouldStartLoadWithRequest(event: ShouldStartLoadRequest) {
+    const { url, isTopFrame } = event;
 
     // Allow normal web URLs
     if (url.startsWith('http://') || url.startsWith('https://')) {
+      return true;
+    }
+
+    if (isTopFrame === false && (url === 'about:blank' || url === 'about:srcdoc')) {
       return true;
     }
 
@@ -97,13 +103,13 @@ export function Browser({
       const fallbackMatch = url.match(/S\.browser_fallback_url=([^;]+)/);
       if (fallbackMatch && fallbackMatch[1]) {
         const fallbackUrl = decodeURIComponent(fallbackMatch[1]);
-        void Linking.openURL(fallbackUrl);
+        void Linking.openURL(fallbackUrl).catch(() => undefined);
       }
       return false;
     }
     // Handle all other deep links normally
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      void Linking.openURL(url);
+      void Linking.openURL(url).catch(() => undefined);
 
       return false;
     }
@@ -135,7 +141,7 @@ export function Browser({
       <ViewShot ref={viewShotRef} style={{ flex: 1, paddingTop: top }}>
         <WebView
           originWhitelist={['*']}
-          onScroll={({ nativeEvent }) => {
+          onScroll={({ nativeEvent }: ScrollEvent) => {
             if (nativeEvent.contentOffset.y < -CONTENT_OFFSET_FOR_BROWSER_CLOSE) {
               browserSheetRef.current?.close();
             }
