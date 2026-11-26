@@ -10,7 +10,8 @@ things a rule can't see. Work through the steps in order. Most PRs are settled b
 - [ ] There are before and after screenshots in light and dark, taken from the Playground
       (`/playground/<area>`), a PR preview, or the simulator.
 - [ ] Each state that changes is shown: loading, empty, error, disabled, long content, and 390px
-      wide for the extension popup.
+      wide for the extension popup. A still is enough for layout. If motion carries the change,
+      attach a short clip and check the reduced-motion state.
 - [ ] If an intent wasn't covered by `i-need-to.md`, the PR says so. Treat that as a system gap,
       not a nit.
 - [ ] Playground explorations: the recreated today screens match the baseline, and the baseline has a clean state plus edge states.
@@ -29,13 +30,16 @@ things a rule can't see. Work through the steps in order. Most PRs are settled b
 - [ ] Each new piece of UI maps to one row in `i-need-to.md`. If it doesn't, either the system is
       missing something (open an issue) or the PR is inventing a pattern (ask why).
 - [ ] There's one `solid` button per screen, and `intent="danger"` appears only on the destructive
-      confirm. Icons inside a button take its label's ink.
+      confirm. Icons inside a button take its label's ink. In compact buttons, inspect brand marks
+      at actual size. Keep the standard icon slot and check the gap between the artwork and label.
 - [ ] Important actions are labelled buttons ("Save to address book"), not a bare `+` or bookmark
       icon on a row. Follow-up choices need explicit product review; never leave Save and Done competing.
 - [ ] Toasts are for transient feedback and Callouts are for problems the user must act on, not
       the other way round. Callouts run edge to edge at the top of their region, never as an
       inset note between rows.
 - [ ] Screen actions (Add, Save, Done) are in the footer; never two competing primaries.
+      When a row offers both an action and help, give the action a labelled button and put the
+      help link beside the explanation.
 - [ ] When an asset is the subject, its token icon is shown. Selection marks and other UI symbols
       use exported Leather icons, not text glyphs.
 - [ ] No new component in an app duplicates something in `@leather.io/ui`. If the ui version is
@@ -43,6 +47,10 @@ things a rule can't see. Work through the steps in order. Most PRs are settled b
 
 ## 3. Ink ladder and hierarchy
 
+- [ ] In a web task sheet, align the title with the opening instruction. Use `body.02` and
+      `ink.text-primary` for the instruction and `caption.01` for details beneath a row title.
+- [ ] In dark mode, check a label or input value that inherits its color. The sheet should pair
+      its surface with `ink.text-primary` so those values stay readable. [Vault setup example](https://github.com/leather-io/mono/pull/3067).
 - [ ] Text that informs a decision is `ink.text-secondary`. This covers fees, warnings,
       approval details and key-value labels on review screens.
 - [ ] `ink.text-subdued` is used only on `ink.background-primary` and only for skippable metadata.
@@ -71,7 +79,8 @@ things a rule can't see. Work through the steps in order. Most PRs are settled b
 ## 4. Copy
 
 - [ ] Button labels are verbs, and the confirm label repeats the action ("Remove wallet", not
-      "OK").
+      "OK"). For a prompt that can recur, explain what the user can do now, including which
+      browser or account it affects.
 - [ ] Errors say what happened and what to do next. Technical detail goes behind "Details", not in
       the toast.
 - [ ] Money is formatted by `Balance` or `formatCurrency`, never by hand.
@@ -94,7 +103,9 @@ things a rule can't see. Work through the steps in order. Most PRs are settled b
       stay fixed while the body scrolls; the footer stays at the bottom (`PopupPage pinned`).
 - [ ] Every changed state, including edit forms, fits horizontally at 390px. Check nested body
       scrollers as well as the document; clipping or hiding a scrollbar does not count as a fix.
-- [ ] The keyboard path works: you can tab to every action, and Escape closes sheets.
+- [ ] You can tab to every action, and Escape closes dismissible sheets. A reachable **Cancel**
+      or **Not now** can serve as the visible dismissal. If it becomes unavailable, check that
+      people can still close the sheet whenever dismissal is allowed.
 - [ ] Destructive actions have a confirm step, and that step can be cancelled.
 - [ ] Loading never shifts layout: skeletons are sized to the content.
 - [ ] Pending confirmation has explicit status and an appropriate exported indicator. Only an
