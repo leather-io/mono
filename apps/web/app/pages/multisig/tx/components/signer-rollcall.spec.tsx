@@ -11,7 +11,7 @@ import type {
   VaultAccount,
 } from '@leather.io/models';
 
-import { multisigGuides, multisigPaths } from '../../multisig.constants';
+import { multisigPaths } from '../../multisig.constants';
 import { SignerRollcall } from './signer-rollcall';
 
 vi.mock('@leather.io/bitcoin', () => ({}));
@@ -105,8 +105,10 @@ describe(SignerRollcall.name, () => {
     const view = screen.getByRole('link', { name: 'View active transaction' });
     expect(view.textContent).toBe('View');
     expect(view.getAttribute('href')).toBe('/multisig/vault/vault-1/tx/ready');
-    expect(screen.getByRole('link', { name: /learn more/i }).getAttribute('href')).toBe(
-      multisigGuides.signAndBroadcast
+    expect(
+      screen.getByRole('link', { name: 'Learn more about queued proposals' }).getAttribute('href')
+    ).toBe(
+      'https://docs.leather.io/wallet-and-security/use-multisig-vault-extension#queued-proposals'
     );
   });
 

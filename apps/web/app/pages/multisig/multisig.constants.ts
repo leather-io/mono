@@ -23,4 +23,5 @@ export const multisigGuides = {
   createAccount: `${walletGuides}/create-or-join-multisig-vault#create-vault-accounts`,
   addToExtension: `${walletGuides}/use-multisig-vault-extension#add-a-vault-account-to-the-extension`,
   signAndBroadcast: `${walletGuides}/use-multisig-vault-extension#sign-and-broadcast-in-the-web-app`,
+  queuedProposals: `${walletGuides}/use-multisig-vault-extension#queued-proposals`,
 };

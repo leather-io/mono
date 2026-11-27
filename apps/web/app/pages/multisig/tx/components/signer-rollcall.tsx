@@ -130,10 +130,7 @@ export function SignerRollcall({
           <styled.div textStyle="caption.01" color="ink.text-secondary" mt="space.01">
             You can sign this once this account&rsquo;s active transaction is broadcast or
             cancelled.
-            <InlineLearnMoreLink
-              href={multisigGuides.signAndBroadcast}
-              subject="signing and broadcasting proposals"
-            />
+            <InlineLearnMoreLink href={multisigGuides.queuedProposals} subject="queued proposals" />
           </styled.div>
         </Box>
       )}
