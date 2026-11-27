@@ -7,7 +7,6 @@ import { userConnectsApp } from '@/store/apps/apps.write';
 import { type App } from '@/store/apps/utils';
 import { useStacksSigners } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useAppDispatch } from '@/store/utils';
-import { bytesToHex } from '@stacks/common';
 
 import { makeAccountIdentifer } from '@leather.io/crypto';
 import { type AccountId } from '@leather.io/models';
@@ -18,6 +17,8 @@ import {
   type stxGetAddresses,
 } from '@leather.io/rpc';
 import { type SheetInstance } from '@leather.io/ui/native';
+
+import { formatAddressesForStxGetAddresses } from './utils';
 
 interface StxGetAddressesApproverProps {
   app: App;
@@ -44,14 +45,8 @@ export function StxGetAddressesApprover(props: StxGetAddressesApproverProps) {
     const account = stacksAccountFromAccountId(selectedAccountId)[0];
     if (!account) return;
 
-    const stacksAddressResponse = {
-      address: account.address,
-      publicKey: bytesToHex(account.publicKey),
-      derivationPath: account.derivationPath,
-    };
-
     const response = createRpcSuccessResponse('stx_getAddresses', {
-      result: [stacksAddressResponse],
+      result: formatAddressesForStxGetAddresses(account),
       id: props.request.id,
     });
 
