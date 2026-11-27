@@ -40,6 +40,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import { Box, SheetModalProvider, useOnMount } from '@leather.io/ui/native';
 
+import { e2eOverlay } from '../../e2e/register';
+
 dayjs.extend(relativeTime);
 
 Sentry.init({
@@ -54,6 +56,8 @@ export { ErrorBoundary } from 'expo-router';
 
 // Ensure that reloading on `/modal` keeps a back button present
 export const unstable_settings = { anchor: '(tabs)' };
+
+if (__DEV__ && process.env.EXPO_PUBLIC_E2E_MOCKS === 'true') require('../../e2e/wallet-seeder');
 
 initAppServices();
 void SplashScreen.preventAutoHideAsync();
@@ -89,6 +93,7 @@ function App() {
         <AddWalletSheet />
         <AppUpdateRequiredSheet />
         <DescriptionSheet />
+        {e2eOverlay.Component && <e2eOverlay.Component />}
       </ErrorBoundary>
     </Box>
   );

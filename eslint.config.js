@@ -295,6 +295,13 @@ export default defineConfig([
     },
   },
   {
+    name: 'mobile-e2e-mocks',
+    files: ['apps/mobile/e2e/**/*.ts'],
+    rules: {
+      'no-console': 'off',
+    },
+  },
+  {
     name: 'react-router-apps',
     files: ['apps/extension/**/*.{ts,tsx}', 'apps/web/**/*.{ts,tsx}'],
     rules: {

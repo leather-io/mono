@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { type TextLayoutEvent } from 'react-native';
 
+import { TestId } from '@/shared/test-id';
 import { type InputCurrencyMode } from '@/utils/types';
 
 import { type CryptoCurrency, type QuoteCurrency } from '@leather.io/models';
@@ -35,6 +36,7 @@ export function AmountFieldPrimaryValue({ value, color }: AmountFieldPrimaryValu
         numberOfLines={1}
         adjustsFontSizeToFit
         onTextLayout={handleTextLayout}
+        testID={TestId.sendAmountValue}
         style={{
           marginTop: -Math.round(lineHeight * topOffsetRatio),
           paddingTop: 0,

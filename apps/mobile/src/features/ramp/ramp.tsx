@@ -4,6 +4,7 @@ import WebView from 'react-native-webview';
 
 import { useCurrentAccount } from '@/hooks/use-current-account';
 import { getOnramperEnv } from '@/shared/environment';
+import { TestId } from '@/shared/test-id';
 import { useBitcoinPayerAddressFromAccountIndex } from '@/store/keychains/bitcoin/bitcoin-keychains.read';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useSettings } from '@/store/settings/settings';
@@ -50,6 +51,7 @@ export function Ramp({ mode, asset }: RampProps) {
 
   return (
     <WebView
+      testID={`${TestId.rampWebView}-${mode}-${asset?.symbol ?? 'any'}`}
       source={{ uri: link }}
       style={{
         backgroundColor: colors['ink.background-primary'],

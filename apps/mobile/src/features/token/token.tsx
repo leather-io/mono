@@ -9,6 +9,7 @@ import { NetworkBadge } from '@/features/settings/network-badge';
 import { TokenActivity } from '@/features/token/components/token-activity';
 import { TokenDetailsTable } from '@/features/token/components/token-details-table';
 import { TokenOverview } from '@/features/token/components/token-overview';
+import { TestId } from '@/shared/test-id';
 
 import { type BlockchainActivityItem, type TokenBalance } from '@leather.io/features';
 import { type FungibleCryptoAsset, isSwappableAsset } from '@leather.io/models';
@@ -58,7 +59,7 @@ export function Token({
   return (
     <Screen>
       <Screen.Header
-        centerElement={<HeaderTitle title={title} />}
+        centerElement={<HeaderTitle title={title} testID={TestId.tokenDetailsTitle} />}
         rightElement={<NetworkBadge />}
       />
       <TokenActivity

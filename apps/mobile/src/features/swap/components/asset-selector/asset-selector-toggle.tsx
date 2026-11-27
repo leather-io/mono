@@ -14,11 +14,13 @@ interface AssetPickerTriggerProps {
   asset: SwappableFungibleCryptoAsset | undefined;
   disabled?: boolean;
   onPress(): void;
+  testID?: string;
 }
 
-export function AssetSelectorToggle({ asset, onPress, disabled }: AssetPickerTriggerProps) {
+export function AssetSelectorToggle({ asset, onPress, disabled, testID }: AssetPickerTriggerProps) {
   return (
     <Pressable
+      testID={testID}
       flexDirection="row"
       alignItems="center"
       gap="2"

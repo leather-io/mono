@@ -1,3 +1,4 @@
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/core/macro';
 
 import {
@@ -44,10 +45,18 @@ export function WarningSheetLayout({
         <Box px="5" gap="5">
           <Text>{description}</Text>
           <Box gap="3">
-            <Button onPress={onSubmit} intent={variant === 'critical' ? 'danger' : undefined}>
+            <Button
+              onPress={onSubmit}
+              intent={variant === 'critical' ? 'danger' : undefined}
+              testID={TestId.warningSheetContinueButton}
+            >
               {t`Continue`}
             </Button>
-            <Button onPress={() => sheetRef.current?.dismiss()} variant="ghost">
+            <Button
+              onPress={() => sheetRef.current?.dismiss()}
+              variant="ghost"
+              testID={TestId.warningSheetCancelButton}
+            >
               {t`Cancel`}
             </Button>
           </Box>
