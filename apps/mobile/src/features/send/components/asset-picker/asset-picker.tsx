@@ -9,6 +9,7 @@ import {
   useSip10AccountBalance,
   type useSip10TotalBalance,
 } from '@/queries/balance/sip10-balance.query';
+import { TestId } from '@/shared/test-id';
 import { type ListRenderItemInfo } from '@shopify/flash-list';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
@@ -38,7 +39,10 @@ function AssetPickerFlashList({ sip10Data, header, handleSelectAsset }: AssetPic
     <Sheet.FlashList
       data={sip10Memo}
       renderItem={({ item }: ListRenderItemInfo<Sip10Balance>) => (
-        <AssetPickerItem onPress={handleSelectAsset(item.asset)}>
+        <AssetPickerItem
+          onPress={handleSelectAsset(item.asset)}
+          testID={`${TestId.sendAssetPickerItem}-${item.asset.symbol}`}
+        >
           {renderAsset({ item })}
         </AssetPickerItem>
       )}
@@ -63,10 +67,18 @@ function AccountAssetPicker({
     <AssetPickerFlashList
       header={
         <>
-          <AssetPickerItem onPress={handleSelectAsset(btcAsset)} canAnimate>
+          <AssetPickerItem
+            onPress={handleSelectAsset(btcAsset)}
+            canAnimate
+            testID={`${TestId.sendAssetPickerItem}-BTC`}
+          >
             <BitcoinBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
           </AssetPickerItem>
-          <AssetPickerItem onPress={handleSelectAsset(stxAsset)} canAnimate>
+          <AssetPickerItem
+            onPress={handleSelectAsset(stxAsset)}
+            canAnimate
+            testID={`${TestId.sendAssetPickerItem}-STX`}
+          >
             <StacksBalanceByAccount fingerprint={fingerprint} accountIndex={accountIndex} />
           </AssetPickerItem>
         </>

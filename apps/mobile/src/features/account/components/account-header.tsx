@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 import { AccountAvatar } from '@/features/account/components/account-avatar';
+import { TestId } from '@/shared/test-id';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { useWalletByFingerprint, useWallets } from '@/store/wallets/wallets.read';
 import { captureMessage } from '@sentry/react-native';
@@ -42,6 +43,7 @@ export function AccountHeader({ account, onPress }: AccountHeaderProps) {
     <Pressable
       onPress={onPress}
       disabled={hasOneAccount}
+      testID={TestId.homeAccountHeader}
       flexDirection="row"
       alignItems="center"
       gap="3"

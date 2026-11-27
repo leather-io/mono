@@ -109,12 +109,14 @@ function ConfigureAccount({ fingerprint, accountIndex, account }: ConfigureAccou
                 title={t`Hide account`}
                 icon={<Eye1ClosedIcon />}
                 onPress={toggleHideAccount}
+                testID={TestId.accountSettingsHideAccountButton}
               />
             ) : (
               <SettingsListItem
                 title={t`Reveal account`}
                 icon={<Eye1Icon />}
                 onPress={toggleHideAccount}
+                testID={TestId.accountSettingsRevealAccountButton}
               />
             )}
           </SettingsList>

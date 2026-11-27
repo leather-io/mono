@@ -5,9 +5,10 @@ interface AssetPickerItemProps {
   onPress(top: number | null): void;
   children: ReactElement<Partial<{ onPress(): void }>> | null;
   canAnimate?: boolean;
+  testID?: string;
 }
 
-export function AssetPickerItem({ onPress, children, canAnimate }: AssetPickerItemProps) {
+export function AssetPickerItem({ onPress, children, canAnimate, testID }: AssetPickerItemProps) {
   const ref = useRef<ViewInstance>(null);
 
   function handlePress() {
@@ -21,7 +22,7 @@ export function AssetPickerItem({ onPress, children, canAnimate }: AssetPickerIt
   }
 
   return (
-    <View ref={ref}>
+    <View ref={ref} testID={testID}>
       {children &&
         cloneElement(children, {
           onPress: handlePress,

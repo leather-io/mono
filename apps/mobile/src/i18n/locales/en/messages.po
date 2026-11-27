@@ -30,7 +30,7 @@ msgstr " since {date}"
 msgid "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
 msgstr "{accountIdentifierType, select, native_segwit {Native Segwit address} taproot {Taproot address} bns {BNS name} stacks {Stacks address} other {Unknown}}"
 
-#: src/features/approver/components/fees/bitcoin-fee-option.tsx:41
+#: src/features/approver/components/fees/bitcoin-fee-option.tsx:43
 msgid "{feeRate} sats/vB · {formattedQuoteFee}"
 msgstr "{feeRate} sats/vB · {formattedQuoteFee}"
 
@@ -150,7 +150,7 @@ msgstr "Activity"
 
 #: src/features/account/components/create-wallet-card.tsx:22
 #: src/features/account/sheets/add-account-sheet.tsx:26
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:143
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:144
 msgid "Add account"
 msgstr "Add account"
 
@@ -191,7 +191,7 @@ msgstr "Add your first NFT by buying or transferring from another account."
 msgid "Add, configure and remove"
 msgstr "Add, configure and remove"
 
-#: src/features/settings/wallet-and-accounts/wallet-card.tsx:143
+#: src/features/settings/wallet-and-accounts/wallet-card.tsx:144
 msgid "Adding account..."
 msgstr "Adding account..."
 
@@ -264,7 +264,7 @@ msgstr "Allow collection of data"
 msgid "Amount must be greater than zero"
 msgstr "Amount must be greater than zero"
 
-#: src/features/account/components/available-account-balance.tsx:38
+#: src/features/account/components/available-account-balance.tsx:39
 msgid "Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing:"
 msgstr "Amount of tokens you can actually send or spend right now. We calculate it by taking your total balance and removing:"
 
@@ -381,11 +381,11 @@ msgstr "Attributes"
 msgid "Authentication failed"
 msgstr "Authentication failed"
 
-#: src/features/account/components/available-account-balance.tsx:62
+#: src/features/account/components/available-account-balance.tsx:63
 msgid "Available"
 msgstr "Available"
 
-#: src/features/account/components/available-account-balance.tsx:34
+#: src/features/account/components/available-account-balance.tsx:35
 msgid "Available balance"
 msgstr "Available balance"
 
@@ -461,7 +461,7 @@ msgid "BTC, STX, sBTC, USDCx"
 msgstr "BTC, STX, sBTC, USDCx"
 
 #: src/components/action-buttons.tsx:50
-#: src/features/token/components/deposit-token-cell.tsx:60
+#: src/features/token/components/deposit-token-cell.tsx:65
 msgid "Buy"
 msgstr "Buy"
 
@@ -477,7 +477,7 @@ msgstr "By signing, this app can move your assets anytime."
 msgid "Can’t send to the same address"
 msgstr "Can’t send to the same address"
 
-#: src/components/sheets/warning-sheet.layout.tsx:51
+#: src/components/sheets/warning-sheet.layout.tsx:60
 #: src/features/approver/components/approver-buttons/index.tsx:49
 #: src/features/approver/components/approver-buttons/index.tsx:65
 #: src/features/qr-scanner/use-camera-permission.ts:39
@@ -593,7 +593,7 @@ msgstr "Contact us"
 msgid "Contacts"
 msgstr "Contacts"
 
-#: src/components/sheets/warning-sheet.layout.tsx:48
+#: src/components/sheets/warning-sheet.layout.tsx:53
 #: src/features/recover-wallet/recover-wallet.layout.tsx:88
 msgid "Continue"
 msgstr "Continue"
@@ -764,7 +764,7 @@ msgstr "Enabled"
 msgid "Enter an amount"
 msgstr "Enter an amount"
 
-#: src/features/send/components/recipient/recipient-toggle.tsx:57
+#: src/features/send/components/recipient/recipient-toggle.tsx:59
 msgid "Enter recipient"
 msgstr "Enter recipient"
 
@@ -885,11 +885,11 @@ msgstr "From"
 msgid "Fund your wallet by buying tokens or transferring from another account."
 msgstr "Fund your wallet by buying tokens or transferring from another account."
 
-#: src/features/account/components/available-account-balance.tsx:43
+#: src/features/account/components/available-account-balance.tsx:44
 msgid "funds already on their way to someone else."
 msgstr "funds already on their way to someone else."
 
-#: src/features/account/components/available-account-balance.tsx:48
+#: src/features/account/components/available-account-balance.tsx:49
 msgid "funds temporarily locked in a stacking pool and not yet spendable."
 msgstr "funds temporarily locked in a stacking pool and not yet spendable."
 
@@ -1114,7 +1114,7 @@ msgstr "Lock app"
 msgid "Locked"
 msgstr "Locked"
 
-#: src/features/account/components/available-account-balance.tsx:47
+#: src/features/account/components/available-account-balance.tsx:48
 msgid "Locked Stacks balance:"
 msgstr "Locked Stacks balance:"
 
@@ -1150,7 +1150,7 @@ msgstr "Manage tokens"
 msgid "Matching"
 msgstr "Matching"
 
-#: src/components/amount-field/amount-send-max-button.tsx:13
+#: src/components/amount-field/amount-send-max-button.tsx:14
 msgid "Max"
 msgstr "Max"
 
@@ -1308,7 +1308,7 @@ msgstr "Only {threshold} more {baseAssetSymbol} can be deposited into {targetAss
 msgid "Open wallet settings"
 msgstr "Open wallet settings"
 
-#: src/features/account/components/available-account-balance.tsx:42
+#: src/features/account/components/available-account-balance.tsx:43
 msgid "Outbound balance:"
 msgstr "Outbound balance:"
 
@@ -1470,14 +1470,14 @@ msgstr "Restore wallet"
 msgid "Retry"
 msgstr "Retry"
 
-#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:115
+#: src/app/settings/wallet/configure/[wallet]/[account]/index.tsx:116
 msgid "Reveal account"
 msgstr "Reveal account"
 
 #: src/features/send/forms/btc/btc-form.tsx:129
 #: src/features/send/forms/stx/sip10-form.tsx:157
 #: src/features/send/forms/stx/stx-form.tsx:143
-#: src/features/swap/screens/swap-form-screen.tsx:118
+#: src/features/swap/screens/swap-form-screen.tsx:121
 msgid "Review"
 msgstr "Review"
 
@@ -1509,7 +1509,7 @@ msgid "Scan a Bitcoin or Stacks address"
 msgstr "Scan a Bitcoin or Stacks address"
 
 #: src/features/send/components/recipient/recipient-selector/recipient-selector.tsx:78
-#: src/features/send/components/recipient/recipient-toggle.tsx:61
+#: src/features/send/components/recipient/recipient-toggle.tsx:63
 msgid "Scan a QR code"
 msgstr "Scan a QR code"
 
@@ -1538,7 +1538,7 @@ msgstr "Secure your wallet"
 msgid "Security"
 msgstr "Security"
 
-#: src/features/swap/components/asset-selector/asset-selector-toggle.tsx:36
+#: src/features/swap/components/asset-selector/asset-selector-toggle.tsx:38
 msgid "Select"
 msgstr "Select"
 
@@ -1576,7 +1576,7 @@ msgstr "Sending to your own address isn’t supported. Choose a different addres
 msgid "Settings"
 msgstr "Settings"
 
-#: src/features/receive/screens/asset-details.tsx:106
+#: src/features/receive/screens/asset-details.tsx:107
 msgid "Share"
 msgstr "Share"
 
@@ -1690,7 +1690,7 @@ msgid "Success"
 msgstr "Success"
 
 #: src/components/action-buttons.tsx:72
-#: src/features/swap/screens/swap-form-screen.tsx:58
+#: src/features/swap/screens/swap-form-screen.tsx:59
 msgid "Swap"
 msgstr "Swap"
 
@@ -1843,7 +1843,7 @@ msgstr "This transaction sends funds to an output Leather can’t display as an 
 msgid "This transaction sends funds to an output Leather can’t display as an address. Continue only if you trust this app."
 msgstr "This transaction sends funds to an output Leather can’t display as an address. Continue only if you trust this app."
 
-#: src/features/account/components/available-account-balance.tsx:53
+#: src/features/account/components/available-account-balance.tsx:54
 msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
@@ -1948,7 +1948,7 @@ msgstr "Unable to open app store. Please update the app manually from your devic
 msgid "Unable to Open Store"
 msgstr "Unable to Open Store"
 
-#: src/features/account/components/available-account-balance.tsx:52
+#: src/features/account/components/available-account-balance.tsx:53
 msgid "Uneconomical balance:"
 msgstr "Uneconomical balance:"
 
@@ -1962,7 +1962,7 @@ msgstr "Unknown"
 msgid "Unknown error during version check"
 msgstr "Unknown error during version check"
 
-#: src/components/splash-screen-guard/splash-screen-guard.tsx:137
+#: src/components/splash-screen-guard/splash-screen-guard.tsx:139
 msgid "Unlock"
 msgstr "Unlock"
 
