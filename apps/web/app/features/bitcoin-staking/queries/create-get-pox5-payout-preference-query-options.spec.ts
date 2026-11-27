@@ -1,5 +1,5 @@
 import { poxAddressToTuple } from '@stacks/stacking';
-import { noneCV, serializeCV, someCV, tupleCV, uintCV } from '@stacks/transactions';
+import { bufferCV, noneCV, serializeCV, someCV, tupleCV, uintCV } from '@stacks/transactions';
 
 import { createGetPox5PayoutPreferenceQueryOptions } from './create-get-pox5-payout-preference-query-options';
 
@@ -116,6 +116,38 @@ describe(createGetPox5PayoutPreferenceQueryOptions.name, () => {
       supportsMinClaim: true,
     });
     expect(calledFunctions).toEqual(['get-payout-config']);
+  });
+
+  test('reads the reported Fast Pool P2PKH payout config', async () => {
+    const options = createGetPox5PayoutPreferenceQueryOptions({
+      address: 'SP2CQRQ7NCY6H7A8DWHM58VXY6HYHX0481NSWME4K',
+      signerManagerContractId:
+        'SPMPMA1V6P430M8C91QS1G9XJ95S59JS1TZFZ4Q4.fastpool-max500-signer-manager',
+      networkName: 'mainnet',
+      client: makeClient({
+        okay: true,
+        result: `0x${serializeCV(
+          someCV(
+            tupleCV({
+              'pox-addr': tupleCV({
+                version: bufferCV(Uint8Array.of(0)),
+                hashbytes: bufferCV(Buffer.from('bd2c155d1d1c2c9d991484398532d6f60c3cbcb0', 'hex')),
+              }),
+              'max-fee': uintCV(1000),
+              'min-claim': uintCV(10000),
+            })
+          )
+        )}`,
+      }),
+    });
+    await expect(options.queryFn()).resolves.toEqual({
+      preference: {
+        btcRewardAddress: '1JFFXEDe8dze2DUm3R1XwXAkVm7jGVtaVb',
+        maxFeeSats: 1000n,
+        minClaimSats: 10000n,
+      },
+      supportsMinClaim: true,
+    });
   });
 
   test('falls back to get-pox-addr on a v1 contract', async () => {
