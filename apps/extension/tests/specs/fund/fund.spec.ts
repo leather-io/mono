@@ -5,6 +5,7 @@ import {
 } from '@tests/mocks/mock-leather-api';
 import { mockTestAccountStacksTxsRequestsWithPendingTx } from '@tests/mocks/mock-stacks-txs';
 import { mockMainnetTestAccountEmptyUtxosRequests } from '@tests/mocks/mock-utxos';
+import { z } from 'zod';
 
 import { test } from '../../fixtures/fixtures';
 import { mockEmptyStacksPrincipalBalancesRequest } from '../../mocks/mock-stacks-principal-balances';
@@ -12,6 +13,7 @@ import { HomePageSelectors } from '../../selectors/home.selectors';
 import { CoreAssetSelectors } from '../../selectors/mocked-tokens.selectors';
 
 const onramperWidgetTitle = 'Onramper Widget';
+const signingRequestBodySchema = z.object({ params: z.record(z.string(), z.string()) });
 
 async function expectSignedWidgetUrl(widget: Locator) {
   await expect(widget).toHaveAttribute('src', /^\?/);
@@ -61,6 +63,7 @@ test.describe('Fund', () => {
       homePage,
       page,
     }) => {
+      const signingRequest = page.waitForRequest('**/v1/onramp/widget-signature');
       const stxAsset = homePage.assetList.getByTestId(CoreAssetSelectors.StxAsset);
       const buyButton = stxAsset.getByTestId(CoreAssetSelectors.StxAssetBuyButton);
       await buyButton.click();
@@ -69,6 +72,13 @@ test.describe('Fund', () => {
       const widget = page.getByTitle(onramperWidgetTitle);
       await expectSignedWidgetUrl(widget);
       await expect(widget).toHaveAttribute('src', /[?&]mode=buy(&|$)/);
+
+      const { params } = signingRequestBodySchema.parse((await signingRequest).postDataJSON());
+      const src = z.string().parse(await widget.getAttribute('src'));
+      expect(Object.fromEntries(new URL(src, 'https://widget.test').searchParams)).toEqual({
+        ...params,
+        ...mockedOnramperWidgetSignature,
+      });
     });
 
     test('that BTC asset shows a buy button that forwards to fund page', async ({

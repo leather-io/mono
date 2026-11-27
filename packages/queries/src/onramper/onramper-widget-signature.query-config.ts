@@ -1,9 +1,6 @@
 import type { QueryFunctionContext, UseQueryOptions } from '@tanstack/react-query';
 
-import {
-  type OnramperWidgetSignature,
-  getOnramperWidgetSignatureClient,
-} from '@leather.io/services';
+import { type LeatherApiOnramperWidgetSignature, getLeatherApiClient } from '@leather.io/services';
 
 export const onramperWidgetSignatureQueryPrefix = 'onramper-widget-signature';
 
@@ -15,12 +12,12 @@ export function createOnramperWidgetSignatureQueryConfig(params: Record<string, 
   return {
     queryKey: createOnramperWidgetSignatureQueryKey(params),
     queryFn: ({ signal }: QueryFunctionContext) =>
-      getOnramperWidgetSignatureClient().signWidgetParams(params, signal),
+      getLeatherApiClient().signOnramperWidgetParams(params, { signal }),
     gcTime: 0,
     staleTime: Infinity,
     meta: { persist: false },
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: false,
-  } satisfies UseQueryOptions<OnramperWidgetSignature>;
+  } satisfies UseQueryOptions<LeatherApiOnramperWidgetSignature>;
 }
