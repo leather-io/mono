@@ -1,18 +1,18 @@
 import { colorThemes } from '@leather.io/tokens';
 
-import { type OnramperMode } from './types';
-import { formatColorHexForParams, generateSignature, matchAddresses } from './utils';
+import { type OnramperMode, type OnramperPlatform } from './types';
+import { formatColorHexForParams, matchAddresses } from './utils';
 
 interface GetIframeProps {
   theme: 'dark' | 'light';
   btcAddress: string | undefined;
   stxAddress: string | undefined;
   apiKey: string;
-  signingSecret: string;
   mode: OnramperMode;
   successRedirectUrl: string | undefined;
   failureRedirectUrl: string | undefined;
   redirectAtCheckout?: boolean;
+  platform?: OnramperPlatform;
 }
 
 export function getOnramperIframeParams({
@@ -20,12 +20,12 @@ export function getOnramperIframeParams({
   btcAddress,
   stxAddress,
   apiKey,
-  signingSecret,
   mode,
   successRedirectUrl,
   failureRedirectUrl,
   redirectAtCheckout = false,
-}: GetIframeProps) {
+  platform,
+}: GetIframeProps): Record<string, string> {
   const redirectUrls: Record<string, string> = {};
   if (successRedirectUrl) redirectUrls['successRedirectUrl'] = successRedirectUrl;
   if (failureRedirectUrl) redirectUrls['failureRedirectUrl'] = failureRedirectUrl;
@@ -59,10 +59,8 @@ export function getOnramperIframeParams({
       none: '',
     },
   });
-  const signContent = `wallets=${wallets}`;
-
   const colors = theme === 'dark' ? colorThemes.dark : colorThemes.base;
-  const params = new URLSearchParams({
+  return {
     darkMode: theme === 'dark' ? 'true' : 'false',
     themeName: theme,
     primaryColor: formatColorHexForParams(colors['ink.action-primary-default']),
@@ -75,7 +73,6 @@ export function getOnramperIframeParams({
     borderRadius: '0.25',
     widgetBorderRadius: '0.1',
     apiKey,
-    signature: generateSignature(signContent, signingSecret),
     mode,
     onlyCryptoNetworks,
     sell_onlyCryptoNetworks: onlyCryptoNetworks,
@@ -90,6 +87,6 @@ export function getOnramperIframeParams({
     hideTopBar: 'true',
     wallets,
     ...redirectUrls,
-  });
-  return params;
+    ...(platform ? { platform } : {}),
+  };
 }

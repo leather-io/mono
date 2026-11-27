@@ -18,4 +18,3 @@ export const DEBUG_TX_MONITOR = process.env.DEBUG_TX_MONITOR === 'true';
 export const MULTISIG_API_URL = process.env.MULTISIG_API_URL ?? '';
 export const ONRAMPER_API_KEY = process.env.ONRAMPER_API_KEY ?? '';
 export const ONRAMPER_WIDGET_HOST = process.env.ONRAMPER_WIDGET_HOST ?? '';
-export const ONRAMPER_SIGNING_SECRET = process.env.ONRAMPER_SIGNING_SECRET ?? '';
