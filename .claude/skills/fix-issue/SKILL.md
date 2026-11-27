@@ -1,6 +1,6 @@
 ---
 name: fix-issue
-description: Take one or more GitHub issue numbers for leather-io/mono, research each one, settle the open decisions with the person in one short round per issue, write a handoff brief per issue (or per group of overlapping issues), then dispatch the repo:fix-issue GitHub workflow once per brief, which runs the fixer, verifies it and opens a signed pull request from bot/fix-issue-<issue>-<run id>, and track the runs and pull requests to the end. Use when given one or more GitHub issue numbers to fix, asked to work through a batch of issues, or asked to dispatch fixers for issues.
+description: Take one or more GitHub issue numbers for leather-io/mono, research each one, settle the open decisions with the person in one short round per issue, write a handoff brief per issue (or per group of overlapping issues), then dispatch the repo:fix-issue GitHub workflow once per brief, which runs the fixer, verifies it and opens a signed pull request from bot/fix-issue-<issue>-<run id>, and track the runs and pull requests to the end; the same workflow, dispatched with a pull request, revises a bot pull request on its own branch. Use when given one or more GitHub issue numbers to fix, asked to work through a batch of issues, asked to dispatch fixers for issues, or asked to have a bot pull request changed or its conflicts with dev resolved.
 ---
 
 # Fix issue
@@ -131,7 +131,8 @@ run is still going cancels that run.
 
 What comes back, per run, 20 minutes to two hours later:
 
-- a pull request from the fix-issue App on its own `bot/fix-issue-<n>-<run id>` branch;
+- a pull request from the fix-issue App on its own `bot/fix-issue-<n>-<run id>` branch, with the
+  brief as a folded first comment;
 - a draft instead when the fixer is blocked, the checks still fail after its rounds, or a change
   outside `apps/`, `packages/` and `pnpm-lock.yaml` is needed (listed under
   `## Needs a maintainer`);
@@ -160,10 +161,75 @@ Put the questions from `status` (or from the issue comment) to the person in one
 round per issue: these are the fixer's questions, a new set, not a second interview. Append each
 answer to the brief's Decisions as `Settled: <choice> — <reason>`, then dispatch again after the
 same explicit yes. The new run's pull request replaces the earlier one, which is closed, unless
-someone added commits to the earlier one or it is ready and the new one is a draft; then both stay
-open and the person picks. A run that only comments on the issue closes nothing.
+a revise or a person added commits to it, or it is ready and the new one is a
+draft; then both stay open and the person picks. A run that only comments on the issue closes
+nothing.
 
-## 9. Report
+When the answer does not change a `Settled:` line and the draft's work is worth keeping, revise the
+draft with the answer as its notes instead (section 9); that continues on the same branch.
+
+## 9. Ask for changes on a pull request
+
+A bot pull request is changed in place by dispatching the same workflow with the pull request
+instead of an issue. It needs no brief, but the run reads nothing of the review from GitHub: the
+notes file is the only feedback the fixer gets, so every revise that is not a bare merge needs one.
+
+```bash
+pnpm lt fix-issue dispatch --pull-request <pull request> [--notes-file <file>] [--merge]
+gh run list --repo leather-io/mono --workflow repo:fix-issue.yml --limit 5
+```
+
+| Dispatch                 | What the revise does                                                  |
+| ------------------------ | --------------------------------------------------------------------- |
+| with `--notes-file`      | does what the notes ask                                               |
+| with `--merge`           | merges `dev` into the branch and fixes what that breaks, nothing else |
+| with `--merge` and notes | the merge and the notes                                               |
+
+Before every dispatch, gather the feedback and write it into the notes file yourself:
+
+1. Read the unresolved review threads and the review summaries of the pull request with `gh`
+   (`gh pr view <n> --json reviews` and `gh api graphql` for `reviewThreads`), plus anything the
+   person asks for in the conversation.
+2. Keep only what people with write access to the repository wrote
+   (`gh api repos/leather-io/mono/collaborators/<login>/permission`); leave out bots and everyone
+   else. The workflow does not filter the notes.
+3. Write one entry per comment: the file and line when it has one, who wrote it, and the comment
+   as written. Add the person's own instructions on top.
+4. Keep the notes file in the run directory, never in a temp directory, and under 60,000 bytes.
+
+A dispatch with no notes and no merge to do is refused. When the pull request conflicts with
+`dev`, any revise merges `dev` first, and one without notes only resolves the conflicts. Reviewers
+without a session can use "Run workflow" on `repo:fix-issue` in the Actions tab, fill in
+`pull_request` and paste the feedback into `notes`.
+
+Dispatching is a GitHub write as the person: show the pull request, the notes and the flags, and
+get an explicit yes first. Whoever dispatches is recorded as the co-author of the revise commit.
+
+What comes back, 20 minutes to two hours later, on the same pull request:
+
+- at most one new signed commit on top of the branch, never a force-push; after a merge it has
+  `dev` as its second parent. A revise that only answers commits nothing;
+- the description rewritten for the pull request as it now stands;
+- one comment that records the revise: `Revise <n> of 5`, who dispatched it and with which notes,
+  the commit, and one line per thing asked for saying what was done or why not. The review threads
+  get no reply and stay open, and no review is requested: tell the person which threads the revise
+  answered so they can resolve them and ask for review again;
+- a draft with the question when it needs a decision. Feedback that contradicts a `Settled:` line
+  of the brief is never applied; it comes back as a question. To change a settled decision, change
+  the brief and dispatch the issue again (section 8).
+
+The run fails, with the reason in its log and nothing written to the pull request, when there is
+nothing to revise, when the pull request has had its five revises, when it is not an open bot pull
+request, or when `dev` conflicts in a way the fixer cannot resolve: in a file outside `apps/`,
+`packages/` and `pnpm-lock.yaml`, or without conflict markers, as when one side deleted the file
+(merge `dev` by hand first). A push to the branch while a revise runs fails that revise. `status`
+(section 7) keeps showing the run that opened the pull request; revise runs are named
+`fix-issue: revise #<pull request>`.
+
+A pull request a revise committed to is no longer replaced by a new dispatch of its issue, so pick
+one path per pull request: revise it, or dispatch the issue again and close it by hand.
+
+## 10. Report
 
 Per issue: the run URL and result, the pull request URL and whether it is a draft, and what still
 needs a human: the open questions, a failed run's failing step (`gh run view <id> --log-failed`),
