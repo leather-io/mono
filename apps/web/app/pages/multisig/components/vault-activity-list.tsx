@@ -1,7 +1,11 @@
 import { useNavigate } from 'react-router';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
-import type { VaultActivityItem } from '~/features/multisig/activity/harmonize-vault-activity';
+import {
+  type VaultActivityItem,
+  isReadyToBroadcast,
+  prioritizeReadyToBroadcast,
+} from '~/features/multisig/activity/harmonize-vault-activity';
 
 import type { ActivityGroup } from '@leather.io/features';
 import { ListContainer } from '@leather.io/ui';
@@ -19,6 +23,7 @@ interface VaultActivityListProps {
   // and the surrounding section already provides the frame.
   variant?: 'contained' | 'plain';
   limit?: number;
+  prioritizeProposals?: boolean;
   vaultNamesById?: ReadonlyMap<string, string>;
   accountNamesById?: ReadonlyMap<string, string>;
   accountThresholdsById?: ReadonlyMap<string, string>;
@@ -69,26 +74,43 @@ function needsAttention(item: VaultActivityItem) {
   );
 }
 
-type VaultActivityTier = 'action' | 'inFlight' | 'history';
+type VaultActivityTier = 'readyToBroadcast' | 'action' | 'inFlight' | 'history';
 
-function tierOf(item: VaultActivityItem): VaultActivityTier {
-  if (needsAttention(item)) return 'action';
+function proposalReview(item: VaultActivityItem): 'solid' | 'outline' | undefined {
+  if (item.view.status !== 'pending') return;
+  const transaction = item.multisig?.transaction;
+  if (isReadyToBroadcast(item)) return 'solid';
+  if (transaction?.status === 'pending') return transaction.signedByMe ? 'outline' : 'solid';
+  if (transaction?.status === 'queued') return 'outline';
+}
+
+function tierOf(item: VaultActivityItem, prioritizeProposals: boolean): VaultActivityTier {
+  if (prioritizeProposals) {
+    if (isReadyToBroadcast(item)) return 'readyToBroadcast';
+    if (proposalReview(item) === 'solid') return 'action';
+  } else if (needsAttention(item)) {
+    return 'action';
+  }
   if (item.view.status === 'pending') return 'inFlight';
   return 'history';
 }
 
 const vaultActivityTiers: { key: VaultActivityTier; label: string }[] = [
+  { key: 'readyToBroadcast', label: 'Ready to broadcast' },
   { key: 'action', label: 'Needs signatures' },
   { key: 'inFlight', label: 'In progress' },
   { key: 'history', label: 'History' },
 ];
 
-function groupVaultActivityByTier(items: VaultActivityItem[]): ActivityGroup<VaultActivityItem>[] {
+function groupVaultActivityByTier(
+  items: VaultActivityItem[],
+  prioritizeProposals: boolean
+): ActivityGroup<VaultActivityItem>[] {
   return vaultActivityTiers
     .map(tier => ({
       key: tier.key,
       label: tier.label,
-      items: items.filter(item => tierOf(item) === tier.key),
+      items: items.filter(item => tierOf(item, prioritizeProposals) === tier.key),
     }))
     .filter(group => group.items.length > 0);
 }
@@ -101,24 +123,28 @@ export function VaultActivityList({
   scale,
   variant = 'contained',
   limit,
+  prioritizeProposals = false,
   vaultNamesById,
   accountNamesById,
   accountThresholdsById,
   onSelect,
 }: VaultActivityListProps) {
   const navigate = useNavigate();
-  const visibleItems = limit === undefined ? items : items.slice(0, limit);
+  const orderedItems = prioritizeProposals ? prioritizeReadyToBroadcast(items) : items;
+  const visibleItems = orderedItems.slice(0, limit);
 
   function renderRow(item: VaultActivityItem) {
     const link = resolveRowLink(item, onSelect, navigate);
     const location = resolveLocation(item, vaultNamesById, accountNamesById, accountThresholdsById);
+    const review = prioritizeProposals ? proposalReview(item) : undefined;
     return (
       <VaultActivityRow
         key={`${item.view.key}:${item.vaultAccountId ?? ''}`}
         item={item}
         scale={scale}
         variant={variant === 'plain' ? 'plain' : 'boxed'}
-        needsAttention={needsAttention(item)}
+        needsAttention={prioritizeProposals ? review === 'solid' : needsAttention(item)}
+        review={review}
         location={location}
         href={link?.href}
         onClick={link?.onClick}
@@ -126,11 +152,11 @@ export function VaultActivityList({
     );
   }
 
-  const tiers = groupVaultActivityByTier(visibleItems);
+  const tiers = groupVaultActivityByTier(visibleItems, prioritizeProposals);
 
   // Labels only earn their place when they separate more than one tier; a feed
   // with a single tier (e.g. history only) renders as a plain list.
-  const showLabels = tiers.length > 1;
+  const showLabels = tiers.length > 1 || tiers[0]?.key === 'readyToBroadcast';
 
   const overflowNote =
     limit !== undefined && items.length > limit ? (

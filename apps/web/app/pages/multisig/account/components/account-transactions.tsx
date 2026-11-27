@@ -43,6 +43,7 @@ export function AccountTransactions({ account }: AccountTransactionsProps) {
     <Flex direction="column" gap="space.04">
       <VaultActivityList
         items={items}
+        prioritizeProposals
         onSelect={(targetVaultId, txId) => void navigate(multisigPaths.tx(targetVaultId, txId))}
       />
       {hasNextPage && (

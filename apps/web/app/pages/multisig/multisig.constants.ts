@@ -16,3 +16,12 @@ export const multisigPaths = {
     return `/multisig/vault/${vaultId}/account/${accountId}/activity/${txid}`;
   },
 };
+
+const walletGuides = 'https://docs.leather.io/wallet-and-security';
+
+export const multisigGuides = {
+  createAccount: `${walletGuides}/create-or-join-multisig-vault#create-vault-accounts`,
+  addToExtension: `${walletGuides}/use-multisig-vault-extension#add-a-vault-account-to-the-extension`,
+  signAndBroadcast: `${walletGuides}/use-multisig-vault-extension#sign-and-broadcast-in-the-web-app`,
+  queuedProposals: `${walletGuides}/use-multisig-vault-extension#queued-proposals`,
+};
