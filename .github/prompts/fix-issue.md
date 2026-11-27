@@ -104,26 +104,35 @@ differently and which parts of this file still apply.
 
 ## Screenshots for the reviewer
 
-When the change alters what an extension screen shows, give the reviewer before and after
-screenshots. Skip this for changes nobody can see.
+When the change alters what an extension screen or a web page shows, give the reviewer before and
+after screenshots, for each app it shows in. Skip this for changes nobody can see.
 
-1. Write one or more Playwright specs in `tmp/fix-issue/screenshot-specs/<name>.spec.ts`. That
-   folder is never committed, linted or typechecked. Import `test` from `@tests/fixtures/fixtures`
-   and anything else from `@tests/...`, `@shared/...` or `@playwright/test`, and reuse the existing
-   mocks and page objects to open each changed screen in each state that matters.
-2. In each state, wait until the screen is ready, then save it with
-   ``await popup.screenshot({ path: `${process.env.REVIEW_SCREENSHOT_DIR}/<id>.png` })``, where
-   `<id>` is lowercase and hyphenated, for example `originator-no-post-conditions`. Name each state
-   once and keep it to 12 states at most.
-3. The workflow runs the same specs against the fixed extension and against `dev`, so only use
-   selectors and text that exist on `dev` too to reach and wait for the screen; a test id that the
-   fix adds would make the `dev` capture fail.
-4. Check them: build the packages you changed and the extension as in step 4 of Work, run
-   `pnpm lt fix-issue screenshots preview`, and look at the PNGs in
-   `tmp/fix-issue/screenshots/preview/` with the Read tool.
+1. Write one or more Playwright specs in `tmp/fix-issue/screenshot-specs/extension/<name>.spec.ts`
+   or `tmp/fix-issue/screenshot-specs/web/<name>.spec.ts`. Those folders are never committed, linted
+   or typechecked, and a spec outside them is never run.
+   - Extension: import `test` from `@tests/fixtures/fixtures` and anything else from `@tests/...`,
+     `@shared/...` or `@playwright/test`, and reuse the existing mocks and page objects to open each
+     changed screen in each state that matters.
+   - Web: import `test` from `../../../../apps/web/tests/fixtures` when the page needs the API mocks
+     or a wallet mode, or from `@playwright/test` otherwise, and open each changed route with
+     `page.goto`.
+2. In each state, wait until the screen is ready, then save it to
+   `` `${process.env.REVIEW_SCREENSHOT_DIR}/<id>.png` `` with `popup.screenshot` in the extension or
+   `page.screenshot` on web. `<id>` is lowercase and hyphenated, for example
+   `originator-no-post-conditions`. Name each state once across both apps and keep it to 12 states
+   at most.
+3. The workflow runs the same specs against the fix and against `dev`, so only use selectors and
+   text that exist on `dev` too to reach and wait for the screen; a test id that the fix adds would
+   make the `dev` capture fail.
+4. Check them: build what the specs run against (the extension as in step 4 of Work; web with
+   `pnpm turbo run build --filter=@leather.io/web`), run `pnpm lt fix-issue screenshots preview`,
+   and look at the PNGs in `tmp/fix-issue/screenshots/preview/` with the Read tool.
 5. List each state in the status file under `screenshots` as `{ "id": "<id>", "caption": "<caption>" }`.
    The caption is a short plain description of the state, and becomes the row label in the pull
    request.
+
+The workflow adds any `Not verified:` line for screenshots itself, including for `apps/mobile`
+changes, which are never captured; do not add one.
 
 ## Status file
 

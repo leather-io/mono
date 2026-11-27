@@ -595,6 +595,8 @@ describe('openPullRequest', () => {
       ],
     };
 
+    const unpublishedBody = `${doneBody}- Not verified: screenshots; the run listed some but none could be published.\n`;
+
     function shoot(side: string, id: string, content: Buffer = png) {
       repo.write(`tmp/fix-issue/screenshots/${side}/${id}.png`, content);
     }
@@ -673,20 +675,20 @@ describe('openPullRequest', () => {
         return undefined;
       });
       await expect(result).resolves.toBe('https://github.com/leather-io/mono/pull/101');
-      expect(callsTo(client, 'POST', '/pulls')[0]?.body).toMatchObject({ body: doneBody });
+      expect(callsTo(client, 'POST', '/pulls')[0]?.body).toMatchObject({ body: unpublishedBody });
       expect(callsTo(client, 'POST', '/git/refs').map(call => call.body)).toContainEqual({
         ref: 'refs/heads/bot/fix-issue-12-777',
         sha: 'new-commit-sha',
       });
     });
 
-    test('skips files that are not PNGs and adds no section without images', async () => {
+    test('skips files that are not PNGs and says that none were published', async () => {
       setup(withScreenshots);
       shoot('after', 'fee-row-narrow', Buffer.from('<svg onload=alert(1)>'));
       const { client, result } = open();
       await result;
       expect(client.calls.some(call => call.path.includes('bot/screenshots-12'))).toBe(false);
-      expect(callsTo(client, 'POST', '/pulls')[0]?.body).toMatchObject({ body: doneBody });
+      expect(callsTo(client, 'POST', '/pulls')[0]?.body).toMatchObject({ body: unpublishedBody });
     });
   });
 });

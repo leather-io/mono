@@ -111,6 +111,11 @@ jobs:
             printf '%s=%s\n' "$key" "${!key}"
           done > apps/extension/.env
 
+      - name: write-web-env
+        env:
+          LAUNCH_DARKLY_KEY: ${{ vars.PUBLIC_WEB_LAUNCH_DARKLY_KEY }}
+        run: printf 'LEATHER_LAUNCH_DARKLY_KEY=%s\n' "$LAUNCH_DARKLY_KEY" > apps/web/.env
+
       - name: install-playwright-browsers
         working-directory: apps/extension
         run: pnpm playwright install chromium --no-shell --with-deps

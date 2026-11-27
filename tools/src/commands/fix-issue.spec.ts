@@ -234,7 +234,9 @@ describe('fix-issue command actions', () => {
 
   test('screenshots preview fails when the fixer wrote no specs', async () => {
     await run(['screenshots', 'preview']);
-    expect(errors).toEqual([`fix-issue-screenshots: no specs in ${repo.paths.screenshotSpecsDir}`]);
+    expect(errors).toEqual([
+      `fix-issue-screenshots: no specs in screenshot-specs/extension/ and screenshot-specs/web/ under ${repo.paths.workDir}`,
+    ]);
     expect(process.exitCode).toBe(1);
   });
 

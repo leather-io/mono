@@ -133,6 +133,8 @@ What comes back, per run, 20 minutes to two hours later:
 
 - a pull request from the fix-issue App on its own `bot/fix-issue-<n>-<run id>` branch, with the
   brief as a folded first comment;
+- in it, a `## Screenshots` before and after table for extension and web changes; mobile changes
+  and failed captures get a `Not verified:` line instead;
 - a draft instead when the fixer is blocked, the checks still fail after its rounds, or a change
   outside `apps/`, `packages/` and `pnpm-lock.yaml` is needed (listed under
   `## Needs a maintainer`);

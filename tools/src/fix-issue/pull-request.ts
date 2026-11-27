@@ -107,6 +107,8 @@ function commitMessage(subject: string, trailer: string | null): string {
   return trailer ? `${subject}\n\n${trailer}\n` : subject;
 }
 
+const unpublishedScreenshotsNote =
+  'Not verified: screenshots; the run listed some but none could be published.';
 const fileModes = ['100644', '100755'];
 const fileMode = '100644';
 
@@ -500,7 +502,11 @@ async function publishFirstRun(
     log(`open-pull-request: skipping screenshots: ${errorMessage(error)}`);
     return null;
   });
-  const body = renderBody(status, closesNumbers(status, issue), table);
+  const tested =
+    table === null && status.screenshots.length > 0
+      ? [...status.tested, unpublishedScreenshotsNote]
+      : status.tested;
+  const body = renderBody({ ...status, tested }, closesNumbers(status, issue), table);
   const title = status.commit;
   const trailer = await coAuthorTrailer(client, options.coAuthor);
   const commit = await commitTree(client, repo, commitMessage(title, trailer), entries, {
