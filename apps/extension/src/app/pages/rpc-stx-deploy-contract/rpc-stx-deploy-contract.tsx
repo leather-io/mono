@@ -5,7 +5,10 @@ import {
   ensurePostConditionWireFormat,
   generateStacksUnsignedTransaction,
 } from '@leather.io/stacks';
+import { Callout } from '@leather.io/ui';
 import { createMoneyFromDecimal } from '@leather.io/utils';
+
+import { clarityVersionDeprecationNotice } from '@shared/rpc/methods/stx-deploy-contract';
 
 import { useConvertCryptoCurrencyToFiatAmount } from '@app/common/hooks/use-convert-to-fiat-amount';
 import { AccountStacksAddress } from '@app/components/account/account-stacks-address';
@@ -22,7 +25,10 @@ import { useSignAndBroadcastStacksTransaction } from '@app/features/rpc-stacks-t
 import { useStacksRpcTransactionRequestApproval } from '@app/features/rpc-stacks-transaction-request/stacks/use-stacks-rpc-transaction-request-approval';
 import { TransactionActionsWithSpend } from '@app/features/rpc-stacks-transaction-request/transaction-actions/transaction-actions-with-spend';
 
-import { getUnsignedStacksDeployContractOptions } from './rpc-stx-deploy-contract.utils';
+import {
+  getUnsignedStacksDeployContractOptions,
+  isClarityVersionRequested,
+} from './rpc-stx-deploy-contract.utils';
 
 export function RpcStxDeployContract() {
   const { address, isLoadingBalance, network, publicKey } = useStacksRpcTransactionRequestContext();
@@ -57,6 +63,7 @@ export function RpcStxDeployContract() {
     await signAndBroadcastTransaction(unsignedTx);
   }
   const onApprove = useStacksRpcTransactionRequestApproval(onApproveTransaction);
+  const showClarityVersionNotice = isClarityVersionRequested();
 
   return (
     <RpcTransactionRequestLayout
@@ -72,6 +79,9 @@ export function RpcStxDeployContract() {
         />
       }
     >
+      {showClarityVersionNotice && (
+        <Callout variant="warning">{clarityVersionDeprecationNotice}</Callout>
+      )}
       <PostConditionsDetailsLayout
         postConditions={(txOptionsForBroadcast.postConditions ?? []).map(pc =>
           ensurePostConditionWireFormat(pc)

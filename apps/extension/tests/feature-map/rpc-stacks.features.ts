@@ -162,7 +162,7 @@ export const rpcStacksFeatures = [
     actions: ['OnboardingPage.signInWithTestAccount'],
     specs: ['apps/extension/tests/specs/rpc-sip30-requests/rpc-stx-deploy-contract.spec.ts'],
     description:
-      'Approver titled "Deploy contract": a post-conditions section ("Only fees will be transferred from your account or the transaction will abort." when there are none), then the signing account, the deploying address with the contract name and the Clarity code body, and fee and nonce rows. ' +
+      'Approver titled "Deploy contract": when the request passes clarityVersion (any value) a warning callout first says "This app asked for a specific Clarity version. Leather no longer supports that, so the contract will deploy with the latest Clarity version.", and the contract always deploys unversioned; then a post-conditions section ("Only fees will be transferred from your account or the transaction will abort." when there are none), then the signing account, the deploying address with the contract name and the Clarity code body, and fee and nonce rows. ' +
       broadcastNote +
       ' ' +
       cancelOnlySpecNote +

@@ -100,44 +100,36 @@ describe('generateStacksUnsignedTransaction', () => {
     expect(result.auth.spendingCondition.nonce).toBe(BigInt('1'));
   });
 
-  it('should generate a versioned contract deploy when a released clarity version is specified', async () => {
-    const options: StacksUnsignedContractDeployOptions = {
-      txType: TransactionTypes.ContractDeploy,
-      clarityVersion: ClarityVersion.Clarity2,
-      codeBody: 'code',
-      contractName: 'hello-world',
-      fee: createMoney(new BigNumber(1000), 'STX'),
-      nonce: '1',
-      publicKey: testPublicKey,
-    };
+  it.each([
+    ClarityVersion.Clarity1,
+    ClarityVersion.Clarity2,
+    ClarityVersion.Clarity3,
+    ClarityVersion.Clarity4,
+    ClarityVersion.Clarity5,
+    ClarityVersion.Clarity6,
+  ])(
+    'should never generate a versioned contract deploy, even when Clarity %i is passed',
+    async clarityVersion => {
+      const optionsWithClarityVersion = {
+        txType: TransactionTypes.ContractDeploy,
+        clarityVersion,
+        codeBody: 'code',
+        contractName: 'hello-world',
+        fee: createMoney(new BigNumber(1000), 'STX'),
+        nonce: '1',
+        publicKey: testPublicKey,
+      };
 
-    const result = await generateStacksUnsignedTransaction(options);
-    if (result.payload.payloadType !== PayloadType.VersionedSmartContract)
-      throw new Error('Expected versioned smart contract payload');
-    expect(result.payload.clarityVersion).toEqual(ClarityVersion.Clarity2);
-    expect(result.payload.contractName.content).toEqual('hello-world');
-    expect(result.payload.codeBody.content).toEqual('code');
-  });
-
-  it('should omit the clarity version when Clarity 6 is specified', async () => {
-    const options: StacksUnsignedContractDeployOptions = {
-      txType: TransactionTypes.ContractDeploy,
-      clarityVersion: ClarityVersion.Clarity6,
-      codeBody: 'code',
-      contractName: 'hello-world',
-      fee: createMoney(new BigNumber(1000), 'STX'),
-      nonce: '1',
-      publicKey: testPublicKey,
-    };
-
-    const result = await generateStacksUnsignedTransaction(options);
-    const roundTripped = deserializeTransaction(result.serialize());
-    if (roundTripped.payload.payloadType !== PayloadType.SmartContract)
-      throw new Error('Expected smart contract payload');
-    expect('clarityVersion' in roundTripped.payload).toEqual(false);
-    expect(roundTripped.payload.contractName.content).toEqual('hello-world');
-    expect(roundTripped.payload.codeBody.content).toEqual('code');
-  });
+      const result = await generateStacksUnsignedTransaction(optionsWithClarityVersion);
+      const roundTripped = deserializeTransaction(result.serialize());
+      expect(roundTripped.payload.payloadType).not.toEqual(PayloadType.VersionedSmartContract);
+      if (roundTripped.payload.payloadType !== PayloadType.SmartContract)
+        throw new Error('Expected smart contract payload');
+      expect('clarityVersion' in roundTripped.payload).toEqual(false);
+      expect(roundTripped.payload.contractName.content).toEqual('hello-world');
+      expect(roundTripped.payload.codeBody.content).toEqual('code');
+    }
+  );
 
   it('should generate unsigned STX token transfer', async () => {
     const options: StacksUnsignedTokenTransferOptions = {

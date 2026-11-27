@@ -8,7 +8,7 @@ import {
   ensurePostConditionWireFormat,
   getPostConditions,
 } from '@leather.io/stacks';
-import { createMoney } from '@leather.io/utils';
+import { createMoney, isDefined } from '@leather.io/utils';
 
 import { initialSearchParams } from '@app/common/initial-search-params';
 import { rpcPostConditionModeToEnum } from '@app/common/transactions/stacks/post-condition.utils';
@@ -21,12 +21,15 @@ function getDecodedRpcStxDeployContractRequest() {
   return decode(rpcRequest);
 }
 
+export function isClarityVersionRequested() {
+  return isDefined(getDecodedRpcStxDeployContractRequest().params.clarityVersion);
+}
+
 function getTransactionOptionsFromRpcRequest() {
   const decodedRpcRequest = getDecodedRpcStxDeployContractRequest();
   return {
     contractName: decodedRpcRequest.params.name,
     codeBody: decodedRpcRequest.params.clarityCode,
-    clarityVersion: decodedRpcRequest.params.clarityVersion,
     sponsored: decodedRpcRequest.params.sponsored,
     fee: decodedRpcRequest.params.fee
       ? createMoney(decodedRpcRequest.params.fee, 'STX')

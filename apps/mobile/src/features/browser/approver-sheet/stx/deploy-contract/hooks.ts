@@ -39,7 +39,6 @@ export function useDeployContractTxHex({
         txType: TransactionTypes.ContractDeploy,
         contractName: request.params.name,
         codeBody: request.params.clarityCode,
-        clarityVersion: request.params.clarityVersion,
         publicKey: bytesToHex(signer.publicKey),
       });
       const txHex = tx.serialize();
@@ -48,7 +47,6 @@ export function useDeployContractTxHex({
     [
       fromAccountId,
       request.params.clarityCode,
-      request.params.clarityVersion,
       request.params.name,
       stxRequestParams,
       accountId,

@@ -1,7 +1,5 @@
 import { hexToBytes } from '@noble/hashes/utils';
 import {
-  ClarityVersion,
-  createSmartContractPayload,
   deserializeCV,
   makeUnsignedContractCall,
   makeUnsignedContractDeploy,
@@ -43,27 +41,13 @@ export function getUnsignedContractDeployParsedOptions(
 ): Parameters<typeof makeUnsignedContractDeploy>[0] {
   return {
     ...options,
+    clarityVersion: undefined,
     fee: options.fee.amount.toString(),
     nonce: initNonce(options.nonce).toString(),
     postConditions: getPostConditions(
       options.postConditions?.map(pc => ensurePostConditionWireFormat(pc))
     ),
   };
-}
-
-function shouldUseNodeDefaultClarityVersion(clarityVersion?: ClarityVersion) {
-  return clarityVersion === undefined || clarityVersion === ClarityVersion.Clarity6;
-}
-
-async function generateUnsignedContractDeployTransaction(
-  options: StacksUnsignedContractDeployOptions
-) {
-  const transaction = await makeUnsignedContractDeploy(
-    getUnsignedContractDeployParsedOptions(options)
-  );
-  if (shouldUseNodeDefaultClarityVersion(options.clarityVersion))
-    transaction.payload = createSmartContractPayload(options.contractName, options.codeBody);
-  return transaction;
 }
 
 export function getUnsignedStxTokenTransferParsedOptions(
@@ -90,7 +74,7 @@ export function generateStacksUnsignedTransaction(options: StacksUnsignedTransac
     case TransactionTypes.ContractCall:
       return makeUnsignedContractCall(getUnsignedContractCallParsedOptions(options));
     case TransactionTypes.ContractDeploy:
-      return generateUnsignedContractDeployTransaction(options);
+      return makeUnsignedContractDeploy(getUnsignedContractDeployParsedOptions(options));
     default:
       assertUnreachable(txType);
   }

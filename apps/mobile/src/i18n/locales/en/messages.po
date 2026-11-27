@@ -961,7 +961,7 @@ msgstr "Hidden accounts"
 msgid "Hide account"
 msgstr "Hide account"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:176
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:179
 #: src/features/psbt-signer/psbt-signer.tsx:319
 msgid "Hide advanced options"
 msgstr "Hide advanced options"
@@ -1584,7 +1584,7 @@ msgstr "Share"
 msgid "Share anonymous usage details"
 msgstr "Share anonymous usage details"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:175
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:178
 #: src/features/psbt-signer/psbt-signer.tsx:318
 msgid "Show advanced options"
 msgstr "Show advanced options"
@@ -1603,7 +1603,7 @@ msgstr "Sign Message"
 msgid "Sign transaction"
 msgstr "Sign transaction"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:125
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:127
 msgid "Sign Transaction"
 msgstr "Sign Transaction"
 
@@ -1800,6 +1800,10 @@ msgstr "This address belongs to a different network. Use an address that matches
 msgid "This address is linked to activity that violates compliance policies. You can’t send funds to it"
 msgstr "This address is linked to activity that violates compliance policies. You can’t send funds to it"
 
+#: src/features/browser/approver-sheet/stx/deploy-contract/deploy-contract.tsx:106
+msgid "This app asked for a specific Clarity version. Leather no longer supports that, so the contract will deploy with the latest Clarity version."
+msgstr "This app asked for a specific Clarity version. Leather no longer supports that, so the contract will deploy with the latest Clarity version."
+
 #: src/features/approver/components/approver-permissions.tsx:19
 msgid "This app would like to"
 msgstr "This app would like to"
@@ -1848,7 +1852,7 @@ msgid "tiny amounts that cost more to send than they’re worth."
 msgstr "tiny amounts that cost more to send than they’re worth."
 
 #: src/features/approver/components/sip10-recipient.tsx:43
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:150
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:153
 #: src/features/browser/approver-sheet/send-transfer.tsx:80
 #: src/features/psbt-signer/psbt-signer.tsx:297
 msgid "To address"
@@ -2107,7 +2111,7 @@ msgstr "You will keep"
 msgid "You will transfer"
 msgstr "You will transfer"
 
-#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:141
+#: src/features/approver/layouts/base-stx-tx-approver.layout.tsx:144
 #: src/features/psbt-signer/psbt-signer.tsx:291
 msgid "You’ll send"
 msgstr "You’ll send"

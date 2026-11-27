@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import { ApproverAccountCard } from '@/features/approver/components/approver-account-card';
 import { OutcomeAddressesCard } from '@/features/approver/components/outcome-addresses-card';
@@ -56,6 +56,7 @@ interface BaseStxTxApproverLayoutProps {
   setTxHex(txHex: string): void;
   txOptions: TxOptions;
   origin?: string;
+  notice?: ReactNode;
   onBack(): void;
 }
 
@@ -68,6 +69,7 @@ export function BaseStxTxApproverLayout({
   setTxHex,
   txOptions,
   origin,
+  notice,
   onBack,
 }: BaseStxTxApproverLayoutProps) {
   const approverWarningSheetRef = useRef<SheetInstance>(null);
@@ -123,6 +125,7 @@ export function BaseStxTxApproverLayout({
       <Approver requester={origin}>
         <Approver.Container>
           <Approver.Header title={t`Sign Transaction`} />
+          {notice}
           {isContractCall(tx.payload) && <AllowModePostConditionWarning txHex={txHex} />}
           {broadcastedTxid && <StxStatusRow txid={broadcastedTxid} />}
 
