@@ -8,8 +8,18 @@ export function registerReviewGateCommands(program: Command): void {
     .description('The repo:review-gate workflow, configured through the job environment');
 
   gate
+    .command('classify')
+    .description(
+      'Ask Claude how many reviews a pull request needs, with a read-only token, and write its answer to the step output'
+    )
+    .requiredOption('--pr <number>', 'the pull request to classify')
+    .action(reviewGate.runClassify);
+
+  gate
     .command('check')
-    .description('Count independent approvals on a pull request and report the gate')
+    .description(
+      'Record how many reviews a pull request needs, then count independent approvals and report the gate'
+    )
     .requiredOption('--pr <number>', 'the pull request to check')
     .action(reviewGate.runCheck);
 

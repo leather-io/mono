@@ -11,17 +11,50 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: review-gate-${{ inputs.pr }}
+  cancel-in-progress: false
+
 jobs:
-  check:
-    name: check
+  classify:
+    name: classify
     if: github.ref_name == 'dev'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     cache-mode: none
+    permissions:
+      contents: read # checkout of dev and the compared commits
+      pull-requests: read # the pull request being classified
+      statuses: read # skips a head that already has a decision
+    outputs:
+      answer: ${{ steps.classify.outputs.answer }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: $/.github/actions/setup-tools
+
+      - uses: $/.github/actions/install-claude-code
+        id: claude-cli
+
+      - name: classify
+        id: classify
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          CLAUDE_BIN: ${{ steps.claude-cli.outputs.path }}
+          PR: ${{ inputs.pr }}
+        run: pnpm lt review-gate classify --pr "$PR"
+
+  check:
+    name: check
+    needs: classify
+    if: ${{ !cancelled() && github.ref_name == 'dev' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    cache-mode: none
     environment: environment/mono-review-gate
-    concurrency:
-      group: review-gate-${{ inputs.pr }}
-      cancel-in-progress: false
     permissions:
       contents: read # checkout of dev only; every GitHub write uses the review gate app token
       id-token: write # OIDC exchange for the AWS role that signs the review gate App JWT with its KMS key
@@ -48,6 +81,7 @@ jobs:
       - name: check-dispatched-pull-request
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          CLASSIFIER_ANSWER: ${{ needs.classify.outputs.answer }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           PR: ${{ inputs.pr }}
         run: pnpm lt review-gate check --pr "$PR"

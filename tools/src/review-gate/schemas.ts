@@ -2,14 +2,48 @@ import { z } from 'zod';
 
 const loginSchema = z.object({ login: z.string() });
 
+const pullRequestFileSchema = z.object({
+  filename: z.string(),
+  previous_filename: z.string().optional(),
+  status: z.string(),
+  additions: z.number(),
+  deletions: z.number(),
+  patch: z.string().optional(),
+  sha: z.string().nullish(),
+});
+export type PullRequestFile = z.infer<typeof pullRequestFileSchema>;
+
+export const comparisonSchema = z.object({ files: z.array(pullRequestFileSchema) });
+
 export const pullRequestSchema = z.object({
   number: z.number(),
   state: z.string(),
+  title: z.string(),
+  body: z.string().nullable(),
   user: z.object({ login: z.string(), type: z.string() }),
-  head: z.object({ sha: z.string(), ref: z.string() }),
-  base: z.object({ ref: z.string() }),
+  head: z.object({
+    sha: z.string(),
+    ref: z.string(),
+    repo: z.object({ full_name: z.string() }).nullable(),
+  }),
+  base: z.object({ sha: z.string(), ref: z.string() }),
 });
 export type PullRequest = z.infer<typeof pullRequestSchema>;
+
+export const commitStatusSchema = z.object({
+  context: z.string(),
+  state: z.string(),
+  description: z.string().nullable(),
+  creator: loginSchema.nullable(),
+});
+export type CommitStatus = z.infer<typeof commitStatusSchema>;
+
+export const treeSchema = z.object({
+  truncated: z.boolean(),
+  tree: z.array(z.object({ path: z.string(), type: z.string(), sha: z.string() })),
+});
+
+export const viewerSchema = z.object({ viewer: z.object({ login: z.string() }) });
 
 const reviewSchema = z.object({
   state: z.string(),

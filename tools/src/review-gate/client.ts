@@ -4,13 +4,19 @@ import { type GitHubClient, GitHubError, type HttpMethod, paginate } from '../ci
 import {
   type Review,
   commitPullRequestSchema,
+  commitStatusSchema,
+  comparisonSchema,
   pullRequestSchema,
   reviewsPageSchema,
+  treeSchema,
+  viewerSchema,
   workflowRunSchema,
 } from './schemas.js';
 
 const notFoundStatus = 404;
 const maxReviewPages = 30;
+const viewerQuery = 'query { viewer { login } }';
+const botLoginSuffix = '[bot]';
 const reviewsQuery = `
   query ($owner: String!, $name: String!, $number: Int!, $after: String) {
     repository(owner: $owner, name: $name) {
@@ -42,7 +48,7 @@ const reviewsQuery = `
 `;
 
 interface NewStatus {
-  readonly state: 'success' | 'failure' | 'error';
+  readonly state: 'pending' | 'success' | 'failure' | 'error';
   readonly context: string;
   readonly description: string;
   readonly target_url: string;
@@ -55,13 +61,33 @@ export function createGateClient(github: GitHubClient, repository: string) {
     return github.request(method, `${repoPath}${path}`, body);
   }
 
+  async function listAll<T extends z.ZodType>(path: string, schema: T): Promise<z.infer<T>[]> {
+    return z.array(schema).parse(await paginate(github, `${repoPath}${path}`));
+  }
+
   return {
+    async getAppBotLogin(): Promise<string> {
+      const { login } = viewerSchema.parse(await github.graphql(viewerQuery, {})).viewer;
+      return login.endsWith(botLoginSuffix) ? login : `${login}${botLoginSuffix}`;
+    },
     async getPullRequest(number: number) {
       return pullRequestSchema.parse(await request(`/pulls/${number}`));
     },
-    async listCommitPullRequests(sha: string) {
-      const pullRequests = await paginate(github, `${repoPath}/commits/${sha}/pulls`);
-      return z.array(commitPullRequestSchema).parse(pullRequests);
+    async listBaseBlobs(sha: string): Promise<Map<string, string>> {
+      const tree = treeSchema.parse(await request(`/git/trees/${sha}?recursive=1`));
+      if (tree.truncated) return new Map();
+      return new Map(
+        tree.tree.filter(entry => entry.type === 'blob').map(entry => [entry.path, entry.sha])
+      );
+    },
+    async listFiles(baseSha: string, headSha: string) {
+      return comparisonSchema.parse(await request(`/compare/${baseSha}...${headSha}`)).files;
+    },
+    listStatuses(sha: string) {
+      return listAll(`/commits/${sha}/statuses`, commitStatusSchema);
+    },
+    listCommitPullRequests(sha: string) {
+      return listAll(`/commits/${sha}/pulls`, commitPullRequestSchema);
     },
     async createStatus(sha: string, status: NewStatus): Promise<void> {
       await request(`/statuses/${sha}`, 'POST', status);

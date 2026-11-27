@@ -74,7 +74,7 @@ describe('findFixIssueRun', () => {
   function pullRequest(ref: string, type = 'Bot') {
     return {
       user: { login: 'leather-fix-issue[bot]', type },
-      head: { sha: 'abc', ref },
+      head: { sha: 'abc', ref, repo: null },
     };
   }
 

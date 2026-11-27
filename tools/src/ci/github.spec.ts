@@ -100,6 +100,13 @@ describe('paginate', () => {
     ]);
   });
 
+  test('refuses a list too long to read in full, rather than cutting it short', async () => {
+    stubFetch([{ status: 200, body: JSON.stringify(Array.from({ length: 100 }, () => 0)) }]);
+    await expect(
+      paginate(createGitHubClient({ token: 'secret' }), 'repos/o/r/statuses')
+    ).rejects.toThrow('GET repos/o/r/statuses has more than 3000 items');
+  });
+
   test('refuses a response that is not a list', async () => {
     stubFetch([{ status: 200, body: '{}' }]);
     await expect(paginate(createGitHubClient({ token: 'secret' }), 'repos/o/r')).rejects.toThrow(

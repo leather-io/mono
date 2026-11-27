@@ -1,7 +1,7 @@
 import { botAccountType, fixIssueBranch } from '../fix-issue/revise-state.js';
 import type { CommitPullRequest, PullRequest, Review, WorkflowRun } from './schemas.js';
 
-const maxStatusDescriptionLength = 140;
+export const maxStatusDescriptionLength = 140;
 const humanAccountType = 'User';
 const decisiveReviewStates = new Set(['APPROVED', 'CHANGES_REQUESTED', 'DISMISSED']);
 const fixIssueWorkflowPath = '.github/workflows/repo:fix-issue.yml';

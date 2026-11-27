@@ -109,9 +109,9 @@ export async function paginate(client: GitHubClient, path: string): Promise<unkn
     if (!Array.isArray(response)) throw new Error(`GET ${path} did not return a list`);
     const entries: unknown[] = response;
     items.push(...entries);
-    if (entries.length < pageSize) break;
+    if (entries.length < pageSize) return items;
   }
-  return items;
+  throw new Error(`GET ${path} has more than ${maxPages * pageSize} items`);
 }
 
 export function readRequiredEnv(name: string): string {
