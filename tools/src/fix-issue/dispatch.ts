@@ -34,31 +34,63 @@ export function briefIssues(runDir: string): number[] {
   return issues;
 }
 
-export function dispatch({ runDir, issue, repo, run = runCommand }: DispatchOptions): string {
-  const brief = briefPath(runDir, issue);
-  if (!existsSync(brief)) throw new Error(`no brief at ${brief}`);
-  const bytes = statSync(brief).size;
+function refuseOversized(file: string): void {
+  const bytes = statSync(file).size;
   if (bytes > maxBriefBytes) {
-    throw new Error(`${brief} is ${bytes} bytes, over the ${maxBriefBytes} byte limit; trim it`);
+    throw new Error(`${file} is ${bytes} bytes, over the ${maxBriefBytes} byte limit; trim it`);
   }
-  const args = [
-    'workflow',
-    'run',
-    workflowFile,
-    '--repo',
-    repo,
-    '--ref',
-    'dev',
-    '-f',
-    `issue=${issue}`,
-    '-F',
-    `notes=@${brief}`,
-  ];
-  const result = run('gh', args, { cwd: runDir });
+}
+
+function runWorkflow(
+  repo: string,
+  fields: readonly string[],
+  cwd: string,
+  run: CommandRunner
+): string {
+  const args = ['workflow', 'run', workflowFile, '--repo', repo, '--ref', 'dev', ...fields];
+  const result = run('gh', args, { cwd });
   if (result.status !== 0) {
     throw new Error(
       `GitHub refused the dispatch: ${result.stderr.trim()}\nSomeone with write access to ${repo} can run:\ngh ${args.join(' ')}`
     );
   }
   return `${result.stdout}${result.stderr}`.trim();
+}
+
+export function dispatch({ runDir, issue, repo, run = runCommand }: DispatchOptions): string {
+  const brief = briefPath(runDir, issue);
+  if (!existsSync(brief)) throw new Error(`no brief at ${brief}`);
+  refuseOversized(brief);
+  return runWorkflow(repo, ['-f', `issue=${issue}`, '-F', `notes=@${brief}`], runDir, run);
+}
+
+interface DispatchReviseOptions {
+  readonly pullRequest: number;
+  readonly notesFile?: string;
+  readonly merge: boolean;
+  readonly repo: string;
+  readonly cwd: string;
+  readonly run?: CommandRunner;
+}
+
+export function dispatchRevise({
+  pullRequest,
+  notesFile,
+  merge,
+  repo,
+  cwd,
+  run = runCommand,
+}: DispatchReviseOptions): string {
+  if (notesFile !== undefined) {
+    if (!existsSync(notesFile)) throw new Error(`no notes at ${notesFile}`);
+    refuseOversized(notesFile);
+  }
+  const fields = [
+    '-f',
+    `pull_request=${pullRequest}`,
+    '-f',
+    `merge=${merge}`,
+    ...(notesFile === undefined ? [] : ['-F', `notes=@${notesFile}`]),
+  ];
+  return runWorkflow(repo, fields, cwd, run);
 }
