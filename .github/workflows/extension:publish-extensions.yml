@@ -70,7 +70,6 @@ jobs:
           IS_PUBLISHING: true
           ONRAMPER_API_KEY: ${{ vars.PUBLIC_ONRAMPER_API_KEY }}
           ONRAMPER_WIDGET_HOST: ${{ vars.PUBLIC_ONRAMPER_WIDGET_HOST }}
-          ONRAMPER_SIGNING_SECRET: ${{ vars.PUBLIC_ONRAMPER_SIGNING_SECRET }}
           # We only add the sentry auth token for chrome, as we don't want to
           # create a duplicate release during the ff build
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
