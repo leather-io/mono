@@ -12,6 +12,7 @@ export default defineConfig({
           {
             name: 'preset-default',
           },
+          'prefixIds',
         ],
       },
     }),

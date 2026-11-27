@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { AccountAddresses, Sip9Asset } from '@leather.io/models';
 
-import type { BnsService } from '../bns/bns.service';
 import { createTestSip9Asset } from '../test/assets-sip9';
 import { createMock } from '../test/create-mock';
 import { CollectiblesService } from './collectibles.service';
@@ -23,11 +22,12 @@ describe(CollectiblesService.name, () => {
   const getAccountSip9s = vi.fn().mockResolvedValue(mockSip9s);
   const mockSip9sService = createMock<Sip9sService>({ getAccountSip9s });
 
-  const mockBnsService = createMock<BnsService>({
-    getAccountBnsNames: vi.fn().mockResolvedValue([]),
-  });
+  const collectiblesService = new CollectiblesService(mockSip9sService);
 
-  const collectiblesService = new CollectiblesService(mockSip9sService, mockBnsService);
+  const account: AccountAddresses = {
+    id: { fingerprint: 'fp1', accountIndex: 0 },
+    stacks: { stxAddress: 'ST123' },
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -35,11 +35,6 @@ describe(CollectiblesService.name, () => {
 
   describe('getAccountCollectibles', () => {
     it('returns stacks collectibles', async () => {
-      const account: AccountAddresses = {
-        id: { fingerprint: 'fp1', accountIndex: 0 },
-        stacks: { stxAddress: 'ST123' },
-      };
-
       const collectibles = await collectiblesService.getAccountCollectibles({ account });
 
       expect(mockSip9sService.getAccountSip9s).toHaveBeenCalledWith({ account }, undefined);
@@ -49,11 +44,6 @@ describe(CollectiblesService.name, () => {
     });
 
     it('passes abort signal to all services', async () => {
-      const account: AccountAddresses = {
-        id: { fingerprint: 'fp1', accountIndex: 0 },
-        stacks: { stxAddress: 'ST123' },
-      };
-
       const abortController = new AbortController();
       await collectiblesService.getAccountCollectibles({ account }, abortController.signal);
 
@@ -66,60 +56,39 @@ describe(CollectiblesService.name, () => {
     it('returns empty array when all services return empty', async () => {
       vi.spyOn(mockSip9sService, 'getAccountSip9s').mockResolvedValueOnce([]);
 
-      const account: AccountAddresses = {
-        id: { fingerprint: 'fp1', accountIndex: 0 },
-      };
-
-      const collectibles = await collectiblesService.getAccountCollectibles({ account });
+      const collectibles = await collectiblesService.getAccountCollectibles({
+        account: { id: { fingerprint: 'fp1', accountIndex: 0 } },
+      });
 
       expect(collectibles).toHaveLength(0);
     });
 
-    it('filters out SIP-9 NFTs whose names match owned BNS names', async () => {
-      const bnsMatchingSip9 = createTestSip9Asset({
-        assetId: 'SP2QEZ.BNS-V2.bns::names',
+    it('returns BNS names', async () => {
+      const bnsName = createTestSip9Asset({
+        assetId: 'SP2QEZ06AGJ3RKJPBV14SY1V5BBFNAW33D96YPGZF.BNS-V2::BNS-V2',
         name: 'alice.btc',
       });
-
-      vi.spyOn(mockSip9sService, 'getAccountSip9s').mockResolvedValueOnce([
-        ...mockSip9s,
-        bnsMatchingSip9,
-      ]);
-      vi.spyOn(mockBnsService, 'getAccountBnsNames').mockResolvedValueOnce([
-        {
-          owner: 'ST123',
-          name: 'alice',
-          namespace: 'btc',
-          fullName: 'alice.btc',
-          renewalHeight: 0,
-          registeredAtBlockNumber: 100,
-          isPrimary: true,
-        },
-      ]);
-
-      const account: AccountAddresses = {
-        id: { fingerprint: 'fp1', accountIndex: 0 },
-        stacks: { stxAddress: 'ST123' },
-      };
+      vi.spyOn(mockSip9sService, 'getAccountSip9s').mockResolvedValueOnce([...mockSip9s, bnsName]);
 
       const collectibles = await collectiblesService.getAccountCollectibles({ account });
 
-      const sip9s = collectibles.filter(c => c.protocol === 'sip9');
-      expect(sip9s).toHaveLength(2);
-      expect(sip9s.every(c => c.name !== 'alice.btc')).toBe(true);
+      expect(collectibles).toHaveLength(3);
+      expect(collectibles).toContainEqual(bnsName);
     });
 
-    it('keeps all SIP-9s when user has no BNS names', async () => {
-      vi.spyOn(mockBnsService, 'getAccountBnsNames').mockResolvedValueOnce([]);
-
-      const account: AccountAddresses = {
-        id: { fingerprint: 'fp1', accountIndex: 0 },
-        stacks: { stxAddress: 'ST123' },
-      };
+    it('puts BNS v1 names last', async () => {
+      const bnsV1Name = createTestSip9Asset({
+        assetId: 'SP000000000000000000002Q6VF78.bns::names',
+        name: 'satoshi.btc',
+      });
+      vi.spyOn(mockSip9sService, 'getAccountSip9s').mockResolvedValueOnce([
+        bnsV1Name,
+        ...mockSip9s,
+      ]);
 
       const collectibles = await collectiblesService.getAccountCollectibles({ account });
 
-      expect(collectibles.filter(c => c.protocol === 'sip9')).toHaveLength(2);
+      expect(collectibles.map(c => c.name)).toEqual(['NFT 2', 'NFT 1', 'satoshi.btc']);
     });
   });
 });

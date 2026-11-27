@@ -5,6 +5,8 @@ import { Stack } from 'leather-styles/jsx';
 
 import type { CollectibleView } from '@leather.io/features';
 
+import { parseIfValidPunycode } from '@app/common/utils';
+
 import { Sip9Card } from '../collectibles/components/sip9-card';
 import { CollectibleDetailsHeader } from './collectible-details-header';
 import { CollectibleDetailsPageLayout } from './collectible-details-page.layout';
@@ -19,7 +21,7 @@ export function Sip9DetailsPage({ view, onBack }: Sip9DetailsPageProps) {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   const asset = view.asset;
-  const title = view.title || 'Stacks NFT';
+  const title = view.kind === 'nft' ? view.title || 'Stacks NFT' : parseIfValidPunycode(view.title);
   const subtitle = view.subtitle;
 
   return (
@@ -29,9 +31,13 @@ export function Sip9DetailsPage({ view, onBack }: Sip9DetailsPageProps) {
       data-testid={CollectiblesSelectors.CollectibleDetailsContainer}
     >
       <CollectibleDetailsHeader title={title} subtitle={subtitle} onBack={onBack} />
-      <CollectibleDetailsPageLayout protocol="sip9" media={<Sip9Card item={asset} />}>
+      <CollectibleDetailsPageLayout
+        protocol="sip9"
+        media={<Sip9Card item={asset} kind={view.kind} />}
+      >
         <Sip9Details
           asset={asset}
+          kind={view.kind}
           isDescriptionExpanded={isDescriptionExpanded}
           onToggleDescription={() => setIsDescriptionExpanded(v => !v)}
         />

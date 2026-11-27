@@ -35,7 +35,7 @@ export type {
   BlockchainActivityTranslate,
   BlockchainActivityView,
 } from './activity/blockchain-activity-view.types';
-export type { CollectibleView } from './collectibles/collectible-view';
+export type { CollectibleKind, CollectibleView } from './collectibles/collectible-view';
 export { createCollectibleView, createCollectibleViews } from './collectibles/collectible-view';
 export type { Sip9MediaInfo, Sip9SupportedContentType } from './collectibles/sip9-media';
 export { getSip9ContentTypeList, getSip9MediaInfo } from './collectibles/sip9-media';
