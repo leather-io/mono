@@ -8,6 +8,8 @@ import {
   collectFunctionCallees,
   collectHandlerEndpointNames,
   collectInterfaceProperties,
+  collectObjectLiteralStringPairs,
+  collectStringArrayConsts,
   collectStringConstObjects,
   evaluateStringExpression,
   parseSourceFile,
@@ -197,5 +199,44 @@ describe(collectFunctionCallees.name, () => {
       callees: ['mockFees', 'mockFees'],
     });
     expect(collectFunctionCallees(sourceFile, 'other')).toBeUndefined();
+  });
+});
+
+describe(collectStringArrayConsts.name, () => {
+  test('collects the string elements of top-level array constants', () => {
+    const sourceFile = parseSourceFile(
+      'persist-whitelist.ts',
+      `export const persistWhitelist = ['accounts', 'active', \`wallets\`] as const;
+       const numbers = [1, 2];
+       export const mixed = ['a', 1, 'b'];`
+    );
+    expect(collectStringArrayConsts(sourceFile)).toEqual(
+      new Map([
+        ['persistWhitelist', ['accounts', 'active', 'wallets']],
+        ['numbers', []],
+        ['mixed', ['a', 'b']],
+      ])
+    );
+  });
+});
+
+describe(collectObjectLiteralStringPairs.name, () => {
+  test('pairs two string properties of every object literal, first occurrence wins', () => {
+    const sourceFile = parseSourceFile(
+      'catalog.ts',
+      `export const specs = [
+         { id: 'open-popup', method: 'open', params: { mode: 'popup' } },
+         { id: 'signPsbt', method: 'signPsbt', async params(ctx) { return { id: 'inner', method: 'nope' }; } },
+         { id: 'open-popup', method: 'duplicate' },
+         { id: 'no-method', label: 'x' },
+       ];`
+    );
+    expect(collectObjectLiteralStringPairs(sourceFile, 'id', 'method')).toEqual(
+      new Map([
+        ['open-popup', 'open'],
+        ['signPsbt', 'signPsbt'],
+        ['inner', 'nope'],
+      ])
+    );
   });
 });
