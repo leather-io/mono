@@ -54,7 +54,7 @@ Sentry.init({
 export { ErrorBoundary } from 'expo-router';
 
 // Ensure that reloading on `/modal` keeps a back button present
-export const unstable_settings = { initialRouteName: '/' };
+export const unstable_settings = { anchor: '(tabs)' };
 
 initAppServices();
 void SplashScreen.preventAutoHideAsync();

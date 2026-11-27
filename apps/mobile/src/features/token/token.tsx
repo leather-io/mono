@@ -119,16 +119,13 @@ export function Token({
               name={name}
               layer={layer}
               price={
-                <Box flexDirection="row" alignItems="center" gap="1">
-                  <SkeletonLoader height={23} maxWidth={120} isLoading={isLoading}>
-                    <Balance
-                      balance={price}
-                      formattingOptions={{ showCurrency: false }}
-                      variant="label02"
-                      lineHeight={16}
-                    />
-                  </SkeletonLoader>
-                </Box>
+                <SkeletonLoader height={23} maxWidth={120} isLoading={isLoading}>
+                  <Balance
+                    balance={price}
+                    formattingOptions={{ showCurrency: false }}
+                    variant="label02"
+                  />
+                </SkeletonLoader>
               }
               priceChange={
                 <Box flexDirection="row" alignItems="baseline" gap="1">
