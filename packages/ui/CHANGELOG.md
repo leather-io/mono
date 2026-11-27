@@ -489,6 +489,30 @@
   * devDependencies
     * @leather.io/models bumped to 0.41.0
 
+## [1.121.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.120.0...@leather.io/ui-v1.121.0) (2026-11-27)
+
+
+### Features
+
+* add primary testnet, remove sbtc testnet and legacy staking testnet ([#2834](https://github.com/leather-io/mono/issues/2834)) ([00d076f](https://github.com/leather-io/mono/commit/00d076fb00537cc2c9a4727f9feb8fb255c66a14))
+* expo 58 ([#3005](https://github.com/leather-io/mono/issues/3005)) ([cd4deb5](https://github.com/leather-io/mono/commit/cd4deb57218a6564f3bde86e71b69371514154e4))
+
+
+### Bug Fixes
+
+* **mobile:** keep input sheets above the keyboard ([#3064](https://github.com/leather-io/mono/issues/3064)) ([f10c518](https://github.com/leather-io/mono/commit/f10c518d92dae8169051f9dfbbefb6baa3eceb2f))
+* **ui:** remove the svgo removeViewBox override from the web build ([#2989](https://github.com/leather-io/mono/issues/2989)) ([400c150](https://github.com/leather-io/mono/commit/400c150018cb072401fa9a25ac2fbb17fc6eb196))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/utils bumped to 0.56.0
+  * devDependencies
+    * @leather.io/features bumped to 1.9.0
+    * @leather.io/models bumped to 0.64.0
+
 ## [1.120.0](https://github.com/leather-io/mono/compare/@leather.io/ui-v1.119.4...@leather.io/ui-v1.120.0) (2026-11-19)
 
 

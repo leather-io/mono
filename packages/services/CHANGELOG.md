@@ -413,6 +413,29 @@
   * devDependencies
     * @leather.io/rpc bumped to 2.20.14
 
+## [1.68.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.67.0...@leather.io/services-v1.68.0) (2026-11-27)
+
+
+### Features
+
+* add primary testnet, remove sbtc testnet and legacy staking testnet ([#2834](https://github.com/leather-io/mono/issues/2834)) ([00d076f](https://github.com/leather-io/mono/commit/00d076fb00537cc2c9a4727f9feb8fb255c66a14))
+* **extension:** pay sbtc send fees in sbtc via sponsorship ([#2790](https://github.com/leather-io/mono/issues/2790)) ([4871849](https://github.com/leather-io/mono/commit/4871849c00c371ebda5be14fca075b88d787f1ed))
+* **features:** sign Onramper widget URLs with Signature V2 through the Leather API ([#2988](https://github.com/leather-io/mono/issues/2988)) ([d020648](https://github.com/leather-io/mono/commit/d020648ee557c541a770803f3340a7022388b36b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/bitcoin bumped to 0.42.3
+    * @leather.io/constants bumped to 0.42.0
+    * @leather.io/crypto bumped to 1.13.13
+    * @leather.io/models bumped to 0.64.0
+    * @leather.io/stacks bumped to 1.23.0
+    * @leather.io/utils bumped to 0.56.0
+  * devDependencies
+    * @leather.io/rpc bumped to 2.25.6
+
 ## [1.67.0](https://github.com/leather-io/mono/compare/@leather.io/services-v1.66.3...@leather.io/services-v1.67.0) (2026-11-19)
 
 

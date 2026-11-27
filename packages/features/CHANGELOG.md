@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.9.0](https://github.com/leather-io/mono/compare/@leather.io/features-v1.8.7...@leather.io/features-v1.9.0) (2026-11-27)
+
+
+### Features
+
+* add primary testnet, remove sbtc testnet and legacy staking testnet ([#2834](https://github.com/leather-io/mono/issues/2834)) ([00d076f](https://github.com/leather-io/mono/commit/00d076fb00537cc2c9a4727f9feb8fb255c66a14))
+* expo 58 ([#3005](https://github.com/leather-io/mono/issues/3005)) ([cd4deb5](https://github.com/leather-io/mono/commit/cd4deb57218a6564f3bde86e71b69371514154e4))
+* **features:** sign Onramper widget URLs with Signature V2 through the Leather API ([#2988](https://github.com/leather-io/mono/issues/2988)) ([d020648](https://github.com/leather-io/mono/commit/d020648ee557c541a770803f3340a7022388b36b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.42.0
+    * @leather.io/models bumped to 0.64.0
+    * @leather.io/services bumped to 1.68.0
+    * @leather.io/stacks bumped to 1.23.0
+    * @leather.io/utils bumped to 0.56.0
+
 ## [1.8.7](https://github.com/leather-io/mono/compare/@leather.io/features-v1.8.6...@leather.io/features-v1.8.7) (2026-11-19)
 
 

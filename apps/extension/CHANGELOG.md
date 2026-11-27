@@ -40,6 +40,43 @@
 
 ---
 
+## [6.117.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.116.0...@leather.io/extension-v6.117.0) (2026-11-27)
+
+
+### Features
+
+* add primary testnet, remove sbtc testnet and legacy staking testnet ([#2834](https://github.com/leather-io/mono/issues/2834)) ([00d076f](https://github.com/leather-io/mono/commit/00d076fb00537cc2c9a4727f9feb8fb255c66a14))
+* expo 58 ([#3005](https://github.com/leather-io/mono/issues/3005)) ([cd4deb5](https://github.com/leather-io/mono/commit/cd4deb57218a6564f3bde86e71b69371514154e4))
+* **extension:** grey out multisig accounts in the connect popup ([#3059](https://github.com/leather-io/mono/issues/3059)) ([863c50b](https://github.com/leather-io/mono/commit/863c50be4de61d2f938864bb242147d44c33da82))
+* **extension:** pay sbtc send fees in sbtc via sponsorship ([#2790](https://github.com/leather-io/mono/issues/2790)) ([4871849](https://github.com/leather-io/mono/commit/4871849c00c371ebda5be14fca075b88d787f1ed))
+* **features:** sign Onramper widget URLs with Signature V2 through the Leather API ([#2988](https://github.com/leather-io/mono/issues/2988)) ([d020648](https://github.com/leather-io/mono/commit/d020648ee557c541a770803f3340a7022388b36b))
+
+
+### Bug Fixes
+
+* **extension:** register sbtc deposits before broadcasting ([#2953](https://github.com/leather-io/mono/issues/2953)) ([2cde93d](https://github.com/leather-io/mono/commit/2cde93d66484e4b0a6619d2f03893604404fc7e6))
+* point app.leather.io links at leather.io ([#3014](https://github.com/leather-io/mono/issues/3014)) ([db24332](https://github.com/leather-io/mono/commit/db243324b9aea9190ca34c4d31d3ba8efe6f85a2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.27.1
+    * @leather.io/bitcoin bumped to 0.42.3
+    * @leather.io/cms bumped to 1.8.0
+    * @leather.io/constants bumped to 0.42.0
+    * @leather.io/crypto bumped to 1.13.13
+    * @leather.io/features bumped to 1.9.0
+    * @leather.io/models bumped to 0.64.0
+    * @leather.io/provider bumped to 1.7.8
+    * @leather.io/queries bumped to 0.19.0
+    * @leather.io/rpc bumped to 2.25.6
+    * @leather.io/services bumped to 1.68.0
+    * @leather.io/stacks bumped to 1.23.0
+    * @leather.io/ui bumped to 1.121.0
+    * @leather.io/utils bumped to 0.56.0
+
 ## [6.116.0](https://github.com/leather-io/mono/compare/@leather.io/extension-v6.115.0...@leather.io/extension-v6.116.0) (2026-11-19)
 
 

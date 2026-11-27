@@ -114,6 +114,20 @@
   * devDependencies
     * @leather.io/models bumped to 0.44.1
 
+## [3.27.1](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.27.0...@leather.io/analytics-v3.27.1) (2026-11-27)
+
+
+### Bug Fixes
+
+* **extension:** register sbtc deposits before broadcasting ([#2953](https://github.com/leather-io/mono/issues/2953)) ([2cde93d](https://github.com/leather-io/mono/commit/2cde93d66484e4b0a6619d2f03893604404fc7e6))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * devDependencies
+    * @leather.io/models bumped to 0.64.0
+
 ## [3.27.0](https://github.com/leather-io/mono/compare/@leather.io/analytics-v3.26.1...@leather.io/analytics-v3.27.0) (2026-11-19)
 
 

@@ -368,6 +368,21 @@
   * devDependencies
     * @leather.io/prettier-config bumped to 0.9.0
 
+## [0.56.0](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.55.1...@leather.io/utils-v0.56.0) (2026-11-27)
+
+
+### Features
+
+* add primary testnet, remove sbtc testnet and legacy staking testnet ([#2834](https://github.com/leather-io/mono/issues/2834)) ([00d076f](https://github.com/leather-io/mono/commit/00d076fb00537cc2c9a4727f9feb8fb255c66a14))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/constants bumped to 0.42.0
+    * @leather.io/models bumped to 0.64.0
+
 ## [0.55.1](https://github.com/leather-io/mono/compare/@leather.io/utils-v0.55.0...@leather.io/utils-v0.55.1) (2026-11-19)
 
 
