@@ -270,10 +270,10 @@ export const rpcStacksFeatures = [
     actions: ['OnboardingPage.signInWithTestAccount'],
     specs: ['apps/extension/tests/specs/rpc-sip30-requests/rpc-stx-transfer-sip10-ft.spec.ts'],
     description:
-      'Approver titled "Sign transaction" for a SIP-10 token transfer built by the wallet: it renders the exact-amount post condition ("You will transfer exactly <amount> <symbol> or the transaction will abort."), the transfer contract call details, the signing account and fee and nonce rows. ' +
+      'Approver titled "Sign transaction" for a SIP-10 token transfer built by the wallet: it renders the exact-amount post condition ("You will transfer exactly <amount> <symbol> or the transaction will abort."), the transfer contract call details, the signing account and fee and nonce rows. Total spend is the token amount priced with the token\'s own market data plus the fee, or the fee alone for an unpriced token; "Available balance insufficient" replaces the actions only when the available STX cannot cover the fee. ' +
       broadcastNote +
       ' ' +
-      cancelOnlySpecNote +
+      'The rpc-sip30 spec covers display and close only: it asserts the rendered content, that a large LEO amount still shows "Approve" with no insufficient-balance error, and that an empty STX balance shows "Available balance insufficient" without "Approve"; every test closes the popup and asserts 4001 "User rejected request".' +
       ' ' +
       connectedOriginNote,
   },
