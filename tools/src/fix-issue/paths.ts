@@ -15,6 +15,10 @@ export interface FixIssuePaths {
   readonly applyDir: string;
   readonly screenshotSpecsDir: string;
   readonly screenshotsDir: string;
+  readonly feedbackFile: string;
+  readonly reviseFile: string;
+  readonly pullRequestFile: string;
+  readonly pullRequestDiff: string;
 }
 
 const defaultWorkDir = 'tmp/fix-issue';
@@ -36,5 +40,9 @@ export function fixIssuePaths(root: string, workDir = defaultWorkDir): FixIssueP
     applyDir: path.join(dir, 'apply'),
     screenshotSpecsDir: path.join(dir, 'screenshot-specs'),
     screenshotsDir: path.join(dir, 'screenshots'),
+    feedbackFile: path.join(dir, 'feedback.md'),
+    reviseFile: path.join(dir, 'revise.json'),
+    pullRequestFile: path.join(dir, 'pull-request.md'),
+    pullRequestDiff: path.join(dir, 'pull-request.diff'),
   };
 }
