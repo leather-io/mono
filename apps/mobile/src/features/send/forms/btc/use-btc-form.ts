@@ -9,6 +9,7 @@ import { useCalculateBtcMaxSpend } from '@/features/send/hooks/use-calculate-btc
 import { useSendMax } from '@/features/send/hooks/use-send-max';
 import { useSendNavigation } from '@/features/send/navigation';
 import { btcFormValuesToPsbtHex } from '@/features/send/utils';
+import { type BitcoinFeeRates } from '@/queries/fees/bitcoin-fee-rates.query';
 import {
   useBitcoinAccounts,
   useBitcoinPayerFromKeyOrigin,
@@ -18,11 +19,11 @@ import { analytics } from '@/utils/analytics';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from '@lingui/core/macro';
 
-import { type AccountId, type AverageBitcoinFeeRates, type OwnedUtxo } from '@leather.io/models';
+import { type AccountId, type OwnedUtxo } from '@leather.io/models';
 
 interface UseBtcFormProps {
   account: AccountId;
-  feeRates: AverageBitcoinFeeRates;
+  feeRates: BitcoinFeeRates;
   utxos: OwnedUtxo[];
 }
 export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
@@ -35,7 +36,7 @@ export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
     fingerprint,
     accountIndex
   );
-  const calculateMaxBtcSpend = useCalculateBtcMaxSpend(feeRates, utxos);
+  const calculateMaxBtcSpend = useCalculateBtcMaxSpend(utxos);
   const schema = useBtcSendFormSchema({
     networkMode: networkPreference.chain.bitcoin.mode,
     calculateBtcMaxSpend: calculateMaxBtcSpend,
@@ -47,7 +48,7 @@ export function useBtcForm({ account, feeRates, utxos }: UseBtcFormProps) {
       amount: '0',
       recipient: '',
       isSendingMax: false,
-      feeRate: feeRates.halfHourFee.toNumber(),
+      feeRate: feeRates.standard.rate,
     },
   });
 

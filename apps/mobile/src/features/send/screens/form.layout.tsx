@@ -47,7 +47,7 @@ export function FormLayout({
     case 'nativeStx':
       return (
         <StxDataLoader account={currentAccount}>
-          {({ availableBalance, quoteBalance, marketData, nonce }) => {
+          {({ availableBalance, quoteBalance, marketData, nonce, fees }) => {
             return (
               <StxForm
                 marketData={marketData}
@@ -55,6 +55,7 @@ export function FormLayout({
                 quoteBalance={quoteBalance}
                 quoteCurrency={fiatCurrencyPreference}
                 nonce={nonce}
+                fees={fees}
                 onOpenAssetPicker={handleOpenAssetPicker}
                 assetItemAnimationOffsetTop={assetItemElementInitialOffset}
               />
@@ -65,7 +66,7 @@ export function FormLayout({
     case 'sip10':
       return (
         <Sip10DataLoader account={currentAccount} asset={selectedAsset}>
-          {({ balance, marketData, nonce }) => {
+          {({ balance, marketData, nonce, fees }) => {
             return (
               <Sip10Form
                 asset={selectedAsset}
@@ -74,6 +75,7 @@ export function FormLayout({
                 quoteBalance={balance.quote.availableBalance}
                 quoteCurrency={fiatCurrencyPreference}
                 nonce={nonce}
+                fees={fees}
                 onOpenAssetPicker={handleOpenAssetPicker}
                 assetItemAnimationOffsetTop={assetItemElementInitialOffset}
               />

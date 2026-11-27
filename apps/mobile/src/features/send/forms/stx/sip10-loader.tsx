@@ -1,5 +1,6 @@
 import { Error } from '@/components/error/error';
 import { SendFormLoadingSpinner } from '@/features/send/components/send-form-layout';
+import { useSip10TransferFees } from '@/features/send/hooks/use-stacks-transfer-fees';
 import { useSip10BalanceByAssetId } from '@/queries/balance/sip10-balance.query';
 
 import '@/queries/balance/stx-balance.query';
@@ -9,13 +10,19 @@ import { useNextNonce } from '@/queries/stacks/nonce/account-nonces.hooks';
 import { useStacksSignerAddressFromAccountIndex } from '@/store/keychains/stacks/stacks-keychains.read';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { type AccountId, type MarketData, type Sip10Asset } from '@leather.io/models';
+import {
+  type AccountId,
+  type MarketData,
+  type Sip10Asset,
+  type StacksTransactionFees,
+} from '@leather.io/models';
 import { type Sip10Balance } from '@leather.io/services';
 
 interface Sip10SendLoaderData {
   balance: Sip10Balance;
   nonce: number | undefined;
   marketData: MarketData;
+  fees: StacksTransactionFees;
 }
 
 interface Sip10DataLoaderProps {
@@ -35,14 +42,19 @@ export function Sip10DataLoader({ account, asset, children }: Sip10DataLoaderPro
   );
   const marketData = useMarketDataQuery(asset);
   const nextNonce = useNextNonce(address);
+  const fees = useSip10TransferFees(account, asset);
 
   const isLoading =
     sip10Balance.state === 'loading' ||
     marketData.status === 'pending' ||
-    nextNonce.status === 'pending';
+    nextNonce.status === 'pending' ||
+    fees.status === 'pending';
 
   const isError =
-    sip10Balance.state === 'error' || marketData.status === 'error' || nextNonce.status === 'error';
+    sip10Balance.state === 'error' ||
+    marketData.status === 'error' ||
+    nextNonce.status === 'error' ||
+    fees.status === 'error';
 
   if (isLoading) {
     return <SendFormLoadingSpinner />;
@@ -56,5 +68,6 @@ export function Sip10DataLoader({ account, asset, children }: Sip10DataLoaderPro
     balance: sip10Balance.value,
     nonce: nextNonce.data?.nonce,
     marketData: marketData.data,
+    fees: fees.data,
   });
 }

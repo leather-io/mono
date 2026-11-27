@@ -9,12 +9,12 @@ import { SendFormContainer, SendFormFooter } from '@/features/send/components/se
 import { locale } from '@/features/send/constants';
 import { useBtcForm } from '@/features/send/forms/btc/use-btc-form';
 import { useSendFlowContext } from '@/features/send/send-flow-provider';
+import { type BitcoinFeeRates } from '@/queries/fees/bitcoin-fee-rates.query';
 import { whenInputCurrencyMode } from '@/utils/when-currency-input-mode';
 import { t } from '@lingui/core/macro';
 
 import { btcAsset } from '@leather.io/constants';
 import {
-  type AverageBitcoinFeeRates,
   type MarketData,
   type Money,
   type OwnedUtxo,
@@ -28,7 +28,7 @@ const asset = btcAsset;
 interface BtcFormProps {
   availableBalance: Money;
   quoteBalance: Money;
-  feeRates: AverageBitcoinFeeRates;
+  feeRates: BitcoinFeeRates;
   utxos: OwnedUtxo[];
   marketData: MarketData;
   quoteCurrency: QuoteCurrency;
