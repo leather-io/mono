@@ -1,4 +1,4 @@
-import { type GitHubClient, GitHubError, type HttpMethod } from '../../ci/github.js';
+import { type GitHubClient, GitHubError, type HttpMethod, graphqlData } from '../../ci/github.js';
 import { gitBlobSha } from '../git.js';
 
 interface GitHubCall {
@@ -8,6 +8,7 @@ interface GitHubCall {
 }
 
 export type GitHubRoute = (method: HttpMethod, path: string, body: unknown) => unknown;
+export type GraphqlRoute = (query: string, variables: Readonly<Record<string, unknown>>) => unknown;
 
 interface FakeGitHub extends GitHubClient {
   readonly calls: GitHubCall[];
@@ -31,7 +32,9 @@ function respond(route: GitHubRoute, method: HttpMethod, path: string, body: unk
   if (method === 'POST' && path.endsWith('/git/blobs')) return { sha: blobSha(body) };
   if (method === 'POST' && path.endsWith('/git/trees')) return { sha: 'new-tree-sha' };
   if (method === 'POST' && path.endsWith('/git/commits')) return { sha: 'new-commit-sha' };
-  if (method === 'GET' && path.includes('/git/commits/')) return { tree: { sha: 'base-tree-sha' } };
+  if (method === 'GET' && path.includes('/git/commits/')) {
+    return { tree: { sha: 'base-tree-sha' }, parents: [] };
+  }
   if (method === 'GET' && path.includes('/git/matching-refs/')) return [];
   if (method === 'GET' && path.includes('/pulls?')) return [];
   if (path.includes('/git/refs')) return {};
@@ -48,7 +51,10 @@ function respond(route: GitHubRoute, method: HttpMethod, path: string, body: unk
   throw new GitHubError(404, `fake GitHub has no route for ${method} ${path}`);
 }
 
-export function fakeGitHub(route: GitHubRoute = () => undefined): FakeGitHub {
+export function fakeGitHub(
+  route: GitHubRoute = () => undefined,
+  graphqlRoute: GraphqlRoute = () => undefined
+): FakeGitHub {
   const calls: GitHubCall[] = [];
   return {
     calls,
@@ -60,7 +66,9 @@ export function fakeGitHub(route: GitHubRoute = () => undefined): FakeGitHub {
     },
     graphql(query, variables) {
       calls.push({ method: 'GRAPHQL', path: query, body: variables });
-      return Promise.resolve({});
+      return new Promise(resolve => {
+        resolve(graphqlData(graphqlRoute(query, variables) ?? { data: {} }));
+      });
     },
   };
 }
