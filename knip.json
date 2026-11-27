@@ -18,6 +18,7 @@
     "lingui:extract",
     "lingui:compile",
     "expo:prebuild",
+    "native:fingerprint",
     "only-allow",
     "pinact",
     "sed"
@@ -97,7 +98,13 @@
         "@babel/plugin-transform-class-static-block"
       ],
       "ignoreBinaries": ["op", "maestro"],
-      "ignore": [".detoxrc.cjs", "index.d.ts", "lingui.config.ts", "src/tests/test-utils.tsx"]
+      "ignore": [
+        ".detoxrc.cjs",
+        "fingerprint.config.cjs",
+        "index.d.ts",
+        "lingui.config.ts",
+        "src/tests/test-utils.tsx"
+      ]
     },
     "apps/test-app": {
       "entry": ["src/main.tsx", "src/catalog.ts", "src/cli.ts"],
