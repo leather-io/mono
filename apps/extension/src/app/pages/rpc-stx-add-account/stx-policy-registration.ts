@@ -36,12 +36,13 @@ export function deriveStxPolicyAddress({ params, networks }: DeriveStxPolicyAddr
     paramsNetwork: params.network,
     networks,
   });
+  const chainId = network.chain.stacks.chainId;
   const address = deriveStxMultisigAddress({
     publicKeys: params.publicKeys,
     threshold: params.threshold,
-    chainId: network.chain.stacks.chainId,
+    chainId,
   });
-  return { address, networkId };
+  return { address, networkId, chainId };
 }
 
 interface CreateStxPolicyRegistrationArgs {

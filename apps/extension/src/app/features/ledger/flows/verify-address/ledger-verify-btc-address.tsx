@@ -33,7 +33,7 @@ import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
 import { useCurrentPolicy } from '@app/store/policy/policy.selectors';
 
 interface LedgerVerifyBtcAddressProps {
-  variant: Exclude<VerifyAddressVariant, 'stx'>;
+  variant: Exclude<VerifyAddressVariant, 'stx' | 'stxMultisig'>;
 }
 export function LedgerVerifyBtcAddress({ variant }: LedgerVerifyBtcAddressProps) {
   const navigate = useNavigate();

@@ -10,6 +10,7 @@ import { closeWindow } from '@shared/utils';
 import { useSwitchAccountSheet } from '@app/common/switch-account/use-switch-account-sheet-context';
 import { CrossOriginFrameCallout } from '@app/components/cross-origin-frame-callout';
 import { CurrentAccountDisplayer } from '@app/features/current-account/current-account-displayer';
+import { useLedgerFlow } from '@app/features/ledger/flow/ledger-flow.context';
 import { useOnOriginTabClose } from '@app/routes/hooks/use-on-tab-closed';
 
 import { policyCallout, verifyModeCalloutMessage } from '../policy-match';
@@ -23,12 +24,15 @@ export function RpcStxAddAccount() {
     threshold,
     address,
     matchStatus,
+    chainId,
     mode,
+    walletType,
     canApprove,
     focusInitiatingTab,
     finalize,
   } = useStxAddAccount();
 
+  const { open: openLedgerFlow } = useLedgerFlow();
   const isFinalizingRef = useRef(false);
 
   useOnOriginTabClose(() => closeWindow());
@@ -41,6 +45,20 @@ export function RpcStxAddAccount() {
   }
 
   async function onApprove() {
+    if (walletType === 'ledger') {
+      openLedgerFlow({
+        kind: 'confirm-stx-policy-address',
+        publicKeys,
+        threshold,
+        address,
+        chainId,
+        async onConfirmed() {
+          await finalize();
+          closeWindow();
+        },
+      });
+      return;
+    }
     if (isFinalizingRef.current) return;
     isFinalizingRef.current = true;
     await finalize();
@@ -48,6 +66,7 @@ export function RpcStxAddAccount() {
   }
 
   const isVerifyMode = mode === 'verify';
+  const confirmLabel = `${isVerifyMode ? 'Verify' : 'Confirm'}${walletType === 'ledger' ? ' on Ledger' : ''}`;
   const callout = policyCallout(matchStatus, 'Stacks');
 
   return (
@@ -116,7 +135,7 @@ export function RpcStxAddAccount() {
             onClick={() => void onApprove()}
             data-testid={ConnectAccountSelectors.StxAddAccountApproveBtn}
           >
-            {isVerifyMode ? 'Verify' : 'Confirm'}
+            {confirmLabel}
           </Button>,
         ]}
       />
