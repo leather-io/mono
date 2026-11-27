@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { generatePath, useNavigate } from 'react-router';
 
 import { HomePageSelectors } from '@tests/selectors/home.selectors';
 
@@ -44,7 +44,7 @@ export function FundButtons() {
   const isAtLeastMd = useViewportMinWidth('md');
 
   function onBuy() {
-    return pageModeRoutingAction(RouteUrls.Fund);
+    return pageModeRoutingAction(generatePath(RouteUrls.Fund));
   }
 
   function onSell() {

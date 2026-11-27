@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { generatePath, useNavigate } from 'react-router';
 
 import { Flex, styled } from 'leather-styles/jsx';
 
@@ -110,7 +110,7 @@ export function TokenDetailsActionsRow({
         <TokenDetailsPillButton
           label="Buy"
           disabled={!isBuyEnabled}
-          onClick={() => pageModeRoutingAction(RouteUrls.Fund)}
+          onClick={() => pageModeRoutingAction(generatePath(RouteUrls.Fund))}
           testId="token-details-buy-btn"
         />
       )}
