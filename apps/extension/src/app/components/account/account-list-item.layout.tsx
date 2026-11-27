@@ -62,6 +62,7 @@ export function AccountListItemLayout(props: AccountListItemLayoutProps) {
       }
       key={`account-${accountIndex}`}
       aria-disabled={nonInteractive || undefined}
+      aria-current={isSelected || undefined}
       onClick={nonInteractive ? undefined : () => onSelectAccount({ fingerprint, accountIndex })}
     >
       {itemContent}

@@ -24,6 +24,7 @@ interface SwitchAccountListItemProps {
   handleClose(): void;
   hideBalance?: boolean;
   walletType: WalletType;
+  isSelected?: boolean;
 }
 export function SwitchAccountListItem({
   accountId,
@@ -31,6 +32,7 @@ export function SwitchAccountListItem({
   handleClose,
   hideBalance,
   walletType,
+  isSelected: isSelectedOverride,
 }: SwitchAccountListItemProps) {
   const stacksAccount = useStacksAccount(accountId);
   const stxAddress = stacksAccount?.address ?? '';
@@ -53,7 +55,7 @@ export function SwitchAccountListItem({
     setIsIdle();
   }
 
-  const isSelected = getIsActive(accountId);
+  const isSelected = isSelectedOverride ?? getIsActive(accountId);
 
   return (
     <AccountListItemLayout
