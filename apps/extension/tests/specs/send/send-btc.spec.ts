@@ -1,7 +1,7 @@
 import { TEST_TESTNET_ACCOUNT_2_BTC_ADDRESS } from '@tests/mocks/constants';
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
-import { getDisplayerAddress, withNbsp } from '@tests/utils';
+import { expectToSettleAt, getDisplayerAddress, withNbsp } from '@tests/utils';
 
 import { BtcFeeType } from '@leather.io/models';
 
@@ -28,6 +28,16 @@ test.describe('send btc', () => {
       await sendPage.feesListItem.filter({ hasText: BtcFeeType.Low }).click();
 
       await test.expect(sendPage.confirmationDetails).toBeVisible();
+    });
+
+    test('that an empty recipient blocks the preview without an error row', async ({
+      sendPage,
+    }) => {
+      await sendPage.amountInput.fill('0.00006');
+      await sendPage.previewSendTxButton.click();
+
+      await expectToSettleAt(() => sendPage.formInputErrorLabel.count(), 0);
+      await test.expect(sendPage.recipientInput).toBeVisible();
     });
 
     test('that recipient input is trimmed correctly', async ({ sendPage }) => {

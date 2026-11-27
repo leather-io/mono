@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react';
+import { useFormContext } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { GroupedVirtuoso } from 'react-virtuoso';
@@ -7,12 +8,11 @@ import {
   getRecipientSelectAccountTestId,
   getRecipientSelectPolicyTestId,
 } from '@tests/selectors/send.selectors';
-import { useFormikContext } from 'formik';
 import { Box } from 'leather-styles/jsx';
 
 import { Sheet, SheetHeader } from '@leather.io/ui';
 
-import { type BitcoinSendFormValues, type StacksSendFormValues } from '@shared/models/form.model';
+import type { RecipientFormValues } from '@shared/models/form.model';
 
 import { WalletHeader } from '@app/features/dialogs/switch-account-sheet/components/wallet-header';
 import { useHiddenAccountIds } from '@app/store/accounts/accounts.selectors';
@@ -36,7 +36,8 @@ export function RecipientAccountsSheet() {
   const hiddenAccountIds = useHiddenAccountIds();
   const allPolicies = useSelector(selectAllPolicies);
   const network = useCurrentNetwork();
-  const { values } = useFormikContext<BitcoinSendFormValues | StacksSendFormValues>();
+  const { watch } = useFormContext<RecipientFormValues>();
+  const symbol = watch('symbol');
 
   const onGoBack = useCallback(() => void navigate('..', { replace: true }), [navigate]);
 
@@ -45,7 +46,7 @@ export function RecipientAccountsSheet() {
     [walletTree, hiddenAccountIds]
   );
 
-  const chain = values.symbol === 'BTC' ? 'bitcoin' : 'stacks';
+  const chain = symbol === 'BTC' ? 'bitcoin' : 'stacks';
 
   const rowGroups = useMemo(
     () =>

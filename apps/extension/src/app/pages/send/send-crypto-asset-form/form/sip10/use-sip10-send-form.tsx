@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
+import { type UseFormSetError } from 'react-hook-form';
 
 import BigNumber from 'bignumber.js';
-import { type FormikHelpers } from 'formik';
 import { z } from 'zod';
 
 import type { CryptoAssetBalance, Money, Sip10Asset } from '@leather.io/models';
@@ -23,7 +23,7 @@ import {
   isSbtcContractPrincipal,
 } from '@app/common/transactions/stacks/sbtc-sponsorship.utils';
 import { useBuildSbtcSponsoredTransfer } from '@app/common/transactions/stacks/use-build-sbtc-sponsored-transfer';
-import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
+import { createFormResolver } from '@app/common/validation/form-resolver';
 import { stacksFungibleTokenAmountValidator } from '@app/common/validation/forms/amount-validators';
 import { stxFeeCurrency } from '@app/components/fees-row/fees-row';
 import { useToast } from '@app/features/toasts/use-toast';
@@ -144,7 +144,7 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
     symbol: info.symbol,
     decimals: info.decimals,
     avatar: createFtAvatar(),
-    validationSchema: createFormikValidationSchema(
+    resolver: createFormResolver<StacksSendFormValues>(
       z.object({
         amount: stacksFungibleTokenAmountValidator(spendableTokenBalance),
         recipient,
@@ -155,9 +155,9 @@ export function useSip10SendForm({ balance, info }: UseSip10SendFormArgs) {
 
     async previewTransaction(
       values: StacksSendFormValues,
-      formikHelpers: FormikHelpers<StacksSendFormValues>
+      setError: UseFormSetError<StacksSendFormValues>
     ) {
-      const isFormValid = await checkFormValidation(values, formikHelpers);
+      const isFormValid = checkFormValidation(values, setError);
       if (!isFormValid) return;
 
       if (values.feeCurrency !== stxFeeCurrency) return previewSponsoredTransaction(values);

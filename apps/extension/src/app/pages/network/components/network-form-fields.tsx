@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
+import { useFormContext } from 'react-hook-form';
 
-import { useFormikContext } from 'formik';
 import { Flex } from 'leather-styles/jsx';
 
 import { type BitcoinNetwork } from '@leather.io/models';
@@ -18,19 +18,20 @@ interface NetworkFormFieldsProps {
 }
 
 export function NetworkFormFields({ isEditNetworkMode }: NetworkFormFieldsProps) {
-  const { handleChange, setFieldValue, values } = useFormikContext<AddNetworkFormValues>();
+  const { register, setValue, watch } = useFormContext<AddNetworkFormValues>();
+  const values = watch();
   const setStacksUrl = useCallback(
     (value: string) => {
-      void setFieldValue('stacksUrl', value);
+      setValue('stacksUrl', value);
     },
-    [setFieldValue]
+    [setValue]
   );
 
   const setBitcoinUrl = useCallback(
     (value: string) => {
-      void setFieldValue('bitcoinUrl', value);
+      setValue('bitcoinUrl', value);
     },
-    [setFieldValue]
+    [setValue]
   );
 
   function setNetworkUrls(value: BitcoinNetwork) {
@@ -49,15 +50,15 @@ export function NetworkFormFields({ isEditNetworkMode }: NetworkFormFieldsProps)
 
   return (
     <Flex direction="column" gap="space.05">
-      <NetworkNameSection handleChange={handleChange} values={values} />
+      <NetworkNameSection register={register} />
       <BitcoinApiSection
-        handleChange={handleChange}
         isEditNetworkMode={isEditNetworkMode}
-        setFieldValue={setFieldValue}
+        register={register}
+        setValue={setValue}
         setNetworkUrls={setNetworkUrls}
         values={values}
       />
-      <StacksApiSection handleChange={handleChange} values={values} />
+      <StacksApiSection register={register} />
     </Flex>
   );
 }

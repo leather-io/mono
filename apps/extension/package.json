@@ -91,7 +91,6 @@
     "browserify-fs": "1.0.0",
     "compare-versions": "6.1.0",
     "dompurify": "3.2.4",
-    "formik": "2.4.6",
     "framer-motion": "12.23.22",
     "immer": "10.1.1",
     "launchdarkly-react-client-sdk": "3.9.0",

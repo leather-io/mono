@@ -3,7 +3,9 @@ import { z } from 'zod';
 
 import { stringField } from '@shared/forms/field-schemas';
 
-import { createFormikValidationSchema } from '@app/common/validation/formik-validation-schema';
+import { createFormResolver } from '@app/common/validation/form-resolver';
+
+import type { MnemonicFormValues } from './error-handling';
 
 function isValidMnemonic(word: string): boolean {
   return wordlist.includes(word);
@@ -12,13 +14,13 @@ function isValidMnemonic(word: string): boolean {
 const dynamicObjectValue = stringField().check(
   z.refine<string | undefined>(
     value => {
-      if (!value) return false;
+      if (!value) return true;
       return isValidMnemonic(value);
     },
     { error: issue => `${String(issue.path?.at(-1))} is invalid` }
   )
 );
 
-export const validationSchema = createFormikValidationSchema(
+export const mnemonicFormResolver = createFormResolver<MnemonicFormValues>(
   z.object({}).catchall(dynamicObjectValue)
 );

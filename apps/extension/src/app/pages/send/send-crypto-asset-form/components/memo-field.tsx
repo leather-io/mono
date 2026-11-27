@@ -1,5 +1,6 @@
+import { useController } from 'react-hook-form';
+
 import { SendCryptoAssetSelectors } from '@tests/selectors/send.selectors';
-import { useField } from 'formik';
 import { Box } from 'leather-styles/jsx';
 
 import { Input } from '@leather.io/ui';
@@ -10,7 +11,7 @@ import { TextInputFieldError } from '@app/components/field-error';
 const name = 'memo';
 
 export function MemoField() {
-  const [field] = useField(name);
+  const { field } = useController<{ memo: string }>({ name });
 
   const showError = useShowFieldError(name);
 
@@ -18,7 +19,14 @@ export function MemoField() {
     <Box width="100%" mt="space.04">
       <Input.Root hasError={!!showError}>
         <Input.Label>Memo</Input.Label>
-        <Input.Field data-testid={SendCryptoAssetSelectors.MemoFieldInput} {...field} />
+        <Input.Field
+          data-testid={SendCryptoAssetSelectors.MemoFieldInput}
+          name={field.name}
+          ref={field.ref}
+          value={field.value}
+          onBlur={field.onBlur}
+          onChange={field.onChange}
+        />
       </Input.Root>
       <Box mt="space.02">
         <TextInputFieldError name={name} />

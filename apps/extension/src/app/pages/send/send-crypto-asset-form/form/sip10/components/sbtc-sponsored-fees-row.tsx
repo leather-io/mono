@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from 'react';
-
-import { useField } from 'formik';
+import { useFormContext } from 'react-hook-form';
 
 import {
   FeeTypes,
@@ -14,6 +13,8 @@ import {
 import type { SbtcSponsorshipQuoteResponse } from '@leather.io/services';
 import { SkeletonLoader } from '@leather.io/ui';
 import { baseCurrencyAmountInQuote, convertAmountToBaseUnit, createMoney } from '@leather.io/utils';
+
+import { type StacksSendFormValues } from '@shared/models/form.model';
 
 import {
   getSbtcSponsorshipFeeSats,
@@ -50,9 +51,10 @@ export function SbtcSponsoredFeesRow({
   offerSbtcFee,
   onSelectedSbtcFeeChange,
 }: SbtcSponsoredFeesRowProps) {
-  const [feeField, _, feeHelper] = useField('fee');
-  const [feeTypeField, __, feeTypeHelper] = useField<string>('feeType');
-  const [feeCurrencyField, ___, feeCurrencyHelper] = useField('feeCurrency');
+  const { setValue, watch } = useFormContext<StacksSendFormValues>();
+  const feeValue = watch('fee');
+  const feeType = watch('feeType');
+  const feeCurrencyValue = watch('feeCurrency');
 
   const quote = useSbtcSponsorshipQuote({ enabled: offerSbtcFee });
   const activeQuote =
@@ -72,11 +74,11 @@ export function SbtcSponsoredFeesRow({
     };
   }, [activeQuote, asset, fees, isSbtcFeeMode]);
 
-  const isTierSelected = isSbtcSponsorshipFeeType(feeTypeField.value);
+  const isTierSelected = isSbtcSponsorshipFeeType(feeType);
   const selectedFee = useMemo(() => {
     if (!sbtcFees) return null;
-    return sbtcFees.options[getSbtcSponsorshipFeeTier(feeTypeField.value)].value;
-  }, [feeTypeField.value, sbtcFees]);
+    return sbtcFees.options[getSbtcSponsorshipFeeTier(feeType)].value;
+  }, [feeType, sbtcFees]);
 
   const selectedFeeFiatValue = useMemo(() => {
     if (!selectedFee || !marketData || marketData.pair.base !== selectedFee.symbol) return null;
@@ -88,20 +90,20 @@ export function SbtcSponsoredFeesRow({
   }, [onSelectedSbtcFeeChange, selectedFee]);
 
   useEffect(() => {
-    if (feeCurrencyField.value === feeCurrency) return;
-    void feeCurrencyHelper.setValue(feeCurrency);
-    void feeTypeHelper.setValue(FeeTypes[FeeTypes.Unknown]);
-    void feeHelper.setValue('');
-  }, [feeCurrency, feeCurrencyField.value, feeCurrencyHelper, feeHelper, feeTypeHelper]);
+    if (feeCurrencyValue === feeCurrency) return;
+    setValue('feeCurrency', feeCurrency);
+    setValue('feeType', FeeTypes[FeeTypes.Unknown]);
+    setValue('fee', '');
+  }, [feeCurrency, feeCurrencyValue, setValue]);
 
   useEffect(() => {
     if (!selectedFee || !isTierSelected) return;
     const nextFee = convertAmountToBaseUnit(selectedFee).toString();
-    if (feeField.value !== nextFee) void feeHelper.setValue(nextFee);
-  }, [feeField.value, feeHelper, isTierSelected, selectedFee]);
+    if (feeValue !== nextFee) setValue('fee', nextFee);
+  }, [feeValue, isTierSelected, selectedFee, setValue]);
 
   const isQuoteLoading = offerSbtcFee && !isSbtcFeeMode && (quote.isPending || quote.isFetching);
-  const isFeeCurrencySynced = feeCurrencyField.value === feeCurrency;
+  const isFeeCurrencySynced = feeCurrencyValue === feeCurrency;
   if (isQuoteLoading || !isFeeCurrencySynced)
     return <SkeletonLoader isLoading height="32px" width="100%" />;
 

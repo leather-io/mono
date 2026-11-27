@@ -1,6 +1,8 @@
-import { type FormikErrors, type FormikTouched, type FormikValues } from 'formik';
+export type MnemonicFormValues = Record<string, string>;
 
-export function hasMnemonicFormValues(values: FormikValues): boolean {
+type MnemonicFieldFlags = Partial<Record<string, unknown>>;
+
+export function hasMnemonicFormValues(values: MnemonicFormValues): boolean {
   return Object.values(values).filter(value => value !== '').length > 0;
 }
 
@@ -13,9 +15,9 @@ export function getMnemonicErrorMessage(mnemonicErrorFields: string[]): string {
 }
 
 export function getMnemonicErrorFields(
-  errors: FormikErrors<FormikValues>,
-  touched: FormikTouched<FormikValues>,
-  values: FormikValues
+  errors: MnemonicFieldFlags,
+  touched: MnemonicFieldFlags,
+  values: MnemonicFormValues
 ): string[] {
   return Object.keys(errors)
     .filter(

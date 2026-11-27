@@ -1,18 +1,16 @@
 import { useCallback, useState } from 'react';
-
-import { useFormikContext } from 'formik';
+import { useFormContext } from 'react-hook-form';
 
 import { FormErrorMessages } from '@shared/error-messages';
 import { logger } from '@shared/logger';
-import { type BitcoinSendFormValues, type StacksSendFormValues } from '@shared/models/form.model';
+import type { RecipientFormValues } from '@shared/models/form.model';
 
 import { useCurrentStacksAccountAddress } from '@app/store/accounts/blockchain/stacks/stacks-account.hooks';
 
 // Handles validating the BNS name lookup
 export function useRecipientBnsName() {
-  const { setFieldError, setFieldValue, values } = useFormikContext<
-    BitcoinSendFormValues | StacksSendFormValues
-  >();
+  const { clearErrors, setError, setValue, watch } = useFormContext<RecipientFormValues>();
+  const recipientBnsName = watch('recipientBnsName');
   const [bnsAddress, setBnsAddress] = useState('');
 
   const currentStacksAddress = useCurrentStacksAccountAddress();
@@ -20,29 +18,29 @@ export function useRecipientBnsName() {
   const getBnsAddressAndValidate = useCallback(
     async (fetchFn: (name: string) => Promise<string | null>) => {
       setBnsAddress('');
-      if (!values.recipientBnsName) return;
+      if (!recipientBnsName) return;
 
       try {
-        const owner = await fetchFn(values.recipientBnsName);
+        const owner = await fetchFn(recipientBnsName);
 
         if (owner) {
           if (owner === currentStacksAddress) {
-            setFieldError('recipientBnsName', FormErrorMessages.SameAddress);
+            setError('recipientBnsName', { message: FormErrorMessages.SameAddress });
             return;
           }
 
           setBnsAddress(owner);
-          setFieldError('recipient', undefined);
-          await setFieldValue('recipient', owner);
+          clearErrors('recipient');
+          setValue('recipient', owner, { shouldValidate: true });
         } else {
-          setFieldError('recipientBnsName', FormErrorMessages.BnsAddressNotFound);
+          setError('recipientBnsName', { message: FormErrorMessages.BnsAddressNotFound });
         }
       } catch (e) {
-        setFieldError('recipientBnsName', FormErrorMessages.BnsAddressNotFound);
+        setError('recipientBnsName', { message: FormErrorMessages.BnsAddressNotFound });
         logger.error('Error fetching bns address', e);
       }
     },
-    [currentStacksAddress, setFieldError, setFieldValue, values.recipientBnsName]
+    [clearErrors, currentStacksAddress, recipientBnsName, setError, setValue]
   );
 
   return { bnsAddress, getBnsAddressAndValidate, setBnsAddress };

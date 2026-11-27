@@ -1,4 +1,4 @@
-import { type FormikHelpers } from 'formik';
+import { type UseFormSetError } from 'react-hook-form';
 
 import { FeeTypes, type Money } from '@leather.io/models';
 
@@ -32,8 +32,7 @@ export function useStacksCommonSendForm({
   const currentNetwork = useCurrentNetworkState();
   const policy = useCurrentPolicy();
   const isStacksPolicy = policy?.chain === 'stacks';
-  const { isHighFeeWithNoFormErrors, setShowHighFeeWarningSheet } =
-    useStacksHighFeeWarningContext();
+  const { shouldWarnAboutHighFee, setShowHighFeeWarningSheet } = useStacksHighFeeWarningContext();
 
   const initialValues: StacksSendFormValues = createDefaultInitialFormValues({
     hasDismissedHighFeeWarning: false,
@@ -48,20 +47,18 @@ export function useStacksCommonSendForm({
     ...routeState,
   });
 
-  async function checkFormValidation(
+  function checkFormValidation(
     values: StacksSendFormValues,
-    formikHelpers: FormikHelpers<StacksSendFormValues>
+    setError: UseFormSetError<StacksSendFormValues>
   ) {
-    const formErrors = await formikHelpers.validateForm();
-
     if (!values.recipient) {
-      formikHelpers.setFieldError('recipient', FormErrorMessages.AddressRequired);
-      formikHelpers.setFieldError('recipientBnsName', FormErrorMessages.AddressRequired);
+      setError('recipient', { message: FormErrorMessages.AddressRequired });
+      setError('recipientBnsName', { message: FormErrorMessages.AddressRequired });
       return false;
     }
 
     const isStxFee = values.feeCurrency === stxFeeCurrency;
-    if (isStxFee && isHighFeeWithNoFormErrors(formErrors, values.fee)) {
+    if (isStxFee && shouldWarnAboutHighFee(values.fee)) {
       setShowHighFeeWarningSheet(true);
       return false;
     }
