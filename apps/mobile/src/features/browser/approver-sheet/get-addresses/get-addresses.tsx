@@ -5,6 +5,7 @@ import { GetAddressesApproverLayout } from '@/features/approver/layouts/get-addr
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { userConnectsApp } from '@/store/apps/apps.write';
 import { type App } from '@/store/apps/utils';
+import { useSettings } from '@/store/settings/settings';
 import { useAppDispatch } from '@/store/utils';
 
 import { keyOriginToDerivationPath, makeAccountIdentifer } from '@leather.io/crypto';
@@ -31,6 +32,7 @@ interface GetAddressesApproverProps {
 export function GetAddressesApprover(props: GetAddressesApproverProps) {
   const { list: accounts } = useAccounts();
   const dispatch = useAppDispatch();
+  const { networkPreference } = useSettings();
   const accountSelecterSheetRef = useRef<SheetInstance>(null);
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(
     'accountId' in props.app ? props.app.accountId : null
@@ -48,18 +50,19 @@ export function GetAddressesApprover(props: GetAddressesApproverProps) {
         address: account.taprootPayer.address,
         publicKey: account.taprootPayer.publicKey,
         derivationPath: keyOriginToDerivationPath(account.taprootPayer.keyOrigin),
-        descriptor: account.taprootDescriptor,
+        xpub: account.taprootXpub,
       },
       nativeSegwit: {
         address: account.nativeSegwitPayer.address,
         publicKey: account.nativeSegwitPayer.publicKey,
         derivationPath: keyOriginToDerivationPath(account.nativeSegwitPayer.keyOrigin),
-        descriptor: account.nativeSegwitDescriptor,
+        xpub: account.nativeSegwitXpub,
       },
       stacksAccount: {
         address: account.stacksAccount.address,
         publicKey: account.stacksAccount.publicKey,
       },
+      bitcoinNetworkMode: networkPreference.chain.bitcoin.mode,
     });
     const result = { addresses: keysToIncludeInResponse };
     const response = createRpcSuccessResponse('getAddresses', {
