@@ -21,7 +21,7 @@ export function useGetAddressesAccount(accountId: string | null) {
 
   const taprootPayer = taproot?.derivePayer({ change: 0, addressIndex: 0 });
   const nativeSegwitPayer = nativeSegwit?.derivePayer({ change: 0, addressIndex: 0 });
-  if (!stacksAccount || !nativeSegwitPayer || !taprootPayer)
+  if (!stacksAccount || !nativeSegwit || !taproot || !nativeSegwitPayer || !taprootPayer)
     throw new Error('some of the accounts are not available');
   return {
     fingerprint,
@@ -29,7 +29,7 @@ export function useGetAddressesAccount(accountId: string | null) {
     taprootPayer,
     nativeSegwitPayer,
     stacksAccount,
-    taprootDescriptor: taproot?.descriptor,
-    nativeSegwitDescriptor: nativeSegwit?.descriptor,
+    taprootXpub: taproot.xpub,
+    nativeSegwitXpub: nativeSegwit.xpub,
   };
 }
