@@ -1,4 +1,15 @@
-import { accountIconUrl, defaultAccountIcon, vaultIcons } from './multisig-tokens';
+import {
+  accountIconUrl,
+  defaultAccountIcon,
+  vaultIcons,
+  vaultThemeFromName,
+} from './multisig-tokens';
+
+describe('vaultThemeFromName', () => {
+  test('resolves a lowercase stored theme to the same theme as its display name', () => {
+    expect(vaultThemeFromName('green')).toBe(vaultThemeFromName('Green'));
+  });
+});
 
 describe('accountIconUrl', () => {
   test('maps every known icon id to its own asset', () => {

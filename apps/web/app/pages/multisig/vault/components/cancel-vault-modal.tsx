@@ -1,6 +1,6 @@
 import { Flex, styled } from 'leather-styles/jsx';
 
-import { Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
+import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
 interface CancelVaultModalProps {
   vaultName: string;
@@ -10,23 +10,6 @@ interface CancelVaultModalProps {
   onClose(): void;
 }
 
-function CancelVaultHeader({ vaultName, onClose }: { vaultName: string; onClose?(): void }) {
-  return (
-    <Flex
-      alignItems="center"
-      justifyContent="space-between"
-      gap="space.04"
-      px="space.05"
-      py="space.04"
-      width="100%"
-      minHeight="headerHeight"
-    >
-      <styled.h2 textStyle="heading.05">Cancel “{vaultName}”?</styled.h2>
-      {onClose && <IconButton icon={<CloseIcon />} onClick={onClose} />}
-    </Flex>
-  );
-}
-
 export function CancelVaultModal({
   vaultName,
   isShowing,
@@ -34,36 +17,29 @@ export function CancelVaultModal({
   onConfirm,
   onClose,
 }: CancelVaultModalProps) {
+  const title = `Cancel “${vaultName}”?`;
+
   return (
     <Sheet
       isShowing={isShowing}
       onClose={onClose}
-      header={<CancelVaultHeader vaultName={vaultName} />}
+      title={title}
+      header={<SheetHeader variant="task" title={title} showCloseButton={false} />}
       footer={
         <Flex gap="space.03" justifyContent="flex-end" width="100%">
           <Button variant="ghost" onClick={onClose}>
             Keep vault
           </Button>
-          <styled.button
+          <Button
             type="button"
+            variant="outline"
+            intent="danger"
             onClick={onConfirm}
             disabled={isCancelling}
             aria-busy={isCancelling}
-            height="48px"
-            px="space.04"
-            borderRadius="round"
-            borderWidth="1px"
-            borderStyle="solid"
-            borderColor="red.border"
-            bg="transparent"
-            color="red.action-primary-default"
-            textStyle="label.02"
-            cursor="pointer"
-            _hover={{ bg: 'red.background-primary' }}
-            _disabled={{ cursor: 'not-allowed', opacity: 0.6 }}
           >
             Cancel vault
-          </styled.button>
+          </Button>
         </Flex>
       }
     >

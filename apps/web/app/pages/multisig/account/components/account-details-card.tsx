@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 
 import { Box, Flex, styled } from 'leather-styles/jsx';
 import { CopyAddress } from '~/components/copy-address';
+import { InlineLearnMoreLink } from '~/components/inline-learn-more-link';
 
 import type { Vault, VaultAccount } from '@leather.io/models';
 import {
@@ -18,13 +19,14 @@ import { truncateMiddle } from '@leather.io/utils';
 import { AvatarCircle } from '../../components/avatar-circle';
 import { AvatarSq } from '../../components/avatar-sq';
 import { vaultThemeFromName } from '../../multisig-tokens';
+import { multisigGuides } from '../../multisig.constants';
 import { chainFromNetwork } from '../../multisig.utils';
 
 interface AccountDetailsCardProps {
   vault: Vault;
   account: VaultAccount;
   currentUserAddress?: string;
-  onAddToWallet(): void;
+  onAddToWallet?(): void;
   isAddingToWallet?: boolean;
   isAddedToWallet?: boolean;
   onEdit?(): void;
@@ -95,48 +97,53 @@ export function AccountDetailsCard({
         />
       </Box>
 
-      <CardRow highlight={!isAddedToWallet}>
-        {isAddedToWallet ? (
-          <>
-            <Button
-              variant="outline"
-              size="sm"
-              fullWidth
-              onClick={onAddToWallet}
-              aria-busy={isAddingToWallet}
-              disabled={isAddingToWallet}
-            >
-              <Flex alignItems="center" gap="space.02">
-                <CheckmarkIcon variant="small" color="ink.text-subdued" />
-                Added to your Leather extension
-              </Flex>
-            </Button>
-            <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.03">
-              On this browser. Using another device? Add it again there.
-            </styled.p>
-          </>
-        ) : (
-          <>
-            <Button
-              variant="solid"
-              size="sm"
-              fullWidth
-              onClick={onAddToWallet}
-              aria-busy={isAddingToWallet}
-              disabled={isAddingToWallet}
-            >
-              <Flex alignItems="center" gap="space.02">
-                <PlusIcon variant="small" color="ink.background-primary" />
-                Add account to wallet
-              </Flex>
-            </Button>
-            <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.03">
-              Apps talk to your Leather extension, not this site. Until this account is in your
-              extension, dApps, contract calls and staking can&rsquo;t see it.
-            </styled.p>
-          </>
-        )}
-      </CardRow>
+      {onAddToWallet && (
+        <CardRow highlight={!isAddedToWallet}>
+          {isAddedToWallet ? (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                fullWidth
+                onClick={onAddToWallet}
+                aria-busy={isAddingToWallet}
+                disabled={isAddingToWallet}
+              >
+                <Flex alignItems="center" gap="space.02">
+                  <CheckmarkIcon variant="small" color="ink.text-subdued" />
+                  Added to your Leather extension
+                </Flex>
+              </Button>
+              <styled.p textStyle="caption.01" color="ink.text-subdued" mt="space.03">
+                On this browser. Using another device? Add it again there.
+              </styled.p>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="solid"
+                size="sm"
+                fullWidth
+                onClick={onAddToWallet}
+                aria-busy={isAddingToWallet}
+                disabled={isAddingToWallet}
+              >
+                <Flex alignItems="center" gap="space.02">
+                  <PlusIcon variant="small" color="ink.background-primary" />
+                  Add to Leather extension
+                </Flex>
+              </Button>
+              <styled.p textStyle="caption.01" color="ink.text-secondary" mt="space.03">
+                Add this account to your Leather extension to use it with apps in this browser.
+                <InlineLearnMoreLink
+                  href={multisigGuides.addToExtension}
+                  subject="adding a vault account to Leather"
+                />
+              </styled.p>
+            </>
+          )}
+        </CardRow>
+      )}
 
       <CardRow>
         <CopyAddress addr={account.multisigAddress} grouped />

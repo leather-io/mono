@@ -4,7 +4,7 @@ import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import { VAULT_MAX_NAME_LENGTH } from '@leather.io/constants';
 import type { Vault } from '@leather.io/models';
-import { Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
+import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { AccountIconNameField } from '../../components/account-icon-name-field';
 import { ThemePicker } from '../../create-vault/components/theme-picker';
@@ -62,20 +62,8 @@ export function EditVaultModal({
       isShowing={isShowing}
       onClose={onClose}
       contentMaxVh={90}
-      header={
-        <Flex
-          alignItems="center"
-          justifyContent="space-between"
-          gap="space.04"
-          px="space.05"
-          py="space.04"
-          width="100%"
-          minHeight="headerHeight"
-        >
-          <styled.h2 textStyle="heading.05">Edit vault</styled.h2>
-          <IconButton icon={<CloseIcon />} onClick={onClose} />
-        </Flex>
-      }
+      title="Edit vault"
+      header={<SheetHeader variant="task" title="Edit vault" showCloseButton={false} />}
       footer={
         <Flex gap="space.03" justifyContent="flex-end" width="100%">
           <Button variant="ghost" onClick={onClose}>

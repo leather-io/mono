@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Box, Flex, styled } from 'leather-styles/jsx';
 
 import type { Vault, VaultAccount } from '@leather.io/models';
-import { Button, CloseIcon, IconButton, Sheet } from '@leather.io/ui';
+import { Button, Sheet, SheetHeader } from '@leather.io/ui';
 
 import { AccountIconNameField } from '../../components/account-icon-name-field';
 import { defaultAccountIcon, vaultThemeFromName } from '../../multisig-tokens';
@@ -52,20 +52,8 @@ export function EditAccountModal({
       isShowing={isShowing}
       onClose={onClose}
       contentMaxVh={90}
-      header={
-        <Flex
-          alignItems="center"
-          justifyContent="space-between"
-          gap="space.04"
-          px="space.05"
-          py="space.04"
-          width="100%"
-          minHeight="headerHeight"
-        >
-          <styled.h2 textStyle="heading.05">Edit account</styled.h2>
-          <IconButton icon={<CloseIcon />} onClick={onClose} />
-        </Flex>
-      }
+      title="Edit account"
+      header={<SheetHeader variant="task" title="Edit account" showCloseButton={false} />}
       footer={
         <Flex gap="space.03" justifyContent="flex-end" width="100%">
           <Button variant="ghost" onClick={onClose}>

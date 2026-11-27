@@ -66,7 +66,7 @@ export const Avatar = forwardRef<AvatarElement, AvatarProps>((props, ref) => {
 
 Avatar.displayName = 'Avatar';
 
-const AvatarIndicatorBadge = styled('div', {
+export const AvatarIndicatorBadge = styled('div', {
   base: {
     bg: 'ink.background-primary',
     borderRadius: 'round',

@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { Box, Flex } from 'leather-styles/jsx';
 import { useMultisigNetworks } from '~/features/multisig/auth/use-multisig-networks';
 import { useSession } from '~/features/multisig/auth/use-session';
 import { useIsRestoringSession } from '~/features/multisig/auth/use-session-bootstrap';
+import { useMissingVaultAccounts } from '~/features/multisig/vaults/use-add-account-to-wallet';
 import { useMultisigMe } from '~/features/multisig/vaults/use-multisig-me';
 import { useVaultAccountsBalance } from '~/features/multisig/vaults/use-vault-account-balance';
 import { useVaultAccountRecovery } from '~/features/multisig/vaults/use-vault-account-mutations';
@@ -38,6 +39,7 @@ import { CreateAccountModal } from './components/create-account-modal';
 import { EditVaultModal } from './components/edit-vault-modal';
 import { MembersSection } from './components/members-section';
 import { ShareInvitationsModal } from './components/share-invitations-modal';
+import { AddVaultAccountsPrompt, FirstVaultAccountPrompt } from './components/vault-account-setup';
 import { VaultBalanceHero } from './components/vault-balance-hero';
 import { VaultStatusCard } from './components/vault-status-card';
 import { VaultTransactions } from './components/vault-transactions';
@@ -57,6 +59,13 @@ function accountCreationBlockedReason(
 }
 
 export function VaultDetailPage() {
+  const { key } = useLocation();
+  const { btc, stx } = useMultisigNetworks();
+
+  return <VaultDetailVisit key={`${key}:${btc}:${stx}`} />;
+}
+
+function VaultDetailVisit() {
   const { vaultId } = useParams();
   const navigate = useNavigate();
   const { success: showToast, error: showErrorToast } = useToast();
@@ -64,6 +73,7 @@ export function VaultDetailPage() {
   const [isSharingInvites, setIsSharingInvites] = useState(false);
   const [isConfirmingCancel, setIsConfirmingCancel] = useState(false);
   const [isEditingVault, setIsEditingVault] = useState(false);
+  const [hasDismissedSetup, setHasDismissedSetup] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
 
@@ -90,6 +100,7 @@ export function VaultDetailPage() {
 
   const me = useMultisigMe(vaultNetworkKnown ? network : undefined);
   const accounts = useVaultAccounts(network, vaultNetworkKnown ? vaultId : undefined);
+  const missingAccounts = useMissingVaultAccounts(accounts.data);
   const accountRecovery = useVaultAccountRecovery(network, vaultNetworkKnown ? vaultId : undefined);
   const accountsBalance = useVaultAccountsBalance(accounts.data);
   const cancelVault = useCancelVault(network);
@@ -139,9 +150,35 @@ export function VaultDetailPage() {
     );
   const canCreateAccount =
     isCreator && vault.status !== 'cancelled' && allMembersJoined && !atAccountLimit;
+  const canShowSetup =
+    hydrated &&
+    accounts.isSuccess &&
+    !hasDismissedSetup &&
+    !isCreatingAccount &&
+    !isEditingVault &&
+    !isSharingInvites &&
+    !isConfirmingCancel;
+  const showFirstAccountPrompt =
+    canShowSetup &&
+    canCreateAccount &&
+    !accounts.isFetching &&
+    !accountRecovery.isRecovering &&
+    !accountRecovery.recoveryFailed &&
+    accountList?.length === 0;
+  const showAddAccountsPrompt =
+    canShowSetup && myMembership?.membershipStatus === 'joined' && missingAccounts.length > 0;
   const vaultDetailsHeading = `${vault.name.charAt(0).toUpperCase()}${vault.name.slice(1)} details`;
 
   const { id: resolvedVaultId, name: resolvedVaultName } = vault;
+
+  function dismissSetup() {
+    setHasDismissedSetup(true);
+  }
+
+  function openCreateAccount() {
+    dismissSetup();
+    setIsCreatingAccount(true);
+  }
 
   function onCancel() {
     cancelVault.mutate(resolvedVaultId, {
@@ -185,11 +222,11 @@ export function VaultDetailPage() {
       )}
 
       <Flex
-        direction={['column', 'column', 'row']}
-        gap={['space.06', 'space.06', 'space.08', 'space.10']}
+        direction={{ base: 'column', xl: 'row' }}
+        gap={{ base: 'space.06', xl: 'space.10' }}
         alignItems="flex-start"
       >
-        <Box flex={['1', '1', '1.6']} width="100%">
+        <Box flex={{ xl: '1.6' }} minWidth={0} width="100%">
           <VaultBalanceHero
             vault={vault}
             crypto={accountsBalance.crypto}
@@ -217,7 +254,7 @@ export function VaultDetailPage() {
             onRetryRecovery={accountRecovery.retry}
             canCreate={canCreateAccount}
             disabledReason={accountCreationBlockedReason(vault, isCreator, atAccountLimit)}
-            onCreateAccount={() => setIsCreatingAccount(true)}
+            onCreateAccount={openCreateAccount}
             onOpenAccount={accountId => void navigate(multisigPaths.account(vault.id, accountId))}
           />
           <SectionLabel
@@ -242,7 +279,7 @@ export function VaultDetailPage() {
             }
           />
         </Box>
-        <Box flex={['1', '1', '1']} width="100%">
+        <Box flex={{ xl: '1' }} minWidth={0} width="100%">
           <SectionLabel noGutter>{vaultDetailsHeading}</SectionLabel>
           <VaultStatusCard
             vault={vault}
@@ -259,6 +296,17 @@ export function VaultDetailPage() {
           <VaultTransactions accounts={accounts.data} />
         </Box>
       </Flex>
+
+      {showFirstAccountPrompt && (
+        <FirstVaultAccountPrompt
+          vault={vault}
+          onClose={dismissSetup}
+          onCreate={openCreateAccount}
+        />
+      )}
+      {showAddAccountsPrompt && (
+        <AddVaultAccountsPrompt vault={vault} accounts={missingAccounts} onClose={dismissSetup} />
+      )}
 
       <CreateAccountModal
         vault={vault}

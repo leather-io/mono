@@ -20,7 +20,11 @@ export function useVaultAccounts(network: AuthNetworkId, vaultId: string | undef
   });
 }
 
-export function useVaultAccount(network: AuthNetworkId, accountId: string | undefined) {
+export function useVaultAccount(
+  network: AuthNetworkId,
+  accountId: string | undefined,
+  enabled = true
+) {
   const session = useSession(network);
   return useQuery({
     queryKey: multisigVaultKeys.account(network, session?.identity.address, accountId),
@@ -28,7 +32,7 @@ export function useVaultAccount(network: AuthNetworkId, accountId: string | unde
       if (!accountId) throw new Error('useVaultAccount requires an accountId');
       return getMultisigService().getVaultAccount(network, accountId, signal);
     },
-    enabled: Boolean(session) && Boolean(accountId),
+    enabled: enabled && Boolean(session) && Boolean(accountId),
     retry: retryMultisigQuery,
   });
 }

@@ -2,13 +2,14 @@ import { type ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 
 import { Box, Flex, type HTMLStyledProps, styled } from 'leather-styles/jsx';
+import { InlineLearnMoreLink } from '~/components/inline-learn-more-link';
 import { MockModeToggle } from '~/components/mock-mode-toggle';
 import { WhenClient } from '~/components/when-client';
 import { SignInButton } from '~/features/sign-in-button/sign-in-button';
 import { useSignInSlot } from '~/layouts/page/sign-in-slot';
 import { getPostHref } from '~/utils/post-link';
 
-import { ArrowLeftIcon, Button, Link } from '@leather.io/ui';
+import { ArrowLeftIcon, Button } from '@leather.io/ui';
 
 export function Page(props: HTMLStyledProps<'div'>) {
   return <styled.div {...props} />;
@@ -53,18 +54,7 @@ export function LearnMoreLink({ destination }: LearnMoreLinkProps) {
   // Simple URL check
   const isUrl = /^https?:\/\//.test(destination);
   const href = isUrl ? destination : getPostHref(destination);
-  return (
-    <styled.span>
-      {' '}
-      <Link
-        href={href}
-        {...(isUrl ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-        style={{ fontSize: 'inherit', display: 'inline', whiteSpace: 'nowrap' }}
-      >
-        Learn more
-      </Link>
-    </styled.span>
-  );
+  return <InlineLearnMoreLink href={href} openInNewTab={isUrl} />;
 }
 
 interface PageHeaderProps {

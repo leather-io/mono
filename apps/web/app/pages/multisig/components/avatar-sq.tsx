@@ -15,6 +15,7 @@ interface AvatarSqProps {
   themeId?: number;
   size?: AvatarSqSize;
   withChainBadge?: boolean;
+  backgroundPosition?: 'left' | 'center' | 'right';
 }
 
 const tileSize: Record<AvatarSqSize, number> = { sm: 32, md: 40, lg: 56 };
@@ -35,6 +36,7 @@ export function AvatarSq({
   themeId = 0,
   size = 'md',
   withChainBadge = true,
+  backgroundPosition,
 }: AvatarSqProps) {
   const theme = vaultTheme(themeId);
   const px = tileSize[size];
@@ -54,7 +56,7 @@ export function AvatarSq({
         alignItems="center"
         justifyContent="center"
         overflow="hidden"
-        style={{ background: theme.background, borderRadius: radius }}
+        style={{ background: theme.background, backgroundPosition, borderRadius: radius }}
       >
         {icon && (
           <Box

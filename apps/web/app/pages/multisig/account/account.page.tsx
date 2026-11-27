@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 
 import { Box, Flex } from 'leather-styles/jsx';
 import { Balance } from '~/components/balance/balance';
@@ -32,6 +32,7 @@ import { chainFromNetwork } from '../multisig.utils';
 import { AccountAssets } from './components/account-assets';
 import { AccountDetailsCard } from './components/account-details-card';
 import { AccountTransactions } from './components/account-transactions';
+import { AccountWalletOffer } from './components/account-wallet-offer';
 import { AssetDetailModal } from './components/asset-detail-modal';
 import { EditAccountModal } from './components/edit-account-modal';
 import { ProposeTransactionModal } from './components/propose-transaction-modal';
@@ -40,6 +41,7 @@ import { SendTransactionButton } from './components/send-transaction-button';
 
 export function AccountDetailPage() {
   const { vaultId, accountId } = useParams();
+  const { key: visitKey } = useLocation();
   const navigate = useNavigate();
   const [hydrated, setHydrated] = useState(false);
   const [isProposing, setIsProposing] = useState(false);
@@ -85,7 +87,7 @@ export function AccountDetailPage() {
   const detailResolving = vaultNetworkKnown && !(vault.isSuccess && account.isSuccess);
   const isResolving = !hydrated || sessionsRestoring || !listsSettled || detailResolving;
 
-  if (!vault.data || !account.data) {
+  if (!vault.data || !account.data || account.data.vaultId !== vault.data.id) {
     return (
       <MultisigPage
         title="Vault account"
@@ -113,15 +115,24 @@ export function AccountDetailPage() {
   const theme = vaultThemeFromName(vault.data.theme);
   const chain = chainFromNetwork(account.data.network);
   const isCreator = vault.data.createdBy === me.data?.id;
+  const isJoined = vault.data.members.some(
+    member => member.address === me.data?.address && member.membershipStatus === 'joined'
+  );
+  const canRegisterAccount =
+    hydrated && !sessionsRestoring && isJoined && vault.data.status !== 'cancelled';
+
+  function addToExtension() {
+    void addAccountToWallet();
+  }
 
   return (
     <MultisigPage title={account.data.name} backTo={multisigPaths.vault(vault.data.id)}>
       <Flex
-        direction={['column', 'column', 'row']}
-        gap={['space.06', 'space.06', 'space.08', 'space.10']}
+        direction={{ base: 'column', xl: 'row' }}
+        gap={{ base: 'space.06', xl: 'space.10' }}
         alignItems="flex-start"
       >
-        <Box flex={['1', '1', '1.6']} width="100%">
+        <Box flex={{ xl: '1.6' }} minWidth={0} width="100%">
           <MultisigHero
             variant="balance"
             themeId={theme.id}
@@ -130,6 +141,16 @@ export function AccountDetailPage() {
             }
             secondary={<Balance balance={accountBalance.fiat} formatCurrency={formatCurrency} />}
           />
+          {canRegisterAccount && !isAddedToWallet && (
+            <AccountWalletOffer
+              key={`${visitKey}:${network}:${account.data.id}`}
+              vault={vault.data}
+              account={account.data}
+              canOpenSheet={!isProposing && !isReceiving && !isEditingAccount && !assetDetail}
+              isAdding={isAddingToWallet}
+              onAdd={addToExtension}
+            />
+          )}
           <Box mt="space.05">
             <InlineTabs.Root defaultValue="transactions">
               <InlineTabs.List>
@@ -156,13 +177,13 @@ export function AccountDetailPage() {
             </InlineTabs.Root>
           </Box>
         </Box>
-        <Box flex={['1', '1', '1']} width="100%">
+        <Box flex={{ xl: '1' }} minWidth={0} width="100%">
           <SectionLabel noGutter>Account details</SectionLabel>
           <AccountDetailsCard
             vault={vault.data}
             account={account.data}
             currentUserAddress={me.data?.address}
-            onAddToWallet={() => void addAccountToWallet()}
+            onAddToWallet={canRegisterAccount && isAddedToWallet ? addToExtension : undefined}
             isAddingToWallet={isAddingToWallet}
             isAddedToWallet={isAddedToWallet}
             onEdit={isCreator ? () => setIsEditingAccount(true) : undefined}
