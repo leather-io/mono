@@ -70,6 +70,16 @@ describe('parseStatus', () => {
     });
   });
 
+  test('takes one answer per feedback item of a revise, each a single line', () => {
+    const answers = ['Wrapped the label.', 'Kept the name the brief settles.'];
+    const result = parseStatus({ ...doneStatus, answers });
+    expect(result.ok && result.status.answers).toEqual(answers);
+    expect(parseStatus({ ...doneStatus, answers: ['one\ntwo'] })).toEqual({
+      ok: false,
+      problems: ['answers.0: must be a single line'],
+    });
+  });
+
   test('refuses more than 12 screenshots', () => {
     const screenshots = Array.from({ length: 13 }, (_, index) => ({
       id: `state-${index}`,
