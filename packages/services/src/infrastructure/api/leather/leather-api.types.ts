@@ -6979,11 +6979,12 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** @description Quote the sBTC fee range for a sponsored sBTC transfer */
+    /** @description Quote the sBTC fee range for a sponsored transaction. Pass `service` (the prefix of an earlier quoteId, before the first colon) to ask only that service. */
     post: {
       parameters: {
         query: {
           network: 'mainnet' | 'testnet';
+          service?: string;
         };
         header?: never;
         path?: never;
@@ -7051,6 +7052,66 @@ export interface paths {
           'application/json': {
             quoteId: string;
             transaction: string;
+          };
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              txid: string;
+              transaction: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/v1/sponsorship/submit-call': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Co-sign an origin-signed sponsored contract call as sponsor and broadcast it, paid for by a confirmed sBTC payment */
+    post: {
+      parameters: {
+        query: {
+          network: 'mainnet' | 'testnet';
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          'application/json': {
+            quoteId: string;
+            transaction: string;
+            paymentTxid: string;
           };
         };
       };

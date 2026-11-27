@@ -18,6 +18,12 @@ import { RpcTransactionRequestLayout } from '@app/features/rpc-stacks-transactio
 import { SigningAccountCard } from '@app/features/rpc-stacks-transaction-request/signing-account-card/signing-account-card';
 import { ContractCallDetailsLayout } from '@app/features/rpc-stacks-transaction-request/stacks/contract-call/contract-call-details.layout';
 import { PostConditionsDetailsLayout } from '@app/features/rpc-stacks-transaction-request/stacks/post-conditions/post-conditions-details.layout';
+import {
+  SbtcSponsoredCallActions,
+  SbtcSponsoredCallFee,
+} from '@app/features/rpc-stacks-transaction-request/stacks/sbtc-sponsored-call/sbtc-sponsored-call-fee';
+import { SbtcSponsoredCallStatus } from '@app/features/rpc-stacks-transaction-request/stacks/sbtc-sponsored-call/sbtc-sponsored-call-status';
+import { useSbtcSponsoredCall } from '@app/features/rpc-stacks-transaction-request/stacks/sbtc-sponsored-call/use-sbtc-sponsored-call';
 import { useStacksRpcTransactionRequestContext } from '@app/features/rpc-stacks-transaction-request/stacks/stacks-rpc-transaction-request.context';
 import { useProposeStacksTransaction } from '@app/features/rpc-stacks-transaction-request/stacks/use-propose-stacks-transaction';
 import { useSignAndBroadcastStacksTransaction } from '@app/features/rpc-stacks-transaction-request/stacks/use-sign-and-broadcast-stacks-transaction';
@@ -59,7 +65,15 @@ export function RpcStxCallContract() {
     [isSponsored, network, nonce, publicKey, selectedFee.txFee]
   );
 
+  const sbtcSponsoredCall = useSbtcSponsoredCall({
+    method: stxCallContract.method,
+    callOptions: txOptionsForBroadcast,
+    isEligibleRequest: !isSponsored && !isStacksPolicy,
+  });
+  const sbtcFeeOffer = sbtcSponsoredCall.offer;
+
   async function onApproveTransaction() {
+    if (sbtcFeeOffer) return sbtcSponsoredCall.approve();
     if (isStacksPolicy) {
       const unsignedMultisigTx = await generateStacksUnsignedTransaction(
         toUnsignedMultiSigStacksOptions(txOptionsForBroadcast, {
@@ -74,20 +88,37 @@ export function RpcStxCallContract() {
   }
   const onApprove = useStacksRpcTransactionRequestApproval(onApproveTransaction);
 
+  function getTitle() {
+    if (sbtcFeeOffer) return 'Sign 2 transactions';
+    return rpcRequest.params.postConditions?.length ? 'Sign transaction' : 'Sign contract';
+  }
+
+  if (sbtcSponsoredCall.progress)
+    return (
+      <SbtcSponsoredCallStatus
+        method={stxCallContract.method}
+        progress={sbtcSponsoredCall.progress}
+      />
+    );
+
   return (
     <RpcTransactionRequestLayout
-      title={rpcRequest.params.postConditions?.length ? 'Sign transaction' : 'Sign contract'}
+      title={getTitle()}
       method={stxCallContract.method}
       actions={
-        <TransactionActionsWithSpend
-          isLoading={isLoadingBalance || isLoadingFees}
-          isSponsored={isSponsored}
-          // TODO: Calculate total request
-          txAmount={createMoney(0, 'STX')}
-          onApprove={onApprove}
-          approveLabel={isStacksPolicy ? 'Propose transaction' : undefined}
-          busyLabel={isStacksPolicy ? 'Proposing...' : undefined}
-        />
+        sbtcFeeOffer ? (
+          <SbtcSponsoredCallActions offer={sbtcFeeOffer} onApprove={onApprove} />
+        ) : (
+          <TransactionActionsWithSpend
+            isLoading={isLoadingBalance || isLoadingFees || sbtcSponsoredCall.isLoading}
+            isSponsored={isSponsored}
+            // TODO: Calculate total request
+            txAmount={createMoney(0, 'STX')}
+            onApprove={onApprove}
+            approveLabel={isStacksPolicy ? 'Propose transaction' : undefined}
+            busyLabel={isStacksPolicy ? 'Proposing...' : undefined}
+          />
+        )
       }
     >
       <PostConditionsDetailsLayout
@@ -109,14 +140,22 @@ export function RpcStxCallContract() {
         functionName={txOptionsForBroadcast.functionName}
         functionArgs={txOptionsForBroadcast.functionArgs}
       />
-      <FeeEditor.Trigger
-        feeType="fee-value"
-        isLoading={isLoadingFees}
-        isSponsored={isSponsored}
-        marketData={marketData}
-        onEditFee={onUserActivatesFeeEditor}
-        selectedFee={selectedFee}
-      />
+      {sbtcFeeOffer ? (
+        <SbtcSponsoredCallFee
+          offer={sbtcFeeOffer}
+          functionName={txOptionsForBroadcast.functionName}
+          contractName={txOptionsForBroadcast.contractName}
+        />
+      ) : (
+        <FeeEditor.Trigger
+          feeType="fee-value"
+          isLoading={isLoadingFees}
+          isSponsored={isSponsored}
+          marketData={marketData}
+          onEditFee={onUserActivatesFeeEditor}
+          selectedFee={selectedFee}
+        />
+      )}
       <NonceEditor.Trigger nonce={nonce} onEditNonce={onUserActivatesNonceEditor} />
     </RpcTransactionRequestLayout>
   );

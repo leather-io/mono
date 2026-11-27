@@ -1,16 +1,39 @@
+import type { StacksNetwork } from '@stacks/network';
+import {
+  ClarityType,
+  type ClarityValue,
+  PayloadType,
+  PostConditionMode,
+  PostConditionType,
+  type StacksTransactionWire,
+  deserializeTransaction,
+  serializeCV,
+} from '@stacks/transactions';
 import BigNumber from 'bignumber.js';
 
 import { SBTC_ASSET_ID_MAINNET, SBTC_ASSET_ID_TESTNET } from '@leather.io/constants';
 import { FeeTypes, type TransactionFeeTier } from '@leather.io/models';
 import {
+  LeatherApiError,
   type SbtcSponsorshipErrorCode,
   type SbtcSponsorshipQuoteResponse,
   getErrorDetail,
   getSbtcSponsorshipErrorCode,
   getSbtcSponsorshipIneligibilityReason,
+  getSbtcSponsorshipNetwork,
 } from '@leather.io/services';
-import { getPrincipalFromAssetString } from '@leather.io/stacks';
-import { microStxToStx } from '@leather.io/utils';
+import {
+  type SbtcSponsoredTransferParams,
+  type StacksUnsignedContractCallOptions,
+  TransactionTypes,
+  buildSbtcSponsoredTransferPostCondition,
+  buildSbtcTransferManyArgs,
+  generateStacksUnsignedTransaction,
+  getPrincipalFromAssetString,
+  getStacksAssetStringParts,
+  sbtcTransferManyFunctionName,
+} from '@leather.io/stacks';
+import { createMoney, microStxToStx } from '@leather.io/utils';
 
 const sbtcContractPrincipals = [SBTC_ASSET_ID_MAINNET, SBTC_ASSET_ID_TESTNET].map(
   getPrincipalFromAssetString
@@ -77,10 +100,177 @@ type SbtcSponsorshipFeeQuote = Pick<
   'satsPerStx' | 'minFeeSats' | 'maxFeeSats'
 >;
 
+function priceStxFeeInSats(stxFeeMicro: number | string | BigNumber, satsPerStx: string) {
+  return microStxToStx(stxFeeMicro).times(satsPerStx).integerValue(BigNumber.ROUND_CEIL);
+}
+
 export function getSbtcSponsorshipFeeSats(
   stxFeeMicro: number | string | BigNumber,
   { satsPerStx, minFeeSats, maxFeeSats }: SbtcSponsorshipFeeQuote
 ): number {
-  const feeSats = microStxToStx(stxFeeMicro).times(satsPerStx).integerValue(BigNumber.ROUND_CEIL);
+  const feeSats = priceStxFeeInSats(stxFeeMicro, satsPerStx);
   return BigNumber.min(BigNumber.max(feeSats, minFeeSats), maxFeeSats).toNumber();
+}
+
+export function getSbtcSponsoredCallBudgetSats(
+  stxFeeMicro: number | string | BigNumber,
+  { satsPerStx, minFeeSats, maxFeeSats }: SbtcSponsorshipFeeQuote
+): number {
+  const budgetSats = priceStxFeeInSats(stxFeeMicro, satsPerStx).plus(minFeeSats);
+  return BigNumber.min(budgetSats, maxFeeSats).toNumber();
+}
+
+export function getSbtcSponsorshipContractId(chainId: number) {
+  const network = getSbtcSponsorshipNetwork(chainId);
+  if (!network) return undefined;
+  return getPrincipalFromAssetString(
+    network === 'mainnet' ? SBTC_ASSET_ID_MAINNET : SBTC_ASSET_ID_TESTNET
+  );
+}
+
+interface GenerateSbtcSponsoredTransferTxArgs {
+  contractId: string;
+  sender: string;
+  publicKey: string;
+  network: StacksNetwork;
+  recipient: string;
+  feeRecipient: string;
+  amount: bigint;
+  feeAmount: bigint;
+  memo?: string;
+  nonce: number;
+}
+export function generateSbtcSponsoredTransferTx({
+  contractId,
+  publicKey,
+  network,
+  nonce,
+  ...transfer
+}: GenerateSbtcSponsoredTransferTxArgs) {
+  const { contractAddress, contractName } = getStacksAssetStringParts(contractId);
+  const params: SbtcSponsoredTransferParams = { contractAddress, contractName, ...transfer };
+
+  return generateStacksUnsignedTransaction({
+    txType: TransactionTypes.ContractCall,
+    contractAddress,
+    contractName,
+    functionName: sbtcTransferManyFunctionName,
+    functionArgs: buildSbtcTransferManyArgs(params).map(arg => serializeCV(arg)),
+    postConditions: [buildSbtcSponsoredTransferPostCondition(params)],
+    postConditionMode: PostConditionMode.Deny,
+    network,
+    publicKey,
+    sponsored: true,
+    fee: createMoney(0, 'STX'),
+    nonce,
+  });
+}
+
+interface GenerateSbtcSponsoredCallTransactionsArgs {
+  callOptions: StacksUnsignedContractCallOptions;
+  contractId: string;
+  sender: string;
+  publicKey: string;
+  network: StacksNetwork;
+  quote: Pick<SbtcSponsorshipQuoteResponse, 'feeRecipientPrincipal'> & SbtcSponsorshipFeeQuote;
+  stxFeeMicro: number | string | BigNumber;
+  nonce: number;
+}
+export async function generateSbtcSponsoredCallTransactions({
+  callOptions,
+  contractId,
+  sender,
+  publicKey,
+  network,
+  quote,
+  stxFeeMicro,
+  nonce,
+}: GenerateSbtcSponsoredCallTransactionsArgs) {
+  const budgetSats = getSbtcSponsoredCallBudgetSats(stxFeeMicro, quote);
+  const feeSats = getSbtcSponsorshipFeeSats(stxFeeMicro, quote);
+
+  const paymentTx = await generateSbtcSponsoredTransferTx({
+    contractId,
+    sender,
+    publicKey,
+    network,
+    recipient: quote.feeRecipientPrincipal,
+    feeRecipient: quote.feeRecipientPrincipal,
+    amount: BigInt(budgetSats),
+    feeAmount: BigInt(feeSats),
+    nonce,
+  });
+  const callTx = await generateStacksUnsignedTransaction({
+    ...callOptions,
+    sponsored: true,
+    fee: createMoney(0, 'STX'),
+    nonce: nonce + 1,
+  });
+
+  return { paymentTx, callTx };
+}
+
+const sbtcSponsoredCallMaxBytes = 16_384;
+const hexCharsPerByte = 2;
+
+function isInByteOrder(keys: string[]) {
+  return keys.every((key, index) => index === 0 || keys[index - 1] < key);
+}
+
+function hasTupleKeysInByteOrder(value: ClarityValue): boolean {
+  switch (value.type) {
+    case ClarityType.Tuple:
+      return (
+        isInByteOrder(Object.keys(value.value)) &&
+        Object.values(value.value).every(hasTupleKeysInByteOrder)
+      );
+    case ClarityType.List:
+      return value.value.every(hasTupleKeysInByteOrder);
+    case ClarityType.OptionalSome:
+    case ClarityType.ResponseOk:
+    case ClarityType.ResponseErr:
+      return hasTupleKeysInByteOrder(value.value);
+    default:
+      return true;
+  }
+}
+
+export function isSbtcSponsorableContractCall(tx: StacksTransactionWire) {
+  const serialized = tx.serialize();
+  if (serialized.length > sbtcSponsoredCallMaxBytes * hexCharsPerByte) return false;
+
+  const { payload, postConditions } = deserializeTransaction(serialized);
+  if (payload.payloadType !== PayloadType.ContractCall) return false;
+  const nftAssetIds = postConditions.values.flatMap(condition =>
+    condition.conditionType === PostConditionType.NonFungible ? [condition.assetName] : []
+  );
+  return [...payload.functionArgs, ...nftAssetIds].every(hasTupleKeysInByteOrder);
+}
+
+const sbtcSponsorshipRetryCodes: SbtcSponsorshipErrorCode[] = [
+  'funding_pending',
+  'upstream_unavailable',
+  'broadcast_failed',
+];
+const paymentNotConfirmedReason = 'payment_not_confirmed';
+const serverErrorStatus = 500;
+
+interface GetSbtcSponsorshipRefusalActionOptions {
+  awaitsPayment: boolean;
+}
+export function getSbtcSponsorshipRefusalAction(
+  error: unknown,
+  { awaitsPayment }: GetSbtcSponsorshipRefusalActionOptions
+): 'retry' | 'requote' | 'stop' {
+  if (!LeatherApiError.isLeatherApiError(error)) return 'retry';
+  const code = getSbtcSponsorshipErrorCode(error);
+  if (!code) return error.status >= serverErrorStatus ? 'retry' : 'stop';
+  if (code === 'quote_expired') return 'requote';
+  if (sbtcSponsorshipRetryCodes.includes(code)) return 'retry';
+  if (!awaitsPayment) return 'stop';
+  if (code === 'stale_nonce') return 'retry';
+  const isPaymentNotConfirmed =
+    code === 'not_eligible' &&
+    getSbtcSponsorshipIneligibilityReason(error) === paymentNotConfirmedReason;
+  return isPaymentNotConfirmed ? 'retry' : 'stop';
 }

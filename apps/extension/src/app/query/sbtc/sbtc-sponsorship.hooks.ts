@@ -15,13 +15,15 @@ export function isSbtcSponsorshipQuoteExpired(expiresAt: string) {
 
 interface UseSbtcSponsorshipQuoteArgs {
   enabled: boolean;
+  refetchInterval?: number;
 }
-export function useSbtcSponsorshipQuote({ enabled }: UseSbtcSponsorshipQuoteArgs) {
+export function useSbtcSponsorshipQuote({ enabled, refetchInterval }: UseSbtcSponsorshipQuoteArgs) {
   const settings = useUserSettings();
 
   return useQuery({
     ...createSbtcSponsorshipQuoteQueryConfig(settings),
     enabled,
+    refetchInterval,
     placeholderData: keepPreviousData,
   });
 }

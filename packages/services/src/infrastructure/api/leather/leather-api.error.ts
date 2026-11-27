@@ -2,6 +2,8 @@ export interface LeatherApiErrorData {
   error: string;
   code?: string;
   reason?: string;
+  txid?: string;
+  transaction?: string;
 }
 
 export class LeatherApiError extends Error {
@@ -45,7 +47,12 @@ export async function readLeatherApiErrorData(
     if (body && typeof body === 'object' && 'error' in body && typeof body.error === 'string') {
       const code = 'code' in body && typeof body.code === 'string' ? body.code : undefined;
       const reason = 'reason' in body && typeof body.reason === 'string' ? body.reason : undefined;
-      return { error: body.error, code, reason };
+      const txid = 'txid' in body && typeof body.txid === 'string' ? body.txid : undefined;
+      const transaction =
+        'transaction' in body && typeof body.transaction === 'string'
+          ? body.transaction
+          : undefined;
+      return { error: body.error, code, reason, txid, transaction };
     }
   } catch {
     return undefined;

@@ -76,6 +76,10 @@ interface FetchStakingBondsOptions extends ApiRequestOptions {
   includeSpent?: boolean;
 }
 
+interface FetchSbtcSponsorshipQuoteOptions extends ApiRequestOptions {
+  service?: string;
+}
+
 function createLeatherOpenApiClient(baseUrl: string, clientId: string) {
   const client = createClient<paths>({ baseUrl });
   client.use({
@@ -1097,11 +1101,15 @@ export class LeatherApiClient {
     return network;
   }
 
-  async fetchSbtcSponsorshipQuote({ signal }: ApiRequestOptions = {}) {
+  async fetchSbtcSponsorshipQuote({ signal, service }: FetchSbtcSponsorshipQuoteOptions = {}) {
     const network = this.getSbtcSponsorshipNetwork();
     const { data } = await this.rateLimiter.add(
       RateLimiterType.Leather,
-      () => this.client.POST('/v1/sponsorship/quote', { params: { query: { network } }, signal }),
+      () =>
+        this.client.POST('/v1/sponsorship/quote', {
+          params: { query: { network, service } },
+          signal,
+        }),
       {
         priority: leatherApiPriorities.sbtcSponsorshipQuote,
         signal,
@@ -1119,6 +1127,27 @@ export class LeatherApiClient {
       RateLimiterType.Leather,
       () =>
         this.client.POST('/v1/sponsorship/submit', {
+          params: { query: { network } },
+          body,
+          signal,
+        }),
+      {
+        priority: leatherApiPriorities.sbtcSponsorshipSubmit,
+        signal,
+      }
+    );
+    return assertLeatherApiData(data);
+  }
+
+  async submitSbtcSponsoredCall(
+    body: { quoteId: string; transaction: string; paymentTxid: string },
+    { signal }: ApiRequestOptions = {}
+  ) {
+    const network = this.getSbtcSponsorshipNetwork();
+    const { data } = await this.rateLimiter.add(
+      RateLimiterType.Leather,
+      () =>
+        this.client.POST('/v1/sponsorship/submit-call', {
           params: { query: { network } },
           body,
           signal,

@@ -8,7 +8,16 @@ import {
 } from '@stacks/transactions';
 import { requestLeatherProvider } from '@tests/leather-provider';
 import { TEST_ACCOUNT_2_STX_ADDRESS } from '@tests/mocks/constants';
+import {
+  SBTC_SPONSORSHIP_CALL_TXID,
+  SBTC_SPONSORSHIP_TXID,
+  mockSbtcSponsorshipPaymentConfirmed,
+  mockSbtcSponsorshipQuote,
+  mockSbtcSponsorshipSubmitCall,
+} from '@tests/mocks/mock-sbtc';
+import { mockZeroStxPrincipalBalanceRequest } from '@tests/mocks/mock-stacks-principal-balances';
 import { getConnectedTestAppPermissionsState } from '@tests/page-object-models/onboarding.page';
+import { SbtcSponsoredCallSelectors } from '@tests/selectors/requests.selectors';
 import { SharedComponentsSelectors } from '@tests/selectors/shared-component.selectors';
 
 import type { RpcParams, stxCallContract } from '@leather.io/rpc';
@@ -176,5 +185,127 @@ test.describe('RPC: stx_callContract', () => {
         message: RpcErrorMessage.UserRejectedOperation,
       },
     });
+  });
+});
+
+const sponsorshipQuoteUrl = '/v1/sponsorship/quote';
+const sponsorshipSubmitUrl = '/v1/sponsorship/submit?';
+const sponsorshipSubmitCallUrl = '/v1/sponsorship/submit-call';
+const pinnedQuoteId = 'service-a:quote-1';
+const sponsoredCallTimeout = 20_000;
+
+test.describe('RPC: stx_callContract without STX to cover the fee', () => {
+  test.beforeEach(async ({ context, extensionId, globalPage, onboardingPage, page }) => {
+    await globalPage.setupAndUseApiCalls(extensionId);
+    await mockZeroStxPrincipalBalanceRequest(context);
+    await mockSbtcSponsorshipQuote(context, { quoteId: pinnedQuoteId });
+    await mockSbtcSponsorshipPaymentConfirmed(context);
+    await onboardingPage.signInWithTestAccount(extensionId, getConnectedTestAppPermissionsState());
+    await page.goto('localhost:3000');
+  });
+
+  function requestNameTransfer(page: Page) {
+    const args: ClarityValue[] = [
+      bufferCVFromString('id'),
+      bufferCVFromString('test'),
+      standardPrincipalCV(TEST_ACCOUNT_2_STX_ADDRESS),
+      noneCV(),
+    ];
+    return page.evaluate(requestLeatherProvider, {
+      method: 'stx_callContract',
+      params: {
+        contract: 'SP000000000000000000002Q6VF78.bns',
+        functionName: 'name-transfer',
+        functionArgs: args.map(arg => serializeCV(arg)),
+      },
+    });
+  }
+
+  function collectSponsorshipPosts(context: BrowserContext) {
+    const posts: { url: string; body: unknown }[] = [];
+    context.on('request', request => {
+      if (request.method() !== 'POST' || !request.url().includes('/v1/sponsorship/')) return;
+      posts.push({ url: request.url(), body: request.postDataJSON() });
+    });
+    return posts;
+  }
+
+  async function approveWithSbtcFee(context: BrowserContext) {
+    const popup = await context.waitForEvent('page');
+    await test.expect(popup.getByTestId(SbtcSponsoredCallSelectors.FeeSection)).toBeVisible({
+      timeout: sponsoredCallTimeout,
+    });
+    await popup.getByRole('button', { name: 'Sign 2 transactions' }).click();
+    return popup;
+  }
+
+  test('pays the fee in sBTC, then sends the call and returns its txid', async ({
+    context,
+    page,
+  }) => {
+    await mockSbtcSponsorshipSubmitCall(context);
+    const posts = collectSponsorshipPosts(context);
+
+    const [result] = await Promise.all([requestNameTransfer(page), approveWithSbtcFee(context)]);
+
+    const submits = posts.filter(post => post.url.includes(sponsorshipSubmitUrl));
+    const submitCalls = posts.filter(post => post.url.includes(sponsorshipSubmitCallUrl));
+    test.expect(submits).toHaveLength(1);
+    test.expect(submitCalls).toHaveLength(1);
+    test.expect(posts.indexOf(submits[0])).toBeLessThan(posts.indexOf(submitCalls[0]));
+    test.expect(submits[0].body).toMatchObject({ quoteId: pinnedQuoteId });
+    test.expect(submitCalls[0].body).toMatchObject({
+      quoteId: pinnedQuoteId,
+      paymentTxid: SBTC_SPONSORSHIP_TXID,
+    });
+    test.expect(result.result).toMatchObject({ txid: SBTC_SPONSORSHIP_CALL_TXID });
+  });
+
+  test('asks the service that took the payment for a fresh quote when the quote expired', async ({
+    context,
+    page,
+  }) => {
+    await mockSbtcSponsorshipSubmitCall(context, [{ status: 410, code: 'quote_expired' }, {}]);
+    const posts = collectSponsorshipPosts(context);
+
+    const [result] = await Promise.all([requestNameTransfer(page), approveWithSbtcFee(context)]);
+
+    const lastQuote = posts.filter(post => post.url.includes(sponsorshipQuoteUrl)).at(-1);
+    test.expect(lastQuote?.url).toContain('service=service-a');
+    test.expect(result.result).toMatchObject({ txid: SBTC_SPONSORSHIP_CALL_TXID });
+  });
+
+  test('returns the txid a failed broadcast carried once the call is in flight', async ({
+    context,
+    page,
+  }) => {
+    const transaction = '00cafe';
+    await mockSbtcSponsorshipSubmitCall(context, [
+      { status: 502, code: 'broadcast_failed', txid: SBTC_SPONSORSHIP_CALL_TXID, transaction },
+      { status: 409, code: 'stale_nonce' },
+    ]);
+
+    const [result] = await Promise.all([requestNameTransfer(page), approveWithSbtcFee(context)]);
+
+    test.expect(result.result).toEqual({ txid: SBTC_SPONSORSHIP_CALL_TXID, transaction });
+  });
+
+  test('says the fee was paid and the call was not sent when the sponsor refuses the call', async ({
+    context,
+    page,
+  }) => {
+    await mockSbtcSponsorshipSubmitCall(context, [
+      { status: 422, code: 'not_eligible', reason: 'payment_mismatch' },
+    ]);
+
+    const [result, popup] = await Promise.all([
+      requestNameTransfer(page),
+      approveWithSbtcFee(context),
+    ]);
+
+    await test
+      .expect(popup.getByTestId(SbtcSponsoredCallSelectors.FailureCallout))
+      .toContainText('The fee was paid and the call was not sent.');
+    test.expect(result.error).toMatchObject({ code: -32603 });
   });
 });
