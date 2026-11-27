@@ -1,3 +1,4 @@
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { Box } from 'leather-styles/jsx';
 import { InfoTooltipIcon } from '~/components/info-tooltip-icon';
 import { EM_DASH } from '~/constants/constants';
@@ -40,7 +41,11 @@ export function PoolFeeValue({
         </Box>
       )}
       {pool.operatorBtcPayout && (
-        <Box textStyle="label.03" color="ink.text-subdued" data-testid="pool-fee-source">
+        <Box
+          textStyle="label.03"
+          color="ink.text-subdued"
+          data-testid={BitcoinStakingSelectors.PoolFeeSource}
+        >
           {bitcoinStakingContent.operatorPayout.feeCaption(pool.name)}
           <InfoTooltipIcon
             title={bitcoinStakingContent.operatorPayout.feeCaption(pool.name)}

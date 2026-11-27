@@ -44,6 +44,7 @@ export default defineConfig(({ command, mode, isSsrBuild }) => ({
         },
       },
       { find: '~', replacement: path.resolve(__dirname, 'app') },
+      { find: '@tests', replacement: path.resolve(__dirname, 'tests') },
       { find: 'leather-styles', replacement: path.resolve(__dirname, 'leather-styles') },
       {
         find: 'axios',

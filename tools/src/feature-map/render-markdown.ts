@@ -15,6 +15,7 @@ import {
   unkeyedRoutes,
   unroutedKeys,
 } from './model.js';
+import { type RoutedRoute } from './routers-parser.js';
 
 const catchAllPath = '*';
 
@@ -42,6 +43,12 @@ function table(headers: readonly string[], rows: readonly (readonly string[])[])
   ];
 }
 
+function routerCell(instance: RoutedRoute): string {
+  const declared = code(location(instance.file, instance.line));
+  if (instance.module === undefined) return declared;
+  return `${declared} → ${code(instance.module)}`;
+}
+
 function routeRows(model: FeatureMapModel, feature: ParsedFeature): string[][] {
   const rows: string[][] = [];
   for (const { route, key, instances } of featureRouteInstances(model, feature)) {
@@ -53,7 +60,7 @@ function routeRows(model: FeatureMapModel, feature: ParsedFeature): string[][] {
         code(instance.mountedPath),
         joinOrDash(instance.gates),
         joinOrDash(instance.flags),
-        code(location(instance.file, instance.line)),
+        routerCell(instance),
       ]);
     }
     if (instances.length === 0) {
@@ -201,6 +208,10 @@ export function renderFeatureMap(model: FeatureMapModel): string {
   const claimedRouted = routed.filter(key => claims.has(key));
   const rpcClaims = claimsByRpcHandler(model);
   const claimedHandlers = [...model.rpcHandlers.keys()].filter(name => rpcClaims.has(name));
+  const rpcCoverage =
+    model.config.rpcMethodsDir === undefined
+      ? ''
+      : ` and ${claimedHandlers.length} of ${model.rpcHandlers.size} rpc handlers`;
   const lines: string[] = [];
 
   lines.push(
@@ -212,7 +223,7 @@ export function renderFeatureMap(model: FeatureMapModel): string {
     '',
     `Proofread entries when their tests change: the check validates every reference but not the prose, so whenever a spec, page object, mock or selector under ${toRepoRelative(model.config.specsDir).replace(/\/specs$/, '')} changes, re-read the entries that cite it and fix their steps, preconditions and description.`,
     '',
-    `Coverage: ${model.features.length} features claim ${claimedRouted.length} of ${routed.length} routed \`${model.config.routeUrlsObjectName}\` keys and ${claimedHandlers.length} of ${model.rpcHandlers.size} rpc handlers; ${uncoveredFeatures(model).length} features have no covering spec.`,
+    `Coverage: ${model.features.length} features claim ${claimedRouted.length} of ${routed.length} routed \`${model.config.routeUrlsObjectName}\` keys${rpcCoverage}; ${uncoveredFeatures(model).length} features have no covering spec.`,
     '',
     'Anchors: a `route` entry is reached by URL; a `selectors` entry is a dialog or sheet with no URL, opened by the listed page-object action; an `rpc` entry is a dApp method whose handler opens no approver of its own; a `behavior` entry has no screen and is documented under Behaviors.',
     '',

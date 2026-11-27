@@ -76,3 +76,22 @@ export interface FeatureEntry {
   readonly specs: readonly string[];
   readonly description: string;
 }
+
+export const webFeatureGates = ['multisigLayout', 'playgroundLayout', 'none'] as const;
+export type WebFeatureGate = (typeof webFeatureGates)[number];
+
+export const webFeatureSessions = ['uninstalled', 'mock-installed', 'mock-connected'] as const;
+export type WebFeatureSession = (typeof webFeatureSessions)[number];
+
+export const webFeatureFlags = ['nonProductionBuild'] as const;
+export type WebFeatureFlag = (typeof webFeatureFlags)[number];
+
+export interface FeatureVocabulary {
+  readonly gates: readonly string[];
+  readonly sessions: readonly string[];
+}
+
+export const defaultFeatureVocabulary: FeatureVocabulary = {
+  gates: featureGates,
+  sessions: featureSessions,
+};

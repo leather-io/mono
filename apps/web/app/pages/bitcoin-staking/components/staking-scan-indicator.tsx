@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { Flex, styled } from 'leather-styles/jsx';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
 import { usePox5Position } from '~/features/bitcoin-staking/hooks/use-pox5-position';
@@ -43,7 +44,7 @@ export function StakingScanIndicator() {
       bg="transparent"
       flexShrink={0}
       animation={isScanning ? 'fadein 200ms ease-out both' : `fadeout ${fadeOutMs}ms ease-out both`}
-      data-testid="staking-scan-indicator"
+      data-testid={BitcoinStakingSelectors.StakingScanIndicator}
     >
       <Spinner width="14px" height="14px" color="ink.text-subdued" />
       <styled.span textStyle="label.02" color="ink.text-subdued" whiteSpace="nowrap">

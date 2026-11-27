@@ -1,3 +1,4 @@
+import { BitcoinStakingSelectors } from '@tests/selectors/bitcoin-staking.selectors';
 import { Flex, Stack, styled } from 'leather-styles/jsx';
 import { ErrorLabel } from '~/components/error-label';
 import { bitcoinStakingContent } from '~/content/bitcoin-staking-content';
@@ -29,7 +30,7 @@ export function CustomContractEntry({
     <Stack gap="space.02" p="space.03" borderRadius="sm" bg="ink.background-secondary">
       <styled.input
         id="customSignerManagerContract"
-        data-testid="custom-signer-manager-input"
+        data-testid={BitcoinStakingSelectors.CustomSignerManagerInput}
         autoFocus
         autoComplete="off"
         data-1p-ignore
@@ -82,7 +83,7 @@ export function CustomContractEntry({
               },
             }}
             onClick={onValidate}
-            data-testid="custom-signer-manager-validate"
+            data-testid={BitcoinStakingSelectors.CustomSignerManagerValidate}
           >
             {isChecking ? switchContent.validatingLabel : switchContent.validateLabel}
           </Button>

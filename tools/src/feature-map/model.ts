@@ -2,7 +2,12 @@ import { readFileSync } from 'node:fs';
 
 import { compareStrings } from '../utils/compare.js';
 import { type FeatureMapAppConfig } from './app-config.js';
-import { type FeatureGate, type FeatureParam, featureGates } from './feature-entry.js';
+import {
+  type FeatureParam,
+  type FeatureVocabulary,
+  defaultFeatureVocabulary,
+  featureGates,
+} from './feature-entry.js';
 import {
   type FeaturesParseResult,
   type ParsedFeature,
@@ -36,6 +41,7 @@ import {
   loadSpecs,
 } from './test-assets.js';
 import { type SourceLocation, type StringTable, mergeStringTables } from './ts-ast.js';
+import { parseRouteConfigFile } from './web-routes-parser.js';
 
 export interface FeatureMapModel {
   readonly config: FeatureMapAppConfig;
@@ -54,16 +60,48 @@ export interface FeatureMapModel {
   readonly rpcHandlers: ReadonlyMap<string, RpcHandler>;
 }
 
-function parseAllFeatures(files: readonly string[], table: StringTable): FeaturesParseResult {
+function parseAllFeatures(
+  files: readonly string[],
+  table: StringTable,
+  vocabulary: FeatureVocabulary
+): FeaturesParseResult {
   const features: ParsedFeature[] = [];
   const errors: string[] = [];
   for (const file of files) {
-    const result = parseFeaturesSource(file, readFileSync(file, 'utf8'), table);
+    const result = parseFeaturesSource(file, readFileSync(file, 'utf8'), table, vocabulary);
     features.push(...result.features);
     errors.push(...result.errors);
   }
   features.sort((a, b) => compareStrings(a.id, b.id));
   return { features, errors };
+}
+
+export function featureVocabularyOf(config: FeatureMapAppConfig): FeatureVocabulary {
+  return {
+    gates: config.gates ?? defaultFeatureVocabulary.gates,
+    sessions: config.sessions ?? defaultFeatureVocabulary.sessions,
+  };
+}
+
+function parseRouter(config: FeatureMapAppConfig, table: StringTable): RouterModel {
+  if (config.routeConfigFile !== undefined) {
+    return parseRouteConfigFile(
+      config.routeConfigFile,
+      table,
+      {
+        objectName: config.routeUrlsObjectName,
+        layoutGates: config.layoutGates ?? {},
+        conditionFlags: config.conditionFlags ?? {},
+      },
+      config.importAliases
+    );
+  }
+  return parseRouterFiles(
+    loadRouterFiles(config),
+    table,
+    config.routeUrlsObjectName,
+    config.importAliases
+  );
 }
 
 export function buildFeatureMapModel(config: FeatureMapAppConfig): FeatureMapModel {
@@ -73,13 +111,8 @@ export function buildFeatureMapModel(config: FeatureMapAppConfig): FeatureMapMod
     selectorTable,
     new Map([[config.routeUrlsObjectName, routeUrls]]),
   ]);
-  const router = parseRouterFiles(
-    loadRouterFiles(config),
-    table,
-    config.routeUrlsObjectName,
-    config.importAliases
-  );
-  const parsed = parseAllFeatures(loadFeatureFiles(config), table);
+  const router = parseRouter(config, table);
+  const parsed = parseAllFeatures(loadFeatureFiles(config), table, featureVocabularyOf(config));
   const mocks = loadMockFunctions(config);
 
   return {
@@ -246,9 +279,17 @@ export function featureRouteInstances(
   });
 }
 
-export function derivedGate(instance: RoutedRoute): FeatureGate {
+export function derivedGate(
+  instance: RoutedRoute,
+  gates: readonly string[] = featureGates
+): string {
   const innermost = innermostGate(instance);
-  return featureGates.find(gate => gate === innermost) ?? 'none';
+  return gates.find(gate => gate === innermost) ?? 'none';
+}
+
+export function unkeyedRequiredRoutes(model: FeatureMapModel): RoutedRoute[] {
+  if (model.config.routeKeysRequired !== true) return [];
+  return model.router.routes.filter(route => route.keys.length === 0);
 }
 
 export function uncoveredFeatures(model: FeatureMapModel): ParsedFeature[] {
