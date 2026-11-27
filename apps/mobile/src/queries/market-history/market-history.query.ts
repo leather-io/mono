@@ -1,4 +1,4 @@
-import { toFetchState } from '@/components/loading';
+import { toFetchState } from '@/queries/fetch-state';
 import { useSettings } from '@/store/settings/settings';
 import { useQuery } from '@tanstack/react-query';
 

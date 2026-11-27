@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 
 import { AccountSelectorSheet } from '@/features/account/account-selector/account-selector-sheet';
-import { useGetBtcNetworkFromRequestParams } from '@/shared/utils';
+import { useGetBtcNetworkFromRequestParams } from '@/features/browser/approver-sheet/use-network-from-request-params';
 import { useAccounts } from '@/store/accounts/accounts.read';
 import { type App } from '@/store/apps/utils';
 import { useBitcoinAccounts } from '@/store/keychains/bitcoin/bitcoin-keychains.read';

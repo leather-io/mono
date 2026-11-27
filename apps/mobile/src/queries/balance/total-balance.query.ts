@@ -1,5 +1,5 @@
-import { type FetchState, toFetchState } from '@/components/loading/fetch-state';
 import { useStxTotalBalance } from '@/queries/balance/stx-balance.query';
+import { type FetchState, toFetchState } from '@/queries/fetch-state';
 import { useSettings } from '@/store/settings/settings';
 
 import { type Money } from '@leather.io/models';

@@ -1,11 +1,10 @@
 import { type ReactNode } from 'react';
 
+import { useTabLayoutContext } from '@/components/screen/tab-layout-context';
 import { usePathname, useRouter } from 'expo-router';
 import { type TabTriggerSlotProps, useTabTrigger } from 'expo-router/ui';
 
 import { Pressable, Text } from '@leather.io/ui/native';
-
-import { useTabLayoutContext } from './tab-layout-context';
 
 interface TabButtonProps extends Omit<TabTriggerSlotProps, 'ref'> {
   title: string;

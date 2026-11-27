@@ -1,9 +1,9 @@
 import { type ReactNode, useCallback } from 'react';
 
-import { type FetchState } from '@/components/loading/fetch-state';
 import { LoadingItem } from '@/components/loading/loading-item';
+import { RefreshControl } from '@/components/refresh-control/refresh-control';
 import { Screen } from '@/components/screen/screen';
-import { RefreshControl } from '@/features/refresh-control/refresh-control';
+import { type FetchState } from '@/queries/fetch-state';
 
 import { type BlockchainActivityItem } from '@leather.io/features';
 

@@ -2,6 +2,8 @@ import { LEATHER_GUIDES_URL } from '@leather.io/constants';
 
 export const HEADER_HEIGHT = 64;
 
+export const DEFAULT_PRIVACY_MASK = '***';
+
 export const LEATHER_GUIDES_MOBILE_ANALYTICS = `${LEATHER_GUIDES_URL}/mobile-analytics`;
 export const LEATHER_GUIDES_MOBILE_ACCOUNT_IDENTIFIER = `${LEATHER_GUIDES_URL}/mobile-account-identifier`;
 export const LEATHER_GUIDES_MOBILE_BITCOIN_UNIT = `${LEATHER_GUIDES_URL}/mobile-bitcoin-unit`;

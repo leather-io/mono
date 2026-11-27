@@ -7,13 +7,13 @@ import {
   type NotifyUserSheetData,
   NotifyUserSheetLayout,
 } from '@/components/sheets/notify-user-sheet.layout';
-import { useToastContext } from '@/components/toast/toast-context';
-import { useWaitlistFlag } from '@/features/feature-flags';
+import { useToastContext } from '@/core/toast/toast-context';
 import SettingsLayout from '@/features/settings/settings-layout';
 import { RemoveWalletSheet } from '@/features/settings/wallet-and-accounts/remove-wallet-sheet';
 import { WalletNameSheet } from '@/features/settings/wallet-and-accounts/wallet-name-sheet';
 import { WaitlistIds } from '@/features/waitlist/ids';
 import { useAuthentication } from '@/hooks/use-authentication';
+import { useWaitlistFlag } from '@/shared/feature-flags';
 import { TestId } from '@/shared/test-id';
 import { useSettings } from '@/store/settings/settings';
 import { useAppDispatch } from '@/store/utils';

@@ -1,8 +1,8 @@
 import { useCallback, useEffect } from 'react';
 
-import { toFetchState } from '@/components/loading/fetch-state';
-import { defaultMask } from '@/components/private-text';
 import { useAccountAddresses } from '@/hooks/use-account-addresses';
+import { toFetchState } from '@/queries/fetch-state';
+import { DEFAULT_PRIVACY_MASK } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { usePrivacyMode } from '@/store/settings/settings.read';
 import { formatCurrency } from '@/utils/currency-formatter';
@@ -30,7 +30,7 @@ function formatActivityMoney(money: Money, options?: FormatAmountOptions) {
 }
 
 function maskActivityMoney() {
-  return defaultMask;
+  return DEFAULT_PRIVACY_MASK;
 }
 
 const activityViewDeps: BlockchainActivityViewDeps = { formatMoney: formatActivityMoney };

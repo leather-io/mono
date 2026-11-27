@@ -2,7 +2,7 @@ import btcDomainImage from '@/assets/btc-domain.png';
 import gammaMarketplaceImage from '@/assets/gamma-marketplace.png';
 import stxNftImage from '@/assets/stx-nft.png';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
-import { useOpenUrl } from '@/features/browser/browser/use-open-url';
+import { useOpenUrl } from '@/hooks/use-open-url';
 import { t } from '@lingui/core/macro';
 import { Image } from 'expo-image';
 

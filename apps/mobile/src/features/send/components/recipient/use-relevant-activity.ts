@@ -1,6 +1,6 @@
-import { toFetchState } from '@/components/loading/fetch-state';
 import { type RecipientActivity } from '@/features/send/components/recipient/recipient.types';
 import { useActivityByAssetIdQuery } from '@/queries/activity/activity.query';
+import { toFetchState } from '@/queries/fetch-state';
 import { filter, isDefined, map, pipe } from 'remeda';
 
 import {

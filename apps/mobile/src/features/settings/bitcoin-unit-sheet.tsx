@@ -1,6 +1,7 @@
 import { SettingsList } from '@/components/settings/settings-list';
 import { SettingsListItem } from '@/components/settings/settings-list-item';
-import { useToastContext } from '@/components/toast/toast-context';
+import { useToastContext } from '@/core/toast/toast-context';
+import { useOpenUrl } from '@/hooks/use-open-url';
 import { LEATHER_GUIDES_MOBILE_BITCOIN_UNIT } from '@/shared/constants';
 import { useSettings } from '@/store/settings/settings';
 import { t } from '@lingui/core/macro';
@@ -10,7 +11,6 @@ import { bitcoinUnitsKeyedByName } from '@leather.io/constants';
 import { type BitcoinUnit } from '@leather.io/models';
 import { type SheetRef } from '@leather.io/ui/native';
 
-import { useOpenUrl } from '../browser/browser/use-open-url';
 import { SettingsSheetLayout } from './settings-sheet.layout';
 
 interface BitcoinUnitSheetProps {

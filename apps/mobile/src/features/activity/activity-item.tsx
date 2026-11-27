@@ -1,6 +1,7 @@
 import { memo } from 'react';
 
 import { Balance } from '@/components/balance/balance';
+import { useOpenUrl } from '@/hooks/use-open-url';
 import { useSettings } from '@/store/settings/settings';
 
 import { btcAsset, stxAsset } from '@leather.io/constants';
@@ -17,8 +18,6 @@ import {
   Cell,
 } from '@leather.io/ui/native';
 import { minusSign } from '@leather.io/utils';
-
-import { useOpenUrl } from '../browser/browser/use-open-url';
 
 const indicatorSize = 16;
 
