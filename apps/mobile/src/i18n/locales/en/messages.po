@@ -637,6 +637,10 @@ msgstr "Copy address"
 msgid "Copy ID"
 msgstr "Copy ID"
 
+#: src/features/ramp/ramp.tsx:67
+msgid "Couldn't load checkout"
+msgstr "Couldn't load checkout"
+
 #: src/features/wallet-manager/add-wallet/add-wallet-sheet.layout.tsx:77
 msgid "Create new wallet"
 msgstr "Create new wallet"
@@ -1653,6 +1657,10 @@ msgstr "Some balances couldn’t load."
 msgid "Something went wrong"
 msgstr "Something went wrong"
 
+#: src/features/ramp/ramp.tsx:68
+msgid "Something went wrong while preparing the checkout. Try again in a moment."
+msgstr "Something went wrong while preparing the checkout. Try again in a moment."
+
 #: src/features/approver/components/fees/sponsored-fee-card.tsx:13
 msgid "Sponsored fee"
 msgstr "Sponsored fee"
@@ -1909,6 +1917,7 @@ msgid "Trending tokens"
 msgstr "Trending tokens"
 
 #: src/components/error/error.tsx:54
+#: src/features/ramp/ramp.tsx:72
 msgid "Try again"
 msgstr "Try again"
 
