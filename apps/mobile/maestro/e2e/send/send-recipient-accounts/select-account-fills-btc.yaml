@@ -1,0 +1,48 @@
+appId: io.leather.mobilewallet
+name: send - that selecting an account fills the recipient field with its BTC address
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow:
+    file: ../shared/read-own-address.yaml
+    env:
+      RECEIVE_INDEX: 0
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: BTC
+- tapOn:
+    id: 'sendRecipientToggle'
+- extendedWaitUntil:
+    visible:
+      id: 'sendRecipientAccountItem-0'
+    timeout: 20000
+- tapOn:
+    id: 'sendRecipientAccountItem-0'
+- evalScript: ${output.fillAttempt = 0}
+- retry:
+    maxRetries: 1
+    commands:
+      - evalScript: ${output.fillAttempt = output.fillAttempt + 1}
+      - runFlow:
+          when:
+            true: ${output.fillAttempt > 1}
+            visible: 'Sending to the same address'
+          commands:
+            - tapOn: 'Confirm'
+      - extendedWaitUntil:
+          visible:
+            id: 'sendRecipientToggle'
+            text: '${output.ownAddress.match(/.{1,4}/g).join(", ")}'
+          timeout: 5000
+      - assertNotVisible: 'Sending to the same address'
+- extendedWaitUntil:
+    visible:
+      id: 'sendRecipientToggle'
+      text: '${output.ownAddress.match(/.{1,4}/g).join(", ")}'
+    timeout: 15000
+- assertTrue: ${output.ownAddress.startsWith('bc1q')}

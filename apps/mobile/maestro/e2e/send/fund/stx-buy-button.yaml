@@ -1,0 +1,21 @@
+appId: io.leather.mobilewallet
+name: send - that STX asset shows a buy button that forwards to fund page
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: empty-wallet
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBuyButton-STX'
+    timeout: 30000
+- tapOn:
+    id: 'tokenBuyButton-STX'
+- extendedWaitUntil:
+    visible:
+      id: 'rampWebView-buy-STX'
+    timeout: 30000
+- assertNotVisible:
+    id: 'rampWebView-buy-BTC'

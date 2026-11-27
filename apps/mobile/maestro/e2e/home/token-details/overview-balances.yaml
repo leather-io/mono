@@ -1,0 +1,74 @@
+appId: io.leather.mobilewallet
+name: home - token details overview shows the BTC, STX, sBTC, aeUSDC and USDCx balance
+tags:
+  - home
+  - blocked
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: ''
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+    timeout: 30000
+- tapOn:
+    id: 'tokenBalanceItem-BTC'
+- extendedWaitUntil:
+    visible: 'Token Details'
+    timeout: 20000
+- assertVisible:
+    id: 'tokenDetailsAvailableBalance'
+    text: '0\.01.*BTC'
+- assertVisible:
+    id: 'tokenDetailsQuoteBalance'
+    text: '450\.00'
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    id: 'tokenBalanceItem-STX'
+- extendedWaitUntil:
+    visible: 'Token Details'
+    timeout: 20000
+- assertVisible:
+    id: 'tokenDetailsAvailableBalance'
+    text: '13\.568.*STX'
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    id: 'tokenBalanceItem-sBTC'
+- extendedWaitUntil:
+    visible: 'Token Details'
+    timeout: 20000
+- assertVisible:
+    id: 'tokenDetailsAvailableBalance'
+    text: '0\.5.*sBTC'
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    id: 'tokenBalanceItem-USDCx'
+- extendedWaitUntil:
+    visible: 'Token Details'
+    timeout: 20000
+- assertVisible:
+    id: 'tokenDetailsAvailableBalance'
+    text: '250.*USDCx'
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    id: 'homeManageTokensButton'
+- tapOn:
+    id: 'tokenSwitchItem-aeUSDC'
+- swipe:
+    start: 50%, 14%
+    end: 50%, 95%
+- waitForAnimationToEnd
+- scroll
+- tapOn:
+    id: 'tokenBalanceItem-aeUSDC'
+- extendedWaitUntil:
+    visible: 'Token Details'
+    timeout: 20000
+- assertVisible:
+    id: 'tokenDetailsAvailableBalance'
+    text: '100.*aeUSDC'

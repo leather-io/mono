@@ -1,0 +1,28 @@
+appId: io.leather.mobilewallet
+name: send - nothing happens when the compliance api is down
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: compliance-down
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: BTC
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '0.00001231'
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: 12QtD5BFwRsdNsAZY76UVE1xyCGNTojH9h
+- assertNotVisible: 'Address blocked'
+- runFlow: ../shared/review.yaml
+- assertVisible: 'Send token'
+- assertVisible:
+    id: 'tokenBalanceItem-BTC'
+    text: 'Bitcoin, BTC, .*, 0\.00001231'
+- assertNotVisible: 'Address blocked'

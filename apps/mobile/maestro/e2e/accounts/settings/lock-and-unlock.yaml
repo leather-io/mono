@@ -1,0 +1,46 @@
+appId: io.leather.mobilewallet
+name: accounts - that menu item can lock and unlock the extension
+tags:
+  - accounts
+  - ios-ci
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- tapOn:
+    id: 'homeSettingsButton'
+- extendedWaitUntil:
+    visible:
+      id: 'settingsWalletAndAccountsButton'
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: 'settingsLockAppButton'
+    direction: DOWN
+    timeout: 10000
+- retry:
+    maxRetries: 2
+    commands:
+      - waitForAnimationToEnd
+      - runFlow:
+          when:
+            notVisible:
+              id: 'lockScreenUnlockButton'
+          commands:
+            - tapOn:
+                id: 'settingsLockAppButton'
+      - extendedWaitUntil:
+          visible:
+            id: 'lockScreenUnlockButton'
+          timeout: 20000
+- tapOn:
+    id: 'lockScreenUnlockButton'
+- extendedWaitUntil:
+    notVisible:
+      id: 'lockScreenUnlockButton'
+    timeout: 20000
+- runFlow: ../shared/back-to-home.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1'

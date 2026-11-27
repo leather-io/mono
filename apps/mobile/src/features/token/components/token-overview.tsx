@@ -1,3 +1,5 @@
+import { TestId } from '@/shared/test-id';
+
 import { Box, Text } from '@leather.io/ui/native';
 
 interface TokenOverviewProps {
@@ -25,10 +27,10 @@ export function TokenOverview({
       <Box flexDirection="column" alignItems="center" gap="3" flex={1}>
         {heading}
         <Box gap="1" flexDirection="column" alignItems="center">
-          <Text variant="label01" textAlign="center">
+          <Text variant="label01" textAlign="center" testID={TestId.tokenDetailsAvailableBalance}>
             {availableBalance}
           </Text>
-          <Text variant="caption01" textAlign="center">
+          <Text variant="caption01" textAlign="center" testID={TestId.tokenDetailsQuoteBalance}>
             {quoteBalance}
           </Text>
         </Box>

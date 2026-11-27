@@ -1,0 +1,468 @@
+name: mobile:integration-tests
+
+env:
+  DO_NOT_TRACK: 1
+  E2E_SHARD_TOTAL: 28
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'apps/mobile/**'
+      - 'apps/test-app/**'
+      - 'packages/**'
+      - '!packages/ui/**/*.web.ts'
+      - '!packages/ui/**/*.web.tsx'
+      - '.github/actions/mobile-test-build-key/**'
+      - '.github/workflows/mobile:integration-tests.yml'
+  push:
+    branches:
+      - dev
+    paths:
+      - 'apps/mobile/package.json'
+      - 'apps/mobile/app.config.ts'
+      - 'apps/mobile/fingerprint.config.cjs'
+      - 'apps/mobile/.gitignore'
+      - 'apps/mobile/src/assets/**'
+      - 'packages/ui/src/assets-native/fonts/**'
+      - 'pnpm-lock.yaml'
+      - 'patches/**'
+      - '.github/actions/mobile-test-build-key/**'
+      - '.github/workflows/mobile:integration-tests.yml'
+
+# GITHUB_TOKEN only needs to read the repository; results are uploaded as
+# workflow artifacts and the job summary.
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'push' }}
+
+jobs:
+  build:
+    name: build-android-apk
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      ANDROID_ABI: x86_64
+    outputs:
+      shard-indexes: ${{ steps.plan-shards.outputs.shard-indexes }}
+      shard-total: ${{ steps.plan-shards.outputs.shard-total }}
+      expected-flows: ${{ steps.count-flows.outputs.expected-flows }}
+    steps:
+      - name: plan-shards
+        id: plan-shards
+        run: |
+          echo "shard-indexes=$(jq -cn --argjson n "$E2E_SHARD_TOTAL" '[range(1; $n + 1)]')" >> "$GITHUB_OUTPUT"
+          echo "shard-total=$E2E_SHARD_TOTAL" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: count-flows
+        id: count-flows
+        run: |
+          expected=$(bash apps/mobile/maestro/e2e/run-e2e.sh --list --platform android | grep -c .)
+          echo "Flows selected for Android: $expected"
+          echo "expected-flows=$expected" >> "$GITHUB_OUTPUT"
+
+      - name: provision-the-app
+        uses: $/.github/actions/provision
+
+        # A debug APK holds no JavaScript (it loads the bundle from Metro), so
+        # it only changes when native inputs change. A JavaScript-only change
+        # restores it and skips prebuild and Gradle. Bump the v1 prefix when
+        # the Gradle command below changes.
+      - name: test-build-key
+        id: build-key
+        uses: $/.github/actions/mobile-test-build-key
+        with:
+          platform: android
+          build-revision: v1
+          architecture: ${{ env.ANDROID_ABI }}
+
+      - name: cache-debug-apk
+        id: apk-cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk
+          key: ${{ steps.build-key.outputs.key }}
+
+      - name: build-mobile-workspace
+        if: steps.apk-cache.outputs.cache-hit != 'true'
+        run: pnpm -w build:mobile
+
+      - name: expo-prebuild
+        if: steps.apk-cache.outputs.cache-hit != 'true'
+        working-directory: apps/mobile
+        run: pnpm expo:prebuild --platform android
+
+      - name: setup-java
+        if: steps.apk-cache.outputs.cache-hit != 'true'
+        uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: cache-gradle
+        if: steps.apk-cache.outputs.cache-hit != 'true'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-debug-${{ hashFiles('apps/mobile/android/**/*.gradle*', 'apps/mobile/android/gradle.properties') }}
+          restore-keys: |
+            gradle-debug-
+            gradle-
+
+      - name: assemble-debug-apk
+        if: steps.apk-cache.outputs.cache-hit != 'true'
+        working-directory: apps/mobile/android
+        env:
+          SENTRY_DISABLE_AUTO_UPLOAD: 'true'
+        run: ./gradlew assembleDebug -PreactNativeArchitectures="$ANDROID_ABI"
+
+      - name: upload-debug-apk
+        if: github.event_name != 'push'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: android-debug-apk
+          path: apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 1
+          if-no-files-found: error
+
+  test:
+    name: shard-${{ matrix.shardIndex }}-of-${{ needs.build.outputs.shard-total }}
+    if: github.event_name != 'push'
+    needs: build
+    timeout-minutes: 90
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: ${{ fromJSON(needs.build.outputs.shard-indexes) }}
+    env:
+      API_LEVEL: 34
+      ANDROID_AVD_HOME: /home/runner/.android/avd
+      APK_PATH: ${{ github.workspace }}/apk/app-debug.apk
+      MAESTRO_VERSION: 2.12.1
+      MAESTRO_SHA256: 54dbb0716425626604973cbb374c585ca30272375d9ce15177a1152765ddd9d7
+      MAESTRO_CLI_NO_ANALYTICS: 1
+      MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED: 'true'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+        # The Android emulator needs hardware acceleration, see
+        # https://github.com/ReactiveCircus/android-emulator-runner#running-hardware-accelerated-emulators-on-linux-runners
+      - name: enable-kvm
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: start-emulator
+        run: |
+          cat > "$RUNNER_TEMP/start-emulator.sh" <<'EOF'
+          set -eu
+          sdkmanager="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          avdmanager="$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager"
+          image="system-images;android-${API_LEVEL};google_apis;x86_64"
+          yes | "$sdkmanager" --licenses > /dev/null || true
+          "$sdkmanager" --install emulator platform-tools "$image" > /dev/null
+          mkdir -p "$ANDROID_AVD_HOME"
+          echo no | "$avdmanager" create avd --force -n e2e --package "$image" --path "$ANDROID_AVD_HOME/e2e.avd"
+          config="$ANDROID_AVD_HOME/e2e.avd/config.ini"
+          sed -i -E '/^(hw\.lcd\.width|hw\.lcd\.height|hw\.lcd\.density|hw\.cpu\.ncore|hw\.ramSize|disk\.dataPartition\.size|hw\.keyboard|skin\.[a-z]+)=/d' "$config"
+          {
+            echo 'hw.lcd.width=540'
+            echo 'hw.lcd.height=1200'
+            echo 'hw.lcd.density=210'
+            echo 'hw.cpu.ncore=4'
+            echo 'hw.ramSize=4096'
+            echo 'disk.dataPartition.size=6000M'
+            echo 'hw.keyboard=yes'
+            echo 'skin.name=540x1200'
+            echo 'skin.path=540x1200'
+          } >> "$config"
+          exec "$ANDROID_HOME/emulator/emulator" -avd e2e -port 5554 -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -no-snapshot -no-metrics
+          EOF
+          cat > "$RUNNER_TEMP/prepare-emulator.sh" <<'EOF'
+          set -eu
+          adb="$ANDROID_HOME/platform-tools/adb"
+          booted=""
+          for _ in $(seq 1 240); do
+            booted=$("$adb" -s emulator-5554 shell getprop sys.boot_completed 2>/dev/null | tr -d '\r' || true)
+            if [ "$booted" = "1" ]; then
+              break
+            fi
+            if ! kill -0 "$(cat "$RUNNER_TEMP/emulator.pid")" 2> /dev/null; then
+              break
+            fi
+            sleep 2
+          done
+          if [ "$booted" != "1" ]; then
+            tail -100 "$RUNNER_TEMP/emulator.log"
+            exit 1
+          fi
+          "$adb" -s emulator-5554 shell settings put global hide_error_dialogs 1
+          "$adb" -s emulator-5554 shell device_config set_sync_disabled_for_tests persistent
+          "$adb" -s emulator-5554 shell device_config put systemui clipboard_overlay_enabled false
+          "$adb" -s emulator-5554 shell pm disable-user --user 0 com.google.android.apps.nexuslauncher || true
+          "$adb" -s emulator-5554 install -r -g "$APK_PATH"
+          "$adb" -s emulator-5554 reverse tcp:8081 tcp:8081
+          "$adb" -s emulator-5554 reverse tcp:3100 tcp:3100
+          for overlay in $("$adb" -s emulator-5554 shell cmd overlay list | tr -d '\r' | grep -i 'cutout' | grep -F '[x]' | awk '{ print $2 }'); do
+            "$adb" -s emulator-5554 shell cmd overlay disable "$overlay"
+          done
+          "$adb" -s emulator-5554 shell wm size
+          "$adb" -s emulator-5554 shell wm density
+          "$adb" -s emulator-5554 shell dumpsys window displays | grep -i -E 'cutout|stableInsets' | head -5 || true
+          EOF
+          cat > "$RUNNER_TEMP/recover-emulator.sh" <<'EOF'
+          set -u
+          adb="$ANDROID_HOME/platform-tools/adb"
+          "$adb" -s emulator-5554 emu kill > /dev/null 2>&1 || true
+          kill -9 "$(cat "$RUNNER_TEMP/emulator.pid")" 2> /dev/null || true
+          pkill -9 -f 'qemu-system-x86_64' || true
+          pkill -9 -f "$ANDROID_HOME/emulator/emulator" || true
+          rm -f "$ANDROID_AVD_HOME"/e2e.avd/*.lock
+          "$adb" kill-server || true
+          "$adb" start-server
+          echo "=== recover-emulator.sh restarts the emulator at $(date -u +%H:%M:%S)" >> "$RUNNER_TEMP/emulator.log"
+          nohup bash "$RUNNER_TEMP/start-emulator.sh" >> "$RUNNER_TEMP/emulator.log" 2>&1 < /dev/null &
+          echo "$!" > "$RUNNER_TEMP/emulator.pid"
+          bash "$RUNNER_TEMP/prepare-emulator.sh"
+          EOF
+          nohup bash "$RUNNER_TEMP/start-emulator.sh" > "$RUNNER_TEMP/emulator.log" 2>&1 &
+          echo "$!" > "$RUNNER_TEMP/emulator.pid"
+
+      - uses: $/.github/actions/provision
+
+      - name: build-mobile-workspace
+        run: pnpm -w build:mobile
+
+      - name: install-maestro
+        run: |
+          curl -fsSL --retry 3 -o "$RUNNER_TEMP/maestro.zip" "https://github.com/mobile-dev-inc/maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip"
+          echo "${MAESTRO_SHA256}  $RUNNER_TEMP/maestro.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/maestro.zip" -d "$RUNNER_TEMP"
+          "$RUNNER_TEMP/maestro/bin/maestro" --version
+
+      - name: download-debug-apk
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: android-debug-apk
+          path: apk
+
+      - name: start-metro
+        working-directory: apps/mobile
+        env:
+          EXPO_NO_TELEMETRY: 1
+          EXPO_PUBLIC_E2E_MOCKS: 'true'
+          EXPO_PUBLIC_LAUNCH_DARKLY: mob-e2e-placeholder
+          EXPO_PUBLIC_ONRAMPER_API_KEY: pk_e2e_placeholder
+          EXPO_PUBLIC_ONRAMPER_SIGNING_SECRET: e2e-placeholder
+          EXPO_PUBLIC_ONRAMPER_WIDGET_HOST: https://buy.onramper.com
+        run: nohup pnpm exec expo start --dev-client --port 8081 > "$RUNNER_TEMP/metro.log" 2>&1 &
+
+      - name: start-test-app
+        working-directory: apps/test-app
+        env:
+          VITE_TEST_APP_MOBILE_E2E: 'true'
+        run: nohup pnpm exec vite --port 3100 --strictPort > "$RUNNER_TEMP/test-app.log" 2>&1 &
+
+      - name: wait-for-servers
+        run: |
+          for _ in $(seq 1 90); do
+            if curl -fs http://localhost:8081/status | grep -q running && curl -fs -o /dev/null http://localhost:3100; then
+              exit 0
+            fi
+            sleep 2
+          done
+          tail -50 "$RUNNER_TEMP/metro.log" "$RUNNER_TEMP/test-app.log"
+          exit 1
+
+      - name: prewarm-android-bundle
+        run: curl -fsS --max-time 900 -o /dev/null 'http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=android&dev=true&hot=false&lazy=true&minify=false&app=io.leather.mobilewallet&transform.engine=hermes&transform.bytecode=1&transform.routerRoot=src%2Fapp&unstable_transformProfile=hermes-stable'
+
+      - name: prepare-emulator
+        timeout-minutes: 10
+        run: bash "$RUNNER_TEMP/prepare-emulator.sh"
+
+      - name: run-maestro-flows
+        env:
+          MAESTRO_DRIVER_STARTUP_TIMEOUT: 300000
+          SHARD_INDEX: ${{ matrix.shardIndex }}
+          SHARD_TOTAL: ${{ needs.build.outputs.shard-total }}
+        run: |
+          export PATH="$ANDROID_HOME/platform-tools:$PATH"
+          export E2E_DEVICE_RECOVER_CMD="bash $RUNNER_TEMP/recover-emulator.sh"
+          export E2E_EMULATOR_LOG="$RUNNER_TEMP/emulator.log"
+          MAESTRO="$RUNNER_TEMP/maestro/bin/maestro" bash apps/mobile/maestro/e2e/run-e2e.sh --device emulator-5554 --platform android --shard "$SHARD_INDEX/$SHARD_TOTAL" --output "$RUNNER_TEMP/maestro-e2e"
+
+      - name: collect-server-logs
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/maestro-e2e"
+          cp "$RUNNER_TEMP/metro.log" "$RUNNER_TEMP/test-app.log" "$RUNNER_TEMP/emulator.log" "$RUNNER_TEMP/maestro-e2e/" || true
+          sudo dmesg | grep -i -E 'killed process|out of memory|qemu' > "$RUNNER_TEMP/maestro-e2e/dmesg.txt" || true
+
+      - name: upload-shard-output
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: maestro-shard-${{ matrix.shardIndex }}
+          path: ${{ runner.temp }}/maestro-e2e
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: check-metro-log
+        if: always()
+        run: |
+          log="$RUNNER_TEMP/metro.log"
+          allowlist=apps/mobile/maestro/e2e/unhandled-allowlist.txt
+          status=0
+          if ! grep -a -q 'mocks started' "$log"; then
+            echo "::error::The Metro log has no 'mocks started' line, so it did not capture the app's console output."
+            status=1
+          fi
+          if grep -a 'UNKNOWN SCENARIO' "$log" | sort -u | grep .; then
+            echo "::error::A flow asked for a scenario that does not exist."
+            status=1
+          fi
+          grep -a 'UNHANDLED' "$log" | sed -E 's/^.*UNHANDLED/UNHANDLED/' | sort -u > "$RUNNER_TEMP/unhandled.txt" || true
+          grep -v -E '^[[:space:]]*$' "$allowlist" > "$RUNNER_TEMP/unhandled-patterns.txt" || true
+          if [ -s "$RUNNER_TEMP/unhandled-patterns.txt" ]; then
+            grep -v -E -f "$RUNNER_TEMP/unhandled-patterns.txt" "$RUNNER_TEMP/unhandled.txt" > "$RUNNER_TEMP/unexpected.txt" || true
+          else
+            cp "$RUNNER_TEMP/unhandled.txt" "$RUNNER_TEMP/unexpected.txt"
+          fi
+          if [ -s "$RUNNER_TEMP/unexpected.txt" ]; then
+            cat "$RUNNER_TEMP/unexpected.txt"
+            echo "::error::Metro logged requests with no mock. Add a handler, or a regular expression to $allowlist for a request that cannot be mocked."
+            status=1
+          fi
+          exit "$status"
+
+  report:
+    name: report
+    if: ${{ !cancelled() && github.event_name != 'push' }}
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: download-shard-outputs
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          path: shards
+          pattern: maestro-shard-*
+
+      - name: write-combined-report
+        id: combined-report
+        env:
+          EXPECTED_SHARDS: ${{ needs.build.outputs.shard-total }}
+        run: |
+          mkdir -p shards merged/failures
+          found=$(find shards -mindepth 2 -maxdepth 2 -name summary.json | wc -l | tr -d ' ')
+          if [ "$found" -gt 0 ]; then
+            find shards -mindepth 2 -maxdepth 2 -name summary.json -print0 | xargs -0 jq -s '[.[].flows[]]' > merged/flows.json
+          else
+            echo '[]' > merged/flows.json
+          fi
+          find shards -mindepth 2 -maxdepth 2 -name summary.json -print0 | xargs -0 -r jq -s '[.[] | select((.deviceRecoveries // 0) > 0) | { shard, deviceRecoveries }]' > merged/recoveries.json
+          [ -s merged/recoveries.json ] || echo '[]' > merged/recoveries.json
+          recovered=$(jq '[.[].deviceRecoveries] | add // 0' merged/recoveries.json)
+          passed=$(jq '[.[] | select(.status == "pass")] | length' merged/flows.json)
+          flaky=$(jq '[.[] | select(.status == "flaky")] | length' merged/flows.json)
+          failed=$(jq '[.[] | select(.status == "fail")] | length' merged/flows.json)
+          {
+            echo "## Mobile Maestro flows (Android)"
+            echo ""
+            if [ "$recovered" -gt 0 ]; then
+              echo "> [!WARNING]"
+              echo "> The emulator was lost and restarted $recovered times. Evidence is in the \`recovery-N\` folders of each shard's artifact."
+              echo ""
+              jq -r '.[] | "- shard \(.shard): \(.deviceRecoveries) emulator recoveries"' merged/recoveries.json
+              echo ""
+            fi
+            if [ "$flaky" -gt 0 ]; then
+              echo "> [!WARNING]"
+              echo "> $flaky flows failed once and passed on the retry. They count as passed."
+              echo ""
+              echo "### Flaky (passed on retry)"
+              echo ""
+              jq -r '.[] | select(.status == "flaky") | "- `\(.flow)`"' merged/flows.json
+              echo ""
+            fi
+            echo "| Passed | Flaky | Failed | Shards reported |"
+            echo "| --- | --- | --- | --- |"
+            echo "| $passed | $flaky | $failed | $found of ${EXPECTED_SHARDS:-?} |"
+            if [ "$failed" -gt 0 ]; then
+              echo ""
+              echo "### Failed twice"
+              jq -r '.[] | select(.status == "fail") | "- `\(.flow)`"' merged/flows.json
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          jq -r '.[] | select(.status == "flaky") | .flow' merged/flows.json | while read -r flow; do
+            echo "::warning title=Flaky Maestro flow::$flow passed only on its retry"
+          done
+          jq -r '.[] | "\(.shard) \(.deviceRecoveries)"' merged/recoveries.json | while read -r shard count; do
+            echo "::warning title=Emulator recovered::shard $shard restarted its emulator $count times"
+          done
+          {
+            echo '<?xml version="1.0" encoding="UTF-8"?>'
+            echo '<testsuites>'
+            find shards -mindepth 2 -maxdepth 2 -name junit.xml -print0 | sort -z | xargs -0 -r sed -e '/<?xml[^>]*?>/d' -e 's|<testsuites[^>]*>||g' -e 's|</testsuites>||g'
+            echo '</testsuites>'
+          } > merged/junit.xml
+          for dir in shards/*/artifacts; do
+            if [ -d "$dir" ]; then
+              cp -R "$dir/." merged/failures/
+            fi
+          done
+          {
+            echo "failed=$failed"
+            echo "found=$found"
+            echo "total=$(jq length merged/flows.json)"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: upload-merged-junit
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: maestro-junit
+          path: merged/junit.xml
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: upload-failure-artifacts
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: maestro-failures
+          path: merged/failures
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: fail-on-failed-flows
+        env:
+          EXPECTED_SHARDS: ${{ needs.build.outputs.shard-total }}
+          EXPECTED_FLOWS: ${{ needs.build.outputs.expected-flows }}
+          FAILED: ${{ steps.combined-report.outputs.failed }}
+          FOUND: ${{ steps.combined-report.outputs.found }}
+          TOTAL: ${{ steps.combined-report.outputs.total }}
+        run: |
+          if [ -z "$EXPECTED_SHARDS" ] || [ "$FOUND" -ne "$EXPECTED_SHARDS" ]; then
+            echo "Only $FOUND of ${EXPECTED_SHARDS:-?} shards wrote a summary."
+            exit 1
+          fi
+          if [ -z "$EXPECTED_FLOWS" ] || [ "$EXPECTED_FLOWS" -eq 0 ] || [ "$TOTAL" -lt "$EXPECTED_FLOWS" ]; then
+            echo "Shards ran $TOTAL flows, the runner lists ${EXPECTED_FLOWS:-?}."
+            exit 1
+          fi
+          if [ "$FAILED" -gt 0 ]; then
+            echo "$FAILED flows failed twice."
+            exit 1
+          fi

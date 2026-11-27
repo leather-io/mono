@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks - stx_signMessage Signature rejected
+tags:
+  - rpc-stacks
+  - ios-ci
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'rpc-stacks'
+      FILTER: 'mobile-e2e-stx-sign-message-reject'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx sign utf8 reject'
+- assertVisible: 'Sign Message'
+- assertVisible: 'test'
+- runFlow:
+    file: ../shared/cancel-card.yaml
+    env:
+      CARD: 'e2e stx sign utf8 reject'
+- scrollUntilVisible:
+    element: '.*User rejected request.*'
+    direction: DOWN
+    timeout: 60000

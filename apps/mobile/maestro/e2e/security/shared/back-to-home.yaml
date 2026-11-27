@@ -1,0 +1,16 @@
+appId: io.leather.mobilewallet
+name: Security shared - go back through Settings screens until Home shows
+---
+- repeat:
+    times: 5
+    while:
+      notVisible:
+        id: 'homeAccountHeader'
+    commands:
+      - tapOn:
+          id: 'backButton'
+      - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'homeAccountHeader'
+    timeout: 20000

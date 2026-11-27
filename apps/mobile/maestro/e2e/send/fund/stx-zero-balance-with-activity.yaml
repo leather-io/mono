@@ -1,0 +1,24 @@
+appId: io.leather.mobilewallet
+name: send - that STX asset shows $0.00 if STX has activity
+tags:
+  - send
+  - blocked
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: empty-balances,stacks-pending-tx
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-STX'
+      text: '.*\$0\.00.*'
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+      text: '.*\$0\.00.*'
+    timeout: 30000
+- assertNotVisible:
+    id: 'tokenBuyButton-STX'
+- assertNotVisible:
+    id: 'tokenBuyButton-BTC'

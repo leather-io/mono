@@ -1,0 +1,21 @@
+appId: io.leather.mobilewallet
+name: send - that it preselects assets from the route params
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: send-swap
+- tapOn:
+    id: 'tokenBalanceItem-sBTC'
+- extendedWaitUntil:
+    visible: 'Swap'
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn: 'Swap'
+- extendedWaitUntil:
+    visible:
+      id: 'swapBaseAssetToggle'
+      text: '.*sBTC.*'
+    timeout: 30000

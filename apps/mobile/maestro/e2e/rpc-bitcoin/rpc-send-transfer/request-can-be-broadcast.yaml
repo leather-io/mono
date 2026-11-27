@@ -1,0 +1,27 @@
+appId: io.leather.mobilewallet
+name: 'rpc-bitcoin - that the request can be broadcast'
+tags:
+  - rpc-bitcoin
+  - ios-ci
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+      FILTER: 'e2ebtc-prime-keys,e2ebtc-sendtransfer-two-recipients'
+- runFlow: ../shared/connect.yaml
+- runFlow:
+    file: ../shared/run-card.yaml
+    env:
+      CARD: '.*e2e sendTransfer two recipients.*'
+- extendedWaitUntil:
+    visible: 'Send token'
+    timeout: 30000
+- extendedWaitUntil:
+    visible: 'Total spend'
+    timeout: 30000
+- runFlow: ../shared/approve.yaml
+- runFlow:
+    file: ../shared/expect-pass.yaml
+    env:
+      PASS: '(?i).*e2e sendTransfer two recipients pass.*'

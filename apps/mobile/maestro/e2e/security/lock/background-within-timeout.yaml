@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: security - returning to a secured app within the lock timeout keeps the app unlocked
+tags:
+  - security
+  - faceid-match
+  - faceid-prompts-0
+---
+- runFlow:
+    file: ../shared/start-secure.yaml
+    env:
+      SCENARIO: ''
+- evalScript: ${output.backgroundedAt = Date.now()}
+- pressKey: home
+- waitForAnimationToEnd
+- launchApp:
+    stopApp: false
+- evalScript: ${output.backgroundMs = Date.now() - output.backgroundedAt}
+- assertTrue:
+    condition: ${output.backgroundMs < 45000}
+    label: 'The app was back in the foreground within 45 of the 60 lock-timeout seconds'
+- waitForAnimationToEnd
+- runFlow: ../shared/assert-unlocked.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1'

@@ -1,0 +1,31 @@
+appId: io.leather.mobilewallet
+name: Send shared - open the approver fee sheet and pick the fee FEE (Low, Middle or High)
+---
+- extendedWaitUntil:
+    visible:
+      id: 'approverFeeCard'
+      enabled: true
+    timeout: 30000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'approverFeeOption-${FEE}'
+          commands:
+            - tapOn:
+                id: 'approverFeeCard'
+      - extendedWaitUntil:
+          visible:
+            id: 'approverFeeOption-${FEE}'
+          timeout: 10000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'approverFeeOption-${FEE}'
+- extendedWaitUntil:
+    notVisible:
+      id: 'approverFeeOption-${FEE}'
+    timeout: 15000
+- waitForAnimationToEnd

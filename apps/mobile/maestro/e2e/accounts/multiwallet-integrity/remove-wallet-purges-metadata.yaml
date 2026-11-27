@@ -1,0 +1,76 @@
+appId: io.leather.mobilewallet
+name: accounts - that removing a wallet purges its account name and hidden metadata
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- copyTextFrom:
+    id: 'walletListAccountCard'
+    index: 0
+- evalScript: ${output.originalAddress = maestro.copiedText.split(',')[0]}
+- assertTrue: ${output.originalAddress.trim().length >= 8}
+- runFlow:
+    file: ../shared/add-account.yaml
+    env:
+      ACCOUNT_NAME: 'Account 2'
+- runFlow:
+    file: ../shared/open-account.yaml
+    env:
+      ACCOUNT_INDEX: 0
+- runFlow:
+    file: ../shared/rename-account.yaml
+    env:
+      NAME: 'Purged name'
+- tapOn:
+    id: 'backButton'
+- runFlow:
+    file: ../shared/open-account.yaml
+    env:
+      ACCOUNT_INDEX: 1
+- runFlow:
+    file: ../shared/toggle-hidden.yaml
+    env:
+      FROM_ID: 'accountSettingsHideAccountButton'
+      TO_ID: 'accountSettingsRevealAccountButton'
+- tapOn:
+    id: 'backButton'
+- extendedWaitUntil:
+    visible: '.*Hidden accounts.*'
+    timeout: 10000
+- assertVisible: '.*, Purged name, .*'
+- runFlow:
+    file: ../shared/copy-secret-key.yaml
+    env:
+      WALLET_INDEX: 0
+- runFlow:
+    file: ../shared/remove-wallet.yaml
+    env:
+      WALLET_INDEX: 0
+- runFlow: ../shared/to-empty-home.yaml
+- tapOn:
+    id: 'homeCreateWalletCard'
+- extendedWaitUntil:
+    visible:
+      id: 'restoreWalletSheetButton'
+    timeout: 20000
+- runFlow: ../shared/restore-from-clipboard.yaml
+- runFlow: ../shared/finish-onboarding.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1'
+- runFlow: ../shared/open-wallets.yaml
+- assertVisible: '${output.originalAddress}, Account 1, .*'
+- assertNotVisible: '.*Purged name.*'
+- runFlow:
+    file: ../shared/add-account.yaml
+    env:
+      ACCOUNT_NAME: 'Account 2'
+- assertVisible:
+    id: 'walletListAccountCard'
+    text: '.*, Account 2, .*'
+- assertNotVisible: '.*Hidden accounts.*'
+- assertNotVisible: '.*Purged name.*'

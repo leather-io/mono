@@ -1,0 +1,21 @@
+appId: io.leather.mobilewallet
+name: Send shared - tap Review on the send form and wait for the approver
+---
+- extendedWaitUntil:
+    visible:
+      text: 'Review'
+      enabled: true
+    timeout: 20000
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: 'Review'
+            notVisible: 'Approve'
+          commands:
+            - tapOn: 'Review'
+      - extendedWaitUntil:
+          visible: 'Approve'
+          timeout: 15000
+- waitForAnimationToEnd

@@ -1,0 +1,96 @@
+appId: io.leather.mobilewallet
+name: send - that asset value, recipient, memo and fees on preview match input
+tags:
+  - send
+  - ios-ci
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: STX
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '1'
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB
+- evalScript: ${output.memoSheetAttempt = 0}
+- retry:
+    maxRetries: 2
+    commands:
+      - evalScript: ${output.memoSheetAttempt = output.memoSheetAttempt + 1}
+      - runFlow:
+          when:
+            platform: Android
+            true: ${output.memoSheetAttempt > 1}
+          commands:
+            - runFlow:
+                when:
+                  visible: 'Bottom sheet backdrop'
+                commands:
+                  - hideKeyboard
+                  - waitForAnimationToEnd
+      - runFlow:
+          when:
+            notVisible: 'Memo'
+          commands:
+            - tapOn: 'Add memo'
+      - extendedWaitUntil:
+          visible: 'Memo'
+          timeout: 10000
+- tapOn: 'Memo'
+- inputText: '123'
+- evalScript: ${output.memoAttempt = 0}
+- retry:
+    maxRetries: 3
+    commands:
+      - evalScript: ${output.memoAttempt = output.memoAttempt + 1}
+      - runFlow:
+          when:
+            true: ${output.memoAttempt > 1}
+          commands:
+            - eraseText: 10
+            - inputText: '123'
+      - extendedWaitUntil:
+          visible: '123'
+          timeout: 3000
+- assertVisible: '123'
+- pressKey: Enter
+- extendedWaitUntil:
+    notVisible: 'Add memo'
+    timeout: 15000
+- assertVisible: 'Edit memo'
+- waitForAnimationToEnd
+- runFlow: ../shared/review.yaml
+- assertVisible: 'Sign Transaction'
+- runFlow:
+    file: ../shared/pick-fee.yaml
+    env:
+      FEE: Low
+- extendedWaitUntil:
+    visible:
+      id: 'approverFeeCard'
+      text: '.*Slow.*0\.0002.STX.*'
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-STX'
+      text: 'Stacks, STX, .*, 1\.0002'
+    timeout: 15000
+- runFlow:
+    file: ../shared/assert-address-chunks.yaml
+    env:
+      ADDRESS: SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB
+- scrollUntilVisible:
+    element: 'Memo'
+    direction: DOWN
+    timeout: 60000
+- assertVisible:
+    text: '123'
+    rightOf: 'Memo'

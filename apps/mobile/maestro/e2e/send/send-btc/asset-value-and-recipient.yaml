@@ -1,0 +1,35 @@
+appId: io.leather.mobilewallet
+name: send - that asset value and recipient on preview match input
+tags:
+  - send
+env:
+  RECIPIENT: bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: BTC
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '0.00006'
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: ${RECIPIENT}
+- runFlow: ../shared/review.yaml
+- runFlow:
+    file: ../shared/pick-fee.yaml
+    env:
+      FEE: Low
+- assertVisible:
+    id: 'tokenBalanceItem-BTC'
+    text: 'Bitcoin, BTC, .*, 0\.00006'
+- runFlow:
+    file: ../shared/assert-address-chunks.yaml
+    env:
+      ADDRESS: ${RECIPIENT}

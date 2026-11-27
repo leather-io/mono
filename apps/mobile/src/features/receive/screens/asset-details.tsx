@@ -90,6 +90,7 @@ export function AssetDetails() {
           justifyContent="space-between"
           gap="2"
           onPress={handleCopyAddress}
+          testID={TestId.receiveAssetDetailsAddress}
         >
           <Box flex={1}>
             <AddressDisplayer address={address} />

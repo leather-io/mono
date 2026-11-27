@@ -9,6 +9,7 @@ import '@formatjs/intl-numberformat/polyfill-force';
 import '@formatjs/intl-pluralrules/polyfill';
 
 import 'react-native-get-random-values';
+import './e2e/register';
 import 'expo-router/entry';
 import { polyfillWebCrypto } from 'expo-standard-web-crypto';
 import 'fast-text-encoding';

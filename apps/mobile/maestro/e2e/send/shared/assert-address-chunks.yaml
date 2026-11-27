@@ -1,0 +1,10 @@
+appId: io.leather.mobilewallet
+name: Send shared - assert every 4-character chunk of ADDRESS is shown on screen
+---
+- evalScript: ${output.chunkIndex = 0}
+- repeat:
+    times: ${Math.ceil(ADDRESS.length / 4)}
+    commands:
+      - assertVisible:
+          text: ${ADDRESS.substr(output.chunkIndex * 4, 4)}
+      - evalScript: ${output.chunkIndex = output.chunkIndex + 1}

@@ -1,0 +1,8 @@
+appId: io.leather.mobilewallet
+name: Shared - check the in-app mocks accepted exactly the broadcasts BROADCASTS describes since the scenarios were last applied, as a count followed by the chain and txid of the latest one
+---
+- extendedWaitUntil:
+    visible:
+      id: 'e2eBroadcasts'
+      text: ${BROADCASTS}
+    timeout: 15000

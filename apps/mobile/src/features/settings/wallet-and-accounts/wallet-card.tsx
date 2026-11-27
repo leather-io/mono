@@ -136,6 +136,7 @@ export function WalletCard({ fingerprint, variant, name }: WalletCardProps) {
               onPress={() => void onAddAccount()}
               variant="ghost"
               disabled={isAddingAccount}
+              testID={TestId.walletListAddAccountButton}
               iconStart={
                 isAddingAccount ? () => <SpinnerIcon /> : () => <PlusIcon variant="small" />
               }

@@ -1,8 +1,11 @@
 // Aggregates the per-area catalogs into the list the UI and the runners read.
+import { readOverride } from './env';
 import { bitcoinMethods } from './methods/bitcoin';
 import { bondMethods } from './methods/bonds';
 import { generalMethods } from './methods/general';
 import { localMethods } from './methods/local';
+import { mobileE2eBitcoinMethods } from './methods/mobile-e2e-bitcoin';
+import { mobileE2eStacksMethods } from './methods/mobile-e2e-stacks';
 import { multisigMethods } from './methods/multisig';
 import { stacksMethods } from './methods/stacks';
 import { stakingMethods } from './methods/staking';
@@ -22,7 +25,13 @@ export const rpcCategories: RpcCategory[] = [
   'Multisig',
   'Bonds',
   'Local',
+  'Mobile E2E',
 ];
+
+const mobileE2eMethods =
+  readOverride('MOBILE_E2E') === 'true'
+    ? [...mobileE2eBitcoinMethods, ...mobileE2eStacksMethods]
+    : [];
 
 export const rpcMethods: RpcMethodSpec[] = [
   ...generalMethods,
@@ -32,6 +41,7 @@ export const rpcMethods: RpcMethodSpec[] = [
   ...multisigMethods,
   ...bondMethods,
   ...localMethods,
+  ...mobileE2eMethods,
 ];
 
 /** Resolve a spec's params, running its builder against the wallet if needed. */

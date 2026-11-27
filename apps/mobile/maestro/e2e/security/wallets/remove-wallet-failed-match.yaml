@@ -1,0 +1,39 @@
+appId: io.leather.mobilewallet
+name: security - a failed Face ID match when removing a wallet keeps the wallet
+tags:
+  - security
+  - faceid-nomatch
+  - faceid-prompts-1
+---
+- runFlow:
+    file: ../shared/start-secure.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../../accounts/shared/open-wallets.yaml
+- runFlow:
+    file: ../shared/start-remove-wallet.yaml
+    env:
+      WALLET_INDEX: 0
+- runFlow: ../shared/cancel-failed-faceid.yaml
+- extendedWaitUntil:
+    visible: 'Authentication failed'
+    timeout: 10000
+- tapOn:
+    id: 'warningSheetCancelButton'
+- extendedWaitUntil:
+    notVisible:
+      id: 'warningSheetContinueButton'
+    timeout: 10000
+- assertVisible:
+    id: 'walletSettingsRemoveWalletButton'
+- tapOn:
+    id: 'backButton'
+- extendedWaitUntil:
+    visible:
+      id: 'walletListSettingsButton'
+    timeout: 20000
+- assertVisible: '.*Wallet 1.*'
+- runFlow: ../shared/back-to-home.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1'

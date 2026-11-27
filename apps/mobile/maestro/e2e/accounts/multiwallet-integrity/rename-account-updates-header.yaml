@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: accounts - that renaming an account updates the home header
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1'
+- runFlow: ../shared/open-wallets.yaml
+- runFlow:
+    file: ../shared/open-account.yaml
+    env:
+      ACCOUNT_INDEX: 0
+- runFlow:
+    file: ../shared/rename-account.yaml
+    env:
+      NAME: 'Renamed account'
+- runFlow: ../shared/back-to-home.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Renamed account'

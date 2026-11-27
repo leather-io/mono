@@ -1,0 +1,66 @@
+appId: io.leather.mobilewallet
+name: rpc-bitcoin shared - open the RPC test app in the Browser tab
+---
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - evalScript: ${output.openDappAttempt = 0}
+      - retry:
+          maxRetries: 2
+          commands:
+            - evalScript: ${output.openDappAttempt = output.openDappAttempt + 1}
+            - runFlow:
+                when:
+                  true: ${output.openDappAttempt > 1}
+                  visible: 'Open'
+                commands:
+                  - tapOn: 'Open'
+            - openLink: "leather://browser?url=${encodeURIComponent(TEST_APP_URL + (typeof FILTER === 'string' && FILTER ? '/?filter=' + FILTER : ''))}"
+            - extendedWaitUntil:
+                visible: '.*Leather detected.*'
+                timeout: 60000
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - retry:
+          maxRetries: 2
+          commands:
+            - runFlow:
+                when:
+                  notVisible: 'leather\.io'
+                commands:
+                  - tapOn: 'Browser'
+            - extendedWaitUntil:
+                visible: 'leather\.io'
+                timeout: 15000
+      - retry:
+          maxRetries: 2
+          commands:
+            - runFlow:
+                when:
+                  notVisible: '.*Leather detected.*'
+                commands:
+                  - tapOn: 'leather\.io|localhost'
+                  - waitForAnimationToEnd
+                  - eraseText: 60
+                  - inputText: "${TEST_APP_URL + (typeof FILTER === 'string' && FILTER ? '/?filter=' + FILTER : '')}"
+                  - pressKey: enter
+            - extendedWaitUntil:
+                visible: '.*Leather detected.*'
+                timeout: 30000
+- assertVisible: '.*Leather detected.*'
+- runFlow:
+    when:
+      platform: Android
+      true: ${typeof FILTER === 'string' && FILTER != ''}
+      notVisible: ${FILTER}
+    commands:
+      - longPressOn:
+          below: 'Filter'
+      - tapOn: 'Select all'
+      - eraseText: 1
+      - inputText: ${FILTER}
+      - hideKeyboard
+      - assertVisible: ${FILTER}

@@ -1,0 +1,48 @@
+appId: io.leather.mobilewallet
+name: home - BTC token details shows usable Send, Receive and Swap buttons
+tags:
+  - home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: ''
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+    timeout: 30000
+- tapOn:
+    id: 'tokenBalanceItem-BTC'
+    waitToSettleTimeoutMs: 500
+- extendedWaitUntil:
+    visible: 'Token Details'
+    timeout: 20000
+- waitForAnimationToEnd
+- assertVisible: 'Send'
+- assertVisible: 'Receive'
+- assertVisible: 'Swap'
+- tapOn:
+    text: 'Send'
+    waitToSettleTimeoutMs: 500
+- extendedWaitUntil:
+    visible:
+      id: 'sendMaxButton'
+    timeout: 15000
+- assertNotVisible: 'Select asset'
+- assertVisible:
+    id: 'tokenBalanceItem-BTC'
+    text: 'Bitcoin, BTC, \$450\.00, 0\.01'
+- assertNotVisible:
+    id: 'tokenBalanceItem-STX'
+- tapOn:
+    id: 'sendMaxButton'
+    waitToSettleTimeoutMs: 500
+- extendedWaitUntil:
+    notVisible:
+      id: 'sendAmountValue'
+      text: '0'
+    timeout: 15000
+- copyTextFrom:
+    id: 'sendAmountValue'
+- evalScript: ${output.maxAmount = Number(maestro.copiedText.replace(/[^0-9.]/g, ''))}
+- assertTrue: ${output.maxAmount > 0.009 && output.maxAmount < 0.01}

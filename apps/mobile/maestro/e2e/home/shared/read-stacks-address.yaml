@@ -1,0 +1,38 @@
+appId: io.leather.mobilewallet
+name: Home shared - from Home, read the account's Stacks receive address into output.stacksAddress and close the sheet
+---
+- extendedWaitUntil:
+    visible:
+      id: 'homeAccountHeader'
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn: 'Receive'
+- extendedWaitUntil:
+    visible:
+      id: 'receiveAssetItem'
+      index: 2
+    timeout: 20000
+- copyTextFrom:
+    id: 'receiveAssetItem'
+    text: '.*, SP[0-9A-Z]+…[0-9A-Z]+(, Copy address)?'
+- evalScript: ${output.stacksAddressShort = maestro.copiedText.match(/SP[0-9A-Z]+…[0-9A-Z]+/)[0]}
+- tapOn:
+    id: 'receiveAssetItem'
+    text: '.*, SP[0-9A-Z]+…[0-9A-Z]+(, Copy address)?'
+- extendedWaitUntil:
+    visible:
+      id: 'receiveAssetDetailsAddress'
+    timeout: 20000
+- copyTextFrom:
+    id: 'receiveAssetDetailsAddress'
+- evalScript: ${output.stacksAddress = maestro.copiedText.split(', ').join('')}
+- assertTrue: ${RegExp('^SP[0-9A-HJKMNP-TV-Z]+$').test(output.stacksAddress) && output.stacksAddress.length >= 39 && output.stacksAddress.length <= 41}
+- assertTrue: ${output.stacksAddressShort == output.stacksAddress.slice(0, 5) + '…' + output.stacksAddress.slice(-5)}
+- swipe:
+    start: 50%, 14%
+    end: 50%, 95%
+- extendedWaitUntil:
+    notVisible:
+      id: 'receiveAssetDetailsAddress'
+    timeout: 10000
+- waitForAnimationToEnd

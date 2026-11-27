@@ -1,0 +1,13 @@
+appId: io.leather.mobilewallet
+name: accounts - Activity tab
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../../shared/start-ui.yaml
+    env:
+      SCENARIO: 'empty-wallet'
+- tapOn: 'Activity'
+- extendedWaitUntil:
+    visible: 'Make your first transaction to get started'
+    timeout: 30000

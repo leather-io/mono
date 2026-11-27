@@ -1,0 +1,20 @@
+appId: io.leather.mobilewallet
+name: Security shared - on Settings > Security, open the App authentication sheet, flip its switch and wait for the Face ID prompt
+---
+- tapOn: 'App authentication, (Enabled|Disabled)'
+- extendedWaitUntil:
+    visible: 'App authentication, Require biometrics or PIN'
+    timeout: 10000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible: 'Face ID'
+          commands:
+            - tapOn:
+                point: '86%,89%'
+      - extendedWaitUntil:
+          visible: 'Face ID'
+          timeout: 20000

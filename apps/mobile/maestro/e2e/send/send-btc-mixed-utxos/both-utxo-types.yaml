@@ -1,0 +1,43 @@
+appId: io.leather.mobilewallet
+name: send - that send succeeds when amount requires both taproot and native segwit utxos
+tags:
+  - send
+  - ios-ci
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: send-mixed-utxos
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: BTC
+- extendedWaitUntil:
+    visible: 'Bitcoin, BTC, .*, 0\.005'
+    timeout: 20000
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '0.004'
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq
+- runFlow: ../shared/review.yaml
+- runFlow:
+    file: ../shared/pick-fee.yaml
+    env:
+      FEE: Low
+- assertVisible: 'Send token'
+- assertVisible:
+    id: 'tokenBalanceItem-BTC'
+    text: 'Bitcoin, BTC, .*, 0\.004'
+- tapOn: 'Approve'
+- extendedWaitUntil:
+    visible: 'Copy ID'
+    timeout: 60000
+- assertVisible: 'Close window'
+- runFlow:
+    file: ../../shared/assert-broadcasts.yaml
+    env:
+      BROADCASTS: '1 bitcoin [0-9a-f]{64}'

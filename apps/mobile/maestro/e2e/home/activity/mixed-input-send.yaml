@@ -1,0 +1,17 @@
+appId: io.leather.mobilewallet
+name: home - combines owned inputs across taproot and native segwit
+tags:
+  - home
+  - ios-ci
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: 'empty-activity,activity-mixed-input-send'
+- tapOn: 'Activity'
+- extendedWaitUntil:
+    visible: 'BTC, Sent to .* · [0-9]+[a-z]+ ago, − 0\.003, \$135\.00'
+    timeout: 30000
+- assertNotVisible: '.*, Received.*'
+- assertNotVisible: '.*, − 0\.004, .*'
+- assertNotVisible: '.*0\.00402.*'

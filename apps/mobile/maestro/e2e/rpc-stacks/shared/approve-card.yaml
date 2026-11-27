@@ -1,0 +1,20 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks shared - approve the open approver and expect the CARD verdict PASS
+---
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: 'Approve'
+            notVisible: 'Submitting\.\.\.|Signing\.\.\.'
+          commands:
+            - tapOn: 'Approve'
+      - extendedWaitUntil:
+          notVisible: 'Approve'
+          timeout: 15000
+- runFlow:
+    file: expect-pass.yaml
+    env:
+      CARD: ${CARD}

@@ -1,0 +1,4 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - wipe the app and open it on the empty Home screen
+---
+- runFlow: ../../shared/open-app.yaml

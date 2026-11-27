@@ -1,0 +1,19 @@
+appId: io.leather.mobilewallet
+name: accounts - that the add wallet sheet presents wallet creation options
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- tapOn: 'Add wallet'
+- extendedWaitUntil:
+    visible:
+      id: 'createNewWalletSheetButton'
+    timeout: 20000
+- assertVisible:
+    id: 'restoreWalletSheetButton'
+- assertNotVisible: '.*[Hh]ardware.*'
+- assertNotVisible: '.*Ledger.*'

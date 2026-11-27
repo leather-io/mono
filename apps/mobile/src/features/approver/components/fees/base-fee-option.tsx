@@ -11,6 +11,7 @@ interface BaseFeeOptionProps {
   time: string;
   formattedFeeAmount: string;
   formattedQuoteFeeAmount: string;
+  testID?: string;
 }
 
 export function BaseFeeOption({
@@ -22,6 +23,7 @@ export function BaseFeeOption({
   time,
   formattedFeeAmount,
   formattedQuoteFeeAmount,
+  testID,
 }: BaseFeeOptionProps) {
   const borderColor = {
     default: isSelected ? 'ink.text-primary' : 'ink.border-default',
@@ -30,6 +32,7 @@ export function BaseFeeOption({
 
   return (
     <Pressable
+      testID={testID}
       borderColor={borderColor.default}
       borderWidth={1}
       borderRadius="xs"

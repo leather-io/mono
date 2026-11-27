@@ -1,0 +1,38 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - on Configure account, rename the account to NAME
+---
+- runFlow: open-rename-sheet.yaml
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 3
+    commands:
+      - tapOn:
+          id: 'accountChangeNameSheetInput'
+      - eraseText: 40
+      - inputText: ${NAME}
+      - assertVisible:
+          id: 'accountChangeNameSheetInput'
+          text: ${NAME}
+- pressKey: enter
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'walletSettingsAccountNameCell'
+              text: '.*${NAME}.*'
+          commands:
+            - tapOn:
+                id: 'accountChangeNameSheetSaveButton'
+                optional: true
+      - extendedWaitUntil:
+          visible:
+            id: 'walletSettingsAccountNameCell'
+            text: '.*${NAME}.*'
+          timeout: 10000
+- assertVisible:
+    id: 'walletSettingsAccountNameCell'
+    text: '.*${NAME}.*'
+- waitForAnimationToEnd

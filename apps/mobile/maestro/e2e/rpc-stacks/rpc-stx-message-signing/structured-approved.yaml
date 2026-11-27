@@ -1,0 +1,31 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks - stx_signMessage MessageType structured Signature approved
+tags:
+  - rpc-stacks
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'rpc-stacks'
+      FILTER: 'mobile-e2e-stx-warm-addresses,mobile-e2e-stx-sign-message-structured'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx warm addresses'
+- runFlow:
+    file: ../shared/approve-card.yaml
+    env:
+      CARD: 'e2e stx warm addresses'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx sign structured'
+- assertVisible: 'Sign Message'
+- assertVisible: 'leather.io'
+- assertVisible: '1.0.0 Mainnet'
+- assertVisible: '-1'
+- assertVisible: '.*this is a structured message.*'
+- runFlow:
+    file: ../shared/approve-card.yaml
+    env:
+      CARD: 'e2e stx sign structured'

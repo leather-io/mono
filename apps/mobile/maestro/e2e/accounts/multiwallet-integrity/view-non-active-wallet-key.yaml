@@ -1,0 +1,45 @@
+appId: io.leather.mobilewallet
+name: accounts - that viewing a non-active wallet's secret key shows that wallet's key
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- copyTextFrom:
+    id: 'walletListAccountCard'
+    index: 0
+- evalScript: ${output.firstWalletAddress = maestro.copiedText.split(',')[0]}
+- assertTrue: ${output.firstWalletAddress.trim().length >= 8}
+- runFlow: ../shared/add-wallet.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1, Wallet 2'
+- runFlow: ../shared/open-wallets.yaml
+- runFlow:
+    file: ../shared/copy-secret-key.yaml
+    env:
+      WALLET_INDEX: 0
+- runFlow:
+    file: ../shared/remove-wallet.yaml
+    env:
+      WALLET_INDEX: 0
+- extendedWaitUntil:
+    visible: 'Wallet 2'
+    timeout: 10000
+- assertNotVisible: '${output.firstWalletAddress}, Account 1, .*'
+- tapOn: 'Add wallet'
+- extendedWaitUntil:
+    visible:
+      id: 'restoreWalletSheetButton'
+    timeout: 20000
+- runFlow: ../shared/restore-from-clipboard.yaml
+- extendedWaitUntil:
+    visible:
+      id: 'homeAccountHeader'
+      text: 'Account 1, Wallet [0-9]+'
+    timeout: 60000
+- runFlow: ../shared/open-wallets.yaml
+- assertVisible: '${output.firstWalletAddress}, Account 1, .*'

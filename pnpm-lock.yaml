@@ -861,6 +861,9 @@ importers:
       '@babel/runtime':
         specifier: 7.26.0
         version: 7.26.0
+      '@expo/fingerprint':
+        specifier: 0.21.10
+        version: 0.21.10
       '@leather.io/prettier-config':
         specifier: workspace:*
         version: link:../../packages/prettier-config
@@ -906,6 +909,9 @@ importers:
       knip:
         specifier: 5.50.5
         version: 5.50.5(@types/node@24.0.8)(typescript@5.9.3)
+      msw:
+        specifier: 2.12.7
+        version: 2.12.7(@types/node@24.0.8)(typescript@5.9.3)
       redux-devtools-expo-dev-plugin:
         specifier: 2.0.0
         version: 2.0.0(@redux-devtools/core@4.1.1(react-redux@9.2.0(@types/react@19.3.0)(react@19.3.0)(redux@5.0.1))(react@19.3.0)(redux@5.0.1))(expo@58.0.25)(immutable@5.1.5)(redux@5.0.1)

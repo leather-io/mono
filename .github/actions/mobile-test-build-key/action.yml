@@ -1,0 +1,55 @@
+name: mobile-test-build-key
+description: Compute the cache key of the mobile debug test build from its native fingerprint, the toolchain and the build flags; needs a provisioned checkout
+inputs:
+  platform:
+    description: 'Native platform the build is for: android or ios'
+    required: true
+  build-revision:
+    description: 'Revision of the workflow build command; bump it when the Gradle or xcodebuild command or its flags change'
+    required: true
+  architecture:
+    description: 'CPU architecture the build targets (the Gradle ABI filter or the xcodebuild ARCHS value)'
+    required: true
+outputs:
+  key:
+    description: 'Cache key of the test build'
+    value: ${{ steps.key.outputs.key }}
+  fingerprint:
+    description: 'Native fingerprint of apps/mobile for the platform'
+    value: ${{ steps.key.outputs.fingerprint }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: compute-test-build-key
+      id: key
+      shell: bash
+      env:
+        PLATFORM: ${{ inputs.platform }}
+        BUILD_REVISION: ${{ inputs.build-revision }}
+        ARCHITECTURE: ${{ inputs.architecture }}
+        GEMFILE_LOCK_HASH: ${{ hashFiles('apps/mobile/fastlane/Gemfile.lock') }}
+      run: |
+        set -euo pipefail
+        case "$PLATFORM" in
+          android) toolchain="" ;;
+          ios) toolchain="-$(xcodebuild -version | tr -s '[:space:]' '-' | sed 's/-$//')-gems-${GEMFILE_LOCK_HASH:0:16}" ;;
+          *)
+            echo "::error::platform must be android or ios, got '$PLATFORM'"
+            exit 1
+            ;;
+        esac
+        report="$RUNNER_TEMP/fingerprint-$PLATFORM.json"
+        pnpm --silent --filter @leather.io/mobile native:fingerprint --platform "$PLATFORM" > "$report"
+        if ! jq -e '.sources | any(.reasons | index("pnpmPatches"))' "$report" > /dev/null; then
+          echo "::error::The fingerprint has no pnpm patches source, so apps/mobile/fingerprint.config.cjs did not load."
+          exit 1
+        fi
+        fingerprint=$(jq -r '.hash' "$report")
+        key="mobile-test-build-$PLATFORM-$BUILD_REVISION-$RUNNER_OS-$RUNNER_ARCH-$ARCHITECTURE$toolchain-$fingerprint"
+        echo "Fingerprint of $(jq '.sources | length' "$report") native sources: $fingerprint"
+        echo "Test build key: $key"
+        {
+          echo "fingerprint=$fingerprint"
+          echo "key=$key"
+        } >> "$GITHUB_OUTPUT"

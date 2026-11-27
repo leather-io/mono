@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: accounts - that choosing create new wallet opens the create wallet flow
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- tapOn: 'Add wallet'
+- extendedWaitUntil:
+    visible:
+      id: 'createNewWalletSheetButton'
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'createNewWalletSheetButton'
+- extendedWaitUntil:
+    visible:
+      id: 'walletCreationBackedUpButton'
+    timeout: 20000
+- assertVisible: '(?i)back up your secret key'
+- assertVisible:
+    id: 'walletCreationTapToReveal'
