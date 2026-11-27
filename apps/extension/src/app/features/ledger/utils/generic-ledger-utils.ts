@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { UserInteractionRequired } from '@ledgerhq/device-management-kit';
 
@@ -26,6 +26,41 @@ export interface BaseLedgerOperationContext {
 
 export function useLedgerResponseState() {
   return useState<LatestDeviceResponse>(null);
+}
+
+interface LedgerAttempt {
+  isDismissed(): boolean;
+  finish(): void;
+}
+
+export function useLedgerAttemptGuard() {
+  const isAttemptInFlight = useRef(false);
+  const isFlowMounted = useRef(true);
+
+  useEffect(() => {
+    isFlowMounted.current = true;
+    return () => {
+      isFlowMounted.current = false;
+    };
+  }, []);
+
+  return useMemo(
+    () => ({
+      start(): LedgerAttempt | null {
+        if (isAttemptInFlight.current) return null;
+        isAttemptInFlight.current = true;
+        return {
+          isDismissed() {
+            return !isFlowMounted.current;
+          },
+          finish() {
+            isAttemptInFlight.current = false;
+          },
+        };
+      },
+    }),
+    []
+  );
 }
 
 export type SemVerObject = Record<'major' | 'minor' | 'patch', number>;

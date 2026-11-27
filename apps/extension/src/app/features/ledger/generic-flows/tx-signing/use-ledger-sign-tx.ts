@@ -12,6 +12,7 @@ import { type BitcoinAppVersion } from '../../utils/bitcoin-ledger-utils';
 import {
   isCancellableConnectionInteraction,
   isUnlockDeviceInteraction,
+  useLedgerAttemptGuard,
   useLedgerResponseState,
 } from '../../utils/generic-ledger-utils';
 import type { LedgerApp } from '../../utils/ledger-app';
@@ -41,6 +42,7 @@ export function useLedgerSignTx<App extends LedgerApp>({
   const [awaitingDeviceConnection, setAwaitingDeviceConnection] = useState(false);
   const [isConnectionCancellable, setIsConnectionCancellable] = useState(false);
   const ledgerNavigate = useLedgerSteps();
+  const ledgerAttempt = useLedgerAttemptGuard();
   async function checkCorrectAppIsOpenWithFailState(app: App) {
     // Show checking version page immediately
     ledgerNavigate.toCheckingAppVersion();
@@ -62,7 +64,10 @@ export function useLedgerSignTx<App extends LedgerApp>({
   }
 
   async function signTransactionImpl() {
+    const attempt = ledgerAttempt.start();
+    if (!attempt) return;
     let app: App | undefined;
+    let failure: { error: unknown } | undefined;
     try {
       setLatestDeviceResponse({ deviceLocked: false });
       setAwaitingDeviceConnection(true);
@@ -74,8 +79,10 @@ export function useLedgerSignTx<App extends LedgerApp>({
           setIsConnectionCancellable(isCancellableConnectionInteraction(interaction));
         },
       });
+      if (attempt.isDismissed()) return;
       setIsConnectionCancellable(false);
       const versionCheckResult = await checkCorrectAppIsOpenWithFailState(app);
+      if (attempt.isDismissed()) return;
 
       // If version check failed, return early (navigation already handled)
       if (versionCheckResult === null) {
@@ -86,14 +93,24 @@ export function useLedgerSignTx<App extends LedgerApp>({
       setAwaitingDeviceConnection(false);
       ledgerNavigate.toConnectionSuccessStep(chain);
       await delay(1250);
+      if (attempt.isDismissed()) return;
       await signTransactionWithDevice(app);
+      if (attempt.isDismissed()) return;
       onSuccess?.();
     } catch (e) {
       setAwaitingDeviceConnection(false);
       setIsConnectionCancellable(false);
-      handleLedgerConnectionError(e, { chain, ledgerNavigate, setLatestDeviceResponse });
+      failure = { error: e };
     } finally {
       if (app) await closeLedgerSession(dmk, app.sessionId);
+      attempt.finish();
+    }
+    if (failure && !attempt.isDismissed()) {
+      handleLedgerConnectionError(failure.error, {
+        chain,
+        ledgerNavigate,
+        setLatestDeviceResponse,
+      });
     }
   }
 
