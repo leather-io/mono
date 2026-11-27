@@ -1,0 +1,51 @@
+appId: io.leather.mobilewallet
+name: Security shared - from the empty Home, create a new wallet up to the Secure your wallet screen
+---
+- repeat:
+    while:
+      notVisible:
+        id: 'createNewWalletSheetButton'
+    times: 3
+    commands:
+      - tapOn:
+          id: 'homeCreateWalletCard'
+          optional: true
+      - extendedWaitUntil:
+          visible:
+            id: 'createNewWalletSheetButton'
+          timeout: 30000
+          optional: true
+- waitForAnimationToEnd
+- repeat:
+    while:
+      notVisible:
+        id: 'walletCreationBackedUpButton'
+    times: 3
+    commands:
+      - tapOn:
+          id: 'createNewWalletSheetButton'
+          optional: true
+      - extendedWaitUntil:
+          visible:
+            id: 'walletCreationBackedUpButton'
+          timeout: 30000
+          optional: true
+- waitForAnimationToEnd
+- repeat:
+    while:
+      notVisible: 'Enable device security'
+    times: 3
+    commands:
+      - tapOn:
+          id: 'walletCreationTapToReveal'
+          optional: true
+      - tapOn:
+          id: 'walletCreationBackedUpButton'
+          optional: true
+      - extendedWaitUntil:
+          visible: 'Enable device security'
+          timeout: 30000
+          optional: true
+- assertVisible: 'Secure your wallet'
+- assertVisible: 'Skip for now'
+- waitForAnimationToEnd

@@ -1,0 +1,47 @@
+appId: io.leather.mobilewallet
+name: accounts - that switching account changes the receive address
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- runFlow:
+    file: ../shared/add-account.yaml
+    env:
+      ACCOUNT_NAME: 'Account 2'
+- runFlow: ../shared/back-to-home.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1'
+- runFlow:
+    file: ../shared/read-address.yaml
+    env:
+      ITEM: 0
+      KEY: 'accountOne'
+- runFlow: ../shared/open-selector.yaml
+- tapOn:
+    id: 'accountSelectorAccountCard'
+    text: '.*, Account 2, .*'
+- extendedWaitUntil:
+    visible:
+      id: 'homeAccountHeader'
+      text: 'Account 2'
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+      text: 'Bitcoin, BTC, \$495\.00, 0\.011'
+    timeout: 30000
+- assertVisible:
+    id: 'tokenBalanceItem-STX'
+    text: 'Stacks, STX, .*, 14\.568'
+- runFlow:
+    file: ../shared/read-address.yaml
+    env:
+      ITEM: 0
+      KEY: 'accountTwo'
+- assertTrue: ${output.accountOne.startsWith('bc1q') && output.accountTwo.startsWith('bc1q')}
+- assertTrue: ${output.accountOne != output.accountTwo}

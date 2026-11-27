@@ -1,0 +1,15 @@
+appId: io.leather.mobilewallet
+name: Security shared - the lock screen shows Unlock and a tap on Home Settings does not get through
+---
+- extendedWaitUntil:
+    visible:
+      id: 'lockScreenUnlockButton'
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'homeSettingsButton'
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: 'settingsWalletAndAccountsButton'
+- assertVisible:
+    id: 'lockScreenUnlockButton'

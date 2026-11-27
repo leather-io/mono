@@ -1,0 +1,31 @@
+appId: io.leather.mobilewallet
+name: accounts - that removing the last remaining wallet returns to the empty Home screen
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- tapOn:
+    id: 'walletListSettingsButton'
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: 'walletSettingsRemoveWalletButton'
+    timeout: 20000
+- assertVisible:
+    id: 'walletSettingsRenameWalletButton'
+- tapOn:
+    id: 'backButton'
+- runFlow:
+    file: ../shared/remove-wallet.yaml
+    env:
+      WALLET_INDEX: 0
+- runFlow: ../shared/to-empty-home.yaml
+- waitForAnimationToEnd
+- assertVisible:
+    id: 'homeCreateWalletCard'
+- assertNotVisible:
+    id: 'homeAccountHeader'

@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - after a wallet is created or restored, pass the security screen if it shows and wait for Home
+---
+- evalScript: ${output.finishOnboardingAttempt = 0}
+- retry:
+    maxRetries: 3
+    commands:
+      - evalScript: ${output.finishOnboardingAttempt = output.finishOnboardingAttempt + 1}
+      - runFlow:
+          when:
+            true: ${output.finishOnboardingAttempt > 1}
+            visible: 'Skip for now'
+          commands:
+            - tapOn: 'Skip for now'
+            - waitForAnimationToEnd
+            - tapOn: 'Continue'
+      - extendedWaitUntil:
+          visible:
+            id: 'homeAccountHeader'
+          timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: 'homeAccountHeader'
+    timeout: 60000
+- waitForAnimationToEnd

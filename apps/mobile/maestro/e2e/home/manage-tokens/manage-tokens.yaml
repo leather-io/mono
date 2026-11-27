@@ -1,0 +1,67 @@
+appId: io.leather.mobilewallet
+name: home - manage tokens lists supported tokens, leaves out BTC and STX, and removes and adds a token
+tags:
+  - home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: ''
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-sBTC'
+    timeout: 30000
+- tapOn:
+    id: 'homeManageTokensButton'
+- extendedWaitUntil:
+    visible:
+      id: 'tokenSwitchItem-LONG'
+    timeout: 15000
+- assertVisible:
+    id: 'tokenSwitchItem-LONG'
+    text: '.*LONGcoin.*'
+- assertNotVisible:
+    id: 'tokenSwitchItem-BTC'
+- assertNotVisible:
+    id: 'tokenSwitchItem-STX'
+- assertVisible:
+    id: 'tokenSwitchItem-USDCx'
+- assertVisible:
+    id: 'tokenSwitchItem-sBTC'
+    checked: true
+- tapOn:
+    id: 'tokenSwitchItem-sBTC'
+- assertVisible:
+    id: 'tokenSwitchItem-sBTC'
+    checked: false
+- swipe:
+    start: 50%, 14%
+    end: 50%, 95%
+- waitForAnimationToEnd
+- assertNotVisible: 'Manage tokens'
+- extendedWaitUntil:
+    notVisible:
+      id: 'tokenBalanceItem-sBTC'
+    timeout: 10000
+- assertVisible:
+    id: 'tokenBalanceItem-USDCx'
+- tapOn:
+    id: 'homeManageTokensButton'
+- extendedWaitUntil:
+    visible:
+      id: 'tokenSwitchItem-sBTC'
+    timeout: 15000
+- tapOn:
+    id: 'tokenSwitchItem-sBTC'
+- assertVisible:
+    id: 'tokenSwitchItem-sBTC'
+    checked: true
+- swipe:
+    start: 50%, 14%
+    end: 50%, 95%
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-sBTC'
+      text: 'sBTC, sBTC, \$22,500\.00, 0\.50'
+    timeout: 10000

@@ -1,0 +1,30 @@
+appId: io.leather.mobilewallet
+name: security - turning App authentication on and off in Settings asks for Face ID each way and takes effect on relaunch
+tags:
+  - security
+  - faceid-match
+  - faceid-prompts-3
+---
+- runFlow:
+    file: ../../shared/start-ui.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-security.yaml
+- assertVisible: 'App authentication, Disabled'
+- runFlow: ../shared/toggle-app-authentication.yaml
+- extendedWaitUntil:
+    visible: 'App authentication, Enabled'
+    timeout: 30000
+- runFlow: ../shared/relaunch.yaml
+- runFlow: ../shared/assert-unlocked.yaml
+- runFlow: ../shared/open-security.yaml
+- assertVisible: 'App authentication, Enabled'
+- runFlow: ../shared/toggle-app-authentication.yaml
+- extendedWaitUntil:
+    visible: 'App authentication, Disabled'
+    timeout: 30000
+- runFlow: ../shared/relaunch-unsecured.yaml
+- runFlow: ../shared/assert-unlocked.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1'

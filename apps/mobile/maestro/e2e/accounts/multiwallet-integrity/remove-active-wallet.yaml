@@ -1,0 +1,35 @@
+appId: io.leather.mobilewallet
+name: accounts - that removing the active wallet reassigns the active account
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- runFlow: ../shared/add-wallet.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1, Wallet 2'
+- runFlow: ../shared/open-wallets.yaml
+- runFlow:
+    file: ../shared/remove-wallet.yaml
+    env:
+      WALLET_INDEX: 1
+- extendedWaitUntil:
+    visible: 'Wallet 1'
+    timeout: 10000
+- assertNotVisible: 'Wallet 2'
+- runFlow: ../shared/back-to-home.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1'
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+      text: 'Bitcoin, BTC, \$450\.00, 0\.01'
+    timeout: 30000
+- assertVisible:
+    id: 'tokenBalanceItem-STX'
+    text: 'Stacks, STX, .*, 13\.568'

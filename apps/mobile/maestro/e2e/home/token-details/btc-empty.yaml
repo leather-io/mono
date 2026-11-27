@@ -1,0 +1,23 @@
+appId: io.leather.mobilewallet
+name: home - empty BTC token details shows a zero balance
+tags:
+  - home
+  - blocked
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: 'empty-wallet'
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+    timeout: 30000
+- tapOn:
+    id: 'tokenBalanceItem-BTC'
+- extendedWaitUntil:
+    visible: 'Token Details'
+    timeout: 20000
+- assertVisible: 'Bitcoin \(BTC\)'
+- assertVisible:
+    id: 'tokenDetailsAvailableBalance'
+    text: '0.*BTC'

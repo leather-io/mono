@@ -1,0 +1,21 @@
+appId: io.leather.mobilewallet
+name: home - should show Learn section with all items
+tags:
+  - home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: 'empty-activity'
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+    timeout: 30000
+- scrollUntilVisible:
+    element: 'Learn more about stacking'
+    direction: DOWN
+    timeout: 20000
+- assertVisible: 'Learn'
+- assertVisible: '.*Getting Started with Leather.*'
+- assertVisible: '.*What is sBTC\?.*'
+- assertVisible: '.*Learn more about stacking.*'

@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: Security shared - stop and relaunch the app without clearing state, and wait for Home without a prompt
+---
+- stopApp
+- retry:
+    maxRetries: 2
+    commands:
+      - openLink: ${DEV_CLIENT_URL}
+- repeat:
+    while:
+      notVisible:
+        id: 'homeSettingsButton'
+    times: 20
+    commands:
+      - runFlow:
+          when:
+            visible: 'Open'
+          commands:
+            - tapOn: 'Open'
+      - extendedWaitUntil:
+          visible:
+            id: 'homeSettingsButton'
+          timeout: 5000
+          optional: true
+- assertNotVisible: 'Face ID'

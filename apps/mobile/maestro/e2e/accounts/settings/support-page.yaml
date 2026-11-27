@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: accounts - that menu item takes user to support page
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- tapOn:
+    id: 'homeSettingsButton'
+- extendedWaitUntil:
+    visible:
+      id: 'settingsHelpButton'
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'settingsHelpButton'
+- extendedWaitUntil:
+    visible: '.*Guides.*'
+    timeout: 20000
+- tapOn: '.*Guides.*'
+- extendedWaitUntil:
+    visible: 'docs\.leather\.io'
+    timeout: 30000

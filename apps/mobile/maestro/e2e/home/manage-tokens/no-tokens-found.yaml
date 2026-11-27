@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: home - manage tokens shows No tokens found for an empty wallet search
+tags:
+  - home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: 'empty-balances'
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+    timeout: 30000
+- tapOn:
+    id: 'homeManageTokensButton'
+- extendedWaitUntil:
+    visible: 'Manage tokens'
+    timeout: 15000
+- tapOn: 'Search tokens'
+- inputText: 'zzzz'
+- extendedWaitUntil:
+    visible: 'No tokens found'
+    timeout: 10000
+- assertNotVisible:
+    id: 'tokenSwitchItem-USDCx'

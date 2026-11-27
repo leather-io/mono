@@ -1,0 +1,16 @@
+appId: io.leather.mobilewallet
+name: security - creating a wallet with Enable device security lands on Home with App authentication enabled
+tags:
+  - security
+  - faceid-match
+  - faceid-prompts-0
+---
+- runFlow:
+    file: ../shared/start-secure.yaml
+    env:
+      SCENARIO: ''
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1'
+- runFlow: ../shared/open-security.yaml
+- assertVisible: 'App authentication, Enabled'

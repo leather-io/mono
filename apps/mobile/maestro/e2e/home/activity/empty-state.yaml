@@ -1,0 +1,15 @@
+appId: io.leather.mobilewallet
+name: home - renders the empty state when there is no activity
+tags:
+  - home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: 'empty-activity'
+- tapOn: 'Activity'
+- extendedWaitUntil:
+    visible: 'Make your first transaction to get started'
+    timeout: 30000
+- assertNotVisible: '.*, Sent.*'
+- assertNotVisible: '.*, Received.*'

@@ -1,0 +1,46 @@
+appId: io.leather.mobilewallet
+name: home - correctly shows bns v2 account name
+tags:
+  - home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: 'bns-name'
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+    timeout: 30000
+- tapOn:
+    id: 'homeSettingsButton'
+- tapOn:
+    id: 'settingsDisplayButton'
+- extendedWaitUntil:
+    visible: 'Account identifier, .*'
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn: 'Account identifier, .*'
+- extendedWaitUntil:
+    visible: 'BNS name, .*'
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn: 'BNS name, .*'
+- extendedWaitUntil:
+    visible: 'Account identifier, BNS name'
+    timeout: 10000
+- swipe:
+    start: 50%, 58%
+    end: 50%, 98%
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    notVisible: 'BNS name, .*'
+    timeout: 10000
+- tapOn:
+    id: 'backButton'
+- tapOn:
+    id: 'settingsWalletAndAccountsButton'
+- extendedWaitUntil:
+    visible:
+      id: 'walletListAccountCard'
+      text: 'leather\.btc, Account 1, .*'
+    timeout: 20000

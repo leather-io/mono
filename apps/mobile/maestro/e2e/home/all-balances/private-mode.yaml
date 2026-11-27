@@ -1,0 +1,57 @@
+appId: io.leather.mobilewallet
+name: home - private mode hides every balance
+tags:
+  - home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: ''
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-sBTC'
+      text: 'sBTC, sBTC, \$22,500\.00, 0\.50'
+    timeout: 30000
+- assertVisible: '\$23,211\.53'
+- tapOn:
+    id: 'homePrivacyButton'
+- extendedWaitUntil:
+    notVisible: '\$23,211\.53'
+    timeout: 10000
+- assertVisible:
+    id: 'tokenBalanceItem-BTC'
+    text: 'Bitcoin, BTC, \*\*\*, \*\*\*'
+- assertVisible:
+    id: 'tokenBalanceItem-STX'
+    text: 'Stacks, STX, \*\*\*, \*\*\*'
+- assertVisible:
+    id: 'tokenBalanceItem-sBTC'
+    text: 'sBTC, sBTC, \*\*\*, \*\*\*'
+- assertVisible:
+    id: 'tokenBalanceItem-USDCx'
+    text: 'USDCx, USDCx, \*\*\*, \*\*\*'
+- assertVisible: '\*\*\*'
+- tapOn:
+    id: 'tokenBalanceItem-BTC'
+- extendedWaitUntil:
+    visible: 'Token Details'
+    timeout: 20000
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - assertVisible: '.*Native Segwit, .*, \*\*\*, \*\*\*'
+      - assertVisible: '.*Taproot, .*, \*\*\*, \*\*\*'
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - assertVisible:
+          text: 'bc1q.*'
+          childOf:
+            text: 'Native Segwit, \*\*\*, \*\*\*'
+      - assertVisible:
+          text: 'bc1p.*'
+          childOf:
+            text: 'Taproot, \*\*\*, \*\*\*'
+- assertNotVisible: '.*0\.006 BTC.*'

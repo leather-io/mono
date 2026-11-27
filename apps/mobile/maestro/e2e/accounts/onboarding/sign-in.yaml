@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: accounts - going through the onboarding flow to sign in
+tags:
+  - accounts
+  - ios-ci
+---
+- runFlow:
+    file: ../../shared/start-ui.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- copyTextFrom:
+    id: 'walletListAccountCard'
+    index: 0
+- evalScript: ${output.originalAddress = maestro.copiedText.split(',')[0]}
+- assertTrue: ${output.originalAddress.trim().length >= 8}
+- runFlow: ../shared/back-to-home.yaml
+- runFlow: ../shared/restore-same-wallet.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1'
+- runFlow: ../shared/open-wallets.yaml
+- assertVisible: 'Wallet 1'
+- assertVisible: '${output.originalAddress}, Account 1, .*'
+- assertNotVisible: 'Wallet 2'

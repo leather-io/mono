@@ -1,0 +1,44 @@
+appId: io.leather.mobilewallet
+name: Security shared - stop and relaunch the app without clearing state, and fail unless the Face ID prompt or the lock screen shows
+---
+- stopApp
+- retry:
+    maxRetries: 2
+    commands:
+      - openLink: ${DEV_CLIENT_URL}
+- evalScript: ${output.relaunchAttempt = 0}
+- evalScript: ${output.relaunchHomeFirst = false}
+- retry:
+    maxRetries: 6
+    commands:
+      - evalScript: ${output.relaunchAttempt = output.relaunchAttempt + 1}
+      - runFlow:
+          when:
+            true: ${output.relaunchAttempt > 1}
+            visible:
+              id: 'homeSettingsButton'
+            notVisible: '.*(Face ID|Unlock).*'
+          commands:
+            - evalScript: ${output.relaunchHomeFirst = true}
+      - runFlow:
+          when:
+            true: ${output.relaunchAttempt > 1}
+            visible: 'Open'
+          commands:
+            - tapOn: 'Open'
+      - runFlow:
+          when:
+            true: ${output.relaunchAttempt > 1}
+            visible: 'There was a problem loading the project\..*'
+          commands:
+            - tapOn: 'Reload'
+      - runFlow:
+          when:
+            true: ${output.relaunchAttempt > 1}
+            visible: 'Development Build'
+          commands:
+            - openLink: ${DEV_CLIENT_URL}
+      - extendedWaitUntil:
+          visible: '.*(Face ID|Unlock).*'
+          timeout: 20000
+- assertTrue: ${!output.relaunchHomeFirst}

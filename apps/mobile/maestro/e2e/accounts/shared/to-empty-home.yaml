@@ -1,0 +1,22 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - after the last wallet is removed, go back to the empty Home screen
+---
+- retry:
+    maxRetries: 3
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'homeCreateWalletCard'
+          commands:
+            - tapOn:
+                id: 'backButton'
+            - waitForAnimationToEnd
+      - extendedWaitUntil:
+          visible:
+            id: 'homeCreateWalletCard'
+          timeout: 2000
+- extendedWaitUntil:
+    visible:
+      id: 'homeCreateWalletCard'
+    timeout: 20000

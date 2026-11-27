@@ -1,0 +1,28 @@
+appId: io.leather.mobilewallet
+name: Security shared - wait for the Face Not Recognized alert and tap its Cancel button
+---
+- extendedWaitUntil:
+    visible: 'Face Not Recognized'
+    timeout: 30000
+- assertVisible: 'Try Face ID Again'
+- runFlow:
+    when:
+      visible:
+        id: 'warningSheetContinueButton'
+    commands:
+      - tapOn:
+          text: 'Cancel'
+          below: 'Try Face ID Again'
+          above:
+            id: 'warningSheetContinueButton'
+- runFlow:
+    when:
+      notVisible:
+        id: 'warningSheetContinueButton'
+    commands:
+      - tapOn:
+          text: 'Cancel'
+          below: 'Try Face ID Again'
+- extendedWaitUntil:
+    notVisible: 'Face Not Recognized'
+    timeout: 10000

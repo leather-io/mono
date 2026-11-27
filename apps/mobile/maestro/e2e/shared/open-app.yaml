@@ -1,0 +1,87 @@
+appId: io.leather.mobilewallet
+name: Shared - wipe the app and open it on the empty Home screen
+---
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - stopApp
+      - clearKeychain
+      - clearState
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - stopApp
+      - clearState
+- retry:
+    maxRetries: 2
+    commands:
+      - openLink: ${DEV_CLIENT_URL}
+- evalScript: ${output.openAppAttempt = 0}
+- retry:
+    maxRetries: 3
+    commands:
+      - evalScript: ${output.openAppAttempt = output.openAppAttempt + 1}
+      - runFlow:
+          when:
+            true: ${output.openAppAttempt > 1}
+            visible: 'Toggle element inspector'
+          commands:
+            - tapOn: 'Close'
+            - waitForAnimationToEnd
+      - runFlow:
+          when:
+            true: ${output.openAppAttempt > 1}
+            visible: 'Open'
+          commands:
+            - tapOn: 'Open'
+            - openLink: ${DEV_CLIENT_URL}
+      - runFlow:
+          when:
+            true: ${output.openAppAttempt > 1}
+            visible: 'There was a problem loading the project\..*'
+          commands:
+            - tapOn: 'Reload'
+      - runFlow:
+          when:
+            true: ${output.openAppAttempt > 1}
+            visible: 'Development Build'
+          commands:
+            - openLink: ${DEV_CLIENT_URL}
+      - runFlow:
+          when:
+            platform: Android
+            true: ${output.openAppAttempt > 1}
+            notVisible:
+              id: 'action_bar_root'
+          commands:
+            - openLink: ${DEV_CLIENT_URL}
+      - extendedWaitUntil:
+          visible:
+            id: 'homeCreateWalletCard'
+          timeout: 20000
+- runFlow:
+    when:
+      true: ${typeof SKIP_LATE_MENU_WAIT !== 'string'}
+    commands:
+      - extendedWaitUntil:
+          visible: 'Toggle element inspector'
+          timeout: 3000
+          optional: true
+- evalScript: ${output.openAppMenuAttempt = 0}
+- retry:
+    maxRetries: 2
+    commands:
+      - evalScript: ${output.openAppMenuAttempt = output.openAppMenuAttempt + 1}
+      - runFlow:
+          when:
+            true: ${output.openAppMenuAttempt > 1}
+          commands:
+            - tapOn: 'Close'
+            - waitForAnimationToEnd
+      - extendedWaitUntil:
+          notVisible: 'Toggle element inspector'
+          timeout: 1000
+- assertVisible:
+    id: 'homeCreateWalletCard'

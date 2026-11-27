@@ -1,0 +1,35 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - with the add wallet sheet open, restore the secret key held in the clipboard
+---
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'restoreWalletTextInput'
+          commands:
+            - tapOn:
+                id: 'restoreWalletSheetButton'
+                optional: true
+      - extendedWaitUntil:
+          visible:
+            id: 'restoreWalletTextInput'
+          timeout: 10000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - tapOn:
+          text: 'Paste'
+          optional: true
+      - waitForAnimationToEnd
+      - extendedWaitUntil:
+          notVisible: 'Paste'
+          timeout: 15000
+- assertNotVisible: 'Paste'
+- pressKey: enter
+- waitForAnimationToEnd
+- tapOn:
+    id: 'restoreWalletContinue'

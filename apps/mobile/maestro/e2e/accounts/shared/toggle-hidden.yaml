@@ -1,0 +1,21 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - on Configure account, tap FROM_ID until TO_ID shows
+---
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 3
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: ${TO_ID}
+          commands:
+            - tapOn:
+                id: ${FROM_ID}
+                optional: true
+      - extendedWaitUntil:
+          visible:
+            id: ${TO_ID}
+          timeout: 5000
+- assertVisible:
+    id: ${TO_ID}

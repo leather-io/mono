@@ -1,0 +1,43 @@
+appId: io.leather.mobilewallet
+name: accounts - that restoring an already-added wallet is rejected
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- runFlow:
+    file: ../shared/copy-secret-key.yaml
+    env:
+      WALLET_INDEX: 0
+- tapOn: 'Add wallet'
+- extendedWaitUntil:
+    visible:
+      id: 'restoreWalletSheetButton'
+    timeout: 20000
+- runFlow: ../shared/restore-from-clipboard.yaml
+- extendedWaitUntil:
+    visible: 'Wallet added already'
+    timeout: 30000
+- assertNotVisible: 'Wallet added'
+- runFlow:
+    when:
+      visible:
+        id: 'restoreWalletContinue'
+    commands:
+      - tapOn:
+          id: 'backButton'
+- runFlow:
+    when:
+      visible:
+        id: 'restoreWalletSheetButton'
+    commands:
+      - swipe:
+          start: 50%, 50%
+          end: 50%, 95%
+- extendedWaitUntil:
+    visible: 'Wallet 1'
+    timeout: 20000
+- assertNotVisible: 'Wallet 2'

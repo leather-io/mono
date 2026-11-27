@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: accounts - that it lists the accounts of the wallet
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- runFlow:
+    file: ../shared/add-account.yaml
+    env:
+      ACCOUNT_NAME: 'Account 2'
+- runFlow: ../shared/back-to-home.yaml
+- runFlow: ../shared/open-selector.yaml
+- assertVisible:
+    id: 'accountSelectorAccountCard'
+    text: '.*, Wallet 1, Account 1, .*'
+- assertVisible:
+    id: 'accountSelectorAccountCard'
+    text: '.*, Wallet 1, Account 2, .*'
+- assertNotVisible:
+    id: 'accountSelectorAccountCard'
+    text: '.*, Account 3, .*'
