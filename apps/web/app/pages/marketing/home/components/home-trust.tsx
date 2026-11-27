@@ -127,15 +127,16 @@ export function HomeTrust() {
               Learn more <styled.span aria-hidden>↗</styled.span>
               <styled.span srOnly> (opens in a new tab)</styled.span>
             </styled.span>
-            <styled.img
-              src={card.image}
-              alt={card.imageAlt}
-              width="100%"
-              height="auto"
-              aspectRatio="334 / 192"
-              mt="space.06"
-              loading="lazy"
-            />
+            <Box mt="auto" pt="space.06">
+              <styled.img
+                src={card.image}
+                alt={card.imageAlt}
+                width="100%"
+                height="auto"
+                aspectRatio="334 / 192"
+                loading="lazy"
+              />
+            </Box>
           </styled.a>
         ))}
       </Grid>
