@@ -1,0 +1,30 @@
+appId: io.leather.mobilewallet
+name: send - that shows insufficient funds when amount exceeds combined balance
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: send-mixed-utxos
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: BTC
+- extendedWaitUntil:
+    visible: 'Bitcoin, BTC, .*, 0\.005'
+    timeout: 20000
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '0.006'
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq
+- extendedWaitUntil:
+    visible: 'Insufficient funds'
+    timeout: 15000
+- assertVisible:
+    text: 'Review'
+    enabled: false

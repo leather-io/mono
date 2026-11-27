@@ -1,0 +1,12 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks shared - new wallet with SCENARIO mocks, open the test dApp in the Browser tab narrowed to the cards in FILTER when set, and connect
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: ${SCENARIO}
+- runFlow:
+    file: open-dapp.yaml
+    env:
+      FILTER: "${typeof FILTER === 'string' ? FILTER : ''}"
+- runFlow: connect.yaml

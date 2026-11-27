@@ -1,0 +1,43 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks - broadcasts the fee chosen in the fee editor
+tags:
+  - rpc-stacks
+  - ios-ci
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'rpc-stacks'
+      FILTER: 'mobile-e2e-stx-warm-addresses,mobile-e2e-stx-transfer-approve'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx warm addresses'
+- runFlow:
+    file: ../shared/approve-card.yaml
+    env:
+      CARD: 'e2e stx warm addresses'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx transfer approve'
+- assertVisible: 'Sign Transaction'
+- tapOn:
+    text: '.*(Standard|Custom).*STX.*'
+    index: 0
+- extendedWaitUntil:
+    visible: '.*Slow.*'
+    timeout: 15000
+- tapOn: '.*Slow.*'
+- extendedWaitUntil:
+    visible: '.*0\.0002.*'
+    timeout: 15000
+- runFlow:
+    file: ../shared/approve-card.yaml
+    env:
+      CARD: 'e2e stx transfer approve'
+- scrollUntilVisible:
+    element: '.*"amount": "100".*'
+    direction: DOWN
+    timeout: 180000
+- assertVisible: '.*"fee": "200".*'

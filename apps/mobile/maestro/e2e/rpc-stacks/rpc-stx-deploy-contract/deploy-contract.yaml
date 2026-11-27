@@ -1,0 +1,26 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks - SIP-30 deploy contract, shows the deploy and cancels it
+tags:
+  - rpc-stacks
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'rpc-stacks'
+      FILTER: 'mobile-e2e-stx-deploy-contract'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx deploy token'
+- assertVisible: 'Sign Transaction'
+- assertVisible: 'mock-contract-name'
+- assertVisible: 'Account 1, Wallet 1, .*|Account 1'
+- tapOn: 'Show advanced options'
+- extendedWaitUntil:
+    visible: 'Code'
+    timeout: 10000
+- assertVisible: '.*define-fungible-token.*'
+- runFlow:
+    file: ../shared/cancel-card.yaml
+    env:
+      CARD: 'e2e stx deploy token'

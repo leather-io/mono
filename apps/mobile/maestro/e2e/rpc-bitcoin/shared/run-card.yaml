@@ -1,0 +1,19 @@
+appId: io.leather.mobilewallet
+name: rpc-bitcoin shared - tap the card matching CARD and wait for its approver sheet, tapping again only while no sheet has opened
+---
+- runFlow:
+    file: show-card.yaml
+    env:
+      CARD: ${CARD}
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible: 'Approve|Sign transaction'
+          commands:
+            - tapOn: ${CARD}
+      - extendedWaitUntil:
+          visible: 'Approve|Sign transaction'
+          timeout: 15000
+- waitForAnimationToEnd

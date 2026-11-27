@@ -1,0 +1,36 @@
+appId: io.leather.mobilewallet
+name: send - that send max recalculates when recipient address type changes
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: send-max-mixed-utxos
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: BTC
+- extendedWaitUntil:
+    visible: 'Bitcoin, BTC, .*, 0\.003'
+    timeout: 20000
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq
+- tapOn:
+    id: 'sendMaxButton'
+- extendedWaitUntil:
+    visible:
+      id: 'sendAmountValue'
+      text: '0\.00299165'
+    timeout: 15000
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: bc1pmk2sacpfyy4v5phl8tq6eggu4e8laztep7fsgkkx0nc6m9vydjesaw0g2r
+- extendedWaitUntil:
+    visible:
+      id: 'sendAmountValue'
+      text: '0\.00299105'
+    timeout: 15000

@@ -1,0 +1,21 @@
+appId: io.leather.mobilewallet
+name: Send shared - open the swap asset selector TOGGLE and pick SYMBOL from the list
+---
+- tapOn:
+    id: ${TOGGLE}
+- extendedWaitUntil:
+    visible: 'Search for asset'
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: 'swapAssetSelectorItem-${SYMBOL}'
+    timeout: 30000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'swapAssetSelectorItem-${SYMBOL}'
+- extendedWaitUntil:
+    visible:
+      id: ${TOGGLE}
+      text: '.*${SYMBOL}.*'
+    timeout: 20000
+- waitForAnimationToEnd

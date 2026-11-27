@@ -1,0 +1,33 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks - SIP-30 compatibility it works with SIP-30 formatted transactions
+tags:
+  - rpc-stacks
+  - ios-ci
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'rpc-stacks'
+      FILTER: 'mobile-e2e-stx-warm-addresses,mobile-e2e-stx-sign-transaction-sip30'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx warm addresses'
+- runFlow:
+    file: ../shared/approve-card.yaml
+    env:
+      CARD: 'e2e stx warm addresses'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx sign sip30 approve'
+- assertVisible: 'Sign Transaction'
+- assertVisible: '.*Account 1.*'
+- assertVisible: 'You’ll send'
+- assertVisible: '.*0\.0008.*'
+- assertVisible: 'To address'
+- assertVisible: '.*SPXH.*'
+- runFlow:
+    file: ../shared/approve-card.yaml
+    env:
+      CARD: 'e2e stx sign sip30 approve'

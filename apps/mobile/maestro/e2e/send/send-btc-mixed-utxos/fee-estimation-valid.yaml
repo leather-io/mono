@@ -1,0 +1,53 @@
+appId: io.leather.mobilewallet
+name: send - that fee estimation produces valid fees for mixed input types
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: send-mixed-utxos
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: BTC
+- extendedWaitUntil:
+    visible: 'Bitcoin, BTC, .*, 0\.005'
+    timeout: 20000
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '0.003'
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq
+- runFlow: ../shared/review.yaml
+- extendedWaitUntil:
+    visible:
+      id: 'approverFeeCard'
+      enabled: true
+    timeout: 30000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'approverFeeOption-Low'
+          commands:
+            - tapOn:
+                id: 'approverFeeCard'
+      - extendedWaitUntil:
+          visible:
+            id: 'approverFeeOption-Low'
+          timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: 'approverFeeOption-Low'
+      text: '.*Slow.*0\.0*[1-9][0-9]*.BTC.*'
+    timeout: 15000
+- assertNotVisible:
+    id: 'approverFeeOption-Low'
+    text: '.*NaN.*'

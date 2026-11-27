@@ -1,0 +1,30 @@
+appId: io.leather.mobilewallet
+name: 'rpc-bitcoin - it returns the second accounts data after changing account'
+tags:
+  - rpc-bitcoin
+---
+- runFlow:
+    file: ../shared/start-wallet.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/add-account-2.yaml
+- runFlow:
+    file: ../shared/open-dapp.yaml
+    env:
+      FILTER: 'e2ebtc-getaddresses-account-2'
+- runFlow:
+    file: ../shared/run-card.yaml
+    env:
+      CARD: '.*e2e getAddresses second account.*'
+- runFlow:
+    file: ../shared/pick-account.yaml
+    env:
+      ACCOUNT_INDEX: 1
+- extendedWaitUntil:
+    visible: '.*Account 2.*'
+    timeout: 30000
+- runFlow: ../shared/approve.yaml
+- runFlow:
+    file: ../shared/expect-pass.yaml
+    env:
+      PASS: '(?i).*e2e getAddresses second account pass.*'

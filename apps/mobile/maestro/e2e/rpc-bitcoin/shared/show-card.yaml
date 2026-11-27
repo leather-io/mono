@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: rpc-bitcoin shared - wait for the card matching CARD in the filtered test app, scrolling only when a retry finds it missing
+---
+- evalScript: ${output.showCardAttempt = 0}
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            true: ${output.showCardAttempt > 0}
+          commands:
+            - scrollUntilVisible:
+                element: ${CARD}
+                direction: DOWN
+                timeout: 30000
+                optional: true
+            - scrollUntilVisible:
+                element: ${CARD}
+                direction: UP
+                timeout: 30000
+                optional: true
+      - evalScript: ${output.showCardAttempt = output.showCardAttempt + 1}
+      - extendedWaitUntil:
+          visible: ${CARD}
+          timeout: 15000

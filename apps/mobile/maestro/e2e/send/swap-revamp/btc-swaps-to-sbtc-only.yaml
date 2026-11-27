@@ -1,0 +1,33 @@
+appId: io.leather.mobilewallet
+name: send - that BTC can be swapped to sBTC only
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: send-swap
+- runFlow:
+    file: ../shared/show-token.yaml
+    env:
+      TICKER: aeUSDC
+- runFlow: ../shared/open-swap.yaml
+- runFlow:
+    file: ../shared/pick-swap-asset.yaml
+    env:
+      TOGGLE: swapBaseAssetToggle
+      SYMBOL: BTC
+- tapOn:
+    id: 'swapTargetAssetToggle'
+- extendedWaitUntil:
+    visible:
+      id: 'swapAssetSelectorItem-sBTC'
+    timeout: 30000
+- assertNotVisible:
+    id: 'swapAssetSelectorItem-STX'
+- assertNotVisible:
+    id: 'swapAssetSelectorItem-aeUSDC'
+- assertNotVisible:
+    id: 'swapAssetSelectorItem-USDCx'
+- assertNotVisible:
+    id: 'swapAssetSelectorItem-BTC'

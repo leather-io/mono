@@ -1,0 +1,118 @@
+appId: io.leather.mobilewallet
+name: send - that an address for another network is rejected
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- tapOn:
+    id: 'homeSettingsButton'
+- extendedWaitUntil:
+    visible:
+      id: 'settingsNetworkButton'
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'settingsNetworkButton'
+- extendedWaitUntil:
+    visible: '(?i).*testnet ?4.*'
+    timeout: 20000
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible: '(?i).*testnet ?4.*enabled.*'
+          commands:
+            - tapOn: '(?i).*testnet ?4.*'
+      - extendedWaitUntil:
+          visible: '(?i).*testnet ?4.*enabled.*'
+          timeout: 10000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 3
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'homeAccountHeader'
+          commands:
+            - tapOn:
+                id: 'backButton'
+            - waitForAnimationToEnd
+      - extendedWaitUntil:
+          visible:
+            id: 'homeAccountHeader'
+          timeout: 2000
+- scrollUntilVisible:
+    element: 'Total balance'
+    direction: UP
+    visibilityPercentage: 100
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: 'networkBadge'
+    timeout: 30000
+- assertVisible: 'Testnet4'
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: STX
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '0.000001'
+- runFlow:
+    file: ../shared/search-recipient.yaml
+    env:
+      SEARCH: SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB
+- extendedWaitUntil:
+    visible:
+      id: 'sendRecipientItem'
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'sendRecipientItem'
+- extendedWaitUntil:
+    visible: 'Address from another network'
+    timeout: 20000
+- assertVisible: 'This address belongs to a different network.*'
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: 'Address from another network'
+          commands:
+            - tapOn: 'Dismiss'
+      - extendedWaitUntil:
+          notVisible: 'Address from another network'
+          timeout: 10000
+- assertNotVisible: 'Verify full address'
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: 'Search for BNS name or address'
+          commands:
+            - swipe:
+                start: 50%, 14%
+                end: 50%, 95%
+            - waitForAnimationToEnd
+      - extendedWaitUntil:
+          notVisible: 'Search for BNS name or address'
+          timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: 'sendRecipientToggle'
+    timeout: 15000
+- assertNotVisible:
+    id: 'sendRecipientToggle'
+    text: '.*SPXH.*'
+- assertVisible:
+    text: 'Review'
+    enabled: false

@@ -1,0 +1,34 @@
+appId: io.leather.mobilewallet
+name: send - that send max reflects combined balance from both utxo types
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: send-mixed-utxos
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: BTC
+- extendedWaitUntil:
+    visible: 'Bitcoin, BTC, .*, 0\.005'
+    timeout: 20000
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq
+- tapOn:
+    id: 'sendMaxButton'
+- extendedWaitUntil:
+    visible:
+      id: 'sendAmountValue'
+      text: '0\.004[0-9]*'
+    timeout: 15000
+- runFlow: ../shared/review.yaml
+- runFlow:
+    file: ../shared/pick-fee.yaml
+    env:
+      FEE: Low
+- assertVisible: 'Send token'
+- assertVisible: 'You.ll send'

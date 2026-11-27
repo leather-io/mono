@@ -31,7 +31,10 @@ export function App() {
   const [accountError, setAccountError] = useState<string | undefined>();
   const [runs, setRuns] = useState<SpecRun[]>([]);
   const [busyIds, setBusyIds] = useState<ReadonlySet<string>>(() => new Set());
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState(
+    () => new URLSearchParams(window.location.search).get('filter') ?? ''
+  );
+  const [compact] = useState(() => new URLSearchParams(window.location.search).has('filter'));
 
   useEffect(() => {
     function refresh() {
@@ -94,15 +97,21 @@ export function App() {
   );
 
   const grouped = useMemo(() => {
-    const needle = filter.trim().toLowerCase();
-    function matches(spec: RpcMethodSpec) {
+    const needles = filter
+      .toLowerCase()
+      .split(',')
+      .map(needle => needle.trim())
+      .filter(Boolean);
+    function matchesNeedle(spec: RpcMethodSpec, needle: string) {
       return (
-        !needle ||
         spec.id.toLowerCase().includes(needle) ||
         spec.method.toLowerCase().includes(needle) ||
         spec.label.toLowerCase().includes(needle) ||
         (spec.tags ?? []).some(tag => tag.includes(needle))
       );
+    }
+    function matches(spec: RpcMethodSpec) {
+      return needles.length === 0 || needles.some(needle => matchesNeedle(spec, needle));
     }
     return rpcCategories
       .map(category => ({
@@ -120,11 +129,13 @@ export function App() {
       <main className="panel">
         <header className="masthead">
           <h1>Leather RPC test</h1>
-          <p className="subtitle">
-            Click a button to fire a <code>LeatherProvider.request()</code> call with a pre-filled
-            payload. Buttons that need your keys ask for <code>getAddresses</code> first. Everything
-            here is also on <code>window.__leatherTestApp</code>.
-          </p>
+          {!compact && (
+            <p className="subtitle">
+              Click a button to fire a <code>LeatherProvider.request()</code> call with a pre-filled
+              payload. Buttons that need your keys ask for <code>getAddresses</code> first.
+              Everything here is also on <code>window.__leatherTestApp</code>.
+            </p>
+          )}
           <div className="masthead-row">
             <span
               className={`badge ${installed ? 'badge-ok' : 'badge-bad'}`}
@@ -165,20 +176,22 @@ export function App() {
             onRefresh={handleRefresh}
           />
 
-          <TagRunner
-            tags={tags}
-            onRun={async tag => {
-              const specs = specsWithTag(tag);
-              const ctx = createCachedRequestContext(getNetwork());
-              const results: SpecRun[] = [];
-              for (const spec of specs) {
-                const run = await runSpec(spec, { ctx });
-                record(run);
-                results.push(run);
-              }
-              return results;
-            }}
-          />
+          {!compact && (
+            <TagRunner
+              tags={tags}
+              onRun={async tag => {
+                const specs = specsWithTag(tag);
+                const ctx = createCachedRequestContext(getNetwork());
+                const results: SpecRun[] = [];
+                for (const spec of specs) {
+                  const run = await runSpec(spec, { ctx });
+                  record(run);
+                  results.push(run);
+                }
+                return results;
+              }}
+            />
+          )}
         </header>
 
         {grouped.map(({ category, methods }) => (

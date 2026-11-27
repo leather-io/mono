@@ -1,0 +1,22 @@
+appId: io.leather.mobilewallet
+name: 'rpc-bitcoin - the promise rejects when user closes popup window'
+tags:
+  - rpc-bitcoin
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+      FILTER: 'e2ebtc-getaddresses-reject'
+- runFlow:
+    file: ../shared/run-card.yaml
+    env:
+      CARD: '.*e2e getAddresses reject.*'
+- extendedWaitUntil:
+    visible: 'Connect'
+    timeout: 30000
+- runFlow: ../shared/cancel.yaml
+- runFlow:
+    file: ../shared/expect-pass.yaml
+    env:
+      PASS: '(?i).*e2e getAddresses reject pass.*'

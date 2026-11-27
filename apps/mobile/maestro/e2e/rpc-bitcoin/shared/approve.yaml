@@ -1,0 +1,16 @@
+appId: io.leather.mobilewallet
+name: rpc-bitcoin shared - approve the open sheet and wait for it to close
+---
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: 'Approve|Sign transaction'
+            notVisible: 'Submitting\.\.\.|Signing\.\.\.'
+          commands:
+            - tapOn: 'Approve|Sign transaction'
+      - extendedWaitUntil:
+          notVisible: 'Approve|Sign transaction|Submitting\.\.\.|Signing\.\.\.'
+          timeout: 15000

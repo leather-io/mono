@@ -1,0 +1,6 @@
+appId: io.leather.mobilewallet
+name: rpc-bitcoin shared - assert the card in view shows the verdict PASS, matching PASS
+---
+- extendedWaitUntil:
+    visible: ${PASS}
+    timeout: 30000

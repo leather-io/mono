@@ -1,0 +1,74 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks shared - open the test dApp from TEST_APP_URL in the Browser tab
+---
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - evalScript: ${output.openDappAttempt = 0}
+      - retry:
+          maxRetries: 2
+          commands:
+            - evalScript: ${output.openDappAttempt = output.openDappAttempt + 1}
+            - runFlow:
+                when:
+                  true: ${output.openDappAttempt > 1}
+                  visible: 'Open'
+                commands:
+                  - tapOn: 'Open'
+            - openLink: "leather://browser?url=${encodeURIComponent(TEST_APP_URL + (typeof FILTER === 'string' && FILTER ? '/?filter=' + FILTER : ''))}"
+            - extendedWaitUntil:
+                visible: '.*Leather RPC test.*'
+                timeout: 60000
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - retry:
+          maxRetries: 3
+          commands:
+            - runFlow:
+                when:
+                  notVisible: 'leather\.io|localhost'
+                commands:
+                  - tapOn: 'Browser'
+                  - waitForAnimationToEnd
+            - extendedWaitUntil:
+                visible: 'leather\.io|localhost'
+                timeout: 10000
+      - extendedWaitUntil:
+          visible: 'leather.io'
+          timeout: 30000
+          optional: true
+      - retry:
+          maxRetries: 2
+          commands:
+            - tapOn: 'leather\.io|localhost'
+            - waitForAnimationToEnd
+            - eraseText: 60
+            - inputText: "${TEST_APP_URL + (typeof FILTER === 'string' && FILTER ? '/?filter=' + FILTER : '')}"
+            - pressKey: enter
+            - extendedWaitUntil:
+                visible: '.*Leather RPC test.*'
+                timeout: 40000
+- runFlow:
+    when:
+      platform: Android
+      true: ${typeof FILTER === 'string' && FILTER != ''}
+    commands:
+      - evalScript: ${output.dappFilterAttempt = 0}
+      - retry:
+          maxRetries: 1
+          commands:
+            - evalScript: ${output.dappFilterAttempt = output.dappFilterAttempt + 1}
+            - runFlow:
+                when:
+                  true: ${output.dappFilterAttempt > 1}
+                commands:
+                  - longPressOn:
+                      below: 'Filter'
+                  - tapOn: 'Select all'
+                  - eraseText: 1
+                  - inputText: ${FILTER}
+                  - hideKeyboard
+            - assertVisible: ${FILTER}

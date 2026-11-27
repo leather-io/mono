@@ -1,0 +1,26 @@
+appId: io.leather.mobilewallet
+name: send - that recipient address matches bns name
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'send-bns-lookup'
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: STX
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '0.0001'
+- runFlow:
+    file: ../shared/search-recipient.yaml
+    env:
+      SEARCH: test-hiro-wallet.btc
+- extendedWaitUntil:
+    visible:
+      id: 'sendRecipientItem'
+      text: 'test-hiro-wallet\.btc, SP12YQ0M2KFT7YMJKVGP71B874YF055F77PFPH9KM'
+    timeout: 20000

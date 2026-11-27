@@ -1,0 +1,36 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks - approves a SIP-30 STX transfer broadcasting the displayed fee
+tags:
+  - rpc-stacks
+  - blocked
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'rpc-stacks'
+      FILTER: 'mobile-e2e-stx-warm-addresses,mobile-e2e-stx-transfer-approve'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx warm addresses'
+- runFlow:
+    file: ../shared/approve-card.yaml
+    env:
+      CARD: 'e2e stx warm addresses'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx transfer approve'
+- assertVisible: 'Sign Transaction'
+- assertVisible: 'To address'
+- assertVisible: '.*Standard.*'
+- assertVisible: '.*0\.0004.*'
+- runFlow:
+    file: ../shared/approve-card.yaml
+    env:
+      CARD: 'e2e stx transfer approve'
+- scrollUntilVisible:
+    element: '.*"amount": "100".*'
+    direction: DOWN
+    timeout: 60000
+- assertVisible: '.*"fee": "400".*'

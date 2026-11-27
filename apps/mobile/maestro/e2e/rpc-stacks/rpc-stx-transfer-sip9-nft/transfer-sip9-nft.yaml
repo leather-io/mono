@@ -1,0 +1,23 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks - SIP-30 transfer sip9 non-fungible token, shows the transfer and cancels it
+tags:
+  - rpc-stacks
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'rpc-stacks'
+      FILTER: 'mobile-e2e-stx-transfer-sip9-reject'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx sip9 reject'
+- assertVisible: 'Sign Transaction'
+- assertVisible: 'You will transfer'
+- assertVisible: '.*living-leather::living-.*'
+- assertVisible: 'transfer'
+- assertVisible: 'SP2XMGYYTA1KRBKBYJHTW8CFWB2QYZKZE4BMHG3PJ.living-leather'
+- runFlow:
+    file: ../shared/cancel-card.yaml
+    env:
+      CARD: 'e2e stx sip9 reject'

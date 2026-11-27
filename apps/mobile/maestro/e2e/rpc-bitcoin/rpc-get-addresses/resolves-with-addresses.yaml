@@ -1,0 +1,27 @@
+appId: io.leather.mobilewallet
+name: 'rpc-bitcoin - the promise resolves with addresses successfully'
+tags:
+  - rpc-bitcoin
+  - ios-ci
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+      FILTER: 'e2ebtc-getaddresses-approve'
+- runFlow:
+    file: ../shared/run-card.yaml
+    env:
+      CARD: '.*e2e getAddresses approve.*'
+- extendedWaitUntil:
+    visible: 'Connect'
+    timeout: 30000
+- runFlow:
+    file: ../shared/pick-account.yaml
+    env:
+      ACCOUNT_INDEX: 0
+- runFlow: ../shared/approve.yaml
+- runFlow:
+    file: ../shared/expect-pass.yaml
+    env:
+      PASS: '(?i).*e2e getAddresses approve pass.*'

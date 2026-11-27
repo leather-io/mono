@@ -10,7 +10,8 @@ export type RpcCategory =
   | 'Staking'
   | 'Multisig'
   | 'Bonds'
-  | 'Local';
+  | 'Local'
+  | 'Mobile E2E';
 
 /** Address flavour a wallet network id resolves to. */
 export type NetworkMode = 'mainnet' | 'testnet' | 'regtest';

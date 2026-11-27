@@ -1,0 +1,19 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks shared - cancel the open approver and expect the CARD verdict PASS
+---
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: 'Cancel'
+          commands:
+            - tapOn: 'Cancel'
+      - extendedWaitUntil:
+          notVisible: 'Cancel'
+          timeout: 10000
+- runFlow:
+    file: expect-pass.yaml
+    env:
+      CARD: ${CARD}

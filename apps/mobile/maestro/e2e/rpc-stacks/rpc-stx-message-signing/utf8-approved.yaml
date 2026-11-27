@@ -1,0 +1,30 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks - stx_signMessage MessageType utf8 Signature approved
+tags:
+  - rpc-stacks
+  - ios-ci
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'rpc-stacks'
+      FILTER: 'mobile-e2e-stx-warm-addresses,mobile-e2e-stx-sign-message-utf8'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx warm addresses'
+- runFlow:
+    file: ../shared/approve-card.yaml
+    env:
+      CARD: 'e2e stx warm addresses'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx sign utf8 approve'
+- assertVisible: 'Sign Message'
+- assertVisible: 'Message'
+- assertVisible: 'test'
+- runFlow:
+    file: ../shared/approve-card.yaml
+    env:
+      CARD: 'e2e stx sign utf8 approve'

@@ -1,0 +1,54 @@
+appId: io.leather.mobilewallet
+name: send - That the Receive dialog renders and shows the correct assets
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- tapOn: 'Receive'
+- extendedWaitUntil:
+    visible: 'Select asset'
+    timeout: 20000
+- assertVisible: 'Receive'
+- extendedWaitUntil:
+    visible:
+      id: 'receiveAssetItem'
+      index: 2
+    timeout: 20000
+- assertNotVisible:
+    id: 'receiveAssetItem'
+    index: 3
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - assertVisible:
+          id: 'receiveAssetItem'
+          text: '.*bc1q.*Copy address'
+      - assertVisible:
+          id: 'receiveAssetItem'
+          text: '.*bc1p.*Copy address'
+      - assertVisible:
+          id: 'receiveAssetItem'
+          text: '.*SP.*Copy address'
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - assertVisible:
+          text: 'Copy address'
+          childOf:
+            id: 'receiveAssetItem'
+            text: '.*Native Segwit, bc1q.*'
+      - assertVisible:
+          text: 'Copy address'
+          childOf:
+            id: 'receiveAssetItem'
+            text: '.*Taproot, bc1p.*'
+      - assertVisible:
+          text: 'Copy address'
+          childOf:
+            id: 'receiveAssetItem'
+            text: '.*Stacks, SP.*'

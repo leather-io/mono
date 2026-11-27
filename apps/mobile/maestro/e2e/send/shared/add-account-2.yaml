@@ -1,0 +1,71 @@
+appId: io.leather.mobilewallet
+name: Send shared - add Account 2 to the wallet in Settings and return to Home
+---
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'settingsWalletAndAccountsButton'
+          commands:
+            - tapOn:
+                id: 'homeSettingsButton'
+      - extendedWaitUntil:
+          visible:
+            id: 'settingsWalletAndAccountsButton'
+          timeout: 10000
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'walletListAddAccountButton'
+          commands:
+            - tapOn:
+                id: 'settingsWalletAndAccountsButton'
+      - extendedWaitUntil:
+          visible:
+            id: 'walletListAddAccountButton'
+          timeout: 10000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible: '.*, Account 2, .*'
+          commands:
+            - tapOn:
+                id: 'walletListAddAccountButton'
+      - extendedWaitUntil:
+          visible: '.*, Account 2, .*'
+          timeout: 15000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 3
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: 'walletListAddAccountButton'
+          commands:
+            - tapOn:
+                id: 'backButton'
+            - waitForAnimationToEnd
+      - runFlow:
+          when:
+            visible:
+              id: 'settingsWalletAndAccountsButton'
+          commands:
+            - tapOn:
+                id: 'backButton'
+            - waitForAnimationToEnd
+      - extendedWaitUntil:
+          visible: 'Home'
+          timeout: 5000
+- tapOn: 'Home'
+- extendedWaitUntil:
+    visible: 'Send'
+    timeout: 20000
