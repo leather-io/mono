@@ -260,6 +260,10 @@ msgstr "Allow Camera Access"
 msgid "Allow collection of data"
 msgstr "Allow collection of data"
 
+#: src/features/approver/components/post-conditions/post-conditions-warning.tsx:15
+msgid "Allow mode"
+msgstr "Allow mode"
+
 #: src/features/send/error-messages.ts:11
 msgid "Amount must be greater than zero"
 msgstr "Amount must be greater than zero"
@@ -465,7 +469,7 @@ msgstr "BTC, STX, sBTC, USDCx"
 msgid "Buy"
 msgstr "Buy"
 
-#: src/features/approver/components/post-conditions/post-conditions-warning.tsx:14
+#: src/features/approver/components/post-conditions/post-conditions-warning.tsx:22
 msgid "By approving, this app can move your assets anytime, without asking again. Only proceed if you fully trust it."
 msgstr "By approving, this app can move your assets anytime, without asking again. Only proceed if you fully trust it."
 
@@ -1240,6 +1244,10 @@ msgstr "Network fee"
 msgid "Networks"
 msgstr "Networks"
 
+#: src/features/approver/components/post-conditions/post-conditions-warning.tsx:41
+msgid "No asset transfers are permitted. Any movement of assets will cancel the transaction."
+msgstr "No asset transfers are permitted. Any movement of assets will cancel the transaction."
+
 #: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:55
 msgid "No assets"
 msgstr "No assets"
@@ -1247,6 +1255,10 @@ msgstr "No assets"
 #: src/features/swap/components/asset-selector/asset-selector-empty-state.tsx:30
 msgid "No assets found"
 msgstr "No assets found"
+
+#: src/features/approver/components/post-conditions/post-conditions-warning.tsx:32
+msgid "No assets will be transferred from your account by this transaction. Assets owned by contracts aren't restricted."
+msgstr "No assets will be transferred from your account by this transaction. Assets owned by contracts aren't restricted."
 
 #: src/features/approver/components/allow-mode-warning-sheet/allow-mode-warning-sheet.tsx:47
 msgid "No confirmations will appear."
@@ -1304,9 +1316,21 @@ msgstr "OK"
 msgid "Only {threshold} more {baseAssetSymbol} can be deposited into {targetAssetSymbol} right now"
 msgstr "Only {threshold} more {baseAssetSymbol} can be deposited into {targetAssetSymbol} right now"
 
+#: src/features/approver/components/post-conditions/post-conditions-warning.tsx:40
+msgid "Only the transfers shown are allowed. Any other movement of assets will cancel the transaction."
+msgstr "Only the transfers shown are allowed. Any other movement of assets will cancel the transaction."
+
+#: src/features/approver/components/post-conditions/post-conditions-warning.tsx:31
+msgid "Only the transfers shown below can move assets out of your account. Assets owned by contracts aren't restricted."
+msgstr "Only the transfers shown below can move assets out of your account. Assets owned by contracts aren't restricted."
+
 #: src/features/settings/wallet-and-accounts/wallet-card.tsx:93
 msgid "Open wallet settings"
 msgstr "Open wallet settings"
+
+#: src/features/approver/components/post-conditions/post-conditions-warning.tsx:29
+msgid "Originator mode"
+msgstr "Originator mode"
 
 #: src/features/account/components/available-account-balance.tsx:42
 msgid "Outbound balance:"
@@ -1677,6 +1701,10 @@ msgstr "Stacks address"
 msgid "Standard"
 msgstr "Standard"
 
+#: src/features/approver/components/post-conditions/post-conditions-warning.tsx:38
+msgid "Standard checks"
+msgstr "Standard checks"
+
 #: src/features/approver/components/approver-buttons/index.tsx:31
 msgid "Submitted"
 msgstr "Submitted"
@@ -1779,6 +1807,10 @@ msgstr "The guaranteed minimum amount you‘ll receive based on your slippage to
 msgid "The maximum price change you're willing to accept between when you submit and when your swap executes. If the price moves beyond this threshold, the transaction will revert."
 msgstr "The maximum price change you're willing to accept between when you submit and when your swap executes. If the price moves beyond this threshold, the transaction will revert."
 
+#: src/features/approver/components/post-conditions/post-conditions-warning.tsx:16
+msgid "The transfers shown will be checked, but this transaction can also move any other assets — including from your account — without limit. Only confirm if you fully trust the contract."
+msgstr "The transfers shown will be checked, but this transaction can also move any other assets — including from your account — without limit. Only confirm if you fully trust the contract."
+
 #: src/app/settings/display/index.tsx:52
 #: src/features/settings/theme-sheet.tsx:28
 msgid "Theme"
@@ -1808,7 +1840,7 @@ msgstr "This app would like to"
 msgid "This feature is not available yet, but we can notify you when ready."
 msgstr "This feature is not available yet, but we can notify you when ready."
 
-#: src/features/approver/components/post-conditions/post-conditions-warning.tsx:13
+#: src/features/approver/components/post-conditions/post-conditions-warning.tsx:21
 msgid "This is an “Allow Mode” transaction"
 msgstr "This is an “Allow Mode” transaction"
 
