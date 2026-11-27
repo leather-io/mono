@@ -3,6 +3,7 @@ import * as btc from '@scure/btc-signer';
 
 import {
   compileWshDescriptor,
+  compilesToP2wpkhScriptCode,
   findAccountDescriptorKey,
   getDescriptorMatchingInputIndexes,
   makeNativeSegwitAddressIndexDerivationPath,
@@ -31,6 +32,9 @@ function useGetDescriptorSigningPlan() {
 
   return (psbtHex: string, descriptor: string) => {
     if (!nativeSegwitAccount) throw new Error('No native segwit account available');
+
+    if (compilesToP2wpkhScriptCode(descriptor))
+      throw new Error('Descriptor is not supported for signing');
 
     const compiled = compileWshDescriptor(descriptor);
     const { scriptPubKey, witnessScript } = compiled;
