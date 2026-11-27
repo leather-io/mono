@@ -1,0 +1,32 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - on Configure account, open the account name sheet
+---
+- waitForAnimationToEnd
+- evalScript: ${output.renameSheetAttempt = 0}
+- retry:
+    maxRetries: 2
+    commands:
+      - evalScript: ${output.renameSheetAttempt = output.renameSheetAttempt + 1}
+      - runFlow:
+          when:
+            platform: Android
+            true: ${output.renameSheetAttempt > 1}
+          commands:
+            - runFlow:
+                when:
+                  visible: 'Bottom sheet backdrop'
+                commands:
+                  - hideKeyboard
+                  - waitForAnimationToEnd
+      - runFlow:
+          when:
+            notVisible:
+              id: 'accountChangeNameSheetInput'
+          commands:
+            - tapOn:
+                id: 'walletSettingsAccountNameCell'
+      - extendedWaitUntil:
+          visible:
+            id: 'accountChangeNameSheetInput'
+          timeout: 10000
+- waitForAnimationToEnd

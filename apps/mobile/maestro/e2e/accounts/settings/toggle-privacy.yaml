@@ -1,0 +1,23 @@
+appId: io.leather.mobilewallet
+name: accounts - that menu item can toggle privacy
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- extendedWaitUntil:
+    visible: '\$23,211\.53'
+    timeout: 30000
+- tapOn:
+    id: 'homePrivacyButton'
+- extendedWaitUntil:
+    visible: '\*\*\*'
+    timeout: 10000
+- assertNotVisible: '\$23,211\.53'
+- tapOn:
+    id: 'homePrivacyButton'
+- extendedWaitUntil:
+    visible: '\$23,211\.53'
+    timeout: 10000

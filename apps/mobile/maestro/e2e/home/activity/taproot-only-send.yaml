@@ -1,0 +1,15 @@
+appId: io.leather.mobilewallet
+name: home - shows an outgoing amount for a taproot-only send
+tags:
+  - home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: 'empty-activity,activity-taproot-send'
+- tapOn: 'Activity'
+- extendedWaitUntil:
+    visible: 'BTC, Sent to .* · [0-9]+[a-z]+ ago, − 0\.00198, \$89\.10'
+    timeout: 30000
+- assertNotVisible: '.*, Received.*'
+- assertNotVisible: 'Make your first transaction to get started'

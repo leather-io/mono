@@ -1,0 +1,21 @@
+appId: io.leather.mobilewallet
+name: security - adding an account to a wallet created with device security lists Account 2 next to Account 1
+tags:
+  - security
+  - faceid-match
+---
+- runFlow:
+    file: ../shared/start-secure.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../../accounts/shared/open-wallets.yaml
+- runFlow:
+    file: ../../accounts/shared/add-account.yaml
+    env:
+      ACCOUNT_NAME: 'Account 2'
+- assertVisible:
+    id: 'walletListAccountCard'
+    text: '.*, Account 1, .*'
+- assertVisible:
+    id: 'walletListAccountCard'
+    text: '.*, Account 2, .*'

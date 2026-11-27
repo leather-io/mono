@@ -1,0 +1,35 @@
+appId: io.leather.mobilewallet
+name: security - a failed Face ID match when turning App authentication on leaves it disabled
+tags:
+  - security
+  - faceid-nomatch
+  - faceid-prompts-1
+---
+- runFlow:
+    file: ../../shared/start-ui.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-security.yaml
+- assertVisible: 'App authentication, Disabled'
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible: 'App authentication, Require biometrics or PIN'
+          commands:
+            - tapOn: 'App authentication, (Enabled|Disabled)'
+      - extendedWaitUntil:
+          visible: 'App authentication, Require biometrics or PIN'
+          timeout: 10000
+      - waitForAnimationToEnd
+      - tapOn:
+          point: '86%,89%'
+      - extendedWaitUntil:
+          visible: 'Face Not Recognized'
+          timeout: 30000
+- runFlow: ../shared/cancel-failed-faceid.yaml
+- extendedWaitUntil:
+    visible: 'Failed to authenticate'
+    timeout: 10000
+- assertVisible: 'App authentication, Disabled'

@@ -1,0 +1,29 @@
+appId: io.leather.mobilewallet
+name: accounts - that a user can add multiple wallets
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- runFlow: ../shared/add-wallet.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1, Wallet 2'
+- runFlow: ../shared/open-wallets.yaml
+- runFlow: ../shared/add-wallet.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1, Wallet 3'
+- runFlow: ../shared/open-wallets.yaml
+- assertVisible: 'Wallet 1'
+- assertVisible: 'Wallet 2'
+- scrollUntilVisible:
+    element: 'Wallet 3'
+    direction: DOWN
+- scrollUntilVisible:
+    element: 'Add wallet'
+    direction: DOWN
+- assertNotVisible: 'Wallet 4'

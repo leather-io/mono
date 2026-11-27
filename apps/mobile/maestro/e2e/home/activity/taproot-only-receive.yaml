@@ -1,0 +1,15 @@
+appId: io.leather.mobilewallet
+name: home - shows an inbound amount for a taproot-only receive
+tags:
+  - home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: 'empty-activity,activity-taproot-receive'
+- tapOn: 'Activity'
+- extendedWaitUntil:
+    visible: 'BTC, Received from .* · [0-9]+[a-z]+ ago, \+ 0\.0015, \$67\.50'
+    timeout: 30000
+- assertNotVisible: '.*, Sent.*'
+- assertNotVisible: 'Make your first transaction to get started'

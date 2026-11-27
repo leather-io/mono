@@ -1,0 +1,30 @@
+appId: io.leather.mobilewallet
+name: accounts - that menu item can perform sign out
+tags:
+  - accounts
+  - ios-ci
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- runFlow:
+    file: ../shared/remove-wallet.yaml
+    env:
+      WALLET_INDEX: 0
+- extendedWaitUntil:
+    visible: 'View and manage all your wallets in one place'
+    timeout: 20000
+- waitForAnimationToEnd
+- assertVisible: 'View and manage all your wallets in one place'
+- assertNotVisible:
+    id: 'walletListSettingsButton'
+- assertNotVisible:
+    id: 'walletListAddAccountButton'
+- runFlow: ../shared/to-empty-home.yaml
+- waitForAnimationToEnd
+- assertVisible:
+    id: 'homeCreateWalletCard'
+- assertNotVisible:
+    id: 'homeAccountHeader'

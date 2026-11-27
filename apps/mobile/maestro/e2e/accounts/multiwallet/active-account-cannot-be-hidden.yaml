@@ -1,0 +1,29 @@
+appId: io.leather.mobilewallet
+name: accounts - that the active account cannot be hidden
+tags:
+  - accounts
+  - blocked
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- runFlow:
+    file: ../shared/add-account.yaml
+    env:
+      ACCOUNT_NAME: 'Account 2'
+- runFlow:
+    file: ../shared/open-account.yaml
+    env:
+      ACCOUNT_INDEX: 1
+- assertVisible:
+    id: 'accountSettingsHideAccountButton'
+- tapOn:
+    id: 'backButton'
+- runFlow:
+    file: ../shared/open-account.yaml
+    env:
+      ACCOUNT_INDEX: 0
+- assertNotVisible:
+    id: 'accountSettingsHideAccountButton'

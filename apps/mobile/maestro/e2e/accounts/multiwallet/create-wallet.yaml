@@ -1,0 +1,18 @@
+appId: io.leather.mobilewallet
+name: accounts - that a user can create and add a new wallet
+tags:
+  - accounts
+  - ios-ci
+---
+- runFlow:
+    file: ../../shared/start-ui.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- assertVisible: 'Wallet 1'
+- assertNotVisible: 'Wallet 2'
+- runFlow: ../shared/add-wallet.yaml
+- runFlow: ../shared/open-wallets.yaml
+- assertVisible: 'Wallet 1'
+- assertVisible: 'Wallet 2'
+- assertNotVisible: 'Wallet 3'

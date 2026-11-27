@@ -1,0 +1,47 @@
+appId: io.leather.mobilewallet
+name: home - aeUSDC token details open after enabling it and show stablecoin info
+tags:
+  - home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: ''
+- extendedWaitUntil:
+    visible:
+      id: 'homeManageTokensButton'
+    timeout: 30000
+- tapOn:
+    id: 'homeManageTokensButton'
+    waitToSettleTimeoutMs: 500
+- extendedWaitUntil:
+    visible:
+      id: 'tokenSwitchItem-aeUSDC'
+    timeout: 15000
+- tapOn:
+    id: 'tokenSwitchItem-aeUSDC'
+    waitToSettleTimeoutMs: 500
+- assertVisible:
+    id: 'tokenSwitchItem-aeUSDC'
+    checked: true
+- swipe:
+    start: 50%, 14%
+    end: 50%, 95%
+- waitForAnimationToEnd
+- scroll
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-aeUSDC'
+      text: '.*Wrapped USDC, aeUSDC, \$100\.00, 100\.00'
+    timeout: 15000
+- tapOn:
+    id: 'tokenBalanceItem-aeUSDC'
+    waitToSettleTimeoutMs: 500
+- extendedWaitUntil:
+    visible: 'Token Details'
+    timeout: 20000
+- assertVisible: 'Name'
+- assertVisible: 'Wrapped USDC'
+- assertVisible: 'Price'
+- assertVisible: '1\.00'
+- assertVisible: 'Layer 2 · Stacks'

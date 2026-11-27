@@ -1,0 +1,30 @@
+appId: io.leather.mobilewallet
+name: Security shared - the lock screen is gone and Settings opens from Home, then back to Home
+---
+- extendedWaitUntil:
+    notVisible: 'Face ID'
+    timeout: 30000
+- repeat:
+    times: 5
+    while:
+      notVisible:
+        id: 'settingsWalletAndAccountsButton'
+    commands:
+      - tapOn:
+          id: 'homeSettingsButton'
+          optional: true
+      - extendedWaitUntil:
+          visible:
+            id: 'settingsWalletAndAccountsButton'
+          timeout: 5000
+          optional: true
+- scrollUntilVisible:
+    element:
+      id: 'settingsLockAppButton'
+    direction: DOWN
+    timeout: 10000
+- assertVisible:
+    id: 'settingsLockAppButton'
+- assertNotVisible:
+    id: 'lockScreenUnlockButton'
+- runFlow: back-to-home.yaml

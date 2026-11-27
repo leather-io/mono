@@ -1,0 +1,22 @@
+appId: io.leather.mobilewallet
+name: accounts - that a user can add an account to a wallet
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- assertVisible: '.*, Account 1, .*'
+- assertNotVisible: '.*, Account 2, .*'
+- tapOn:
+    id: 'walletListAddAccountButton'
+- extendedWaitUntil:
+    visible: 'Account created'
+    timeout: 30000
+- extendedWaitUntil:
+    visible: '.*, Account 2, .*'
+    timeout: 30000
+- assertVisible: '.*, Account 1, .*'
+- assertNotVisible: '.*, Account 3, .*'

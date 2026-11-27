@@ -1,0 +1,39 @@
+appId: io.leather.mobilewallet
+name: accounts - that menu item allows changing networks
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- assertNotVisible:
+    id: 'networkBadge'
+- tapOn:
+    id: 'homeSettingsButton'
+- extendedWaitUntil:
+    visible:
+      id: 'settingsNetworkButton'
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'settingsNetworkButton'
+- extendedWaitUntil:
+    visible: '(?i).*testnet ?4.*'
+    timeout: 20000
+- tapOn: '(?i).*testnet ?4.*'
+- extendedWaitUntil:
+    visible: 'Changed network'
+    timeout: 10000
+- assertVisible: '(?i).*testnet ?4.*enabled.*'
+- runFlow: ../shared/back-to-home.yaml
+- scrollUntilVisible:
+    element: 'Total balance'
+    direction: UP
+    visibilityPercentage: 100
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: 'networkBadge'
+    timeout: 20000
+- assertVisible: 'Testnet4'

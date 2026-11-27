@@ -1,0 +1,73 @@
+appId: io.leather.mobilewallet
+name: Shared - create a wallet without device security and land on Home
+---
+- evalScript: ${output.createWalletAttempt = 0}
+- retry:
+    maxRetries: 2
+    commands:
+      - evalScript: ${output.createWalletAttempt = output.createWalletAttempt + 1}
+      - runFlow:
+          when:
+            platform: Android
+            true: ${output.createWalletAttempt > 1}
+          commands:
+            - pressKey: home
+            - waitForAnimationToEnd
+            - openLink: leather://
+            - waitForAnimationToEnd:
+                timeout: 30000
+      - tapOn:
+          id: 'homeCreateWalletCard'
+      - extendedWaitUntil:
+          visible:
+            id: 'createNewWalletSheetButton'
+          timeout: 10000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - tapOn:
+          id: 'createNewWalletSheetButton'
+          optional: true
+      - extendedWaitUntil:
+          visible:
+            id: 'walletCreationBackedUpButton'
+          timeout: 10000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - tapOn:
+          id: 'walletCreationTapToReveal'
+          optional: true
+      - tapOn:
+          id: 'walletCreationBackedUpButton'
+          optional: true
+      - extendedWaitUntil:
+          visible: 'Skip for now'
+          timeout: 15000
+- assertVisible: 'Skip for now'
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - tapOn:
+          text: 'Skip for now'
+          optional: true
+      - extendedWaitUntil:
+          visible: 'Continue without security'
+          timeout: 5000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - tapOn:
+          text: 'Continue'
+          optional: true
+      - extendedWaitUntil:
+          visible: 'Account 1'
+          timeout: 20000
+- extendedWaitUntil:
+    visible: 'Account 1'
+    timeout: 60000
+- waitForAnimationToEnd

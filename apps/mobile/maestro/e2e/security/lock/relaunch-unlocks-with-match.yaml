@@ -1,0 +1,16 @@
+appId: io.leather.mobilewallet
+name: security - relaunching a secured app asks for Face ID once and a match unlocks Home
+tags:
+  - security
+  - faceid-match
+  - faceid-prompts-1
+---
+- runFlow:
+    file: ../shared/start-secure.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/relaunch.yaml
+- runFlow: ../shared/assert-unlocked.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1'

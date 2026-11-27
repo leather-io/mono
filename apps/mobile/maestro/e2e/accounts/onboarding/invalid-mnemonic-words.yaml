@@ -1,0 +1,31 @@
+appId: io.leather.mobilewallet
+name: accounts - mnemonic key validation should show error for invalid mnemonic key words
+tags:
+  - accounts
+---
+- runFlow: ../shared/open-app.yaml
+- tapOn:
+    id: 'homeCreateWalletCard'
+- extendedWaitUntil:
+    visible:
+      id: 'restoreWalletSheetButton'
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'restoreWalletSheetButton'
+- extendedWaitUntil:
+    visible:
+      id: 'restoreWalletTextInput'
+    timeout: 20000
+- runFlow:
+    file: ../shared/type-in-restore.yaml
+    env:
+      FIRST: 's'
+      REST: 'ome incorrect data'
+- tapOn: 'Paste or type Secret Key to add wallet'
+- extendedWaitUntil:
+    visible: 'Invalid words: some, incorrect, data'
+    timeout: 10000
+- assertVisible:
+    id: 'restoreWalletContinue'
+    enabled: false

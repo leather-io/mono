@@ -1,0 +1,48 @@
+appId: io.leather.mobilewallet
+name: accounts - that a wallet created after signing out unlocks with its own password
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../../shared/start-ui.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- copyTextFrom:
+    id: 'walletListAccountCard'
+    index: 0
+- evalScript: ${output.firstAddress = maestro.copiedText.split(',')[0]}
+- assertTrue: ${output.firstAddress.trim().length >= 8}
+- runFlow:
+    file: ../shared/remove-wallet.yaml
+    env:
+      WALLET_INDEX: 0
+- runFlow: ../shared/to-empty-home.yaml
+- tapOn:
+    id: 'homeCreateWalletCard'
+- extendedWaitUntil:
+    visible:
+      id: 'createNewWalletSheetButton'
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'createNewWalletSheetButton'
+- extendedWaitUntil:
+    visible:
+      id: 'walletCreationBackedUpButton'
+    timeout: 20000
+- tapOn:
+    id: 'walletCreationTapToReveal'
+    optional: true
+- tapOn:
+    id: 'walletCreationBackedUpButton'
+- runFlow: ../shared/finish-onboarding.yaml
+- runFlow: ../shared/relaunch-app.yaml
+- runFlow: ../shared/lock-and-unlock.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1'
+- runFlow: ../shared/open-wallets.yaml
+- assertVisible: 'Wallet 1'
+- assertNotVisible: 'Wallet 2'
+- assertNotVisible: '${output.firstAddress}, Account 1, .*'

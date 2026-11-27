@@ -1,0 +1,42 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - open Settings > Wallets and accounts from Home
+---
+- extendedWaitUntil:
+    visible:
+      id: 'homeSettingsButton'
+    timeout: 20000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'settingsWalletAndAccountsButton'
+          commands:
+            - tapOn:
+                id: 'homeSettingsButton'
+                optional: true
+      - extendedWaitUntil:
+          visible:
+            id: 'settingsWalletAndAccountsButton'
+          timeout: 10000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'walletListSettingsButton'
+          commands:
+            - tapOn:
+                id: 'settingsWalletAndAccountsButton'
+                optional: true
+      - extendedWaitUntil:
+          visible:
+            id: 'walletListSettingsButton'
+          timeout: 10000
+- assertVisible:
+    id: 'walletListSettingsButton'
+- waitForAnimationToEnd

@@ -1,0 +1,55 @@
+appId: io.leather.mobilewallet
+name: accounts - that a second wallet shows its own BTC receive address and balance, and removing it brings back the first wallet's address and balances
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow:
+    file: ../shared/read-address.yaml
+    env:
+      ITEM: 0
+      KEY: 'firstWallet'
+- assertTrue: ${output.firstWallet.startsWith('bc1q')}
+- runFlow: ../shared/open-wallets.yaml
+- runFlow: ../shared/add-wallet.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1, Wallet 2'
+- runFlow:
+    file: ../shared/read-address.yaml
+    env:
+      ITEM: 0
+      KEY: 'secondWallet'
+- assertTrue: ${output.secondWallet.startsWith('bc1q')}
+- assertTrue: ${output.secondWallet != output.firstWallet}
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+      text: 'Bitcoin, BTC, .*, 0\.02'
+    timeout: 30000
+- runFlow: ../shared/open-wallets.yaml
+- runFlow:
+    file: ../shared/remove-wallet.yaml
+    env:
+      WALLET_INDEX: 1
+- runFlow: ../shared/back-to-home.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1'
+- runFlow:
+    file: ../shared/read-address.yaml
+    env:
+      ITEM: 0
+      KEY: 'afterRemoval'
+- assertTrue: ${output.afterRemoval == output.firstWallet}
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+      text: 'Bitcoin, BTC, \$450\.00, 0\.01'
+    timeout: 30000
+- assertVisible:
+    id: 'tokenBalanceItem-STX'
+    text: 'Stacks, STX, .*, 13\.568'

@@ -1,0 +1,7 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - fresh app, mock scenarios from SCENARIO, new wallet on Home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: ${SCENARIO}

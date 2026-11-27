@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: home - leaves out a transaction the wallet neither sent nor received
+tags:
+  - home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: 'empty-activity,activity-owned-and-unowned'
+- tapOn: 'Activity'
+- extendedWaitUntil:
+    visible: 'BTC, Sent to .* · [0-9]+[a-z]+ ago, − 0\.00198, \$89\.10'
+    timeout: 30000
+- assertVisible:
+    text: '.* · [0-9]+[a-z]+ ago, .*'
+    index: 0
+- assertNotVisible:
+    text: '.* · [0-9]+[a-z]+ ago, .*'
+    index: 1
+- assertNotVisible: '.*0\.0009.*'
+- assertNotVisible: '.*0\.00089.*'
+- assertNotVisible: '.*\$40\.50.*'
+- assertNotVisible: '.*\$40\.05.*'
+- assertNotVisible: '.*, Received.*'
+- assertNotVisible: 'Make your first transaction to get started'

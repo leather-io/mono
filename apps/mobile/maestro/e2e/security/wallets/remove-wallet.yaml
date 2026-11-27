@@ -1,0 +1,26 @@
+appId: io.leather.mobilewallet
+name: security - removing a wallet with device security on asks for Face ID once and a match removes it
+tags:
+  - security
+  - faceid-match
+  - faceid-prompts-1
+---
+- runFlow:
+    file: ../shared/start-secure.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../../accounts/shared/open-wallets.yaml
+- runFlow: ../../accounts/shared/add-wallet.yaml
+- runFlow: ../../accounts/shared/open-wallets.yaml
+- assertVisible: 'Wallet 2'
+- runFlow: ../shared/start-remove-wallet.yaml
+- extendedWaitUntil:
+    notVisible:
+      id: 'walletSettingsRemoveWalletButton'
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: 'walletListSettingsButton'
+    timeout: 20000
+- assertNotVisible: 'Wallet 2'
+- assertVisible: 'Wallet 1'

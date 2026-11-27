@@ -1,0 +1,21 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - from Home with one wallet, copy its secret key, remove it and restore it from the empty Home screen
+---
+- runFlow: open-wallets.yaml
+- runFlow:
+    file: copy-secret-key.yaml
+    env:
+      WALLET_INDEX: 0
+- runFlow:
+    file: remove-wallet.yaml
+    env:
+      WALLET_INDEX: 0
+- runFlow: to-empty-home.yaml
+- tapOn:
+    id: 'homeCreateWalletCard'
+- extendedWaitUntil:
+    visible:
+      id: 'restoreWalletSheetButton'
+    timeout: 20000
+- runFlow: restore-from-clipboard.yaml
+- runFlow: finish-onboarding.yaml

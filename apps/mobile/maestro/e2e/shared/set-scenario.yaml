@@ -1,0 +1,45 @@
+appId: io.leather.mobilewallet
+name: Shared - switch the in-app network mocks to the scenarios in SCENARIO, check the app applied them, and create a wallet when WALLET is new
+---
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - pressKey: home
+      - extendedWaitUntil:
+          notVisible:
+            id: 'action_bar_root'
+          timeout: 10000
+          optional: true
+- openLink: "leather://?e2e=${SCENARIO}${typeof WALLET === 'string' && WALLET !== '' ? '&wallet=' + WALLET : ''}"
+- evalScript: ${output.setScenarioAttempt = 0}
+- retry:
+    maxRetries: 1
+    commands:
+      - evalScript: ${output.setScenarioAttempt = output.setScenarioAttempt + 1}
+      - runFlow:
+          when:
+            platform: iOS
+            true: ${output.setScenarioAttempt > 1}
+            visible: 'Open'
+          commands:
+            - tapOn: 'Open'
+            - waitForAnimationToEnd
+      - runFlow:
+          when:
+            true: ${output.setScenarioAttempt > 1}
+            visible: 'Toggle element inspector'
+          commands:
+            - tapOn: 'Close'
+            - waitForAnimationToEnd
+      - extendedWaitUntil:
+          visible:
+            id: 'e2eActiveScenario'
+            text: "${SCENARIO || 'baseline'}"
+          timeout: 30000
+      - runFlow:
+          when:
+            platform: iOS
+          commands:
+            - assertNotVisible: 'Open'
+      - assertNotVisible: 'Toggle element inspector'

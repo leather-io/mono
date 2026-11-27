@@ -1,0 +1,116 @@
+appId: io.leather.mobilewallet
+name: home - home tabs switch between tokens, collectibles and activity and open receive
+tags:
+  - home
+  - ios-ci
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: 'no-nfts'
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+    timeout: 30000
+- assertVisible: 'Tokens'
+- assertVisible: 'Collectibles'
+- assertVisible: 'Activity'
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible: '.*Get your first NFT.*'
+          commands:
+            - tapOn: 'Collectibles'
+      - extendedWaitUntil:
+          visible: '.*Get your first NFT.*'
+          timeout: 15000
+- assertNotVisible:
+    id: 'tokenBalanceItem-BTC'
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: 'Collectibles'
+          commands:
+            - tapOn: 'Activity'
+      - extendedWaitUntil:
+          notVisible: 'Collectibles'
+          timeout: 15000
+- extendedWaitUntil:
+    visible: 'ACTIVITY'
+    timeout: 15000
+- assertNotVisible: 'Collectibles'
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible: 'Collectibles'
+          commands:
+            - tapOn: 'Home'
+      - extendedWaitUntil:
+          visible: 'Collectibles'
+          timeout: 15000
+- tapOn: 'Tokens'
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+    timeout: 15000
+- assertNotVisible: '.*Get your first NFT.*'
+- tapOn: 'Receive'
+- extendedWaitUntil:
+    visible: 'Select asset'
+    timeout: 15000
+- assertVisible:
+    id: 'receiveAssetItem'
+    text: '.*bc1q.*'
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: 'Select asset'
+          commands:
+            - swipe:
+                start: 50%, 14%
+                end: 50%, 95%
+      - extendedWaitUntil:
+          notVisible: 'Select asset'
+          timeout: 10000
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible: '.*Get your first NFT.*'
+          commands:
+            - tapOn: 'Collectibles'
+      - extendedWaitUntil:
+          visible: '.*Get your first NFT.*'
+          timeout: 15000
+- tapOn: 'Receive'
+- extendedWaitUntil:
+    visible: 'Select asset'
+    timeout: 15000
+- assertVisible:
+    id: 'receiveAssetItem'
+    text: '.*bc1q.*'
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: 'Select asset'
+          commands:
+            - swipe:
+                start: 50%, 14%
+                end: 50%, 95%
+      - extendedWaitUntil:
+          notVisible: 'Select asset'
+          timeout: 10000
+- assertVisible: '.*Get your first NFT.*'
+- assertNotVisible:
+    id: 'tokenBalanceItem-BTC'

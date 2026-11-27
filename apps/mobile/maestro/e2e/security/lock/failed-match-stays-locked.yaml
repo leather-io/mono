@@ -1,0 +1,32 @@
+appId: io.leather.mobilewallet
+name: security - a failed Face ID match keeps the app locked until a match unlocks it
+tags:
+  - security
+  - faceid-nomatch
+  - faceid-prompts-2
+---
+- runFlow:
+    file: ../shared/start-secure.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/relaunch.yaml
+- runFlow: ../shared/cancel-failed-faceid.yaml
+- runFlow: ../shared/assert-locked.yaml
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: 'lockScreenUnlockButton'
+            notVisible: 'Face ID'
+          commands:
+            - tapOn:
+                id: 'lockScreenUnlockButton'
+      - extendedWaitUntil:
+          visible: 'Face ID'
+          timeout: 20000
+- runFlow: ../shared/assert-unlocked.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1'

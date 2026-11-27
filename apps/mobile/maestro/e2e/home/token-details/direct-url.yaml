@@ -1,0 +1,83 @@
+appId: io.leather.mobilewallet
+name: home - token details open from a direct link for BTC, STX, sBTC, aeUSDC and USDCx
+tags:
+  - home
+  - blocked-android
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: ''
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+    timeout: 30000
+- openLink: 'leather://nativeBtc%7CBTC'
+- extendedWaitUntil:
+    visible: 'Bitcoin \(BTC\)'
+    timeout: 20000
+- scroll
+- extendedWaitUntil:
+    visible:
+      id: 'tokenDetailsTitle'
+      text: 'Bitcoin'
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'backButton'
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-STX'
+    timeout: 10000
+- openLink: 'leather://nativeStx%7CSTX'
+- extendedWaitUntil:
+    visible: 'Stacks \(STX\)'
+    timeout: 20000
+- scroll
+- extendedWaitUntil:
+    visible:
+      id: 'tokenDetailsTitle'
+      text: 'Stacks'
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'backButton'
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-sBTC'
+    timeout: 10000
+- openLink: 'leather://sip10%7CSM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4.sbtc-token%3A%3Asbtc-token'
+- extendedWaitUntil:
+    visible: 'Layer 2 · Stacks'
+    timeout: 20000
+- assertVisible: 'sBTC'
+- assertVisible: '45,000\.00'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'backButton'
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-USDCx'
+    timeout: 10000
+- openLink: 'leather://sip10%7CSP3Y2ZSH8P7D50B0VBTSX11S7XSG24M1VB9YFQA4K.token-aeusdc%3A%3AaeUSDC'
+- extendedWaitUntil:
+    visible: 'Wrapped USDC'
+    timeout: 20000
+- assertVisible: 'Layer 2 · Stacks'
+- waitForAnimationToEnd
+- tapOn:
+    id: 'backButton'
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-USDCx'
+    timeout: 10000
+- openLink: 'leather://sip10%7CSP120SBRBQJ00MCWS7TM5R8WJNTTKD5K0HFRC2CNE.usdcx%3A%3Ausdcx-token'
+- extendedWaitUntil:
+    visible: 'Layer 2 · Stacks'
+    timeout: 20000
+- assertVisible: 'USDCx'
+- assertVisible: 'Token Details'
