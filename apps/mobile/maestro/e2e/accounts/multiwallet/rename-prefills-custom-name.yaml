@@ -1,0 +1,22 @@
+appId: io.leather.mobilewallet
+name: accounts - that the rename account dialog prefills a previously set custom name
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- runFlow:
+    file: ../shared/open-account.yaml
+    env:
+      ACCOUNT_INDEX: 0
+- runFlow:
+    file: ../shared/rename-account.yaml
+    env:
+      NAME: 'Savings'
+- runFlow: ../shared/open-rename-sheet.yaml
+- assertVisible:
+    id: 'accountChangeNameSheetInput'
+    text: 'Savings'

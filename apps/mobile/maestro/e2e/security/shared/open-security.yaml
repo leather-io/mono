@@ -1,0 +1,29 @@
+appId: io.leather.mobilewallet
+name: Security shared - open Settings > Security from Home
+---
+- extendedWaitUntil:
+    visible:
+      id: 'homeSettingsButton'
+    timeout: 20000
+- waitForAnimationToEnd
+- repeat:
+    times: 3
+    while:
+      notVisible:
+        id: 'settingsSecurityButton'
+    commands:
+      - tapOn:
+          id: 'homeSettingsButton'
+          optional: true
+      - extendedWaitUntil:
+          visible:
+            id: 'settingsSecurityButton'
+          timeout: 10000
+          optional: true
+- waitForAnimationToEnd
+- tapOn:
+    id: 'settingsSecurityButton'
+- extendedWaitUntil:
+    visible: 'App authentication, .*'
+    timeout: 20000
+- waitForAnimationToEnd

@@ -1,6 +1,7 @@
 import { Balance } from '@/components/balance/balance';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
 import { useAccountUnlockedBalance } from '@/queries/balance/account-balance.query';
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/core/macro';
 
 import { type AccountId } from '@leather.io/models';
@@ -66,7 +67,7 @@ export function AvailableAccountBalance({
           <Balance balance={unlockedBalance.value} variant="heading05" />
         )}
       </Box>
-      <Pressable p="2" onPress={onOpenManageTokens}>
+      <Pressable p="2" onPress={onOpenManageTokens} testID={TestId.homeManageTokensButton}>
         <SettingsSliderHorIcon />
       </Pressable>
     </Box>

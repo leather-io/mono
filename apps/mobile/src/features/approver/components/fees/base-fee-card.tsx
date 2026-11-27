@@ -1,6 +1,7 @@
 import { type ReactElement } from 'react';
 
 import { Balance } from '@/components/balance/balance';
+import { TestId } from '@/shared/test-id';
 
 import { type MarketData, type Money } from '@leather.io/models';
 import { Avatar, Box, Cell, ChevronRightIcon, type IconProps } from '@leather.io/ui/native';
@@ -29,7 +30,12 @@ export function BaseFeeCard({
 
   return (
     <Box mx="-5">
-      <Cell.Root pressable={!disabled} onPress={onPress} disabled={disabled}>
+      <Cell.Root
+        pressable={!disabled}
+        onPress={onPress}
+        disabled={disabled}
+        testID={TestId.approverFeeCard}
+      >
         <Cell.Icon>
           <Avatar icon={icon} />
         </Cell.Icon>

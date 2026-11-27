@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - from Home, open the account selector from the header
+---
+- extendedWaitUntil:
+    visible:
+      id: 'homeAccountHeader'
+    timeout: 20000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'accountSelectorAccountCard'
+          commands:
+            - tapOn:
+                id: 'homeAccountHeader'
+            - waitForAnimationToEnd
+      - extendedWaitUntil:
+          visible:
+            id: 'accountSelectorAccountCard'
+          timeout: 10000
+- assertVisible:
+    id: 'accountSelectorAccountCard'

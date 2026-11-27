@@ -1,0 +1,40 @@
+appId: io.leather.mobilewallet
+name: 'send - send form preview: that it shows preview of tx details to be confirmed'
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: STX
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '1'
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB
+- runFlow: ../shared/review.yaml
+- assertVisible: 'Sign Transaction'
+- assertVisible: 'You.ll send'
+- assertVisible: 'To address'
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-STX'
+      text: 'Stacks, STX, .*, 1\.003'
+    timeout: 15000
+- assertVisible:
+    id: 'approverFeeCard'
+    text: '.*, 0\.003.STX, .*'
+- runFlow:
+    file: ../shared/assert-address-chunks.yaml
+    env:
+      ADDRESS: SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB
+- assertVisible:
+    text: 'Approve'
+    enabled: true

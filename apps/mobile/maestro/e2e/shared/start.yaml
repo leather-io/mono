@@ -1,0 +1,28 @@
+appId: io.leather.mobilewallet
+name: Shared - fresh app, mock scenarios from SCENARIO, new wallet created in code, on Home
+---
+- runFlow:
+    file: open-app.yaml
+    env:
+      SKIP_LATE_MENU_WAIT: 'true'
+- runFlow:
+    file: set-scenario.yaml
+    env:
+      SCENARIO: ${SCENARIO}
+      WALLET: new
+- evalScript: ${output.startHomeAttempt = 0}
+- retry:
+    maxRetries: 1
+    commands:
+      - evalScript: ${output.startHomeAttempt = output.startHomeAttempt + 1}
+      - runFlow:
+          when:
+            true: ${output.startHomeAttempt > 1}
+            visible: 'Toggle element inspector'
+          commands:
+            - tapOn: 'Close'
+            - waitForAnimationToEnd
+      - extendedWaitUntil:
+          visible: 'Account 1'
+          timeout: 120000
+- waitForAnimationToEnd

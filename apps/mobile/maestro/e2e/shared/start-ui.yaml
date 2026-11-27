@@ -1,0 +1,11 @@
+appId: io.leather.mobilewallet
+name: Shared - fresh app, mock scenarios from SCENARIO, new wallet created through the onboarding screens, on Home
+---
+- runFlow: open-app.yaml
+- runFlow:
+    when:
+      true: ${SCENARIO !== ''}
+    file: set-scenario.yaml
+    env:
+      SCENARIO: ${SCENARIO}
+- runFlow: create-wallet.yaml

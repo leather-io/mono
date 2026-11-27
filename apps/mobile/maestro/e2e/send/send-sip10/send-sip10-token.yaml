@@ -1,0 +1,44 @@
+appId: io.leather.mobilewallet
+name: send - can send sip10 token
+tags:
+  - send
+  - ios-ci
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: sBTC
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '0.000001'
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB
+- runFlow: ../shared/review.yaml
+- assertVisible: 'Sign Transaction'
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-sBTC'
+      text: 'sBTC, sBTC, .*, 0\.000001'
+    timeout: 15000
+- assertVisible: 'SM3VDXK3WZZSA84XXFKAFAF15NNZX32CTSG82JFQ4\.sbtc-token'
+- assertVisible: 'transfer'
+- runFlow:
+    file: ../shared/assert-address-chunks.yaml
+    env:
+      ADDRESS: SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB
+- tapOn: 'Approve'
+- extendedWaitUntil:
+    visible: 'Copy ID'
+    timeout: 60000
+- assertVisible: 'Close window'
+- runFlow:
+    file: ../../shared/assert-broadcasts.yaml
+    env:
+      BROADCASTS: '1 stacks [0-9a-f]{64}'

@@ -1,0 +1,62 @@
+appId: io.leather.mobilewallet
+name: home - BTC token details open, show price info, open receive and go back
+tags:
+  - home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: ''
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+    timeout: 30000
+- tapOn:
+    id: 'tokenBalanceItem-BTC'
+    waitToSettleTimeoutMs: 500
+- extendedWaitUntil:
+    visible: 'Token Details'
+    timeout: 20000
+- assertVisible: 'Name'
+- assertVisible: 'Bitcoin \(BTC\)'
+- assertVisible: 'Price'
+- assertVisible: '45,000.00'
+- assertVisible: 'Layer'
+- assertVisible: 'Layer 1'
+- scroll
+- extendedWaitUntil:
+    visible:
+      id: 'tokenDetailsTitle'
+      text: 'Bitcoin'
+    timeout: 10000
+- swipe:
+    start: 50%, 40%
+    end: 50%, 80%
+    waitToSettleTimeoutMs: 500
+- waitForAnimationToEnd
+- tapOn:
+    text: 'Receive'
+    waitToSettleTimeoutMs: 500
+- extendedWaitUntil:
+    visible: 'Select asset'
+    timeout: 10000
+- assertVisible:
+    id: 'receiveAssetItem'
+    text: '.*bc1q.*'
+- assertVisible:
+    id: 'receiveAssetItem'
+    text: '.*bc1p.*'
+- swipe:
+    start: 50%, 14%
+    end: 50%, 95%
+    waitToSettleTimeoutMs: 500
+- waitForAnimationToEnd
+- assertNotVisible: 'Select asset'
+- tapOn:
+    id: 'backButton'
+    waitToSettleTimeoutMs: 500
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+    timeout: 10000
+- assertVisible: 'Total balance'

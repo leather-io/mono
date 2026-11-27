@@ -1,0 +1,28 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks - shows memo on SIP-30 STX transfer approval
+tags:
+  - rpc-stacks
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'rpc-stacks'
+      FILTER: 'mobile-e2e-stx-transfer-memo-reject'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx transfer memo reject'
+- assertVisible: 'Sign Transaction'
+- assertVisible: '.*Account 1.*'
+- assertVisible: 'You’ll send'
+- assertVisible: 'To address'
+- assertVisible: '.*SPXH.*'
+- scrollUntilVisible:
+    element: '.*mock-memo.*'
+    direction: DOWN
+    timeout: 15000
+- assertVisible: '.*Memo.*'
+- runFlow:
+    file: ../shared/cancel-card.yaml
+    env:
+      CARD: 'e2e stx transfer memo reject'

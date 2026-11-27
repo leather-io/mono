@@ -1,0 +1,73 @@
+appId: io.leather.mobilewallet
+name: home - empty tokens tab shows BTC and STX with Buy and opens their details
+tags:
+  - home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: 'empty-wallet'
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: 'tokenBalanceItem-BTC'
+            text: 'Bitcoin, BTC, Buy'
+          timeout: 30000
+      - assertVisible:
+          id: 'tokenBalanceItem-STX'
+          text: 'Stacks, STX, Buy'
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: 'tokenBalanceItem-BTC'
+            text: 'Bitcoin, BTC'
+          timeout: 30000
+      - assertVisible:
+          id: 'tokenBuyButton-BTC'
+          text: 'Buy'
+          childOf:
+            id: 'tokenBalanceItem-BTC'
+      - assertVisible:
+          id: 'tokenBalanceItem-STX'
+          text: 'Stacks, STX'
+      - assertVisible:
+          id: 'tokenBuyButton-STX'
+          text: 'Buy'
+          childOf:
+            id: 'tokenBalanceItem-STX'
+- assertNotVisible:
+    id: 'tokenBalanceItem-USDCx'
+- tapOn:
+    id: 'tokenBalanceItem-BTC'
+- extendedWaitUntil:
+    visible: 'Bitcoin \(BTC\)'
+    timeout: 20000
+- assertVisible: 'Token Details'
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'tokenBalanceItem-STX'
+          commands:
+            - tapOn:
+                id: 'backButton'
+      - extendedWaitUntil:
+          visible:
+            id: 'tokenBalanceItem-STX'
+          timeout: 10000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'tokenBalanceItem-STX'
+- extendedWaitUntil:
+    visible: 'Stacks \(STX\)'
+    timeout: 20000
+- assertVisible: 'Token Details'

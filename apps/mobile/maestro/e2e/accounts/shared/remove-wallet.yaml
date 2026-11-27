@@ -1,0 +1,49 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - on the wallet list, remove wallet WALLET_INDEX through its warning sheet
+---
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'walletSettingsRemoveWalletButton'
+          commands:
+            - tapOn:
+                id: 'walletListSettingsButton'
+                index: ${WALLET_INDEX}
+      - extendedWaitUntil:
+          visible:
+            id: 'walletSettingsRemoveWalletButton'
+          timeout: 10000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'warningSheetContinueButton'
+          commands:
+            - tapOn:
+                id: 'walletSettingsRemoveWalletButton'
+      - extendedWaitUntil:
+          visible:
+            id: 'warningSheetContinueButton'
+          timeout: 10000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: 'warningSheetContinueButton'
+          commands:
+            - tapOn:
+                id: 'warningSheetContinueButton'
+      - extendedWaitUntil:
+          notVisible:
+            id: 'walletSettingsRemoveWalletButton'
+          timeout: 15000
+- waitForAnimationToEnd

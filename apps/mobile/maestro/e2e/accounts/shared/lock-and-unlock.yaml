@@ -1,0 +1,36 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - from Home, lock the app in Settings, unlock it and return to Home
+---
+- tapOn:
+    id: 'homeSettingsButton'
+- extendedWaitUntil:
+    visible:
+      id: 'settingsWalletAndAccountsButton'
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: 'settingsLockAppButton'
+    direction: DOWN
+    timeout: 10000
+- retry:
+    maxRetries: 2
+    commands:
+      - waitForAnimationToEnd
+      - runFlow:
+          when:
+            notVisible:
+              id: 'lockScreenUnlockButton'
+          commands:
+            - tapOn:
+                id: 'settingsLockAppButton'
+      - extendedWaitUntil:
+          visible:
+            id: 'lockScreenUnlockButton'
+          timeout: 20000
+- tapOn:
+    id: 'lockScreenUnlockButton'
+- extendedWaitUntil:
+    notVisible:
+      id: 'lockScreenUnlockButton'
+    timeout: 20000
+- runFlow: back-to-home.yaml

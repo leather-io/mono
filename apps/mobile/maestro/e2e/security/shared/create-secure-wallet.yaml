@@ -1,0 +1,20 @@
+appId: io.leather.mobilewallet
+name: Security shared - create a wallet with device security enabled and land on Home
+---
+- runFlow: to-secure-your-wallet.yaml
+- repeat:
+    while:
+      notVisible: 'Account 1'
+    times: 3
+    commands:
+      - tapOn:
+          text: 'Enable device security'
+          optional: true
+      - extendedWaitUntil:
+          visible: 'Account 1'
+          timeout: 20000
+          optional: true
+- extendedWaitUntil:
+    visible: 'Account 1'
+    timeout: 60000
+- waitForAnimationToEnd

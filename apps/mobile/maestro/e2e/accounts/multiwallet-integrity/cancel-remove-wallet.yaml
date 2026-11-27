@@ -1,0 +1,56 @@
+appId: io.leather.mobilewallet
+name: accounts - that cancelling wallet removal keeps the wallet
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- runFlow: ../shared/add-wallet.yaml
+- runFlow: ../shared/open-wallets.yaml
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'walletSettingsRemoveWalletButton'
+          commands:
+            - tapOn:
+                id: 'walletListSettingsButton'
+                index: 1
+      - extendedWaitUntil:
+          visible:
+            id: 'walletSettingsRemoveWalletButton'
+          timeout: 10000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'warningSheetCancelButton'
+          commands:
+            - tapOn:
+                id: 'walletSettingsRemoveWalletButton'
+      - extendedWaitUntil:
+          visible:
+            id: 'warningSheetCancelButton'
+          timeout: 10000
+- tapOn:
+    id: 'warningSheetCancelButton'
+- extendedWaitUntil:
+    notVisible:
+      id: 'warningSheetCancelButton'
+    timeout: 10000
+- assertVisible:
+    id: 'walletSettingsRemoveWalletButton'
+- tapOn:
+    id: 'backButton'
+- extendedWaitUntil:
+    visible: 'Wallet 1'
+    timeout: 10000
+- assertVisible: 'Wallet 2'

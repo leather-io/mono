@@ -1,0 +1,28 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks - Single signature STX transfer being rejected
+tags:
+  - rpc-stacks
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'rpc-stacks'
+      FILTER: 'mobile-e2e-stx-sign-transaction-txhex-reject'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx sign txHex reject'
+- assertVisible: 'Sign Transaction'
+- assertVisible: '.*Account 1.*'
+- assertVisible: 'You’ll send'
+- assertVisible: '.*0\.0008.*'
+- assertVisible: 'To address'
+- assertVisible: '.*SPXH.*'
+- runFlow:
+    file: ../shared/cancel-card.yaml
+    env:
+      CARD: 'e2e stx sign txHex reject'
+- scrollUntilVisible:
+    element: '.*User rejected request.*'
+    direction: DOWN
+    timeout: 60000

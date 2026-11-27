@@ -1,0 +1,22 @@
+appId: io.leather.mobilewallet
+name: accounts - that the wallet generates the correct Native Segwit address
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../../shared/start-ui.yaml
+    env:
+      SCENARIO: ''
+- runFlow:
+    file: ../shared/read-address.yaml
+    env:
+      ITEM: 0
+      KEY: 'beforeRestore'
+- assertTrue: ${RegExp('^bc1q[qpzry9x8gf2tvdw0s3jn54khce6mua7l]+$').test(output.beforeRestore) && output.beforeRestore.length == 42}
+- runFlow: ../shared/restore-same-wallet.yaml
+- runFlow:
+    file: ../shared/read-address.yaml
+    env:
+      ITEM: 0
+      KEY: 'afterRestore'
+- assertTrue: ${output.afterRestore == output.beforeRestore}

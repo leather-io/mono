@@ -1,0 +1,62 @@
+appId: io.leather.mobilewallet
+name: send - that it errors if non-compliant entity is detected
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: compliance-non-compliant
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: BTC
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '0.00001231'
+- runFlow:
+    file: ../shared/search-recipient.yaml
+    env:
+      SEARCH: 12QtD5BFwRsdNsAZY76UVE1xyCGNTojH9h
+- extendedWaitUntil:
+    visible: 'Matching'
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'sendRecipientItem'
+    text: '12QtD5BFwRsdNsAZY76UVE1xyCGNTojH9h.*'
+- extendedWaitUntil:
+    visible: 'Address blocked'
+    timeout: 20000
+- assertVisible: 'This address is linked to activity that violates compliance policies.*'
+- assertNotVisible: 'Confirm'
+- tapOn: 'Dismiss'
+- extendedWaitUntil:
+    notVisible: 'Address blocked'
+    timeout: 15000
+- assertNotVisible: 'Verify full address'
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: 'Search for BNS name or address'
+          commands:
+            - swipe:
+                start: 50%, 14%
+                end: 50%, 95%
+            - waitForAnimationToEnd
+      - extendedWaitUntil:
+          notVisible: 'Search for BNS name or address'
+          timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: 'sendRecipientToggle'
+    timeout: 15000
+- assertNotVisible:
+    id: 'sendRecipientToggle'
+    text: '.*12Qt.*'
+- assertVisible:
+    text: 'Review'
+    enabled: false

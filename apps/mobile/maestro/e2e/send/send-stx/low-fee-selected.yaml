@@ -1,0 +1,31 @@
+appId: io.leather.mobilewallet
+name: send - that low fee estimate can be selected
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: STX
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '1'
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB
+- runFlow: ../shared/review.yaml
+- runFlow:
+    file: ../shared/pick-fee.yaml
+    env:
+      FEE: Low
+- extendedWaitUntil:
+    visible:
+      id: 'approverFeeCard'
+      text: '.*Slow.*0\.0002.STX.*'
+    timeout: 15000

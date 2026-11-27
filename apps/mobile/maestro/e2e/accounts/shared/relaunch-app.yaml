@@ -1,0 +1,78 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - stop the app, open it again from the dev client, unlock it and wait for Home
+---
+- stopApp
+- retry:
+    maxRetries: 2
+    commands:
+      - openLink: ${DEV_CLIENT_URL}
+- evalScript: ${output.relaunchAttempt = 0}
+- retry:
+    maxRetries: 10
+    commands:
+      - evalScript: ${output.relaunchAttempt = output.relaunchAttempt + 1}
+      - runFlow:
+          when:
+            true: ${output.relaunchAttempt > 1}
+            visible: 'Toggle element inspector'
+          commands:
+            - tapOn: 'Close'
+            - waitForAnimationToEnd
+      - runFlow:
+          when:
+            true: ${output.relaunchAttempt > 1}
+            visible: 'Open'
+          commands:
+            - tapOn: 'Open'
+      - runFlow:
+          when:
+            true: ${output.relaunchAttempt > 1}
+            visible: 'There was a problem loading the project\..*'
+          commands:
+            - tapOn: 'Reload'
+      - runFlow:
+          when:
+            true: ${output.relaunchAttempt > 1}
+            visible: 'Development Build'
+          commands:
+            - openLink: ${DEV_CLIENT_URL}
+      - runFlow:
+          when:
+            platform: Android
+            true: ${output.relaunchAttempt > 1}
+            notVisible:
+              id: 'action_bar_root'
+          commands:
+            - openLink: ${DEV_CLIENT_URL}
+      - runFlow:
+          when:
+            true: ${output.relaunchAttempt > 1}
+            visible:
+              id: 'lockScreenUnlockButton'
+          commands:
+            - tapOn:
+                id: 'lockScreenUnlockButton'
+      - extendedWaitUntil:
+          visible:
+            id: 'homeAccountHeader'
+          timeout: 5000
+- extendedWaitUntil:
+    visible: 'Toggle element inspector'
+    timeout: 3000
+    optional: true
+- evalScript: ${output.relaunchMenuAttempt = 0}
+- retry:
+    maxRetries: 2
+    commands:
+      - evalScript: ${output.relaunchMenuAttempt = output.relaunchMenuAttempt + 1}
+      - runFlow:
+          when:
+            true: ${output.relaunchMenuAttempt > 1}
+          commands:
+            - tapOn: 'Close'
+            - waitForAnimationToEnd
+      - extendedWaitUntil:
+          notVisible: 'Toggle element inspector'
+          timeout: 1000
+- assertVisible:
+    id: 'homeAccountHeader'

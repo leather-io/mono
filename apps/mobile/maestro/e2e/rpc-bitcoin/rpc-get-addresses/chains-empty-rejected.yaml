@@ -1,0 +1,20 @@
+appId: io.leather.mobilewallet
+name: 'rpc-bitcoin - chains: [] is rejected with invalid params'
+tags:
+  - rpc-bitcoin
+  - blocked
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+      FILTER: 'e2ebtc-getaddresses-chains-empty'
+- runFlow:
+    file: ../shared/show-card.yaml
+    env:
+      CARD: '.*e2e getAddresses chains empty.*'
+- tapOn: '.*e2e getAddresses chains empty.*'
+- runFlow:
+    file: ../shared/expect-pass.yaml
+    env:
+      PASS: '(?i).*e2e getAddresses chains empty pass.*'

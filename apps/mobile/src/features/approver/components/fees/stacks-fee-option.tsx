@@ -1,6 +1,7 @@
+import { TestId } from '@/shared/test-id';
 import { formatCurrency } from '@/utils/currency-formatter';
 
-import { type FeeTypes, type Money } from '@leather.io/models';
+import { FeeTypes, type Money } from '@leather.io/models';
 
 import { getStacksFeeData } from '../../utils';
 import { BaseFeeOption } from './base-fee-option';
@@ -24,6 +25,7 @@ export function StacksFeeOption({
 }: StacksFeeOptionProps) {
   return (
     <BaseFeeOption
+      testID={`${TestId.approverFeeOption}-${FeeTypes[feeType]}`}
       onPress={onPress}
       isSelected={isSelected}
       disabled={disabled}

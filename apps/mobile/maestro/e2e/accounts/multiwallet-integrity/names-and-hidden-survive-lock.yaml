@@ -1,0 +1,44 @@
+appId: io.leather.mobilewallet
+name: accounts - that custom names and hidden accounts survive a lock and unlock
+tags:
+  - accounts
+  - ios-ci
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- runFlow:
+    file: ../shared/add-account.yaml
+    env:
+      ACCOUNT_NAME: 'Account 2'
+- runFlow:
+    file: ../shared/open-account.yaml
+    env:
+      ACCOUNT_INDEX: 0
+- runFlow:
+    file: ../shared/rename-account.yaml
+    env:
+      NAME: 'Kept name'
+- tapOn:
+    id: 'backButton'
+- runFlow:
+    file: ../shared/open-account.yaml
+    env:
+      ACCOUNT_INDEX: 1
+- runFlow:
+    file: ../shared/toggle-hidden.yaml
+    env:
+      FROM_ID: 'accountSettingsHideAccountButton'
+      TO_ID: 'accountSettingsRevealAccountButton'
+- runFlow: ../shared/back-to-home.yaml
+- runFlow: ../shared/relaunch-app.yaml
+- runFlow: ../shared/lock-and-unlock.yaml
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Kept name'
+- runFlow: ../shared/open-wallets.yaml
+- assertVisible: '.*, Kept name, .*'
+- assertVisible: '.*Hidden accounts.*'
+- assertNotVisible: '.*, Account 2, .*'

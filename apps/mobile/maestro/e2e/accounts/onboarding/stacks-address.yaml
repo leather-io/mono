@@ -1,0 +1,22 @@
+appId: io.leather.mobilewallet
+name: accounts - that restoring a wallet generates the correct stacks address
+tags:
+  - accounts
+---
+- runFlow:
+    file: ../../shared/start-ui.yaml
+    env:
+      SCENARIO: ''
+- runFlow:
+    file: ../shared/read-address.yaml
+    env:
+      ITEM: 2
+      KEY: 'beforeRestore'
+- assertTrue: ${RegExp('^SP[0-9A-HJKMNP-TV-Z]+$').test(output.beforeRestore) && output.beforeRestore.length >= 39 && output.beforeRestore.length <= 41}
+- runFlow: ../shared/restore-same-wallet.yaml
+- runFlow:
+    file: ../shared/read-address.yaml
+    env:
+      ITEM: 2
+      KEY: 'afterRestore'
+- assertTrue: ${output.afterRestore == output.beforeRestore}

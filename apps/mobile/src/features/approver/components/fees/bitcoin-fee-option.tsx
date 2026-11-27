@@ -1,7 +1,8 @@
+import { TestId } from '@/shared/test-id';
 import { formatCurrency } from '@/utils/currency-formatter';
 import { t } from '@lingui/core/macro';
 
-import { type FeeTypes, type Money } from '@leather.io/models';
+import { FeeTypes, type Money } from '@leather.io/models';
 import { createMoney } from '@leather.io/utils';
 
 import { getBitcoinFeeData } from '../../utils';
@@ -31,6 +32,7 @@ export function BitcoinFeeOption({
 
   return (
     <BaseFeeOption
+      testID={`${TestId.approverFeeOption}-${FeeTypes[feeType]}`}
       onPress={onPress}
       icon={getBitcoinFeeData(feeType).icon}
       title={getBitcoinFeeData(feeType).title}

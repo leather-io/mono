@@ -1,0 +1,11 @@
+appId: io.leather.mobilewallet
+name: Security shared - fresh app, mock scenarios from SCENARIO, new wallet with device security on Home
+---
+- runFlow: ../../shared/open-app.yaml
+- runFlow:
+    when:
+      true: ${SCENARIO !== ''}
+    file: ../../shared/set-scenario.yaml
+    env:
+      SCENARIO: ${SCENARIO}
+- runFlow: create-secure-wallet.yaml

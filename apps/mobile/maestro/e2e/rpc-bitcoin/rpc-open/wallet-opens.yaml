@@ -1,0 +1,21 @@
+appId: io.leather.mobilewallet
+name: 'rpc-bitcoin - the wallet opens successfully'
+tags:
+  - rpc-bitcoin
+  - blocked
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+      FILTER: 'e2ebtc-prime-keys,open-popup'
+- runFlow: ../shared/connect.yaml
+- runFlow:
+    file: ../shared/show-card.yaml
+    env:
+      CARD: '.*open .popup.*'
+- tapOn: '.*open .popup.*'
+- runFlow:
+    file: ../shared/expect-pass.yaml
+    env:
+      PASS: '(?i).*open .popup. pass.*'

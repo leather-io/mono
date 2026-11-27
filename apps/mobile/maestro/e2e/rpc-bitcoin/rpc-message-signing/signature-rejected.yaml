@@ -1,0 +1,23 @@
+appId: io.leather.mobilewallet
+name: 'rpc-bitcoin - Signature rejected'
+tags:
+  - rpc-bitcoin
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+      FILTER: 'e2ebtc-prime-keys,e2ebtc-signmessage-reject'
+- runFlow: ../shared/connect.yaml
+- runFlow:
+    file: ../shared/run-card.yaml
+    env:
+      CARD: '.*e2e signMessage reject.*'
+- extendedWaitUntil:
+    visible: 'Sign Message'
+    timeout: 30000
+- runFlow: ../shared/cancel.yaml
+- runFlow:
+    file: ../shared/expect-pass.yaml
+    env:
+      PASS: '(?i).*e2e signMessage reject pass.*'

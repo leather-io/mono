@@ -1,0 +1,15 @@
+appId: io.leather.mobilewallet
+name: send - that it defaults to swapping STX
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: send-swap
+- runFlow: ../shared/open-swap.yaml
+- extendedWaitUntil:
+    visible:
+      id: 'swapBaseAssetToggle'
+      text: '.*STX.*'
+    timeout: 20000

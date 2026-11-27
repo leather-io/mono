@@ -1,0 +1,16 @@
+appId: io.leather.mobilewallet
+name: security - a second wallet can be created next to a wallet with device security and becomes active
+tags:
+  - security
+  - faceid-match
+---
+- runFlow:
+    file: ../shared/start-secure.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../../accounts/shared/open-wallets.yaml
+- runFlow: ../../accounts/shared/add-wallet.yaml
+- assertNotVisible: 'Secure your wallet'
+- assertVisible:
+    id: 'homeAccountHeader'
+    text: 'Account 1, Wallet 2'

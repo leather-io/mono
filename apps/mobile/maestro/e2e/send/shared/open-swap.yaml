@@ -1,0 +1,41 @@
+appId: io.leather.mobilewallet
+name: Send shared - open Swap from Home and wait for the form
+---
+- swipe:
+    from: 'Buy'
+    direction: LEFT
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'swapBaseAssetToggle'
+          commands:
+            - runFlow:
+                when:
+                  visible: 'Bottom Sheet'
+                commands:
+                  - swipe:
+                      start: 50%, 14%
+                      end: 50%, 95%
+                  - extendedWaitUntil:
+                      notVisible: 'Bottom Sheet'
+                      timeout: 10000
+                  - waitForAnimationToEnd
+            - runFlow:
+                when:
+                  notVisible: 'Swap'
+                  visible: 'Buy'
+                commands:
+                  - swipe:
+                      from: 'Buy'
+                      direction: LEFT
+                  - waitForAnimationToEnd
+            - tapOn: 'Swap'
+      - extendedWaitUntil:
+          visible:
+            id: 'swapBaseAssetToggle'
+          timeout: 15000
+- waitForAnimationToEnd

@@ -1,0 +1,62 @@
+appId: io.leather.mobilewallet
+name: send - that it swaps STX for aeUSDC end to end
+tags:
+  - send
+  - ios-ci
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: send-swap
+- runFlow:
+    file: ../shared/show-token.yaml
+    env:
+      TICKER: aeUSDC
+- runFlow: ../shared/open-swap.yaml
+- runFlow:
+    file: ../shared/pick-swap-asset.yaml
+    env:
+      TOGGLE: swapTargetAssetToggle
+      SYMBOL: aeUSDC
+- tapOn:
+    text: '1'
+    below:
+      id: 'swapTargetAssetToggle'
+- extendedWaitUntil:
+    visible:
+      text: 'Review'
+      enabled: true
+    timeout: 30000
+- tapOn: 'Review'
+- extendedWaitUntil:
+    visible: 'Review Swap'
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      text: 'Confirm'
+      enabled: true
+    timeout: 30000
+- tapOn:
+    text: 'Confirm'
+    waitToSettleTimeoutMs: 200
+- extendedWaitUntil:
+    notVisible: 'Review Swap'
+    timeout: 60000
+- extendedWaitUntil:
+    notVisible:
+      id: 'swapBaseAssetToggle'
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: 'homeAccountHeader'
+    timeout: 15000
+- waitForAnimationToEnd
+- assertNotVisible: 'Failed to start a swap'
+- assertNotVisible: 'Back to review'
+- assertNotVisible: 'Initiating the swap.*'
+- assertVisible:
+    id: 'homeAccountHeader'
+- runFlow:
+    file: ../../shared/assert-broadcasts.yaml
+    env:
+      BROADCASTS: '1 stacks [0-9a-f]{64}'

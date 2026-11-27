@@ -1,0 +1,26 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks - SIP-30 transfer sip10 fungible token, shows the transfer and cancels it
+tags:
+  - rpc-stacks
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'rpc-stacks'
+      FILTER: 'mobile-e2e-stx-transfer-sip10-reject'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx sip10 reject'
+- assertVisible: 'Sign Transaction'
+- assertVisible: 'You will transfer exactly'
+- assertVisible: '.*(LEO|Leo).*'
+- assertVisible: '.*0\.001.*'
+- assertVisible: 'To address'
+- assertVisible: '.*SPXH.*'
+- assertVisible: 'transfer'
+- assertVisible: 'SP1AY6K3PQV5MRT6R4S671NWW2FRVPKM0BR162CT6.leo-token'
+- runFlow:
+    file: ../shared/cancel-card.yaml
+    env:
+      CARD: 'e2e stx sip10 reject'

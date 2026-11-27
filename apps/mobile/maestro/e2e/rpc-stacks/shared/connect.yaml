@@ -1,0 +1,50 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks shared - connect the test dApp with Load account
+---
+- extendedWaitUntil:
+    visible: '.*Leather detected.*'
+    timeout: 60000
+- retry:
+    maxRetries: 2
+    commands:
+      - tapOn: 'Load account'
+      - extendedWaitUntil:
+          visible: 'Approve'
+          timeout: 15000
+- waitForAnimationToEnd
+- runFlow:
+    when:
+      visible: 'Choose an account'
+    commands:
+      - retry:
+          maxRetries: 2
+          commands:
+            - runFlow:
+                when:
+                  notVisible:
+                    id: 'accountSelectorAccountCard'
+                commands:
+                  - tapOn: 'Choose an account'
+            - extendedWaitUntil:
+                visible:
+                  id: 'accountSelectorAccountCard'
+                timeout: 10000
+      - tapOn:
+          id: 'accountSelectorAccountCard'
+          index: 0
+      - waitForAnimationToEnd
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: 'Approve'
+          commands:
+            - tapOn: 'Approve'
+      - extendedWaitUntil:
+          visible: 'Refresh'
+          timeout: 10000
+- extendedWaitUntil:
+    notVisible: 'Approve'
+    timeout: 20000

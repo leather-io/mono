@@ -1,0 +1,13 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - on the wallet list, add an account to the first wallet and wait for ACCOUNT_NAME
+---
+- tapOn:
+    id: 'walletListAddAccountButton'
+- extendedWaitUntil:
+    visible: '.*, ${ACCOUNT_NAME}, .*'
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: 'walletListAddAccountButton'
+      text: 'Add account'
+    timeout: 30000

@@ -5,6 +5,7 @@ import { FullHeightSheetLayout } from '@/components/sheets/full-height-sheet/ful
 import { getAmountErrorMessage } from '@/features/swap/components/amount-field/amount-field-error-messages';
 import { AmountPresets } from '@/features/swap/components/amount-presets';
 import { QuotePreview } from '@/features/swap/components/quote-preview/quote-preview';
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/core/macro';
 
 import { currencyDecimalsMap } from '@leather.io/constants';
@@ -70,6 +71,7 @@ export function SwapFormScreen({ liveEstimate, onPressReview }: SwapFormScreenPr
             />
             <Box alignItems="flex-end" gap="3" flexShrink={0}>
               <AssetSelectorToggle
+                testID={TestId.swapBaseAssetToggle}
                 asset={state.baseSwapAsset?.asset}
                 onPress={() => actions.openAssetSelector('base')}
               />
@@ -89,6 +91,7 @@ export function SwapFormScreen({ liveEstimate, onPressReview }: SwapFormScreenPr
             />
             <Box alignItems="flex-end" gap="3" flexShrink={0}>
               <AssetSelectorToggle
+                testID={TestId.swapTargetAssetToggle}
                 asset={state.targetSwapAsset?.asset}
                 onPress={() => actions.openAssetSelector('target')}
                 disabled={state.baseSwapAsset === null}

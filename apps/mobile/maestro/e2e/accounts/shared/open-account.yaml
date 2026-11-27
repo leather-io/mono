@@ -1,0 +1,19 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - on the wallet list, open Configure account for card ACCOUNT_INDEX
+---
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'walletSettingsAccountNameCell'
+          commands:
+            - tapOn:
+                id: 'walletListAccountCard'
+                index: ${ACCOUNT_INDEX}
+      - extendedWaitUntil:
+          visible:
+            id: 'walletSettingsAccountNameCell'
+          timeout: 10000
+- waitForAnimationToEnd

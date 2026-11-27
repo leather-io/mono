@@ -1,0 +1,22 @@
+appId: io.leather.mobilewallet
+name: send - that the address must be valid
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: STX
+- runFlow:
+    file: ../shared/search-recipient.yaml
+    env:
+      SEARCH: ST3TZVWsss4VTZA1WZN2TB6RQ5J8RACHZYMWMM2N1HT2
+- extendedWaitUntil:
+    visible: 'No results found'
+    timeout: 20000
+- assertVisible: 'The address you entered isn.t valid. Verify and try again'
+- assertNotVisible: 'Matching'

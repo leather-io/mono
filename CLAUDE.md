@@ -54,7 +54,7 @@ Mobile requires an `apps/mobile/.env` file with `EXPO_PUBLIC_LAUNCH_DARKLY` set.
 
 ## React Native / Expo
 
-- Mobile app uses Expo with local prebuild + Fastlane on GitHub runners (no EAS Build, no EAS Update, no @expo/fingerprint).
+- Mobile app uses Expo with local prebuild + Fastlane on GitHub runners (no EAS Build, no EAS Update; @expo/fingerprint only keys the cached CI test builds).
 - SDK upgrades: check the official upgrade guide for deprecated/renamed APIs before starting.
 - Clear bundler cache: `npx expo start --dev-client --clear`.
 - `BUILD_TARGET` env var controls platform builds: `mobile`, `extension`, or `web`. Unset builds everything.

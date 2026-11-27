@@ -1,0 +1,21 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - type FIRST then REST into the restore input, allowing the iOS paste prompt the input triggers
+---
+- tapOn:
+    id: 'restoreWalletTextInput'
+- inputText: ${FIRST}
+- extendedWaitUntil:
+    visible: 'Allow Paste'
+    timeout: 4000
+    optional: true
+- runFlow:
+    when:
+      visible: 'Allow Paste'
+    commands:
+      - tapOn: 'Allow Paste'
+- inputText: ${REST}
+- runFlow:
+    when:
+      visible: 'Allow Paste'
+    commands:
+      - tapOn: 'Allow Paste'

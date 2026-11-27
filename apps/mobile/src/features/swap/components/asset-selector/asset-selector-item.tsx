@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react';
 
+import { TestId } from '@/shared/test-id';
 import { formatCurrency } from '@/utils/currency-formatter';
 
 import { type Money } from '@leather.io/models';
@@ -19,10 +20,15 @@ export function AssetSelectorItem({
   icon,
   name,
   quoteBalance,
+  symbol,
   onPress,
 }: AssetListItemProps) {
   return (
-    <Cell.Root pressable={!!onPress} onPress={onPress}>
+    <Cell.Root
+      pressable={!!onPress}
+      onPress={onPress}
+      testID={`${TestId.swapAssetSelectorItem}-${symbol}`}
+    >
       <Cell.Icon>{icon}</Cell.Icon>
       <Cell.Content>
         <Cell.Label variant="primary">{name}</Cell.Label>

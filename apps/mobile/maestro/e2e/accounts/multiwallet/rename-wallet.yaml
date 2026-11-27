@@ -1,0 +1,97 @@
+appId: io.leather.mobilewallet
+name: accounts - that a user can rename a wallet
+tags:
+  - accounts
+  - ios-ci
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- tapOn:
+    id: 'walletListSettingsButton'
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: 'walletSettingsRenameWalletButton'
+    timeout: 20000
+- waitForAnimationToEnd
+- evalScript: ${output.renameSheetAttempt = 0}
+- retry:
+    maxRetries: 2
+    commands:
+      - evalScript: ${output.renameSheetAttempt = output.renameSheetAttempt + 1}
+      - runFlow:
+          when:
+            platform: Android
+            true: ${output.renameSheetAttempt > 1}
+          commands:
+            - runFlow:
+                when:
+                  visible: 'Bottom sheet backdrop'
+                commands:
+                  - hideKeyboard
+                  - waitForAnimationToEnd
+      - runFlow:
+          when:
+            notVisible:
+              id: 'walletChangeNameSheetInput'
+          commands:
+            - tapOn:
+                id: 'walletSettingsRenameWalletButton'
+      - extendedWaitUntil:
+          visible:
+            id: 'walletChangeNameSheetInput'
+          timeout: 10000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 3
+    commands:
+      - repeat:
+          times: 4
+          while:
+            visible:
+              id: 'walletChangeNameSheetInput'
+              text: '(?!Name$).+'
+          commands:
+            - runFlow:
+                when:
+                  platform: iOS
+                commands:
+                  - pressKey: enter
+                  - waitForAnimationToEnd
+            - tapOn:
+                id: 'walletChangeNameSheetInput'
+            - eraseText: 40
+      - inputText: 'Trading wallet'
+      - assertVisible:
+          id: 'walletChangeNameSheetInput'
+          text: 'Trading wallet'
+- pressKey: enter
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: 'walletChangeNameSheetSaveButton'
+          commands:
+            - tapOn:
+                id: 'walletChangeNameSheetSaveButton'
+                optional: true
+            - waitForAnimationToEnd
+      - extendedWaitUntil:
+          notVisible:
+            id: 'walletChangeNameSheetSaveButton'
+          timeout: 5000
+- assertNotVisible:
+    id: 'walletChangeNameSheetSaveButton'
+- assertVisible: '.*Trading wallet.*'
+- tapOn:
+    id: 'backButton'
+- extendedWaitUntil:
+    visible: 'Trading wallet'
+    timeout: 10000
+- assertNotVisible: 'Wallet 1'

@@ -1,0 +1,37 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks shared - wait for the test dApp card labelled CARD in the filtered page, scrolling only when a retry finds it missing, tap it and wait for the approver sheet
+---
+- evalScript: ${output.sendCardAttempt = 0}
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            true: ${output.sendCardAttempt > 0}
+          commands:
+            - scrollUntilVisible:
+                element: '.*${CARD}.*'
+                direction: DOWN
+                timeout: 30000
+                optional: true
+            - scrollUntilVisible:
+                element: '.*${CARD}.*'
+                direction: UP
+                timeout: 30000
+                optional: true
+      - evalScript: ${output.sendCardAttempt = output.sendCardAttempt + 1}
+      - extendedWaitUntil:
+          visible: '.*${CARD}.*'
+          timeout: 15000
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible: 'Cancel'
+          commands:
+            - tapOn: '.*${CARD}.*'
+      - extendedWaitUntil:
+          visible: 'Cancel'
+          timeout: 15000
+- waitForAnimationToEnd

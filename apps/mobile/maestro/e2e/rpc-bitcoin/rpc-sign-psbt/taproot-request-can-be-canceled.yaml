@@ -1,0 +1,23 @@
+appId: io.leather.mobilewallet
+name: 'rpc-bitcoin - taproot signing request can be canceled'
+tags:
+  - rpc-bitcoin
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+      FILTER: 'e2ebtc-prime-keys,e2ebtc-signpsbt-taproot-reject'
+- runFlow: ../shared/connect.yaml
+- runFlow:
+    file: ../shared/run-card.yaml
+    env:
+      CARD: '.*e2e signPsbt taproot reject.*'
+- extendedWaitUntil:
+    visible: 'Send token'
+    timeout: 30000
+- runFlow: ../shared/cancel.yaml
+- runFlow:
+    file: ../shared/expect-pass.yaml
+    env:
+      PASS: '(?i).*e2e signPsbt taproot reject pass.*'

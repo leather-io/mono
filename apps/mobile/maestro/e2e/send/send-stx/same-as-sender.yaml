@@ -1,0 +1,67 @@
+appId: io.leather.mobilewallet
+name: send - that the address cannot be same as sender
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow:
+    file: ../shared/read-own-address.yaml
+    env:
+      RECEIVE_INDEX: 2
+- assertTrue: ${output.ownAddress.startsWith('SP')}
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: STX
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '1'
+- runFlow:
+    file: ../shared/search-recipient.yaml
+    env:
+      SEARCH: ${output.ownAddress}
+- extendedWaitUntil:
+    visible:
+      id: 'sendRecipientItem'
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'sendRecipientItem'
+- extendedWaitUntil:
+    visible: 'Can.t send to the same address'
+    timeout: 20000
+- assertVisible: 'Sending to your own address isn.t supported. Choose a different address.'
+- assertNotVisible: 'Confirm'
+- tapOn: 'Dismiss'
+- extendedWaitUntil:
+    notVisible: 'Can.t send to the same address'
+    timeout: 15000
+- assertNotVisible: 'Verify full address'
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: 'Search for BNS name or address'
+          commands:
+            - swipe:
+                start: 50%, 14%
+                end: 50%, 95%
+            - waitForAnimationToEnd
+      - extendedWaitUntil:
+          notVisible: 'Search for BNS name or address'
+          timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: 'sendRecipientToggle'
+    timeout: 15000
+- assertNotVisible:
+    id: 'sendRecipientToggle'
+    text: '.*${output.ownAddress.substr(0, 4)}.*'
+- assertVisible:
+    text: 'Review'
+    enabled: false

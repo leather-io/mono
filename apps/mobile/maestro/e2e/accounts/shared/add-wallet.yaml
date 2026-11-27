@@ -1,0 +1,56 @@
+appId: io.leather.mobilewallet
+name: Accounts shared - from the wallet list, create another wallet and land on Home
+---
+- scrollUntilVisible:
+    element: 'Add wallet'
+    direction: DOWN
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'createNewWalletSheetButton'
+          commands:
+            - tapOn: 'Add wallet'
+      - extendedWaitUntil:
+          visible:
+            id: 'createNewWalletSheetButton'
+          timeout: 10000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'walletCreationBackedUpButton'
+          commands:
+            - tapOn:
+                id: 'createNewWalletSheetButton'
+                optional: true
+      - extendedWaitUntil:
+          visible:
+            id: 'walletCreationBackedUpButton'
+          timeout: 10000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: 'walletCreationBackedUpButton'
+          commands:
+            - tapOn:
+                id: 'walletCreationTapToReveal'
+                optional: true
+            - tapOn:
+                id: 'walletCreationBackedUpButton'
+      - extendedWaitUntil:
+          visible:
+            id: 'homeAccountHeader'
+            text: 'Account 1, Wallet [2-9]'
+          timeout: 30000
+- waitForAnimationToEnd

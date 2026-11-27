@@ -1,0 +1,31 @@
+appId: io.leather.mobilewallet
+name: Security shared - on the wallet list, open the last wallet's settings and confirm Remove wallet
+---
+- tapOn:
+    id: 'walletListSettingsButton'
+    index: "${typeof WALLET_INDEX === 'undefined' || WALLET_INDEX === '' ? 1 : WALLET_INDEX}"
+- extendedWaitUntil:
+    visible:
+      id: 'walletSettingsRemoveWalletButton'
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'walletSettingsRemoveWalletButton'
+- extendedWaitUntil:
+    visible:
+      id: 'warningSheetContinueButton'
+    timeout: 10000
+- waitForAnimationToEnd
+- repeat:
+    times: 3
+    while:
+      visible:
+        id: 'warningSheetContinueButton'
+      notVisible: 'Face ID|Face Not Recognized|Try Face ID Again'
+    commands:
+      - tapOn:
+          id: 'warningSheetContinueButton'
+      - extendedWaitUntil:
+          visible: 'Face ID|Face Not Recognized|Try Face ID Again'
+          timeout: 6000
+          optional: true

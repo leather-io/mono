@@ -2,6 +2,7 @@ import { type ReactNode } from 'react';
 
 import { Loading } from '@/components/loading';
 import { useGlobalSheets } from '@/core/global-sheet-provider';
+import { TestId } from '@/shared/test-id';
 import { t } from '@lingui/core/macro';
 import { useRouter } from 'expo-router';
 
@@ -57,7 +58,11 @@ export function DepositTokenCell({
         onPress={onPress}
         asideComponent={
           <Cell.Aside>
-            <Button variant="outline" onPress={onBuy}>{t`Buy`}</Button>
+            <Button
+              variant="outline"
+              onPress={onBuy}
+              testID={`${TestId.tokenBuyButton}-${ticker}`}
+            >{t`Buy`}</Button>
           </Cell.Aside>
         }
         {...tokenProps}

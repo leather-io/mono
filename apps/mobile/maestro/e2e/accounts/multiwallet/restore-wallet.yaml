@@ -1,0 +1,46 @@
+appId: io.leather.mobilewallet
+name: accounts - that a user can restore a wallet from a secret key
+tags:
+  - accounts
+  - ios-ci
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/open-wallets.yaml
+- runFlow: ../shared/add-wallet.yaml
+- runFlow: ../shared/open-wallets.yaml
+- copyTextFrom:
+    id: 'walletListAccountCard'
+    index: 1
+- evalScript: ${output.restoredAddress = maestro.copiedText.split(',')[0]}
+- runFlow:
+    file: ../shared/copy-secret-key.yaml
+    env:
+      WALLET_INDEX: 1
+- runFlow:
+    file: ../shared/remove-wallet.yaml
+    env:
+      WALLET_INDEX: 1
+- extendedWaitUntil:
+    visible: 'Add wallet'
+    timeout: 20000
+- assertNotVisible: 'Wallet 2'
+- tapOn: 'Add wallet'
+- extendedWaitUntil:
+    visible:
+      id: 'restoreWalletSheetButton'
+    timeout: 20000
+- runFlow: ../shared/restore-from-clipboard.yaml
+- extendedWaitUntil:
+    visible:
+      id: 'homeAccountHeader'
+      text: 'Account 1, Wallet 2'
+    timeout: 60000
+- runFlow: ../shared/open-wallets.yaml
+- assertVisible: 'Wallet 1'
+- assertVisible: 'Wallet 2'
+- assertVisible:
+    id: 'walletListAccountCard'
+    text: '${output.restoredAddress}, Account 1, .*'

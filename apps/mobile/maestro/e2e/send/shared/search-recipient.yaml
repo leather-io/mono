@@ -1,0 +1,17 @@
+appId: io.leather.mobilewallet
+name: Send shared - open the recipient sheet and search for SEARCH
+---
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible: 'Search for BNS name or address'
+          commands:
+            - tapOn:
+                id: 'sendRecipientToggle'
+      - extendedWaitUntil:
+          visible: 'Search for BNS name or address'
+          timeout: 10000
+- waitForAnimationToEnd
+- inputText: ${SEARCH}

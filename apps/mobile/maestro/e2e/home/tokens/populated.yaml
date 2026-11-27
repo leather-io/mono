@@ -1,0 +1,55 @@
+appId: io.leather.mobilewallet
+name: home - populated tokens tab shows available balance, core assets, manage tokens and pinned order
+tags:
+  - home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: ''
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-BTC'
+      text: 'Bitcoin, BTC, \$450\.00, 0\.01'
+    timeout: 30000
+- assertVisible: 'Available'
+- assertVisible:
+    text: '\$23,211\.53'
+    below: 'Available'
+- assertVisible:
+    id: 'tokenBalanceItem-STX'
+    text: 'Stacks, STX, \$11\.53, 13\.568'
+- assertVisible:
+    id: 'tokenBalanceItem-USDCx'
+    text: 'USDCx, USDCx, \$250\.00, 250\.00'
+- tapOn:
+    id: 'homeManageTokensButton'
+- extendedWaitUntil:
+    visible: 'Manage tokens'
+    timeout: 15000
+- assertVisible:
+    id: 'tokenSwitchItem-sBTC'
+- tapOn:
+    id: 'tokenSwitchItem-aeUSDC'
+- assertVisible:
+    id: 'tokenSwitchItem-aeUSDC'
+    checked: true
+- swipe:
+    start: 50%, 14%
+    end: 50%, 95%
+- waitForAnimationToEnd
+- assertNotVisible: 'Manage tokens'
+- scrollUntilVisible:
+    element:
+      id: 'tokenBalanceItem-aeUSDC'
+    direction: DOWN
+    visibilityPercentage: 100
+    timeout: 15000
+- assertVisible:
+    id: 'tokenBalanceItem-USDCx'
+    below:
+      id: 'tokenBalanceItem-sBTC'
+- assertVisible:
+    id: 'tokenBalanceItem-aeUSDC'
+    below:
+      id: 'tokenBalanceItem-USDCx'

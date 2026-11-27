@@ -1,0 +1,40 @@
+appId: io.leather.mobilewallet
+name: home - sBTC token details open, show token info and open receive
+tags:
+  - home
+---
+- runFlow:
+    file: ../../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/read-stacks-address.yaml
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-sBTC'
+    timeout: 30000
+- tapOn:
+    id: 'tokenBalanceItem-sBTC'
+    waitToSettleTimeoutMs: 500
+- extendedWaitUntil:
+    visible: 'Token Details'
+    timeout: 20000
+- assertVisible: 'Name'
+- assertVisible: 'sBTC'
+- assertVisible: 'Price'
+- assertVisible: '45,000\.00'
+- assertVisible: 'Layer 2 · Stacks'
+- waitForAnimationToEnd
+- tapOn:
+    text: 'Receive'
+    waitToSettleTimeoutMs: 500
+- extendedWaitUntil:
+    visible:
+      id: 'receiveAssetDetailsAddress'
+    timeout: 10000
+- assertVisible: 'Account 1'
+- assertVisible: 'Share'
+- copyTextFrom:
+    id: 'receiveAssetDetailsAddress'
+- assertTrue: ${maestro.copiedText.split(', ').join('') == output.stacksAddress}
+- assertVisible: 'This is your address for receiving tokens on the Stacks network\.'
+- assertNotVisible: 'Select asset'
