@@ -1,6 +1,7 @@
 import { bytesToHex } from '@stacks/common';
 
-import { ecdsaPublicKeyToSchnorr } from '@leather.io/bitcoin';
+import { ecdsaPublicKeyToSchnorr, encodeExtendedPublicKeyForNetwork } from '@leather.io/bitcoin';
+import { type BitcoinNetworkModes } from '@leather.io/models';
 import { type BtcAddress, type StxAddress, getAddresses } from '@leather.io/rpc';
 
 interface FormatAddressesForGetAddresses {
@@ -9,18 +10,19 @@ interface FormatAddressesForGetAddresses {
     address: string;
     publicKey: Uint8Array;
     derivationPath: string;
-    descriptor?: string;
+    xpub: string;
   };
   nativeSegwit: {
     address: string;
     publicKey: Uint8Array;
     derivationPath: string;
-    descriptor?: string;
+    xpub: string;
   };
   stacksAccount: {
     address: string;
     publicKey: Uint8Array;
   };
+  bitcoinNetworkMode: BitcoinNetworkModes;
 }
 
 // We could think of making the arguments optional here.
@@ -29,6 +31,7 @@ export function formatAddressesForGetAddresses({
   taproot,
   nativeSegwit,
   stacksAccount,
+  bitcoinNetworkMode,
 }: FormatAddressesForGetAddresses) {
   const keysToIncludeInResponse = [];
   const nativeSegwitAddressResponse: BtcAddress = {
@@ -37,7 +40,7 @@ export function formatAddressesForGetAddresses({
     address: nativeSegwit.address,
     publicKey: bytesToHex(nativeSegwit.publicKey),
     derivationPath: nativeSegwit.derivationPath,
-    descriptor: nativeSegwit.descriptor ?? '',
+    descriptor: `wpkh(${encodeExtendedPublicKeyForNetwork(nativeSegwit.xpub, bitcoinNetworkMode)})`,
     fingerprint,
   };
 
@@ -50,7 +53,7 @@ export function formatAddressesForGetAddresses({
     publicKey: bytesToHex(taproot.publicKey),
     tweakedPublicKey: bytesToHex(ecdsaPublicKeyToSchnorr(taproot.publicKey)),
     derivationPath: taproot.derivationPath,
-    descriptor: taproot.descriptor ?? '',
+    descriptor: `tr(${encodeExtendedPublicKeyForNetwork(taproot.xpub, bitcoinNetworkMode)})`,
     fingerprint,
   };
   keysToIncludeInResponse.push(taprootAddressResponse);
