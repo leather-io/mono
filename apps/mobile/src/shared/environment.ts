@@ -44,16 +44,11 @@ export function getOnramperEnv() {
     'EXPO_PUBLIC_ONRAMPER_API_KEY should be set'
   );
   assertExistence(
-    process.env.EXPO_PUBLIC_ONRAMPER_SIGNING_SECRET,
-    'EXPO_PUBLIC_ONRAMPER_SIGNING_SECRET should be set'
-  );
-  assertExistence(
     process.env.EXPO_PUBLIC_ONRAMPER_WIDGET_HOST,
     'EXPO_PUBLIC_ONRAMPER_WIDGET_HOST should be set'
   );
   return {
     apiKey: process.env.EXPO_PUBLIC_ONRAMPER_API_KEY,
-    signingSecret: process.env.EXPO_PUBLIC_ONRAMPER_SIGNING_SECRET,
     widgetHost: process.env.EXPO_PUBLIC_ONRAMPER_WIDGET_HOST,
   };
 }

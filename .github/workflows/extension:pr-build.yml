@@ -84,9 +84,8 @@ jobs:
           BITFLOW_PROVIDER_ADDRESS: ${{ vars.PUBLIC_BITFLOW_PROVIDER_ADDRESS }}
           PR_NUMBER: ${{ github.event.number }}
           COMMIT_SHA: ${{ needs.sha-hash.outputs.SHORT_SHA }}
-          ONRAMPER_API_KEY: ${{ vars.PUBLIC_ONRAMPER_API_KEY }}
-          ONRAMPER_WIDGET_HOST: ${{ vars.PUBLIC_ONRAMPER_WIDGET_HOST }}
-          ONRAMPER_SIGNING_SECRET: ${{ vars.PUBLIC_ONRAMPER_SIGNING_SECRET }}
+          ONRAMPER_API_KEY: ${{ vars.PUBLIC_ONRAMPER_API_KEY_STAGING }}
+          ONRAMPER_WIDGET_HOST: ${{ vars.PUBLIC_ONRAMPER_WIDGET_HOST_STAGING }}
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         name: Upload ${{ matrix.target }} extension zip
