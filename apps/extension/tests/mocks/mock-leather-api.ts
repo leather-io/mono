@@ -148,6 +148,14 @@ const mockedSwapDexMap = {
   },
 };
 
+export const mockedOnramperWidgetSignature = {
+  sigV2: 'v2:mocked-signature',
+  sigV2Timestamp: '1763553600',
+  sigV2Nonce: 'mocked-nonce',
+  sigV2Fields: 'apiKey,mode,wallets',
+  endUserIpHash: '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
+};
+
 export async function mockLeatherApiRequests(page: Page | BrowserContext) {
   await page.route('**/v1/swap/dexes**', route => route.fulfill({ json: mockedSwapDexMap }));
   await page.route('**/v1/tokens/sip10s/*', route => route.fulfill({ status: 404, json: {} }));
@@ -340,6 +348,10 @@ export async function mockLeatherApiRequests(page: Page | BrowserContext) {
       },
     });
   });
+
+  await page.route('**/v1/onramp/widget-signature', route =>
+    route.fulfill({ json: mockedOnramperWidgetSignature })
+  );
 
   await page.route('**/v1/compliance/addresses/**', route => {
     const address = route.request().url().split('/').at(-1) ?? '';
