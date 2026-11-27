@@ -577,6 +577,22 @@
     * @leather.io/models bumped to 0.44.1
     * @leather.io/utils bumped to 0.46.4
 
+## [1.23.0](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.22.10...@leather.io/stacks-v1.23.0) (2026-11-27)
+
+
+### Features
+
+* **extension:** pay sbtc send fees in sbtc via sponsorship ([#2790](https://github.com/leather-io/mono/issues/2790)) ([4871849](https://github.com/leather-io/mono/commit/4871849c00c371ebda5be14fca075b88d787f1ed))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/crypto bumped to 1.13.13
+    * @leather.io/models bumped to 0.64.0
+    * @leather.io/utils bumped to 0.56.0
+
 ## [1.22.10](https://github.com/leather-io/mono/compare/@leather.io/stacks-v1.22.9...@leather.io/stacks-v1.22.10) (2026-11-19)
 
 

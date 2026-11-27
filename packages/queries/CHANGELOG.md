@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.19.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.18.0...@leather.io/queries-v0.19.0) (2026-11-27)
+
+
+### Features
+
+* **extension:** pay sbtc send fees in sbtc via sponsorship ([#2790](https://github.com/leather-io/mono/issues/2790)) ([4871849](https://github.com/leather-io/mono/commit/4871849c00c371ebda5be14fca075b88d787f1ed))
+* **features:** sign Onramper widget URLs with Signature V2 through the Leather API ([#2988](https://github.com/leather-io/mono/issues/2988)) ([d020648](https://github.com/leather-io/mono/commit/d020648ee557c541a770803f3340a7022388b36b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/cms bumped to 1.8.0
+    * @leather.io/models bumped to 0.64.0
+    * @leather.io/services bumped to 1.68.0
+    * @leather.io/utils bumped to 0.56.0
+
 ## [0.18.0](https://github.com/leather-io/mono/compare/@leather.io/queries-v0.17.3...@leather.io/queries-v0.18.0) (2026-11-19)
 
 

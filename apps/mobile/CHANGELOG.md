@@ -23,6 +23,44 @@
 * axios cve ([b145cd5](https://github.com/leather-io/mono/commit/b145cd5fd055201b18304b5e2b92635d56086915))
 * **mobile:** help header ([764af25](https://github.com/leather-io/mono/commit/764af257655ecb585d6805c5350c3d5fffe7a56a))
 
+## [2.118.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.117.0...@leather.io/mobile-v2.118.0) (2026-11-27)
+
+
+### Features
+
+* add primary testnet, remove sbtc testnet and legacy staking testnet ([#2834](https://github.com/leather-io/mono/issues/2834)) ([00d076f](https://github.com/leather-io/mono/commit/00d076fb00537cc2c9a4727f9feb8fb255c66a14))
+* expo 58 ([#3005](https://github.com/leather-io/mono/issues/3005)) ([cd4deb5](https://github.com/leather-io/mono/commit/cd4deb57218a6564f3bde86e71b69371514154e4))
+* **features:** sign Onramper widget URLs with Signature V2 through the Leather API ([#2988](https://github.com/leather-io/mono/issues/2988)) ([d020648](https://github.com/leather-io/mono/commit/d020648ee557c541a770803f3340a7022388b36b))
+
+
+### Bug Fixes
+
+* **ci:** run the mobile cocoapods check through bundler ([#2993](https://github.com/leather-io/mono/issues/2993)) ([4f6dd55](https://github.com/leather-io/mono/commit/4f6dd55aeaad7783c74a14803e1880d44117a7ed))
+* **mobile:** keep input sheets above the keyboard ([#3064](https://github.com/leather-io/mono/issues/3064)) ([f10c518](https://github.com/leather-io/mono/commit/f10c518d92dae8169051f9dfbbefb6baa3eceb2f))
+* **mobile:** keep the recipient input and show an activity error when activity fails to load ([#3046](https://github.com/leather-io/mono/issues/3046)) ([b577683](https://github.com/leather-io/mono/commit/b5776833316d85f36eea49b55b39cfdb665551dc))
+* **mobile:** return output descriptors from getAddresses ([#3066](https://github.com/leather-io/mono/issues/3066)) ([d3c3c56](https://github.com/leather-io/mono/commit/d3c3c56a825b522a4f7008ed06bb288ff6bf8c7c))
+* **mobile:** use nonce labels on the approver nonce sheet and adopt Leather numpad ([#3061](https://github.com/leather-io/mono/issues/3061)) ([457ef20](https://github.com/leather-io/mono/commit/457ef201781c8477129326342709146b8df72881))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @leather.io/analytics bumped to 3.27.1
+    * @leather.io/bitcoin bumped to 0.42.3
+    * @leather.io/cms bumped to 1.8.0
+    * @leather.io/constants bumped to 0.42.0
+    * @leather.io/crypto bumped to 1.13.13
+    * @leather.io/features bumped to 1.9.0
+    * @leather.io/models bumped to 0.64.0
+    * @leather.io/provider bumped to 1.7.8
+    * @leather.io/queries bumped to 0.19.0
+    * @leather.io/rpc bumped to 2.25.6
+    * @leather.io/services bumped to 1.68.0
+    * @leather.io/stacks bumped to 1.23.0
+    * @leather.io/ui bumped to 1.121.0
+    * @leather.io/utils bumped to 0.56.0
+
 ## [2.117.0](https://github.com/leather-io/mono/compare/@leather.io/mobile-v2.116.0...@leather.io/mobile-v2.117.0) (2026-11-19)
 
 

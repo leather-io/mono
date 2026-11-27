@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.8.0](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.7.0...@leather.io/cms-v1.8.0) (2026-11-27)
+
+
+### Features
+
+* expo 58 ([#3005](https://github.com/leather-io/mono/issues/3005)) ([cd4deb5](https://github.com/leather-io/mono/commit/cd4deb57218a6564f3bde86e71b69371514154e4))
+
+
+### Bug Fixes
+
+* point app.leather.io links at leather.io ([#3014](https://github.com/leather-io/mono/issues/3014)) ([db24332](https://github.com/leather-io/mono/commit/db243324b9aea9190ca34c4d31d3ba8efe6f85a2))
+
 ## [1.7.0](https://github.com/leather-io/mono/compare/@leather.io/cms-v1.6.4...@leather.io/cms-v1.7.0) (2026-11-19)
 
 
