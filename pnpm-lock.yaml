@@ -1547,9 +1547,6 @@ importers:
       '@leather.io/utils':
         specifier: workspace:*
         version: link:../utils
-      '@noble/hashes':
-        specifier: 1.5.0
-        version: 1.5.0
       dayjs:
         specifier: 1.11.13
         version: 1.11.13
@@ -1580,7 +1577,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: 2.1.9
-        version: 2.1.9(@types/node@26.6.6)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.5.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@26.6.6)(typescript@5.9.3))(terser@5.51.2)
+        version: 2.1.9(@types/node@26.6.6)(happy-dom@20.0.11)(jsdom@27.4.0(@noble/hashes@1.8.0))(lightningcss@1.30.2)(msw@2.12.7(@types/node@26.6.6)(typescript@5.9.3))(terser@5.51.2)
 
   packages/models:
     dependencies:

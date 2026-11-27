@@ -65,6 +65,8 @@ export type LeatherApiTokenAnalyticsMapEntry = Extract<
 >['data'][string];
 export type LeatherApiAddressComplianceCheck =
   paths['/v1/compliance/addresses/{address}']['get']['responses'][200]['content']['application/json'];
+export type LeatherApiOnramperWidgetSignature =
+  paths['/v1/onramp/widget-signature']['post']['responses'][200]['content']['application/json'];
 
 interface ProposeMultisigTransactionOptions extends ApiRequestOptions {
   baseUrl?: string;
@@ -1066,6 +1068,21 @@ export class LeatherApiClient {
       () => client.POST('/v1/multisig-ext/propose', { body, signal }),
       {
         priority: leatherApiPriorities.proposeMultisigTransaction,
+        signal,
+      }
+    );
+    return assertLeatherApiData(data);
+  }
+
+  async signOnramperWidgetParams(
+    params: Record<string, string>,
+    { signal }: ApiRequestOptions = {}
+  ) {
+    const { data } = await this.rateLimiter.add(
+      RateLimiterType.Leather,
+      () => this.client.POST('/v1/onramp/widget-signature', { body: { params }, signal }),
+      {
+        priority: leatherApiPriorities.onramperWidgetSignature,
         signal,
       }
     );
