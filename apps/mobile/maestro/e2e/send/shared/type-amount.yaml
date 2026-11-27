@@ -1,0 +1,33 @@
+appId: io.leather.mobilewallet
+name: Send shared - type AMOUNT on the send form numpad, clearing and retyping if a key press was dropped
+---
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'sendAmountValue'
+              text: '${AMOUNT.replace(".", "\\.")}'
+          commands:
+            - longPressOn:
+                text: 'delete'
+                below:
+                  id: 'sendRecipientToggle'
+            - evalScript: ${output.amountIndex = 0}
+            - repeat:
+                times: ${AMOUNT.length}
+                commands:
+                  - tapOn:
+                      text: '${AMOUNT.charAt(output.amountIndex) === "." ? "\\." : AMOUNT.charAt(output.amountIndex)}'
+                      below:
+                        id: 'sendRecipientToggle'
+                  - evalScript: ${output.amountIndex = output.amountIndex + 1}
+      - extendedWaitUntil:
+          visible:
+            id: 'sendAmountValue'
+            text: '${AMOUNT.replace(".", "\\.")}'
+          timeout: 5000
+- assertVisible:
+    id: 'sendAmountValue'
+    text: '${AMOUNT.replace(".", "\\.")}'

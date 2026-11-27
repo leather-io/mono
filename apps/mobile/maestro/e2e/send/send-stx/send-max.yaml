@@ -1,0 +1,33 @@
+appId: io.leather.mobilewallet
+name: send - that send max button sets available balance minus fee
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: STX
+- tapOn:
+    id: 'sendMaxButton'
+- extendedWaitUntil:
+    visible:
+      id: 'sendAmountValue'
+      text: '13\.56[0-7][0-9]*'
+    timeout: 15000
+- assertNotVisible:
+    id: 'sendAmountValue'
+    text: '13\.568037'
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB
+- assertNotVisible: 'Insufficient funds'
+- runFlow: ../shared/review.yaml
+- assertVisible: 'Sign Transaction'
+- assertVisible:
+    text: 'Approve'
+    enabled: true

@@ -1,0 +1,27 @@
+appId: io.leather.mobilewallet
+name: send - that accounts are grouped under their wallet with the correct per-wallet counts
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow: ../shared/add-account-2.yaml
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: BTC
+- tapOn:
+    id: 'sendRecipientToggle'
+- extendedWaitUntil:
+    visible: 'Your accounts'
+    timeout: 20000
+- assertVisible:
+    id: 'sendRecipientAccountItem-0'
+    text: '.*Account 1.*Wallet 1.*'
+- assertVisible:
+    id: 'sendRecipientAccountItem-1'
+    text: '.*Account 2.*Wallet 1.*'
+- assertNotVisible:
+    id: 'sendRecipientAccountItem-2'

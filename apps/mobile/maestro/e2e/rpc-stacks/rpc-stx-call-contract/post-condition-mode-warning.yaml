@@ -1,0 +1,34 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks - call contract shows warning for post condition mode
+tags:
+  - rpc-stacks
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'rpc-stacks'
+      FILTER: 'mobile-e2e-stx-call-contract-allow-mode'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx call allow mode'
+- assertVisible: 'Careful. This transaction could drain your wallet.'
+- assertVisible: 'I’m aware of the risks'
+- assertVisible: 'Do not proceed'
+- assertVisible: '.*Allow Mode.*'
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: 'Do not proceed'
+          commands:
+            - tapOn: 'Do not proceed'
+      - extendedWaitUntil:
+          notVisible: 'Cancel'
+          timeout: 10000
+- runFlow:
+    file: ../shared/expect-pass.yaml
+    env:
+      CARD: 'e2e stx call allow mode'

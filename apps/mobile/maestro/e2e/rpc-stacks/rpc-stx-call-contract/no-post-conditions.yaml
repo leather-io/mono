@@ -1,0 +1,37 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks - call contract with no post conditions, shows the call and cancels it
+tags:
+  - rpc-stacks
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'rpc-stacks'
+      FILTER: 'mobile-e2e-stx-call-contract-bns'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx call bns'
+- assertVisible: 'Sign Transaction'
+- assertVisible: 'name-transfer'
+- assertVisible: 'SP000000000000000000002Q6VF78.bns'
+- tapOn: 'Show advanced options'
+- extendedWaitUntil:
+    visible: 'Contract arguments'
+    timeout: 10000
+- assertVisible: 'namespace'
+- assertVisible: '0x6964'
+- assertVisible: '0x74657374'
+- assertVisible: '.*SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K.*'
+- scrollUntilVisible:
+    element: 'zonefile-hash'
+    direction: DOWN
+    timeout: 15000
+- scrollUntilVisible:
+    element: 'none'
+    direction: DOWN
+    timeout: 15000
+- runFlow:
+    file: ../shared/cancel-card.yaml
+    env:
+      CARD: 'e2e stx call bns'

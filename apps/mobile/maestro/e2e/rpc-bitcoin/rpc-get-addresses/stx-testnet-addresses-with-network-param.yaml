@@ -1,0 +1,24 @@
+appId: io.leather.mobilewallet
+name: 'rpc-bitcoin - it returns testnet addresses with the network param set - stx_getAddresses'
+tags:
+  - rpc-bitcoin
+  - blocked
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+      FILTER: 'e2ebtc-stx-getaddresses-testnet'
+- runFlow:
+    file: ../shared/run-card.yaml
+    env:
+      CARD: '.*e2e stx_getAddresses testnet param.*'
+- runFlow:
+    file: ../shared/pick-account.yaml
+    env:
+      ACCOUNT_INDEX: 0
+- runFlow: ../shared/approve.yaml
+- runFlow:
+    file: ../shared/expect-pass.yaml
+    env:
+      PASS: '(?i).*e2e stx_getAddresses testnet param pass.*'

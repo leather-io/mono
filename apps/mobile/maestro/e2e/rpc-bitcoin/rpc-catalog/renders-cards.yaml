@@ -1,0 +1,28 @@
+appId: io.leather.mobilewallet
+name: 'rpc-bitcoin - renders one card per catalog entry and detects the provider, adapted to Leather detected, the three filtered cards and the idle result panel'
+tags:
+  - rpc-bitcoin
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+      FILTER: 'signmessage-p2wpkh,native,e2ebtc-prime-keys'
+- assertVisible: '.*Leather RPC test.*'
+- assertVisible: '.*Leather detected.*'
+- runFlow:
+    file: ../shared/show-card.yaml
+    env:
+      CARD: '.*signMessage .p2wpkh.*native-segwit key.*'
+- runFlow:
+    file: ../shared/show-card.yaml
+    env:
+      CARD: '.*signPsbt .native segwit.*'
+- runFlow:
+    file: ../shared/show-card.yaml
+    env:
+      CARD: '.*e2e prime keys.*'
+- scrollUntilVisible:
+    element: 'Fire a request to see the params sent and the wallet response\.'
+    direction: DOWN
+    timeout: 60000

@@ -1,0 +1,34 @@
+appId: io.leather.mobilewallet
+name: Send shared - switch on the hidden token TICKER in Manage tokens and return to Home
+---
+- scrollUntilVisible:
+    element:
+      id: 'homeManageTokensButton'
+    direction: DOWN
+- tapOn:
+    id: 'homeManageTokensButton'
+- extendedWaitUntil:
+    visible:
+      id: 'tokenSwitchItem-${TICKER}'
+    timeout: 20000
+- tapOn:
+    id: 'tokenSwitchItem-${TICKER}'
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: 'Default set, Main tokens'
+          commands:
+            - swipe:
+                start: 50%, 14%
+                end: 50%, 95%
+            - waitForAnimationToEnd
+      - extendedWaitUntil:
+          notVisible: 'Default set, Main tokens'
+          timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: 'tokenBalanceItem-${TICKER}'
+    timeout: 20000

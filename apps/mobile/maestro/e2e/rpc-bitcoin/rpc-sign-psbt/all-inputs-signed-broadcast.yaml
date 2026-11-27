@@ -1,0 +1,23 @@
+appId: io.leather.mobilewallet
+name: 'rpc-bitcoin - all inputs are signed even if the number of inputs is greater than vout index'
+tags:
+  - rpc-bitcoin
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+      FILTER: 'e2ebtc-prime-keys,e2ebtc-signpsbt-broadcast-2in'
+- runFlow: ../shared/connect.yaml
+- runFlow:
+    file: ../shared/run-card.yaml
+    env:
+      CARD: '.*e2e signPsbt broadcast 2 segwit inputs.*'
+- extendedWaitUntil:
+    visible: 'Send token'
+    timeout: 30000
+- runFlow: ../shared/approve.yaml
+- runFlow:
+    file: ../shared/expect-pass.yaml
+    env:
+      PASS: '(?i).*e2e signPsbt broadcast 2 segwit inputs pass.*'

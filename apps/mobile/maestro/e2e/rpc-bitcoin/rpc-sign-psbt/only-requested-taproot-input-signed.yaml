@@ -1,0 +1,24 @@
+appId: io.leather.mobilewallet
+name: 'rpc-bitcoin - only requested taproot input is signed'
+tags:
+  - rpc-bitcoin
+  - blocked
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+      FILTER: 'e2ebtc-prime-keys,e2ebtc-signpsbt-taproot-index'
+- runFlow: ../shared/connect.yaml
+- runFlow:
+    file: ../shared/run-card.yaml
+    env:
+      CARD: '.*e2e signPsbt sign taproot input 0 only.*'
+- extendedWaitUntil:
+    visible: 'Send token'
+    timeout: 30000
+- runFlow: ../shared/approve.yaml
+- runFlow:
+    file: ../shared/expect-pass.yaml
+    env:
+      PASS: '(?i).*e2e signPsbt sign taproot input 0 only pass.*'

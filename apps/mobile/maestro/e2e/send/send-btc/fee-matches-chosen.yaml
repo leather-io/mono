@@ -1,0 +1,50 @@
+appId: io.leather.mobilewallet
+name: send - that fee value on preview match chosen one
+tags:
+  - send
+env:
+  RECIPIENT: bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: BTC
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '0.00006'
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: ${RECIPIENT}
+- runFlow: ../shared/review.yaml
+- extendedWaitUntil:
+    visible:
+      id: 'approverFeeCard'
+      enabled: true
+    timeout: 30000
+- tapOn:
+    id: 'approverFeeCard'
+- extendedWaitUntil:
+    visible:
+      id: 'approverFeeOption-Middle'
+    timeout: 15000
+- waitForAnimationToEnd
+- copyTextFrom:
+    id: 'approverFeeOption-Middle'
+- evalScript: ${output.chosenFee = maestro.copiedText.match(/[0-9.]+\sBTC/)[0]}
+- tapOn:
+    id: 'approverFeeOption-Middle'
+- extendedWaitUntil:
+    notVisible:
+      id: 'approverFeeOption-Middle'
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: 'approverFeeCard'
+      text: '${"Standard, ~30 min, " + output.chosenFee.replace(".", "\\.") + ", .*"}'
+    timeout: 15000

@@ -1,0 +1,25 @@
+appId: io.leather.mobilewallet
+name: send - that BTC pairs are hidden while the sbtc bridging flag is off
+tags:
+  - send
+  - blocked
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: send-swap,send-swap-bridging-off
+- runFlow: ../shared/open-swap.yaml
+- tapOn:
+    id: 'swapBaseAssetToggle'
+- extendedWaitUntil:
+    visible: 'Search for asset'
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn: 'Search for asset'
+- inputText: BTC
+- extendedWaitUntil:
+    visible:
+      id: 'swapAssetSelectorItem-sBTC'
+    timeout: 30000
+- assertNotVisible:
+    id: 'swapAssetSelectorItem-BTC'

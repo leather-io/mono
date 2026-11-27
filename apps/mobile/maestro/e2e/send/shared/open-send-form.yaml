@@ -1,0 +1,34 @@
+appId: io.leather.mobilewallet
+name: Send shared - open Send from Home and pick the asset in ASSET
+---
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible: 'Select asset'
+          commands:
+            - tapOn: 'Send'
+      - extendedWaitUntil:
+          visible: 'Select asset'
+          timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: 'sendAssetPickerItem-${ASSET}'
+    timeout: 20000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: 'sendRecipientToggle'
+          commands:
+            - tapOn:
+                id: 'sendAssetPickerItem-${ASSET}'
+      - extendedWaitUntil:
+          visible:
+            id: 'sendRecipientToggle'
+          timeout: 10000
+- waitForAnimationToEnd

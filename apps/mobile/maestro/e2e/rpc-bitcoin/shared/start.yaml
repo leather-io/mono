@@ -1,0 +1,11 @@
+appId: io.leather.mobilewallet
+name: rpc-bitcoin shared - new wallet with mock scenarios from SCENARIO, then the test app open in the Browser tab, narrowed to the cards in FILTER when set
+---
+- runFlow:
+    file: start-wallet.yaml
+    env:
+      SCENARIO: ${SCENARIO}
+- runFlow:
+    file: open-dapp.yaml
+    env:
+      FILTER: "${typeof FILTER === 'string' ? FILTER : ''}"

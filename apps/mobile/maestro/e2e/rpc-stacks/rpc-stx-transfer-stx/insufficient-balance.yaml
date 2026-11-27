@@ -1,0 +1,22 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks - shows insufficient balance error and no approve action when balance is empty
+tags:
+  - rpc-stacks
+  - blocked
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'rpc-stacks,empty-balances'
+      FILTER: 'mobile-e2e-stx-transfer-no-memo-reject'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx transfer no memo reject'
+- assertVisible: 'Sign Transaction'
+- assertVisible: '.*[Ii]nsufficient.*'
+- assertNotVisible: 'Approve'
+- runFlow:
+    file: ../shared/cancel-card.yaml
+    env:
+      CARD: 'e2e stx transfer no memo reject'

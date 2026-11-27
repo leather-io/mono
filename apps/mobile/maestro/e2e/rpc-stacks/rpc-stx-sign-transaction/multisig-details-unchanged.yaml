@@ -1,0 +1,30 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks - that transaction details are the same after signing multi-signature STX transfer
+tags:
+  - rpc-stacks
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'rpc-stacks'
+      FILTER: 'mobile-e2e-stx-warm-addresses,mobile-e2e-stx-sign-transaction-multisig'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx warm addresses'
+- runFlow:
+    file: ../shared/approve-card.yaml
+    env:
+      CARD: 'e2e stx warm addresses'
+- runFlow:
+    file: ../shared/send-card.yaml
+    env:
+      CARD: 'e2e stx sign multisig'
+- assertVisible: 'Sign Transaction'
+- assertVisible: 'You’ll send'
+- assertVisible: 'To address'
+- assertVisible: '.*SPXH.*'
+- runFlow:
+    file: ../shared/approve-card.yaml
+    env:
+      CARD: 'e2e stx sign multisig'

@@ -1,0 +1,8 @@
+appId: io.leather.mobilewallet
+name: rpc-stacks shared - the test dApp card CARD shows the verdict PASS
+---
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: '${CARD} (PASS|FAIL|UNJUDGED).*'
+    timeout: 30000
+- assertVisible: '${CARD} PASS.*'

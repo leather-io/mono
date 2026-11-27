@@ -1,0 +1,30 @@
+appId: io.leather.mobilewallet
+name: Send shared - search RECIPIENT, pick the match and confirm the new-address check
+---
+- runFlow:
+    file: search-recipient.yaml
+    env:
+      SEARCH: ${RECIPIENT}
+- extendedWaitUntil:
+    visible: 'Matching'
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn:
+    id: 'sendRecipientItem'
+    text: '${RECIPIENT.trim()}.*'
+- extendedWaitUntil:
+    visible: 'Verify full address'
+    timeout: 20000
+- waitForAnimationToEnd
+- retry:
+    maxRetries: 2
+    commands:
+      - runFlow:
+          when:
+            visible: 'Verify full address'
+          commands:
+            - tapOn: 'Confirm'
+      - extendedWaitUntil:
+          notVisible: 'Verify full address'
+          timeout: 8000
+- waitForAnimationToEnd

@@ -1,0 +1,21 @@
+appId: io.leather.mobilewallet
+name: 'rpc-bitcoin - failed broadcasts return an error to the app'
+tags:
+  - rpc-bitcoin
+  - blocked
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: 'broadcast-fail'
+      FILTER: 'e2ebtc-prime-keys,e2ebtc-signpsbt-broadcast-fail'
+- runFlow: ../shared/connect.yaml
+- runFlow:
+    file: ../shared/run-card.yaml
+    env:
+      CARD: '.*e2e signPsbt failed broadcast.*'
+- tapOn: 'Approve'
+- runFlow:
+    file: ../shared/expect-pass.yaml
+    env:
+      PASS: '(?i).*e2e signPsbt failed broadcast pass.*'

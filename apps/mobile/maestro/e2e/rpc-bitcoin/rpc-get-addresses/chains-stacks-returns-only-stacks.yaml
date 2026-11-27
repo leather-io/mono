@@ -1,0 +1,24 @@
+appId: io.leather.mobilewallet
+name: 'rpc-bitcoin - chains: [stacks] returns only stacks addresses'
+tags:
+  - rpc-bitcoin
+  - blocked
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+      FILTER: 'e2ebtc-getaddresses-chains-stacks'
+- runFlow:
+    file: ../shared/run-card.yaml
+    env:
+      CARD: '.*e2e getAddresses chains stacks.*'
+- runFlow:
+    file: ../shared/pick-account.yaml
+    env:
+      ACCOUNT_INDEX: 0
+- runFlow: ../shared/approve.yaml
+- runFlow:
+    file: ../shared/expect-pass.yaml
+    env:
+      PASS: '(?i).*e2e getAddresses chains stacks pass.*'

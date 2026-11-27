@@ -1,0 +1,7 @@
+appId: io.leather.mobilewallet
+name: rpc-bitcoin shared - cancel the open sheet and wait for it to close
+---
+- tapOn: 'Cancel'
+- extendedWaitUntil:
+    notVisible: 'Cancel'
+    timeout: 30000

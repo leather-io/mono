@@ -1,0 +1,30 @@
+appId: io.leather.mobilewallet
+name: send - that recipient input is trimmed correctly
+tags:
+  - send
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: BTC
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '0.00006'
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: ' bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq '
+- runFlow: ../shared/review.yaml
+- runFlow:
+    file: ../shared/pick-fee.yaml
+    env:
+      FEE: Low
+- runFlow:
+    file: ../shared/assert-address-chunks.yaml
+    env:
+      ADDRESS: bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq

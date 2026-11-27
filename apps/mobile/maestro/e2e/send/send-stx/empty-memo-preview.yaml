@@ -1,0 +1,31 @@
+appId: io.leather.mobilewallet
+name: send - that empty memo on preview matches default empty value
+tags:
+  - send
+  - blocked
+---
+- runFlow:
+    file: ../shared/start.yaml
+    env:
+      SCENARIO: ''
+- runFlow:
+    file: ../shared/open-send-form.yaml
+    env:
+      ASSET: STX
+- runFlow:
+    file: ../shared/type-amount.yaml
+    env:
+      AMOUNT: '1'
+- runFlow:
+    file: ../shared/enter-recipient.yaml
+    env:
+      RECIPIENT: SPXH3HNBPM5YP15VH16ZXZ9AX6CK289K3MCXRKCB
+- runFlow: ../shared/review.yaml
+- assertVisible: 'Sign Transaction'
+- scrollUntilVisible:
+    element: 'Memo'
+    direction: DOWN
+- assertVisible: 'Memo'
+- assertVisible:
+    text: 'No memo'
+    rightOf: 'Memo'
