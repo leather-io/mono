@@ -34,7 +34,7 @@ const graphqlResponseSchema = z.object({
   errors: z.unknown().optional(),
 });
 
-function graphqlData(response: unknown): unknown {
+export function graphqlData(response: unknown): unknown {
   const result = graphqlResponseSchema.parse(response);
   if (result.errors !== undefined) {
     throw new Error(

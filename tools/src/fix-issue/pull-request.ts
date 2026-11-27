@@ -1,27 +1,57 @@
-import { existsSync, lstatSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { z } from 'zod';
 
 import { runCommand, runOrThrow } from '../ci/exec.js';
 import { type GitHubClient, paginate } from '../ci/github.js';
-import { allowedPathsDescription, changedPaths, gitBlobSha, headSha, refusedPaths } from './git.js';
+import { isBriefComment, renderBriefComment } from './brief.js';
+import {
+  allowedPathsDescription,
+  changedPaths,
+  gitBlobSha,
+  headSha,
+  indexChanges,
+  refusedPaths,
+  treeEntry,
+} from './git.js';
+import { filesWithConflictMarkers, mergeDev } from './merge.js';
 import type { FixIssuePaths } from './paths.js';
+import {
+  type ReviseTarget,
+  bullets,
+  carriedScreenshots,
+  errorMessage,
+  readReviseTarget,
+  renderReviseSummary,
+  unresolvedQuestion,
+} from './revise-pull-request.js';
 import { isScreenshot } from './screenshots.js';
 import { type FixStatus, closesNumbers, readStatus } from './status.js';
 
-interface OpenPullRequestOptions {
+interface PublishOptions {
   readonly client: GitHubClient;
   readonly paths: FixIssuePaths;
   readonly repo: string;
-  readonly issue: number;
-  readonly branch: string;
   readonly baseBranch: string;
   readonly parentSha: string;
   readonly runId?: string;
   readonly runAttempt?: string;
   readonly serverUrl?: string;
   readonly coAuthor?: string;
+  readonly brief?: string;
   log?(line: string): void;
+}
+
+interface OpenPullRequestOptions extends PublishOptions {
+  readonly issue: number;
+  readonly branch: string;
+}
+
+interface RevisePullRequestOptions extends PublishOptions {
+  readonly pullRequest: number;
+  readonly mergeRequested: boolean;
+  readonly appLogin: string;
+  readonly workflowAppClientId: string;
 }
 
 interface TreeEntry {
@@ -29,6 +59,11 @@ interface TreeEntry {
   readonly mode: string;
   readonly type: 'blob';
   readonly sha: string | null;
+}
+
+interface CommitParents {
+  readonly parents: readonly string[];
+  readonly base?: string;
 }
 
 interface ScreenshotRow {
@@ -39,7 +74,11 @@ interface ScreenshotRow {
 }
 
 const shaSchema = z.object({ sha: z.string() });
-const commitSchema = z.object({ tree: z.object({ sha: z.string() }) });
+const commitSchema = z.object({
+  tree: z.object({ sha: z.string() }),
+  parents: z.array(z.object({ sha: z.string() })).optional(),
+});
+const commentBodiesSchema = z.array(z.object({ body: z.string().nullable() }));
 const refsSchema = z.array(z.object({ ref: z.string(), object: z.object({ sha: z.string() }) }));
 const pullSchema = z.object({
   number: z.number(),
@@ -68,12 +107,8 @@ function commitMessage(subject: string, trailer: string | null): string {
   return trailer ? `${subject}\n\n${trailer}\n` : subject;
 }
 
-const executableMode = '100755';
+const fileModes = ['100644', '100755'];
 const fileMode = '100644';
-
-function bullets(lines: readonly string[]): string {
-  return lines.map(line => `- ${line}`).join('\n');
-}
 
 function sections(entries: readonly (readonly [string, readonly string[]])[]): string[] {
   return entries
@@ -144,11 +179,15 @@ function patchPaths(root: string, patchFile: string): string[] {
     .map(record => record.split('\t').slice(2).join('\t'));
 }
 
-function prepareWorkspace(paths: FixIssuePaths, parentSha: string): string {
+function addWorkspace(paths: FixIssuePaths, parentSha: string): string {
   removeWorkspace(paths);
   runOrThrow('git', ['worktree', 'add', '--detach', '--quiet', paths.applyDir, parentSha], {
     cwd: paths.root,
   });
+  return paths.applyDir;
+}
+
+function applyPatch(paths: FixIssuePaths): void {
   if (existsSync(paths.patchFile) && readFileSync(paths.patchFile, 'utf8').trim() !== '') {
     const refused = refusedPaths(patchPaths(paths.root, paths.patchFile));
     if (refused.length > 0) {
@@ -158,7 +197,15 @@ function prepareWorkspace(paths: FixIssuePaths, parentSha: string): string {
     }
     runOrThrow('git', ['apply', '--index', '--binary', paths.patchFile], { cwd: paths.applyDir });
   }
-  return paths.applyDir;
+}
+
+function refuseForbiddenChanges(workspace: string): void {
+  const refused = refusedPaths(changedPaths(workspace).map(change => change.path));
+  if (refused.length > 0) {
+    throw new Error(
+      `refusing to commit; only ${allowedPathsDescription} may change:\n  ${refused.join('\n  ')}`
+    );
+  }
 }
 
 function removeWorkspace(paths: FixIssuePaths): void {
@@ -192,52 +239,57 @@ async function commitTree(
   repo: string,
   message: string,
   entries: readonly TreeEntry[],
-  parent: string | null
+  { parents, base = parents[0] }: CommitParents
 ): Promise<string> {
-  const baseTree = parent
-    ? commitSchema.parse(await client.request('GET', `repos/${repo}/git/commits/${parent}`)).tree
-        .sha
+  const baseTree = base
+    ? commitSchema.parse(await client.request('GET', `repos/${repo}/git/commits/${base}`)).tree.sha
     : undefined;
-  const tree = shaSchema.parse(
-    await client.request('POST', `repos/${repo}/git/trees`, {
-      ...(baseTree ? { base_tree: baseTree } : {}),
-      tree: entries,
-    })
-  );
+  const tree =
+    baseTree && entries.length === 0
+      ? { sha: baseTree }
+      : shaSchema.parse(
+          await client.request('POST', `repos/${repo}/git/trees`, {
+            ...(baseTree ? { base_tree: baseTree } : {}),
+            tree: entries,
+          })
+        );
   const commit = shaSchema.parse(
     await client.request('POST', `repos/${repo}/git/commits`, {
       message,
       tree: tree.sha,
-      parents: parent ? [parent] : [],
+      parents,
     })
   );
   return commit.sha;
 }
 
-async function changeEntries(
+async function commitEntries(
   client: GitHubClient,
   repo: string,
-  workspace: string
+  workspace: string,
+  base: string,
+  onGitHub: readonly string[]
 ): Promise<TreeEntry[]> {
   const entries: TreeEntry[] = [];
-  for (const change of changedPaths(workspace)) {
-    const file = path.join(workspace, change.path);
-    if (change.present) {
-      const stat = lstatSync(file);
-      if (stat.isSymbolicLink())
-        throw new Error(`refusing to commit the symbolic link ${change.path}`);
-      entries.push({
-        path: change.path,
-        mode: (stat.mode & 0o111) === 0 ? fileMode : executableMode,
-        type: 'blob',
-        sha: await createBlob(client, repo, file),
-      });
-    } else {
-      const mode = runOrThrow('git', ['ls-tree', 'HEAD', '--', change.path], {
-        cwd: workspace,
-      }).split(' ')[0];
-      entries.push({ path: change.path, mode: mode || fileMode, type: 'blob', sha: null });
+  for (const change of indexChanges(workspace, base)) {
+    if (change.mode === null || change.sha === null) {
+      entries.push({ path: change.path, mode: change.previousMode, type: 'blob', sha: null });
+      continue;
     }
+    const known = onGitHub.some(commit => {
+      const entry = treeEntry(workspace, commit, change.path);
+      return entry?.sha === change.sha && entry.mode === change.mode;
+    });
+    if (known) {
+      entries.push({ path: change.path, mode: change.mode, type: 'blob', sha: change.sha });
+      continue;
+    }
+    if (!fileModes.includes(change.mode)) {
+      throw new Error(`refusing to commit ${change.path}: it is not a regular file`);
+    }
+    const sha = await createBlob(client, repo, path.join(workspace, change.path));
+    if (sha !== change.sha) throw new Error(`${change.path} changed while it was committed`);
+    entries.push({ path: change.path, mode: change.mode, type: 'blob', sha });
   }
   return entries;
 }
@@ -273,7 +325,9 @@ async function publishScreenshots(
 
   const branch = `bot/screenshots-${issue}`;
   const head = await findRef(client, repo, branch);
-  const commit = await commitTree(client, repo, `Screenshots for #${issue}`, entries, head);
+  const commit = await commitTree(client, repo, `Screenshots for #${issue}`, entries, {
+    parents: head ? [head] : [],
+  });
   if (head) {
     await client.request('PATCH', `repos/${repo}/git/refs/heads/${branch}`, { sha: commit });
   } else {
@@ -334,7 +388,7 @@ async function keepReason(
     await client.request('GET', `repos/${repo}/pulls/${earlier}`)
   );
   if (fresh.state !== 'open') return 'it is no longer open';
-  if (fresh.commits > botCommitCount) return 'someone added commits to it';
+  if (fresh.commits > botCommitCount) return 'it was revised or someone added commits to it';
   if (current.draft && !fresh.draft) return `it is ready and #${current.number} is only a draft`;
   return null;
 }
@@ -368,9 +422,7 @@ async function supersedeEarlierPullRequests(
       await client.request('DELETE', `repos/${repo}/git/refs/heads/${pull.head.ref}`);
       log(`open-pull-request: closed #${pull.number}, superseded by #${current.number}`);
     } catch (error) {
-      log(
-        `open-pull-request: could not supersede #${pull.number}: ${error instanceof Error ? error.message : String(error)}`
-      );
+      log(`open-pull-request: could not supersede #${pull.number}: ${errorMessage(error)}`);
     }
   }
 }
@@ -380,86 +432,218 @@ const readyMutation =
 const draftMutation =
   'mutation($id: ID!) { convertPullRequestToDraft(input: { pullRequestId: $id }) { clientMutationId } }';
 
-export async function openPullRequest(options: OpenPullRequestOptions): Promise<string> {
-  const { client, paths, repo, issue, branch, baseBranch, parentSha } = options;
-  const log = options.log ?? console.log;
-  if (headSha(paths.root) !== parentSha) throw new Error(`HEAD is not ${parentSha}`);
-  const status = readStatus(paths.statusFile);
-  if (!status.ok)
-    throw new Error(`the fixer status is not valid:\n  ${status.problems.join('\n  ')}`);
+async function isOwnCommit(
+  client: GitHubClient,
+  repo: string,
+  commit: string,
+  parentSha: string
+): Promise<boolean> {
+  const { parents } = commitSchema.parse(
+    await client.request('GET', `repos/${repo}/git/commits/${commit}`)
+  );
+  return parents?.length === 1 && parents[0]?.sha === parentSha;
+}
 
-  const workspace = prepareWorkspace(paths, parentSha);
+async function postBrief(
+  options: OpenPullRequestOptions,
+  pullRequest: number,
+  isNew: boolean,
+  log: (line: string) => void
+): Promise<void> {
+  const { client, repo } = options;
+  const comment = renderBriefComment(options.brief);
+  if (comment === null) return;
   try {
-    const refused = refusedPaths(changedPaths(workspace).map(change => change.path));
-    if (refused.length > 0)
-      throw new Error(
-        `refusing to commit; only ${allowedPathsDescription} may change:\n  ${refused.join('\n  ')}`
-      );
-    const entries = await changeEntries(client, repo, workspace);
-
-    if (entries.length === 0) {
-      if (status.status.state !== 'blocked' && status.status.handoff.length === 0)
-        throw new Error('state is done but nothing changed');
-      const runUrl = options.runId
-        ? `${options.serverUrl ?? 'https://github.com'}/${repo}/actions/runs/${options.runId}`
-        : null;
-      const comment = urlSchema.parse(
-        await client.request('POST', `repos/${repo}/issues/${issue}/comments`, {
-          body: renderQuestionsComment(status.status, runUrl),
-        })
-      );
-      return comment.html_url;
+    const comments = `repos/${repo}/issues/${pullRequest}/comments`;
+    if (!isNew) {
+      const existing = commentBodiesSchema.parse(await paginate(client, comments));
+      if (existing.some(entry => isBriefComment(entry.body))) return;
     }
+    await client.request('POST', comments, { body: comment });
+  } catch (error) {
+    log(`open-pull-request: could not store the brief on #${pullRequest}: ${errorMessage(error)}`);
+  }
+}
 
-    const existing = await findOpenPullRequest(options);
-    const branchHead = await findRef(client, repo, branch);
-    const table = await publishScreenshots(options, status.status, log).catch((error: unknown) => {
-      log(
-        `open-pull-request: skipping screenshots: ${error instanceof Error ? error.message : String(error)}`
-      );
-      return null;
+function runUrl(options: PublishOptions): string | null {
+  return options.runId
+    ? `${options.serverUrl ?? 'https://github.com'}/${options.repo}/actions/runs/${options.runId}`
+    : null;
+}
+
+async function publishFirstRun(
+  options: OpenPullRequestOptions,
+  status: FixStatus,
+  entries: readonly TreeEntry[],
+  log: (line: string) => void
+): Promise<string> {
+  const { client, repo, issue, branch, baseBranch, parentSha } = options;
+  if (entries.length === 0) {
+    if (status.state !== 'blocked' && status.handoff.length === 0)
+      throw new Error('state is done but nothing changed');
+    const comment = urlSchema.parse(
+      await client.request('POST', `repos/${repo}/issues/${issue}/comments`, {
+        body: renderQuestionsComment(status, runUrl(options)),
+      })
+    );
+    return comment.html_url;
+  }
+
+  const existing = await findOpenPullRequest(options);
+  const branchHead = await findRef(client, repo, branch);
+  if (branchHead && !(await isOwnCommit(client, repo, branchHead, parentSha))) {
+    throw new Error(
+      `refusing to overwrite ${branch}: it holds commits beyond this run's own, from a revise or a person`
+    );
+  }
+  const table = await publishScreenshots(options, status, log).catch((error: unknown) => {
+    log(`open-pull-request: skipping screenshots: ${errorMessage(error)}`);
+    return null;
+  });
+  const body = renderBody(status, closesNumbers(status, issue), table);
+  const title = status.commit;
+  const trailer = await coAuthorTrailer(client, options.coAuthor);
+  const commit = await commitTree(client, repo, commitMessage(title, trailer), entries, {
+    parents: [parentSha],
+  });
+  if (branchHead) {
+    await client.request('PATCH', `repos/${repo}/git/refs/heads/${branch}`, {
+      sha: commit,
+      force: true,
     });
-    const body = renderBody(status.status, closesNumbers(status.status, issue), table);
-    const title = status.status.commit;
+  } else {
+    await client.request('POST', `repos/${repo}/git/refs`, {
+      ref: `refs/heads/${branch}`,
+      sha: commit,
+    });
+  }
+
+  const draft = status.state === 'blocked' || status.handoff.length > 0;
+  if (!existing) {
+    const created = createdPullSchema.parse(
+      await client.request('POST', `repos/${repo}/pulls`, {
+        title,
+        head: branch,
+        base: baseBranch,
+        body,
+        draft,
+      })
+    );
+    await postBrief(options, created.number, true, log);
+    await supersedeEarlierPullRequests(options, { number: created.number, draft }, log);
+    return created.html_url;
+  }
+  await client.request('PATCH', `repos/${repo}/pulls/${existing.number}`, { title, body });
+  if (!draft && existing.draft) await client.graphql(readyMutation, { id: existing.node_id });
+  if (draft && !existing.draft) await client.graphql(draftMutation, { id: existing.node_id });
+  await postBrief(options, existing.number, false, log);
+  await supersedeEarlierPullRequests(options, { number: existing.number, draft }, log);
+  return existing.html_url;
+}
+
+async function publishRevise(
+  options: RevisePullRequestOptions,
+  target: ReviseTarget,
+  status: FixStatus,
+  entries: readonly TreeEntry[] | null,
+  log: (line: string) => void
+): Promise<string> {
+  const { client, repo, parentSha } = options;
+  let commit: string | null = null;
+  if (entries !== null && (target.merge || entries.length > 0)) {
     const trailer = await coAuthorTrailer(client, options.coAuthor);
-    const commit = await commitTree(
+    commit = await commitTree(client, repo, commitMessage(status.commit, trailer), entries, {
+      parents: target.merge ? [target.head, parentSha] : [target.head],
+      base: target.merge ? parentSha : target.head,
+    });
+    await client.request('PATCH', `repos/${repo}/git/refs/heads/${target.branch}`, { sha: commit });
+  }
+
+  const draft = status.state === 'blocked' || status.handoff.length > 0;
+  await client.request('PATCH', `repos/${repo}/pulls/${target.number}`, {
+    body: renderBody(
+      status,
+      closesNumbers(status, target.issue),
+      carriedScreenshots(target.body, target.ordinal)
+    ),
+  });
+  if (draft !== target.draft) {
+    await client
+      .graphql(draft ? draftMutation : readyMutation, {
+        id: target.nodeId,
+      })
+      .catch((error: unknown) => {
+        log(
+          `open-pull-request: could not make #${target.number} ${draft ? 'a draft' : 'ready'}: ${errorMessage(error)}`
+        );
+      });
+  }
+
+  const summary = urlSchema.parse(
+    await client.request('POST', `repos/${repo}/issues/${target.number}/comments`, {
+      body: renderReviseSummary({
+        ordinal: target.ordinal,
+        status,
+        commit,
+        mergedDev: target.merge ? parentSha : null,
+        requestedBy: options.coAuthor,
+        request: options.brief,
+        runUrl: runUrl(options),
+      }),
+    })
+  );
+  return summary.html_url;
+}
+
+function readFixStatus({ paths, parentSha }: PublishOptions): FixStatus {
+  if (headSha(paths.root) !== parentSha) throw new Error(`HEAD is not ${parentSha}`);
+  const read = readStatus(paths.statusFile);
+  if (!read.ok) throw new Error(`the fixer status is not valid:\n  ${read.problems.join('\n  ')}`);
+  return read.status;
+}
+
+export async function openPullRequest(options: OpenPullRequestOptions): Promise<string> {
+  const { client, paths, repo, parentSha } = options;
+  const log = options.log ?? console.log;
+  const status = readFixStatus(options);
+  const workspace = addWorkspace(paths, parentSha);
+  try {
+    applyPatch(paths);
+    refuseForbiddenChanges(workspace);
+    const entries = await commitEntries(client, repo, workspace, parentSha, [parentSha]);
+    return await publishFirstRun(options, status, entries, log);
+  } finally {
+    removeWorkspace(paths);
+  }
+}
+
+export async function revisePullRequest(options: RevisePullRequestOptions): Promise<string> {
+  const { client, paths, repo, parentSha } = options;
+  const log = options.log ?? console.log;
+  const status = readFixStatus(options);
+  const target = await readReviseTarget({ ...options, devSha: parentSha });
+  const workspace = addWorkspace(paths, target.head);
+  try {
+    const conflicts = target.merge ? mergeDev(workspace, parentSha) : [];
+    applyPatch(paths);
+    refuseForbiddenChanges(workspace);
+    const unresolved = filesWithConflictMarkers(workspace, conflicts);
+    if (unresolved.length > 0) {
+      const blocked: FixStatus = {
+        ...status,
+        state: 'blocked',
+        questions: [...status.questions, unresolvedQuestion(unresolved)],
+      };
+      return await publishRevise(options, target, blocked, null, log);
+    }
+    const entries = await commitEntries(
       client,
       repo,
-      commitMessage(title, trailer),
-      entries,
-      parentSha
+      workspace,
+      target.merge ? parentSha : target.head,
+      [target.head, parentSha]
     );
-    if (branchHead) {
-      await client.request('PATCH', `repos/${repo}/git/refs/heads/${branch}`, {
-        sha: commit,
-        force: true,
-      });
-    } else {
-      await client.request('POST', `repos/${repo}/git/refs`, {
-        ref: `refs/heads/${branch}`,
-        sha: commit,
-      });
-    }
-
-    const draft = status.status.state === 'blocked' || status.status.handoff.length > 0;
-    if (!existing) {
-      const created = createdPullSchema.parse(
-        await client.request('POST', `repos/${repo}/pulls`, {
-          title,
-          head: branch,
-          base: baseBranch,
-          body,
-          draft,
-        })
-      );
-      await supersedeEarlierPullRequests(options, { number: created.number, draft }, log);
-      return created.html_url;
-    }
-    await client.request('PATCH', `repos/${repo}/pulls/${existing.number}`, { title, body });
-    if (!draft && existing.draft) await client.graphql(readyMutation, { id: existing.node_id });
-    if (draft && !existing.draft) await client.graphql(draftMutation, { id: existing.node_id });
-    await supersedeEarlierPullRequests(options, { number: existing.number, draft }, log);
-    return existing.html_url;
+    return await publishRevise(options, target, status, entries, log);
   } finally {
     removeWorkspace(paths);
   }
