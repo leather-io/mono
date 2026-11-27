@@ -376,7 +376,7 @@ How the extension uses inputs today, and so what to reach for:
 ## Show an address
 
 ```tsx
-import { AddressDisplayer } from '@leather.io/ui';
+import { AddressDisplayer, Caption } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
 
 <AddressDisplayer address={address} />                 {/* full address, grouped by four */}
@@ -384,7 +384,14 @@ import { truncateMiddle } from '@leather.io/utils';
 ```
 
 - Never slice an address by hand. `truncateMiddle` handles `0x…` and `contract.name` correctly.
-- Use the full `AddressDisplayer` wherever the user is checking where funds go: send review, receive, approvals.
+- **Recognizing an account.** Under an account, member, or vault name, show the shortened
+  address in the regular Diatype caption. Use the same treatment in the selected account card
+  and its picker. If the row offers Copy, copy the original address.
+- **Checking an exact address.** Show the full value with `AddressDisplayer` and its default
+  `address` style (Fira Code). This applies to Receive, an unfamiliar destination in send review,
+  hardware-wallet comparison, and lookalike warnings. Keep visual groups out of the copied value.
+- A known recipient can use the name and compact caption in the summary when the full address
+  is available to inspect before approval.
 
 ## Let someone copy a value
 
