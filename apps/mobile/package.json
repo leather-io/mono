@@ -35,7 +35,7 @@
     "@formatjs/intl-locale": "4.2.11",
     "@formatjs/intl-numberformat": "8.15.4",
     "@formatjs/intl-pluralrules": "5.4.4",
-    "@gorhom/bottom-sheet": "5.2.10",
+    "@gorhom/bottom-sheet": "5.2.14",
     "@hookform/resolvers": "5.2.1",
     "@launchdarkly/react-native-client-sdk": "10.20.2",
     "@leather.io/analytics": "workspace:*",

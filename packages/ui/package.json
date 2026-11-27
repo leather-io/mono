@@ -24,7 +24,7 @@
     "./assets/*": "./src/assets/*"
   },
   "dependencies": {
-    "@gorhom/bottom-sheet": "5.2.10",
+    "@gorhom/bottom-sheet": "5.2.14",
     "@leather.io/tokens": "workspace:*",
     "@leather.io/utils": "workspace:*",
     "@rnx-kit/metro-resolver-symlinks": "0.2.3",
