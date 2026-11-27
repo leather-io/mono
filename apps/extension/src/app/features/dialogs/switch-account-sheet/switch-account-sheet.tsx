@@ -18,9 +18,10 @@ import { useAppDispatch } from '@app/store';
 import { useCurrentAccountId } from '@app/store/accounts/account';
 import { useHiddenAccountIds } from '@app/store/accounts/accounts.selectors';
 import { userTogglesHideAccount } from '@app/store/accounts/accounts.slice';
+import { selectActivePolicyId } from '@app/store/active/active.selectors';
 import { useWalletAccountRefTree } from '@app/store/common/wallet-type.selectors';
 import { useCurrentNetwork } from '@app/store/networks/networks.selectors';
-import { type PolicyStore } from '@app/store/policy/policy-store.utils';
+import { type PolicyStore, parsePolicyParent } from '@app/store/policy/policy-store.utils';
 import {
   filterPoliciesByParentAndNetwork,
   selectAllPolicies,
@@ -73,6 +74,7 @@ export function SwitchAccountSheet({
   const [removingPolicy, setRemovingPolicy] = useState<PolicyStore | null>(null);
 
   const allPolicies = useSelector(selectAllPolicies);
+  const activePolicyId = useSelector(selectActivePolicyId);
   const network = useCurrentNetwork();
 
   const filteredWalletTree = useMemo(() => {
@@ -87,11 +89,10 @@ export function SwitchAccountSheet({
 
   const getPolicies = useCallback(
     (acc: AccountId) => {
-      if (!allowPolicyAccounts) return [];
       const parentAccountId = makeAccountIdentifer(acc.fingerprint, acc.accountIndex);
       return filterPoliciesByParentAndNetwork(allPolicies, parentAccountId, network.id);
     },
-    [allPolicies, network.id, allowPolicyAccounts]
+    [allPolicies, network.id]
   );
 
   const walletRows = useMemo(
@@ -105,6 +106,15 @@ export function SwitchAccountSheet({
     (acc: AccountId) =>
       hiddenAccountIds.includes(makeAccountIdentifer(acc.fingerprint, acc.accountIndex)),
     [hiddenAccountIds]
+  );
+
+  const getIsParentOfActivePolicy = useCallback(
+    (acc: AccountId) => {
+      if (allowPolicyAccounts || !activePolicyId) return undefined;
+      const parent = parsePolicyParent(activePolicyId);
+      return parent.fingerprint === acc.fingerprint && parent.accountIndex === acc.accountIndex;
+    },
+    [activePolicyId, allowPolicyAccounts]
   );
 
   const initialScrollIndex = useMemo(() => {
@@ -240,13 +250,15 @@ export function SwitchAccountSheet({
                 }
 
                 if (row.kind === 'policy') {
+                  const isUnavailable = !isManageMode && !allowPolicyAccounts;
                   return (
                     <Box position="relative" pl="space.06" pr="space.05" py="space.03">
                       <PolicyListItem
                         policy={row.policy}
                         handleClose={isManageMode ? noop : onClose}
                         hideBalance={isManageMode}
-                        nonInteractive={isManageMode}
+                        nonInteractive={isManageMode || isUnavailable}
+                        unavailable={isUnavailable}
                       />
                       {isManageMode && (
                         <Box
@@ -276,6 +288,7 @@ export function SwitchAccountSheet({
                       walletType={wallet.type}
                       hideBalance={isManageMode}
                       nonInteractive={isManageMode}
+                      isSelected={getIsParentOfActivePolicy(accountId)}
                     />
                     {isManageMode && (
                       <Box

@@ -1,4 +1,5 @@
 import { SettingsSelectors } from '@tests/selectors/settings.selectors';
+import { Box, styled } from 'leather-styles/jsx';
 
 import { Caption } from '@leather.io/ui';
 import { truncateMiddle } from '@leather.io/utils';
@@ -16,28 +17,49 @@ interface PolicyListItemProps {
   nonInteractive?: boolean;
   handleClose(): void;
   hideBalance?: boolean;
+  unavailable?: boolean;
 }
 export function PolicyListItem({
   policy,
   nonInteractive,
   handleClose,
   hideBalance,
+  unavailable,
 }: PolicyListItemProps) {
   const { handleSwitchToPolicy, getIsPolicyActive } = useSwitchAccount(handleClose);
   const parent = parsePolicyParent(policy.parentAccountId);
   const displayName = usePolicyDisplayName(policy);
 
+  const avatar = <AccountAvatarItem index={parent.accountIndex} publicKey={policy.address} />;
+  const balance = <PolicyTotalBalance policy={policy} />;
+
+  function renderBalance() {
+    if (hideBalance) return null;
+    if (unavailable) return <styled.span color="ink.text-non-interactive">{balance}</styled.span>;
+    return balance;
+  }
+
   return (
     <AccountListItemLayout
       {...parent}
       dataTestId={SettingsSelectors.SwitchAccountPolicyItem.replace('[id]', policy.id)}
-      accountAddresses={<Caption>{truncateMiddle(policy.address, 5)}</Caption>}
-      accountName={<AccountNameLayout>{displayName}</AccountNameLayout>}
-      avatar={<AccountAvatarItem index={parent.accountIndex} publicKey={policy.address} />}
-      balanceLabel={hideBalance ? null : <PolicyTotalBalance policy={policy} />}
+      accountAddresses={
+        unavailable ? (
+          <Caption color="ink.text-secondary">Can't connect to this app</Caption>
+        ) : (
+          <Caption>{truncateMiddle(policy.address, 5)}</Caption>
+        )
+      }
+      accountName={
+        <AccountNameLayout color={unavailable ? 'ink.text-non-interactive' : undefined}>
+          {displayName}
+        </AccountNameLayout>
+      }
+      avatar={unavailable ? <Box opacity={0.5}>{avatar}</Box> : avatar}
+      balanceLabel={renderBalance()}
       nonInteractive={nonInteractive}
       isLoading={false}
-      isSelected={getIsPolicyActive(policy.id)}
+      isSelected={!unavailable && getIsPolicyActive(policy.id)}
       onSelectAccount={() => handleSwitchToPolicy(policy)}
     />
   );

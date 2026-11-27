@@ -202,7 +202,39 @@ test.describe('Rpc: getAddresses with policy (multisig) accounts', () => {
       const requestPromise = initiateGetAddresses(page, { allowPolicyAccounts: false });
 
       const popup = await openSwitcher(context);
-      await expect(popup.getByTestId(`switch-account-policy-${bitcoinPolicy.id}`)).toHaveCount(0);
+      const policyRow = popup.getByTestId(`switch-account-policy-${bitcoinPolicy.id}`);
+      await expect(policyRow).toBeVisible();
+      await expect(policyRow).toHaveAttribute('aria-disabled', 'true');
+      await expect(policyRow).toContainText("Can't connect to this app");
+
+      await popup.close();
+      await expect(requestPromise).rejects.toThrow();
+    });
+
+    test('shows the parent account as selected in the switcher when a policy is active and the param is false', async ({
+      page,
+      context,
+      extensionId,
+      onboardingPage,
+    }) => {
+      await onboardingPage.signInWithTestAccount(
+        extensionId,
+        policyStateOverrides({
+          policies: [bitcoinPolicy, stacksPolicy],
+          activePolicyId: bitcoinPolicy.id,
+        })
+      );
+      await page.goto('localhost:3000');
+      const requestPromise = initiateGetAddresses(page, { allowPolicyAccounts: false });
+
+      const popup = await openSwitcher(context);
+      const policyRow = popup.getByTestId(`switch-account-policy-${bitcoinPolicy.id}`);
+      await expect(policyRow).toHaveAttribute('aria-disabled', 'true');
+      await expect(policyRow).not.toHaveAttribute('aria-current', 'true');
+      await expect(popup.getByRole('dialog').getByTestId('switch-account-item-0')).toHaveAttribute(
+        'aria-current',
+        'true'
+      );
 
       await popup.close();
       await expect(requestPromise).rejects.toThrow();
