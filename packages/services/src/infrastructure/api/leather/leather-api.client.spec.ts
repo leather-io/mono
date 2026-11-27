@@ -353,4 +353,51 @@ describe(LeatherApiClient.name, () => {
       expect(getSbtcSponsorshipUnconfirmedBroadcast(error)).toEqual(broadcast);
     });
   });
+
+  describe('Onramper widget signature', () => {
+    const widgetParams = { apiKey: 'pk_test', mode: 'buy', wallets: 'btc:bc1qaddress' };
+    const signature = {
+      sigV2: 'v2:signature',
+      sigV2Timestamp: '2026-11-26T09:32:32.131Z',
+      sigV2Nonce: '33db7aaf-f353-402d-8885-ab588a5549f7',
+      sigV2Fields: 'apiKey,endUserIpHash,mode,wallets',
+      endUserIpHash: '49e37e8131a214c4e15a2c80cb24397f44ee55f10974cf5478d118ea391e036d',
+    };
+
+    test('posts the widget parameters as JSON and returns the signature', async () => {
+      const requests: Request[] = [];
+      vi.stubGlobal(
+        'fetch',
+        vi.fn((request: Request) => {
+          requests.push(request.clone());
+          return Promise.resolve(jsonResponse(signature));
+        })
+      );
+
+      const result = await createClient(defaultNetworksKeyedById.mainnet).signOnramperWidgetParams(
+        widgetParams
+      );
+
+      expect(result).toEqual(signature);
+      expect(requests).toHaveLength(1);
+      expect(requests[0].method).toBe('POST');
+      expect(requests[0].url).toBe(`${LEATHER_API_URL_PRODUCTION}/v1/onramp/widget-signature`);
+      expect(requests[0].headers.get('X-Client-ID')).toBeTruthy();
+      expect(await requests[0].json()).toEqual({ params: widgetParams });
+    });
+
+    test('throws a LeatherApiError when signing fails', async () => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(() => Promise.resolve(jsonResponse({ error: 'Too many requests' }, 429)))
+      );
+
+      const error = await createClient(defaultNetworksKeyedById.mainnet)
+        .signOnramperWidgetParams(widgetParams)
+        .catch((e: unknown) => e);
+
+      expect(LeatherApiError.isLeatherApiError(error)).toBe(true);
+      expect(getErrorDetail(error)).toBe('Too many requests');
+    });
+  });
 });

@@ -52,6 +52,7 @@ export const leatherApiPriorities = {
   protocolContracts: leatherPriorityLevels.LOW,
   proposeMultisigTransaction: leatherPriorityLevels.HIGH,
   compliance: leatherPriorityLevels.HIGH,
+  onramperWidgetSignature: leatherPriorityLevels.HIGH,
   sbtcSponsorshipQuote: leatherPriorityLevels.HIGH,
   sbtcSponsorshipSubmit: leatherPriorityLevels.HIGH,
 };

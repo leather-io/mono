@@ -3109,6 +3109,81 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/v1/onramp/widget-signature': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** @description Sign Onramper widget URL parameters with Signature V2, adding the hash of the caller IP */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      /** @description Widget URL parameters to sign */
+      requestBody: {
+        content: {
+          'application/json': {
+            params: {
+              [key: string]: string;
+            };
+          };
+        };
+      };
+      responses: {
+        /** @description OK */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              sigV2: string;
+              /** Format: date-time */
+              sigV2Timestamp: string;
+              /** Format: uuid */
+              sigV2Nonce: string;
+              sigV2Fields: string;
+              endUserIpHash: string;
+            };
+          };
+        };
+        /** @description Bad Request */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+        /** @description Internal Server Error */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': {
+              error: string;
+            };
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/v1/protocols': {
     parameters: {
       query?: never;
